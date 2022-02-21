@@ -1,0 +1,119 @@
+import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import user4 from "../Assets/images/users/avatar-4.jpg";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
+import logoSm from "../Assets/images/logo-sm.png";
+import logoDark from "../Assets/images/logo-dark.png";
+import logoLight from "../Assets/images/logo-light.png";
+
+const Header = (props) => {
+  function tToggle() {
+    var body = document.body;
+    body.classList.toggle("vertical-collpsed");
+    body.classList.toggle("sidebar-enable");
+  }
+
+  const [menu, setMenu] = useState(false);
+
+  const [username, setusername] = useState("Raul");
+  return (
+    <>
+      <header id="page-topbar">
+        <div
+          className="navbar-header"
+          style={{ backgroundColor: "#3DC7F4", width: "100%" }}
+        >
+          <div className="d-flex">
+            <div className="navbar-brand-box">
+              <Link to="/" className="logo logo-dark">
+                <span className="logo-sm">
+                  <img src={logoSm} alt="" height="22" />
+                </span>
+                <span className="logo-lg">
+                  <img src={logoDark} alt="" height="20" />
+                </span>
+              </Link>
+
+              <Link to="/" className="logo logo-light">
+                <span className="logo-sm">
+                  <img src={logoSm} alt="" height="22" />
+                </span>
+                <span className="logo-lg">
+                  <img src={logoLight} alt="" height="20" />
+                </span>
+              </Link>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                tToggle();
+              }}
+              className="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn"
+              id="vertical-menu-btn"
+            >
+              <i className="fa fa-fw fa-bars" />
+            </button>
+          </div>
+
+          <div className="d-flex">
+            <Dropdown
+              isOpen={menu}
+              toggle={() => setMenu(!menu)}
+              className="d-inline-block"
+            >
+              <DropdownToggle
+                className="btn header-item waves-effect"
+                id="page-header-user-dropdown"
+                tag="button"
+              >
+                <img
+                  className="rounded-circle header-profile-user"
+                  src={user4}
+                  alt="Header Avatar"
+                />
+                <span className="d-none d-xl-inline-block ms-1 fw-medium font-size-15">
+                  {username}
+                </span>{" "}
+                <i className="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu-end">
+                <DropdownItem tag="a" href="/profile">
+                  {" "}
+                  <i className="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i>
+                  {"View Profile"}
+                </DropdownItem>
+                <DropdownItem tag="a" href="/">
+                  <i className="uil uil-wallet font-size-18 align-middle me-1 text-muted"></i>
+                  {"My Wallet"}
+                </DropdownItem>
+                <DropdownItem tag="a" href="#">
+                  <i className="uil uil-cog font-size-18 align-middle me-1 text-muted"></i>
+                  {"Settings"}
+                  <span className="badge bg-soft-success rounded-pill mt-1 ms-2">
+                    03
+                  </span>
+                </DropdownItem>
+                <DropdownItem tag="a" href="auth-lock-screen">
+                  <i className="uil uil-lock-alt font-size-18 align-middle me-1 text-muted"></i>
+                  {"Lock screen"}
+                </DropdownItem>
+                <div className="dropdown-divider" />
+                <Link to="/login" className="dropdown-item">
+                  <i className="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i>
+                  <span>"Logout"</span>
+                </Link>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+};
+
+export default Header;
