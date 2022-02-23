@@ -1,12 +1,10 @@
 import React from 'react'
-// import { useSelector } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
-// import { getStorageSync } from '../utils/baseAPI';
+import { getStorageSync } from '../API';
 
 const PublicRoutes = ({ component: Component, ...rest }) => {
-    // const { loged } = useSelector((state) => state.authReducer);
-    // const loged = getStorageSync('token')
-    const loged = true
+    const loged = JSON.parse(getStorageSync('token'))
+    
     return (
         <Route
             {...rest}
