@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import { getStorageSync } from "../../Utils/API";
+import { useHistory } from "react-router-dom";
 import user4 from "../Assets/images/users/avatar-4.jpg";
 import {
   Dropdown,
@@ -11,16 +13,27 @@ import logoSm from "../Assets/images/logo-sm.png";
 import logoDark from "../Assets/images/logo-dark.png";
 import logoLight from "../Assets/images/logo-light.png";
 
-const Header = (props) => {
+const Header = () => {
   function tToggle() {
     var body = document.body;
     body.classList.toggle("vertical-collpsed");
     body.classList.toggle("sidebar-enable");
   }
 
+  const token = JSON.parse(getStorageSync('token')) 
   const [menu, setMenu] = useState(false);
+  const [username, setusername] = useState("");
 
-  const [username, setusername] = useState("Raul");
+  useEffect(() => {
+    setusername(token.user.first_name)
+  }, []);
+
+  //logOut
+  const history = useHistory();
+  const onLogOut = () =>{
+    localStorage.removeItem('token');
+    history.push("/home");
+  }
   return (
     <>
       <header id="page-topbar">
@@ -103,10 +116,10 @@ const Header = (props) => {
                   {"Lock screen"}
                 </DropdownItem>
                 <div className="dropdown-divider" />
-                <Link to="/login" className="dropdown-item">
+                <div onClick={() => onLogOut()} className="dropdown-item" style={{cursor:'pointer'}}>
                   <i className="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i>
-                  <span>"Logout"</span>
-                </Link>
+                  <span>Logout</span>
+                </div>
               </DropdownMenu>
             </Dropdown>
           </div>
