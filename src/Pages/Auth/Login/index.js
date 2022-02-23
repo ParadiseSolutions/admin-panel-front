@@ -1,4 +1,5 @@
 import LoginImage from "../../../Components/Assets/images/login-girl.png";
+import ParadiseLogo from "../../../Components/Assets/images/paradise-logo.png";
 import { Formik } from "formik";
 import { LoginData } from "../../../Utils/Redux/Actions/LoginActions";
 import { createStorageSync } from "../../../Utils/API";
@@ -126,7 +127,8 @@ const Login = () => {
                               </label>
                             </div>
                             <div className="col-6 d-flex align-items-center justify-content-end">
-                              <span
+                              <a
+                              href="/login/forgot-password"
                                 className="text-muted"
                                 style={{
                                   fontSize: "14.4px",
@@ -135,7 +137,7 @@ const Login = () => {
                                 }}
                               >
                                 Forgot Password?
-                              </span>
+                              </a>
                             </div>
                           </div>
 
@@ -165,6 +167,14 @@ const Login = () => {
                                 Contact your IT Team for support!
                               </a>
                             </p>
+                          </div>
+                          <div className=" row justify-content-center">
+                            <div
+                              className="col-4 mt-2"
+                              style={{ marginLeft: "1rem" }}
+                            >
+                             <img src={ParadiseLogo} alt='logo' style={{width:"100px" }} />
+                            </div>
                           </div>
                         </form>
                       );
