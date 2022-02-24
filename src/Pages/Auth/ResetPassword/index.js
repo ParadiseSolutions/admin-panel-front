@@ -4,18 +4,28 @@ import Alpaca from "../../../Components/Assets/images/alpaca.png";
 import ParadiseLogo from "../../../Components/Assets/images/paradise-logo.png";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { Formik } from "formik";
-import { ForgotPasswordAction } from "../../../Utils/Redux/Actions/ForgotPassword";
+import { ResetPasswordAction } from "../../../Utils/Redux/Actions/ResetPassword";
 
-const ForgotPassword = () => {
+
+const ResetPassword = () => {
+
+  //get params
+  const queryString = window.location.search;
+  console.log(queryString);
+  const urlParams = new URLSearchParams(queryString);
+  const token = urlParams.get('token')
+
   const [custom_div1, setcustom_div1] = useState(false);
   const [custom_div2, setcustom_div2] = useState(false);
   const onSubmit = (values) => {
     console.log(values);
 
     let data = {
-      email: values.email,
+      token: token,
+      password: values.password,
+      password_confirmation: values.password_confirmation,
     };
-    ForgotPasswordAction(data)
+    ResetPasswordAction(data)
       .then((resp) => {
         if (resp.data.status === 200) {
           setcustom_div1(true);
@@ -31,47 +41,14 @@ const ForgotPassword = () => {
       <div className="container-fluid">
         <div className="row align-items-center">
           <div className="col-6">
-            <div
-              style={{
-                position: "absolute",
-                marginLeft: "-150px",
-                marginTop: "-180px",
-              }}
-            >
-              <img
-                src={Alpaca}
-                class="rounded"
-                alt="alpaca"
-                style={{ position: "relative", zIndex: "1" }}
-              />
-            </div>
-            <div className="row justify-content-center">
-              <div className="col-7">
-                <span
-                  className="h1 fw-bold mb-0 mx-5"
-                  style={{ color: "#3DC7F4", fontSize: "132px" }}
-                >
-                  Uh-Oh!
-                </span>
-              </div>
-            </div>
-            <div className="row justify-content-center">
-              <div className="col-6">
-                <span
-                  className="h1 mb-0 fw-bold"
-                  style={{ color: "#74788D", fontSize: "23px" }}
-                >
-                  Looks like someone forgot their password.
-                </span>
-              </div>
-            </div>
-
+            
             <div className="row justify-content-center">
               <div className="col-7 mt-3">
                 <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
                   <Formik
                     initialValues={{
-                      email: "",
+                      password: "",
+                      password_confirmation:'',
                     }}
                     enableReinitialize
                     onSubmit={(values, { setSubmitting }) => {
@@ -91,11 +68,11 @@ const ForgotPassword = () => {
                       return (
                         <form onSubmit={handleSubmit} className="col-12">
                           <div className="row justify-content-center mb-4">
-                            <div className="col-5">
+                            <div className="col-6">
                               <p
                                 style={{
-                                  color: "#74788D",
-                                  fontSize: "18px",
+                                  color: "#74788D", 
+                                  fontSize: "23px",
                                   marginLeft: "8px",
                                 }}
                               >
@@ -104,23 +81,26 @@ const ForgotPassword = () => {
                             </div>
                             <div className="col-12">
                               <div
-                                className="form-control"
+                                className="form-control "
                                 style={{
                                   backgroundColor: "#C7E3EB",
                                   border: "none",
                                 }}
                               >
+                                <div className=" row justify-content-center">
+
                                 <p
+                                className="col-6"
                                   style={{
                                     padding: "5px",
                                     marginBottom: 0,
-                                    marginLeft: "1rem",
                                     color: "#2986A4",
+                                    marginLeft:'15px'
                                   }}
                                 >
-                                  Enter your Email and instructions will be sent
-                                  to you!
+                                  Enter your new password
                                 </p>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -130,15 +110,32 @@ const ForgotPassword = () => {
                               className="form-label"
                               htmlFor="form2Example28"
                             >
-                              Email
+                              Password
                             </label>
                             <input
-                              type="email"
-                              name="email"
-                              value={values.email}
+                              type="password"
+                              name="password"
+                              value={values.password}
                               onChange={handleChange}
                               onBlur={handleBlur}
                               id="form2Example28"
+                              className="form-control"
+                            />
+                          </div>
+                          <div className="form-outline mb-4">
+                            <label
+                              className="form-label"
+                              htmlFor="form2Example"
+                            >
+                              Repeat Password
+                            </label>
+                            <input
+                              type="password"
+                              name="password_confirmation"
+                              value={values.password_confirmation}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              id="form2Example"
                               className="form-control"
                             />
                           </div>
@@ -158,43 +155,10 @@ const ForgotPassword = () => {
                             </button>
                           </div>
 
-                          <div className="mt-5 row justify-content-center">
-                            <div
-                              className="col-5"
-                              style={{ marginLeft: "1rem" }}
-                            >
-                              <p style={{ fontSize: "14.4px" }}>
-                                Remember It ?{" "}
-                                <a
-                                  href="/login"
-                                  style={{ fontSize: "14.4px" }}
-                                  className="link-info mx-1"
-                                >
-                                  Sign in
-                                </a>
-                              </p>
-                            </div>
-                          </div>
-                          <div className="mt-5 row justify-content-center">
-                            <div
-                              className="col-5"
-                              style={{ marginLeft: "1rem" }}
-                            >
-                              <p style={{ fontSize: "14.4px" }}>
-                                Remember It ?{" "}
-                                <a
-                                  href="/login/reset-password"
-                                  style={{ fontSize: "14.4px" }}
-                                  className="link-info mx-1"
-                                >
-                                  reset
-                                </a>
-                              </p>
-                            </div>
-                          </div>
+                         
                           <div className=" row justify-content-center">
                             <div
-                              className="col-4 mt-2"
+                              className="col-4 mt-5"
                               style={{ marginLeft: "1rem" }}
                             >
                               <img
@@ -260,4 +224,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
