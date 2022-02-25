@@ -183,7 +183,7 @@ const ForgotPassword = () => {
                               <p style={{ fontSize: "14.4px" }}>
                                 Remember It ?{" "}
                                 <a
-                                  href="/login/reset-password"
+                                  href="/reset-password"
                                   style={{ fontSize: "14.4px" }}
                                   className="link-info mx-1"
                                 >
