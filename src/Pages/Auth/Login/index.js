@@ -128,7 +128,7 @@ const Login = () => {
                             </div>
                             <div className="col-6 d-flex align-items-center justify-content-end">
                               <a
-                              href="/login/forgot-password"
+                              href="/forgot-password"
                                 className="text-muted"
                                 style={{
                                   fontSize: "14.4px",

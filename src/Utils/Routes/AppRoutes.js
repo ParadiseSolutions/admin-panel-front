@@ -8,7 +8,7 @@ const AppRuter = () => {
     return (
       <Switch>
         <PublicRoutes
-          path="/login"
+          path="/"
           component={AuthRoutes}
         />
         <PrivateRoutes
