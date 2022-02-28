@@ -30,8 +30,6 @@ const Fallback = () => <div>cargando.....</div>;
 const AuthRoutes = ({ isLogged, ...rest }) => {
   return (
     <>
-    
-      
           <Suspense fallback={<Fallback />}>
             <Switch>
               <PublicRoutes
