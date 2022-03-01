@@ -43,7 +43,7 @@ const ResetPassword = () => {
        let data = {
         token: token,
         password: values.password,
-        password_confirmation: values.password_confirmation,
+        password_confirmation: values.password1,
       };
       ResetPasswordAction(data)
         .then((resp) => {
