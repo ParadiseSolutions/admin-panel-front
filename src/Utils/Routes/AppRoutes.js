@@ -3,13 +3,24 @@ import PrivateRoutes from './PrivateRoutes'
 import PublicRoutes from './PublicRoutes'
 import AuthRoutes from './AuthRoutes'
 import ContentRoutes from './ContentRoutes'
+import ForgotPasswordRoute from './ForgotPasswordRoute'
+import ResetPasswordRoute from './ResetPasswordRoute'
 
 const AppRuter = () => {
     return (
       <Switch>
+        
         <PublicRoutes
-          path="/"
+          path="/login"
           component={AuthRoutes}
+        />
+        <PublicRoutes
+          path="/forgot-password"
+          component={ForgotPasswordRoute}
+        />
+        <PublicRoutes
+          path="/reset-password"
+          component={ResetPasswordRoute}
         />
         <PrivateRoutes
           path="/"
