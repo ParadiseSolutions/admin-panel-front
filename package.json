@@ -79,6 +79,7 @@
     "reactstrap": "^9.0.1",
     "redux-thunk": "^2.4.1",
     "simplebar-react": "^2.3.5",
+    "sweetalert2": "^11.4.4",
     "toastr": "^2.1.4",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
