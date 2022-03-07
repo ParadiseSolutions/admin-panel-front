@@ -7,7 +7,7 @@ export const getStorageSync = (key) => {
 };
 
 const tokenData = JSON.parse(getStorageSync("token"));
-const bearerToken = `Bearer ${tokenData.token}`;
+const bearerToken = tokenData ? `Bearer ${tokenData.token}` : '';
 export const API_URL = `https://api.paradisesolutions.com/api`;
 
 export const options = {

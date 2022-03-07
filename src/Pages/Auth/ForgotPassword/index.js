@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LoginImage from "../../../Components/Assets/images/login-girl.png";
+import LoginImage from "../../../Components/Assets/images/adventure-bg-hub.jpg";
 import Alpaca from "../../../Components/Assets/images/alpaca.png";
 import ParadiseLogo from "../../../Components/Assets/images/paradise-logo.png";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -44,24 +44,6 @@ const ForgotPassword = () => {
         });
     },
   });
-
-  // const onSubmit = (values) => {
-  //   console.log(values);
-
-  //   let data = {
-  //     email: values.email,
-  //   };
-  //   ForgotPasswordAction(data)
-  //     .then((resp) => {
-  //       if (resp.data.status === 200) {
-  //         setcustom_div1(true);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       setcustom_div2(true)
-  //     });
-  // };
   return (
     <section className="vh-100">
       <div className="container-fluid">
@@ -85,7 +67,7 @@ const ForgotPassword = () => {
               <div className="col-7">
                 <span
                   className="h1 fw-bold mb-0 mx-5"
-                  style={{ color: "#3DC7F4", fontSize: "132px" }}
+                  style={{ color: "#3DC7F4", fontSize: "130px", paddingLeft:'13px' }}
                 >
                   Uh-Oh!
                 </span>
@@ -95,7 +77,7 @@ const ForgotPassword = () => {
               <div className="col-6">
                 <span
                   className="h1 mb-0 fw-bold"
-                  style={{ color: "#74788D", fontSize: "23px" }}
+                  style={{ color: "#74788D", fontSize: "22px", paddingLeft:'28px' }}
                 >
                   Looks like someone forgot their password.
                 </span>

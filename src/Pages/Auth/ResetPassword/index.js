@@ -1,6 +1,5 @@
 import { useState } from "react";
-import LoginImage from "../../../Components/Assets/images/login-girl.png";
-import Alpaca from "../../../Components/Assets/images/alpaca.png";
+import LoginImage from "../../../Components/Assets/images/adventure-bg-hub.jpg";
 import ParadiseLogo from "../../../Components/Assets/images/paradise-logo.png";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { ResetPasswordAction } from "../../../Utils/Redux/Actions/ResetPassword";
