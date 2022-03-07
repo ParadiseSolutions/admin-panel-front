@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LoginImage from "../../../Components/Assets/images/login-girl.png";
+import LoginImage from "../../../Components/Assets/images/adventure-bg-hub.jpg";
 import ParadiseLogo from "../../../Components/Assets/images/paradise-logo.png";
 import { LoginData } from "../../../Utils/Redux/Actions/LoginActions";
 import { createStorageSync } from "../../../Utils/API";
@@ -52,22 +52,6 @@ const Login = () => {
     },
   });
 
-  // const onSubmit = (values) =>{
-  //   let data = {
-  //   email: values.email,
-  //   password: values.password
-  //   }
-  //   LoginData(data).then((resp) => {
-  //     const respuesta = resp.data.data
-  //     if (resp.data.status === 200) {
-  //       createStorageSync('token', JSON.stringify(respuesta));
-  //       history.push('/dashboard');
-  //     }
-
-  //   }).catch((error) =>{
-  //     console.log(error)
-  //   })
-  // }
   return (
     <section className="vh-100">
       <div className="container-fluid">
@@ -94,12 +78,12 @@ const Login = () => {
               </div>
             </div>
             <div className="row justify-content-center">
-              <div className="col-4 mt-3">
+              <div className="col-6 mt-3">
                 <span
-                  className="h1 fw-bold mb-0"
-                  style={{ color: "#74788D", fontSize: "15px" }}
+                  className="h1 fw-bold mb-0 mx-5"
+                  style={{ color: "#74788D", fontSize: "16px" }}
                 >
-                  Sign in to continue to your Admin Panel.
+                  Sign in to continue to your Adventure Station.
                 </span>
               </div>
             </div>
@@ -239,6 +223,7 @@ const Login = () => {
             </div>
           </div>
           <div className="col-sm-6 px-0 d-none d-sm-block">
+            
             <img
               src={LoginImage}
               alt="LoginImage"
