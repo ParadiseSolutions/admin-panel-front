@@ -163,7 +163,7 @@ const Departments = () => {
                       columns={columns}
                       data={data}
                       isGlobalFilter={true}
-                      isAddTableWithoutBorderStrap={true}
+                      departmentTable={true}
                       isAddOrder={true}
                       // handleOrderClicks={handleOrderClicks}
                     />
