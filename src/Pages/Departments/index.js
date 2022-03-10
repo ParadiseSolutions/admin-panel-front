@@ -18,9 +18,11 @@ const Departments = () => {
     departmentsRequest();
   }, [dispatch]);
 
+
   //get info
   const data = useSelector((state) => state.departments.departments.data);
 
+  console.log(data)
   //table actions
 
   const onEdit = () => {
@@ -149,7 +151,7 @@ const Departments = () => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-5">
-            <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
+            <h1 className="display-5 fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
               DEPARTMENTS
             </h1>
           </div>
