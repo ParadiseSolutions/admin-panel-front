@@ -12,21 +12,15 @@ import {
 } from "react-table";
 import { Table, Row, Col, Button, Input } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
+import { Link } from "react-router-dom";
 
 const TableContainer = ({
   columns,
   data,
   isGlobalFilter,
-  isAddOrder,
-  isAddTableWithoutBorderStrap,
-  handleOrderClicks,
-  isAddCustomer,
-  isAddUsers,
+  departmentTable,
   handleUserClicks,
-  handleCustomerClicks,
-  isAddTableBorderStrap,
-  isAddInvoice,
-  handleInvoiceClicks,
+  
 }) => {
   const {
     getTableProps,
@@ -84,68 +78,27 @@ const TableContainer = ({
             setGlobalFilter={setGlobalFilter}
           />
         )}
-        {isAddUsers && (
+        {departmentTable && (
           <Col sm="7">
             <div className="text-sm-end">
+              <Link to='/departments/new'>
+              
               <Button
                 type="button"
-                color="success"
-                
+                style={{ backgroundColor: '#F6851F', border: 'none' }}
                 className="waves-effect waves-light mb-3 btn btn-success"
                 onClick={handleUserClicks}
               >
                 <i className="mdi mdi-plus me-1" />
-                Add New
-              </Button>
-            </div>
-          </Col>
-        )}
-        {isAddInvoice && (
-          <Col sm="7">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="success"
-                className="waves-effect waves-light mb-3 btn btn-success"
-                onClick={handleInvoiceClicks}
-              >
-                <i className="mdi mdi-plus me-1" />
-                Add Invoice
-              </Button>
-            </div>
-          </Col>
-        )}
-        {isAddCustomer && (
-          <Col sm="7">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="success"
-                className="waves-effect waves-light mb-3 btn btn-success"
-                onClick={handleCustomerClicks}
-              >
-                <i className="mdi mdi-plus me-1" />
-                Add New Customer
-              </Button>
-            </div>
-          </Col>
-        )}
-        {isAddOrder && (
-          <Col sm="7">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                // color="success"
-                style={{backgroundColor: "#F38430", border: 'none'}}
-                className="waves-effect waves-light mb-3 btn"
-                onClick={handleOrderClicks}
-              >
-                <i className="mdi mdi-plus me-1" />
                 Add New Department
               </Button>
+              </Link>
             </div>
           </Col>
         )}
+        
+       
+      
 
         <Col md={1}>
           <select
@@ -162,7 +115,7 @@ const TableContainer = ({
         </Col>
       </Row>
 
-      {isAddTableWithoutBorderStrap && (
+      {departmentTable && (
         <div className="table-responsive">
           <Table bordered hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
@@ -203,49 +156,7 @@ const TableContainer = ({
         </div>
       )}
 
-      {isAddTableBorderStrap && (
-        <div className="table-responsive">
-          <Table
-            className="table-centered datatable dt-responsive nowrap table-card-list react_table"
-            {...getTableProps()}
-          >
-            <thead className="table-nowrap">
-              {headerGroups.map((headerGroup) => (
-                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
-                      <div className="mb-2" {...column.getSortByToggleProps()}>
-                        {column.render("Header")}
-                        {generateSortingIndicator(column)}
-                      </div>
-                      <Filter column={column} />
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-
-            <tbody {...getTableBodyProps()}>
-              {page.map((row) => {
-                prepareRow(row);
-                return (
-                  <Fragment key={row.getRowProps().key}>
-                    <tr>
-                      {row.cells.map((cell) => {
-                        return (
-                          <td key={cell.id} {...cell.getCellProps()}>
-                            {cell.render("Cell")}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </Fragment>
-                );
-              })}
-            </tbody>
-          </Table>
-        </div>
-      )}
+      
 
       <Row className="justify-content-md-end justify-content-center align-items-center">
         <Col className="col-md-auto">

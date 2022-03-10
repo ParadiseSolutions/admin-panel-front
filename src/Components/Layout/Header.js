@@ -39,7 +39,7 @@ const Header = () => {
       <header id="page-topbar">
         <div
           className="navbar-header"
-          style={{ backgroundColor: "#3DC7F4", width: "100%" }}
+          // // style={{ backgroundColor: "#3DC7F4", width: "100%" }}
         >
           <div className="d-flex">
             <div className="navbar-brand-box">

@@ -30,7 +30,7 @@ const getDepartmentsSuccess = (food) => ({
   payload: food,
 });
 
-const getDepartmentsError = () => ({
+const getDepartmentsError = (error) => ({
   type: DEPARTMENTS_ERROR,
-  payload: true,
+  payload: error,
 });

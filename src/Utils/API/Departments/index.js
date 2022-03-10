@@ -16,3 +16,10 @@ export const statusUpdate = (id, body) => {
       headers: options,
     });
   };
+
+  export const createDepartment = (body) => {
+    const url = `${API_URL}/departments`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
