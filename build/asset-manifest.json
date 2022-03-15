@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.b1a3235f.css",
-    "main.js": "/static/js/main.d1b70d19.js",
+    "main.js": "/static/js/main.b16838cc.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.8.55": "/static/media/materialdesignicons-webfont.506bc8215df8660d8f04.ttf",
@@ -39,11 +39,11 @@
     "static/media/paradise-logo.png": "/static/media/paradise-logo.7202d63b4dfed004a919.png",
     "index.html": "/index.html",
     "main.b1a3235f.css.map": "/static/css/main.b1a3235f.css.map",
-    "main.d1b70d19.js.map": "/static/js/main.d1b70d19.js.map",
+    "main.b16838cc.js.map": "/static/js/main.b16838cc.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b1a3235f.css",
-    "static/js/main.d1b70d19.js"
+    "static/js/main.b16838cc.js"
   ]
 }
