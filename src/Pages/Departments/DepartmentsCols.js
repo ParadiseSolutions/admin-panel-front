@@ -10,7 +10,6 @@ import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 const Name = (cell) => {
   return cell.value ? cell.value : "";
 };
-
 const Code = (cell) => {
   return cell.value ? cell.value : "";
 };

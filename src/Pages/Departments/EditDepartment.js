@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { usersData } from "../../Utils/Redux/Actions/UsersActions";
 import { modulesData } from "../../Utils/Redux/Actions/ModulesActions";
+import MembersChecked from "./MembersChecked";
+import PermissionsChecked from "./PermissionsChecked";
 import { useSelector, useDispatch } from "react-redux";
-import { createDepartment } from "../../Utils/API/Departments";
+import { editDepartment, getDepartment } from "../../Utils/API/Departments";
+import { useParams } from "react-router-dom";
 import {
   Container,
   Row,
@@ -21,8 +24,39 @@ import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
 
-const NewDepartment = ({ history }) => {
+const EditDepartment = ({ history }) => {
   const dispatch = useDispatch();
+  const { id } = useParams();
+
+  //get dep data
+  const [dataDep, setDataDep] = useState([]);
+  useEffect(() => {
+    getDepartment(id).then((resp) => {
+      setDataDep(resp.data.data);
+    });
+  }, [id]);
+
+  const [membersIds, setMembersIds] = useState([]);
+  const [permsId, setPermsIds] = useState([]);
+
+  useEffect(() => {
+    if (dataDep.members) {
+      const dataMembers = dataDep.members;
+      let ids = [];
+      dataMembers.forEach((element) => {
+        ids.push(element.id);
+      });
+      setMembersIds(ids);
+    }
+    if (dataDep.modules) {
+      const dataModules = dataDep.modules;
+      let ids = [];
+      dataModules.forEach((element) => {
+        ids.push(element.module_id);
+      });
+      setPermsIds(ids);
+    }
+  }, [dataDep]);
 
   //users request
   useEffect(() => {
@@ -39,26 +73,20 @@ const NewDepartment = ({ history }) => {
   const dataUsers = useSelector((state) => state.users.users.data);
   const dataModules = useSelector((state) => state.modules.modules.data);
 
-  const [membersAdded, setMembersAdded] = useState([]);
   const [modulesAdded, setModulesAdded] = useState([]);
-  const [validation, setValidation] = useState(false);
+  // const onChangeMembers = (e) => {
+  //   console.log("ejecutado");
+  //   const selection = e.target.value;
+  //   const selectionFlag = membersIds.includes(selection);
 
-  useEffect(() => {
-    if (membersAdded.length > 0 && modulesAdded.length > 0) {
-      setValidation(true);
-      return;
-    }
-  }, [membersAdded, modulesAdded]);
-  const onChangeMembers = (e) => {
-    const selection = e.target.value;
-    const selectionFlag = membersAdded.includes(selection);
-    if (!selectionFlag) {
-      setMembersAdded([...membersAdded, e.target.value]);
-    }
-    if (selectionFlag) {
-      setMembersAdded(membersAdded.filter((ele) => ele !== selection));
-    }
-  };
+  //   if (!selectionFlag) {
+  //     setMembersIds([...membersIds, e.target.value]);
+  //   }
+  //   if (selectionFlag) {
+  //     setMembersIds(membersIds.filter((ele) => ele !== selection));
+  //   }
+  // };
+
   const onChangeModules = (e) => {
     const selection = e.target.value;
     const selectionFlag = modulesAdded.includes(selection);
@@ -73,11 +101,12 @@ const NewDepartment = ({ history }) => {
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
+
     initialValues: {
-      name: "",
-      code: "",
-      members: [],
-      modules: [],
+      name: dataDep ? dataDep.name : "",
+      code: dataDep ? dataDep.code : "",
+      members: membersIds,
+      modules: permsId,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
@@ -91,16 +120,16 @@ const NewDepartment = ({ history }) => {
       let data = {
         name: values.name,
         code: values.code,
-        module_ids: modulesAdded,
-        user_ids: membersAdded,
+        module_ids: values.modules,
+        user_ids: values.members,
       };
-      createDepartment(data)
+      editDepartment(id, data)
         .then((resp) => {
           console.log(resp.data);
-          if (resp.data.status === 201) {
+          if (resp.data.status === 200) {
             Swal.fire(
-              "Created!",
-              "The department has been created.",
+              "Edited!",
+              "The department has been edited.",
               "success"
             ).then(() => {
               history.goBack();
@@ -127,7 +156,7 @@ const NewDepartment = ({ history }) => {
         <Container fluid>
           <div className=" mx-5">
             <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
-              + ADD NEW DEPARTMENT
+              + EDIT DEPARTMENT
             </h1>
           </div>
           <Form
@@ -196,29 +225,14 @@ const NewDepartment = ({ history }) => {
                             ) : null}
                           </div>
                         </Row>
-                        {validation ? (
-                          <>
-                            <Button
-                              color="primary"
-                              className="waves-effect waves-light"
-                            >
-                              <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Department
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button
-                              color="secondary"
-                              type="button"
-                              className="bg-secondary"
-                              // onClick={toggleCategory}
-                            >
-                              <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Department
-                            </Button>
-                          </>
-                        )}
+
+                        <Button
+                          color="primary"
+                          className="waves-effect waves-light"
+                        >
+                          <i className=" mdi mdi-plus-circle-outline me-1" />
+                          Edit Department
+                        </Button>
                       </CardBody>
                     </Card>
                   </Col>
@@ -229,27 +243,16 @@ const NewDepartment = ({ history }) => {
                       </Row>
                       <CardBody className="overflow-auto">
                         <Row className="justify-content-center mt-4">
-                          {dataUsers ? (
+                          {dataUsers && membersIds.length > 0 ? (
                             <>
                               {map(dataUsers, (user, index) => {
                                 return (
-                                  <div
+                                  <MembersChecked
                                     key={index}
-                                    className="controls my-4 mx-5 px-5"
-                                  >
-                                    <div className="form-check px-5">
-                                      <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        value={user.id}
-                                        name={validationType.values.members}
-                                        onChange={(e) => onChangeMembers(e)}
-                                      />
-                                      <label className="form-check-label">
-                                        {`${user.first_name} ${user.last_name}`}
-                                      </label>
-                                    </div>
-                                  </div>
+                                    user={user}
+                                    membersIds={membersIds}
+                                    setMembersIds={setMembersIds}
+                                  />
                                 );
                               })}
                             </>
@@ -266,26 +269,17 @@ const NewDepartment = ({ history }) => {
                       <CardBody className="overflow-auto">
                         <Row className="mt-4">
                           <Row lg={6}>
-                            {dataModules ? (
+                            {dataModules && permsId.length > 0 ? (
                               <>
                                 {map(dataModules, (module, index) => {
                                   return (
                                     <div key={index} className=" my-4 mx-4 ">
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="checkbox"
-                                          value={module.id}
-                                          name={
-                                            validationType.values.permissions
-                                          }
-                                          onChange={(e) => onChangeModules(e)}
-                                          onBlur={validationType.handleBlur}
-                                        />
-                                        <label className="form-check-label">
-                                          {`${module.name}`}
-                                        </label>
-                                      </div>
+                                      <PermissionsChecked
+                                        key={index}
+                                        module={module}
+                                        permsId={permsId}
+                                        setPermsIds={setPermsIds}
+                                      />
                                     </div>
                                   );
                                 })}
@@ -306,4 +300,4 @@ const NewDepartment = ({ history }) => {
   );
 };
 
-export default NewDepartment;
+export default EditDepartment;
