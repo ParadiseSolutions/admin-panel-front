@@ -23,3 +23,16 @@ export const statusUpdate = (id, body) => {
       headers: options,
     });
   };
+
+  export const getDepartment = (id) => {
+    return axios.get(`${API_URL}/departments/${id}`, {
+      headers: options,
+    });
+  };
+
+  export const editDepartment = (id, body) => {
+    const url = `${API_URL}/departments/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };

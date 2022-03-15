@@ -6,7 +6,7 @@ import { Container } from "reactstrap";
 import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
-import { Name, Code, Date, Members, Active } from "./DepartmentsCols";
+import { Name, Code, Date, Members, Active, URL } from "./DepartmentsCols";
 import Swal from "sweetalert2";
 import { departmentDelete } from "../../Utils/API/Departments";
 const Departments = () => {
@@ -22,12 +22,7 @@ const Departments = () => {
   //get info
   const data = useSelector((state) => state.departments.departments.data);
 
-  console.log(data)
   //table actions
-
-  const onEdit = () => {
-    console.log("on edit");
-  };
   const onDelete = (depData) => {
     Swal.fire({
       title: "Delete Department?",
@@ -110,15 +105,13 @@ const Departments = () => {
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
+          const depData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
               <Link
-                to="#"
+                to={`/departments/${depData.id}`}
                 className="text-success"
-                onClick={() => {
-                  const depData = cellProps.row.original;
-                  onEdit(depData);
-                }}
+                
               >
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
