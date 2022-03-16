@@ -243,7 +243,7 @@ const EditDepartment = ({ history }) => {
                       </Row>
                       <CardBody className="overflow-auto">
                         <Row className="justify-content-center mt-4">
-                          {dataUsers && membersIds.length > 0 ? (
+                          {dataUsers ? (
                             <>
                               {map(dataUsers, (user, index) => {
                                 return (
@@ -269,7 +269,7 @@ const EditDepartment = ({ history }) => {
                       <CardBody className="overflow-auto">
                         <Row className="mt-4">
                           <Row lg={6}>
-                            {dataModules && permsId.length > 0 ? (
+                            {dataModules ? (
                               <>
                                 {map(dataModules, (module, index) => {
                                   return (
