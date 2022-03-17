@@ -145,6 +145,13 @@ const Sidebar = () => {
                     <span>{"Departments"}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to="/roles" className=" waves-effect">
+                    <i className="bx bx-check-shield"></i>
+                    
+                    <span>{"Roles"}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </SimpleBar>
