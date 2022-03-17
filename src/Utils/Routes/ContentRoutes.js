@@ -4,6 +4,7 @@ import PrivateRoutes from "./PrivateRoutes";
 import DashboardRoutes from "./DashboardRoutes/Dashboard";
 import UserRoutes from "./UsersRoutes";
 import DepartmentsRoutes from "./DepartmentsRoutes";
+import RolesRoutes from "./UsersRoutes";
 import Layout from "../../Components/Layout";
 
 
@@ -29,6 +30,11 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
               <PrivateRoutes
                 path="/departments"
                 component={DepartmentsRoutes}
+                isAuthenticated={isLogged}
+              />
+              <PrivateRoutes
+                path="/roles"
+                component={RolesRoutes}
                 isAuthenticated={isLogged}
               />
               <Redirect to="/dashboard" />

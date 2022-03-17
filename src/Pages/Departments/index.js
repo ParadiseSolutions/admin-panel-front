@@ -6,7 +6,7 @@ import { Container } from "reactstrap";
 import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
-import { Name, Code, Date, Members, Active, URL } from "./DepartmentsCols";
+import { Name, Code, Date, Members, Active } from "./DepartmentsCols";
 import Swal from "sweetalert2";
 import { departmentDelete } from "../../Utils/API/Departments";
 const Departments = () => {
