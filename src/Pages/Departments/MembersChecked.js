@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 
 const MembersChecked = ({ user, membersIds, setMembersIds }) => {
-  
+  const isChecked = membersIds.includes(user.id) ? true : false;
+
   const [checked, setChecked] = useState(
     membersIds.includes(user.id) ? true : false
   );
 
   useEffect(() => {
-    setChecked(membersIds.includes(user.id) ? true : false);
-  }, [membersIds, user.id]);
+    if (membersIds.length > 0) {
+      setChecked(membersIds.includes(user.id) ? true : false);
+    }
+  }, [isChecked]);
 
   const onChangeMembers = (e) => {
     setChecked(!checked);
+    console.log(checked);
     const selection = Number(e.target.value);
     const selectionFlag = membersIds.includes(selection);
 
