@@ -9,3 +9,23 @@ export const statusUpdateRol = (id, body) => {
       headers: options,
     });
   };
+
+export const deleteRol = (id) => {
+    const url = `${API_URL}/roles/${id}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
+export const getPermissionType = () => {
+    const url = `${API_URL}/permissionTypes`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+
+  export const createRol = (body) => {
+    const url = `${API_URL}/roles`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
