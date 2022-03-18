@@ -3,23 +3,40 @@
 // 
 
 #page-topbar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: $sidebar-width;
-    z-index: 1002;
-    background-color: $header-bg;
-    box-shadow: $box-shadow;
+    // position: fixed;
+    // top: 0;
+    // right: 0;
+    // left: $sidebar-width;
+    // z-index: 1002;
+    // background-color: $header-bg;
+    // box-shadow: $box-shadow;
+    background-color: #3dc7f4;
+left: 250px;
+position: fixed;
+right: 0;
+top: 0;
+z-index: 1002;
+padding: 10px 10px 0px 0px
 }
 
 .navbar-header {
-    display: flex;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
+    // display: flex;
+    // -ms-flex-pack: justify;
+    // justify-content: space-between;
+    // align-items: center;
+    // margin: 0 auto;
+    // height: $header-height;
+    // padding: 0 calc(#{$grid-gutter-width} / 2) 0 0;
+
     align-items: center;
-    margin: 0 auto;
-    height: $header-height;
-    padding: 0 calc(#{$grid-gutter-width} / 2) 0 0;
+display: flex;
+height: 55px;
+justify-content: space-between;
+margin: 0 auto;
+padding: 0 0.625rem 0 0;
+background-color: #fff;
+border-radius: 20px 20px 0 0;
+box-shadow: $box-shadow;
 
     .dropdown .show {
         &.header-item {
@@ -150,6 +167,11 @@ body {
 
 .page-content {
     padding: calc(#{$header-height} + #{$grid-gutter-width}) calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
+    background-color: #fff;
+    margin-right: 10px;
+    border-radius: 0px 0px 20px 20px;
+    margin-bottom: 10px;
+    height: 99vh;
 }
 
 .header-item {

@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
 
 const PermissionsChecked = ({ module, permsId, setPermsIds }) => {
+
+  const isChecked = permsId.includes(module.id) ? true : false;
+
   const [checked, setChecked] = useState(
     permsId.includes(module.id) ? true : false
   );
 
   useEffect(() => {
-    setChecked(permsId.includes(module.id) ? true : false);
-  }, [permsId, module.id]);
+    if (permsId.length > 0) {
+      
+      setChecked(permsId.includes(module.id) ? true : false);
+    }
+  }, [isChecked]);
   const onChangeModules = (e) => {
     setChecked(!checked);
     const selection = parseInt(e.target.value);
