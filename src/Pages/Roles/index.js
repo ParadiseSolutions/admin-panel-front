@@ -92,10 +92,10 @@ const Roles = () => {
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
-          const depData = cellProps.row.original;
+          const rolData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link to={`/departments/${depData.id}`} className="text-success">
+              <Link to={`/roles/${rolData.id}`} className="text-success">
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit

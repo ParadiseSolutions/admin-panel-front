@@ -29,3 +29,17 @@ export const getPermissionType = () => {
       headers: options,
     });
   };
+
+  export const getRol = (id) => {
+    const url = `${API_URL}/roles/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+
+  export const editRolAPI = (id, body) => {
+    const url = `${API_URL}/roles/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
