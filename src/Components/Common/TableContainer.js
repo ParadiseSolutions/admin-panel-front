@@ -19,7 +19,11 @@ const TableContainer = ({
   data,
   isGlobalFilter,
   departmentTable,
+<<<<<<< HEAD
   rolesTable,
+=======
+  websitesTable,
+>>>>>>> willy
   handleUserClicks,
 }) => {
   const {
@@ -96,10 +100,17 @@ const TableContainer = ({
             </div>
           </Col>
         )}
+<<<<<<< HEAD
         {rolesTable && (
           <Col sm="7">
             <div className="text-sm-end">
               <Link to='/roles/new'>
+=======
+        {websitesTable && (
+          <Col sm="7">
+            <div className="text-sm-end">
+              <Link to='/websites/new'>
+>>>>>>> willy
               
               <Button
                 type="button"
@@ -108,7 +119,11 @@ const TableContainer = ({
                 onClick={handleUserClicks}
               >
                 <i className="mdi mdi-plus me-1" />
+<<<<<<< HEAD
                 Add New Rol
+=======
+                Add New Website
+>>>>>>> willy
               </Button>
               </Link>
             </div>
@@ -174,6 +189,47 @@ const TableContainer = ({
         </div>
       )}
       {rolesTable && (
+        <div className="table-responsive">
+          <Table bordered hover {...getTableProps()} className="react_table">
+            <thead className="table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th key={column.id}>
+                      <div {...column.getSortByToggleProps()}>
+                        {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
+                      </div>
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
+
+{websitesTable && (
         <div className="table-responsive">
           <Table bordered hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">

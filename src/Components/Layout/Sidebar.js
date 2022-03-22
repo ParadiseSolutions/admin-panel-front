@@ -146,10 +146,17 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
+<<<<<<< HEAD
                   <Link to="/roles" className=" waves-effect">
                     <i className="bx bx-check-shield"></i>
                     
                     <span>{"Roles"}</span>
+=======
+                  <Link to="/websites" className=" waves-effect">
+                    <i className="uil uil-globe"></i>
+                    
+                    <span>{"Websites"}</span>
+>>>>>>> willy
                   </Link>
                 </li>
               </ul>
