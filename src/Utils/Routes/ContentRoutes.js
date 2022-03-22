@@ -34,13 +34,13 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
                 isAuthenticated={isLogged}
               />
               <PrivateRoutes
-<<<<<<< HEAD
                 path="/roles"
                 component={RolesRoutes}
-=======
+                isAuthenticated={isLogged}
+                />
+                <PrivateRoutes
                 path="/websites"
                 component={WebsitesRoutes}
->>>>>>> willy
                 isAuthenticated={isLogged}
               />
               <Redirect to="/dashboard" />

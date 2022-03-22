@@ -19,11 +19,8 @@ const TableContainer = ({
   data,
   isGlobalFilter,
   departmentTable,
-<<<<<<< HEAD
   rolesTable,
-=======
   websitesTable,
->>>>>>> willy
   handleUserClicks,
 }) => {
   const {
@@ -100,17 +97,10 @@ const TableContainer = ({
             </div>
           </Col>
         )}
-<<<<<<< HEAD
         {rolesTable && (
           <Col sm="7">
             <div className="text-sm-end">
               <Link to='/roles/new'>
-=======
-        {websitesTable && (
-          <Col sm="7">
-            <div className="text-sm-end">
-              <Link to='/websites/new'>
->>>>>>> willy
               
               <Button
                 type="button"
@@ -119,18 +109,31 @@ const TableContainer = ({
                 onClick={handleUserClicks}
               >
                 <i className="mdi mdi-plus me-1" />
-<<<<<<< HEAD
                 Add New Rol
-=======
-                Add New Website
->>>>>>> willy
               </Button>
               </Link>
             </div>
           </Col>
         )}
         
-       
+        {websitesTable && (
+          <Col sm="7">
+            <div className="text-sm-end">
+              <Link to='/websites/new'>
+              
+              <Button
+                type="button"
+                style={{ backgroundColor: '#F6851F', border: 'none' }}
+                className="waves-effect waves-light mb-3 btn btn-success"
+                onClick={handleUserClicks}
+              >
+                <i className="mdi mdi-plus me-1" />
+                Add New Website
+              </Button>
+              </Link>
+            </div>
+          </Col>
+        )}
       
 
         <Col md={1}>
