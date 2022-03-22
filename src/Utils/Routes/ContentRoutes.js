@@ -3,6 +3,7 @@ import { Switch, Redirect } from "react-router-dom";
 import PrivateRoutes from "./PrivateRoutes";
 import DashboardRoutes from "./DashboardRoutes/Dashboard";
 import UserRoutes from "./UsersRoutes";
+import WebsitesRoutes from "./WebsitesRoutes";
 import DepartmentsRoutes from "./DepartmentsRoutes";
 import Layout from "../../Components/Layout";
 
@@ -29,6 +30,11 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
               <PrivateRoutes
                 path="/departments"
                 component={DepartmentsRoutes}
+                isAuthenticated={isLogged}
+              />
+              <PrivateRoutes
+                path="/websites"
+                component={WebsitesRoutes}
                 isAuthenticated={isLogged}
               />
               <Redirect to="/dashboard" />
