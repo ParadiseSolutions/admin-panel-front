@@ -101,10 +101,12 @@ const Websites = () => {
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
+          const siteData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
+              
               <Link
-                to="#"
+                to={`/websites/${siteData.id}`}
                 className="text-success"
                 onClick={() => {
                   const siteData = cellProps.row.original;
