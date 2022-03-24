@@ -2,10 +2,10 @@ import React, { Suspense } from "react";
 import { Switch, Redirect } from "react-router-dom";
 import PrivateRoutes from "./PrivateRoutes";
 import DashboardRoutes from "./DashboardRoutes/Dashboard";
-import UserRoutes from "./UsersRoutes";
 import WebsitesRoutes from "./WebsitesRoutes";
 import DepartmentsRoutes from "./DepartmentsRoutes";
-import RolesRoutes from "./UsersRoutes";
+import RolesRoutes from "./RolesRoutes";
+import UsersRoutes from './UsersRoutes'
 import Layout from "../../Components/Layout";
 
 
@@ -25,9 +25,10 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
               />
               <PrivateRoutes
                 path="/users"
-                component={UserRoutes}
+                component={UsersRoutes}
                 isAuthenticated={isLogged}
               />
+             
               <PrivateRoutes
                 path="/departments"
                 component={DepartmentsRoutes}

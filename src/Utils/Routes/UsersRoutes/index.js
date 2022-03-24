@@ -1,17 +1,14 @@
 import React from 'react'
 import { Route, Switch } from "react-router-dom";
-import Roles from '../../../Pages/Roles';
-import NewRol from '../../../Pages/Roles/newRol';
-import EditRol from '../../../Pages/Roles/editRol';
+import Users from '../../../Pages/Users';
 
-const RolesRoutes = () => {
+const DepartmentsRoutes = () => {
     return (
         <Switch>
-            <Route exact path="/roles" component={Roles} />
-            <Route exact path="/roles/new" component={NewRol} />
-            <Route exact path="/roles/:id" component={EditRol} />
+            <Route exact path="/users" component={Users} />
+            
         </Switch>
     )
 }
 
-export default RolesRoutes
+export default DepartmentsRoutes

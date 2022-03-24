@@ -130,7 +130,7 @@ const Roles = () => {
             className="display-5 fw-bold cursor-pointer"
             style={{ color: "#3DC7F4" }}
           >
-            Roles
+            ROLES
           </h1>
         </div>
 
