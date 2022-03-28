@@ -16,3 +16,26 @@ export const deleteUser = (id) => {
       headers: options,
     });
   };
+
+  export const createUserAPI = (body) => {
+    const url = `${API_URL}/users`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+
+  export const getUserAPI = (id) => {
+    const url = `${API_URL}/users/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+
+  export const editUserAPI = (id, body) => {
+    const url = `${API_URL}/users/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+
+  
