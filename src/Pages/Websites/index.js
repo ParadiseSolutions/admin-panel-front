@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from "react"
+import {useEffect, useMemo, useState} from "react"
 import moment from "moment";
 import { Container } from "reactstrap"
 import {websitesData} from "../../Utils/Redux/Actions/WebsitesActions"
@@ -9,9 +9,12 @@ import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Code, Date, Domain, URL, Root, Folder, Active } from "./WebsitesCols";
 import Swal from "sweetalert2";
 import { websiteDelete } from "../../Utils/API/Websites";
+import AddWebsiteModal from "../../Components/Common/Modals/addWebsiteModal";
+
 
 
 const Websites = () => {
+ 
   const dispatch = useDispatch();
   //departments request
   useEffect(() => {
@@ -139,7 +142,11 @@ const Websites = () => {
     ],
     []
   );
-  
+  //modal new
+  const [addModal, setAddModal] = useState(false)
+  const onClickAddNewWebsite = () =>{
+    setAddModal(!addModal)
+  }
   /////////////////////////////////////////////
   return (
     <>
@@ -162,6 +169,7 @@ const Websites = () => {
                       isGlobalFilter={true}
                       websitesTable={true}
                       isAddOrder={true}
+                      onClickAddNewWebsite={onClickAddNewWebsite}
                       // handleOrderClicks={handleOrderClicks}
                     />
                   ) : null}
@@ -169,10 +177,17 @@ const Websites = () => {
               </Card>
             </Col>
           </Row>
+          <AddWebsiteModal 
+          addModal={addModal}
+          setAddModal={setAddModal}
+          onClickAddNewWebsite={onClickAddNewWebsite}
+        />
         </Container>
       </div>
     </>
   )
+  //for the new website pop up
+  
 }
 
 export default Websites

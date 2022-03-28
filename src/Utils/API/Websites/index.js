@@ -29,5 +29,5 @@ export const statusUpdate = (id, body) => {
 
 export const editWebsite = (id) => {
     const url = `${API_URL}/websites/${id}`;
-    return axios.post(url, {headers:options});
+    return axios.put(url, {headers:options});
 }
