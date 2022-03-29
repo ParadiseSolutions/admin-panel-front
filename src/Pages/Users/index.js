@@ -3,7 +3,8 @@ import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Department, Active, LastName, Email, Rol } from "./UsersCols";
 import { usersData } from "../../Utils/Redux/Actions/UsersActions";
 import { deleteUser } from "../../Utils/API/Users";
-import AddUserModal from "../../Components/Common/Modals/addUserModal";
+import AddUserModal from "../../Components/Common/Modals/UsersModals/addUserModal";
+import EditUserModal from "../../Components/Common/Modals/UsersModals/EditUserModal";
 import {
   Container,
   Row,
@@ -15,23 +16,27 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-const Roles = () => {
+
+
+const Users = () => {
+  const [addModal, setAddModal] = useState(false)
+  const [editModal, setEditModal] = useState(false)
+  const [userId, setUserId] = useState({})
   //roles request
   const dispatch = useDispatch();
   useEffect(() => {
-    const usersRequest = () => dispatch(usersData());
+    var usersRequest = () => dispatch(usersData());
     usersRequest();
-  }, [dispatch]);
+  }, [dispatch, addModal]);
 
   //get info
   const data = useSelector((state) => state.users.users.data);
 
-  console.log(data);
   const onDelete = (userData) => {
     Swal.fire({
       title: "Delete Department?",
       icon: "question",
-      text: `Do you want delete ${userData.name}`,
+      text: `Do you want delete ${userData.first_name}`,
       showCancelButton: true,
       confirmButtonText: "Yes",
       confirmButtonColor: "#F38430",
@@ -42,7 +47,7 @@ const Roles = () => {
           .then((resp) => {
             const usersRequest = () => dispatch(usersData());
             usersRequest();
-            Swal.fire("Deleted!", "The Rol has been deleted.", "success");
+            Swal.fire("Deleted!", "The User has been deleted.", "success");
           })
           .catch((error) => {
             console.log(error);
@@ -112,15 +117,18 @@ const Roles = () => {
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
-          const rolData = cellProps.row.original;
+          const userData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link to={`/roles/${rolData.id}`} className="text-success">
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+              <div className="text-success">
+                <i className="mdi mdi-pencil font-size-18" id="edittooltip" onClick={() => {
+                  setUserId(userData.id)
+                  setEditModal(true)
+                  }}  />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
-              </Link>
+              </div>
               <Link
                 to="#"
                 className="text-danger"
@@ -144,9 +152,12 @@ const Roles = () => {
   );
 
   //modal new
-  const [addModal, setAddModal] = useState(false)
+  
   const onClickAddNew = () =>{
     setAddModal(!addModal)
+  }
+  const onClickEdit = () =>{
+    setEditModal(!editModal)
   }
   return (
     <div className="page-content">
@@ -171,7 +182,7 @@ const Roles = () => {
                     isGlobalFilter={true}
                     usersTable={true}
                     isAddOrder={true}
-                     onClickAddNew={onClickAddNew}
+                    onClickAddNew={onClickAddNew}
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}
@@ -184,9 +195,15 @@ const Roles = () => {
           setAddModal={setAddModal}
           onClickAddNew={onClickAddNew}
         />
+        <EditUserModal 
+        userId={userId}
+        editModal={editModal}
+        setEditModal={setEditModal}
+        onClickEdit={onClickEdit}
+        />
       </Container>
     </div>
   );
 };
 
-export default Roles;
+export default Users;

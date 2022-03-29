@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { departmentsData } from "../../../Utils/Redux/Actions/DepartmentsActions";
-import { rolesData } from "../../../Utils/Redux/Actions/RolesActions";
+import { departmentsData } from "../../../../Utils/Redux/Actions/DepartmentsActions";
+import { rolesData } from "../../../../Utils/Redux/Actions/RolesActions";
+import { createUserAPI } from "../../../../Utils/API/Users";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Row,
@@ -12,7 +13,6 @@ import {
   FormFeedback,
   Button,
 } from "reactstrap";
-import Select from "react-select";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
@@ -82,33 +82,39 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
     }),
     onSubmit: (values) => {
       console.log(values);
-      //   let data = {
-      //     name: values.name,
-      //   };
-      //   console.log(data);
-      //   createRol(data)
-      //     .then((resp) => {
-      //       console.log(resp.data);
-      //       if (resp.data.status === 201) {
-      //         Swal.fire(
-      //           "Created!",
-      //           "The Rol has been created.",
-      //           "success"
-      //         ).then(() => {
-      //           history.goBack();
-      //         });
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log(error.response);
-      //       Swal.fire(
-      //         "Error!",
-      //         `${
-      //           error.response.data.data[0]
-      //         }`,
-      //         "error"
-      //       );
-      //     });
+        let data = {
+          department_id: department,
+          role_id: rol,
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          password: values.password,
+          job_title: values.job_title,
+        };
+        console.log(data);
+        createUserAPI(data)
+          .then((resp) => {
+            console.log(resp.data);
+            if (resp.data.status === 201) {
+              Swal.fire(
+                "Created!",
+                "The User has been created.",
+                "success"
+              ).then(() => {
+                setAddModal(false);
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+            Swal.fire(
+              "Error!",
+              `${
+                error.response.data.data[0]
+              }`,
+              "error"
+            );
+          });
     },
   });
 
