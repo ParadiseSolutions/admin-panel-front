@@ -4583,7 +4583,7 @@ textarea.form-control-lg {
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #f6f6f6;
+  /* border: 1px solid #f6f6f6; */
   border-radius: 0.4rem;
   outline: 0; }
 

@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { departmentsData } from "../../../../Utils/Redux/Actions/DepartmentsActions";
 import { rolesData } from "../../../../Utils/Redux/Actions/RolesActions";
-import { getUserAPI, editUserAPI } from "../../../../Utils/API/Users";
+import {
+  getUserAPI,
+  editUserAPI,
+  getRolesDepAPI,
+  getUserDepAPI,
+} from "../../../../Utils/API/Users";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Row,
@@ -18,63 +23,48 @@ import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
 
-const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit, }) => {
-
-
-
+const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
   //user data Request
-  const [data, setData] = useState()
+  const [data, setData] = useState();
   useEffect(() => {
     if (userId) {
-      getUserAPI(userId).then((resp) =>{
-        setData(resp.data.data)
-      })
+      getUserAPI(userId).then((resp) => {
+        setData(resp.data.data);
+      });
     }
   }, [userId]);
 
-  console.log(data)
-
-  const dispatch = useDispatch();
   //departments request
+  const [dataDepartments, setDataDepartments] = useState([]);
+  const [dataRoles, setDataRoles] = useState([]);
   useEffect(() => {
-    const departmentsRequest = () => dispatch(departmentsData());
-    departmentsRequest();
-  }, [dispatch]);
-
-    //roles request
-    useEffect(() => {
-      const rolesRequest = () => dispatch(rolesData());
-      rolesRequest();
-    }, [dispatch]);
-  
-    //get info
-    const dataRoles = useSelector(
-        (state) => state.roles.roles.data
-        );
-    const dataDepartments = useSelector(
-        (state) => state.departments.departments.data
-      );
+    getUserDepAPI().then((resp) => {
+      setDataDepartments(resp.data.data);
+    });
+    getRolesDepAPI().then((response) => {
+      setDataRoles(response.data.data);
+    });
+  }, []);
   // selects
-  const [department, setDepartment] = useState([])
+  const [department, setDepartment] = useState([]);
   const onChangeSelectionDep = (value) => {
     setDepartment(value);
   };
-  const [rol, setRol] = useState([])
+  const [rol, setRol] = useState([]);
   const onChangeSelectionRol = (value) => {
     setRol(value);
   };
-
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      first_name: data ? data.first_name : '',
-      last_name: data ? data.last_name : '',
-      email: data ? data.email : '',
+      first_name: data ? data.first_name : "",
+      last_name: data ? data.last_name : "",
+      email: data ? data.email : "",
       password: "",
       repeat_password: "",
-      job_title: data ? data.job_title : '',
+      job_title: data ? data.job_title : "",
       role: "",
       department: "",
     },
@@ -85,50 +75,33 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit, }) => {
         .email("Must be a valid Email")
         .max(255)
         .required("Email is required"),
-      // password: Yup.string().required("This value is required"),
-      // repeat_password: Yup.string().when("password", {
-      //   is: (val) => (val && val.length > 0 ? true : false),
-      //   then: Yup.string().oneOf(
-      //     [Yup.ref("password")],
-      //     "Both password need to be the same"
-      //   ),
-      // }),
+
       job_title: Yup.string().required("Job Title is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
-        let data = {
-          department_id: department,
-          role_id: rol,
-          first_name: values.first_name,
-          last_name: values.last_name,
-          email: values.email,
-          job_title: values.job_title,
-        };
-        console.log(data);
-        editUserAPI( userId, data)
-          .then((resp) => {
-            console.log(resp.data);
-            if (resp.data.status === 200) {
-              Swal.fire(
-                "Edited!",
-                "The User has been edited.",
-                "success"
-              ).then(() => {
+      let data = {
+        department_id: department,
+        role_id: rol,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        job_title: values.job_title,
+      };
+
+      editUserAPI(userId, data)
+        .then((resp) => {
+          if (resp.data.status === 200) {
+            Swal.fire("Edited!", "The User has been edited.", "success").then(
+              () => {
                 setEditModal(false);
-              });
-            }
-          })
-          .catch((error) => {
-            console.log(error.response);
-            Swal.fire(
-              "Error!",
-              `${
-                error.response.data.data[0]
-              }`,
-              "error"
+              }
             );
-          });
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+          Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+        });
     },
   });
 
@@ -140,10 +113,11 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit, }) => {
         onClickEdit();
       }}
     >
-      <div className="modal-header">
-        <h5 className="modal-title mt-0" id="myLargeModalLabel">
-          Edit User
-        </h5>
+      <div
+        className="modal-header"
+        style={{ backgroundColor: "#3DC7F4", border: "none" }}
+      >
+        <h1 className="modal-title mt-0 text-white">+ Edit User</h1>
         <button
           onClick={() => {
             setEditModal(false);
@@ -219,58 +193,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit, }) => {
                   </div>
                 </Col>
               </Row>
-              {/* <Row>
-                <Col lg={5}>
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">Password</Label>
-                    <Input
-                      name="password"
-                      placeholder=""
-                      type="password"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.password || ""}
-                      invalid={
-                        validationType.touched.password &&
-                        validationType.errors.password
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.password &&
-                    validationType.errors.password ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.password}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-5 mx-4">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">Repeat Password</Label>
-                    <Input
-                      name="repeat_password"
-                      placeholder=""
-                      type="password"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.repeat_password || ""}
-                      invalid={
-                        validationType.touched.repeat_password &&
-                        validationType.errors.repeat_password
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.repeat_password &&
-                    validationType.errors.repeat_password ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.repeat_password}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-              </Row> */}
+
               <Row>
                 <Col lg={5}>
                   <div className="form-outline mb-4">
@@ -333,12 +256,19 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit, }) => {
                       name="department"
                       onChange={(e) => onChangeSelectionDep(e.target.value)}
                       onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(dataDepartments, (department, index) => {
                         return (
-                          <option selected={ data && data.department_id === department.id ? true : false } value={department.id}>
+                          <option
+                            selected={
+                              data && data.department_id === department.id
+                                ? true
+                                : false
+                            }
+                            value={department.id}
+                          >
                             {department.name}
                           </option>
                         );
@@ -346,7 +276,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit, }) => {
                     </Input>
                   </div>
                 </Col>
-                <Col  className="col-5 mx-4">
+                <Col className="col-5 mx-4">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Rol</Label>
 
@@ -355,12 +285,17 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit, }) => {
                       name="roles"
                       onChange={(e) => onChangeSelectionRol(e.target.value)}
                       onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(dataRoles, (rol, index) => {
                         return (
-                          <option selected={ data && data.role_id === rol.id ? true : false } value={rol.id}>
+                          <option
+                            selected={
+                              data && data.role_id === rol.id ? true : false
+                            }
+                            value={rol.id}
+                          >
                             {rol.name}
                           </option>
                         );
