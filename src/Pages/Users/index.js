@@ -17,17 +17,17 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
-
 const Users = () => {
-  const [addModal, setAddModal] = useState(false)
-  const [editModal, setEditModal] = useState(false)
-  const [userId, setUserId] = useState({})
+  const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [userId, setUserId] = useState({});
   //roles request
   const dispatch = useDispatch();
   useEffect(() => {
     var usersRequest = () => dispatch(usersData());
     usersRequest();
-  }, [dispatch, addModal]);
+  }, [dispatch, addModal, editModal]);
+
 
   //get info
   const data = useSelector((state) => state.users.users.data);
@@ -121,10 +121,14 @@ const Users = () => {
           return (
             <div className="d-flex gap-3">
               <div className="text-success">
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" onClick={() => {
-                  setUserId(userData.id)
-                  setEditModal(true)
-                  }}  />
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  onClick={() => {
+                    setUserId(userData.id);
+                    setEditModal(true);
+                  }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -152,13 +156,13 @@ const Users = () => {
   );
 
   //modal new
-  
-  const onClickAddNew = () =>{
-    setAddModal(!addModal)
-  }
-  const onClickEdit = () =>{
-    setEditModal(!editModal)
-  }
+
+  const onClickAddNew = () => {
+    setAddModal(!addModal);
+  };
+  const onClickEdit = () => {
+    setEditModal(!editModal);
+  };
   return (
     <div className="page-content">
       <Container fluid>
@@ -190,16 +194,22 @@ const Users = () => {
             </Card>
           </Col>
         </Row>
-        <AddUserModal 
-          addModal={addModal}
-          setAddModal={setAddModal}
-          onClickAddNew={onClickAddNew}
-        />
-        <EditUserModal 
-        userId={userId}
-        editModal={editModal}
-        setEditModal={setEditModal}
-        onClickEdit={onClickEdit}
+
+        <div className="modal-dialog-centered">
+          <div className="modal-content" style={{border:'none'}}>
+            <AddUserModal
+              addModal={addModal}
+              setAddModal={setAddModal}
+              onClickAddNew={onClickAddNew}
+            />
+          </div>
+        </div>
+
+        <EditUserModal
+          userId={userId}
+          editModal={editModal}
+          setEditModal={setEditModal}
+          onClickEdit={onClickEdit}
         />
       </Container>
     </div>
