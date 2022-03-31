@@ -3,6 +3,8 @@ import { usersData } from "../../Utils/Redux/Actions/UsersActions";
 import { modulesData } from "../../Utils/Redux/Actions/ModulesActions";
 import { useSelector, useDispatch } from "react-redux";
 import { createDepartment } from "../../Utils/API/Departments";
+import BoatImage from "../../Components/Assets/images/boat.png";
+import Inter1 from '../../Components/Assets/images/Intersection1.svg'
 import {
   Container,
   Row,
@@ -126,8 +128,9 @@ const NewDepartment = ({ history }) => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-5">
-            <h1 className="display-5 fw-bold text-paradise" 
-            // style={{ color: "#3DC7F4" }}
+            <h1
+              className="display-5 fw-bold text-paradise"
+              // style={{ color: "#3DC7F4" }}
             >
               + ADD NEW DEPARTMENT
             </h1>
@@ -143,11 +146,13 @@ const NewDepartment = ({ history }) => {
             <Row>
               <Col className="col-12 mx-5">
                 <Row>
-                  <Col lg={3}>
+                  <Col lg={3} style={{ height: "75vh" }}>
                     <Card>
                       <CardBody className="d-grid px-2 pt-0">
-                        <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
-                          <h5 className="text-white">+ General Information</h5>
+                        <Row className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3">
+                          
+                          <h5 className="text-white col-8">+ General Information</h5>
+                        <img src={Inter1} alt='inter1' style={{width: '100px', marginTop:'-15px', marginRight:'-10px'}} />
                         </Row>
                         <Row className="justify-content-center mt-4">
                           <div className="form-outline mb-4">
@@ -223,20 +228,23 @@ const NewDepartment = ({ history }) => {
                         )}
                       </CardBody>
                     </Card>
-                    <Card>
-                      <CardBody className="d-grid px-2 pt-0">
-                        <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
-                          <h5 className="text-white">+ General Information</h5>
-                        </Row>
-                       
-                      </CardBody>
-                    </Card>
+                    <div style={{ border: "none" }}>
+                      <img
+                        src={BoatImage}
+                        alt="boat"
+                        style={{
+                          width: "103%",
+                          height: "363px",
+                          marginLeft: "-5px",
+                        }}
+                      />
+                    </div>
                   </Col>
                   <Col lg={4}>
-                    <Card style={{ height: "75vh" }} className='px-2 pt-0'>
-                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
-                          <h5 className="text-white">+ Select Members</h5>
-                        </Row>
+                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
+                      <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                        <h5 className="text-white">+ Select Members</h5>
+                      </Row>
                       <CardBody className="overflow-auto">
                         <Row className="justify-content-center mt-4">
                           {dataUsers ? (
@@ -269,10 +277,10 @@ const NewDepartment = ({ history }) => {
                     </Card>
                   </Col>
                   <Col lg={4}>
-                  <Card style={{ height: "75vh" }} className='px-2 pt-0'>
-                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
-                          <h5 className="text-white">+ Permissionss</h5>
-                        </Row>
+                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
+                      <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                        <h5 className="text-white">+ Permissionss</h5>
+                      </Row>
                       <CardBody className="overflow-auto">
                         <Row className="mt-4">
                           <Row lg={6}>
