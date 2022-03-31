@@ -9,12 +9,13 @@ import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Code, Date, Domain, URL, Root, Folder, Active } from "./WebsitesCols";
 import Swal from "sweetalert2";
 import { websiteDelete } from "../../Utils/API/Websites";
-import AddWebsiteModal from "../../Components/Common/Modals/addWebsiteModal";
+import AddWebsiteModal from "../../Components/Common/Modals/WebsitesModals/addWebsiteModal";
+import UpdateWebsiteModal from "../../Components/Common/Modals/WebsitesModals/updateWebsiteModal";
 
 
 
 const Websites = () => {
- 
+  const [siteId, setSiteId] = useState(false)
   const dispatch = useDispatch();
   //departments request
   useEffect(() => {
@@ -108,19 +109,20 @@ const Websites = () => {
           return (
             <div className="d-flex gap-3">
               
-              <Link
-                to={`/websites/${siteData.id}`}
+              <div
+               
                 className="text-success"
                 onClick={() => {
+                  setEditModal(true)
                   const siteData = cellProps.row.original;
-                  onEdit(siteData);
+                  setSiteId(siteData.id);
                 }}
               >
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
-              </Link>
+              </div>
               <Link
                 to="#"
                 className="text-danger"
@@ -144,15 +146,20 @@ const Websites = () => {
   );
   //modal new
   const [addModal, setAddModal] = useState(false)
+  const [ editModal, setEditModal] = useState(false) 
   const onClickAddNewWebsite = () =>{
     setAddModal(!addModal)
+  }
+  
+  const onClickEditWebsite = () =>{
+    setEditModal(!editModal)
   }
   /////////////////////////////////////////////
   return (
     <>
       <div className="page-content">
         <Container fluid>
-        <div className=" mx-5">
+          <div className=" mx-5">
             <h1 className="display-5 fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
               WEBSITES
             </h1>
@@ -170,6 +177,7 @@ const Websites = () => {
                       websitesTable={true}
                       isAddOrder={true}
                       onClickAddNewWebsite={onClickAddNewWebsite}
+                      onClickEditWebsite={onClickEditWebsite}
                       // handleOrderClicks={handleOrderClicks}
                     />
                   ) : null}
@@ -177,15 +185,18 @@ const Websites = () => {
               </Card>
             </Col>
           </Row>
-          <AddWebsiteModal 
-          addModal={addModal}
-          setAddModal={setAddModal}
-          onClickAddNewWebsite={onClickAddNewWebsite}
-        />
+          <AddWebsiteModal addModal={addModal} setAddModal={setAddModal} onClickAddNewWebsite={onClickAddNewWebsite} />
+
+          <UpdateWebsiteModal 
+               
+          siteId ={siteId}   
+          editModal={editModal} 
+          setEditModal={setEditModal} 
+          onClickEditWebsite={onClickEditWebsite} />
         </Container>
       </div>
     </>
-  )
+  );
   //for the new website pop up
   
 }
