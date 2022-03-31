@@ -5,6 +5,7 @@ import websitesReducers from './WebsitesReducers'
 import usersReducers from './UsersReducers'
 import modulesReducers from './ModulesReducers'
 import rolesReducers from './RolesReducers'
+import tourTypesReducers from './TourTypesReducers'
 
 export default combineReducers({
     login: loginReducers,
@@ -13,4 +14,5 @@ export default combineReducers({
     users: usersReducers,
     modules: modulesReducers,
     roles: rolesReducers,
+    tourTypes: tourTypesReducers
 })
