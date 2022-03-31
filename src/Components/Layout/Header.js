@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import MyProfileModal from "../Common/Modals/ProfileModal";
 import { getStorageSync } from "../../Utils/API";
 import { useHistory } from "react-router-dom";
 import user4 from "../Assets/images/users/avatar-4.jpg";
+import { Link } from "react-router-dom";
 import {
   Dropdown,
   DropdownToggle,
@@ -14,26 +15,27 @@ import logoDark from "../Assets/images/logo-dark.png";
 import logoLight from "../Assets/images/logo-light.png";
 
 const Header = () => {
+  const [profileModal, setProfileModal] = useState(false);
   function tToggle() {
     var body = document.body;
     body.classList.toggle("vertical-collpsed");
     body.classList.toggle("sidebar-enable");
   }
 
-  const token = JSON.parse(getStorageSync('token')) 
+  const token = JSON.parse(getStorageSync("token"));
   const [menu, setMenu] = useState(false);
   const [username, setusername] = useState("");
 
   useEffect(() => {
-    setusername(token.user.first_name)
+    setusername(token.user.first_name);
   }, []);
 
   //logOut
   const history = useHistory();
-  const onLogOut = () =>{
-    localStorage.removeItem('token');
+  const onLogOut = () => {
+    localStorage.removeItem("token");
     history.push("/home");
-  }
+  };
   return (
     <>
       <header id="page-topbar">
@@ -95,7 +97,11 @@ const Header = () => {
                 <i className="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-end">
-                <DropdownItem tag="a" href="/profile">
+                <DropdownItem
+                  onClick={() => {
+                    setProfileModal(true)
+                  }}
+                >
                   {" "}
                   <i className="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i>
                   {"View Profile"}
@@ -116,7 +122,11 @@ const Header = () => {
                   {"Lock screen"}
                 </DropdownItem>
                 <div className="dropdown-divider" />
-                <div onClick={() => onLogOut()} className="dropdown-item" style={{cursor:'pointer'}}>
+                <div
+                  onClick={() => onLogOut()}
+                  className="dropdown-item"
+                  style={{ cursor: "pointer" }}
+                >
                   <i className="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i>
                   <span>Logout</span>
                 </div>
@@ -124,6 +134,11 @@ const Header = () => {
             </Dropdown>
           </div>
         </div>
+        <MyProfileModal
+          profileModal={profileModal}
+          setProfileModal={setProfileModal}
+          token={token}
+        />
       </header>
     </>
   );

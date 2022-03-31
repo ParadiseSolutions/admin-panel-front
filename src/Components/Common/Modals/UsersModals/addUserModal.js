@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { departmentsData } from "../../../../Utils/Redux/Actions/DepartmentsActions";
 import { rolesData } from "../../../../Utils/Redux/Actions/RolesActions";
-import { createUserAPI } from "../../../../Utils/API/Users";
+import {
+  createUserAPI,
+  getUserDepAPI,
+  getRolesDepAPI,
+} from "../../../../Utils/API/Users";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Row,
@@ -19,36 +23,28 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 
 const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
-  const dispatch = useDispatch();
   //departments request
-  useEffect(() => {
-    const departmentsRequest = () => dispatch(departmentsData());
-    departmentsRequest();
-  }, [dispatch]);
 
-    //roles request
-    useEffect(() => {
-      const rolesRequest = () => dispatch(rolesData());
-      rolesRequest();
-    }, [dispatch]);
-  
-    //get info
-    const dataRoles = useSelector(
-        (state) => state.roles.roles.data
-        );
-    const dataDepartments = useSelector(
-        (state) => state.departments.departments.data
-      );
+  const [dataDepartments, setDataDepartments] = useState([]);
+  const [dataRoles, setDataRoles] = useState([]);
+  useEffect(() => {
+    getUserDepAPI().then((resp) => {
+      setDataDepartments(resp.data.data);
+    });
+    getRolesDepAPI().then((response) => {
+      setDataRoles(response.data.data);
+    });
+  }, []);
+
   // selects
-  const [department, setDepartment] = useState([])
+  const [department, setDepartment] = useState([]);
   const onChangeSelectionDep = (value) => {
     setDepartment(value);
   };
-  const [rol, setRol] = useState([])
+  const [rol, setRol] = useState([]);
   const onChangeSelectionRol = (value) => {
     setRol(value);
   };
-
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -81,40 +77,30 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
       job_title: Yup.string().required("Job Title is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
-        let data = {
-          department_id: department,
-          role_id: rol,
-          first_name: values.first_name,
-          last_name: values.last_name,
-          email: values.email,
-          password: values.password,
-          job_title: values.job_title,
-        };
-        console.log(data);
-        createUserAPI(data)
-          .then((resp) => {
-            console.log(resp.data);
-            if (resp.data.status === 201) {
-              Swal.fire(
-                "Created!",
-                "The User has been created.",
-                "success"
-              ).then(() => {
+      let data = {
+        department_id: department,
+        role_id: rol,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        password: values.password,
+        job_title: values.job_title,
+      };
+
+      createUserAPI(data)
+        .then((resp) => {
+          if (resp.data.status === 201) {
+            Swal.fire("Created!", "The User has been created.", "success").then(
+              () => {
                 setAddModal(false);
-              });
-            }
-          })
-          .catch((error) => {
-            console.log(error.response);
-            Swal.fire(
-              "Error!",
-              `${
-                error.response.data.data[0]
-              }`,
-              "error"
+              }
             );
-          });
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+          Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+        });
     },
   });
 
@@ -126,10 +112,11 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
         onClickAddNew();
       }}
     >
-      <div className="modal-header">
-        <h5 className="modal-title mt-0" id="myLargeModalLabel">
-          Add New User
-        </h5>
+      <div
+        className="modal-header"
+        style={{ backgroundColor: "#3DC7F4", border: "none" }}
+      >
+        <h1 className="modal-title mt-0 text-white">+ Add New User</h1>
         <button
           onClick={() => {
             setAddModal(false);
@@ -139,7 +126,9 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
           data-dismiss="modal"
           aria-label="Close"
         >
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" style={{ color: "white" }}>
+            &times;
+          </span>
         </button>
       </div>
       <div className="modal-body">
@@ -319,7 +308,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                       name="department"
                       onChange={(e) => onChangeSelectionDep(e.target.value)}
                       onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(dataDepartments, (department, index) => {
@@ -332,7 +321,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     </Input>
                   </div>
                 </Col>
-                <Col  className="col-5 mx-4">
+                <Col className="col-5 mx-4">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Rol</Label>
 
@@ -341,15 +330,11 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                       name="roles"
                       onChange={(e) => onChangeSelectionRol(e.target.value)}
                       onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(dataRoles, (rol, index) => {
-                        return (
-                          <option value={rol.id}>
-                            {rol.name}
-                          </option>
-                        );
+                        return <option value={rol.id}>{rol.name}</option>;
                       })}
                     </Input>
                   </div>

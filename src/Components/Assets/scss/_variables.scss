@@ -127,6 +127,7 @@ $yellow:  #f1b44c;
 $green:   #34c38f;
 $teal:    #050505;
 $cyan:    #50a5f1;
+$paradise: #3DC7F4;
 // scss-docs-end color-variables
 
 // scss-docs-start colors-map
@@ -143,7 +144,8 @@ $colors: (
     "cyan":       $cyan,
     "white":      $white,
     "gray":       $gray-600,
-    "gray-dark":  $gray-800
+    "gray-dark":  $gray-800,
+    "paradise":   $paradise
   );
 // scss-docs-end colors-map
 
@@ -157,6 +159,7 @@ $danger:        $red;
 $light:         $gray-200;
 $dark:          $gray-800;
 $purple:        $purple;
+$paradise:      $paradise;
 // scss-docs-end theme-color-variables
 
 // scss-docs-start theme-colors-map
@@ -170,7 +173,8 @@ $theme-colors: (
     "pink":       $pink,
     "light":      $light,
     "dark":       $dark,
-    "purple":       $purple
+    "purple":       $purple,
+    "paradise":   $paradise
 );
 
 // scss-docs-end theme-colors-map

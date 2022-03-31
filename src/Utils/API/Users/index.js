@@ -38,4 +38,15 @@ export const deleteUser = (id) => {
     });
   };
 
-  
+  export const getUserDepAPI = () => {
+    const url = `${API_URL}/departments?active=1`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getRolesDepAPI = () => {
+    const url = `${API_URL}/roles?active=1`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };

@@ -2,7 +2,8 @@ import { DEPARTMENTS_INIT, DEPARTMENTS_SUCCESS, DEPARTMENTS_ERROR } from "../../
 import axios from "axios";
 import { API_URL, options } from "../../../API";
 
-export const departmentsData = () => {
+export const departmentsData = (body) => {
+  
   return async (dispatch) => {
     dispatch(getDepartmentsInit());
 

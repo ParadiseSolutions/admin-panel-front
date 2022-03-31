@@ -126,7 +126,9 @@ const NewDepartment = ({ history }) => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-5">
-            <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
+            <h1 className="display-5 fw-bold text-paradise" 
+            // style={{ color: "#3DC7F4" }}
+            >
               + ADD NEW DEPARTMENT
             </h1>
           </div>
@@ -143,9 +145,9 @@ const NewDepartment = ({ history }) => {
                 <Row>
                   <Col lg={3}>
                     <Card>
-                      <CardBody className="d-grid">
-                        <Row className="justify-content-center">
-                          <h3>+ General Information</h3>
+                      <CardBody className="d-grid px-2 pt-0">
+                        <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                          <h5 className="text-white">+ General Information</h5>
                         </Row>
                         <Row className="justify-content-center mt-4">
                           <div className="form-outline mb-4">
@@ -221,12 +223,20 @@ const NewDepartment = ({ history }) => {
                         )}
                       </CardBody>
                     </Card>
+                    <Card>
+                      <CardBody className="d-grid px-2 pt-0">
+                        <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                          <h5 className="text-white">+ General Information</h5>
+                        </Row>
+                       
+                      </CardBody>
+                    </Card>
                   </Col>
                   <Col lg={4}>
-                    <Card style={{ height: "75vh" }}>
-                      <Row className="justify-content-center mt-4 mx-3">
-                        <h3>+ Select Members</h3>
-                      </Row>
+                    <Card style={{ height: "75vh" }} className='px-2 pt-0'>
+                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                          <h5 className="text-white">+ Select Members</h5>
+                        </Row>
                       <CardBody className="overflow-auto">
                         <Row className="justify-content-center mt-4">
                           {dataUsers ? (
@@ -259,10 +269,10 @@ const NewDepartment = ({ history }) => {
                     </Card>
                   </Col>
                   <Col lg={4}>
-                    <Card style={{ height: "75vh" }}>
-                      <Row className="justify-content-center mt-4 mx-3">
-                        <h3>+ Permissions</h3>
-                      </Row>
+                  <Card style={{ height: "75vh" }} className='px-2 pt-0'>
+                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                          <h5 className="text-white">+ Permissionss</h5>
+                        </Row>
                       <CardBody className="overflow-auto">
                         <Row className="mt-4">
                           <Row lg={6}>
