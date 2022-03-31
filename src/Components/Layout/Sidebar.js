@@ -160,6 +160,14 @@ const Sidebar = () => {
                     <span>{"Websites"}</span>
                   </Link>
                 </li>
+
+                <li>
+                  <Link to="/tour-types" className=" waves-effect">
+                    <i className="uil uil-list-ul"></i>
+                    
+                    <span>{"Tour Types"}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </SimpleBar>
