@@ -31,3 +31,4 @@ export const editWebsite = (id) => {
     const url = `${API_URL}/websites/${id}`;
     return axios.put(url, {headers:options});
 }
+
