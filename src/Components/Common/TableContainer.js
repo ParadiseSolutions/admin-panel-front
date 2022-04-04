@@ -1,33 +1,11 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import {
-  useTable,
-  useGlobalFilter,
-  useAsyncDebounce,
-  useSortBy,
-  useFilters,
-  useExpanded,
-  usePagination,
-  useRowSelect,
-} from "react-table";
+import { useTable, useGlobalFilter, useAsyncDebounce, useSortBy, useFilters, useExpanded, usePagination, useRowSelect } from "react-table";
 import { Table, Row, Col, Button, Input } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 
-const TableContainer = ({
-  columns,
-  data,
-  isGlobalFilter,
-  departmentTable,
-  rolesTable,
-  websitesTable,
-  usersTable,
-  handleUserClicks,
-  onClickAddNew,
-  onClickAddNewWebsite,
-  
-  
-}) => {
+const TableContainer = ({ columns, data, isGlobalFilter, departmentTable, rolesTable, websitesTable, tourTypesTable, usersTable, handleUserClicks, onClickAddNew, onClickAddNewWebsite }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -77,23 +55,12 @@ const TableContainer = ({
   return (
     <Fragment>
       <Row className="mb-3">
-        {isGlobalFilter && (
-          <GlobalFilter
-            preGlobalFilteredRows={preGlobalFilteredRows}
-            globalFilter={state.globalFilter}
-            setGlobalFilter={setGlobalFilter}
-          />
-        )}
+        {isGlobalFilter && <GlobalFilter preGlobalFilteredRows={preGlobalFilteredRows} globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />}
         {departmentTable && (
           <Col sm="7">
             <div className="text-sm-end">
               <Link to="/departments/new">
-                <Button
-                  type="button"
-                  style={{ backgroundColor: "#F6851F", border: "none" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
-                  onClick={handleUserClicks}
-                >
+                <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={handleUserClicks}>
                   <i className="mdi mdi-plus me-1" />
                   Add New Department
                 </Button>
@@ -105,12 +72,7 @@ const TableContainer = ({
           <Col sm="7">
             <div className="text-sm-end">
               <Link to="/roles/new">
-                <Button
-                  type="button"
-                  style={{ backgroundColor: "#F6851F", border: "none" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
-                  onClick={handleUserClicks}
-                >
+                <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={handleUserClicks}>
                   <i className="mdi mdi-plus me-1" />
                   Add New Rol
                 </Button>
@@ -122,44 +84,38 @@ const TableContainer = ({
         {websitesTable && (
           <Col sm="7">
             <div className="text-sm-end">
-              
-                <Button
-                  type="button"
-                  style={{ backgroundColor: "#F6851F", border: "none" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
-                  onClick={() => onClickAddNewWebsite()}
-                >
-                  <i className="mdi mdi-plus me-1" />
-                  Add New Website
-                </Button>
-              
+              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
+                <i className="mdi mdi-plus me-1" />
+                Add New Website
+              </Button>
             </div>
           </Col>
         )}
+
+        {tourTypesTable && (
+          <Col sm="7">
+            <div className="text-sm-end">
+              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
+                <i className="mdi mdi-plus me-1" />
+                Add New Tour Type
+              </Button>
+            </div>
+          </Col>
+        )}
+
         {usersTable && (
           <Col sm="7">
             <div className="text-sm-end">
-             
-                <Button
-                  type="button"
-                  style={{ backgroundColor: "#F6851F", border: "none" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
-                  onClick={() => onClickAddNew()}
-                >
-                  <i className="mdi mdi-plus me-1" />
-                  Add New User
-                </Button>
-              
+              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNew()}>
+                <i className="mdi mdi-plus me-1" />
+                Add New User
+              </Button>
             </div>
           </Col>
         )}
 
         <Col md={1}>
-          <select
-            className="form-select"
-            value={pageSize}
-            onChange={onChangeInSelect}
-          >
+          <select className="form-select" value={pageSize} onChange={onChangeInSelect}>
             {[10, 20, 30, 40, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 Show {pageSize}
@@ -290,6 +246,47 @@ const TableContainer = ({
           </Table>
         </div>
       )}
+
+      {tourTypesTable && (
+        <div className="table-responsive">
+          <Table bordered hover {...getTableProps()} className="react_table">
+            <thead className="table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th key={column.id}>
+                      <div {...column.getSortByToggleProps()}>
+                        {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
+                      </div>
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
       {usersTable && (
         <div className="table-responsive">
           <Table bordered hover {...getTableProps()} className="react_table">
@@ -359,23 +356,12 @@ const TableContainer = ({
           </strong>
         </Col>
         <Col className="col-md-auto">
-          <Input
-            type="number"
-            min={1}
-            style={{ width: 70 }}
-            max={pageOptions.length}
-            defaultValue={pageIndex + 1}
-            onChange={onChangeInInput}
-          />
+          <Input type="number" min={1} style={{ width: 70 }} max={pageOptions.length} defaultValue={pageIndex + 1} onChange={onChangeInInput} />
         </Col>
 
         <Col className="col-md-auto">
           <div className="d-flex gap-1">
-            <Button
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
-              onClick={nextPage}
-              disabled={!canNextPage}
-            >
+            <Button style={{ backgroundColor: "#3DC7F4", border: "none" }} onClick={nextPage} disabled={!canNextPage}>
               {">"}
             </Button>
             <Button
@@ -394,11 +380,7 @@ const TableContainer = ({
 };
 
 // Define a default UI for filtering
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-}) {
+function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(globalFilter);
   const onChange = useAsyncDebounce((value) => {
