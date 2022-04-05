@@ -25,7 +25,6 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
      })
   }, [profileModal, token]);
 
-  console.log(userData)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,

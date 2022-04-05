@@ -22,10 +22,10 @@ const TableContainer = ({
   rolesTable,
   websitesTable,
   usersTable,
+  cartsTable,
   handleUserClicks,
   onClickAddNew,
   onClickAddNewWebsite,
-  
   
 }) => {
   const {
@@ -85,7 +85,7 @@ const TableContainer = ({
           />
         )}
         {departmentTable && (
-          <Col sm="7">
+          <Col sm="8">
             <div className="text-sm-end">
               <Link to="/departments/new">
                 <Button
@@ -102,7 +102,7 @@ const TableContainer = ({
           </Col>
         )}
         {rolesTable && (
-          <Col sm="7">
+          <Col sm="8">
             <div className="text-sm-end">
               <Link to="/roles/new">
                 <Button
@@ -120,7 +120,7 @@ const TableContainer = ({
         )}
 
         {websitesTable && (
-          <Col sm="7">
+          <Col sm="8">
             <div className="text-sm-end">
               
                 <Button
@@ -137,7 +137,7 @@ const TableContainer = ({
           </Col>
         )}
         {usersTable && (
-          <Col sm="7">
+          <Col sm="8">
             <div className="text-sm-end">
              
                 <Button
@@ -153,8 +153,25 @@ const TableContainer = ({
             </div>
           </Col>
         )}
+        {cartsTable && (
+           <Col sm="8">
+           <div className="text-sm-end">
+             <Link to="/departments/new">
+               <Button
+                 type="button"
+                 style={{ backgroundColor: "#F6851F", border: "none" }}
+                 className="waves-effect waves-light mb-3 btn btn-success"
+                 onClick={handleUserClicks}
+               >
+                 <i className="mdi mdi-plus me-1" />
+                 Add New Cart
+               </Button>
+             </Link>
+           </div>
+         </Col>
+        )}
 
-        <Col md={1}>
+        {/* <Col md={1}>
           <select
             className="form-select"
             value={pageSize}
@@ -166,7 +183,7 @@ const TableContainer = ({
               </option>
             ))}
           </select>
-        </Col>
+        </Col> */}
       </Row>
 
       {departmentTable && (
@@ -291,6 +308,46 @@ const TableContainer = ({
         </div>
       )}
       {usersTable && (
+        <div className="table-responsive">
+          <Table bordered hover {...getTableProps()} className="react_table">
+            <thead className="table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th key={column.id}>
+                      <div {...column.getSortByToggleProps()}>
+                        {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
+                      </div>
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
+      {cartsTable && (
         <div className="table-responsive">
           <Table bordered hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">

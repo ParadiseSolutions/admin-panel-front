@@ -7,6 +7,7 @@ import TourTypesRoutes from "./TourTypesRoutes";
 import DepartmentsRoutes from "./DepartmentsRoutes";
 import RolesRoutes from "./RolesRoutes";
 import UsersRoutes from './UsersRoutes'
+import ShoppingCartRoutes from "./ShoppingCartRoutes";
 import Layout from "../../Components/Layout";
 
 
@@ -25,6 +26,7 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
             <PrivateRoutes path="/roles" component={RolesRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/websites" component={WebsitesRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/tour-types" component={TourTypesRoutes} isAuthenticated={isLogged} />
+            <PrivateRoutes path="/shopping-carts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
             <Redirect to="/dashboard" />
           </Switch>
         </Suspense>

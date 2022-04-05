@@ -168,6 +168,13 @@ const Sidebar = () => {
                     <span>{"Tour Types"}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to="/shopping-carts" className=" waves-effect">
+                    <i className="uil-shopping-cart-alt"></i>
+                    
+                    <span>{"Shopping Carts"}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </SimpleBar>
