@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
+import { useDispatch } from "react-redux";
+import { tourTypesData } from "../../Utils/Redux/Actions/TourTypesActions";
 import { statusUpdate } from "../../Utils/API/TourTypes";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
+
+
 
 const Name = (cell) => {
   return cell.value ? cell.value : "";
@@ -47,24 +51,25 @@ const Active = (cell) => {
   };
 
   const [activeTourType, setActiveTourType] = useState(cell.value && cell.value === 1 ? true : false);
-  
-
+  const dispatch = useDispatch();
+  const tourTypesRequest = () => dispatch(tourTypesData());
   const onChangeActive = () => {
     setActiveTourType(!activeTourType);
     if (cell.value === 1) {
       let data = { active: 0 };
       statusUpdate(id, data).then((resp) => {
-        console.log("was 1 so changing to 0 " , resp);
-        
+        console.log("was 1 so changing to 0 ", resp);
+
+        tourTypesRequest();
       });
     }
     if (cell.value === 0) {
       let data = { active: 1 };
       statusUpdate(id, data)
         .then((resp) => {
-          console.log("was 0 so changing to 1 " ,resp);
-          
-          
+          console.log("was 0 so changing to 1 ", resp);
+
+          tourTypesRequest();
         })
         .catch((error) => {
           console.log(error);
@@ -78,15 +83,7 @@ const Active = (cell) => {
     }
   };
 
-  return (
-    <Switch
-      uncheckedIcon = {<Offsymbol/>}
-      checkedIcon = {<OnSymbol/>}
-      onColor="#3DC7F4"
-      onChange={() => onChangeActive()}
-      checked={activeTourType}
-    />
-  )
+  return <Switch uncheckedIcon={<Offsymbol />} checkedIcon={<OnSymbol />} onColor="#3DC7F4" onChange={() => onChangeActive()} checked={activeTourType} />;
 };
 
-export {Name, Active}
+export { Name, Active };
