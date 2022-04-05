@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUserAPI } from "../../../../Utils/API/Users";
+import { editUserAPI } from "../../../../Utils/API/Users";
 import {
   Row,
   Col,
@@ -13,8 +14,7 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import user4 from '../../../Assets/images/users/avatar-7.jpg'
-import { map } from "lodash";
-import Swal from "sweetalert2";
+
 const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
  
 
@@ -26,7 +26,6 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
   }, [profileModal, token]);
 
   console.log(userData)
-
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -43,15 +42,23 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
       last_name: Yup.string().required("Last Name is required"),
       phone_number: Yup.string().required("Phone Number is required"),
     }),
-    // onSubmit: (values) => {
-    //   let data = {
-    //     first_name: values.first_name,
-    //     last_name: values.last_name,
-    //     email: values.email,
-    //     password: values.password,
-    //     job_title: values.job_title,
-    //   };
-    // },
+    onSubmit: (values) => {
+      let data = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        phone_number: values.phone_number,
+        department_id: userData.department_id,
+        email: userData.email,
+        role_id: userData.role_id,
+
+      };
+
+      editUserAPI(userData.id, data).then((resp) =>{
+        console.log(resp)
+        setProfileModal(false);
+      })
+    },
+
   });
   return (
     <Modal

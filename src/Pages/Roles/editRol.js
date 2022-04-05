@@ -7,6 +7,8 @@ import MembersChecked from "./MembersChecked";
 import { useSelector, useDispatch } from "react-redux";
 import { getRol } from "../../Utils/API/Roles";
 import { useParams } from "react-router-dom";
+import BoatImage from "../../Components/Assets/images/boat.png";
+import Inter1 from '../../Components/Assets/images/Intersection1.svg'
 import {
   Container,
   Row,
@@ -127,8 +129,10 @@ const EditRol = ({ history }) => {
                   <Col lg={3}>
                     <Card>
                     <CardBody className="d-grid px-2 pt-0">
-                        <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
-                          <h5 className="text-white">+ General Information</h5>
+                    <Row className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3">
+                          
+                          <h5 className="text-white col-8">+ General Information</h5>
+                        <img src={Inter1} alt='inter1' style={{width: '100px', marginTop:'-15px', marginRight:'-10px'}} />
                         </Row>
                         <Row className="justify-content-center mt-4">
                           <div className="form-outline mb-4">
@@ -166,9 +170,20 @@ const EditRol = ({ history }) => {
                         </Button>
                       </CardBody>
                     </Card>
+                    <div style={{ border: "none" }}>
+                      <img
+                        src={BoatImage}
+                        alt="boat"
+                        style={{
+                          width: "103%",
+                          height: "363px",
+                          marginLeft: "-5px",
+                        }}
+                      />
+                    </div>
                   </Col>
                   <Col lg={4}>
-                  <Card style={{ height: "75vh" }} className='px-2 pt-0'>
+                  <Card style={{ height: "65vh" }} className='px-2 pt-0'>
                     <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
                           <h5 className="text-white">+ Select Members</h5>
                         </Row>
@@ -193,7 +208,7 @@ const EditRol = ({ history }) => {
                     </Card>
                   </Col>
                   <Col lg={4}>
-                  <Card style={{ height: "75vh" }} className='px-2 pt-0'>
+                  <Card style={{ height: "65vh" }} className='px-2 pt-0'>
                     <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
                           <h5 className="text-white">+ Select Actions</h5>
                         </Row>
