@@ -37,6 +37,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
       secondary_color: Yup.string().required("Secondary Color is required"),
     }),
     onSubmit: (values) => {
+      console.log("values are", values)
       let data = {
         company_name: values.company_name,
         code: values.code,
@@ -149,15 +150,15 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                   <div className="form-outline mb-4">
                     <Label className="form-label">Root Folder</Label>
                     <Input
-                      name="root_ccount"
+                      name="root_folder"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.root_ccount || ""}
-                      invalid={validationType.touched.root_ccount && validationType.errors.root_ccount ? true : false}
+                      value={validationType.values.root_folder || ""}
+                      invalid={validationType.touched.root_folder && validationType.errors.root_folder ? true : false}
                     />
-                    {validationType.touched.root_ccount && validationType.errors.root_ccount ? <FormFeedback type="invalid">{validationType.errors.root_ccount}</FormFeedback> : null}
+                    {validationType.touched.root_folder && validationType.errors.root_folder ? <FormFeedback type="invalid">{validationType.errors.root_folder}</FormFeedback> : null}
                   </div>
                 </Col>
               </Row>
@@ -222,7 +223,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.primary_color || ""}
+                      value={validationType.values.accent_color || ""}
                       invalid={validationType.touched.accent_color && validationType.errors.accent_color ? true : false}                  
                       />                    
                    
