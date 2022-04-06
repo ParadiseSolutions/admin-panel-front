@@ -5,6 +5,7 @@ import { Table, Row, Col, Button, Input } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 
+<<<<<<< HEAD
 const TableContainer = ({ 
   columns, 
   data, 
@@ -19,6 +20,9 @@ const TableContainer = ({
   onClickAddNew, 
   onClickAddNewWebsite
  }) => {
+=======
+const TableContainer = ({ columns, data, isGlobalFilter, departmentTable, rolesTable, websitesTable, tourTypesTable, usersTable, handleUserClicks, onClickAddNew, onClickAddNewWebsite, onClickAddTourType }) => {
+>>>>>>> bf9f4b143c3f4b4f5f6353fdea3d352d4b32b039
   const {
     getTableProps,
     getTableBodyProps,
@@ -108,7 +112,7 @@ const TableContainer = ({
         {tourTypesTable && (
           <Col sm="7">
             <div className="text-sm-end">
-              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
+              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddTourType()}>
                 <i className="mdi mdi-plus me-1" />
                 Add New Tour Type
               </Button>

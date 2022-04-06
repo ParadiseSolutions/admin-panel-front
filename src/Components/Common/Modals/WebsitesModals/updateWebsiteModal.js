@@ -60,10 +60,10 @@ const EditWebsiteModal = ({ siteId, editModal, setEditModal, onClickEditWebsite}
             root_folder: values.root_folder,
             user_folder: values.user_folder,
           };
-          editWebsite(data)
+          editWebsite(siteId, data)
             .then((resp) => {
               console.log(resp.data);
-              if (resp.data.status === 201) {
+              if (resp.data.status === 200) {
                 Swal.fire("Success!", "The website has been edited.", "success").then(() => {
                   window.location.href = "/websites";
                   //history.goBack()
@@ -157,15 +157,15 @@ const EditWebsiteModal = ({ siteId, editModal, setEditModal, onClickEditWebsite}
                       <div className="form-outline mb-4">
                         <Label className="form-label">Root Folder</Label>
                         <Input
-                          name="root_ccount"
+                          name="root_folder"
                           placeholder=""
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
-                          value={validationType.values.root_ccount || ""}
-                          invalid={validationType.touched.root_ccount && validationType.errors.root_ccount ? true : false}
+                          value={validationType.values.root_folder || ""}
+                          invalid={validationType.touched.root_folder && validationType.errors.root_folder ? true : false}
                         />
-                        {validationType.touched.root_ccount && validationType.errors.root_ccount ? <FormFeedback type="invalid">{validationType.errors.root_ccount}</FormFeedback> : null}
+                        {validationType.touched.root_folder && validationType.errors.root_folder ? <FormFeedback type="invalid">{validationType.errors.root_folder}</FormFeedback> : null}
                       </div>
                     </Col>
                   </Row>
@@ -229,7 +229,7 @@ const EditWebsiteModal = ({ siteId, editModal, setEditModal, onClickEditWebsite}
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
-                          value={validationType.values.primary_color || ""}
+                          value={validationType.values.accent_color || ""}
                           invalid={validationType.touched.accent_color && validationType.errors.accent_color ? true : false}
                         />
 

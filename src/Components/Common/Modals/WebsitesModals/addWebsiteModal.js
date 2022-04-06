@@ -46,6 +46,9 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
         cpanel_account: values.cpanel_account,
         root_folder: values.root_folder,
         user_folder: values.user_folder,
+        accent_color: values.accent_color,
+        primary_color: values.primary_color,
+        secondary_color: values.secondary_color,
       };
       createWebsite(data)
         .then((resp) => {
