@@ -5,24 +5,7 @@ import { Table, Row, Col, Button, Input } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 
-<<<<<<< HEAD
-const TableContainer = ({ 
-  columns, 
-  data, 
-  isGlobalFilter, 
-  departmentTable, 
-  rolesTable, 
-  websitesTable, 
-  tourTypesTable, 
-  usersTable,
-  cartsTable, 
-  handleUserClicks, 
-  onClickAddNew, 
-  onClickAddNewWebsite
- }) => {
-=======
-const TableContainer = ({ columns, data, isGlobalFilter, departmentTable, rolesTable, websitesTable, tourTypesTable, usersTable, handleUserClicks, onClickAddNew, onClickAddNewWebsite, onClickAddTourType }) => {
->>>>>>> bf9f4b143c3f4b4f5f6353fdea3d352d4b32b039
+const TableContainer = ({ columns, data, isGlobalFilter, departmentTable, rolesTable, websitesTable, tourTypesTable, usersTable, cartsTable, handleUserClicks, onClickAddNew, onClickAddNewWebsite, onClickAddTourType }) => {
   const {
     getTableProps,
     getTableBodyProps,
