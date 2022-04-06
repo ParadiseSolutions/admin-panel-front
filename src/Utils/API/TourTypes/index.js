@@ -27,7 +27,7 @@ export const statusUpdate = (id, body) => {
     });  
   };
   
-  export const editTourType = (id) => {
+  export const editTourType = (id, body) => {
       const url = `${API_URL}/tourtypes/${id}`;
-      return axios.put(url, {headers:options});
+      return axios.put(url, body, {headers:options});
   }

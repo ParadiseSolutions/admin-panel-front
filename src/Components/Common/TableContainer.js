@@ -19,6 +19,7 @@ const TableContainer = ({
   onClickAddNew, 
   onClickAddNewWebsite,
   onClickAddNewCart,
+  onClickAddTourType
  }) => {
   const {
     getTableProps,
@@ -109,7 +110,7 @@ const TableContainer = ({
         {tourTypesTable && (
           <Col sm="7">
             <div className="text-sm-end">
-              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
+              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddTourType()}>
                 <i className="mdi mdi-plus me-1" />
                 Add New Tour Type
               </Button>
