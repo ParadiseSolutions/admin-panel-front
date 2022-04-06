@@ -17,7 +17,8 @@ const TableContainer = ({
   cartsTable, 
   handleUserClicks, 
   onClickAddNew, 
-  onClickAddNewWebsite
+  onClickAddNewWebsite,
+  onClickAddNewCart,
  }) => {
   const {
     getTableProps,
@@ -129,17 +130,17 @@ const TableContainer = ({
         {cartsTable && (
            <Col sm="8">
            <div className="text-sm-end">
-             <Link to="/departments/new">
+            
                <Button
                  type="button"
                  style={{ backgroundColor: "#F6851F", border: "none" }}
                  className="waves-effect waves-light mb-3 btn btn-success"
-                 onClick={handleUserClicks}
+                 onClick={() => onClickAddNewCart()}
                >
                  <i className="mdi mdi-plus me-1" />
                  Add New Cart
                </Button>
-             </Link>
+             
            </div>
          </Col>
         )}

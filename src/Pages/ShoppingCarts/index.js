@@ -1,26 +1,62 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { shoppingCartsData } from "../../Utils/Redux/Actions/ShoppingCartActions";
-import moment from "moment";
+import { deleteCartAPI } from "../../Utils/API/ShoppingCarts";
+import AddCartModal from "../../Components/Common/Modals/ShoppingCartsModals/addCartModal";
+import EditCartModal from "../../Components/Common/Modals/ShoppingCartsModals/EditCartModal";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
 import { CartName, CartID, Server, Website, TestLink, Active } from "./CartsCols";
 import { Container, Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ShoppingCarts = () => {
   const dispatch = useDispatch();
+   //modals
+   const [addCartModal, setAddCartModal] = useState(false)
+   const [editCartModal, setEditCartModal] = useState(false)
+   const [cartID, setCartID] = useState()
+   const onClickAddNewCart = () => {
+     setAddCartModal(!addCartModal);
+   };
+   const onClickEditCart = () => {
+    setEditCartModal(!editCartModal);
+   };
 
-  //departments request
+  //cart request
   useEffect(() => {
     const cartsRequest = () => dispatch(shoppingCartsData());
     cartsRequest();
-  }, [dispatch]);
+  }, [dispatch, addCartModal]);
   
   //get info
   const data = useSelector((state) => state.carts.carts.data);
 
-console.log(data)
+ //delete
 
+ const onDelete = (cart) =>{
+  Swal.fire({
+    title: "Delete Shopping Cart?",
+    icon: "question",
+    text: `Do you want delete ${cart.name}`,
+    showCancelButton: true,
+    confirmButtonText: "Yes",
+    confirmButtonColor: "#F38430",
+    cancelButtonText: "Cancel",
+  }).then((resp) => {
+    if (resp.isConfirmed) {
+      deleteCartAPI(cart.id)
+        .then((resp) => {
+          const cartsRequest = () => dispatch(shoppingCartsData());
+    cartsRequest();
+          Swal.fire("Deleted!", "The Cart has been deleted.", "success");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  });
+ }
   const columns = useMemo(
     () => [
       {
@@ -52,7 +88,7 @@ console.log(data)
       },
       {
         Header: "Website",
-        accessor: "website_id",
+        accessor: "website",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
@@ -60,8 +96,8 @@ console.log(data)
         },
       },
       {
-        Header: "Test Link",
-        accessor: "test_link",
+        Header: "URL",
+        accessor: "domain",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
@@ -84,26 +120,29 @@ console.log(data)
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
-          const depData = cellProps.row.original;
+          const cartData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link
-                to={`/departments/${depData.id}`}
-                className="text-success"
+              <div
                 
+                className="text-success"
+                onClick={() => {
+                  setCartID(cartData.id)
+                  setEditCartModal(true)
+                }}
               >
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
-              </Link>
+              </div>
               <Link
                 to="#"
                 className="text-danger"
                 onClick={() => {
-                  const depData = cellProps.row.original;
+                  const cartData = cellProps.row.original;
                   // setconfirm_alert(true);
-                  // onDelete(depData);
+                  onDelete(cartData);
                 }}
               >
                 <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
@@ -136,6 +175,7 @@ console.log(data)
                       data={data}
                       isGlobalFilter={true}
                       cartsTable={true}
+                      onClickAddNewCart={onClickAddNewCart}
                       // handleOrderClicks={handleOrderClicks}
                     />
                   ) : null}
@@ -143,6 +183,17 @@ console.log(data)
               </Card>
             </Col>
           </Row>
+          <AddCartModal 
+            addCartModal={addCartModal}
+            setAddCartModal={setAddCartModal}
+            onClickAddNewCart={onClickAddNewCart}
+          />
+          <EditCartModal 
+          editCartModal={editCartModal}
+          setEditCartModal={setEditCartModal}
+          onClickEditCart={onClickEditCart}
+          cartID={cartID}
+          />
           </Container>
           </div>
      );
