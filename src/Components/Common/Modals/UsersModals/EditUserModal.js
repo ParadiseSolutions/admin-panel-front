@@ -25,7 +25,7 @@ import Swal from "sweetalert2";
 
 const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
   //user data Request
-  const [data, setData] = useState();
+  const [dataUser, setData] = useState();
   useEffect(() => {
     if (userId) {
       getUserAPI(userId).then((resp) => {
@@ -59,12 +59,12 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      first_name: data ? data.first_name : "",
-      last_name: data ? data.last_name : "",
-      email: data ? data.email : "",
+      first_name: dataUser ? dataUser.first_name : "",
+      last_name: dataUser ? dataUser.last_name : "",
+      email: dataUser ? dataUser.email : "",
       password: "",
       repeat_password: "",
-      job_title: data ? data.job_title : "",
+      job_title: dataUser ? dataUser.job_title : "",
       role: "",
       department: "",
     },
@@ -80,8 +80,8 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
     }),
     onSubmit: (values) => {
       let data = {
-        department_id: department,
-        role_id: rol,
+        department_id: department ? department : dataUser.department_id,
+        role_id: rol ? rol : dataUser.role_id,
         first_name: values.first_name,
         last_name: values.last_name,
         email: values.email,
@@ -263,7 +263,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                         return (
                           <option
                             selected={
-                              data && data.department_id === department.id
+                              dataUser && dataUser.department_id === department.id
                                 ? true
                                 : false
                             }
@@ -292,7 +292,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                         return (
                           <option
                             selected={
-                              data && data.role_id === rol.id ? true : false
+                              dataUser && dataUser.role_id === rol.id ? true : false
                             }
                             value={rol.id}
                           >

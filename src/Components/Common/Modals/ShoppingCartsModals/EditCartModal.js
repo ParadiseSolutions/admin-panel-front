@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { websitesData } from "../../../../Utils/Redux/Actions/WebsitesActions";
-import { createCartAPI, getCartAPI } from "../../../../Utils/API/ShoppingCarts";
+import { getCartAPI, editCartAPI } from "../../../../Utils/API/ShoppingCarts";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Row,
@@ -20,14 +20,14 @@ import Swal from "sweetalert2";
 const EditCartModal = ({ editCartModal, setEditCartModal, onClickEditCart, cartID }) => {
 
   //data request
-  const [data, setData] = useState({})
+  const [dataCarts, setDataCarts] = useState({})
   useEffect(() => {
     getCartAPI(cartID).then((resp) =>{
-      setData(resp.data.data)
+      setDataCarts(resp.data.data)
     })
   }, [cartID]);
 
-console.log(data)
+console.log(dataCarts)
   const dispatch = useDispatch();
   //websites request
   useEffect(() => {
@@ -40,7 +40,7 @@ console.log(data)
   const dataWebsites = useSelector((state) => state.websites.websites.data);
 
 
-  const [websiteID, setWebsiteID] = useState([])
+  const [websiteID, setWebsiteID] = useState('')
   const onChangeSelectionWeb = (selection) =>{
     setWebsiteID(selection)
   }
@@ -49,10 +49,10 @@ console.log(data)
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      name: data.name,
-      cart_number: "",
-      server: "",
-      test_link: "",
+      name: dataCarts.name,
+      cart_number: dataCarts.cart_number,
+      server: dataCarts.server,
+      test_link: dataCarts.test_link,
       website_id:''
     },
     validationSchema: Yup.object().shape({
@@ -67,12 +67,12 @@ console.log(data)
         cart_number: values.cart_number,
         server: values.server,
         test_link: values.test_link ? values.test_link : '',
-        website_id:websiteID
+        website_id: websiteID ? websiteID : dataCarts.id
       };
-      createCartAPI(data)
+      editCartAPI(cartID, data)
         .then((resp) => {
-          if (resp.data.status === 201) {
-            Swal.fire("Created!", "The Cart has been created.", "success").then(
+          if (resp.data.status === 200) {
+            Swal.fire("Edited!", "The Cart has been edited.", "success").then(
               () => {
                 setEditCartModal(false);
               }
@@ -244,7 +244,7 @@ console.log(data)
                       <option>Select....</option>
                       {map(dataWebsites, (website, index) => {
                         return (
-                          <option value={website.id}>
+                          <option value={website.id} selected={dataCarts.website_id === website.id ? 'true' : 'false'} >
                             {website.company_name}
                           </option>
                         );
@@ -257,8 +257,8 @@ console.log(data)
               <Row>
                 <Col className="col-10 mx-4 mt-2 d-flex justify-content-end">
                   <Button
-                    type={websiteID.length > 0 ? 'submit' : 'button'}
-                    style={{ backgroundColor: websiteID.length > 0 ? "#F6851F" : 'gray', border: "none" }}
+                    type='submit'
+                    style={{ backgroundColor:"#F6851F", border: "none" }}
                     className="waves-effect waves-light mb-3 btn btn-success"
                   >
                     <i className="mdi mdi-plus me-1" />

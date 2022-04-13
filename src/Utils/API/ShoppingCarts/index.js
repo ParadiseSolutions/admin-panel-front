@@ -31,3 +31,10 @@ export const createCartAPI = (body) => {
     });
   };
 
+  export const editCartAPI = (id, body) => {
+    const url = `${API_URL}/carts/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+
