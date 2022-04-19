@@ -189,6 +189,13 @@ const Sidebar = () => {
                     <span>{"Payment Types"}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to="/providers" className=" waves-effect">
+                    <i className="uil-bus-school"></i>
+                    
+                    <span>{"Providers"}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </SimpleBar>

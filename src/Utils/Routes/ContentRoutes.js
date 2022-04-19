@@ -10,10 +10,11 @@ import UsersRoutes from './UsersRoutes'
 import ShoppingCartRoutes from "./ShoppingCartRoutes";
 import PaymentTypesRoutes from "./PaymentTypesRoutes";
 import CategoriesRoutes from "./CategoriesRoutes";
+import ProvidersRoutes from "./ProvidersRoutes";
 import Layout from "../../Components/Layout";
 
 
-const Fallback = () => <div>cargando.....</div>;
+const Fallback = () => <div>loading.....</div>;
 
 const ContentRoutes = ({ isLogged, ...rest }) => {
   return (
@@ -31,7 +32,7 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
             <PrivateRoutes path="/shopping-carts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/payment-types" component={PaymentTypesRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/categories" component={CategoriesRoutes} isAuthenticated={isLogged} />
-            <PrivateRoutes path="/categories" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
+            <PrivateRoutes path="/providers" component={ProvidersRoutes} isAuthenticated={isLogged} />
             <Redirect to="/dashboard" />
           </Switch>
         </Suspense>
