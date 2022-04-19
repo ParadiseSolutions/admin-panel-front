@@ -5,7 +5,6 @@ import { Table, Row, Col, Button, Input } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 
-<<<<<<< HEAD
 const TableContainer = ({ 
   columns, 
   data, 
@@ -16,9 +15,11 @@ const TableContainer = ({
   tourTypesTable, 
   usersTable,
   cartsTable, 
+  categoriesTable,
   paymentsTable,
   handleUserClicks, 
   onClickAddNew, 
+  onClickAddCategory,
   onClickAddNewWebsite,
   onClickAddNewCart,
   onClickAddTourType,
@@ -56,58 +57,6 @@ const TableContainer = ({
     usePagination,
     useRowSelect
   );
-=======
-const TableContainer = ({
-	columns,
-	data,
-	isGlobalFilter,
-	departmentTable,
-	rolesTable,
-	websitesTable,
-  categoriesTable,
-	tourTypesTable,
-	usersTable,
-	cartsTable,
-	handleUserClicks,
-	onClickAddNew,
-	onClickAddNewWebsite,
-	onClickAddNewCart,
-	onClickAddCategory,
-	onClickAddTourType,
-}) => {
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		page,
-		prepareRow,
-		canPreviousPage,
-		canNextPage,
-		pageOptions,
-		pageCount,
-		gotoPage,
-		nextPage,
-		previousPage,
-		setPageSize,
-		state,
-		preGlobalFilteredRows,
-		setGlobalFilter,
-		state: { pageIndex, pageSize },
-	} = useTable(
-		{
-			columns,
-			data,
-			defaultColumn: { Filter: DefaultColumnFilter },
-			initialState: { pageIndex: 0, pageSize: 10 },
-		},
-		useGlobalFilter,
-		useFilters,
-		useSortBy,
-		useExpanded,
-		usePagination,
-		useRowSelect
-	);
->>>>>>> 615d8d37ef961b2ddd454cdded8f99f1a0ffe2cc
 
 	const generateSortingIndicator = (column) => {
 		return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
@@ -165,7 +114,6 @@ const TableContainer = ({
 					</Col>
 				)}
 
-<<<<<<< HEAD
         {usersTable && (
           <Col sm="8">
             <div className="text-sm-end">
@@ -210,18 +158,6 @@ const TableContainer = ({
            </div>
          </Col>
         )}
-=======
-				{websitesTable && (
-					<Col sm="8">
-						<div className="text-sm-end">
-							<Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
-								<i className="mdi mdi-plus me-1" />
-								Add New Website
-							</Button>
-						</div>
-					</Col>
-				)}
->>>>>>> 615d8d37ef961b2ddd454cdded8f99f1a0ffe2cc
 
 				{tourTypesTable && (
 					<Col sm="8">
@@ -532,7 +468,6 @@ const TableContainer = ({
 							))}
 						</thead>
 
-<<<<<<< HEAD
             <tbody {...getTableBodyProps()}>
               {page.map((row) => {
                 prepareRow(row);
@@ -594,29 +529,6 @@ const TableContainer = ({
           </Table>
         </div>
       )}
-=======
-						<tbody {...getTableBodyProps()}>
-							{page.map((row) => {
-								prepareRow(row);
-								return (
-									<Fragment key={row.getRowProps().key}>
-										<tr>
-											{row.cells.map((cell) => {
-												return (
-													<td key={cell.id} {...cell.getCellProps()}>
-														{cell.render("Cell")}
-													</td>
-												);
-											})}
-										</tr>
-									</Fragment>
-								);
-							})}
-						</tbody>
-					</Table>
-				</div>
-			)}
->>>>>>> 615d8d37ef961b2ddd454cdded8f99f1a0ffe2cc
 
 			<Row className="justify-content-md-end justify-content-center align-items-center">
 				<Col className="col-md-auto">

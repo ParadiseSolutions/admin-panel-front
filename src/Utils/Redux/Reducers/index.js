@@ -18,11 +18,8 @@ export default combineReducers({
     modules: modulesReducers,
     roles: rolesReducers,
     tourTypes: tourTypesReducers,
-<<<<<<< HEAD
     carts: shoppingCartsReducer,
     paymentTypes: paymentTypesReducers,
-=======
     categories:categoriesReducers,
     carts: shoppingCartsReducer
->>>>>>> 615d8d37ef961b2ddd454cdded8f99f1a0ffe2cc
 })
