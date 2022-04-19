@@ -65,10 +65,10 @@ const EditTourTypeModal = ({ tourTypeId, editModal, setEditModal, onClickEditTou
 					onClickEditTourType();
 				}}
 			>
-				<div className="modal-header">
-					<h5 className="modal-title mt-0" id="myLargeModalLabel">
-						Edit Tour Type
-					</h5>
+				<div className="modal-header" style={{ backgroundColor: "#3DC7F4", border: "none" }}>
+					<h1 className="modal-title mt-0 text-white">
+						+ Edit Tour Type
+					</h1>
 					<button
 						onClick={() => {
 							setEditModal(false);
@@ -85,7 +85,7 @@ const EditTourTypeModal = ({ tourTypeId, editModal, setEditModal, onClickEditTou
 				{
 					//modal body
 				}
-
+				<div className="modal-body">
 				<Form
 					onSubmit={(e) => {
 						e.preventDefault();
@@ -124,6 +124,7 @@ const EditTourTypeModal = ({ tourTypeId, editModal, setEditModal, onClickEditTou
 						</Col>
 					</Row>
 				</Form>
+				</div>
 			</Modal>
 		</>
 	);

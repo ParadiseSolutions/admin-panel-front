@@ -8,7 +8,11 @@ import DepartmentsRoutes from "./DepartmentsRoutes";
 import RolesRoutes from "./RolesRoutes";
 import UsersRoutes from './UsersRoutes'
 import ShoppingCartRoutes from "./ShoppingCartRoutes";
+<<<<<<< HEAD
 import PaymentTypesRoutes from "./PaymentTypesRoutes";
+=======
+import CategoriesRoutes from "./CategoriesRoutes";
+>>>>>>> 615d8d37ef961b2ddd454cdded8f99f1a0ffe2cc
 import Layout from "../../Components/Layout";
 
 
@@ -27,8 +31,13 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
             <PrivateRoutes path="/roles" component={RolesRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/websites" component={WebsitesRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/tour-types" component={TourTypesRoutes} isAuthenticated={isLogged} />
+<<<<<<< HEAD
             <PrivateRoutes path="/shopping-carts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/payment-types" component={PaymentTypesRoutes} isAuthenticated={isLogged} />
+=======
+            <PrivateRoutes path="/categories" component={CategoriesRoutes} isAuthenticated={isLogged} />
+            <PrivateRoutes path="/categories" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
+>>>>>>> 615d8d37ef961b2ddd454cdded8f99f1a0ffe2cc
             <Redirect to="/dashboard" />
           </Switch>
         </Suspense>

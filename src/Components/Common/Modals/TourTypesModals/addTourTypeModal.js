@@ -54,10 +54,10 @@ const AddTourTypeModal = ({ addModal, setAddModal, onClickAddTourType }) => {
 					onClickAddTourType();
 				}}
 			>
-				<div className="modal-header">
-					<h5 className="modal-title mt-0" id="myLargeModalLabel">
-						Add New Tour Type
-					</h5>
+				<div className="modal-header" style={{ backgroundColor: "#3DC7F4", border: "none" }}>
+					<h1 className="modal-title mt-0 text-white">
+						+ Add New Tour Type
+					</h1>
 					<button
 						onClick={() => {
 							setAddModal(false);
@@ -74,7 +74,7 @@ const AddTourTypeModal = ({ addModal, setAddModal, onClickAddTourType }) => {
 				{
 					//modal body
 				}
-
+<div className="modal-body">
 				<Form
 					onSubmit={(e) => {
 						e.preventDefault();
@@ -113,6 +113,7 @@ const AddTourTypeModal = ({ addModal, setAddModal, onClickAddTourType }) => {
 						</Col>
 					</Row>
 				</Form>
+				</div>
 			</Modal>
 		</>
 	);

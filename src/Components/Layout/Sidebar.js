@@ -169,6 +169,13 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/categories" className=" waves-effect">
+                    <i className="uil uil-apps"></i>
+                    
+                    <span>{"Categories"}</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/shopping-carts" className=" waves-effect">
                     <i className="uil-shopping-cart-alt"></i>
                     
