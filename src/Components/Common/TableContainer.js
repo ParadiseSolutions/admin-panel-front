@@ -5,56 +5,58 @@ import { Table, Row, Col, Button, Input } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 
-const TableContainer = ({
-	columns,
-	data,
-	isGlobalFilter,
-	departmentTable,
-	rolesTable,
-	websitesTable,
+const TableContainer = ({ 
+  columns, 
+  data, 
+  isGlobalFilter, 
+  departmentTable, 
+  rolesTable, 
+  websitesTable, 
+  tourTypesTable, 
+  usersTable,
+  cartsTable, 
   categoriesTable,
-	tourTypesTable,
-	usersTable,
-	cartsTable,
-	handleUserClicks,
-	onClickAddNew,
-	onClickAddNewWebsite,
-	onClickAddNewCart,
-	onClickAddCategory,
-	onClickAddTourType,
-}) => {
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		page,
-		prepareRow,
-		canPreviousPage,
-		canNextPage,
-		pageOptions,
-		pageCount,
-		gotoPage,
-		nextPage,
-		previousPage,
-		setPageSize,
-		state,
-		preGlobalFilteredRows,
-		setGlobalFilter,
-		state: { pageIndex, pageSize },
-	} = useTable(
-		{
-			columns,
-			data,
-			defaultColumn: { Filter: DefaultColumnFilter },
-			initialState: { pageIndex: 0, pageSize: 10 },
-		},
-		useGlobalFilter,
-		useFilters,
-		useSortBy,
-		useExpanded,
-		usePagination,
-		useRowSelect
-	);
+  paymentsTable,
+  handleUserClicks, 
+  onClickAddNew, 
+  onClickAddCategory,
+  onClickAddNewWebsite,
+  onClickAddNewCart,
+  onClickAddTourType,
+  onClickAddNewPayment
+ }) => {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn: { Filter: DefaultColumnFilter },
+      initialState: { pageIndex: 0, pageSize: 10 },
+    },
+    useGlobalFilter,
+    useFilters,
+    useSortBy,
+    useExpanded,
+    usePagination,
+    useRowSelect
+  );
 
 	const generateSortingIndicator = (column) => {
 		return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
@@ -112,16 +114,50 @@ const TableContainer = ({
 					</Col>
 				)}
 
-				{websitesTable && (
-					<Col sm="8">
-						<div className="text-sm-end">
-							<Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
-								<i className="mdi mdi-plus me-1" />
-								Add New Website
-							</Button>
-						</div>
-					</Col>
-				)}
+        {usersTable && (
+          <Col sm="8">
+            <div className="text-sm-end">
+              <Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNew()}>
+                <i className="mdi mdi-plus me-1" />
+                Add New User
+              </Button>
+            </div>
+          </Col>
+        )}
+        {cartsTable && (
+           <Col sm="8">
+           <div className="text-sm-end">
+            
+               <Button
+                 type="button"
+                 style={{ backgroundColor: "#F6851F", border: "none" }}
+                 className="waves-effect waves-light mb-3 btn btn-success"
+                 onClick={() => onClickAddNewCart()}
+               >
+                 <i className="mdi mdi-plus me-1" />
+                 Add New Cart
+               </Button>
+             
+           </div>
+         </Col>
+        )}
+        {paymentsTable && (
+           <Col sm="8">
+           <div className="text-sm-end">
+            
+               <Button
+                 type="button"
+                 style={{ backgroundColor: "#F6851F", border: "none" }}
+                 className="waves-effect waves-light mb-3 btn btn-success"
+                 onClick={() => onClickAddNewPayment()}
+               >
+                 <i className="mdi mdi-plus me-1" />
+                 Add New Payment
+               </Button>
+             
+           </div>
+         </Col>
+        )}
 
 				{tourTypesTable && (
 					<Col sm="8">
@@ -432,27 +468,67 @@ const TableContainer = ({
 							))}
 						</thead>
 
-						<tbody {...getTableBodyProps()}>
-							{page.map((row) => {
-								prepareRow(row);
-								return (
-									<Fragment key={row.getRowProps().key}>
-										<tr>
-											{row.cells.map((cell) => {
-												return (
-													<td key={cell.id} {...cell.getCellProps()}>
-														{cell.render("Cell")}
-													</td>
-												);
-											})}
-										</tr>
-									</Fragment>
-								);
-							})}
-						</tbody>
-					</Table>
-				</div>
-			)}
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
+      {paymentsTable && (
+        <div className="table-responsive">
+          <Table bordered hover {...getTableProps()} className="react_table">
+            <thead className="table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th key={column.id}>
+                      <div {...column.getSortByToggleProps()}>
+                        {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
+                      </div>
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
 
 			<Row className="justify-content-md-end justify-content-center align-items-center">
 				<Col className="col-md-auto">

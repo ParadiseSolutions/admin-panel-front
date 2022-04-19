@@ -1,55 +1,56 @@
 import { useEffect, useMemo, useState } from "react";
-import { shoppingCartsData } from "../../Utils/Redux/Actions/ShoppingCartActions";
-import { deleteCartAPI } from "../../Utils/API/ShoppingCarts";
-import AddCartModal from "../../Components/Common/Modals/ShoppingCartsModals/addCartModal";
-import EditCartModal from "../../Components/Common/Modals/ShoppingCartsModals/EditCartModal";
+import { paymentTypesData } from "../../Utils/Redux/Actions/PaymentTypesActions";
+import { deletePaymentTypeAPI } from "../../Utils/API/Payments";
+import AddPaymentModal from "../../Components/Common/Modals/PaymentsModal/addPaymentModal";
+import EditPaymentModal from "../../Components/Common/Modals/PaymentsModal/EditPaymentModal";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
-import { CartName, CartID, Server, Website, TestLink, Active } from "./CartsCols";
+import { CartName, CartID, Active } from "./PaymentCols";
 import { Container, Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const ShoppingCarts = () => {
+const PaymentTypes = () => {
   const dispatch = useDispatch();
    //modals
-   const [addCartModal, setAddCartModal] = useState(false)
-   const [editCartModal, setEditCartModal] = useState(false)
-   const [cartID, setCartID] = useState()
-   const onClickAddNewCart = () => {
-     setAddCartModal(!addCartModal);
+   const [addPaymentModal, setPaymentModal] = useState(false)
+   const [editPaymentModal, setEditPaymentModal] = useState(false)
+   const [paymentID, setPaymentID] = useState()
+   const onClickAddNewPayment = () => {
+    setPaymentModal(!addPaymentModal);
    };
-   const onClickEditCart = () => {
-    setEditCartModal(!editCartModal);
+   const onClickEditPayment = () => {
+    setEditPaymentModal(!editPaymentModal);
    };
 
   //cart request
   useEffect(() => {
-    const cartsRequest = () => dispatch(shoppingCartsData());
-    cartsRequest();
-  }, [dispatch, addCartModal, editCartModal]);
+    const paymentDataRequest = () => dispatch(paymentTypesData());
+    paymentDataRequest();
+  }, [dispatch, addPaymentModal, editPaymentModal]);
   
   //get info
-  const data = useSelector((state) => state.carts.carts.data);
+  const data = useSelector((state) => state.paymentTypes.paymentTypes.data);
 
+  console.log(data)
  //delete
 
- const onDelete = (cart) =>{
+ const onDelete = (payment) =>{
   Swal.fire({
-    title: "Delete Shopping Cart?",
+    title: "Delete Payment Type?",
     icon: "question",
-    text: `Do you want delete ${cart.name}`,
+    text: `Do you want delete ${payment.name}`,
     showCancelButton: true,
     confirmButtonText: "Yes",
     confirmButtonColor: "#F38430",
     cancelButtonText: "Cancel",
   }).then((resp) => {
     if (resp.isConfirmed) {
-      deleteCartAPI(cart.id)
+      deletePaymentTypeAPI(payment.id)
         .then((resp) => {
-          const cartsRequest = () => dispatch(shoppingCartsData());
-    cartsRequest();
-          Swal.fire("Deleted!", "The Cart has been deleted.", "success");
+          const paymentDataRequest = () => dispatch(paymentTypesData());
+    paymentDataRequest();
+          Swal.fire("Deleted!", "Payment Type has been deleted.", "success");
         })
         .catch((error) => {
           console.log(error);
@@ -60,7 +61,7 @@ const ShoppingCarts = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Cart Name",
+        Header: "Name",
         accessor: "name",
         disableFilters: true,
         filterable: false,
@@ -69,41 +70,15 @@ const ShoppingCarts = () => {
         },
       },
       {
-        Header: "Cart ID",
-        accessor: "cart_number",
+        Header: "Default Label",
+        accessor: "default_label",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
           return <CartID {...cellProps} />;
         },
       },
-      {
-        Header: "Server",
-        accessor: "server",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <Server {...cellProps} />;
-        },
-      },
-      {
-        Header: "Website",
-        accessor: "website",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <Website {...cellProps} />;
-        },
-      },
-      {
-        Header: "URL",
-        accessor: "domain",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <TestLink {...cellProps} />;
-        },
-      },
+     
       
       
       {
@@ -127,8 +102,8 @@ const ShoppingCarts = () => {
                 
                 className="text-success"
                 onClick={() => {
-                  setCartID(cartData.id)
-                  setEditCartModal(true)
+                  setPaymentID(cartData.id)
+                  setEditPaymentModal(true)
                 }}
               >
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
@@ -140,9 +115,9 @@ const ShoppingCarts = () => {
                 to="#"
                 className="text-danger"
                 onClick={() => {
-                  const cartData = cellProps.row.original;
+                  const paymentData = cellProps.row.original;
                   // setconfirm_alert(true);
-                  onDelete(cartData);
+                  onDelete(paymentData);
                 }}
               >
                 <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
@@ -162,7 +137,7 @@ const ShoppingCarts = () => {
         <Container fluid>
           <div className=" mx-5">
             <h1 className="display-5 fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
-              + SHOPPING CARTS
+              + PAYMENT TYPES
             </h1>
           </div>
           <Row>
@@ -174,8 +149,8 @@ const ShoppingCarts = () => {
                       columns={columns}
                       data={data}
                       isGlobalFilter={true}
-                      cartsTable={true}
-                      onClickAddNewCart={onClickAddNewCart}
+                      paymentsTable={true}
+                      onClickAddNewPayment={onClickAddNewPayment}
                       // handleOrderClicks={handleOrderClicks}
                     />
                   ) : null}
@@ -183,20 +158,20 @@ const ShoppingCarts = () => {
               </Card>
             </Col>
           </Row>
-          <AddCartModal 
-            addCartModal={addCartModal}
-            setAddCartModal={setAddCartModal}
-            onClickAddNewCart={onClickAddNewCart}
+          <AddPaymentModal 
+            addPaymentModal={addPaymentModal}
+            setPaymentModal={setPaymentModal}
+            onClickAddNewPayment={onClickAddNewPayment}
           />
-          <EditCartModal 
-          editCartModal={editCartModal}
-          setEditCartModal={setEditCartModal}
-          onClickEditCart={onClickEditCart}
-          cartID={cartID}
+          <EditPaymentModal 
+          editPaymentModal={editPaymentModal}
+          setEditPaymentModal={setEditPaymentModal}
+          onClickEditPayment={onClickEditPayment}
+          paymentID={paymentID}
           />
           </Container>
           </div>
      );
 }
  
-export default ShoppingCarts;
+export default PaymentTypes;

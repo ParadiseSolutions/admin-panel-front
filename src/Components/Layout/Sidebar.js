@@ -182,6 +182,13 @@ const Sidebar = () => {
                     <span>{"Shopping Carts"}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to="/payment-types" className=" waves-effect">
+                    <i className="uil-receipt"></i>
+                    
+                    <span>{"Payment Types"}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </SimpleBar>

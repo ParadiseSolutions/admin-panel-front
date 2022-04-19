@@ -8,6 +8,7 @@ import rolesReducers from './RolesReducers'
 import tourTypesReducers from './TourTypesReducers'
 import categoriesReducers from './CategoriesReducers'
 import shoppingCartsReducer from './ShoppingCartsReducers'
+import paymentTypesReducers from './PaymentTypesReducers'
 
 export default combineReducers({
     login: loginReducers,
@@ -17,6 +18,8 @@ export default combineReducers({
     modules: modulesReducers,
     roles: rolesReducers,
     tourTypes: tourTypesReducers,
+    carts: shoppingCartsReducer,
+    paymentTypes: paymentTypesReducers,
     categories:categoriesReducers,
     carts: shoppingCartsReducer
 })
