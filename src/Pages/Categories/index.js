@@ -12,8 +12,8 @@ import AddCategoryModal from "../../Components/Common/Modals/CategoriesModals/ad
 import UpdateCategoryModal from "../../Components/Common/Modals/CategoriesModals/updateCategoryModal";
 
 const Categories = () => {
-	const [categoryId, setCategoryId] = useState(false);
-	const dispatch = useDispatch();
+	 const [categoryId, setCategoryId] = useState(false);
+	 const dispatch = useDispatch();
 
 	//Categories request
 
@@ -41,11 +41,11 @@ const Categories = () => {
 				categoryDelete(categoryData.id)
 					.then((resp) => {
 						// const tourTypesRequest = () => dispatch(tourTypesData());
-						tourTypesRequest();
+						categoriesRequest();
 						Swal.fire("Deleted!", "Category has been deleted.", "success");
 					})
 					.catch((error) => {
-						console.log(error);
+						console.log("jalopy",error);
 					});
 			}
 		});
@@ -171,7 +171,7 @@ const Categories = () => {
 							</Card>
 						</Col>
 					</Row>
-                    <AddCategoryModal addModal={addModal} setAddModal={setAddModal} onClickAddCategory={onClickAddCategory} />
+                     <AddCategoryModal addModal={addModal} setAddModal={setAddModal} onClickAddCategory={onClickAddCategory} />
 					<UpdateCategoryModal categoryId = {categoryId} editModal={editModal} setEditModal={setEditModal} onClickEditCategory={onClickEditCategory} />
 				</Container>
 			</div>

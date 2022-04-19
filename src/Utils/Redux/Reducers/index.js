@@ -6,6 +6,7 @@ import usersReducers from './UsersReducers'
 import modulesReducers from './ModulesReducers'
 import rolesReducers from './RolesReducers'
 import tourTypesReducers from './TourTypesReducers'
+import categoriesReducers from './CategoriesReducers'
 import shoppingCartsReducer from './ShoppingCartsReducers'
 
 export default combineReducers({
@@ -16,5 +17,6 @@ export default combineReducers({
     modules: modulesReducers,
     roles: rolesReducers,
     tourTypes: tourTypesReducers,
+    categories:categoriesReducers,
     carts: shoppingCartsReducer
 })
