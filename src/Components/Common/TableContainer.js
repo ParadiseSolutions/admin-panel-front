@@ -101,6 +101,18 @@ const TableContainer = ({
 						</div>
 					</Col>
 				)}
+				{websitesTable && (
+					<Col sm="8">
+						<div className="text-sm-end">
+							
+								<Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
+									<i className="mdi mdi-plus me-1" />
+									Add New Website
+								</Button>
+							
+						</div>
+					</Col>
+				)}
 				{rolesTable && (
 					<Col sm="8">
 						<div className="text-sm-end">
