@@ -10,6 +10,7 @@ import UsersRoutes from './UsersRoutes'
 import ShoppingCartRoutes from "./ShoppingCartRoutes";
 import PaymentTypesRoutes from "./PaymentTypesRoutes";
 import CategoriesRoutes from "./CategoriesRoutes";
+import LocationsRoutes from "./LocationsRoutes";
 import Layout from "../../Components/Layout";
 
 
@@ -30,8 +31,9 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
             <PrivateRoutes path="/tour-types" component={TourTypesRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/shopping-carts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/payment-types" component={PaymentTypesRoutes} isAuthenticated={isLogged} />
+            <PrivateRoutes path="/locations" component={LocationsRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/categories" component={CategoriesRoutes} isAuthenticated={isLogged} />
-            <PrivateRoutes path="/categories" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
+            <PrivateRoutes path="/shoppingcarts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
             <Redirect to="/dashboard" />
           </Switch>
         </Suspense>
