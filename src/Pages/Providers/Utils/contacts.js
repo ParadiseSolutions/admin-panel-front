@@ -1,60 +1,54 @@
-import { useMemo, useEffect, useState } from "react";
-import TableContainer from "../../Components/Common/TableContainer";
+import { useMemo, useState } from "react";
+import { deleteContactAPI } from "../../../Utils/API/Contacts";
+import TableContainer from "../../../Components/Common/TableContainer";
+import AddContactProviderModal from "../../../Components/Common/Modals/ContactsProviderModal/addContactProviderModal";
 import {
   Name,
   Department,
   Active,
   LastName,
-  Email,
-  Rol,
+  
 } from "./ProvidersCols";
-import { providersData } from "../../Utils/Redux/Actions/ProvidersActions";
-import { deleteProviderAPI } from "../../Utils/API/Providers";
-import AddUserModal from "../../Components/Common/Modals/UsersModals/addUserModal";
-import EditUserModal from "../../Components/Common/Modals/UsersModals/EditUserModal";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  CardBody,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Collapse, Row, Col, Card, CardBody,   UncontrolledTooltip, } from "reactstrap";
+import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
+import classnames from "classnames";
+const Contacts = ({contacts}) => {
 
-const Providers = () => {
-  const [addModal, setAddModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-  const [userId, setUserId] = useState({});
+  const {id} = useHistory()
+  const [col2, setcol2] = useState(true);
+  const [addContactModal, setAddContactModal] = useState(false)
+  function togglecol1() {
+    setcol2(!col2);
+  }
 
-  //data request
-  const dispatch = useDispatch();
-  useEffect(() => {
-    var providersRequest = () => dispatch(providersData());
-    providersRequest();
-  }, [dispatch, addModal, editModal]);
 
-  //get info
-  const data = useSelector((state) => state.providers.providers.data);
+  const onClickNewContactProvider = () => {
+    setAddContactModal(!addContactModal)
+  };
 
-  const onDelete = (providerInfo) => {
+  //delete contact
+  const onDelete = (depData) => {
     Swal.fire({
-      title: "Delete Provider?",
+      title: "Delete Department?",
       icon: "question",
-      text: `Do you want delete ${providerInfo.name}`,
+      text: `Do you want delete ${depData.first_name}`,
       showCancelButton: true,
       confirmButtonText: "Yes",
       confirmButtonColor: "#F38430",
       cancelButtonText: "Cancel",
     }).then((resp) => {
       if (resp.isConfirmed) {
-        deleteProviderAPI(providerInfo.id)
+        deleteContactAPI(depData.id)
           .then((resp) => {
-            var providersRequest = () => dispatch(providersData());
-            providersRequest();
-            Swal.fire("Deleted!", "Provider has been deleted.", "success");
+            
+            Swal.fire(
+              "Deleted!",
+              "The department has been deleted.",
+              "success"
+            );
+            document.location.reload();
           })
           .catch((error) => {
             console.log(error);
@@ -62,12 +56,11 @@ const Providers = () => {
       }
     });
   };
-  //columns
   const columns = useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "name",
+        accessor: "first_name",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
@@ -75,26 +68,36 @@ const Providers = () => {
         },
       },
       {
-        Header: "Code",
-        accessor: "code",
+        Header: "Last Name",
+        accessor: "last_name",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
           return <LastName {...cellProps} />;
         },
       },
+    
       {
-        Header: "Phone",
-        accessor: "email",
+        Header: "Position",
+        accessor: "job_title",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Email {...cellProps} />;
+          return <Department {...cellProps} />;
         },
       },
       {
-        Header: "Reservation Email",
-        accessor: "department",
+        Header: "Mobile",
+        accessor: "mobile_phone",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Department {...cellProps} />;
+        },
+      },
+      {
+        Header: "Email",
+        accessor: "primary_email",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
@@ -138,9 +141,9 @@ const Providers = () => {
                 to="#"
                 className="text-danger"
                 onClick={() => {
-                  const providerInfo = cellProps.row.original;
-                  // setconfirm_alert(true);
-                  onDelete(providerInfo);
+                  const contactInfo = cellProps.row.original;
+                  
+                  onDelete(contactInfo);
                 }}
               >
                 <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
@@ -156,38 +159,39 @@ const Providers = () => {
     []
   );
 
-  //modal new
 
-  const onClickNewProvider = () => {
-    setAddModal(!addModal);
-  };
-  const onClickEdit = () => {
-    setEditModal(!editModal);
-  };
-  return (
-    <div className="page-content">
-      <Container fluid>
-        <div className=" mx-5">
-          <h1
-            className="display-5 fw-bold cursor-pointer"
-            style={{ color: "#3DC7F4" }}
+    return ( 
+        <div className="accordion-item">
+        <h2 className="accordion-header" id="headingTwo">
+          <button
+            className={classnames("accordion-button", "fw-medium", {
+              collapsed: !col2,
+            })}
+            type="button"
+            onClick={togglecol1}
+            style={{
+              cursor: "pointer",
+              backgroundColor: "#F6851F",
+              color: "white",
+            }}
           >
-            PROVIDERS
-          </h1>
-        </div>
-
-        <Row>
+            Contacts
+          </button>
+        </h2>
+        <Collapse id="collapseTwo" className="accordion-collapse" isOpen={col2}>
+          <div className="accordion-body">
+          <Row>
           <Col xs="12">
             <Card>
               <CardBody>
-                {data ? (
+                {contacts ? (
                   <TableContainer
                     columns={columns}
-                    data={data}
+                    data={contacts}
                     isGlobalFilter={true}
-                    providersTable={true}
+                    contactsProvidersTable={true}
                     isAddOrder={true}
-                    onClickNewProvider={onClickNewProvider}
+                    onClickNewContactProvider={onClickNewContactProvider}
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}
@@ -195,26 +199,16 @@ const Providers = () => {
             </Card>
           </Col>
         </Row>
-
-        <div className="modal-dialog-centered">
-          <div className="modal-content" style={{ border: "none" }}>
-            <AddUserModal
-              addModal={addModal}
-              setAddModal={setAddModal}
-              onClickNewProvider={onClickNewProvider}
-            />
           </div>
-        </div>
-
-        <EditUserModal
-          userId={userId}
-          editModal={editModal}
-          setEditModal={setEditModal}
-          onClickEdit={onClickEdit}
-        />
-      </Container>
-    </div>
-  );
-};
-
-export default Providers;
+          <AddContactProviderModal 
+            addContactModal={addContactModal}
+            setAddContactModal={setAddContactModal}
+            onClickNewContactProvider={onClickNewContactProvider}
+            
+          />
+        </Collapse>
+      </div>
+     );
+}
+ 
+export default Contacts;

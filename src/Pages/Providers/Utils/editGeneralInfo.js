@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { createProviderAPI } from "../../../Utils/API/Providers";
+import { useEffect, useState } from "react";
+import { getProviderAPI, updateProviderAPI } from "../../../Utils/API/Providers";
 import {
   Collapse,
   Form,
@@ -16,22 +16,39 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom'
 
-const GeneralInformation = () => {
-  let history = useHistory();
-  const [col1, setcol1] = useState(true);
-  const [col2, setcol2] = useState(false);
-  const [col3, setcol3] = useState(false);
+const EditGeneralInformation = ({data}) => {
+  //initial info
+  const [initialData, setInitialData] = useState({})
+  
+  useEffect(() => {
+    setInitialData(data)
+  }, [data]);
+
+  // console.log(initialData)
+  const [col1, setcol1] = useState(false);
 
   function togglecol1() {
     setcol1(!col1);
-    setcol2(false);
-    setcol3(false);
   }
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
+      name: initialData ? initialData.name : '',
+      legal_name: initialData ? initialData.legal_name: '',
+      code: initialData ? initialData.code : '',
+      address1: initialData ? initialData.address1 : '',
+      address2: initialData ? initialData.address2 : '',
+      city: initialData ? initialData.city : '',
+      state: initialData ? initialData.state : '',
+      zip: initialData ? initialData.zip : '',
+      country: initialData ? initialData.country : '',
+      website_url: initialData ? initialData.website_url : '',
+      reservation_email: initialData ? initialData.reservation_email : '',
+      cc_email: initialData ? initialData.cc_email : '',
+      // notification_email: initialData ? initialData.cc_email : '',
+      description: initialData ? initialData.description : '',
       
     },
     validationSchema: Yup.object().shape({
@@ -43,98 +60,49 @@ const GeneralInformation = () => {
     }),
     onSubmit: (values) => {
       console.log(values);
-
-      Swal.fire({
-        title: "Operator Request",
-        icon: "question",
-        text: `Create this provider as Operator to?`,
-        showCancelButton: true,
-        confirmButtonText: "Yes",
-        confirmButtonColor: "#F38430",
-        cancelButtonText: "Cancel",
-      }).then((resp) => {
-        if (resp.isConfirmed) {
-          let data = {
-            name: values.name ? values.name : '',
-            legal_name: values.legal_name ? values.legal_name : '',
-            code: values.code ? values.code : '',
-            address1: values.address1 ? values.address1 : '',
-            address2: values.address2 ? values.address2 : '',
-            city: values.city ? values.city : '',
-            state: values.state ? values.state : '',
-            zip: values.zip ? values.zip : '',
-            country: values.country ? values.country : '',
-            website_url: values.website_url ? values.website_url : '',
-            reservation_email: values.reservation_email ? values.reservation_email : '',
-            cc_email: values.cc_email ? values.cc_email : '',
-            notification_email: values.notification_email && values.notification_email === true ? 1 : 0,
-            description: values.description ? values.description : '',
-            is_operator: 1
-            };
-          
-            createProviderAPI(data).then((resp) =>{
-              console.log(resp)
-              history.push('/providers/8')
-            }).catch((error) =>{
-              console.log(error)
-              history.push('/providers/8')
-            })
-        }else{
-          let data = {
-            name: values.name ? values.name : '',
-            legal_name: values.legal_name ? values.legal_name : '',
-            code: values.code ? values.code : '',
-            address1: values.address1 ? values.address1 : '',
-            address2: values.address2 ? values.address2 : '',
-            city: values.city ? values.city : '',
-            state: values.state ? values.state : '',
-            zip: values.zip ? values.zip : '',
-            country: values.country ? values.country : '',
-            website_url: values.website_url ? values.website_url : '',
-            reservation_email: values.reservation_email ? values.reservation_email : '',
-            cc_email: values.cc_email ? values.cc_email : '',
-            notification_email: values.notification_email ? values.notification_email : '',
-            description: values.description ? values.description : '',
-            is_operator: 0
-            };
-            createProviderAPI(data).then((resp) =>{
-              console.log(resp)
-              history.push('/providers/8')
-            }).catch((error) =>{
-              console.log(error)
-              history.push('/providers/8')
-            })
-        }
-      });
-
-
-
+      let data = {
+        name: values.name ? values.name : '',
+        legal_name: values.legal_name ? values.legal_name : '',
+        code: values.code ? values.code : '',
+        address1: values.address1 ? values.address1 : '',
+        address2: values.address2 ? values.address2 : '',
+        city: values.city ? values.city : '',
+        state: values.state ? values.state : '',
+        zip: values.zip ? values.zip : '',
+        country: values.country ? values.country : '',
+        website_url: values.website_url ? values.website_url : '',
+        reservation_email: values.reservation_email ? values.reservation_email : '',
+        cc_email: values.cc_email ? values.cc_email : '',
+        notification_email: values.notification_email && values.notification_email === true ? 1 : 0,
+        description: values.description ? values.description : '',
+        
+        };
      
-      //   createDepartment(data)
-      //     .then((resp) => {
-      //       console.log(resp.data);
-      //       if (resp.data.status === 201) {
-      //         Swal.fire(
-      //           "Created!",
-      //           "The department has been created.",
-      //           "success"
-      //         ).then(() => {
-      //           history.goBack();
-      //         });
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log(error.response);
-      //       Swal.fire(
-      //         "Error!",
-      //         `${
-      //           error.response.data.data.name
-      //             ? error.response.data.data.name
-      //             : error.response.data.data.code
-      //         }`,
-      //         "error"
-      //       );
-      //     });
+        updateProviderAPI(initialData.id, data)
+          .then((resp) => {
+            console.log(resp.data);
+            if (resp.data.status === 200) {
+              Swal.fire(
+                "Edited!",
+                "General Information has been edited.",
+                "success"
+              ).then(() => {
+               
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+            Swal.fire(
+              "Error!",
+              `${
+                error.response.data.data.name
+                  ? error.response.data.data.name
+                  : error.response.data.data.code
+              }`,
+              "error"
+            );
+          });
     },
   });
 
@@ -306,6 +274,7 @@ const GeneralInformation = () => {
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.notification_email || ""}
+                      // defaultChecked={initialData.notification_email === 1 ? true : false}
                       invalid={
                         validationType.touched.notification_email &&
                         validationType.errors.notification_email
@@ -623,52 +592,9 @@ const GeneralInformation = () => {
           </div>
         </Collapse>
       </div>
-      <div className="accordion-item">
-        <h2 className="accordion-header" id="headingTwo">
-          <button
-            className={classnames("accordion-button", "fw-medium", {
-              collapsed: !col2,
-            })}
-            type="button"
-            style={{
-              cursor: "pointer",
-              backgroundColor: "#F6851F",
-              color: "white",
-            }}
-          >
-            Contacts
-          </button>
-        </h2>
-        <Collapse id="collapseTwo" className="accordion-collapse" isOpen={col2}>
-          <div className="accordion-body"></div>
-        </Collapse>
-      </div>
-      <div className="accordion-item">
-        <h2 className="accordion-header" id="headingThree">
-          <button
-            className={classnames("accordion-button", "fw-medium", {
-              collapsed: !col3,
-            })}
-            type="button"
-            style={{
-              cursor: "pointer",
-              backgroundColor: "#F6851F",
-              color: "white",
-            }}
-          >
-            Social Media
-          </button>
-        </h2>
-        <Collapse
-          id="collapseThree"
-          className="accordion-collapse"
-          isOpen={col3}
-        >
-          <div className="accordion-body"></div>
-        </Collapse>
-      </div>
+      
     </div>
   );
 };
 
-export default GeneralInformation;
+export default EditGeneralInformation;
