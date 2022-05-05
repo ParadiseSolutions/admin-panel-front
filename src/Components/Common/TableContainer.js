@@ -25,6 +25,7 @@ const TableContainer = ({
   usersTable,
   cartsTable,
   categoriesTable,
+  locationsTable,
   paymentsTable,
   providersTable,
   contactsProvidersTable,
@@ -37,6 +38,8 @@ const TableContainer = ({
   onClickAddNewPayment,
   onClickNewProvider,
   onClickNewContactProvider,
+  onClickAddLocation,
+  
 }) => {
   const {
     getTableProps,
@@ -145,6 +148,56 @@ const TableContainer = ({
             </div>
           </Col>
         )}
+				{categoriesTable && (
+					<Col sm="8">
+						<div className="text-sm-end">
+							
+								<Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddCategory()}>
+									<i className="mdi mdi-plus me-1" />
+									Add New Category
+								</Button>
+							
+						</div>
+					</Col>
+				)}
+
+{locationsTable && (
+					<Col sm="8">
+						<div className="text-sm-end">
+							
+								<Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddLocation()}>
+									<i className="mdi mdi-plus me-1" />
+									Add New Location
+								</Button>
+							
+						</div>
+					</Col>
+				)}
+
+				{websitesTable && (
+					<Col sm="8">
+						<div className="text-sm-end">
+							
+								<Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={() => onClickAddNewWebsite()}>
+									<i className="mdi mdi-plus me-1" />
+									Add New Website
+								</Button>
+							
+						</div>
+					</Col>
+				)}
+				{rolesTable && (
+					<Col sm="8">
+						<div className="text-sm-end">
+							<Link to="/roles/new">
+								<Button type="button" style={{ backgroundColor: "#F6851F", border: "none" }} className="waves-effect waves-light mb-3 btn btn-success" onClick={handleUserClicks}>
+									<i className="mdi mdi-plus me-1" />
+									Add New Rol
+								</Button>
+							</Link>
+						</div>
+					</Col>
+				)}
 
         {usersTable && (
           <Col sm="8">
@@ -391,6 +444,86 @@ const TableContainer = ({
                 </tr>
               ))}
             </thead>
+						<tbody {...getTableBodyProps()}>
+							{page.map((row) => {
+								prepareRow(row);
+								return (
+									<Fragment key={row.getRowProps().key}>
+										<tr>
+											{row.cells.map((cell) => {
+												return (
+													<td key={cell.id} {...cell.getCellProps()}>
+														{cell.render("Cell")}
+													</td>
+												);
+											})}
+										</tr>
+									</Fragment>
+								);
+							})}
+						</tbody>
+					</Table>
+				</div>
+			)}
+
+{locationsTable && (
+				<div className="table-responsive">
+					<Table bordered hover {...getTableProps()} className="react_table">
+						<thead className="table-nowrap">
+							{headerGroups.map((headerGroup) => (
+								<tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+									{headerGroup.headers.map((column) => (
+										<th key={column.id}>
+											<div {...column.getSortByToggleProps()}>
+												{column.render("Header")}
+												{/* {generateSortingIndicator(column)} */}
+											</div>
+											{/* <Filter column={column} /> */}
+										</th>
+									))}
+								</tr>
+							))}
+						</thead>
+
+						<tbody {...getTableBodyProps()}>
+							{page.map((row) => {
+								prepareRow(row);
+								return (
+									<Fragment key={row.getRowProps().key}>
+										<tr>
+											{row.cells.map((cell) => {
+												return (
+													<td key={cell.id} {...cell.getCellProps()}>
+														{cell.render("Cell")}
+													</td>
+												);
+											})}
+										</tr>
+									</Fragment>
+								);
+							})}
+						</tbody>
+					</Table>
+				</div>
+			)}
+			{rolesTable && (
+				<div className="table-responsive">
+					<Table bordered hover {...getTableProps()} className="react_table">
+						<thead className="table-nowrap">
+							{headerGroups.map((headerGroup) => (
+								<tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+									{headerGroup.headers.map((column) => (
+										<th key={column.id}>
+											<div {...column.getSortByToggleProps()}>
+												{column.render("Header")}
+												{/* {generateSortingIndicator(column)} */}
+											</div>
+											{/* <Filter column={column} /> */}
+										</th>
+									))}
+								</tr>
+							))}
+						</thead>
 
             <tbody {...getTableBodyProps()}>
               {page.map((row) => {

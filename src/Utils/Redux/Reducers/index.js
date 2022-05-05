@@ -11,6 +11,7 @@ import shoppingCartsReducer from './ShoppingCartsReducers'
 import paymentTypesReducers from './PaymentTypesReducers'
 import providersReducers from './ProvidersReducers'
 
+import locationsReducers from './LocationsReducers'
 
 export default combineReducers({
     login: loginReducers,
@@ -23,6 +24,6 @@ export default combineReducers({
     carts: shoppingCartsReducer,
     paymentTypes: paymentTypesReducers,
     categories:categoriesReducers,
-    carts: shoppingCartsReducer,
-    providers: providersReducers
+    providers: providersReducers,
+    locations: locationsReducers
 })

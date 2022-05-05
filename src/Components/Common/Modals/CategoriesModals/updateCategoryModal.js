@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCategory, editCategory } from "../../../../Utils/API/Categories";
+import { categoriesData } from "../../../../Utils/Redux/Actions/CategoriesActions";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Modal, Form, Label, Input, FormFeedback, Button } from "reactstrap";
 import Select from "react-select";
@@ -9,23 +10,68 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 
 const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCategory }) => {
-	//tour types data request
-	const [data, setData] = useState();
+	
+	//cateogories
+	// const [categoryData, setCategoryData] = useState(false);
+	// const dispatch = useDispatch();
+
+	// useEffect(() => {
+	// 	const categoriesRequest = () => dispatch(categoriesData());
+	// 	categoriesRequest();
+	// }, [dispatch]);
+	// const data = useSelector((state) => state.categories.categories.data);
+
+	// console.log("wacataaa", data)
+
+	// useEffect(() => {
+	// 	if (data) {
+	// 		getCategory(categoryId).then((resp) => {
+	// 			setCategoryData(resp.data.data);
+	// 		});
+	// 	}
+	// }, [categoryId]);
+
+	const [catData, setCatData] = useState(false)
+	const [categoryData, setCategoryData] = useState()
+	const dispatch = useDispatch()
+
+	
+
+	useEffect(() => {
+		const categoriesRequest = () => dispatch(categoriesData())
+		categoriesRequest()
+	}, [dispatch])
+
+	const data = useSelector((state) => state.categories.categories.data)
+
+	useEffect(() => {
+		setCatData(data);
+	});
+
 	useEffect(() => {
 		if (categoryId) {
 			getCategory(categoryId).then((resp) => {
-				setData(resp.data.data);
-			});
+				
+				setCategoryData(resp.data.data)
+				
+			})
 		}
-	}, [categoryId]);
+	},[categoryId])
+	console.log(categoryData)
+	//select
+	const [parent, setParent] = useState([]);
+	const onChangeSelectionParent = (value) => {
+		
+		setParent(value);
+	};
 
 	const validationType = useFormik({
 		enableReinitialize: true,
 
 		initialValues: {
-			name: data ? data.name : "",
-			code: data ? data.code : "",
-			parent_category: data ? data.parent_category : "",
+			name: categoryData ? categoryData.name : "",
+			code: categoryData ? categoryData.code : "",
+			
 		},
 		validationSchema: Yup.object().shape({
 			name: Yup.string().required("Name is required"),
@@ -36,7 +82,7 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 			let data = {
 				name: values.name,
 				code: values.code,
-				parent_category: values.parent_category,
+				parent_id: parent.length > 0 ? parent : "",
 			};
 
 			editCategory(categoryId, data)
@@ -136,13 +182,27 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 											<Input
 												name="parent_category"
 												placeholder=""
-												type="text"
-												onChange={validationType.handleChange}
+												type="select"
+												onChange={(e) => onChangeSelectionParent(e.target.value)}
 												onBlur={validationType.handleBlur}
-												value={validationType.values.parent_category || ""}
+												
 												invalid={validationType.touched.parent_category && validationType.errors.parent_category ? true : false}
-											/>
-											{validationType.touched.parent_category && validationType.errors.parent_category ? <FormFeedback type="invalid">{validationType.errors.parent_category}</FormFeedback> : null}
+											>
+											
+												{map(catData, (category, index) => {
+													return (
+														<option
+															selected={
+																 categoryData && categoryData.parent_id === category.id ? true : false
+															} 
+															value={category.id}
+														>
+															{category.name}
+														</option>
+													);
+												})}
+											</Input>
+											
 										</div>
 									</Col>
 								</Row>

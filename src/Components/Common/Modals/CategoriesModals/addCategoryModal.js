@@ -1,18 +1,34 @@
 import React, { useEffect, useState } from "react";
-
+import { categoriesData } from "../../../../Utils/Redux/Actions/CategoriesActions";
 import { createCategory } from "../../../../Utils/API/Categories";
-
+import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Modal, Form, Label, Input, FormFeedback, Button } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
+import { map } from "lodash";
 
 const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
+	const [catData, setCatData] = useState(false);
+	const dispatch = useDispatch();
 
+	useEffect(() => {
+		const categoriesRequest = () => dispatch(categoriesData());
+		categoriesRequest();
+	}, [dispatch]);
+	const data = useSelector((state) => state.categories.categories.data);
+
+	useEffect(() => {
+		setCatData(data);
+	});
+
+	//select
 	const [parent, setParent] = useState([]);
 	const onChangeSelectionParent = (value) => {
-		setParent(value)
-	}
+		
+		setParent(value);
+	};
+
 	const validationType = useFormik({
 		ableReinitialize: true,
 
@@ -30,7 +46,7 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
 			let data = {
 				name: values.name,
 				code: values.code,
-				parent_category: values.parent_category,
+				parent_id: parent.length > 0 ? parent : "",
 			};
 
 			createCategory(data)
@@ -127,15 +143,12 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
 									<Col lg={3}>
 										<div className="form-outline mb-4">
 											<Label className="form-label">Parent Category</Label>
-											<Input
-												name="parent_category"
-												placeholder=""
-												type="select"
-												onChange={(e) => onChangeSelectionParent(e.target.value)}
-												onBlur={validationType.handleBlur}
-												
-											/>
-											{validationType.touched.parent_category && validationType.errors.parent_category ? <FormFeedback type="invalid">{validationType.errors.parent_category}</FormFeedback> : null}
+											<Input name="parent_category" placeholder="" type="select" onChange={(e) => onChangeSelectionParent(e.target.value)} onBlur={validationType.handleBlur}>
+												<option value>Select One...</option>
+												{map(catData, (category, index) => {
+													return <option value={category.id}>{category.name}</option>;
+												})}
+											</Input>
 										</div>
 									</Col>
 								</Row>

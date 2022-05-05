@@ -176,6 +176,20 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/locations" className=" waves-effect">
+                    <i className="uil uil-location-point"></i>
+                    
+                    <span>{"Locations"}</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/operators" className=" waves-effect">
+                    <i className="uil uil-users-alt"></i>
+                    
+                    <span>{"Operators"}</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/shopping-carts" className=" waves-effect">
                     <i className="uil-shopping-cart-alt"></i>
                     
