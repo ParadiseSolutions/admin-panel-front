@@ -5,7 +5,7 @@ import {
 } from '../../Types'
 
 const initialState = {
-    tourTypes: [],
+    locations: [],
     loading: false,
     error: false
 }
@@ -19,7 +19,7 @@ const locationsReducers = (state = initialState, action) => {
                 loading: action.payload
             }
         case GET_LOCATIONS_SUCCESS:
-            console.log("waaaa", action.payload)
+            
             return{
                 ...state,
                 loading: false,

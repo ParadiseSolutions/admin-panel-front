@@ -38,7 +38,7 @@ const EditLocationModal = ({ locationId, editModal, setEditModal, onClickEditLoc
 				.then((resp) => {
 					if (resp.data.status === 200) {
 						Swal.fire("Success!", "Location has been edited", "success").then(() => {
-							window.location.href = "/tour-types";
+							window.location.href = "/locations";
 						});
 					}
 				})

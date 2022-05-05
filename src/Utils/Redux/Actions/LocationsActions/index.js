@@ -14,8 +14,9 @@ export const locationsData = () => {
       };
 
       const dataResult = await getData();
+      console.log(dataResult)
       dispatch(getLocationsSuccess(dataResult.data));
-     
+    
     } catch (error) {
       getLocationsError(error);
     }
