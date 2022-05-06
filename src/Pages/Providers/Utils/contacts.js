@@ -14,11 +14,15 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import classnames from "classnames";
+import EditContactProviderModal from "../../../Components/Common/Modals/ContactsProviderModal/editContactProviderModal";
 const Contacts = ({contacts}) => {
 
   const {id} = useHistory()
   const [col2, setcol2] = useState(true);
   const [addContactModal, setAddContactModal] = useState(false)
+  const [editContactModal, setEditContactModal] = useState(false)
+  const [contactID, setContactID] = useState(false)
+  
   function togglecol1() {
     setcol2(!col2);
   }
@@ -26,6 +30,9 @@ const Contacts = ({contacts}) => {
 
   const onClickNewContactProvider = () => {
     setAddContactModal(!addContactModal)
+  };
+  const onClickEditContactProvider = () => {
+    setEditContactModal(!editContactModal)
   };
 
   //delete contact
@@ -122,11 +129,13 @@ const Contacts = ({contacts}) => {
           const providersData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link
-              to={`/providers/${providersData.id}  `}
-              >
               
-              <div className="text-success">
+              
+              <div 
+              onClick={() => {
+                setContactID(providersData.id)
+                setEditContactModal(true)}}
+              className="text-info">
                 <i
                   className="mdi mdi-pencil font-size-18"
                   id="edittooltip"
@@ -136,7 +145,7 @@ const Contacts = ({contacts}) => {
                   Edit
                 </UncontrolledTooltip>
               </div>
-              </Link>
+             
               <Link
                 to="#"
                 className="text-danger"
@@ -205,6 +214,12 @@ const Contacts = ({contacts}) => {
             setAddContactModal={setAddContactModal}
             onClickNewContactProvider={onClickNewContactProvider}
             
+          />
+          <EditContactProviderModal 
+            editContactModal={editContactModal}
+            setEditContactModal={setEditContactModal}
+            onClickEditContactProvider={onClickEditContactProvider}
+            contactID={contactID}
           />
         </Collapse>
       </div>

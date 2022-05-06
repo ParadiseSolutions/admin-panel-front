@@ -14,13 +14,15 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 const GeneralInformation = () => {
   let history = useHistory();
   const [col1, setcol1] = useState(true);
   const [col2, setcol2] = useState(false);
   const [col3, setcol3] = useState(false);
+  const [addMore1, setAddMore1] = useState(false);
+  const [addMore2, setAddMore2] = useState(false);
 
   function togglecol1() {
     setcol1(!col1);
@@ -31,9 +33,7 @@ const GeneralInformation = () => {
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-    initialValues: {
-      
-    },
+    initialValues: {},
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
       code: Yup.string()
@@ -51,90 +51,93 @@ const GeneralInformation = () => {
         showCancelButton: true,
         confirmButtonText: "Yes",
         confirmButtonColor: "#F38430",
-        cancelButtonText: "Cancel",
+        cancelButtonText: "No",
       }).then((resp) => {
         if (resp.isConfirmed) {
           let data = {
-            name: values.name ? values.name : '',
-            legal_name: values.legal_name ? values.legal_name : '',
-            code: values.code ? values.code : '',
-            address1: values.address1 ? values.address1 : '',
-            address2: values.address2 ? values.address2 : '',
-            city: values.city ? values.city : '',
-            state: values.state ? values.state : '',
-            zip: values.zip ? values.zip : '',
-            country: values.country ? values.country : '',
-            website_url: values.website_url ? values.website_url : '',
-            reservation_email: values.reservation_email ? values.reservation_email : '',
-            cc_email: values.cc_email ? values.cc_email : '',
-            notification_email: values.notification_email && values.notification_email === true ? 1 : 0,
-            description: values.description ? values.description : '',
-            is_operator: 1
-            };
-          
-            createProviderAPI(data).then((resp) =>{
-              console.log(resp)
-              history.push('/providers/8')
-            }).catch((error) =>{
-              console.log(error)
-              history.push('/providers/8')
+            name: values.name ? values.name : "",
+            legal_name: values.legal_name ? values.legal_name : "",
+            code: values.code ? values.code : "",
+            address1: values.address1 ? values.address1 : "",
+            address2: values.address2 ? values.address2 : "",
+            city: values.city ? values.city : "",
+            state: values.state ? values.state : "",
+            zip: values.zip ? values.zip : "",
+            country: values.country ? values.country : "",
+            website_url: values.website_url ? values.website_url : "",
+            reservation_email: values.reservation_email
+              ? values.reservation_email
+              : "",
+            cc_email: values.cc_email ? values.cc_email : "",
+            notification_email:
+              values.notification_email && values.notification_email === true
+                ? 1
+                : 0,
+            description: values.description ? values.description : "",
+            is_operator: 1,
+            phone1: values.phone1 ? values.phone1 : '',
+            phone2: values.phone2 ? values.phone2 : '',
+            phone3: values.phone3 ? values.phone3 : '',
+            whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
+            whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
+            whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
+            mail1: values.mail1 ? values.mail1 : '',
+            mail2: values.mail2 ? values.mail2 : '',
+            mail3: values.mail3 ? values.mail3 : '',
+
+          };
+
+          createProviderAPI(data)
+            .then((resp) => {
+              console.log(resp);
+              history.push("/providers/8");
             })
-        }else{
+            .catch((error) => {
+              console.log(error);
+              history.push("/providers/8");
+            });
+        } else {
           let data = {
-            name: values.name ? values.name : '',
-            legal_name: values.legal_name ? values.legal_name : '',
-            code: values.code ? values.code : '',
-            address1: values.address1 ? values.address1 : '',
-            address2: values.address2 ? values.address2 : '',
-            city: values.city ? values.city : '',
-            state: values.state ? values.state : '',
-            zip: values.zip ? values.zip : '',
-            country: values.country ? values.country : '',
-            website_url: values.website_url ? values.website_url : '',
-            reservation_email: values.reservation_email ? values.reservation_email : '',
-            cc_email: values.cc_email ? values.cc_email : '',
-            notification_email: values.notification_email ? values.notification_email : '',
-            description: values.description ? values.description : '',
-            is_operator: 0
-            };
-            createProviderAPI(data).then((resp) =>{
-              console.log(resp)
-              history.push('/providers/8')
-            }).catch((error) =>{
-              console.log(error)
-              history.push('/providers/8')
+            name: values.name ? values.name : "",
+            legal_name: values.legal_name ? values.legal_name : "",
+            code: values.code ? values.code : "",
+            address1: values.address1 ? values.address1 : "",
+            address2: values.address2 ? values.address2 : "",
+            city: values.city ? values.city : "",
+            state: values.state ? values.state : "",
+            zip: values.zip ? values.zip : "",
+            country: values.country ? values.country : "",
+            website_url: values.website_url ? values.website_url : "",
+            reservation_email: values.reservation_email
+              ? values.reservation_email
+              : "",
+            cc_email: values.cc_email ? values.cc_email : "",
+            notification_email: values.notification_email
+              ? values.notification_email
+              : "",
+            description: values.description ? values.description : "",
+            is_operator: 0,
+            phone1: values.phone1 ? values.phone1 : '',
+            phone2: values.phone2 ? values.phone2 : '',
+            phone3: values.phone3 ? values.phone3 : '',
+            whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
+            whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
+            whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
+            mail1: values.mail1 ? values.mail1 : '',
+            mail2: values.mail2 ? values.mail2 : '',
+            mail3: values.mail3 ? values.mail3 : '',
+          };
+          createProviderAPI(data)
+            .then((resp) => {
+              console.log(resp);
+              history.push(`/providers/${resp.data.data.id}`);
             })
+            .catch((error) => {
+              console.log(error);
+              history.push("/providers/8");
+            });
         }
       });
-
-
-
-     
-      //   createDepartment(data)
-      //     .then((resp) => {
-      //       console.log(resp.data);
-      //       if (resp.data.status === 201) {
-      //         Swal.fire(
-      //           "Created!",
-      //           "The department has been created.",
-      //           "success"
-      //         ).then(() => {
-      //           history.goBack();
-      //         });
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log(error.response);
-      //       Swal.fire(
-      //         "Error!",
-      //         `${
-      //           error.response.data.data.name
-      //             ? error.response.data.data.name
-      //             : error.response.data.data.code
-      //         }`,
-      //         "error"
-      //       );
-      //     });
     },
   });
 
@@ -322,6 +325,274 @@ const GeneralInformation = () => {
                   </div>
                 </Col>
               </Row>
+
+              <Row>
+                <Col className="col-3">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Phone</Label>
+                    <Input
+                      name="phone1"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.phone1 || ""}
+                      invalid={
+                        validationType.touched.phone1 &&
+                        validationType.errors.phone1
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.phone1 &&
+                    validationType.errors.phone1 ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.phone1}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+
+                <Col className="col-3">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">WhatsApp</Label>
+                    <Input
+                      name="whatsapp1"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.whatsapp1 || ""}
+                      invalid={
+                        validationType.touched.whatsapp1 &&
+                        validationType.errors.whatsapp1
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.whatsapp1 &&
+                    validationType.errors.whatsapp1 ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.whatsapp1}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+
+                <Col className="col-3">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Email</Label>
+                    <Input
+                      name="email1"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.email1 || ""}
+                      invalid={
+                        validationType.touched.email1 &&
+                        validationType.errors.email1
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.email1 &&
+                    validationType.errors.email1 ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.email1}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+
+                <Col className="col-3">
+                  <div className="form-outline mb-2 mt-4">
+                    <Label
+                      className="form-label text-info"
+                      onClick={() => setAddMore1(!addMore1)}
+                      style={{cursor:'pointer'}}
+                    >
+                      Add more +
+                    </Label>
+                  </div>
+                </Col>
+              </Row>
+
+              {addMore1 && (
+                <Row>
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Phone 2</Label>
+                      <Input
+                        name="phone2"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.phone2 || ""}
+                        invalid={
+                          validationType.touched.phone2 &&
+                          validationType.errors.phone2
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.phone2 &&
+                      validationType.errors.phone2 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.phone2}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">WhatsApp 2</Label>
+                      <Input
+                        name="whatsapp2"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.whatsapp2 || ""}
+                        invalid={
+                          validationType.touched.whatsapp2 &&
+                          validationType.errors.whatsapp2
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.whatsapp2 &&
+                      validationType.errors.whatsapp2 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.whatsapp2}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Email 2</Label>
+                      <Input
+                        name="email2"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.email2 || ""}
+                        invalid={
+                          validationType.touched.email2 &&
+                          validationType.errors.email2
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.email2 &&
+                      validationType.errors.email2 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.email2}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2 mt-4">
+                      <Label
+                        className="form-label text-info"
+                        onClick={() => setAddMore2(!addMore2)}
+                        style={{cursor: 'pointer'}}
+                      >
+                        Add more +
+                      </Label>
+                    </div>
+                  </Col>
+                </Row>
+              )}
+              {addMore2 && (
+                <Row>
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Phone 3</Label>
+                      <Input
+                        name="phone3"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.phone3 || ""}
+                        invalid={
+                          validationType.touched.phone3 &&
+                          validationType.errors.phone3
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.phone3 &&
+                      validationType.errors.phone3 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.phone3}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">WhatsApp 3</Label>
+                      <Input
+                        name="whatsapp3"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.whatsapp3 || ""}
+                        invalid={
+                          validationType.touched.whatsapp3 &&
+                          validationType.errors.whatsapp3
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.whatsapp3 &&
+                      validationType.errors.whatsapp3 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.whatsapp3}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Email 3</Label>
+                      <Input
+                        name="email3"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.email3 || ""}
+                        invalid={
+                          validationType.touched.email3 &&
+                          validationType.errors.email3
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.email3 &&
+                      validationType.errors.email3 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.email3}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
+              )}
+
               <Row>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
@@ -384,14 +655,12 @@ const GeneralInformation = () => {
                       onBlur={validationType.handleBlur}
                       value={validationType.values.zip || ""}
                       invalid={
-                        validationType.touched.zip &&
-                        validationType.errors.zip
+                        validationType.touched.zip && validationType.errors.zip
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.zip &&
-                    validationType.errors.zip ? (
+                    {validationType.touched.zip && validationType.errors.zip ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.zip}
                       </FormFeedback>
@@ -425,31 +694,6 @@ const GeneralInformation = () => {
                 </Col>
               </Row>
               <Row>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Email</Label>
-                    <Input
-                      name="email"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.email || ""}
-                      invalid={
-                        validationType.touched.email &&
-                        validationType.errors.email
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.email &&
-                    validationType.errors.email ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Reservation Email</Label>
@@ -496,58 +740,6 @@ const GeneralInformation = () => {
                     validationType.errors.cc_email ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.cc_email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Phone</Label>
-                    <Input
-                      name="phone"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.phone || ""}
-                      invalid={
-                        validationType.touched.phone &&
-                        validationType.errors.phone
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.phone &&
-                    validationType.errors.phone ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.phone}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">WhatsApp</Label>
-                    <Input
-                      name="whatsapp"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.whatsapp || ""}
-                      invalid={
-                        validationType.touched.whatsapp &&
-                        validationType.errors.whatsapp
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.whatsapp &&
-                    validationType.errors.whatsapp ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.whatsapp}
                       </FormFeedback>
                     ) : null}
                   </div>

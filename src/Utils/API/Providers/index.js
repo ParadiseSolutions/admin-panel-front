@@ -36,9 +36,21 @@ export const deleteProviderAPI = (id) => {
       headers: options,
     });
   };
+  export const getSocialProviderAPI = (id) => {
+    const url = `${API_URL}/socialmedia/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 
   export const updateProviderAPI = (id, body) => {
     const url = `${API_URL}/providers/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+  export const updateSocialProviderAPI = (id, body) => {
+    const url = `${API_URL}/socialmedia/${id}`;
     return axios.put (url, body, {
       headers: options,
     });

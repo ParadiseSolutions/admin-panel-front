@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProviderAPI, getContactsProviderAPI } from "../../Utils/API/Providers";
+import { getProviderAPI, getContactsProviderAPI, getSocialProviderAPI } from "../../Utils/API/Providers";
 import EditGeneralInformation from "./Utils/editGeneralInfo";
 import Contacts from "./Utils/contacts";
 import SocialMedia from "./Utils/socialMedia";
@@ -9,12 +9,17 @@ const EditProvider = () => {
   const { id } = useParams();
   const [data, setData] = useState()
   const [contacts, setContacts] = useState()
+  const [socialData, setSocialData] = useState()
+
   useEffect(() => {
     getProviderAPI(id).then((resp) =>{
       setData(resp.data.data)
     })
     getContactsProviderAPI(id).then((resp) =>{
       setContacts(resp.data.data)
+    })
+    getSocialProviderAPI(id).then((resp) =>{
+      setSocialData(resp.data.data)
     })
   }, [id]);
 
@@ -33,7 +38,7 @@ const EditProvider = () => {
          <div xl={8}>
           <EditGeneralInformation data={data} />
           <Contacts contacts={contacts}/>
-          <SocialMedia data={data} />
+          <SocialMedia socialData={socialData} id={id} />
          </div>
           </Container>
           </div>

@@ -19,6 +19,8 @@ import { useHistory } from 'react-router-dom'
 const EditGeneralInformation = ({data}) => {
   //initial info
   const [initialData, setInitialData] = useState({})
+  const [addMore1, setAddMore1] = useState(false);
+  const [addMore2, setAddMore2] = useState(false);
   
   useEffect(() => {
     setInitialData(data)
@@ -274,7 +276,6 @@ const EditGeneralInformation = ({data}) => {
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.notification_email || ""}
-                      // defaultChecked={initialData.notification_email === 1 ? true : false}
                       invalid={
                         validationType.touched.notification_email &&
                         validationType.errors.notification_email
@@ -291,6 +292,274 @@ const EditGeneralInformation = ({data}) => {
                   </div>
                 </Col>
               </Row>
+
+              <Row>
+                <Col className="col-3">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Phone</Label>
+                    <Input
+                      name="phone1"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.phone1 || ""}
+                      invalid={
+                        validationType.touched.phone1 &&
+                        validationType.errors.phone1
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.phone1 &&
+                    validationType.errors.phone1 ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.phone1}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+
+                <Col className="col-3">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">WhatsApp</Label>
+                    <Input
+                      name="whatsapp1"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.whatsapp1 || ""}
+                      invalid={
+                        validationType.touched.whatsapp1 &&
+                        validationType.errors.whatsapp1
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.whatsapp1 &&
+                    validationType.errors.whatsapp1 ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.whatsapp1}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+
+                <Col className="col-3">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Email</Label>
+                    <Input
+                      name="email1"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.email1 || ""}
+                      invalid={
+                        validationType.touched.email1 &&
+                        validationType.errors.email1
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.email1 &&
+                    validationType.errors.email1 ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.email1}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+
+                <Col className="col-3">
+                  <div className="form-outline mb-2 mt-4">
+                    <Label
+                      className="form-label text-info"
+                      onClick={() => setAddMore1(!addMore1)}
+                      style={{cursor:'pointer'}}
+                    >
+                      Add more +
+                    </Label>
+                  </div>
+                </Col>
+              </Row>
+
+              {addMore1 && (
+                <Row>
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Phone 2</Label>
+                      <Input
+                        name="phone2"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.phone2 || ""}
+                        invalid={
+                          validationType.touched.phone2 &&
+                          validationType.errors.phone2
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.phone2 &&
+                      validationType.errors.phone2 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.phone2}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">WhatsApp 2</Label>
+                      <Input
+                        name="whatsapp2"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.whatsapp2 || ""}
+                        invalid={
+                          validationType.touched.whatsapp2 &&
+                          validationType.errors.whatsapp2
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.whatsapp2 &&
+                      validationType.errors.whatsapp2 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.whatsapp2}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Email 2</Label>
+                      <Input
+                        name="email2"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.email2 || ""}
+                        invalid={
+                          validationType.touched.email2 &&
+                          validationType.errors.email2
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.email2 &&
+                      validationType.errors.email2 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.email2}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2 mt-4">
+                      <Label
+                        className="form-label text-info"
+                        onClick={() => setAddMore2(!addMore2)}
+                        style={{cursor: 'pointer'}}
+                      >
+                        Add more +
+                      </Label>
+                    </div>
+                  </Col>
+                </Row>
+              )}
+              {addMore2 && (
+                <Row>
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Phone 3</Label>
+                      <Input
+                        name="phone3"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.phone3 || ""}
+                        invalid={
+                          validationType.touched.phone3 &&
+                          validationType.errors.phone3
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.phone3 &&
+                      validationType.errors.phone3 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.phone3}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">WhatsApp 3</Label>
+                      <Input
+                        name="whatsapp3"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.whatsapp3 || ""}
+                        invalid={
+                          validationType.touched.whatsapp3 &&
+                          validationType.errors.whatsapp3
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.whatsapp3 &&
+                      validationType.errors.whatsapp3 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.whatsapp3}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-3">
+                    <div className="form-outline mb-2">
+                      <Label className="form-label">Email 3</Label>
+                      <Input
+                        name="email3"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.email3 || ""}
+                        invalid={
+                          validationType.touched.email3 &&
+                          validationType.errors.email3
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.email3 &&
+                      validationType.errors.email3 ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.email3}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
+              )}
+
               <Row>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
@@ -353,14 +622,12 @@ const EditGeneralInformation = ({data}) => {
                       onBlur={validationType.handleBlur}
                       value={validationType.values.zip || ""}
                       invalid={
-                        validationType.touched.zip &&
-                        validationType.errors.zip
+                        validationType.touched.zip && validationType.errors.zip
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.zip &&
-                    validationType.errors.zip ? (
+                    {validationType.touched.zip && validationType.errors.zip ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.zip}
                       </FormFeedback>
@@ -394,31 +661,6 @@ const EditGeneralInformation = ({data}) => {
                 </Col>
               </Row>
               <Row>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Email</Label>
-                    <Input
-                      name="email"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.email || ""}
-                      invalid={
-                        validationType.touched.email &&
-                        validationType.errors.email
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.email &&
-                    validationType.errors.email ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Reservation Email</Label>
@@ -465,58 +707,6 @@ const EditGeneralInformation = ({data}) => {
                     validationType.errors.cc_email ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.cc_email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Phone</Label>
-                    <Input
-                      name="phone"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.phone || ""}
-                      invalid={
-                        validationType.touched.phone &&
-                        validationType.errors.phone
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.phone &&
-                    validationType.errors.phone ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.phone}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">WhatsApp</Label>
-                    <Input
-                      name="whatsapp"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.whatsapp || ""}
-                      invalid={
-                        validationType.touched.whatsapp &&
-                        validationType.errors.whatsapp
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.whatsapp &&
-                    validationType.errors.whatsapp ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.whatsapp}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -592,7 +782,7 @@ const EditGeneralInformation = ({data}) => {
           </div>
         </Collapse>
       </div>
-      
+     
     </div>
   );
 };

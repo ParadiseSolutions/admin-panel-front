@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProviderAPI, updateProviderAPI } from "../../../Utils/API/Providers";
+import { getProviderAPI, updateProviderAPI, updateSocialProviderAPI } from "../../../Utils/API/Providers";
 import {
   Collapse,
   Form,
@@ -16,15 +16,18 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom'
 
-const SocialMedia = ({data}) => {
+const SocialMedia = ({socialData, id}) => {
+
+  // const {id} = useHistory()
+  console.log(id)
   //initial info
   const [initialData, setInitialData] = useState({})
   
   useEffect(() => {
-    setInitialData(data)
-  }, [data]);
+    setInitialData(socialData)
+  }, [socialData]);
 
-  // console.log(initialData)
+  // console.log('social media',initialData)
   const [col1, setcol1] = useState(false);
 
   function togglecol1() {
@@ -35,56 +38,36 @@ const SocialMedia = ({data}) => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      name: initialData ? initialData.name : '',
-      legal_name: initialData ? initialData.legal_name: '',
-      code: initialData ? initialData.code : '',
-      address1: initialData ? initialData.address1 : '',
-      address2: initialData ? initialData.address2 : '',
-      city: initialData ? initialData.city : '',
-      state: initialData ? initialData.state : '',
-      zip: initialData ? initialData.zip : '',
-      country: initialData ? initialData.country : '',
-      website_url: initialData ? initialData.website_url : '',
-      reservation_email: initialData ? initialData.reservation_email : '',
-      cc_email: initialData ? initialData.cc_email : '',
-      // notification_email: initialData ? initialData.cc_email : '',
-      description: initialData ? initialData.description : '',
+      facebook: initialData && initialData[0]?.url ? initialData[0].url : '',
+      instagram: initialData && initialData[1]?.url ? initialData[1].url : '',
+      youtube: initialData && initialData[2]?.url ? initialData[2].url : '',
+      twitter: initialData && initialData[3]?.url ? initialData[3].url : '',
+      trip_advisor: initialData && initialData[4]?.url ? initialData[4].url : '',
+      yelp: initialData && initialData[5]?.url ? initialData[5].url : ''
       
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required("Name is required"),
-      code: Yup.string()
-        .required("Code is required")
-        .max(3, "Must be exactly 3 chars")
-        .required("Max 3 chars"),
+      // name: Yup.string().required("Name is required"),
+      
     }),
     onSubmit: (values) => {
-      console.log(values);
       let data = {
-        name: values.name ? values.name : '',
-        legal_name: values.legal_name ? values.legal_name : '',
-        code: values.code ? values.code : '',
-        address1: values.address1 ? values.address1 : '',
-        address2: values.address2 ? values.address2 : '',
-        city: values.city ? values.city : '',
-        state: values.state ? values.state : '',
-        zip: values.zip ? values.zip : '',
-        country: values.country ? values.country : '',
-        website_url: values.website_url ? values.website_url : '',
-        reservation_email: values.reservation_email ? values.reservation_email : '',
-        cc_email: values.cc_email ? values.cc_email : '',
-        notification_email: values.notification_email && values.notification_email === true ? 1 : 0,
-        description: values.description ? values.description : '',
-        
+        facebook: values.facebook ? values.facebook : '',
+        instagram: values.instagram ? values.instagram : '',
+        youtube: values.youtube ? values.youtube : '',
+        twitter: values.twitter ? values.instagram : '',
+        trip_advisor: values.trip_advisor ? values.trip_advisor : '',
+        yelp: values.yelp ? values.yelp : '',
+        foreign_key: id
         };
-     
-        updateProviderAPI(initialData.id, data)
+     console.log(data)
+        updateSocialProviderAPI(initialData.id, data)
           .then((resp) => {
             console.log(resp.data);
             if (resp.data.status === 200) {
               Swal.fire(
                 "Edited!",
-                "General Information has been edited.",
+                "Social Media Information has been edited.",
                 "success"
               ).then(() => {
                
@@ -140,23 +123,23 @@ const SocialMedia = ({data}) => {
                   <div className="form-outline mb-2">
                     <Label className="form-label">Facebook</Label>
                     <Input
-                      name="name"
+                      name="facebook"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.name || ""}
+                      value={validationType.values.facebook || ""}
                       invalid={
-                        validationType.touched.name &&
-                        validationType.errors.name
+                        validationType.touched.facebook &&
+                        validationType.errors.facebook
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.name &&
-                    validationType.errors.name ? (
+                    {validationType.touched.facebook &&
+                    validationType.errors.facebook ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.name}
+                        {validationType.errors.facebook}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -165,23 +148,23 @@ const SocialMedia = ({data}) => {
                   <div className="form-outline mb-2">
                     <Label className="form-label">Instagram</Label>
                     <Input
-                      name="legal_name"
+                      name="instagram"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.legal_name || ""}
+                      value={validationType.values.instagram || ""}
                       invalid={
-                        validationType.touched.legal_name &&
-                        validationType.errors.legal_name
+                        validationType.touched.instagram &&
+                        validationType.errors.instagram
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.legal_name &&
-                    validationType.errors.legal_name ? (
+                    {validationType.touched.instagram &&
+                    validationType.errors.instagram ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.legal_name}
+                        {validationType.errors.instagram}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -193,23 +176,23 @@ const SocialMedia = ({data}) => {
                   <div className="form-outline mb-2">
                     <Label className="form-label">Youtube</Label>
                     <Input
-                      name="address1"
+                      name="youtube"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.address1 || ""}
+                      value={validationType.values.youtube || ""}
                       invalid={
-                        validationType.touched.address1 &&
-                        validationType.errors.address1
+                        validationType.touched.youtube &&
+                        validationType.errors.youtube
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.address1 &&
-                    validationType.errors.address1 ? (
+                    {validationType.touched.youtube &&
+                    validationType.errors.youtube ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.address1}
+                        {validationType.errors.youtube}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -218,23 +201,23 @@ const SocialMedia = ({data}) => {
                   <div className="form-outline mb-2">
                     <Label className="form-label">Twitter</Label>
                     <Input
-                      name="address2"
+                      name="twitter"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.address2 || ""}
+                      value={validationType.values.twitter || ""}
                       invalid={
-                        validationType.touched.address2 &&
-                        validationType.errors.address2
+                        validationType.touched.twitter &&
+                        validationType.errors.twitter
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.address2 &&
-                    validationType.errors.address2 ? (
+                    {validationType.touched.twitter &&
+                    validationType.errors.twitter ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.address2}
+                        {validationType.errors.twitter}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -246,23 +229,23 @@ const SocialMedia = ({data}) => {
                   <div className="form-outline mb-2">
                     <Label className="form-label">TripAdvisor</Label>
                     <Input
-                      name="city"
+                      name="trip_advisor"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.city || ""}
+                      value={validationType.values.trip_advisor || ""}
                       invalid={
-                        validationType.touched.city &&
-                        validationType.errors.city
+                        validationType.touched.trip_advisor &&
+                        validationType.errors.trip_advisor
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.city &&
-                    validationType.errors.city ? (
+                    {validationType.touched.trip_advisor &&
+                    validationType.errors.trip_advisor ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.city}
+                        {validationType.errors.trip_advisor}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -271,23 +254,23 @@ const SocialMedia = ({data}) => {
                   <div className="form-outline mb-2">
                     <Label className="form-label">Yelp</Label>
                     <Input
-                      name="state"
+                      name="yelp"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.state || ""}
+                      value={validationType.values.yelp || ""}
                       invalid={
-                        validationType.touched.state &&
-                        validationType.errors.state
+                        validationType.touched.yelp &&
+                        validationType.errors.yelp
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.state &&
-                    validationType.errors.state ? (
+                    {validationType.touched.yelp &&
+                    validationType.errors.yelp ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.state}
+                        {validationType.errors.yelp}
                       </FormFeedback>
                     ) : null}
                   </div>
