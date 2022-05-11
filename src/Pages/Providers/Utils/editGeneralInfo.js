@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { getProviderAPI, updateProviderAPI } from "../../../Utils/API/Providers";
+import {
+  getProviderAPI,
+  updateProviderAPI,
+} from "../../../Utils/API/Providers";
 import {
   Collapse,
   Form,
@@ -14,19 +17,30 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
-const EditGeneralInformation = ({data}) => {
+const EditGeneralInformation = ({ data }) => {
   //initial info
-  const [initialData, setInitialData] = useState({})
+  const [initialData, setInitialData] = useState();
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
-  
+  const [notification, setNotification] = useState();
   useEffect(() => {
-    setInitialData(data)
+    setInitialData(data);
   }, [data]);
 
-  // console.log(initialData)
+  useEffect(() => {
+    if (initialData && initialData.notification_email === 1) {
+      setNotification(true);
+    }
+
+    if (initialData && initialData.notification_email === 0) {
+      setNotification(false);
+    }
+  }, [initialData]);
+
+  console.log(initialData);
+  console.log(notification);
   const [col1, setcol1] = useState(false);
 
   function togglecol1() {
@@ -37,21 +51,20 @@ const EditGeneralInformation = ({data}) => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      name: initialData ? initialData.name : '',
-      legal_name: initialData ? initialData.legal_name: '',
-      code: initialData ? initialData.code : '',
-      address1: initialData ? initialData.address1 : '',
-      address2: initialData ? initialData.address2 : '',
-      city: initialData ? initialData.city : '',
-      state: initialData ? initialData.state : '',
-      zip: initialData ? initialData.zip : '',
-      country: initialData ? initialData.country : '',
-      website_url: initialData ? initialData.website_url : '',
-      reservation_email: initialData ? initialData.reservation_email : '',
-      cc_email: initialData ? initialData.cc_email : '',
-      // notification_email: initialData ? initialData.cc_email : '',
-      description: initialData ? initialData.description : '',
-      
+      name: initialData ? initialData.name : "",
+      legal_name: initialData ? initialData.legal_name : "",
+      code: initialData ? initialData.code : "",
+      address1: initialData ? initialData.address1 : "",
+      address2: initialData ? initialData.address2 : "",
+      city: initialData ? initialData.city : "",
+      state: initialData ? initialData.state : "",
+      zip: initialData ? initialData.zip : "",
+      country: initialData ? initialData.country : "",
+      website_url: initialData ? initialData.website_url : "",
+      reservation_email: initialData ? initialData.reservation_email : "",
+      cc_email: initialData ? initialData.cc_email : "",
+      notification_email: true,
+      description: initialData ? initialData.description : "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
@@ -63,48 +76,59 @@ const EditGeneralInformation = ({data}) => {
     onSubmit: (values) => {
       console.log(values);
       let data = {
-        name: values.name ? values.name : '',
-        legal_name: values.legal_name ? values.legal_name : '',
-        code: values.code ? values.code : '',
-        address1: values.address1 ? values.address1 : '',
-        address2: values.address2 ? values.address2 : '',
-        city: values.city ? values.city : '',
-        state: values.state ? values.state : '',
-        zip: values.zip ? values.zip : '',
-        country: values.country ? values.country : '',
-        website_url: values.website_url ? values.website_url : '',
-        reservation_email: values.reservation_email ? values.reservation_email : '',
-        cc_email: values.cc_email ? values.cc_email : '',
-        notification_email: values.notification_email && values.notification_email === true ? 1 : 0,
-        description: values.description ? values.description : '',
-        
-        };
-     
-        updateProviderAPI(initialData.id, data)
-          .then((resp) => {
-            console.log(resp.data);
-            if (resp.data.status === 200) {
-              Swal.fire(
-                "Edited!",
-                "General Information has been edited.",
-                "success"
-              ).then(() => {
-               
-              });
-            }
-          })
-          .catch((error) => {
-            console.log(error.response);
+        name: values.name ? values.name : "",
+        legal_name: values.legal_name ? values.legal_name : "",
+        code: values.code ? values.code : "",
+        address1: values.address1 ? values.address1 : "",
+        address2: values.address2 ? values.address2 : "",
+        city: values.city ? values.city : "",
+        state: values.state ? values.state : "",
+        zip: values.zip ? values.zip : "",
+        country: values.country ? values.country : "",
+        website_url: values.website_url ? values.website_url : "",
+        reservation_email: values.reservation_email
+          ? values.reservation_email
+          : "",
+        cc_email: values.cc_email ? values.cc_email : "",
+        notification_email:
+          values.notification_email && values.notification_email === true
+            ? 1
+            : 0,
+        description: values.description ? values.description : "",
+        phone1: values.phone1 ? values.phone1 : "",
+        phone2: values.phone2 ? values.phone2 : "",
+        phone3: values.phone3 ? values.phone3 : "",
+        whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
+        whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
+        whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
+        mail1: values.mail1 ? values.mail1 : "",
+        mail2: values.mail2 ? values.mail2 : "",
+        mail3: values.mail3 ? values.mail3 : "",
+      };
+
+      updateProviderAPI(initialData.id, data)
+        .then((resp) => {
+          console.log(resp.data);
+          if (resp.data.status === 200) {
             Swal.fire(
-              "Error!",
-              `${
-                error.response.data.data.name
-                  ? error.response.data.data.name
-                  : error.response.data.data.code
-              }`,
-              "error"
-            );
-          });
+              "Edited!",
+              "General Information has been edited.",
+              "success"
+            ).then(() => {});
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+          Swal.fire(
+            "Error!",
+            `${
+              error.response.data.data.name
+                ? error.response.data.data.name
+                : error.response.data.data.code
+            }`,
+            "error"
+          );
+        });
     },
   });
 
@@ -265,32 +289,35 @@ const EditGeneralInformation = ({data}) => {
                     ) : null}
                   </div>
                 </Col>
-                <Col className="col-2">
-                  <div className="form-check form-switch form-switch-md mt-4">
-                    <Label className="form-label">Notification Email</Label>
-                    <Input
-                      name="notification_email"
-                      placeholder=""
-                      type="checkbox"
-                      className="form-check-input"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.notification_email || ""}
-                      invalid={
-                        validationType.touched.notification_email &&
-                        validationType.errors.notification_email
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.notification_email &&
-                    validationType.errors.notification_email ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.notification_email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
+                {notification === undefined ? null : (
+                  <Col className="col-2">
+                    <div className="form-check form-switch form-switch-md mt-4">
+                      <Label className="form-label">Notification Email</Label>
+                      <Input
+                        name="notification_email"
+                        placeholder=""
+                        type="checkbox"
+                        className="form-check-input"
+                        onChange={validationType.handleChange}
+                        defaultChecked={notification}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.notification_email || ""}
+                        invalid={
+                          validationType.touched.notification_email &&
+                          validationType.errors.notification_email
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.notification_email &&
+                      validationType.errors.notification_email ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.notification_email}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                )}
               </Row>
 
               <Row>
@@ -377,7 +404,7 @@ const EditGeneralInformation = ({data}) => {
                     <Label
                       className="form-label text-info"
                       onClick={() => setAddMore1(!addMore1)}
-                      style={{cursor:'pointer'}}
+                      style={{ cursor: "pointer" }}
                     >
                       Add more +
                     </Label>
@@ -470,7 +497,7 @@ const EditGeneralInformation = ({data}) => {
                       <Label
                         className="form-label text-info"
                         onClick={() => setAddMore2(!addMore2)}
-                        style={{cursor: 'pointer'}}
+                        style={{ cursor: "pointer" }}
                       >
                         Add more +
                       </Label>
@@ -782,7 +809,6 @@ const EditGeneralInformation = ({data}) => {
           </div>
         </Collapse>
       </div>
-     
     </div>
   );
 };

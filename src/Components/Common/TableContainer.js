@@ -319,7 +319,7 @@ const TableContainer = ({
                   onClick={() => onClickNewContactProvider()}
                 >
                   <i className="mdi mdi-plus me-1" />
-                  Add New Provider
+                  Add New Contact
                 </Button>
               
             </div>

@@ -18,7 +18,7 @@ export const deleteProviderAPI = (id) => {
   };
 
   export const createProviderAPI = (body) => {
-    const url = `${API_URL}/providers/`;
+    const url = `${API_URL}/providers`;
     return axios.post (url, body, {
       headers: options,
     });

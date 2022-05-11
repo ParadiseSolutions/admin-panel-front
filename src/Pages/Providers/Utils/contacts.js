@@ -38,7 +38,7 @@ const Contacts = ({contacts}) => {
   //delete contact
   const onDelete = (depData) => {
     Swal.fire({
-      title: "Delete Department?",
+      title: "Delete Contact?",
       icon: "question",
       text: `Do you want delete ${depData.first_name}`,
       showCancelButton: true,
@@ -52,7 +52,7 @@ const Contacts = ({contacts}) => {
             
             Swal.fire(
               "Deleted!",
-              "The department has been deleted.",
+              "Contact has been deleted.",
               "success"
             );
             document.location.reload();

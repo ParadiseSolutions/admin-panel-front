@@ -38,7 +38,8 @@ const EditContactProviderModal = ({ editContactModal, setEditContactModal, onCli
     business_phone: initialData ? initialData.business_phone : "",
     mobile_phone: initialData ? initialData.mobile_phone : "",
     notes: initialData ? initialData.notes : "",
-    whatsapp: initialData ? initialData.whatsapp : ""
+    whatsapp: initialData ? initialData.whatsapp : "",
+    skype: initialData ? initialData.skype : "",
     },
     validationSchema: Yup.object().shape({
       job_title: Yup.string().required("Field required"),
@@ -76,7 +77,8 @@ const EditContactProviderModal = ({ editContactModal, setEditContactModal, onCli
         secondary_email: values.secondary_email,
         business_phone: values.business_phone,
         mobile_phone: values.mobile_phone,
-        notes: values.notes
+        notes: values.notes,
+        skype: values.skype
       };
       editContactAPI(contactID, data)
         .then((resp) => {

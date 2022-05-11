@@ -67,7 +67,8 @@ const AddContactProviderModal = ({ addContactModal, setAddContactModal, onClickN
         secondary_email: values.secondary_email,
         business_phone: values.business_phone,
         mobile_phone: values.mobile_phone,
-        notes: values.notes
+        notes: values.notes,
+        skype: values.skype
       };
       createContactAPI(data)
         .then((resp) => {
