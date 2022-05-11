@@ -81,9 +81,9 @@ const GeneralInformation = () => {
             whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
             whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
             whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
-            email1: values.mail1 ? values.mail1 : '',
-            email2: values.mail2 ? values.mail2 : '',
-            email3: values.mail3 ? values.mail3 : '',
+            email1: values.email1 ? values.email1 : '',
+            email2: values.email2 ? values.email2 : '',
+            email3: values.email3 ? values.email3 : '',
 
           };
 
@@ -112,9 +112,10 @@ const GeneralInformation = () => {
               ? values.reservation_email
               : "",
             cc_email: values.cc_email ? values.cc_email : "",
-            notification_email: values.notification_email
-              ? values.notification_email
-              : "",
+            notification_email: 
+            values.notification_email && values.notification_email === true
+              ? 1
+              : 0,
             description: values.description ? values.description : "",
             is_operator: 0,
             phone1: values.phone1 ? values.phone1 : '',
@@ -123,9 +124,9 @@ const GeneralInformation = () => {
             whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
             whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
             whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
-            email1: values.mail1 ? values.mail1 : '',
-            email2: values.mail2 ? values.mail2 : '',
-            email3: values.mail3 ? values.mail3 : '',
+            email1: values.email1 ? values.email1 : '',
+            email2: values.email2 ? values.email2 : '',
+            email3: values.email3 ? values.email3 : '',
           };
           createProviderAPI(data)
             .then((resp) => {
