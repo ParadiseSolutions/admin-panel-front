@@ -81,20 +81,20 @@ const GeneralInformation = () => {
             whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
             whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
             whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
-            mail1: values.mail1 ? values.mail1 : '',
-            mail2: values.mail2 ? values.mail2 : '',
-            mail3: values.mail3 ? values.mail3 : '',
+            email1: values.mail1 ? values.mail1 : '',
+            email2: values.mail2 ? values.mail2 : '',
+            email3: values.mail3 ? values.mail3 : '',
 
           };
 
           createProviderAPI(data)
             .then((resp) => {
               console.log(resp);
-              history.push("/providers/8");
+              history.push(`/providers/${resp.data.data.id}`);
             })
             .catch((error) => {
               console.log(error);
-              history.push("/providers/8");
+              
             });
         } else {
           let data = {
@@ -123,9 +123,9 @@ const GeneralInformation = () => {
             whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
             whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
             whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
-            mail1: values.mail1 ? values.mail1 : '',
-            mail2: values.mail2 ? values.mail2 : '',
-            mail3: values.mail3 ? values.mail3 : '',
+            email1: values.mail1 ? values.mail1 : '',
+            email2: values.mail2 ? values.mail2 : '',
+            email3: values.mail3 ? values.mail3 : '',
           };
           createProviderAPI(data)
             .then((resp) => {
@@ -134,7 +134,7 @@ const GeneralInformation = () => {
             })
             .catch((error) => {
               console.log(error);
-              history.push("/providers/8");
+              
             });
         }
       });

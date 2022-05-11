@@ -39,8 +39,18 @@ const EditGeneralInformation = ({ data }) => {
     }
   }, [initialData]);
 
-  console.log(initialData);
-  console.log(notification);
+  useEffect(() => {
+    if (initialData && initialData.phone2 !== '') {
+      setAddMore1(true);
+    }
+    if (initialData && initialData.phone3 !== '') {
+      setAddMore2(true);
+    }
+
+  }, [initialData]);
+
+  // console.log(initialData);
+  // console.log(notification);
   const [col1, setcol1] = useState(false);
 
   function togglecol1() {
@@ -65,6 +75,15 @@ const EditGeneralInformation = ({ data }) => {
       cc_email: initialData ? initialData.cc_email : "",
       notification_email: true,
       description: initialData ? initialData.description : "",
+      phone1: initialData ? initialData.phone1 : "",
+      phone2: initialData ? initialData.phone2 : "",
+      phone3: initialData ? initialData.phone3 : "",
+      whatsapp1: initialData ? initialData.whatsapp1 : "",
+      whatsapp2: initialData ? initialData.whatsapp2 : "",
+      whatsapp3: initialData ? initialData.whatsapp3 : "",
+      email1: initialData ? initialData.email1 : "",
+      email2: initialData ? initialData.email2 : "",
+      email3: initialData ? initialData.email3 : "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
@@ -101,9 +120,9 @@ const EditGeneralInformation = ({ data }) => {
         whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
         whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
         whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
-        mail1: values.mail1 ? values.mail1 : "",
-        mail2: values.mail2 ? values.mail2 : "",
-        mail3: values.mail3 ? values.mail3 : "",
+        email1: values.email1 ? values.email1 : "",
+        email2: values.email2 ? values.email2 : "",
+        email3: values.email3 ? values.email3 : "",
       };
 
       updateProviderAPI(initialData.id, data)
