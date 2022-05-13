@@ -10,7 +10,7 @@ import categoriesReducers from './CategoriesReducers'
 import shoppingCartsReducer from './ShoppingCartsReducers'
 import paymentTypesReducers from './PaymentTypesReducers'
 import providersReducers from './ProvidersReducers'
-
+import operatorsReducers from './OperatorsReducers'
 import locationsReducers from './LocationsReducers'
 
 export default combineReducers({
@@ -25,5 +25,6 @@ export default combineReducers({
     paymentTypes: paymentTypesReducers,
     categories:categoriesReducers,
     providers: providersReducers,
-    locations: locationsReducers
+    locations: locationsReducers,
+    operators: operatorsReducers
 })
