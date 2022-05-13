@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  getProviderAPI,
-  updateProviderAPI,
-} from "../../../Utils/API/Providers";
+
+import { updateOperator } from "../../../Utils/API/Operators";
 import {
   Collapse,
   Form,
@@ -40,13 +38,12 @@ const EditGeneralInformation = ({ data }) => {
   }, [initialData]);
 
   useEffect(() => {
-    if (initialData && initialData.phone2 !== '') {
+    if (initialData && initialData.phone2 !== "") {
       setAddMore1(true);
     }
-    if (initialData && initialData.phone3 !== '') {
+    if (initialData && initialData.phone3 !== "") {
       setAddMore2(true);
     }
-
   }, [initialData]);
 
   // console.log(initialData);
@@ -71,7 +68,7 @@ const EditGeneralInformation = ({ data }) => {
       zip: initialData ? initialData.zip : "",
       country: initialData ? initialData.country : "",
       website_url: initialData ? initialData.website_url : "",
-      
+
       description: initialData ? initialData.description : "",
       phone1: initialData ? initialData.phone1 : "",
       phone2: initialData ? initialData.phone2 : "",
@@ -103,7 +100,7 @@ const EditGeneralInformation = ({ data }) => {
         zip: values.zip ? values.zip : "",
         country: values.country ? values.country : "",
         website_url: values.website_url ? values.website_url : "",
-        
+
         description: values.description ? values.description : "",
         phone1: values.phone1 ? values.phone1 : "",
         phone2: values.phone2 ? values.phone2 : "",
@@ -116,7 +113,7 @@ const EditGeneralInformation = ({ data }) => {
         email3: values.email3 ? values.email3 : "",
       };
 
-      updateProviderAPI(initialData.id, data)
+      updateOperator(initialData.id, data)
         .then((resp) => {
           console.log(resp.data);
           if (resp.data.status === 200) {
@@ -299,7 +296,6 @@ const EditGeneralInformation = ({ data }) => {
                     ) : null}
                   </div>
                 </Col>
-                
               </Row>
 
               <Row>
@@ -670,7 +666,6 @@ const EditGeneralInformation = ({ data }) => {
                 </Col>
               </Row>
               <Row>
-                
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Website URL</Label>

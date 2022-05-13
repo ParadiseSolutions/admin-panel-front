@@ -24,4 +24,9 @@ export const deleteOperatorAPI = (id) => {
     });
   };
 
- 
+  export const updateOperator = (id, body) => {
+    const url = `${API_URL}/operators/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
