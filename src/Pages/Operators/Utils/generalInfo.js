@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createOperatorAPI } from "../../../Utils/API/Operators";
 import {
   Collapse,
@@ -13,11 +13,48 @@ import {
 import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-
+import Select from "react-select";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
 
 const GeneralInformation = () => {
+
+
   let history = useHistory();
+
+    //service area options
+    const dispatch = useDispatch();
+    useEffect(() => {
+      var serviceAreaRequest = () => dispatch(serviceAreaData());
+      serviceAreaRequest();
+    }, [dispatch]);
+    const data = useSelector((state) => state.serviceArea.serviceArea.data);
+    const [optionsData, setOptionsData] = useState([]);
+  
+    useEffect(() => {
+      if (data) {
+        let options = [];
+        data.forEach((element) => {
+          options.push({ label: element.name, value: element.id });
+        });
+  
+        setOptionsData(options);
+      }
+    }, [data]);
+  
+    const [selectedMulti, setselectedMulti] = useState(null);
+    const [selectionID, setSelectionID] = useState([]);
+    function handleMulti(selected) {
+      let selection = [];
+  
+      selected.forEach((ele) => {
+        selection.push(ele.value);
+      });
+  
+      setselectedMulti(selected);
+      setSelectionID(selection);
+    }
   const [col1, setcol1] = useState(true);
   const [col2, setcol2] = useState(false);
   const [col3, setcol3] = useState(false);
@@ -67,6 +104,7 @@ const GeneralInformation = () => {
             email1: values.email1 ? values.email1 : "",
             email2: values.email2 ? values.email2 : "",
             email3: values.email3 ? values.email3 : "",
+            service_area_ids: selectionID
           };
 
           createOperatorAPI(data)
@@ -636,6 +674,28 @@ const GeneralInformation = () => {
                       </FormFeedback>
                     ) : null}
                   </div>
+                </Col>
+                <Col className="col-3">
+                {optionsData.length > 0 ? (
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">Service Area</Label>
+                        <Select
+                          value={selectedMulti}
+                          isMulti={true}
+                          onChange={(e) => {
+                            handleMulti(e);
+                          }}
+                          options={optionsData}
+                          classNamePrefix="select2-selection"
+                        />
+                        {validationType.touched.cpanel_account &&
+                        validationType.errors.cpanel_account ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.cpanel_account}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    ) : null}
                 </Col>
               </Row>
 

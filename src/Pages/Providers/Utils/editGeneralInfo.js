@@ -18,6 +18,9 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
+import Select from "react-select";
 
 const EditGeneralInformation = ({ data }) => {
   //initial info
@@ -49,13 +52,46 @@ const EditGeneralInformation = ({ data }) => {
 
   }, [initialData]);
 
-  // console.log(initialData);
+  console.log(initialData);
   // console.log(notification);
   const [col1, setcol1] = useState(false);
 
   function togglecol1() {
     setcol1(!col1);
   }
+
+   //service area options
+   const dispatch = useDispatch();
+   useEffect(() => {
+     var serviceAreaRequest = () => dispatch(serviceAreaData());
+     serviceAreaRequest();
+   }, [dispatch]);
+   const dataAreas = useSelector((state) => state.serviceArea.serviceArea.data);
+   const [optionsData, setOptionsData] = useState([]);
+ 
+   useEffect(() => {
+     if (dataAreas) {
+       let options = [];
+       dataAreas.forEach((element) => {
+         options.push({ label: element.name, value: element.id });
+       });
+ 
+       setOptionsData(options);
+     }
+   }, [dataAreas]);
+ 
+   const [selectedMulti, setselectedMulti] = useState(null);
+   const [selectionID, setSelectionID] = useState([]);
+   function handleMulti(selected) {
+     let selection = [];
+ 
+     selected.forEach((ele) => {
+       selection.push(ele.value);
+     });
+ 
+     setselectedMulti(selected);
+     setSelectionID(selection);
+   }
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -84,6 +120,7 @@ const EditGeneralInformation = ({ data }) => {
       email1: initialData ? initialData.email1 : "",
       email2: initialData ? initialData.email2 : "",
       email3: initialData ? initialData.email3 : "",
+      
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
@@ -123,6 +160,7 @@ const EditGeneralInformation = ({ data }) => {
         email1: values.email1 ? values.email1 : "",
         email2: values.email2 ? values.email2 : "",
         email3: values.email3 ? values.email3 : "",
+        service_area_ids: selectionID
       };
 
       updateProviderAPI(initialData.id, data)
@@ -781,6 +819,28 @@ const EditGeneralInformation = ({ data }) => {
                       </FormFeedback>
                     ) : null}
                   </div>
+                </Col>
+                <Col className="col-3">
+                {optionsData.length > 0 ? (
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">Service Area</Label>
+                        <Select
+                          value={selectedMulti}
+                          isMulti={true}
+                          onChange={(e) => {
+                            handleMulti(e);
+                          }}
+                          options={optionsData}
+                          classNamePrefix="select2-selection"
+                        />
+                        {validationType.touched.cpanel_account &&
+                        validationType.errors.cpanel_account ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.cpanel_account}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    ) : null}
                 </Col>
               </Row>
 
