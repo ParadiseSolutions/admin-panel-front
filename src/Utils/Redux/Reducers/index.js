@@ -10,8 +10,9 @@ import categoriesReducers from './CategoriesReducers'
 import shoppingCartsReducer from './ShoppingCartsReducers'
 import paymentTypesReducers from './PaymentTypesReducers'
 import providersReducers from './ProvidersReducers'
-
+import operatorsReducers from './OperatorsReducers'
 import locationsReducers from './LocationsReducers'
+import serviceAreaReducers from './ServiceAreasReducers'
 
 export default combineReducers({
     login: loginReducers,
@@ -25,5 +26,7 @@ export default combineReducers({
     paymentTypes: paymentTypesReducers,
     categories:categoriesReducers,
     providers: providersReducers,
-    locations: locationsReducers
+    locations: locationsReducers,
+    operators: operatorsReducers,
+    serviceArea: serviceAreaReducers
 })

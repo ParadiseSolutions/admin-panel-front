@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
-import { createProviderAPI } from "../../../Utils/API/Providers";
-import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+
+import { updateOperator } from "../../../Utils/API/Operators";
 import {
   Collapse,
   Form,
@@ -16,63 +14,108 @@ import {
 import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import Select from "react-select";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
+import Select from "react-select";
 
-const GeneralInformation = () => {
-  let history = useHistory();
-
-  //service area options
-  const dispatch = useDispatch();
-  useEffect(() => {
-    var serviceAreaRequest = () => dispatch(serviceAreaData());
-    serviceAreaRequest();
-  }, [dispatch]);
-  const data = useSelector((state) => state.serviceArea.serviceArea.data);
-  const [optionsData, setOptionsData] = useState([]);
-
-  useEffect(() => {
-    if (data) {
-      let options = [];
-      data.forEach((element) => {
-        options.push({ label: element.name, value: element.id });
-      });
-
-      setOptionsData(options);
-    }
-  }, [data]);
-
-  const [selectedMulti, setselectedMulti] = useState(null);
-  const [selectionID, setSelectionID] = useState([]);
-  function handleMulti(selected) {
-    let selection = [];
-
-    selected.forEach((ele) => {
-      selection.push(ele.value);
-    });
-
-    setselectedMulti(selected);
-    setSelectionID(selection);
-  }
-
-
-
-  const [col1, setcol1] = useState(true);
-  const [col2, setcol2] = useState(false);
-  const [col3, setcol3] = useState(false);
+const EditGeneralInformation = ({ data }) => {
+  //initial info
+  const [initialData, setInitialData] = useState();
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
+  const [notification, setNotification] = useState();
+  useEffect(() => {
+    setInitialData(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (initialData && initialData.notification_email === 1) {
+      setNotification(true);
+    }
+
+    if (initialData && initialData.notification_email === 0) {
+      setNotification(false);
+    }
+  }, [initialData]);
+
+  useEffect(() => {
+    if (initialData && initialData.phone2 !== "") {
+      setAddMore1(true);
+    }
+    if (initialData && initialData.phone3 !== "") {
+      setAddMore2(true);
+    }
+  }, [initialData]);
+
+  // console.log(initialData);
+  // console.log(notification);
+  const [col1, setcol1] = useState(false);
 
   function togglecol1() {
     setcol1(!col1);
-    setcol2(false);
-    setcol3(false);
   }
+
+    //service area options
+    const dispatch = useDispatch();
+    useEffect(() => {
+      var serviceAreaRequest = () => dispatch(serviceAreaData());
+      serviceAreaRequest();
+    }, [dispatch]);
+    const dataAreas = useSelector((state) => state.serviceArea.serviceArea.data);
+    const [optionsData, setOptionsData] = useState([]);
+  
+    useEffect(() => {
+      if (dataAreas) {
+        let options = [];
+        dataAreas.forEach((element) => {
+          options.push({ label: element.name, value: element.id });
+        });
+  
+        setOptionsData(options);
+      }
+    }, [dataAreas]);
+  
+    const [selectedMulti, setselectedMulti] = useState(null);
+    const [selectionID, setSelectionID] = useState([]);
+    function handleMulti(selected) {
+      let selection = [];
+  
+      selected.forEach((ele) => {
+        selection.push(ele.value);
+      });
+  
+      setselectedMulti(selected);
+      setSelectionID(selection);
+    }
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-    initialValues: {},
+    initialValues: {
+      name: initialData ? initialData.name : "",
+      legal_name: initialData ? initialData.legal_name : "",
+      code: initialData ? initialData.code : "",
+      address1: initialData ? initialData.address1 : "",
+      address2: initialData ? initialData.address2 : "",
+      city: initialData ? initialData.city : "",
+      state: initialData ? initialData.state : "",
+      zip: initialData ? initialData.zip : "",
+      country: initialData ? initialData.country : "",
+      website_url: initialData ? initialData.website_url : "",
+
+      description: initialData ? initialData.description : "",
+      phone1: initialData ? initialData.phone1 : "",
+      phone2: initialData ? initialData.phone2 : "",
+      phone3: initialData ? initialData.phone3 : "",
+      whatsapp1: initialData ? initialData.whatsapp1 : "",
+      whatsapp2: initialData ? initialData.whatsapp2 : "",
+      whatsapp3: initialData ? initialData.whatsapp3 : "",
+      email1: initialData ? initialData.email1 : "",
+      email2: initialData ? initialData.email2 : "",
+      email3: initialData ? initialData.email3 : "",
+    },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
       code: Yup.string()
@@ -82,103 +125,54 @@ const GeneralInformation = () => {
     }),
     onSubmit: (values) => {
       console.log(values);
+      let data = {
+        name: values.name ? values.name : "",
+        legal_name: values.legal_name ? values.legal_name : "",
+        code: values.code ? values.code : "",
+        address1: values.address1 ? values.address1 : "",
+        address2: values.address2 ? values.address2 : "",
+        city: values.city ? values.city : "",
+        state: values.state ? values.state : "",
+        zip: values.zip ? values.zip : "",
+        country: values.country ? values.country : "",
+        website_url: values.website_url ? values.website_url : "",
 
-      Swal.fire({
-        title: "Operator Request",
-        icon: "question",
-        text: `Create this provider as Operator to?`,
-        showCancelButton: true,
-        confirmButtonText: "Yes",
-        confirmButtonColor: "#F38430",
-        cancelButtonText: "No",
-      }).then((resp) => {
-        if (resp.isConfirmed) {
-          let data = {
-            name: values.name ? values.name : "",
-            legal_name: values.legal_name ? values.legal_name : "",
-            code: values.code ? values.code : "",
-            address1: values.address1 ? values.address1 : "",
-            address2: values.address2 ? values.address2 : "",
-            city: values.city ? values.city : "",
-            state: values.state ? values.state : "",
-            zip: values.zip ? values.zip : "",
-            country: values.country ? values.country : "",
-            website_url: values.website_url ? values.website_url : "",
-            reservation_email: values.reservation_email
-              ? values.reservation_email
-              : "",
-            cc_email: values.cc_email ? values.cc_email : "",
-            notification_email:
-              values.notification_email && values.notification_email === true
-                ? 1
-                : 0,
-            description: values.description ? values.description : "",
-            is_operator: 1,
-            phone1: values.phone1 ? values.phone1 : '',
-            phone2: values.phone2 ? values.phone2 : '',
-            phone3: values.phone3 ? values.phone3 : '',
-            whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
-            whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
-            whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
-            email1: values.email1 ? values.email1 : '',
-            email2: values.email2 ? values.email2 : '',
-            email3: values.email3 ? values.email3 : '',
-            service_area_ids: selectionID
-          };
+        description: values.description ? values.description : "",
+        phone1: values.phone1 ? values.phone1 : "",
+        phone2: values.phone2 ? values.phone2 : "",
+        phone3: values.phone3 ? values.phone3 : "",
+        whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
+        whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
+        whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
+        email1: values.email1 ? values.email1 : "",
+        email2: values.email2 ? values.email2 : "",
+        email3: values.email3 ? values.email3 : "",
+        service_area_ids: selectionID
+      };
 
-          createProviderAPI(data)
-            .then((resp) => {
-              console.log(resp);
-              history.push(`/providers/${resp.data.data.id}`);
-            })
-            .catch((error) => {
-              console.log(error);
-              
-            });
-        } else {
-          let data = {
-            name: values.name ? values.name : "",
-            legal_name: values.legal_name ? values.legal_name : "",
-            code: values.code ? values.code : "",
-            address1: values.address1 ? values.address1 : "",
-            address2: values.address2 ? values.address2 : "",
-            city: values.city ? values.city : "",
-            state: values.state ? values.state : "",
-            zip: values.zip ? values.zip : "",
-            country: values.country ? values.country : "",
-            website_url: values.website_url ? values.website_url : "",
-            reservation_email: values.reservation_email
-              ? values.reservation_email
-              : "",
-            cc_email: values.cc_email ? values.cc_email : "",
-            notification_email: 
-            values.notification_email && values.notification_email === true
-              ? 1
-              : 0,
-            description: values.description ? values.description : "",
-            is_operator: 0,
-            phone1: values.phone1 ? values.phone1 : '',
-            phone2: values.phone2 ? values.phone2 : '',
-            phone3: values.phone3 ? values.phone3 : '',
-            whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
-            whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
-            whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
-            email1: values.email1 ? values.email1 : '',
-            email2: values.email2 ? values.email2 : '',
-            email3: values.email3 ? values.email3 : '',
-            service_area_ids: selectionID
-          };
-          createProviderAPI(data)
-            .then((resp) => {
-              console.log(resp);
-              history.push(`/providers/${resp.data.data.id}`);
-            })
-            .catch((error) => {
-              console.log(error);
-              
-            });
-        }
-      });
+      updateOperator(initialData.id, data)
+        .then((resp) => {
+          console.log(resp.data);
+          if (resp.data.status === 200) {
+            Swal.fire(
+              "Edited!",
+              "General Information has been edited.",
+              "success"
+            ).then(() => {});
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+          Swal.fire(
+            "Error!",
+            `${
+              error.response.data.data.name
+                ? error.response.data.data.name
+                : error.response.data.data.code
+            }`,
+            "error"
+          );
+        });
     },
   });
 
@@ -339,32 +333,6 @@ const GeneralInformation = () => {
                     ) : null}
                   </div>
                 </Col>
-                <Col className="col-2">
-                  <div className="form-check form-switch form-switch-md mt-4">
-                    <Label className="form-label">Notification Email</Label>
-                    <Input
-                      name="notification_email"
-                      placeholder=""
-                      type="checkbox"
-                      className="form-check-input"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.notification_email || ""}
-                      invalid={
-                        validationType.touched.notification_email &&
-                        validationType.errors.notification_email
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.notification_email &&
-                    validationType.errors.notification_email ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.notification_email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
               </Row>
 
               <Row>
@@ -451,7 +419,7 @@ const GeneralInformation = () => {
                     <Label
                       className="form-label text-info"
                       onClick={() => setAddMore1(!addMore1)}
-                      style={{cursor:'pointer'}}
+                      style={{ cursor: "pointer" }}
                     >
                       Add more +
                     </Label>
@@ -544,7 +512,7 @@ const GeneralInformation = () => {
                       <Label
                         className="form-label text-info"
                         onClick={() => setAddMore2(!addMore2)}
-                        style={{cursor: 'pointer'}}
+                        style={{ cursor: "pointer" }}
                       >
                         Add more +
                       </Label>
@@ -737,56 +705,6 @@ const GeneralInformation = () => {
               <Row>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Reservation Email</Label>
-                    <Input
-                      name="reservation_email"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.reservation_email || ""}
-                      invalid={
-                        validationType.touched.reservation_email &&
-                        validationType.errors.reservation_email
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.reservation_email &&
-                    validationType.errors.reservation_email ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.reservation_email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">CC Email</Label>
-                    <Input
-                      name="cc_email"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.cc_email || ""}
-                      invalid={
-                        validationType.touched.cc_email &&
-                        validationType.errors.cc_email
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.cc_email &&
-                    validationType.errors.cc_email ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.cc_email}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
                     <Label className="form-label">Website URL</Label>
                     <Input
                       name="website_url"
@@ -878,52 +796,8 @@ const GeneralInformation = () => {
           </div>
         </Collapse>
       </div>
-      <div className="accordion-item">
-        <h2 className="accordion-header" id="headingTwo">
-          <button
-            className={classnames("accordion-button", "fw-medium", {
-              collapsed: !col2,
-            })}
-            type="button"
-            style={{
-              cursor: "pointer",
-              backgroundColor: "#F6851F",
-              color: "white",
-            }}
-          >
-            Contacts
-          </button>
-        </h2>
-        <Collapse id="collapseTwo" className="accordion-collapse" isOpen={col2}>
-          <div className="accordion-body"></div>
-        </Collapse>
-      </div>
-      <div className="accordion-item">
-        <h2 className="accordion-header" id="headingThree">
-          <button
-            className={classnames("accordion-button", "fw-medium", {
-              collapsed: !col3,
-            })}
-            type="button"
-            style={{
-              cursor: "pointer",
-              backgroundColor: "#F6851F",
-              color: "white",
-            }}
-          >
-            Social Media
-          </button>
-        </h2>
-        <Collapse
-          id="collapseThree"
-          className="accordion-collapse"
-          isOpen={col3}
-        >
-          <div className="accordion-body"></div>
-        </Collapse>
-      </div>
     </div>
   );
 };
 
-export default GeneralInformation;
+export default EditGeneralInformation;
