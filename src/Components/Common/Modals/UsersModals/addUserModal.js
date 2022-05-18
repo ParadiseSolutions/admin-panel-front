@@ -328,6 +328,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     <Input
                       type="select"
                       name="roles"
+                      
                       onChange={(e) => onChangeSelectionRol(e.target.value)}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
