@@ -16,8 +16,13 @@ import {
 import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import Select from "react-select";
+
 import Swal from "sweetalert2";
+import "antd/dist/antd.css";
+import { Select } from "antd";
+import { map } from "lodash";
+
+const { Option } = Select;
 
 const GeneralInformation = () => {
   let history = useHistory();
@@ -29,18 +34,6 @@ const GeneralInformation = () => {
     serviceAreaRequest();
   }, [dispatch]);
   const data = useSelector((state) => state.serviceArea.serviceArea.data);
-  const [optionsData, setOptionsData] = useState([]);
-
-  useEffect(() => {
-    if (data) {
-      let options = [];
-      data.forEach((element) => {
-        options.push({ label: element.name, value: element.id });
-      });
-
-      setOptionsData(options);
-    }
-  }, [data]);
 
   const [selectedMulti, setselectedMulti] = useState(null);
   const [selectionID, setSelectionID] = useState([]);
@@ -811,26 +804,28 @@ const GeneralInformation = () => {
                   </div>
                 </Col>
                 <Col className="col-3">
-                {optionsData.length > 0 ? (
-                      <div className="form-outline mb-4">
-                        <Label className="form-label">Service Area</Label>
-                        <Select
-                          value={selectedMulti}
-                          isMulti={true}
-                          onChange={(e) => {
-                            handleMulti(e);
-                          }}
-                          options={optionsData}
-                          classNamePrefix="select2-selection"
-                        />
-                        {validationType.touched.cpanel_account &&
-                        validationType.errors.cpanel_account ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.cpanel_account}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    ) : null}
+                {data ? (
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Service Area</Label>
+                     
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: "100%", paddingTop: "5px" }}
+                        placeholder="Please select"
+                        // defaultValue={[ {label: 'holis', value:1} ]}
+                        onChange={handleMulti}
+                      >
+                        {map(data, (item, index) => {
+                          return (
+                            <Option key={index} value={item.id}>
+                              {item.name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                  ) : null}
                 </Col>
               </Row>
 

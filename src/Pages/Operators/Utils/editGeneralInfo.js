@@ -15,10 +15,15 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
-import Select from "react-select";
+// import Select from "react-select";
+import 'antd/dist/antd.css';
+import { Select } from 'antd';
+import { map } from "lodash";
+
+const { Option } = Select;
 
 const EditGeneralInformation = ({ data }) => {
   //initial info
@@ -49,7 +54,7 @@ const EditGeneralInformation = ({ data }) => {
     }
   }, [initialData]);
 
-  // console.log(initialData);
+  console.log(initialData);
   // console.log(notification);
   const [col1, setcol1] = useState(false);
 
@@ -64,30 +69,28 @@ const EditGeneralInformation = ({ data }) => {
       serviceAreaRequest();
     }, [dispatch]);
     const dataAreas = useSelector((state) => state.serviceArea.serviceArea.data);
-    const [optionsData, setOptionsData] = useState([]);
   
+    const [initialOptionsArea, setInitialOptionsArea] = useState([]);
     useEffect(() => {
-      if (dataAreas) {
-        let options = [];
+      if (initialData && dataAreas) {
+        let optionsArea = [];
+  
         dataAreas.forEach((element) => {
-          options.push({ label: element.name, value: element.id });
+          if (initialData.service_areas_ids.includes(element.id)) {
+            optionsArea.push({ label: element.name, value: element.id });
+          }
         });
-  
-        setOptionsData(options);
+        setInitialOptionsArea(optionsArea);
       }
-    }, [dataAreas]);
+    }, [dataAreas, initialData]);
   
-    const [selectedMulti, setselectedMulti] = useState(null);
+   
+  
     const [selectionID, setSelectionID] = useState([]);
     function handleMulti(selected) {
-      let selection = [];
+      
   
-      selected.forEach((ele) => {
-        selection.push(ele.value);
-      });
-  
-      setselectedMulti(selected);
-      setSelectionID(selection);
+      setSelectionID(selected);
     }
 
   const validationType = useFormik({
@@ -147,7 +150,9 @@ const EditGeneralInformation = ({ data }) => {
         email1: values.email1 ? values.email1 : "",
         email2: values.email2 ? values.email2 : "",
         email3: values.email3 ? values.email3 : "",
-        service_area_ids: selectionID
+        service_area_ids:
+          selectionID.length > 0 ? selectionID : initialData.service_areas_ids,
+      
       };
 
       updateOperator(initialData.id, data)
@@ -729,26 +734,49 @@ const EditGeneralInformation = ({ data }) => {
                   </div>
                 </Col>
                 <Col className="col-3">
-                {optionsData.length > 0 ? (
-                      <div className="form-outline mb-4">
-                        <Label className="form-label">Service Area</Label>
-                        <Select
-                          value={selectedMulti}
-                          isMulti={true}
-                          onChange={(e) => {
-                            handleMulti(e);
-                          }}
-                          options={optionsData}
-                          classNamePrefix="select2-selection"
-                        />
-                        {validationType.touched.cpanel_account &&
-                        validationType.errors.cpanel_account ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.cpanel_account}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    ) : null}
+                {dataAreas && initialOptionsArea.length > 0 ? (
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Service Area</Label>
+
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: "100%", paddingTop: "5px" }}
+                        placeholder="Please select"
+                        defaultValue={initialOptionsArea}
+                        onChange={handleMulti}
+                      >
+                        {map(dataAreas, (item, index) => {
+                          return (
+                            <Option key={index} value={item.id}>
+                              {item.name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                  ) : null}
+                  {dataAreas && initialOptionsArea.length === 0 ? (
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Service Area</Label>
+
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: "100%", paddingTop: "5px" }}
+                        placeholder="Please select"
+                        onChange={handleMulti}
+                      >
+                        {map(dataAreas, (item, index) => {
+                          return (
+                            <Option key={index} value={item.id}>
+                              {item.name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                  ) : null}
                 </Col>
               </Row>
 

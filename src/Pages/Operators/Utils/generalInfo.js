@@ -13,48 +13,30 @@ import {
 import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import Select from "react-select";
+// import Select from "react-select";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
+import "antd/dist/antd.css";
+import { Select } from "antd";
+import { map } from "lodash";
 
+const { Option } = Select;
 const GeneralInformation = () => {
-
-
   let history = useHistory();
 
-    //service area options
-    const dispatch = useDispatch();
-    useEffect(() => {
-      var serviceAreaRequest = () => dispatch(serviceAreaData());
-      serviceAreaRequest();
-    }, [dispatch]);
-    const data = useSelector((state) => state.serviceArea.serviceArea.data);
-    const [optionsData, setOptionsData] = useState([]);
+  //service area options
+  const dispatch = useDispatch();
+  useEffect(() => {
+    var serviceAreaRequest = () => dispatch(serviceAreaData());
+    serviceAreaRequest();
+  }, [dispatch]);
+  const data = useSelector((state) => state.serviceArea.serviceArea.data);
+  const [selectionID, setSelectionID] = useState([]);
+  function handleMulti(selected) {
+    setSelectionID(selected);
+  }
   
-    useEffect(() => {
-      if (data) {
-        let options = [];
-        data.forEach((element) => {
-          options.push({ label: element.name, value: element.id });
-        });
-  
-        setOptionsData(options);
-      }
-    }, [data]);
-  
-    const [selectedMulti, setselectedMulti] = useState(null);
-    const [selectionID, setSelectionID] = useState([]);
-    function handleMulti(selected) {
-      let selection = [];
-  
-      selected.forEach((ele) => {
-        selection.push(ele.value);
-      });
-  
-      setselectedMulti(selected);
-      setSelectionID(selection);
-    }
   const [col1, setcol1] = useState(true);
   const [col2, setcol2] = useState(false);
   const [col3, setcol3] = useState(false);
@@ -81,43 +63,41 @@ const GeneralInformation = () => {
     onSubmit: (values) => {
       console.log(values);
 
-          let data = {
-            name: values.name ? values.name : "",
-            legal_name: values.legal_name ? values.legal_name : "",
-            code: values.code ? values.code : "",
-            address1: values.address1 ? values.address1 : "",
-            address2: values.address2 ? values.address2 : "",
-            city: values.city ? values.city : "",
-            state: values.state ? values.state : "",
-            zip: values.zip ? values.zip : "",
-            country: values.country ? values.country : "",
-            website_url: values.website_url ? values.website_url : "",
-           
-            description: values.description ? values.description : "",
-            
-            phone1: values.phone1 ? values.phone1 : "",
-            phone2: values.phone2 ? values.phone2 : "",
-            phone3: values.phone3 ? values.phone3 : "",
-            whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
-            whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
-            whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
-            email1: values.email1 ? values.email1 : "",
-            email2: values.email2 ? values.email2 : "",
-            email3: values.email3 ? values.email3 : "",
-            service_area_ids: selectionID
-          };
+      let data = {
+        name: values.name ? values.name : "",
+        legal_name: values.legal_name ? values.legal_name : "",
+        code: values.code ? values.code : "",
+        address1: values.address1 ? values.address1 : "",
+        address2: values.address2 ? values.address2 : "",
+        city: values.city ? values.city : "",
+        state: values.state ? values.state : "",
+        zip: values.zip ? values.zip : "",
+        country: values.country ? values.country : "",
+        website_url: values.website_url ? values.website_url : "",
 
-          createOperatorAPI(data)
-            .then((resp) => {
-              console.log(resp);
-              history.push(`/operators/${resp.data.data.id}`);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        
-        
-    
+        description: values.description ? values.description : "",
+
+        phone1: values.phone1 ? values.phone1 : "",
+        phone2: values.phone2 ? values.phone2 : "",
+        phone3: values.phone3 ? values.phone3 : "",
+        whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
+        whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
+        whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
+        email1: values.email1 ? values.email1 : "",
+        email2: values.email2 ? values.email2 : "",
+        email3: values.email3 ? values.email3 : "",
+        service_area_ids: selectionID,
+      };
+
+      console.log(data);
+      // createOperatorAPI(data)
+      //   .then((resp) => {
+      //     console.log(resp);
+      //     history.push(`/operators/${resp.data.data.id}`);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     },
   });
 
@@ -278,7 +258,6 @@ const GeneralInformation = () => {
                     ) : null}
                   </div>
                 </Col>
-               
               </Row>
 
               <Row>
@@ -649,7 +628,6 @@ const GeneralInformation = () => {
                 </Col>
               </Row>
               <Row>
-                
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Website URL</Label>
@@ -676,26 +654,28 @@ const GeneralInformation = () => {
                   </div>
                 </Col>
                 <Col className="col-3">
-                {optionsData.length > 0 ? (
-                      <div className="form-outline mb-4">
-                        <Label className="form-label">Service Area</Label>
-                        <Select
-                          value={selectedMulti}
-                          isMulti={true}
-                          onChange={(e) => {
-                            handleMulti(e);
-                          }}
-                          options={optionsData}
-                          classNamePrefix="select2-selection"
-                        />
-                        {validationType.touched.cpanel_account &&
-                        validationType.errors.cpanel_account ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.cpanel_account}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    ) : null}
+                  {data ? (
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Service Area</Label>
+                     
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: "100%", paddingTop: "5px" }}
+                        placeholder="Please select"
+                        // defaultValue={[ {label: 'holis', value:1} ]}
+                        onChange={handleMulti}
+                      >
+                        {map(data, (item, index) => {
+                          return (
+                            <Option key={index} value={item.id}>
+                              {item.name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                  ) : null}
                 </Col>
               </Row>
 
