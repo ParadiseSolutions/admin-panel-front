@@ -35,17 +35,10 @@ const GeneralInformation = () => {
   }, [dispatch]);
   const data = useSelector((state) => state.serviceArea.serviceArea.data);
 
-  const [selectedMulti, setselectedMulti] = useState(null);
   const [selectionID, setSelectionID] = useState([]);
   function handleMulti(selected) {
-    let selection = [];
-
-    selected.forEach((ele) => {
-      selection.push(ele.value);
-    });
-
-    setselectedMulti(selected);
-    setSelectionID(selection);
+    
+    setSelectionID(selected);
   }
 
 
@@ -161,6 +154,7 @@ const GeneralInformation = () => {
             email3: values.email3 ? values.email3 : '',
             service_area_ids: selectionID
           };
+          
           createProviderAPI(data)
             .then((resp) => {
               console.log(resp);

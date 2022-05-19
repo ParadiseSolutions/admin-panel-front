@@ -34,6 +34,7 @@ const GeneralInformation = () => {
   const data = useSelector((state) => state.serviceArea.serviceArea.data);
   const [selectionID, setSelectionID] = useState([]);
   function handleMulti(selected) {
+    console.log(selected)
     setSelectionID(selected);
   }
   
@@ -89,15 +90,15 @@ const GeneralInformation = () => {
         service_area_ids: selectionID,
       };
 
-      console.log(data);
-      // createOperatorAPI(data)
-      //   .then((resp) => {
-      //     console.log(resp);
-      //     history.push(`/operators/${resp.data.data.id}`);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
+      
+      createOperatorAPI(data)
+        .then((resp) => {
+          console.log(resp);
+          history.push(`/operators/${resp.data.data.id}`);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   });
 
@@ -682,7 +683,7 @@ const GeneralInformation = () => {
               <Row>
                 <Col className="col-12">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Provider Description</Label>
+                    <Label className="form-label">Operator Description</Label>
                     <Input
                       name="description"
                       placeholder=""

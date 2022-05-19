@@ -33,14 +33,8 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
   const [selectedMulti, setselectedMulti] = useState(null);
   const [selectionID, setSelectionID] = useState([]);
   function handleMulti(selected) {
-    let selection = [];
-
-    selected.forEach((ele) => {
-      selection.push(ele.value);
-    });
-
-    setselectedMulti(selected);
-    setSelectionID(selection);
+   
+    setSelectionID(selected);
   }
 
 

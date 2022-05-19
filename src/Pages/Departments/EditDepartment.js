@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { editDepartment, getDepartment } from "../../Utils/API/Departments";
 import { useParams } from "react-router-dom";
 import BoatImage from "../../Components/Assets/images/boat.png";
-import Inter1 from '../../Components/Assets/images/Intersection1.svg'
+import Inter1 from "../../Components/Assets/images/Intersection1.svg";
 import {
   Container,
   Row,
@@ -156,11 +156,6 @@ const EditDepartment = ({ history }) => {
     <>
       <div className="page-content">
         <Container fluid>
-          <div className=" mx-5">
-            <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
-              + EDIT DEPARTMENT
-            </h1>
-          </div>
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -169,19 +164,56 @@ const EditDepartment = ({ history }) => {
             }}
             className="custom-validation"
           >
+            <div className=" mx-5 d-flex">
+              <h1
+                className="display-5 fw-bold text-paradise"
+                // style={{ color: "#3DC7F4" }}
+              >
+                + EDIT DEPARTMENT
+              </h1>
+            </div>
+            <Col sm="12" className="d-flex justify-content-end">
+              <div className="text-sm-end mx-2">
+                <Button
+                  color="paradise"
+                  outline
+                  type="button"
+                  className="waves-effect waves-light"
+                  onClick={() => history.goBack()}
+                >
+                  <i className="uil-angle-double-left" />
+                  Back
+                </Button>
+              </div>
+              <div className="text-sm-end">
+                <Button
+                  type="button"
+                  style={{ backgroundColor: "#F6851F", borderColor: "#F6851F" }}
+                  className="waves-effect waves-light mb-3 btn btn-success"
+                  // onClick={() => onClickNewContactProvider()}
+                >
+                  <i className="mdi mdi-plus me-1" />
+                  Edit Department
+                </Button>
+              </div>
+            </Col>
+
             <Row>
               <Col className="col-12 mx-5">
-                <Row>
+                <Row className="d-flex justify-content-between">
                   <Col lg={3}>
                     <Card>
-                    <CardBody className="d-grid px-2 pt-0">
-                    <Row className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3">
-                          
-                          <h5 className="text-white col-8">+ General Information</h5>
-                        <img src={Inter1} alt='inter1' style={{width: '100px', marginTop:'-15px', marginRight:'-10px'}} />
+                      <CardBody className="d-grid px-2 pt-0">
+                        <Row
+                          className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3"
+                          style={{ paddingLeft: "20px" }}
+                        >
+                          <h5 className="text-white col-8">
+                            + General Information
+                          </h5>
                         </Row>
                         <Row className="justify-content-center mt-4">
-                          <div className="form-outline mb-4">
+                          <div className="form-outline mb-4 col-11">
                             <Label className="form-label">Name</Label>
                             <Input
                               name="name"
@@ -205,7 +237,7 @@ const EditDepartment = ({ history }) => {
                             ) : null}
                           </div>
 
-                          <div className="form-outline mb-4">
+                          <div className="form-outline mb-4 col-11">
                             <Label>Code</Label>
                             <Input
                               name="code"
@@ -229,14 +261,6 @@ const EditDepartment = ({ history }) => {
                             ) : null}
                           </div>
                         </Row>
-
-                        <Button
-                          color="primary"
-                          className="waves-effect waves-light"
-                        >
-                          <i className=" mdi mdi-plus-circle-outline me-1" />
-                          Edit Department
-                        </Button>
                       </CardBody>
                     </Card>
                     <div style={{ border: "none" }}>
@@ -245,19 +269,22 @@ const EditDepartment = ({ history }) => {
                         alt="boat"
                         style={{
                           width: "103%",
-                          height: "363px",
+                          height: "400px",
                           marginLeft: "-5px",
                         }}
                       />
                     </div>
                   </Col>
                   <Col lg={4}>
-                  <Card style={{ height: "75vh" }} className='px-2 pt-0'>
-                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
-                          <h5 className="text-white">+ Select Members</h5>
-                        </Row>
+                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
+                      <Row
+                        className="justify-content-center bg-paradise pt-3 pb-2 shadow"
+                        style={{ paddingLeft: "20px" }}
+                      >
+                        <h5 className="text-white">+ Select Members</h5>
+                      </Row>
                       <CardBody className="overflow-auto">
-                        <Row className="justify-content-center mt-4">
+                        <Row className="justify-content-center">
                           {dataUsers ? (
                             <>
                               {map(dataUsers, (user, index) => {
@@ -277,18 +304,21 @@ const EditDepartment = ({ history }) => {
                     </Card>
                   </Col>
                   <Col lg={4}>
-                  <Card style={{ height: "75vh" }} className='px-2 pt-0'>
-                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
-                          <h5 className="text-white">+ Permissionss</h5>
-                        </Row>
+                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
+                      <Row
+                        className="justify-content-center bg-paradise pt-3 pb-2 shadow"
+                        style={{ paddingLeft: "20px" }}
+                      >
+                        <h5 className="text-white">+ Permissionss</h5>
+                      </Row>
                       <CardBody className="overflow-auto">
-                        <Row className="mt-4">
-                          <Row lg={6}>
+                        <Row className="d-flex justify-content-center">
+                          
                             {dataModules ? (
                               <>
                                 {map(dataModules, (module, index) => {
                                   return (
-                                    <div key={index} className=" my-4 mx-4 ">
+                                    <div key={index} className=" my-4 col-5 ">
                                       <PermissionsChecked
                                         key={index}
                                         module={module}
@@ -300,7 +330,7 @@ const EditDepartment = ({ history }) => {
                                 })}
                               </>
                             ) : null}
-                          </Row>
+                          
                         </Row>
                       </CardBody>
                     </Card>
