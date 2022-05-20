@@ -783,7 +783,7 @@ const EditGeneralInformation = ({ data }) => {
               <Row>
                 <Col className="col-12">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Provider Description</Label>
+                    <Label className="form-label">Operators Description</Label>
                     <Input
                       name="description"
                       placeholder=""

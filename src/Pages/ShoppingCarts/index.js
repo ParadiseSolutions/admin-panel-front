@@ -125,7 +125,7 @@ const ShoppingCarts = () => {
             <div className="d-flex gap-3">
               <div
                 
-                className="text-success"
+                className="text-paradise"
                 onClick={() => {
                   setCartID(cartData.id)
                   setEditCartModal(true)
