@@ -58,6 +58,8 @@ const PaymentTypes = () => {
     }
   });
  }
+
+  //columns
   const columns = useMemo(
     () => [
       {
@@ -78,9 +80,7 @@ const PaymentTypes = () => {
           return <CartID {...cellProps} />;
         },
       },
-     
-      
-      
+
       {
         Header: "Active",
         accessor: "active",
@@ -95,29 +95,31 @@ const PaymentTypes = () => {
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
-          const cartData = cellProps.row.original;
+          const providersData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <div
-                
-                className="text-success"
-                onClick={() => {
-                  setPaymentID(cartData.id)
-                  setEditPaymentModal(true)
-                }}
+              <Link
+              to={`/providers/${providersData.id}  `}
               >
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+              
+              <div className="text-success">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
               </div>
+              </Link>
               <Link
                 to="#"
                 className="text-danger"
                 onClick={() => {
-                  const paymentData = cellProps.row.original;
+                  const providerInfo = cellProps.row.original;
                   // setconfirm_alert(true);
-                  onDelete(paymentData);
+                  onDelete(providerInfo);
                 }}
               >
                 <i className="mdi mdi-delete font-size-18" id="deletetooltip" />

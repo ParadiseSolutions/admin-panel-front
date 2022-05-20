@@ -80,6 +80,7 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
   return (
     <Modal
       size="lg"
+      centered
       isOpen={addCartModal}
       toggle={() => {
         onClickAddNewCart();
@@ -252,8 +253,8 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                     style={{ backgroundColor: websiteID.length > 0 ? "#F6851F" : 'gray', border: "none" }}
                     className="waves-effect waves-light mb-3 btn btn-success"
                   >
-                    <i className="mdi mdi-plus me-1" />
-                    Submit
+                    
+                    Save Changes
                   </Button>
                 </Col>
               </Row>

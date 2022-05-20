@@ -198,7 +198,7 @@ const Login = () => {
                         Don't have an account?{" "}
                         <a
                           href="#!"
-                          style={{ fontSize: "14.4px" }}
+                          style={{ fontSize: "14.4px", color:'#3DC7F4'}}
                           className="link-info mx-1"
                         >
                           Contact your IT Team for support!

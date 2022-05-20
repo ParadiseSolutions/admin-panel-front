@@ -89,6 +89,7 @@ console.log(dataCarts)
   return (
     <Modal
       size="lg"
+      centered
       isOpen={editCartModal}
       toggle={() => {
         onClickEditCart();
@@ -261,8 +262,7 @@ console.log(dataCarts)
                     style={{ backgroundColor:"#F6851F", border: "none" }}
                     className="waves-effect waves-light mb-3 btn btn-success"
                   >
-                    <i className="mdi mdi-plus me-1" />
-                    Submit
+                    Save Changes
                   </Button>
                 </Col>
               </Row>

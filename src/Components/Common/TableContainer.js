@@ -116,21 +116,6 @@ const TableContainer = ({
           </Col>
         )}
 
-        {categoriesTable && (
-          <Col sm="8">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
-                onClick={() => onClickAddCategory()}
-              >
-                <i className="mdi mdi-plus me-1" />
-                Add New Category
-              </Button>
-            </div>
-          </Col>
-        )}
         {rolesTable && (
           <Col sm="8">
             <div className="text-sm-end">
@@ -228,21 +213,7 @@ const TableContainer = ({
             </div>
           </Col>
         )}
-        {cartsTable && (
-          <Col sm="8">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
-                onClick={() => onClickAddNewCart()}
-              >
-                <i className="mdi mdi-plus me-1" />
-                Add New Cart
-              </Button>
-            </div>
-          </Col>
-        )}
+        
         {paymentsTable && (
           <Col sm="8">
             <div className="text-sm-end">

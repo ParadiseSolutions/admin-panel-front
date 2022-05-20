@@ -49,6 +49,7 @@ const ForgotPassword = () => {
       <div className="container-fluid">
         <div className="row align-items-center">
           <div className="col-6">
+
             <div
               style={{
                 position: "absolute",
@@ -63,11 +64,11 @@ const ForgotPassword = () => {
                 style={{ position: "relative", zIndex: "1" }}
               />
             </div>
-            <div className="row justify-content-center">
-              <div className="col-7">
+            <div className="row justify-content-end col-12" style={{marginLeft: '-110px'}}>
+              <div className="col-8" >
                 <span
                   className="h1 fw-bold mb-0 mx-5"
-                  style={{ color: "#3DC7F4", fontSize: "130px", paddingLeft:'13px' }}
+                  style={{ color: "#3DC7F4", fontSize: "130px" }}
                 >
                   Uh-Oh!
                 </span>
@@ -102,6 +103,7 @@ const ForgotPassword = () => {
                             color: "#74788D",
                             fontSize: "18px",
                             marginLeft: "8px",
+                            fontWeight:'bold'
                           }}
                         >
                           Reset Password
@@ -183,7 +185,7 @@ const ForgotPassword = () => {
                           <a
                             href="/login"
                             style={{ fontSize: "14.4px" }}
-                            className="link-info mx-1"
+                            className="link-info mx-1 text-paradise"
                           >
                             Sign in
                           </a>

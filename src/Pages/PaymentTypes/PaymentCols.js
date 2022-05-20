@@ -2,13 +2,8 @@ import React, { useState } from "react";
 import Switch from "react-switch";
 import { statusUpdatePayments } from "../../Utils/API/Payments";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
-import { useDispatch } from "react-redux";
 import { paymentTypesData } from "../../Utils/Redux/Actions/PaymentTypesActions";
-// const OrderId = (cell) => {
-//     return (
-//         <Link to="#" className="text-body fw-bold">{cell.value ? cell.value : ''}</Link>
-//     );
-// };
+import { useDispatch } from "react-redux";
 const CartName = (cell) => {
   return cell.value ? cell.value : "";
 };
@@ -16,16 +11,10 @@ const CartID = (cell) => {
   return cell.value ? cell.value : "";
 };
 
-const Server = (cell) => {
-  return cell.value ? cell.value : "";
-};
-const Website = (cell) => {
-  return cell.value ? cell.value : "";
-};
-const TestLink = (cell) => {
-  return cell.value ?  cell.value : "";
-};
+
 const Active = (cell) => {
+  console.log(cell.row.original.active)
+  const dispatch = useDispatch();
   const id = cell.row.original.id;
   const Offsymbol = () => {
     return (
@@ -69,26 +58,25 @@ const Active = (cell) => {
     cell.value && cell.value === 1 ? true : false
   );
 
-  const dispatch = useDispatch();
   const onChangeActive = () => {
-    
     setActiveDep(!activeDep);
 
     if (cell.value === 1) {
       let data = { active: 0 };
       statusUpdatePayments(id, data).then((resp) => {
+        var providersRequest = () => dispatch(paymentTypesData());
+    providersRequest();
         console.log(resp);
-        const cartsRequest = () => dispatch(paymentTypesData());
-        cartsRequest();
       });
     }
     if (cell.value === 0) {
       let data = { active: 1 };
       statusUpdatePayments(id, data)
         .then((resp) => {
+          var providersRequest = () => dispatch(paymentTypesData());
+          providersRequest();
+
           console.log(resp);
-          const cartsRequest = () => dispatch(paymentTypesData());
-          cartsRequest();
         })
         .catch((error) => {
           console.log(error);
@@ -127,4 +115,4 @@ const Active = (cell) => {
 //     )
 // };
 
-export { CartName, CartID, Server, Website, TestLink, Active };
+export { CartName, CartID, Active };
