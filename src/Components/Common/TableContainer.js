@@ -30,6 +30,7 @@ const TableContainer = ({
   providersTable,
   contactsProvidersTable,
   operatorsTable,
+  toursTable,
   handleUserClicks,
   onClickAddNew,
   onClickAddCategory,
@@ -320,6 +321,24 @@ const TableContainer = ({
               >
                 <i className="mdi mdi-plus me-1" />
                 Add New Operator
+              </Button>
+              </Link>
+             
+            </div>
+          </Col>
+        )}
+        {toursTable && (
+          <Col sm="8">
+            <div className="text-sm-end">
+              <Link to={'/tours/new'}>
+              <Button
+                type="button"
+                style={{ backgroundColor: "#F6851F", border: "none" }}
+                className="waves-effect waves-light mb-3 btn btn-success"
+                // onClick={() => onClickNewContactProvider()}
+              >
+                <i className="mdi mdi-plus me-1" />
+                Add New Tour
               </Button>
               </Link>
              
@@ -827,6 +846,46 @@ const TableContainer = ({
         </div>
       )}
       {operatorsTable && (
+        <div className="table-responsive">
+          <Table bordered hover {...getTableProps()} className="react_table">
+            <thead className="table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th key={column.id}>
+                      <div {...column.getSortByToggleProps()}>
+                        {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
+                      </div>
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
+      {toursTable && (
         <div className="table-responsive">
           <Table bordered hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
