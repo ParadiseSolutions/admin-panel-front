@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import newTourGi from "../../Components/Assets/images/newTourGI.jpg";
-import { tourTypesData } from "../../Utils/Redux/Actions/TourTypesActions";
-import { websitesData } from "../../Utils/Redux/Actions/WebsitesActions";
-import { locationsData } from "../../Utils/Redux/Actions/LocationsActions";
+import newTourGi from "../../../Components/Assets/images/newTourGI.jpg";
+import { tourTypesData } from "../../../Utils/Redux/Actions/TourTypesActions";
+import { websitesData } from "../../../Utils/Redux/Actions/WebsitesActions";
+import { locationsData } from "../../../Utils/Redux/Actions/LocationsActions";
 import {
   shoppingCartWebsite,
   providerWebsite,
   operatorWebsite,
-} from "../../Utils/API/Tours";
+} from "../../../Utils/API/Tours";
 import {
-  TabContent,
   TabPane,
-  NavLink,
-  NavItem,
-  Nav,
-  Card,
   Row,
   Col,
-  CardBody,
-  Container,
   Form,
   Label,
   Input,
@@ -32,16 +25,9 @@ import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
 
-const NewTour = ({ history }) => {
-  //tabs
-  const [activeTab, setactiveTab] = useState("1");
-  function toggle(tab) {
-    if (activeTab !== tab) {
-      setactiveTab(tab);
-    }
-  }
+const EditGeneralInformation = ({history, tourData}) => {
 
-  //get initial data tour types
+     //get initial data tour types
   const dispatch = useDispatch();
 
   //tour types request
@@ -65,10 +51,9 @@ const NewTour = ({ history }) => {
   }, [dispatch]);
   const dataLocations = useSelector((state) => state.locations.locations.data);
 
-
   //combo boxs
-  const [tourTypeID, setTourTypeID] = useState(null)
-  const [websiteID, setWebsiteID] = useState(null)
+  const [tourTypeID, setTourTypeID] = useState(tourData.type_id)
+  const [websiteID, setWebsiteID] = useState(tourData.website_id)
   const [shoppingCartID, setShoppingCartID] = useState(null)
   const [providerID, setProviderID] = useState(null)
   const [operatorID, setOperatorID] = useState(null)
@@ -92,14 +77,13 @@ const NewTour = ({ history }) => {
     });
   };
 
-  console.log(shoppingCartData)
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      tour_name: "",
-      code: "",
+      tour_name: tourData.name,
+      code: tourData.code,
     },
     validationSchema: Yup.object().shape({
       tour_name: Yup.string().required("Field required"),
@@ -147,98 +131,9 @@ const NewTour = ({ history }) => {
       //     });
     },
   });
-  return (
-    <div className="page-content">
-      <Container fluid>
-        <div className=" mx-4">
-          <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
-            CREATE NEW TOUR
-          </h1>
-        </div>
-      </Container>
-      <Row>
-        <Col xl={12}>
-          <Card>
-            <CardBody>
-              <Nav tabs className="nav-justified">
-                <NavItem>
-                  <NavLink
-                    style={{
-                      cursor: "pointer",
-                      backgroundColor: `${activeTab === "1" ? "#F6851F" : ""}`,
-                      color: `${activeTab === "1" ? "white" : ""}`,
-                    }}
-                    className={classnames({
-                      active: activeTab === "1",
-                    })}
-                    onClick={() => {
-                      toggle("1");
-                    }}
-                  >
-                    <span className="d-block d-sm-none">
-                      <i className="fas fa-home"></i>
-                    </span>
-                    <span className="d-none d-sm-block">
-                      + General Information
-                    </span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    style={{ cursor: "pointer" }}
-                    className={classnames({
-                      active: activeTab === "2",
-                    })}
-                  >
-                    <span className="d-block d-sm-none">
-                      <i className="far fa-user"></i>
-                    </span>
-                    <span className="d-none d-sm-block">+ Settings</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    style={{ cursor: "pointer" }}
-                    className={classnames({
-                      active: activeTab === "3",
-                    })}
-                  >
-                    <span className="d-block d-sm-none">
-                      <i className="far fa-envelope"></i>
-                    </span>
-                    <span className="d-none d-sm-block">+ URLs</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    style={{ cursor: "pointer" }}
-                    className={classnames({
-                      active: activeTab === "3",
-                    })}
-                  >
-                    <span className="d-block d-sm-none">
-                      <i className="far fa-envelope"></i>
-                    </span>
-                    <span className="d-none d-sm-block">+ Pricing</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    style={{ cursor: "pointer" }}
-                    className={classnames({
-                      active: activeTab === "3",
-                    })}
-                  >
-                    <span className="d-block d-sm-none">
-                      <i className="far fa-envelope"></i>
-                    </span>
-                    <span className="d-none d-sm-block">+ Extras</span>
-                  </NavLink>
-                </NavItem>
-              </Nav>
 
-              <TabContent activeTab={activeTab} className="p-3 text-muted">
-                <Form
+    return ( 
+        <Form
                   onSubmit={(e) => {
                     e.preventDefault();
                     validationType.handleSubmit();
@@ -315,7 +210,7 @@ const NewTour = ({ history }) => {
                                   <option>Select....</option>
                                   {map(dataTourType, (tourType, index) => {
                                     return (
-                                      <option key={index} value={tourType.id}>
+                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
                                         {tourType.name}
                                       </option>
                                     );
@@ -339,7 +234,7 @@ const NewTour = ({ history }) => {
                                   <option>Select....</option>
                                   {map(dataWebsite, (website, index) => {
                                     return (
-                                      <option key={index} value={website.id}>
+                                      <option key={index} value={website.id} selected={ tourData.website_id === website.id ? true : false }>
                                         {website.company_name}
                                       </option>
                                     );
@@ -371,7 +266,7 @@ const NewTour = ({ history }) => {
                                           key={index}
                                           value={shoppingCart.id}
                                         >
-                                          {shoppingCart.cart_name}
+                                          {shoppingCart.name}
                                         </option>
                                       );
                                     }
@@ -625,13 +520,7 @@ const NewTour = ({ history }) => {
                     </Row>
                   </TabPane>
                 </Form>
-              </TabContent>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </div>
-  );
-};
-
-export default NewTour;
+     );
+}
+ 
+export default EditGeneralInformation;

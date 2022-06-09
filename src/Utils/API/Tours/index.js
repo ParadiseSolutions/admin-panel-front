@@ -15,6 +15,30 @@ export const statusUpdateTour = (id, body) => {
       headers: options,
     });
   };
+  export const getTourAPI = (id) => {
+    const url = `${API_URL}/tours/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getTourSettingsAPI = (id) => {
+    const url = `${API_URL}/tours/${id}/settings`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getSeasonsAPI = () => {
+    const url = `${API_URL}/seasons`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getAvailableFromAPI = () => {
+    const url = `${API_URL}/availableFrom`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 
   export const shoppingCartWebsite = (id) => {
     const url = `${API_URL}/websites/${id}/carts`;
