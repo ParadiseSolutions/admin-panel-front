@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSeasonsAPI, getAvailableFromAPI } from "../../../Utils/API/Tours";
+import {
+  getSeasonsAPI,
+  getAvailableFromAPI,
+  putSettingsAPI,
+} from "../../../Utils/API/Tours";
+import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
+import SettingsImageTwo from "../../../Components/Assets/images/settings2.png";
+import SettingsImageThree from "../../../Components/Assets/images/settings3.png";
+import AvailableCheckbox from "./availableCheckbox";
 import {
   TabPane,
   Row,
@@ -11,16 +19,19 @@ import {
   FormFeedback,
   Button,
 } from "reactstrap";
-import classnames from "classnames";
-import * as Yup from "yup";
+// import classnames from "classnames";
+
+// import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+import { Select } from "antd";
+const { Option } = Select;
 
 const Settings = ({ history, tourSettings, id }) => {
-  // console.log(tourSettings);
+  console.log(tourSettings);
   //get initial data tour types
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   //seasons request
   const [seasonData, setSeasonData] = useState();
@@ -37,6 +48,35 @@ const Settings = ({ history, tourSettings, id }) => {
     });
   }, []);
 
+  const [initialOptionsArea, setInitialOptionsArea] = useState([]);
+  useEffect(() => {
+    if (tourSettings && availableData) {
+      let optionsArea = [];
+
+      availableData.forEach((element) => {
+        if (tourSettings.available_seasons.includes(element.id.toString())) {
+          optionsArea.push({ label: element.name, value: element.id });
+        }
+      });
+      setInitialOptionsArea(optionsArea);
+    }
+  }, [availableData, tourSettings]);
+
+  console.log(initialOptionsArea);
+
+  //season select
+  const [seasonSelected, setSeasonSelected] = useState(tourSettings.available_seasons);
+  function handleMulti(selected) {
+ 
+
+    setSeasonSelected(selected);
+  }
+  //available from
+  const [availableFromIDs, setAvailableFromIDs] = useState([]);
+  useEffect(() => {
+    setAvailableFromIDs(tourSettings.available_from);
+  }, [tourSettings]);
+
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -46,6 +86,7 @@ const Settings = ({ history, tourSettings, id }) => {
       provider_tour_name: tourSettings.provider_tour_name
         ? tourSettings.provider_tour_name
         : "",
+        available_seasons: tourSettings.available_seasons,
       provider_tour_url: tourSettings.provider_tour_url
         ? tourSettings.provider_tour_url
         : "",
@@ -76,41 +117,43 @@ const Settings = ({ history, tourSettings, id }) => {
     //     .required("Max 2 chars"),
     // }),
     onSubmit: (values) => {
+      
       let data = {
-        // cart_id: shoppingCartID,
-        // website_id: websiteID,
-        // type_id: tourTypeID,
-        // category_id: mainCatID,
-        // location_id: locationID,
-        // provider_id: providerID,
-        // operator_id: operatorID,
-        // name: values.tour_name,
-        // code: values.code,
+        provider_tour_name: values.provider_tour_name
+          ? values.provider_tour_name
+          : "",
+        provider_tour_url: values.provider_tour_url
+          ? values.provider_tour_url
+          : "",
+        available_seasons: seasonSelected,
+        available_from: availableFromIDs,
+        infants_range_from: values.infants_range_from
+          ? values.infants_range_from
+          : "",
+        infants_range_to: values.infants_range_to
+          ? values.infants_range_to
+          : "",
+        kids_range_from: values.kids_range_from ? values.kids_range_from : "",
+        kids_range_to: values.kids_range_to ? values.kids_range_to : "",
+        teenagers_range_from: values.teenagers_range_from
+          ? values.teenagers_range_from
+          : "",
+        teenagers_range_to: values.teenagers_range_to
+          ? values.teenagers_range_to
+          : "",
       };
-      console.log(data);
-      //   createRol(data)
-      //     .then((resp) => {
-      //       console.log(resp.data);
-      //       if (resp.data.status === 201) {
-      //         Swal.fire(
-      //           "Created!",
-      //           "The Rol has been created.",
-      //           "success"
-      //         ).then(() => {
-      //           history.goBack();
-      //         });
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log(error.response);
-      //       Swal.fire(
-      //         "Error!",
-      //         `${
-      //           error.response.data.data[0]
-      //         }`,
-      //         "error"
-      //       );
-      //     });
+      console.log(data)
+      putSettingsAPI(id, data)
+        .then((resp) => {
+          console.log(resp.data);
+          if (resp.data.status === 200) {
+            Swal.fire("Edited!", "Settings has been created.", "success");
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+          Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+        });
     },
   });
 
@@ -123,7 +166,31 @@ const Settings = ({ history, tourSettings, id }) => {
       }}
       className="custom-validation"
     >
-      <TabPane tabId="1">
+      <TabPane tabId="1" className="">
+        <Row xl={12} className=" d-flex justify-content-between pb-4 ">
+          <Col className="col-4">
+            <img
+              src={SettingsImageThree}
+              alt="image1"
+              style={{ width: "480px", height: "146px" }}
+            />
+          </Col>
+          <Col className="col-4">
+            <img
+              src={SettingsImageOne}
+              alt="image1"
+              style={{ width: "480px", height: "146px" }}
+            />
+          </Col>
+          <Col className="col-4">
+            <img
+              src={SettingsImageTwo}
+              alt="image1"
+              style={{ width: "480px", height: "146px" }}
+            />
+          </Col>
+        </Row>
+
         <Row xl={12}>
           <Row className="col-12 p-1" style={{ backgroundColor: "#E9F4FF" }}>
             <p
@@ -235,25 +302,25 @@ const Settings = ({ history, tourSettings, id }) => {
               <Col className="col-3">
                 <div className="form-outline my-2">
                   <Label className="form-label">Available Seasons</Label>
-                  <Input
-                    type="select"
-                    name=""
-                    // disabled={operatorData ? false : true}
-                    // onChange={(e) => {
-                    //   setOperatorID(e.target.value);
-                    // }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option>Select....</option>
-                    {map(seasonData, (season, index) => {
-                      return (
-                        <option key={index} value={season.id}>
-                          {season.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
+
+                  {tourSettings && initialOptionsArea.length > 0 ? (
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      style={{ width: "100%", paddingTop: "5px" }}
+                      placeholder="Please select"
+                      defaultValue={initialOptionsArea}
+                      onChange={handleMulti}
+                    >
+                      {map(availableData, (item, index) => {
+                        return (
+                          <Option key={index} value={item.id}>
+                            {item.name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  ) : null}
                 </div>
               </Col>
               <Col className="col-2 d-flex justify-content-center ">
@@ -265,15 +332,11 @@ const Settings = ({ history, tourSettings, id }) => {
                   return (
                     <Col key={index} className="">
                       <div className="form-check mt-5">
-                        <input
-                          name={available.name}
-                          type="checkbox"
-                          className="form-check-input"
-                          // onChange={(e) => onChangeMembers(e)}
-                          // checked={checked}
+                        <AvailableCheckbox
+                          available={available}
+                          availableFromIDs={availableFromIDs}
+                          setAvailableFromIDs={setAvailableFromIDs}
                         />
-
-                        <Label className="form-label">{available.name}</Label>
                       </div>
                     </Col>
                   );

@@ -60,3 +60,10 @@ export const statusUpdateTour = (id, body) => {
       headers: options,
     });
   };
+
+  export const putSettingsAPI = (id, body) => {
+    const url = `${API_URL}/tours/${id}/settings`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
