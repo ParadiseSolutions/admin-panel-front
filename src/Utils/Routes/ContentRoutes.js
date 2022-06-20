@@ -13,6 +13,7 @@ import CategoriesRoutes from "./CategoriesRoutes";
 import ProvidersRoutes from "./ProvidersRoutes";
 import LocationsRoutes from "./LocationsRoutes";
 import OperatorsRoutes from "./OperatorsRoutes";
+import TourRoutes from "./ToursRoutes";
 import Layout from "../../Components/Layout";
 
 
@@ -38,6 +39,7 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
             <PrivateRoutes path="/categories" component={CategoriesRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/providers" component={ProvidersRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/shoppingcarts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
+            <PrivateRoutes path="/tours" component={TourRoutes} isAuthenticated={isLogged} />
             <Redirect to="/dashboard" />
           </Switch>
         </Suspense>

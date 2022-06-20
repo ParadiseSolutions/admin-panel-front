@@ -110,7 +110,7 @@ const EditGeneralInformation = ({ data }) => {
       website_url: initialData ? initialData.website_url : "",
       reservation_email: initialData ? initialData.reservation_email : "",
       cc_email: initialData ? initialData.cc_email : "",
-      // notification_email: initialData ? initialData.cc_email : "",
+      notification_email: initialData ? initialData.notification_email : "",
       description: initialData ? initialData.description : "",
       phone1: initialData ? initialData.phone1 : "",
       phone2: initialData ? initialData.phone2 : "",

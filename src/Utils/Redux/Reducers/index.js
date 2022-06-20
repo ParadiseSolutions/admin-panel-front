@@ -13,6 +13,7 @@ import providersReducers from './ProvidersReducers'
 import operatorsReducers from './OperatorsReducers'
 import locationsReducers from './LocationsReducers'
 import serviceAreaReducers from './ServiceAreasReducers'
+import toursReducers from './ToursReducers'
 
 export default combineReducers({
     login: loginReducers,
@@ -28,5 +29,6 @@ export default combineReducers({
     providers: providersReducers,
     locations: locationsReducers,
     operators: operatorsReducers,
-    serviceArea: serviceAreaReducers
+    serviceArea: serviceAreaReducers,
+    tours: toursReducers,
 })
