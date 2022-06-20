@@ -1,13 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.c8f2b65c.css",
-    "main.js": "/static/js/main.f6e5db5e.js",
+    "main.js": "/static/js/main.980e2846.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.8.55": "/static/media/materialdesignicons-webfont.506bc8215df8660d8f04.ttf",
     "static/media/fa-solid-900.svg": "/static/media/fa-solid-900.3a909e9bcf105f28ebe7.svg",
     "static/media/boxicons.svg": "/static/media/boxicons.3e906787d0915a1e482c.svg",
     "static/media/fa-brands-400.svg": "/static/media/fa-brands-400.5f363d3d71c36033aff0.svg",
+    "static/media/settings2.png": "/static/media/settings2.f66bbf48524b191aa0b5.png",
+    "static/media/settings3.png": "/static/media/settings3.c2e71127b1446c0fa42f.png",
+    "static/media/settings1.png": "/static/media/settings1.f550dc7e64c320dd47df.png",
     "static/media/materialdesignicons-webfont.woff?v=5.8.55": "/static/media/materialdesignicons-webfont.d06df622bc47f0db9812.woff",
     "static/media/materialdesignicons-webfont.woff2?v=5.8.55": "/static/media/materialdesignicons-webfont.6147fc3741c622c5de2c.woff2",
     "static/media/boat.png": "/static/media/boat.e6c7c078603b28932384.png",
@@ -18,6 +21,7 @@
     "static/media/fa-solid-900.ttf": "/static/media/fa-solid-900.32267f3b4db33a7c85ee.ttf",
     "static/media/alpaca.png": "/static/media/alpaca.f9c5f45f084369f228d3.png",
     "static/media/adventure-bg-hub.jpg": "/static/media/adventure-bg-hub.da1d1842c715b5e6acb0.jpg",
+    "static/media/newTourGI.jpg": "/static/media/newTourGI.abf8ab286931acb5867f.jpg",
     "static/media/fa-regular-400.svg": "/static/media/fa-regular-400.f4f60ace2cf62f2cba66.svg",
     "static/media/fa-brands-400.eot": "/static/media/fa-brands-400.607a77859353c0cc1882.eot",
     "static/media/fa-brands-400.ttf": "/static/media/fa-brands-400.5818bbd07dfd7095920a.ttf",
@@ -42,11 +46,11 @@
     "index.html": "/index.html",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.c8f2b65c.css.map": "/static/css/main.c8f2b65c.css.map",
-    "main.f6e5db5e.js.map": "/static/js/main.f6e5db5e.js.map",
+    "main.980e2846.js.map": "/static/js/main.980e2846.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c8f2b65c.css",
-    "static/js/main.f6e5db5e.js"
+    "static/js/main.980e2846.js"
   ]
 }
