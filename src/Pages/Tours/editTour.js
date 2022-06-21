@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditGeneralInformation from "./EditComponents/editGeneralInfo";
 import Settings from "./EditComponents/settings";
+import Pricing from "./EditComponents/pricing";
 import { getTourAPI, getTourSettingsAPI } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -180,7 +181,7 @@ const EditTour = ({ history }) => {
                   <h1>url</h1>
                 </TabPane>
                 <TabPane tabId="4">
-                  <h1>pricing</h1>
+                  <Pricing />
                 </TabPane>
                 <TabPane tabId="5">
                   <h1>extras</h1>
