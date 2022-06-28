@@ -18,16 +18,7 @@ const PricingTables = ({
   data,
   productsTable,
   addonsTable,
-  handleUserClicks,
-  onClickAddNew,
-  onClickAddCategory,
-  onClickAddNewWebsite,
-  onClickAddNewCart,
-  onClickAddTourType,
-  onClickAddNewPayment,
-  onClickNewProvider,
-  onClickNewContactProvider,
-  onClickAddLocation,
+  onClickNewProduct,
 }) => {
   const {
     getTableProps,
@@ -70,17 +61,17 @@ const PricingTables = ({
       {productsTable && (
         <Col sm="12">
           <div className="text-sm-end">
-            <Link to="/departments/new">
+           
               <Button
                 type="button"
                 style={{ backgroundColor: "#F6851F", border: "none" }}
                 className="waves-effect waves-light mb-3 btn btn-success"
-                onClick={handleUserClicks}
+                onClick={onClickNewProduct}
               >
                 <i className="mdi mdi-plus me-1" />
-                Add New Department
+                New Product
               </Button>
-            </Link>
+            
           </div>
         </Col>
       )}

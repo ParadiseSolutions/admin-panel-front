@@ -29,7 +29,7 @@ import { Select } from "antd";
 const { Option } = Select;
 
 const Settings = ({ history, tourSettings, id }) => {
-  console.log(tourSettings);
+ 
   //get initial data tour types
   // const dispatch = useDispatch();
 
@@ -41,20 +41,19 @@ const Settings = ({ history, tourSettings, id }) => {
     });
   }, []);
   //seasons request
-  const [availableData, setAvailableData] = useState();
+  const [availableData, setAvailableData] = useState([]);
   useEffect(() => {
     getAvailableFromAPI().then((resp) => {
       setAvailableData(resp.data.data);
     });
   }, []);
-
   const [initialOptionsArea, setInitialOptionsArea] = useState([]);
   useEffect(() => {
     if (tourSettings && availableData) {
       let optionsArea = [];
 
       availableData.forEach((element) => {
-        if (tourSettings.available_seasons.includes(element.id.toString())) {
+        if (tourSettings.available_seasons && tourSettings.available_seasons.includes(element.id.toString())) {
           optionsArea.push({ label: element.name, value: element.id });
         }
       });
@@ -62,7 +61,6 @@ const Settings = ({ history, tourSettings, id }) => {
     }
   }, [availableData, tourSettings]);
 
-  console.log(initialOptionsArea);
 
   //season select
   const [seasonSelected, setSeasonSelected] = useState(tourSettings.available_seasons);
@@ -71,6 +69,7 @@ const Settings = ({ history, tourSettings, id }) => {
 
     setSeasonSelected(selected);
   }
+
   //available from
   const [availableFromIDs, setAvailableFromIDs] = useState([]);
   useEffect(() => {
@@ -142,7 +141,7 @@ const Settings = ({ history, tourSettings, id }) => {
           ? values.teenagers_range_to
           : "",
       };
-      console.log(data)
+      
       putSettingsAPI(id, data)
         .then((resp) => {
           console.log(resp.data);
@@ -328,6 +327,9 @@ const Settings = ({ history, tourSettings, id }) => {
               </Col>
 
               <Col className="d-flex">
+                {availableData.length > 0 ? 
+                <>
+                
                 {map(availableData, (available, index) => {
                   return (
                     <Col key={index} className="">
@@ -341,6 +343,8 @@ const Settings = ({ history, tourSettings, id }) => {
                     </Col>
                   );
                 })}
+                </>
+                : null}
               </Col>
             </Row>
           </Row>

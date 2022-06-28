@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 
 const AvailableCheckbox = ({ available, availableFromIDs,  setAvailableFromIDs }) => {
+
  
-  const isChecked = availableFromIDs.includes(available.id) ? true : false;
+  const isChecked = availableFromIDs ?  availableFromIDs.includes(available.id) ? true : false : false;
 
   const [checked, setChecked] = useState(
-    availableFromIDs.includes(available.id) ? true : false
+   availableFromIDs ? availableFromIDs.includes(available.id) ? true : false : false
   );
 
   useEffect(() => {
-    if (availableFromIDs.length > 0) {
+    if ( availableFromIDs && availableFromIDs.length > 0) {
       setChecked(availableFromIDs.includes(available.id.toString()) ? true : false);
     }
   }, [isChecked]);

@@ -44,6 +44,7 @@ const EditTour = ({ history }) => {
     })
   }, [id]);
 
+
   
 
   return (
@@ -181,7 +182,7 @@ const EditTour = ({ history }) => {
                   <h1>url</h1>
                 </TabPane>
                 <TabPane tabId="4">
-                  <Pricing />
+                  <Pricing id={id} tourData={tourData}/>
                 </TabPane>
                 <TabPane tabId="5">
                   <h1>extras</h1>

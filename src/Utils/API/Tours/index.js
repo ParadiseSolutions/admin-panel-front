@@ -2,6 +2,8 @@ import axios from "axios";
 import { API_URL, options } from "../index";
 
 
+
+//general request
 export const statusUpdateTour = (id, body) => {
     const url = `${API_URL}/tours/${id}/status`;
     return axios.put (url, body, {
@@ -21,6 +23,16 @@ export const statusUpdateTour = (id, body) => {
       headers: options,
     });
   };
+  export const createTourAPI = (body) => {
+    const url = `${API_URL}/tours`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+
+
+
+  //settings
   export const getTourSettingsAPI = (id) => {
     const url = `${API_URL}/tours/${id}/settings`;
     return axios.get (url, {
@@ -67,3 +79,18 @@ export const statusUpdateTour = (id, body) => {
       headers: options,
     });
   };
+
+//Pricing
+export const getPricesPricingAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/prices`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const getAddonsPricingAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/addons`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
