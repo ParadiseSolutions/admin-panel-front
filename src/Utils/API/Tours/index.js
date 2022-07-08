@@ -94,3 +94,21 @@ export const getAddonsPricingAPI = (id) => {
     headers: options,
   });
 };
+
+export const postPricesAPI = (body) => {
+  const url = `${API_URL}/prices`;
+  return axios.get (url,body, {
+    headers: options,
+  });
+};
+
+
+
+//pricing options select
+
+export const getPricingOptionsAPI = (id) => {
+  const url = `${API_URL}/pricingOptions/${id}/items`;
+  return axios.get (url, {
+    headers: options,
+  });
+};

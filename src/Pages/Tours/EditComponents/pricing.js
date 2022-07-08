@@ -23,6 +23,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
 const Pricing = ({ history, id, tourData }) => {
+  // console.log(tourData)
   //prices request
   const [pricesData, setPricesData] = useState([]);
   useEffect(() => {
@@ -374,6 +375,7 @@ const Pricing = ({ history, id, tourData }) => {
         addNewProduct={addNewProduct}
         setAddNewProduct={setAddNewProduct}
         onClickNewProduct={onClickNewProduct}
+        tourData={tourData}
       />
       <AddNewAirportTransfer
         addNewAirportTransfer={addNewAirportTransfer}

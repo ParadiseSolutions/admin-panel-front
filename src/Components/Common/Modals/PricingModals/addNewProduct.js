@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import NewProductPricingImage from "../../../Assets/images/newProductPricing.png";
+import { getPricingOptionsAPI, postPricesAPI } from "../../../../Utils/API/Tours";
 import {
   Row,
   Col,
@@ -12,44 +13,113 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { map } from "lodash";
 
 const AddNewProductPricing = ({
   addNewProduct,
   setAddNewProduct,
   onClickNewProduct,
+  tourData,
 }) => {
+  console.log(tourData);
+
+  //combo box request
+  const [priceTypeData, setPriceTypeData] = useState([]);
+  const [priceOptions, setPriceOptions] = useState([]);
+  const [priceCollect, setPriceCollect] = useState([]);
+  const [priceSeason, setPriceSeason] = useState([]);
+  const [priceTypeSelected, setPriceTypeSelected] = useState();
+  const [priceOptionSelected, setPriceOptionSelected] = useState();
+  const [priceCollectSelected, setPriceCollectSelected] = useState();
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState();
+  useEffect(() => {
+    if (addNewProduct) {
+      getPricingOptionsAPI(6).then((resp) => {
+        setPriceTypeData(resp.data.data);
+      });
+      getPricingOptionsAPI(7).then((resp) => {
+        setPriceOptions(resp.data.data);
+      });
+      getPricingOptionsAPI(9).then((resp) => {
+        setPriceCollect(resp.data.data);
+      });
+      getPricingOptionsAPI(29).then((resp) => {
+        setPriceSeason(resp.data.data);
+      });
+    }
+  }, [addNewProduct]);
+
+  // console.log(priceOptions);
+  // console.log(priceTypeSelected);
+
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      // first_name: userData ? userData.first_name : "",
-      // last_name: userData ? userData.last_name : "",
-      // email: userData ? userData.email : "",
-      // phone_number: userData ? userData.phone_number : '',
-      // job_title: userData ? userData.job_title : "",
-      // department: userData ? userData.department : "",
+      product_name: tourData ? tourData.name : "",
+      sku: tourData ? tourData.sku : "",
     },
-    validationSchema: Yup.object().shape({
-      first_name: Yup.string().required("First Name is required"),
-      last_name: Yup.string().required("Last Name is required"),
-      phone_number: Yup.string().required("Phone Number is required"),
-    }),
-    // onSubmit: (values) => {
-    //   let data = {
-    //     first_name: values.first_name,
-    //     last_name: values.last_name,
-    //     phone_number: values.phone_number,
-    //     department_id: userData.department_id,
-    //     email: userData.email,
-    //     role_id: userData.role_id,
+    // validationSchema: Yup.object().shape({
+    //   first_name: Yup.string().required("First Name is required"),
+    //   last_name: Yup.string().required("Last Name is required"),
+    //   phone_number: Yup.string().required("Phone Number is required"),
+    // }),
+    onSubmit: (values) => {
+      let data = {
+        tour_id: tourData.id,
+        sku: tourData.sku,
+        public: values.public_price,
+        provider_price: values.provider_price,
+        rate: values.rate,
+        net_price: values.net_price,
+        compare_at_url: values.compare_at_url,
+        ship_price: values.ship_price,
+        compare_at: values.compare_at,
+        price: values.our_price,
+        you_save: values.you_save,
+        eff_rate: values.eff_rate,
+        commission: values.commission,
+        deposit: values.deposit,
+        balance_due: values.balance_due,
+        
+        price_details: [
+          {
+            pricing_option_id: 6,
+            source_id: priceTypeSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 7,
+            source_id: priceOptionSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 9,
+            source_id: priceCollectSelected,
+            min: 1,
+            max: 3,
+            label: "px",
+          },
+          {
+            pricing_option_id: 29,
+            source_id: priceSeasonSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+         
+        ],
+      };
 
-    //   };
-
-    //   editUserAPI(userData.id, data).then((resp) =>{
-    //     console.log(resp)
-    //     setProfileModal(false);
-    //   })
-    // },
+      postPricesAPI(data).then((resp) =>{
+        console.log(resp)
+        setAddNewProduct(false);
+      })
+    },
   });
   return (
     <Modal
@@ -91,7 +161,11 @@ const AddNewProductPricing = ({
         >
           <Row xl={12} className="d-flex">
             <Col className="col-3">
-              <img src={NewProductPricingImage} alt="new-product" style={{height:'560px', width:'260px'}} />
+              <img
+                src={NewProductPricingImage}
+                alt="new-product"
+                style={{ height: "560px", width: "260px" }}
+              />
             </Col>
             <Col className="col-9">
               <Row className="col-12 d-flex">
@@ -99,50 +173,24 @@ const AddNewProductPricing = ({
                   <div className="form-outline mb-4">
                     <Label className="form-label">Product Name</Label>
                     <Input
-                      name="first_name"
+                      name="product_name"
                       placeholder=""
                       type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
-                      invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
-                          ? true
-                          : false
-                      }
+                      disabled
+                      value={validationType.values.product_name || ""}
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
-                      </FormFeedback>
-                    ) : null}
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">SKU</Label>
                     <Input
-                      name="first_name"
+                      name="sku"
                       placeholder=""
                       type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
-                      invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
-                          ? true
-                          : false
-                      }
+                      disabled
+                      value={validationType.values.sku || ""}
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
-                      </FormFeedback>
-                    ) : null}
                   </div>
                 </Col>
               </Row>
@@ -153,21 +201,21 @@ const AddNewProductPricing = ({
                       <Label className="form-label">Price Type</Label>
                       <Input
                         type="select"
-                        name=""
-                        // onChange={(e) =>{
-                        //   setTourTypeID(e.target.value)
-                        // }}
+                        name="price_type"
+                        onChange={(e) => {
+                          setPriceTypeSelected(e.target.value);
+                        }}
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
                         <option>Select....</option>
-                        {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                        {map(priceTypeData, (type, index) => {
+                          return (
+                            <option key={index} value={type.id}>
+                              {type.text}
+                            </option>
+                          );
+                        })}
                       </Input>
                     </div>
                   </Col>
@@ -176,21 +224,21 @@ const AddNewProductPricing = ({
                       <Label className="form-label">Price Option</Label>
                       <Input
                         type="select"
-                        name=""
-                        // onChange={(e) =>{
-                        //   setTourTypeID(e.target.value)
-                        // }}
+                        name="price_options"
+                        onChange={(e) => {
+                          setPriceOptionSelected(e.target.value);
+                        }}
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
                         <option>Select....</option>
-                        {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                        {map(priceOptions, (option, index) => {
+                          return (
+                            <option key={index} value={option.id}>
+                              {option.text}
+                            </option>
+                          );
+                        })}
                       </Input>
                     </div>
                   </Col>
@@ -199,21 +247,21 @@ const AddNewProductPricing = ({
                       <Label className="form-label">Collect</Label>
                       <Input
                         type="select"
-                        name=""
-                        // onChange={(e) =>{
-                        //   setTourTypeID(e.target.value)
-                        // }}
+                        name="collect"
+                        onChange={(e) => {
+                          setPriceCollectSelected(e.target.value);
+                        }}
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
                         <option>Select....</option>
-                        {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                        {map(priceCollect, (collect, index) => {
+                          return (
+                            <option key={index} value={collect.id}>
+                              {collect.text}
+                            </option>
+                          );
+                        })}
                       </Input>
                     </div>
                   </Col>
@@ -225,21 +273,21 @@ const AddNewProductPricing = ({
                       <Label className="form-label">Season</Label>
                       <Input
                         type="select"
-                        name=""
-                        // onChange={(e) =>{
-                        //   setTourTypeID(e.target.value)
-                        // }}
+                        name="season"
+                        onChange={(e) => {
+                          setPriceSeasonSelected(e.target.value);
+                        }}
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
                         <option>Select....</option>
-                        {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                        {map(priceSeason, (season, index) => {
+                          return (
+                            <option key={index} value={season.id}>
+                              {season.text}
+                            </option>
+                          );
+                        })}
                       </Input>
                     </div>
                   </Col>
@@ -316,127 +364,127 @@ const AddNewProductPricing = ({
                 </p>
               </Row>
               <Row className="col-12 d-flex">
-              <Col className="col-2">
+                <Col className="col-2">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Public Price</Label>
                     <Input
-                      name="first_name"
+                      name="public_price"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.public_price || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.public_price &&
+                        validationType.errors.public_price
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.public_price &&
+                    validationType.errors.public_price ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.public_price}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-2">
+                <Col className="col-2">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Provider Price</Label>
                     <Input
-                      name="first_name"
+                      name="provider_price"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.provider_price || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.provider_price &&
+                        validationType.errors.provider_price
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.provider_price &&
+                    validationType.errors.provider_price ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.provider_price}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-2">
+                <Col className="col-2">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Rate %</Label>
                     <Input
-                      name="first_name"
+                      name="rate"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.rate || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.rate &&
+                        validationType.errors.rate
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.rate &&
+                    validationType.errors.rate ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.rate}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-2">
+                <Col className="col-2">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Net Rate</Label>
                     <Input
-                      name="first_name"
+                      name="net_rate"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.net_rate || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.net_rate &&
+                        validationType.errors.net_rate
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.net_rate &&
+                    validationType.errors.net_rate ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.net_rate}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-4">
+                <Col className="col-4">
                   <div className="form-outline mb-4">
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
-                      name="first_name"
+                      name="compare_at_url"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.compare_at_url || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.compare_at_url &&
+                        validationType.errors.compare_at_url
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.compare_at_url &&
+                    validationType.errors.compare_at_url ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.compare_at_url}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -459,239 +507,235 @@ const AddNewProductPricing = ({
                 </p>
               </Row>
               <Row className="col-12 d-flex">
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Ship Price</Label>
                     <Input
-                      name="first_name"
+                      name="ship_price"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.ship_price || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.ship_price &&
+                        validationType.errors.ship_price
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.ship_price &&
+                    validationType.errors.ship_price ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.ship_price}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Compare At</Label>
                     <Input
-                      name="first_name"
+                      name="compare_at"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.compare_at || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.compare_at &&
+                        validationType.errors.compare_at
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.compare_at &&
+                    validationType.errors.compare_at ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.compare_at}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Our Price</Label>
                     <Input
-                      name="first_name"
+                      name="our_price"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.our_price || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.our_price &&
+                        validationType.errors.our_price
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.our_price &&
+                    validationType.errors.our_price ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.our_price}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">You Save</Label>
                     <Input
-                      name="first_name"
+                      name="you_save"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.you_save || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.you_save &&
+                        validationType.errors.you_save
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.you_save &&
+                    validationType.errors.you_save ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.you_save}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-             
               </Row>
               <Row className="col-12 d-flex">
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Eff. Rate</Label>
                     <Input
-                      name="first_name"
+                      name="eff_rate"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.eff_rate || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.eff_rate &&
+                        validationType.errors.eff_rate
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.eff_rate &&
+                    validationType.errors.eff_rate ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.eff_rate}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Commission</Label>
                     <Input
-                      name="first_name"
+                      name="commission"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.commission || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.commission &&
+                        validationType.errors.commission
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.commission &&
+                    validationType.errors.commission ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.commission}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Deposit</Label>
                     <Input
-                      name="first_name"
+                      name="deposit"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.deposit || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.deposit &&
+                        validationType.errors.deposit
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.deposit &&
+                    validationType.errors.deposit ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.deposit}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-              <Col className="col-3">
+                <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Balance Due</Label>
                     <Input
-                      name="first_name"
+                      name="balance_due"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.balance_due || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.balance_due &&
+                        validationType.errors.balance_due
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.balance_due &&
+                    validationType.errors.balance_due ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.balance_due}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
-             
               </Row>
             </Col>
           </Row>
           <Row xl={12}>
-          <Row
-            className="col-12 d-flex justify-content-end mt-5"
-            style={{ paddingRight: "30px" }}
-          >
-            <Button
-              color="paradise"
-              outline
-              className="waves-effect waves-light col-2 mx-4"
-              type="button"
-              onClick={() => setAddNewProduct(false)}
+            <Row
+              className="col-12 d-flex justify-content-end mt-5"
+              style={{ paddingRight: "30px" }}
             >
-              
-              Close
-            </Button>
-            <Button
-              style={{ backgroundColor: "#F6851F" }}
-              type="submit"
-              className="font-16 btn-block col-2"
-              // onClick={toggleCategory}
-            >
-              Save
-              
-            </Button>
+              <Button
+                color="paradise"
+                outline
+                className="waves-effect waves-light col-2 mx-4"
+                type="button"
+                onClick={() => setAddNewProduct(false)}
+              >
+                Close
+              </Button>
+              <Button
+                style={{ backgroundColor: "#F6851F" }}
+                type="submit"
+                className="font-16 btn-block col-2"
+                // onClick={toggleCategory}
+              >
+                Save
+              </Button>
+            </Row>
           </Row>
-        </Row>
         </Form>
       </div>
     </Modal>
