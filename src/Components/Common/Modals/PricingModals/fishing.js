@@ -75,7 +75,37 @@ const Fishing = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
-
+        price_details: [
+          {
+            pricing_option_id: 6,
+            source_id: priceTypeSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 7,
+            source_id: priceOptionSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 9,
+            source_id: priceCollectSelected,
+            min: 1,
+            max: 3,
+            label: "px",
+          },
+          {
+            pricing_option_id: 29,
+            source_id: priceSeasonSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+         
+        ],
       };
 
       postPricesAPI(data).then((resp) =>{
@@ -119,7 +149,7 @@ const Fishing = ({
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            // validationType.handleSubmit();
+            validationType.handleSubmit();
             return false;
           }}
           className="custom-validation"

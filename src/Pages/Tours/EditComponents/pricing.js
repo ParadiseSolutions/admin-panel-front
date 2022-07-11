@@ -23,7 +23,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
 const Pricing = ({ history, id, tourData }) => {
-  // console.log(tourData)
+  console.log(tourData);
   //prices request
   const [pricesData, setPricesData] = useState([]);
   useEffect(() => {
@@ -308,16 +308,31 @@ const Pricing = ({ history, id, tourData }) => {
   //add new product
   const [addNewProduct, setAddNewProduct] = useState(false);
   const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);
-  const [addNewFishing, setAddNewFishing] = useState(false)
-  const [newPrivateCharter, setNewPrivateCharter] = useState(false)
-  const [newPrivateTour, setNewPrivateTour] = useState(false)
-  const [newTransportation, setNewTransportation] = useState(false)
+  const [addNewFishing, setAddNewFishing] = useState(false);
+  const [newPrivateCharter, setNewPrivateCharter] = useState(false);
+  const [newPrivateTour, setNewPrivateTour] = useState(false);
+  const [newTransportation, setNewTransportation] = useState(false);
   const onClickNewProduct = () => {
-    // setAddNewProduct(!addNewProduct);
-    // setAddNewAirportTransfer(!addNewAirportTransfer);
-    // setAddNewFishing(!addNewFishing)
-    // setNewPrivateCharter(!newPrivateCharter)
-    setNewTransportation(!newTransportation)
+    switch (tourData.type_id) {
+      case 2:
+        break;
+      case 3:
+        setAddNewAirportTransfer(!addNewAirportTransfer);
+        break;
+      case 4:
+        setNewTransportation(!newTransportation);
+        break;
+      case 5:
+        setAddNewFishing(!addNewFishing);
+        break;
+      case 6:
+        setNewPrivateCharter(!newPrivateCharter);
+        break;
+
+      default:
+        setAddNewProduct(!addNewProduct);
+        break;
+    }
   };
 
   return (
@@ -380,22 +395,27 @@ const Pricing = ({ history, id, tourData }) => {
       <AddNewAirportTransfer
         addNewAirportTransfer={addNewAirportTransfer}
         setAddNewAirportTransfer={setAddNewAirportTransfer}
+        tourData={tourData}
       />
       <Fishing
         addNewFishing={addNewFishing}
         setAddNewFishing={setAddNewFishing}
+        tourData={tourData}
       />
       <AddNewPrivateCharter
         newPrivateCharter={newPrivateCharter}
         setNewPrivateCharter={setNewPrivateCharter}
+        tourData={tourData}
       />
       <AddNewPrivateTour
         newPrivateTour={newPrivateTour}
         setNewPrivateTour={setNewPrivateTour}
+        tourData={tourData}
       />
       <AddNewTransportation
         newTransportation={newTransportation}
         setNewTransportation={setNewTransportation}
+        tourData={tourData}
       />
     </TabPane>
   );

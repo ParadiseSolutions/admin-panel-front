@@ -12,36 +12,52 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { getPricingOptionsAPI, postPricesAPI } from "../../../../Utils/API/Tours";
+import {
+  getPricingOptionsAPI,
+  postPricesAPI,
+} from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
-const AddNewTransportation = ({ newTransportation, setNewTransportation, tourData }) => {
-
-   //combo box request
-   const [priceTypeData, setPriceTypeData] = useState([]);
-   const [priceOptions, setPriceOptions] = useState([]);
-   const [priceCollect, setPriceCollect] = useState([]);
-   const [priceSeason, setPriceSeason] = useState([]);
-   const [priceTypeSelected, setPriceTypeSelected] = useState();
-   const [priceOptionSelected, setPriceOptionSelected] = useState();
-   const [priceCollectSelected, setPriceCollectSelected] = useState();
-   const [priceSeasonSelected, setPriceSeasonSelected] = useState();
-   useEffect(() => {
-     if (newTransportation) {
-       getPricingOptionsAPI(6).then((resp) => {
-         setPriceTypeData(resp.data.data);
-       });
-       getPricingOptionsAPI(7).then((resp) => {
-         setPriceOptions(resp.data.data);
-       });
-       getPricingOptionsAPI(9).then((resp) => {
-         setPriceCollect(resp.data.data);
-       });
-       getPricingOptionsAPI(29).then((resp) => {
-         setPriceSeason(resp.data.data);
-       });
-     }
-   }, [newTransportation]);
+const AddNewTransportation = ({
+  newTransportation,
+  setNewTransportation,
+  tourData,
+}) => {
+  //combo box request
+  const [priceTypeData, setPriceTypeData] = useState([]);
+  const [priceOptions, setPriceOptions] = useState([]);
+  const [priceCollect, setPriceCollect] = useState([]);
+  const [priceSeason, setPriceSeason] = useState([]);
+  const [priceZone, setPriceZone] = useState([]);
+  const [priceVehicle, setVehicleZone] = useState([]);
+  const [priceTypeSelected, setPriceTypeSelected] = useState();
+  const [priceOptionSelected, setPriceOptionSelected] = useState();
+  const [priceCollectSelected, setPriceCollectSelected] = useState();
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState();
+  const [priceZoneSelected, setPriceZoneSelected] = useState();
+  const [priceVehicleSelected, setPriceVehicleSelected] = useState();
+  useEffect(() => {
+    if (newTransportation) {
+      getPricingOptionsAPI(6).then((resp) => {
+        setPriceTypeData(resp.data.data);
+      });
+      getPricingOptionsAPI(7).then((resp) => {
+        setPriceOptions(resp.data.data);
+      });
+      getPricingOptionsAPI(9).then((resp) => {
+        setPriceCollect(resp.data.data);
+      });
+      getPricingOptionsAPI(29).then((resp) => {
+        setPriceSeason(resp.data.data);
+      });
+      getPricingOptionsAPI(42).then((resp) => {
+        setPriceZone(resp.data.data);
+      });
+      getPricingOptionsAPI(24).then((resp) => {
+        setVehicleZone(resp.data.data);
+      });
+    }
+  }, [newTransportation]);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -71,13 +87,58 @@ const AddNewTransportation = ({ newTransportation, setNewTransportation, tourDat
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
+        price_details: [
+          {
+            pricing_option_id: 6,
+            source_id: priceTypeSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 7,
+            source_id: priceOptionSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 9,
+            source_id: priceCollectSelected,
+            min: 1,
+            max: 3,
+            label: "px",
+          },
+          {
+            pricing_option_id: 29,
+            source_id: priceSeasonSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 23,
+            source_id: priceZoneSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 24,
+            source_id: priceVehicleSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+         
+        ],
         
       };
 
-      postPricesAPI(data).then((resp) =>{
-        console.log(resp)
+      postPricesAPI(data).then((resp) => {
+        console.log(resp);
         setNewTransportation(false);
-      })
+      });
     },
   });
   return (
@@ -115,7 +176,7 @@ const AddNewTransportation = ({ newTransportation, setNewTransportation, tourDat
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            // validationType.handleSubmit();
+            validationType.handleSubmit();
             return false;
           }}
           className="custom-validation"
@@ -377,20 +438,20 @@ const AddNewTransportation = ({ newTransportation, setNewTransportation, tourDat
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) =>{
+                        setPriceVehicleSelected(e.target.value)
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
+                      {map(priceVehicle, (vehicle, index) => {
                                     return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
+                                      <option key={index} value={vehicle.id} >
+                                        {vehicle.text}
                                       </option>
                                     );
-                                  })} */}
+                                  })}
                     </Input>
                   </div>
                 </Col>
@@ -400,20 +461,20 @@ const AddNewTransportation = ({ newTransportation, setNewTransportation, tourDat
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) =>{
+                        setPriceZoneSelected(e.target.value)
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                      {map(priceZone, (zone, index) => {
+                        return (
+                          <option key={index} value={zone.id}>
+                            {zone.name}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>

@@ -76,6 +76,38 @@ const AddNewPrivateCharter = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
+        price_details: [
+          {
+            pricing_option_id: 6,
+            source_id: priceTypeSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 7,
+            source_id: priceOptionSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 9,
+            source_id: priceCollectSelected,
+            min: 1,
+            max: 3,
+            label: "px",
+          },
+          {
+            pricing_option_id: 29,
+            source_id: priceSeasonSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+        
+         
+        ],
         
       };
 
@@ -120,7 +152,7 @@ const AddNewPrivateCharter = ({
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            // validationType.handleSubmit();
+            validationType.handleSubmit();
             return false;
           }}
           className="custom-validation"
@@ -330,7 +362,7 @@ const AddNewPrivateCharter = ({
                 </p>
               </Row>
               <Row className="col-12 d-flex">
-                <Col className="col-4">
+                <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Charter Type</Label>
                     <Input
@@ -427,7 +459,29 @@ const AddNewPrivateCharter = ({
                     ) : null}
                   </div>
                 </Col>
-                
+                <Col className="col-3">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Meeting Location</Label>
+                    <Input
+                      type="select"
+                      name=""
+                      // onChange={(e) =>{
+                      //   setTourTypeID(e.target.value)
+                      // }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {/* {map(dataTourType, (tourType, index) => {
+                                    return (
+                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
+                                        {tourType.name}
+                                      </option>
+                                    );
+                                  })} */}
+                    </Input>
+                  </div>
+                </Col>
               </Row>
               <Row
                 className="col-12 p-1 my-2"

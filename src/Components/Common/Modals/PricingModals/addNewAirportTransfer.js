@@ -12,42 +12,63 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { getPricingOptionsAPI, postPricesAPI } from "../../../../Utils/API/Tours";
+import {
+  getPricingOptionsAPI,
+  postPricesAPI,
+} from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
   setAddNewAirportTransfer,
-  tourData
+  tourData,
 }) => {
+  //combo box request
+  const [priceTypeData, setPriceTypeData] = useState([]);
+  const [priceOptions, setPriceOptions] = useState([]);
+  const [priceCollect, setPriceCollect] = useState([]);
+  const [priceSeason, setPriceSeason] = useState([]);
+  const [priceTransferType, setPriceTransferType] = useState([]);
+  const [priceDirection, setPriceDirection] = useState([]);
+  const [priceVehicle, setPriceVehicle] = useState([]);
+  const [priceZone, setPriceZone] = useState([]);
+  const [priceTypeSelected, setPriceTypeSelected] = useState();
+  const [priceOptionSelected, setPriceOptionSelected] = useState();
+  const [priceCollectSelected, setPriceCollectSelected] = useState();
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState();
+  const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
+  const [priceDirectionSelected, setPriceDirectionSelected] = useState();
+  const [priceVehicleSelected, setPriceVehicleSelected] = useState();
+  const [priceZoneSelected, setPriceZoneSelected] = useState();
 
-    //combo box request
-    const [priceTypeData, setPriceTypeData] = useState([]);
-    const [priceOptions, setPriceOptions] = useState([]);
-    const [priceCollect, setPriceCollect] = useState([]);
-    const [priceSeason, setPriceSeason] = useState([]);
-    const [priceTypeSelected, setPriceTypeSelected] = useState();
-    const [priceOptionSelected, setPriceOptionSelected] = useState();
-    const [priceCollectSelected, setPriceCollectSelected] = useState();
-    const [priceSeasonSelected, setPriceSeasonSelected] = useState();
-
-    useEffect(() => {
-      if (addNewAirportTransfer) {
-        getPricingOptionsAPI(6).then((resp) => {
-          setPriceTypeData(resp.data.data);
-        });
-        getPricingOptionsAPI(7).then((resp) => {
-          setPriceOptions(resp.data.data);
-        });
-        getPricingOptionsAPI(9).then((resp) => {
-          setPriceCollect(resp.data.data);
-        });
-        getPricingOptionsAPI(29).then((resp) => {
-          setPriceSeason(resp.data.data);
-        });
-      }
-    }, [addNewAirportTransfer]);
-
+  useEffect(() => {
+    if (addNewAirportTransfer) {
+      getPricingOptionsAPI(6).then((resp) => {
+        setPriceTypeData(resp.data.data);
+      });
+      getPricingOptionsAPI(7).then((resp) => {
+        setPriceOptions(resp.data.data);
+      });
+      getPricingOptionsAPI(9).then((resp) => {
+        setPriceCollect(resp.data.data);
+      });
+      getPricingOptionsAPI(29).then((resp) => {
+        setPriceSeason(resp.data.data);
+      });
+      getPricingOptionsAPI(12).then((resp) => {
+        setPriceTransferType(resp.data.data);
+      });
+      getPricingOptionsAPI(13).then((resp) => {
+        setPriceDirection(resp.data.data);
+      });
+      getPricingOptionsAPI(17).then((resp) => {
+        setPriceVehicle(resp.data.data);
+      });
+      getPricingOptionsAPI(16).then((resp) => {
+        setPriceZone(resp.data.data);
+      });
+    }
+  }, [addNewAirportTransfer]);
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -62,6 +83,7 @@ const AddNewAirportTransfer = ({
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values) => {
+      console.log(values)
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -78,13 +100,70 @@ const AddNewAirportTransfer = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
-
+        price_details: [
+          {
+            pricing_option_id: 6,
+            source_id: priceTypeSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 7,
+            source_id: priceOptionSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 9,
+            source_id: priceCollectSelected,
+            min: 1,
+            max: 3,
+            label: "px",
+          },
+          {
+            pricing_option_id: 29,
+            source_id: priceSeasonSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 12,
+            source_id: priceTransferTypeSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 13,
+            source_id: priceDirectionSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 16,
+            source_id: priceZoneSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 17,
+            source_id: priceVehicleSelected,
+            min: null,
+            max: null,
+            label: null,
+          },
+        ],
       };
-
-      postPricesAPI(data).then((resp) =>{
-        console.log(resp)
+console.log(data)
+      postPricesAPI(data).then((resp) => {
+        console.log(resp);
         setAddNewAirportTransfer(false);
-      })
+      });
     },
   });
   return (
@@ -122,7 +201,7 @@ const AddNewAirportTransfer = ({
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            // validationType.handleSubmit();
+            validationType.handleSubmit();
             return false;
           }}
           className="custom-validation"
@@ -338,20 +417,20 @@ const AddNewAirportTransfer = ({
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) => {
+                        setPriceTransferTypeSelected(e.target.value);
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                      {map(priceTransferType, (transferType, index) => {
+                        return (
+                          <option key={index} value={transferType.id}>
+                            {transferType.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -361,20 +440,20 @@ const AddNewAirportTransfer = ({
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) => {
+                        setPriceDirectionSelected(e.target.value);
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                      {map(priceDirection, (direction, index) => {
+                        return (
+                          <option key={index} value={direction.id}>
+                            {direction.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -384,20 +463,20 @@ const AddNewAirportTransfer = ({
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) => {
+                        setPriceVehicleSelected(e.target.value);
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                      {map(priceVehicle, (vehicle, index) => {
+                        return (
+                          <option key={index} value={vehicle.id}>
+                            {vehicle.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -407,20 +486,20 @@ const AddNewAirportTransfer = ({
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) => {
+                        setPriceZoneSelected(e.target.value);
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
-                                    return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
-                                      </option>
-                                    );
-                                  })} */}
+                      {map(priceZone, (zone, index) => {
+                        return (
+                          <option key={index} value={zone.id}>
+                            {zone.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -839,33 +918,31 @@ const AddNewAirportTransfer = ({
                 </Col>
               </Row>
               <Row xl={12}>
-            <Row
-              className="col-12 d-flex justify-content-end mt-4"
-              style={{ paddingRight: "30px" }}
-            >
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light col-2 mx-4"
-                type="button"
-                onClick={() => setAddNewAirportTransfer(false)}
-              >
-                Close
-              </Button>
-              <Button
-                style={{ backgroundColor: "#F6851F" }}
-                type="submit"
-                className="font-16 btn-block col-2"
-                // onClick={toggleCategory}
-              >
-                Save
-              </Button>
-            </Row>
-          </Row>
+                <Row
+                  className="col-12 d-flex justify-content-end mt-4"
+                  style={{ paddingRight: "30px" }}
+                >
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light col-2 mx-4"
+                    type="button"
+                    onClick={() => setAddNewAirportTransfer(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    style={{ backgroundColor: "#F6851F" }}
+                    type="submit"
+                    className="font-16 btn-block col-2"
+                    // onClick={toggleCategory}
+                  >
+                    Save
+                  </Button>
+                </Row>
+              </Row>
             </Col>
-            
           </Row>
-          
         </Form>
       </div>
     </Modal>
