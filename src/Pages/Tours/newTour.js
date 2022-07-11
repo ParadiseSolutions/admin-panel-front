@@ -4,10 +4,13 @@ import newTourGi from "../../Components/Assets/images/newTourGI.jpg";
 import { tourTypesData } from "../../Utils/Redux/Actions/TourTypesActions";
 import { websitesData } from "../../Utils/Redux/Actions/WebsitesActions";
 import { locationsData } from "../../Utils/Redux/Actions/LocationsActions";
+import { categoriesData } from "../../Utils/Redux/Actions/CategoriesActions";
+import { getSubCategory } from "../../Utils/API/Categories";
 import {
   shoppingCartWebsite,
   providerWebsite,
   operatorWebsite,
+  createTourAPI
 } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -64,7 +67,14 @@ const NewTour = ({ history }) => {
     locationRequest();
   }, [dispatch]);
   const dataLocations = useSelector((state) => state.locations.locations.data);
-
+  
+  //categories request
+  useEffect(() => {
+    const categoryRequest = () => dispatch(categoriesData());
+    categoryRequest();
+  }, [dispatch]);
+  const dataCategories = useSelector((state) => state.categories.categories.data);
+  
 
   //combo boxs
   const [tourTypeID, setTourTypeID] = useState(null)
@@ -75,6 +85,15 @@ const NewTour = ({ history }) => {
   const [locationID, setLocationID] = useState(null)
   const [mainCatID, setMainCatID] = useState(null)
   const [secondCatID, setSecondCatID] = useState(null)
+
+    //sub categories request
+  const [subCategoriesData, setSubCategoriesData] = useState(null)
+    useEffect(() => {
+      getSubCategory(mainCatID).then((resp) =>{
+        setSubCategoriesData(resp.data.data)
+      })
+    }, [mainCatID]);
+    
 
   //request based on website id
   const [shoppingCartData, setShoppingCartData] = useState(null);
@@ -92,7 +111,7 @@ const NewTour = ({ history }) => {
     });
   };
 
-  console.log(shoppingCartData)
+  
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -122,29 +141,29 @@ const NewTour = ({ history }) => {
         code: values.code,
       };
       console.log(data);
-      //   createRol(data)
-      //     .then((resp) => {
-      //       console.log(resp.data);
-      //       if (resp.data.status === 201) {
-      //         Swal.fire(
-      //           "Created!",
-      //           "The Rol has been created.",
-      //           "success"
-      //         ).then(() => {
-      //           history.goBack();
-      //         });
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log(error.response);
-      //       Swal.fire(
-      //         "Error!",
-      //         `${
-      //           error.response.data.data[0]
-      //         }`,
-      //         "error"
-      //       );
-      //     });
+        createTourAPI(data)
+          .then((resp) => {
+            console.log(resp.data);
+            if (resp.data.status === 201) {
+              Swal.fire(
+                "Created!",
+                "The Rol has been created.",
+                "success"
+              ).then(() => {
+                history.goBack();
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+            Swal.fire(
+              "Error!",
+              `${
+                error.response.data.data[0]
+              }`,
+              "error"
+            );
+          });
     },
   });
   return (
@@ -371,7 +390,7 @@ const NewTour = ({ history }) => {
                                           key={index}
                                           value={shoppingCart.id}
                                         >
-                                          {shoppingCart.cart_name}
+                                          {shoppingCart.name}
                                         </option>
                                       );
                                     }
@@ -518,7 +537,7 @@ const NewTour = ({ history }) => {
                                 <Input
                                   type="select"
                                   name=""
-                                  disabled={providerData ? false : true}
+                                  disabled={dataCategories ? false : true}
                                   onChange={(e) =>{
                                     setMainCatID(e.target.value)
                                   }}
@@ -526,13 +545,13 @@ const NewTour = ({ history }) => {
                                   //   value={validationType.values.department || ""}
                                 >
                                   <option>Select....</option>
-                                  {map(providerData, (provider, index) => {
+                                  {map(dataCategories, (category, index) => {
                                     return (
                                       <option
                                         key={index}
-                                        value={provider.provider_id}
+                                        value={category.id}
                                       >
-                                        {provider.provider_name}
+                                        {category.name}
                                       </option>
                                     );
                                   })}
@@ -544,28 +563,31 @@ const NewTour = ({ history }) => {
                                 <Label className="form-label">
                                   Sub-Category
                                 </Label>
+                                {subCategoriesData ? 
                                 <Input
-                                  type="select"
-                                  name=""
-                                  disabled={providerData ? false : true}
-                                  onChange={(e) =>{
-                                    setSecondCatID(e.target.value)
-                                  }}
-                                  onBlur={validationType.handleBlur}
-                                  //   value={validationType.values.department || ""}
-                                >
-                                  <option>Select....</option>
-                                  {map(operatorData, (operator, index) => {
-                                    return (
-                                      <option
-                                        key={index}
-                                        value={operator.operator_id}
-                                      >
-                                        {operator.operator_name}
-                                      </option>
-                                    );
-                                  })}
-                                </Input>
+                                type="select"
+                                name=""
+                                disabled={subCategoriesData ? false : true}
+                                onChange={(e) =>{
+                                  setSecondCatID(e.target.value)
+                                }}
+                                onBlur={validationType.handleBlur}
+                                //   value={validationType.values.department || ""}
+                              >
+                                <option>Select....</option>
+                                {map(subCategoriesData, (subCategory, index) => {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={subCategory.category_id}
+                                    >
+                                      {subCategory.category_name}
+                                    </option>
+                                  );
+                                })}
+                              </Input>
+                                : null}
+                                
                               </div>
                             </Col>
                             <Col className="col-4">
