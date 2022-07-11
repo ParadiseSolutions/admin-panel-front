@@ -1,18 +1,24 @@
 {
   "files": {
     "main.css": "/static/css/main.c8f2b65c.css",
-    "main.js": "/static/js/main.980e2846.js",
+    "main.js": "/static/js/main.0aff4b9f.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.8.55": "/static/media/materialdesignicons-webfont.506bc8215df8660d8f04.ttf",
     "static/media/fa-solid-900.svg": "/static/media/fa-solid-900.3a909e9bcf105f28ebe7.svg",
+    "static/media/fishing.png": "/static/media/fishing.faaad2001ddd0ea6b59c.png",
+    "static/media/airport-transfer.png": "/static/media/airport-transfer.bf0b83b95db0137f3120.png",
     "static/media/boxicons.svg": "/static/media/boxicons.3e906787d0915a1e482c.svg",
     "static/media/fa-brands-400.svg": "/static/media/fa-brands-400.5f363d3d71c36033aff0.svg",
+    "static/media/private-charter.png": "/static/media/private-charter.ea0a166d54549b4dd680.png",
+    "static/media/transportation.png": "/static/media/transportation.c8fa4d63a996b190cce7.png",
     "static/media/settings2.png": "/static/media/settings2.f66bbf48524b191aa0b5.png",
+    "static/media/private-tour.png": "/static/media/private-tour.42904d2f9a828e233569.png",
     "static/media/settings3.png": "/static/media/settings3.c2e71127b1446c0fa42f.png",
     "static/media/settings1.png": "/static/media/settings1.f550dc7e64c320dd47df.png",
     "static/media/materialdesignicons-webfont.woff?v=5.8.55": "/static/media/materialdesignicons-webfont.d06df622bc47f0db9812.woff",
     "static/media/materialdesignicons-webfont.woff2?v=5.8.55": "/static/media/materialdesignicons-webfont.6147fc3741c622c5de2c.woff2",
+    "static/media/newProductPricing.png": "/static/media/newProductPricing.aba6929a0ff1935e5f6b.png",
     "static/media/boat.png": "/static/media/boat.e6c7c078603b28932384.png",
     "static/media/boxicons.eot": "/static/media/boxicons.6829ebb16362074c0c30.eot",
     "static/media/boxicons.woff": "/static/media/boxicons.dcaf6a260cca4a061aff.woff",
@@ -46,11 +52,11 @@
     "index.html": "/index.html",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.c8f2b65c.css.map": "/static/css/main.c8f2b65c.css.map",
-    "main.980e2846.js.map": "/static/js/main.980e2846.js.map",
+    "main.0aff4b9f.js.map": "/static/js/main.0aff4b9f.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c8f2b65c.css",
-    "static/js/main.980e2846.js"
+    "static/js/main.0aff4b9f.js"
   ]
 }
