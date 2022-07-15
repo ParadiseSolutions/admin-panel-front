@@ -13,16 +13,30 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import {
+  getPriceAPI,
   getPricingOptionsAPI,
   postPricesAPI,
+  updatePriceAPI,
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
   setAddNewAirportTransfer,
+  editProductID,
   tourData,
 }) => {
+   //edit data
+   const [dataEdit, setDataEdit] = useState();
+   useEffect(() => {
+     if (editProductID !== null) {
+       getPriceAPI(editProductID).then((resp) => {
+         setDataEdit(resp.data.data[0]);
+       });
+     }
+   }, [editProductID]);
+ 
+   console.log(dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -32,10 +46,10 @@ const AddNewAirportTransfer = ({
   const [priceDirection, setPriceDirection] = useState([]);
   const [priceVehicle, setPriceVehicle] = useState([]);
   const [priceZone, setPriceZone] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState();
-  const [priceOptionSelected, setPriceOptionSelected] = useState();
-  const [priceCollectSelected, setPriceCollectSelected] = useState();
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState();
+  const [priceTypeSelected, setPriceTypeSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : '');
+  const [priceOptionSelected, setPriceOptionSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : '');
+  const [priceCollectSelected, setPriceCollectSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : '');
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : '');
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
   const [priceDirectionSelected, setPriceDirectionSelected] = useState();
   const [priceVehicleSelected, setPriceVehicleSelected] = useState();
@@ -76,6 +90,19 @@ const AddNewAirportTransfer = ({
     initialValues: {
       product_name: tourData ? tourData.name : "",
       sku: tourData ? tourData.sku : "",
+      public_price: dataEdit ? dataEdit.public : "",
+      provider_price: dataEdit ? dataEdit.public_price : "",
+      rate: dataEdit ? dataEdit.rate : "",
+      net_price: dataEdit ? dataEdit.net_price : "",
+      compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
+      ship_price: dataEdit ? dataEdit.ship_price : "",
+      compare_at: dataEdit ? dataEdit.compare_at : "",
+      our_price: dataEdit ? dataEdit.price : "",
+      you_save: dataEdit ? dataEdit.you_save : "",
+      eff_rate: dataEdit ? dataEdit.eff_rate : "",
+      commission: dataEdit ? dataEdit.commission : "",
+      deposit: dataEdit ? dataEdit.deposit : "",
+      balance_due: dataEdit ? dataEdit.balance_due : "",
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -159,11 +186,18 @@ const AddNewAirportTransfer = ({
           },
         ],
       };
-console.log(data)
-      postPricesAPI(data).then((resp) => {
-        console.log(resp);
-        setAddNewAirportTransfer(false);
-      });
+
+ if (dataEdit) {
+        updatePriceAPI(editProductID, data).then((resp) => {
+          console.log(resp);
+          setAddNewAirportTransfer(false);
+        });
+      } else {
+        postPricesAPI(data).then((resp) => {
+          console.log(resp);
+          setAddNewAirportTransfer(false);
+        });
+      }
     },
   });
   return (
@@ -258,7 +292,7 @@ console.log(data)
                         <option>Select....</option>
                         {map(priceTypeData, (type, index) => {
                           return (
-                            <option key={index} value={type.id}>
+                            <option key={index} value={type.id} selected={ dataEdit && dataEdit.pricedetails ? type.id === dataEdit.pricedetails[0].source_id : false}>
                               {type.text}
                             </option>
                           );
@@ -281,7 +315,7 @@ console.log(data)
                         <option>Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
-                            <option key={index} value={option.id}>
+                            <option key={index} value={option.id} selected={ dataEdit && dataEdit.pricedetails ?  option.id === dataEdit.pricedetails[1].source_id : false}>
                               {option.text}
                             </option>
                           );
@@ -304,7 +338,7 @@ console.log(data)
                         <option>Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
-                            <option key={index} value={collect.id}>
+                            <option key={index} value={collect.id} selected={ dataEdit && dataEdit.pricedetails ? collect.id === dataEdit.pricedetails[2].source_id : false}>
                               {collect.text}
                             </option>
                           );
@@ -330,7 +364,7 @@ console.log(data)
                         <option>Select....</option>
                         {map(priceSeason, (season, index) => {
                           return (
-                            <option key={index} value={season.id}>
+                            <option key={index} value={season.id} selected={dataEdit && dataEdit.pricedetails ? season.id === dataEdit.pricedetails[3].source_id: false}>
                               {season.text}
                             </option>
                           );
@@ -650,23 +684,23 @@ console.log(data)
                   <div className="form-outline mb-2">
                     <Label className="form-label">Net Rate</Label>
                     <Input
-                      name="net_rate"
+                      name="net_price"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.net_rate || ""}
+                      value={validationType.values.net_price || ""}
                       invalid={
-                        validationType.touched.net_rate &&
-                        validationType.errors.net_rate
+                        validationType.touched.net_price &&
+                        validationType.errors.net_price
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.net_rate &&
-                    validationType.errors.net_rate ? (
+                    {validationType.touched.net_price &&
+                    validationType.errors.net_price ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.net_rate}
+                        {validationType.errors.net_price}
                       </FormFeedback>
                     ) : null}
                   </div>

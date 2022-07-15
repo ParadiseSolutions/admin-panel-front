@@ -97,7 +97,21 @@ export const getAddonsPricingAPI = (id) => {
 
 export const postPricesAPI = (body) => {
   const url = `${API_URL}/prices`;
-  return axios.get (url,body, {
+  return axios.post (url,body, {
+    headers: options,
+  });
+};
+
+export const getPriceAPI = (id) => {
+  const url = `${API_URL}/prices/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const updatePriceAPI = (id, body) => {
+  const url = `${API_URL}/prices/${id}`;
+  return axios.put (url, body, {
     headers: options,
   });
 };

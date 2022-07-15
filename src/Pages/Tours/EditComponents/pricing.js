@@ -27,15 +27,17 @@ const Pricing = ({ history, id, tourData }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
   useEffect(() => {
-    getPricesPricingAPI("28").then((resp) => {
+    getPricesPricingAPI(id).then((resp) => {
       setPricesData(resp.data.data);
     });
   }, [id]);
 
+  console.log(pricesData)
+
   //
   const [addonsData, setAddonsData] = useState([]);
   useEffect(() => {
-    getAddonsPricingAPI("30").then((resp) => {
+    getAddonsPricingAPI(id).then((resp) => {
       setAddonsData(resp.data.data);
     });
   }, [id]);
@@ -68,6 +70,8 @@ const Pricing = ({ history, id, tourData }) => {
       }
     });
   };
+
+  const [editProductID, setEditProductID] = useState(null)
 
   const columnsProducts = useMemo(() => [
     {
@@ -157,15 +161,43 @@ const Pricing = ({ history, id, tourData }) => {
       accessor: "action",
       disableFilters: true,
       Cell: (cellProps) => {
-        const depData = cellProps.row.original;
+        
         return (
           <div className="d-flex gap-3">
-            <Link to={`/departments/${depData.id}`} className="text-success">
+            <div 
+            className="text-success"
+            onClick={() =>{
+              const prodData = cellProps.row.original
+              console.log("data del producto", prodData)
+              setEditProductID(prodData.id)
+              switch (tourData.type_id) {
+                case 2:
+                  setAddNewProduct(!addNewProduct);
+                  break;
+                case 3:
+                  setAddNewAirportTransfer(!addNewAirportTransfer);
+                  break;
+                case 4:
+                  setNewTransportation(!newTransportation);
+                  break;
+                case 5:
+                  setAddNewFishing(!addNewFishing);
+                  break;
+                case 6:
+                  setNewPrivateCharter(!newPrivateCharter);
+                  break;
+          
+                default:
+                  setAddNewProduct(!addNewProduct);
+                  break;
+              }
+            }}
+            >
               <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
               <UncontrolledTooltip placement="top" target="edittooltip">
                 Edit
               </UncontrolledTooltip>
-            </Link>
+            </div>
             <Link
               to="#"
               className="text-danger"
@@ -173,6 +205,7 @@ const Pricing = ({ history, id, tourData }) => {
                 const depData = cellProps.row.original;
                 // setconfirm_alert(true);
                 onDelete(depData);
+
               }}
             >
               <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
@@ -315,6 +348,7 @@ const Pricing = ({ history, id, tourData }) => {
   const onClickNewProduct = () => {
     switch (tourData.type_id) {
       case 2:
+        setAddNewProduct(!addNewProduct);
         break;
       case 3:
         setAddNewAirportTransfer(!addNewAirportTransfer);
@@ -389,32 +423,37 @@ const Pricing = ({ history, id, tourData }) => {
       <AddNewProductPricing
         addNewProduct={addNewProduct}
         setAddNewProduct={setAddNewProduct}
-        onClickNewProduct={onClickNewProduct}
+        editProductID={editProductID}
         tourData={tourData}
       />
       <AddNewAirportTransfer
         addNewAirportTransfer={addNewAirportTransfer}
         setAddNewAirportTransfer={setAddNewAirportTransfer}
+        editProductID={editProductID}
         tourData={tourData}
       />
       <Fishing
         addNewFishing={addNewFishing}
         setAddNewFishing={setAddNewFishing}
+        editProductID={editProductID}
         tourData={tourData}
       />
       <AddNewPrivateCharter
         newPrivateCharter={newPrivateCharter}
         setNewPrivateCharter={setNewPrivateCharter}
+        editProductID={editProductID}
         tourData={tourData}
       />
       <AddNewPrivateTour
         newPrivateTour={newPrivateTour}
         setNewPrivateTour={setNewPrivateTour}
+        editProductID={editProductID}
         tourData={tourData}
       />
       <AddNewTransportation
         newTransportation={newTransportation}
         setNewTransportation={setNewTransportation}
+        editProductID={editProductID}
         tourData={tourData}
       />
     </TabPane>
