@@ -17,6 +17,7 @@ import {
   getPricingOptionsAPI,
   postPricesAPI,
   updatePriceAPI,
+  getPricingZoneOptionsAPI
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
@@ -36,7 +37,7 @@ const AddNewAirportTransfer = ({
      }
    }, [editProductID]);
  
-   console.log(dataEdit);
+  //  console.log(tourData);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -78,7 +79,7 @@ const AddNewAirportTransfer = ({
       getPricingOptionsAPI(17).then((resp) => {
         setPriceVehicle(resp.data.data);
       });
-      getPricingOptionsAPI(16).then((resp) => {
+      getPricingZoneOptionsAPI(50, tourData.provider_id).then((resp) => {
         setPriceZone(resp.data.data);
       });
     }
@@ -91,9 +92,9 @@ const AddNewAirportTransfer = ({
       product_name: tourData ? tourData.name : "",
       sku: tourData ? tourData.sku : "",
       public_price: dataEdit ? dataEdit.public : "",
-      provider_price: dataEdit ? dataEdit.public_price : "",
+      provider_price: dataEdit ? dataEdit.provider_price : "",
       rate: dataEdit ? dataEdit.rate : "",
-      net_price: dataEdit ? dataEdit.net_price : "",
+      net_price: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
       compare_at: dataEdit ? dataEdit.compare_at : "",
@@ -102,7 +103,9 @@ const AddNewAirportTransfer = ({
       eff_rate: dataEdit ? dataEdit.eff_rate : "",
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
-      balance_due: dataEdit ? dataEdit.balance_due : "",
+      balance_due: dataEdit ? dataEdit.net_price : "",
+      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[6]?.max : ""
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -110,7 +113,7 @@ const AddNewAirportTransfer = ({
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values) => {
-      console.log(values)
+      // console.log(values)
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -129,7 +132,7 @@ const AddNewAirportTransfer = ({
         balance_due: values.balance_due,
         price_details: [
           {
-            pricing_option_id: 6,
+            pricing_option_id: 10,
             source_id: priceTypeSelected,
             min: null,
             max: null,
@@ -171,7 +174,7 @@ const AddNewAirportTransfer = ({
             label: null,
           },
           {
-            pricing_option_id: 16,
+            pricing_option_id: 50,
             source_id: priceZoneSelected,
             min: null,
             max: null,
@@ -180,8 +183,8 @@ const AddNewAirportTransfer = ({
           {
             pricing_option_id: 17,
             source_id: priceVehicleSelected,
-            min: null,
-            max: null,
+            min: values.min,
+            max: values.max,
             label: null,
           },
         ],
@@ -189,12 +192,12 @@ const AddNewAirportTransfer = ({
 
  if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           setAddNewAirportTransfer(false);
         });
       } else {
         postPricesAPI(data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           setAddNewAirportTransfer(false);
         });
       }
@@ -278,27 +281,30 @@ const AddNewAirportTransfer = ({
               <Row className="d-flex">
                 <Col className="col-9 d-flex justify-content-between">
                   <Col className="col-2">
+
                     <div className="form-outline">
-                      <Label className="form-label">Price Type</Label>
-                      <Input
-                        type="select"
-                        name="price_type"
-                        onChange={(e) => {
-                          setPriceTypeSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceTypeData, (type, index) => {
-                          return (
-                            <option key={index} value={type.id} selected={ dataEdit && dataEdit.pricedetails ? type.id === dataEdit.pricedetails[0].source_id : false}>
-                              {type.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
+                    <Label className="form-label">Price Type</Label>
+                    <Input
+                      type="select"
+                      name="price_type"
+                      onChange={(e) => {
+                        setPriceTypeSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceTypeData, (type, index) => {
+                        return (
+                          <option key={index} value={type.id} selected={ dataEdit && dataEdit.pricedetails ? type.id === dataEdit.pricedetails[0].source_id : false}>
+                            {type.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                  
+                    
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
@@ -460,7 +466,7 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceTransferType, (transferType, index) => {
                         return (
-                          <option key={index} value={transferType.id}>
+                          <option key={index} value={transferType.id} selected={ dataEdit && dataEdit.pricedetails ? transferType.id === dataEdit.pricedetails[4].source_id : false}>
                             {transferType.text}
                           </option>
                         );
@@ -483,7 +489,7 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceDirection, (direction, index) => {
                         return (
-                          <option key={index} value={direction.id}>
+                          <option key={index} value={direction.id} selected={ dataEdit && dataEdit.pricedetails ? direction.id === dataEdit.pricedetails[5].source_id : false}>
                             {direction.text}
                           </option>
                         );
@@ -506,7 +512,7 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceVehicle, (vehicle, index) => {
                         return (
-                          <option key={index} value={vehicle.id}>
+                          <option key={index} value={vehicle.id} selected={ dataEdit && dataEdit.pricedetails ? vehicle.id === dataEdit.pricedetails[6].source_id : false}>
                             {vehicle.text}
                           </option>
                         );
@@ -529,7 +535,7 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceZone, (zone, index) => {
                         return (
-                          <option key={index} value={zone.id}>
+                          <option key={index} value={zone.id} >
                             {zone.text}
                           </option>
                         );
@@ -541,23 +547,23 @@ const AddNewAirportTransfer = ({
                   <div className="form-outline mb-2">
                     <Label className="form-label">Min. Pax</Label>
                     <Input
-                      name="first_name"
+                      name="min"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.min || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.min &&
+                        validationType.errors.min
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.min &&
+                    validationType.errors.min ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.min}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -566,23 +572,23 @@ const AddNewAirportTransfer = ({
                   <div className="form-outline mb-2">
                     <Label className="form-label">Max. Pax</Label>
                     <Input
-                      name="first_name"
+                      name="max"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.max || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.max &&
+                        validationType.errors.max
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.max &&
+                    validationType.errors.max ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.max}
                       </FormFeedback>
                     ) : null}
                   </div>

@@ -38,23 +38,38 @@ const AddNewPrivateCharter = ({
    const [priceOptions, setPriceOptions] = useState([]);
    const [priceCollect, setPriceCollect] = useState([]);
    const [priceSeason, setPriceSeason] = useState([]);
+   const [priceCharterType, setPriceCharterType] = useState([]);
+   const [priceDuration, setPriceDuration] = useState([]);
+   const [priceLocation, setPriceLocation] = useState([]);
    const [priceTypeSelected, setPriceTypeSelected] = useState( dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : '' );
    const [priceOptionSelected, setPriceOptionSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : '');
    const [priceCollectSelected, setPriceCollectSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : '');
    const [priceSeasonSelected, setPriceSeasonSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : '');
+   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState();
+   const [priceDurationSelected, setPriceDurationSelected] = useState();
+   const [priceLocationSelected, setPriceLocationSelected] = useState();
    useEffect(() => {
      if (newPrivateCharter) {
-       getPricingOptionsAPI(6).then((resp) => {
+       getPricingOptionsAPI(38).then((resp) => {
          setPriceTypeData(resp.data.data);
        });
-       getPricingOptionsAPI(7).then((resp) => {
+       getPricingOptionsAPI(39).then((resp) => {
          setPriceOptions(resp.data.data);
        });
-       getPricingOptionsAPI(9).then((resp) => {
+       getPricingOptionsAPI(41).then((resp) => {
          setPriceCollect(resp.data.data);
        });
-       getPricingOptionsAPI(29).then((resp) => {
+       getPricingOptionsAPI(44).then((resp) => {
          setPriceSeason(resp.data.data);
+       });
+       getPricingOptionsAPI(48).then((resp) => {
+         setPriceCharterType(resp.data.data);
+       });
+       getPricingOptionsAPI(40).then((resp) => {
+         setPriceDuration(resp.data.data);
+       });
+       getPricingOptionsAPI(42).then((resp) => {
+         setPriceLocation(resp.data.data);
        });
      }
    }, [newPrivateCharter]);
@@ -66,9 +81,9 @@ const AddNewPrivateCharter = ({
       product_name: tourData ? tourData.name : "",
       sku: tourData ? tourData.sku : "",
       public_price: dataEdit ? dataEdit.public : "",
-      provider_price: dataEdit ? dataEdit.public_price : "",
+      provider_price: dataEdit ? dataEdit.provider_price : "",
       rate: dataEdit ? dataEdit.rate : "",
-      net_price: dataEdit ? dataEdit.net_price : "",
+      net_price: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
       compare_at: dataEdit ? dataEdit.compare_at : "",
@@ -77,7 +92,9 @@ const AddNewPrivateCharter = ({
       eff_rate: dataEdit ? dataEdit.eff_rate : "",
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
-      balance_due: dataEdit ? dataEdit.balance_due : "",
+      balance_due: dataEdit ? dataEdit.net_price : "",
+      min: dataEdit ? dataEdit?.pricedetails[4]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[4]?.max : ""
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -103,34 +120,50 @@ const AddNewPrivateCharter = ({
         balance_due: values.balance_due,
         price_details: [
           {
-            pricing_option_id: 6,
+            pricing_option_id: 38,
             source_id: priceTypeSelected,
             min: null,
             max: null,
             label: null,
           },
           {
-            pricing_option_id: 7,
+            pricing_option_id: 39,
             source_id: priceOptionSelected,
             min: null,
             max: null,
             label: null,
           },
           {
-            pricing_option_id: 9,
+            pricing_option_id: 41,
             source_id: priceCollectSelected,
             min: 1,
             max: 3,
             label: "px",
           },
           {
-            pricing_option_id: 29,
+            pricing_option_id: 44,
             source_id: priceSeasonSelected,
             min: null,
             max: null,
             label: null,
           },
-        
+          {
+            pricing_option_id: 48,
+            source_id: priceCharterTypeSelected,
+            min: values.min,
+            max: values.max,
+            label: null,
+          },
+          {
+            pricing_option_id: 40,
+            source_id: priceDurationSelected,
+            label: null,
+          },
+          {
+            pricing_option_id: 42,
+            source_id: priceLocationSelected,
+            label: null,
+          },
          
         ],
         
@@ -393,20 +426,20 @@ const AddNewPrivateCharter = ({
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) =>{
+                        setPriceCharterTypeSelected(e.target.value)
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
+                      {map(priceCharterType, (charterType, index) => {
                                     return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
+                                      <option key={index} value={charterType.id} selected={ dataEdit && dataEdit.pricedetails ?  charterType.id === dataEdit.pricedetails[4].source_id : false}>
+                                        {charterType.text}
                                       </option>
                                     );
-                                  })} */}
+                                  })}
                     </Input>
                   </div>
                 </Col>
@@ -416,20 +449,20 @@ const AddNewPrivateCharter = ({
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) =>{
+                        setPriceDurationSelected(e.target.value)
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
+                      {map(priceDuration, (duration, index) => {
                                     return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
+                                      <option key={index} value={duration.id} selected={ dataEdit && dataEdit.pricedetails ?  duration.id === dataEdit.pricedetails[5].source_id : false}>
+                                        {duration.text}
                                       </option>
                                     );
-                                  })} */}
+                                  })}
                     </Input>
                   </div>
                 </Col>
@@ -437,23 +470,23 @@ const AddNewPrivateCharter = ({
                   <div className="form-outline mb-2">
                     <Label className="form-label">Min. Pax.</Label>
                     <Input
-                      name="first_name"
+                      name="min"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.min || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.min &&
+                        validationType.errors.min
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.min &&
+                    validationType.errors.min ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.min}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -463,23 +496,23 @@ const AddNewPrivateCharter = ({
                   <div className="form-outline mb-2">
                     <Label className="form-label">Max. Pax.</Label>
                     <Input
-                      name="first_name"
+                      name="max"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.first_name || ""}
+                      value={validationType.values.max || ""}
                       invalid={
-                        validationType.touched.first_name &&
-                        validationType.errors.first_name
+                        validationType.touched.max &&
+                        validationType.errors.max
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.first_name &&
-                    validationType.errors.first_name ? (
+                    {validationType.touched.max &&
+                    validationType.errors.max ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.first_name}
+                        {validationType.errors.max}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -490,20 +523,20 @@ const AddNewPrivateCharter = ({
                     <Input
                       type="select"
                       name=""
-                      // onChange={(e) =>{
-                      //   setTourTypeID(e.target.value)
-                      // }}
+                      onChange={(e) =>{
+                        setPriceLocationSelected(e.target.value)
+                      }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
-                      {/* {map(dataTourType, (tourType, index) => {
+                      {map(priceLocation, (location, index) => {
                                     return (
-                                      <option key={index} value={tourType.id} selected={ tourData.type_id === tourType.id ? true : false }>
-                                        {tourType.name}
+                                      <option key={index} value={location.id} selected={ dataEdit && dataEdit.pricedetails ?  location.id === dataEdit.pricedetails[6].source_id : false}>
+                                        {location.text}
                                       </option>
                                     );
-                                  })} */}
+                                  })}
                     </Input>
                   </div>
                 </Col>
