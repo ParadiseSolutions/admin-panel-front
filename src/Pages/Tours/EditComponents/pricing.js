@@ -94,7 +94,7 @@ const Pricing = ({ history, id, tourData }) => {
     },
     {
       Header: "Reg. Price",
-      accessor: "reg_price",
+      accessor: "public",
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
@@ -103,7 +103,7 @@ const Pricing = ({ history, id, tourData }) => {
     },
     {
       Header: "Our Price",
-      accessor: "our_price",
+      accessor: "price",
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
@@ -112,7 +112,7 @@ const Pricing = ({ history, id, tourData }) => {
     },
     {
       Header: "Save",
-      accessor: "save",
+      accessor: "you_save",
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
@@ -130,7 +130,7 @@ const Pricing = ({ history, id, tourData }) => {
     },
     {
       Header: "Comm.",
-      accessor: "comm",
+      accessor: "commission",
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
@@ -146,15 +146,7 @@ const Pricing = ({ history, id, tourData }) => {
         return <Members {...cellProps} />;
       },
     },
-    {
-      Header: "Balance",
-      accessor: "balance",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
+    
 
     {
       Header: "Action",
@@ -169,26 +161,32 @@ const Pricing = ({ history, id, tourData }) => {
             onClick={() =>{
               const prodData = cellProps.row.original
               console.log("data del producto", prodData)
-              setEditProductID(prodData.id)
+              
               switch (tourData.type_id) {
                 case 2:
                   setAddNewProduct(!addNewProduct);
+                  setEditProductID(prodData.id)
                   break;
                 case 3:
                   setAddNewAirportTransfer(!addNewAirportTransfer);
+                  setEditProductID(prodData.id)
                   break;
                 case 4:
                   setNewTransportation(!newTransportation);
+                  setEditProductID(prodData.id)
                   break;
                 case 5:
                   setAddNewFishing(!addNewFishing);
+                  setEditProductID(prodData.id)
                   break;
                 case 6:
                   setNewPrivateCharter(!newPrivateCharter);
+                  setEditProductID(prodData.id)
                   break;
           
                 default:
                   setAddNewProduct(!addNewProduct);
+                  setEditProductID(prodData.id)
                   break;
               }
             }}

@@ -126,3 +126,9 @@ export const getPricingOptionsAPI = (id) => {
     headers: options,
   });
 };
+export const getPricingZoneOptionsAPI = (id, provider_id) => {
+  const url = `${API_URL}/pricingOptions/${id}/items/${provider_id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};

@@ -36,7 +36,7 @@ const AddNewProductPricing = ({
     }
   }, [editProductID]);
 
-  console.log(dataEdit);
+  console.log('private tour',dataEdit);
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -74,9 +74,9 @@ const AddNewProductPricing = ({
       product_name: tourData ? tourData.name : "",
       sku: tourData ? tourData.sku : "",
       public_price: dataEdit ? dataEdit.public : "",
-      provider_price: dataEdit ? dataEdit.public_price : "",
+      provider_price: dataEdit ? dataEdit.provider_price : "",
       rate: dataEdit ? dataEdit.rate : "",
-      net_price: dataEdit ? dataEdit.net_price : "",
+      net_price: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
       compare_at: dataEdit ? dataEdit.compare_at : "",
@@ -85,7 +85,7 @@ const AddNewProductPricing = ({
       eff_rate: dataEdit ? dataEdit.eff_rate : "",
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
-      balance_due: dataEdit ? dataEdit.balance_due : "",
+      balance_due: dataEdit ? dataEdit.net_price : "",
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -112,28 +112,28 @@ const AddNewProductPricing = ({
 
         price_details: [
           {
-            pricing_option_id: 6,
+            pricing_option_id: 1,
             source_id: priceTypeSelected,
             min: null,
             max: null,
             label: null,
           },
           {
-            pricing_option_id: 7,
+            pricing_option_id: 2,
             source_id: priceOptionSelected,
             min: null,
             max: null,
             label: null,
           },
           {
-            pricing_option_id: 9,
+            pricing_option_id: 4,
             source_id: priceCollectSelected,
             min: 1,
             max: 3,
             label: "px",
           },
           {
-            pricing_option_id: 29,
+            pricing_option_id: 28,
             source_id: priceSeasonSelected,
             min: null,
             max: null,
