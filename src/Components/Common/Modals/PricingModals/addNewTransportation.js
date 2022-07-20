@@ -38,7 +38,7 @@ const AddNewTransportation = ({
      }
    }, [editProductID]);
  
-   console.log(dataEdit);
+  //  console.log('transportation',dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -48,14 +48,14 @@ const AddNewTransportation = ({
   const [priceTransferType, setPriceTransferType] = useState([]);
   const [priceDirection, setPriceDirection] = useState([]);
   const [priceVehicle, setVehicleZone] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : '');
-  const [priceOptionSelected, setPriceOptionSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : '');
-  const [priceCollectSelected, setPriceCollectSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : '');
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : '');
-  const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
-  const [priceDirectionSelected, setPriceDirectonSelected] = useState();
-  const [priceZoneSelected, setPriceZoneSelected] = useState();
-  const [priceVehicleSelected, setPriceVehicleSelected] = useState();
+  const [priceTypeSelected, setPriceTypeSelected] = useState(null);
+  const [priceOptionSelected, setPriceOptionSelected] = useState(null);
+  const [priceCollectSelected, setPriceCollectSelected] = useState(null);
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState(null);
+  const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState(null);
+  const [priceDirectionSelected, setPriceDirectonSelected] = useState(null);
+  const [priceZoneSelected, setPriceZoneSelected] = useState(null);
+  const [priceVehicleSelected, setPriceVehicleSelected] = useState(null);
   useEffect(() => {
     if (newTransportation) {
       getPricingOptionsAPI(20).then((resp) => {
@@ -131,56 +131,56 @@ const AddNewTransportation = ({
         price_details: [
           {
             pricing_option_id: 20,
-            source_id: priceTypeSelected,
+            source_id: priceTypeSelected ? priceTypeSelected : dataEdit.pricedetails[0].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 21,
-            source_id: priceOptionSelected,
+            source_id: priceOptionSelected ? priceOptionSelected : dataEdit.pricedetails[1].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 22,
-            source_id: priceCollectSelected,
+            source_id: priceCollectSelected ? priceOptionSelected : dataEdit.pricedetails[2].source_id ,
             min: 1,
             max: 3,
             label: "px",
           },
           {
             pricing_option_id: 31,
-            source_id: priceSeasonSelected,
+            source_id: priceSeasonSelected ? priceSeasonSelected : dataEdit.pricedetails[3].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 46,
-            source_id: priceTransferTypeSelected,
+            source_id: priceTransferTypeSelected ? priceTransferTypeSelected : dataEdit.pricedetails[4].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 49,
-            source_id: priceDirectionSelected,
+            source_id: priceDirectionSelected ? priceDirectionSelected : dataEdit.pricedetails[5].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 51,
-            source_id: priceZoneSelected,
+            source_id: priceZoneSelected ? priceZoneSelected : dataEdit.pricedetails[7].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 24,
-            source_id: priceVehicleSelected,
+            source_id: priceVehicleSelected ? priceVehicleSelected : dataEdit.pricedetails[6].source_id ,
             min: values.min,
             max: values.max,
             label: null,

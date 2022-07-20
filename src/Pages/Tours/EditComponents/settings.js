@@ -29,9 +29,8 @@ import { Select } from "antd";
 const { Option } = Select;
 
 const Settings = ({ history, tourSettings, id }) => {
- 
-  //get initial data tour types
-  // const dispatch = useDispatch();
+
+  console.log('settings', tourSettings)
 
   //seasons request
   const [seasonData, setSeasonData] = useState();
@@ -53,7 +52,10 @@ const Settings = ({ history, tourSettings, id }) => {
       let optionsArea = [];
 
       availableData.forEach((element) => {
-        if (tourSettings.available_seasons && tourSettings.available_seasons.includes(element.id.toString())) {
+        if (
+          tourSettings.available_seasons &&
+          tourSettings.available_seasons.includes(element.id.toString())
+        ) {
           optionsArea.push({ label: element.name, value: element.id });
         }
       });
@@ -61,12 +63,11 @@ const Settings = ({ history, tourSettings, id }) => {
     }
   }, [availableData, tourSettings]);
 
-
   //season select
-  const [seasonSelected, setSeasonSelected] = useState(tourSettings.available_seasons);
+  const [seasonSelected, setSeasonSelected] = useState(
+    tourSettings.available_seasons
+  );
   function handleMulti(selected) {
- 
-
     setSeasonSelected(selected);
   }
 
@@ -85,7 +86,7 @@ const Settings = ({ history, tourSettings, id }) => {
       provider_tour_name: tourSettings.provider_tour_name
         ? tourSettings.provider_tour_name
         : "",
-        available_seasons: tourSettings.available_seasons,
+      available_seasons: tourSettings.available_seasons,
       provider_tour_url: tourSettings.provider_tour_url
         ? tourSettings.provider_tour_url
         : "",
@@ -116,7 +117,6 @@ const Settings = ({ history, tourSettings, id }) => {
     //     .required("Max 2 chars"),
     // }),
     onSubmit: (values) => {
-      
       let data = {
         provider_tour_name: values.provider_tour_name
           ? values.provider_tour_name
@@ -141,7 +141,7 @@ const Settings = ({ history, tourSettings, id }) => {
           ? values.teenagers_range_to
           : "",
       };
-      
+
       putSettingsAPI(id, data)
         .then((resp) => {
           console.log(resp.data);
@@ -302,24 +302,22 @@ const Settings = ({ history, tourSettings, id }) => {
                 <div className="form-outline my-2">
                   <Label className="form-label">Available Seasons</Label>
 
-                  {tourSettings && initialOptionsArea.length > 0 ? (
-                    <Select
-                      mode="multiple"
-                      allowClear
-                      style={{ width: "100%", paddingTop: "5px" }}
-                      placeholder="Please select"
-                      defaultValue={initialOptionsArea}
-                      onChange={handleMulti}
-                    >
-                      {map(availableData, (item, index) => {
-                        return (
-                          <Option key={index} value={item.id}>
-                            {item.name}
-                          </Option>
-                        );
-                      })}
-                    </Select>
-                  ) : null}
+                  <Select
+                    mode="multiple"
+                    allowClear
+                    style={{ width: "100%", paddingTop: "5px" }}
+                    placeholder="Please select"
+                    defaultValue={initialOptionsArea}
+                    onChange={handleMulti}
+                  >
+                    {map(availableData, (item, index) => {
+                      return (
+                        <Option key={index} value={item.id}>
+                          {item.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
                 </div>
               </Col>
               <Col className="col-2 d-flex justify-content-center ">
@@ -327,24 +325,23 @@ const Settings = ({ history, tourSettings, id }) => {
               </Col>
 
               <Col className="d-flex">
-                {availableData.length > 0 ? 
-                <>
-                
-                {map(availableData, (available, index) => {
-                  return (
-                    <Col key={index} className="">
-                      <div className="form-check mt-5">
-                        <AvailableCheckbox
-                          available={available}
-                          availableFromIDs={availableFromIDs}
-                          setAvailableFromIDs={setAvailableFromIDs}
-                        />
-                      </div>
-                    </Col>
-                  );
-                })}
-                </>
-                : null}
+                {availableData.length > 0 ? (
+                  <>
+                    {map(availableData, (available, index) => {
+                      return (
+                        <Col key={index} className="">
+                          <div className="form-check mt-5">
+                            <AvailableCheckbox
+                              available={available}
+                              availableFromIDs={availableFromIDs}
+                              setAvailableFromIDs={setAvailableFromIDs}
+                            />
+                          </div>
+                        </Col>
+                      );
+                    })}
+                  </>
+                ) : null}
               </Col>
             </Row>
           </Row>

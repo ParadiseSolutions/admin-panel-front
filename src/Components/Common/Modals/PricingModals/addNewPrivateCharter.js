@@ -31,7 +31,7 @@ const AddNewPrivateCharter = ({
     }
   }, [editProductID]);
 
-  console.log(dataEdit);
+  console.log('charter',dataEdit);
 
    //combo box request
    const [priceTypeData, setPriceTypeData] = useState([]);
@@ -121,47 +121,47 @@ const AddNewPrivateCharter = ({
         price_details: [
           {
             pricing_option_id: 38,
-            source_id: priceTypeSelected,
+            source_id: priceTypeSelected ? priceTypeSelected : dataEdit.pricedetails[0].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 39,
-            source_id: priceOptionSelected,
+            source_id: priceOptionSelected ? priceOptionSelected : dataEdit.pricedetails[1].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 41,
-            source_id: priceCollectSelected,
+            source_id: priceCollectSelected ? priceCollectSelected : dataEdit.pricedetails[2].source_id ,
             min: 1,
             max: 3,
             label: "px",
           },
           {
             pricing_option_id: 44,
-            source_id: priceSeasonSelected,
+            source_id: priceSeasonSelected ? priceSeasonSelected : dataEdit.pricedetails[3].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 48,
-            source_id: priceCharterTypeSelected,
+            source_id: priceCharterTypeSelected ? priceCharterTypeSelected : dataEdit.pricedetails[4].source_id ,
             min: values.min,
             max: values.max,
             label: null,
           },
           {
             pricing_option_id: 40,
-            source_id: priceDurationSelected,
+            source_id: priceDurationSelected ? priceDurationSelected : dataEdit.pricedetails[5].source_id ,
             label: null,
           },
           {
             pricing_option_id: 42,
-            source_id: priceLocationSelected,
+            source_id: priceLocationSelected ? priceLocationSelected : dataEdit.pricedetails[6].source_id ,
             label: null,
           },
          

@@ -22,7 +22,7 @@ const EditTour = ({ history }) => {
 
   const { id } = useParams();
   //tabs
-  const [activeTab, setactiveTab] = useState("1");
+  const [activeTab, setactiveTab] = useState("2");
   function toggle(tab) {
     if (activeTab !== tab) {
       setactiveTab(tab);

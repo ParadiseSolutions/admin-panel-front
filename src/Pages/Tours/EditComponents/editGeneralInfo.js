@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
 import newTourGi from "../../../Components/Assets/images/newTourGI.jpg";
 import { tourTypesData } from "../../../Utils/Redux/Actions/TourTypesActions";
 import { websitesData } from "../../../Utils/Redux/Actions/WebsitesActions";
@@ -25,8 +26,8 @@ import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
 
-const EditGeneralInformation = ({history, tourData}) => {
-
+const EditGeneralInformation = ({tourData}) => {
+  const history = useHistory()
      //get initial data tour types
   const dispatch = useDispatch();
 
@@ -201,6 +202,7 @@ const EditGeneralInformation = ({history, tourData}) => {
                                 <Input
                                   type="select"
                                   name=""
+                                  disabled
                                   onChange={(e) =>{
                                     setTourTypeID(e.target.value)
                                   }}
@@ -224,6 +226,7 @@ const EditGeneralInformation = ({history, tourData}) => {
                                 <Input
                                   type="select"
                                   name=""
+                                  disabled
                                   onChange={(e) =>{
                                     onChangeWebsite(e.target.value)
                                     setWebsiteID(e.target.value)
@@ -250,14 +253,14 @@ const EditGeneralInformation = ({history, tourData}) => {
                                 <Input
                                   type="select"
                                   name="department"
-                                  disabled={shoppingCartData ? false : true}
+                                  disabled
                                   onChange={(e) =>{
                                     setShoppingCartID(e.target.value)
                                   }}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
-                                  <option>Select....</option>
+                                  <option>{tourData.cart_name}</option>
                                   {map(
                                     shoppingCartData,
                                     (shoppingCart, index) => {
@@ -266,7 +269,7 @@ const EditGeneralInformation = ({history, tourData}) => {
                                           key={index}
                                           value={shoppingCart.id}
                                         >
-                                          {shoppingCart.name}
+                                          
                                         </option>
                                       );
                                     }
@@ -284,14 +287,14 @@ const EditGeneralInformation = ({history, tourData}) => {
                                 <Input
                                   type="select"
                                   name=""
-                                  disabled={providerData ? false : true}
+                                  disabled
                                   onChange={(e) =>{
                                     setProviderID(e.target.value)
                                   }}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
-                                  <option>Select....</option>
+                                  <option>{tourData.provider_name}</option>
                                   {map(providerData, (provider, index) => {
                                     return (
                                       <option
@@ -311,14 +314,14 @@ const EditGeneralInformation = ({history, tourData}) => {
                                 <Input
                                   type="select"
                                   name=""
-                                  disabled={operatorData ? false : true}
+                                  disabled
                                   onChange={(e) =>{
                                     setOperatorID(e.target.value)
                                   }}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
-                                  <option>Select....</option>
+                                  <option>{tourData.operator_name}</option>
                                   {map(operatorData, (operator, index) => {
                                     return (
                                       <option
@@ -384,13 +387,14 @@ const EditGeneralInformation = ({history, tourData}) => {
                                 <Input
                                   type="select"
                                   name=""
+                                  disabled
                                   onChange={(e) =>{
                                     setLocationID(e.target.value)
                                   }}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
-                                  <option>Select....</option>
+                                  <option>{tourData.location_name}</option>
                                   {map(dataLocations, (location, index) => {
                                     return (
                                       <option key={index} value={location.id}>
@@ -413,14 +417,14 @@ const EditGeneralInformation = ({history, tourData}) => {
                                 <Input
                                   type="select"
                                   name=""
-                                  disabled={providerData ? false : true}
+                                  disabled
                                   onChange={(e) =>{
                                     setMainCatID(e.target.value)
                                   }}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
-                                  <option>Select....</option>
+                                  <option>{tourData.category_name}</option>
                                   {map(providerData, (provider, index) => {
                                     return (
                                       <option
@@ -472,6 +476,7 @@ const EditGeneralInformation = ({history, tourData}) => {
                                   name="code"
                                   placeholder=""
                                   type="text"
+                                  disabled
                                   onChange={validationType.handleChange}
                                   onBlur={validationType.handleBlur}
                                   value={validationType.values.code || ""}
@@ -501,7 +506,11 @@ const EditGeneralInformation = ({history, tourData}) => {
                             outline
                             className="waves-effect waves-light col-2 mx-4"
                             type="button"
-                            onClick={() => history.goBack()}
+                            onClick={() => {
+                              console.log('asdas')
+                              history.goBack();
+                            }
+                            }
                           >
                             <i className="uil-angle-double-left" />
                             Back

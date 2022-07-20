@@ -37,7 +37,7 @@ const AddNewAirportTransfer = ({
      }
    }, [editProductID]);
  
-  //  console.log(tourData);
+  //  console.log('airport', dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -58,7 +58,7 @@ const AddNewAirportTransfer = ({
 
   useEffect(() => {
     if (addNewAirportTransfer) {
-      getPricingOptionsAPI(6).then((resp) => {
+      getPricingOptionsAPI(10).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
       getPricingOptionsAPI(7).then((resp) => {
@@ -133,56 +133,56 @@ const AddNewAirportTransfer = ({
         price_details: [
           {
             pricing_option_id: 10,
-            source_id: priceTypeSelected,
+            source_id: priceTypeSelected ? priceTypeSelected : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 7,
-            source_id: priceOptionSelected,
+            source_id: priceOptionSelected ? priceOptionSelected : dataEdit.pricedetails[1].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 9,
-            source_id: priceCollectSelected,
+            source_id: priceCollectSelected ? priceCollectSelected : dataEdit.pricedetails[2].source_id ,
             min: 1,
             max: 3,
             label: "px",
           },
           {
             pricing_option_id: 29,
-            source_id: priceSeasonSelected,
+            source_id: priceSeasonSelected ? priceSeasonSelected : dataEdit.pricedetails[3].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 12,
-            source_id: priceTransferTypeSelected,
+            source_id: priceTransferTypeSelected ? priceTransferTypeSelected : dataEdit.pricedetails[4].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 13,
-            source_id: priceDirectionSelected,
+            source_id: priceDirectionSelected ? priceDirectionSelected : dataEdit.pricedetails[5].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 50,
-            source_id: priceZoneSelected,
+            source_id: priceZoneSelected ? priceZoneSelected : dataEdit.pricedetails[7].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 17,
-            source_id: priceVehicleSelected,
+            source_id: priceVehicleSelected ? priceVehicleSelected : dataEdit.pricedetails[6].source_id ,
             min: values.min,
             max: values.max,
             label: null,

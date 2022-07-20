@@ -32,7 +32,7 @@ const Fishing = ({
     }
   }, [editProductID]);
 
-  console.log(dataEdit);
+  // console.log('fishing',dataEdit);
 
     //combo box request
     const [priceTypeData, setPriceTypeData] = useState([]);
@@ -46,9 +46,10 @@ const Fishing = ({
     const [priceOptionSelected, setPriceOptionSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : '');
     const [priceCollectSelected, setPriceCollectSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : '');
     const [priceSeasonSelected, setPriceSeasonSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : '');
-    const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState();
-    const [priceDurationSelected, setPriceDurationSelected] = useState();
-    const [priceLocationSelected, setPriceLocationSelected] = useState();
+
+    const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState(null);
+    const [priceDurationSelected, setPriceDurationSelected] = useState(null);
+    const [priceLocationSelected, setPriceLocationSelected] = useState(null);
     useEffect(() => {
       if (addNewFishing) {
         getPricingOptionsAPI(33).then((resp) => {
@@ -149,19 +150,19 @@ const Fishing = ({
           },
           {
             pricing_option_id: 47,
-            source_id: priceCharterTypeSelected,
+            source_id: priceCharterTypeSelected ? priceCharterType : dataEdit.pricedetails[4].source_id,
             min: values.min,
             max: values.max,
             label: null,
           },
           {
             pricing_option_id: 35,
-            source_id: priceDurationSelected,
+            source_id: priceDurationSelected ? priceDurationSelected : dataEdit.pricedetails[5].source_id,
             label: null,
           },
           {
             pricing_option_id: 37,
-            source_id: priceLocationSelected,
+            source_id: priceLocationSelected ? priceLocationSelected : dataEdit.pricedetails[6].source_id,
             label: null,
           },
          
