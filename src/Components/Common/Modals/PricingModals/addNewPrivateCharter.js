@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { getPriceAPI, getPricingOptionsAPI, postPricesAPI } from "../../../../Utils/API/Tours";
+import { getPriceAPI, getPricingOptionsAPI, postPricesAPI, updatePriceAPI } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
 const AddNewPrivateCharter = ({
@@ -168,11 +168,17 @@ const AddNewPrivateCharter = ({
         ],
         
       };
-
-      postPricesAPI(data).then((resp) =>{
-        console.log(resp)
-        setNewPrivateCharter(false);
-      })
+      if (dataEdit) {
+        updatePriceAPI(editProductID, data).then((resp) => {
+          console.log(resp);
+          setNewPrivateCharter(false);
+        });
+      } else {
+        postPricesAPI(data).then((resp) => {
+          console.log(resp);
+          setNewPrivateCharter(false);
+        });
+      }
     },
   });
   return (
