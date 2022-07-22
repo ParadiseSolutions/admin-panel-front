@@ -116,6 +116,13 @@ export const updatePriceAPI = (id, body) => {
   });
 };
 
+export const deletePriceAPI = (id) => {
+  const url = `${API_URL}/prices/${id}`;
+  return axios.delete (url, {
+    headers: options,
+  });
+};
+
 
 
 //pricing options select

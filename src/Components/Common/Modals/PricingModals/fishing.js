@@ -19,6 +19,7 @@ const Fishing = ({
   addNewFishing,
   setAddNewFishing,
   tourData,
+  refreshTable,
   editProductID
 }) => {
 
@@ -95,7 +96,9 @@ const Fishing = ({
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
       min: dataEdit ? dataEdit?.pricedetails[4]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[4]?.max : ""
+      max: dataEdit ? dataEdit?.pricedetails[4]?.max : "",
+      active: dataEdit?.active ? 1 : 0,
+      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -119,6 +122,8 @@ const Fishing = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
+        active: values.active ? 1 : 0,
+        show_balance_due: values.balance_checkbox ? 1 : 0,
         price_details: [
           {
             pricing_option_id: 33,
@@ -173,11 +178,13 @@ const Fishing = ({
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
           console.log(resp);
+          refreshTable()
           setAddNewFishing(false);
         });
       } else {
         postPricesAPI(data).then((resp) => {
           console.log(resp);
+          refreshTable()
           setAddNewFishing(false);
         });
       }
@@ -360,25 +367,26 @@ const Fishing = ({
                   <Col className="col-6">
                     <Label className="form-label mt-2">Active</Label>
                     <div className="form-check form-switch form-switch-md mx-2">
-                      <Input
-                        name="notification_email"
+                    <Input
+                        name="active"
                         placeholder=""
                         type="checkbox"
+                        checked={dataEdit?.active ? true : false}
                         className="form-check-input"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
+                        value={validationType.values.active || ""}
                         invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
+                          validationType.touched.active &&
+                          validationType.errors.active
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.notification_email &&
-                      validationType.errors.notification_email ? (
+                      {validationType.touched.active &&
+                      validationType.errors.active ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.notification_email}
+                          {validationType.errors.active}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -386,25 +394,26 @@ const Fishing = ({
                   <Col className="col-6">
                     <Label className="form-label mt-2">Balance Due</Label>
                     <div className="form-check form-switch form-switch-md mx-4">
-                      <Input
-                        name="notification_email"
+                    <Input
+                        name="balance_checkbox"
                         placeholder=""
                         type="checkbox"
+                        checked={dataEdit?.show_balance_due ? true : false}
                         className="form-check-input"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
+                        value={validationType.values.balance_checkbox || ""}
                         invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
+                          validationType.touched.balance_checkbox &&
+                          validationType.errors.balance_checkbox
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.notification_email &&
-                      validationType.errors.notification_email ? (
+                      {validationType.touched.balance_checkbox &&
+                      validationType.errors.balance_checkbox ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.notification_email}
+                          {validationType.errors.balance_checkbox}
                         </FormFeedback>
                       ) : null}
                     </div>

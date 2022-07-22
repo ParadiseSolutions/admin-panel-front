@@ -17,26 +17,27 @@ import {
   getPricingOptionsAPI,
   postPricesAPI,
   updatePriceAPI,
-  getPricingZoneOptionsAPI
+  getPricingZoneOptionsAPI,
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
   setAddNewAirportTransfer,
+  refreshTable,
   editProductID,
   tourData,
 }) => {
-   //edit data
-   const [dataEdit, setDataEdit] = useState();
-   useEffect(() => {
-     if (editProductID !== null) {
-       getPriceAPI(editProductID).then((resp) => {
-         setDataEdit(resp.data.data[0]);
-       });
-     }
-   }, [editProductID]);
- 
+  //edit data
+  const [dataEdit, setDataEdit] = useState();
+  useEffect(() => {
+    if (editProductID !== null) {
+      getPriceAPI(editProductID).then((resp) => {
+        setDataEdit(resp.data.data[0]);
+      });
+    }
+  }, [editProductID]);
+
   //  console.log('airport', dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -47,10 +48,18 @@ const AddNewAirportTransfer = ({
   const [priceDirection, setPriceDirection] = useState([]);
   const [priceVehicle, setPriceVehicle] = useState([]);
   const [priceZone, setPriceZone] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : '');
-  const [priceOptionSelected, setPriceOptionSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : '');
-  const [priceCollectSelected, setPriceCollectSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : '');
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : '');
+  const [priceTypeSelected, setPriceTypeSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
+  );
+  const [priceOptionSelected, setPriceOptionSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
+  );
+  const [priceCollectSelected, setPriceCollectSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
+  );
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+  );
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
   const [priceDirectionSelected, setPriceDirectionSelected] = useState();
   const [priceVehicleSelected, setPriceVehicleSelected] = useState();
@@ -105,7 +114,9 @@ const AddNewAirportTransfer = ({
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
       min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : ""
+      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
+      active: dataEdit?.active ? 1 : 0,
+      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -113,7 +124,7 @@ const AddNewAirportTransfer = ({
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values) => {
-      // console.log(values)
+      console.log(values)
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -130,59 +141,77 @@ const AddNewAirportTransfer = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
+        active: values.active ? 1 : 0,
+        show_balance_due: values.balance_checkbox ? 1 : 0,
         price_details: [
           {
             pricing_option_id: 10,
-            source_id: priceTypeSelected ? priceTypeSelected : dataEdit.pricedetails[0].source_id,
+            source_id: priceTypeSelected
+              ? priceTypeSelected
+              : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 7,
-            source_id: priceOptionSelected ? priceOptionSelected : dataEdit.pricedetails[1].source_id ,
+            source_id: priceOptionSelected
+              ? priceOptionSelected
+              : dataEdit.pricedetails[1].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 9,
-            source_id: priceCollectSelected ? priceCollectSelected : dataEdit.pricedetails[2].source_id ,
+            source_id: priceCollectSelected
+              ? priceCollectSelected
+              : dataEdit.pricedetails[2].source_id,
             min: 1,
             max: 3,
             label: "px",
           },
           {
             pricing_option_id: 29,
-            source_id: priceSeasonSelected ? priceSeasonSelected : dataEdit.pricedetails[3].source_id ,
+            source_id: priceSeasonSelected
+              ? priceSeasonSelected
+              : dataEdit.pricedetails[3].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 12,
-            source_id: priceTransferTypeSelected ? priceTransferTypeSelected : dataEdit.pricedetails[4].source_id ,
+            source_id: priceTransferTypeSelected
+              ? priceTransferTypeSelected
+              : dataEdit.pricedetails[4].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 13,
-            source_id: priceDirectionSelected ? priceDirectionSelected : dataEdit.pricedetails[5].source_id ,
+            source_id: priceDirectionSelected
+              ? priceDirectionSelected
+              : dataEdit.pricedetails[5].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 50,
-            source_id: priceZoneSelected ? priceZoneSelected : dataEdit.pricedetails[7].source_id ,
+            source_id: priceZoneSelected
+              ? priceZoneSelected
+              : dataEdit.pricedetails[7].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 17,
-            source_id: priceVehicleSelected ? priceVehicleSelected : dataEdit.pricedetails[6].source_id ,
+            source_id: priceVehicleSelected
+              ? priceVehicleSelected
+              : dataEdit.pricedetails[6].source_id,
             min: values.min,
             max: values.max,
             label: null,
@@ -190,15 +219,18 @@ const AddNewAirportTransfer = ({
         ],
       };
 
- if (dataEdit) {
+      if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
           // console.log(resp);
           setAddNewAirportTransfer(false);
+          refreshTable()
+          
         });
       } else {
         postPricesAPI(data).then((resp) => {
           // console.log(resp);
           setAddNewAirportTransfer(false);
+          refreshTable()
         });
       }
     },
@@ -281,30 +313,36 @@ const AddNewAirportTransfer = ({
               <Row className="d-flex">
                 <Col className="col-9 d-flex justify-content-between">
                   <Col className="col-2">
-
                     <div className="form-outline">
-                    <Label className="form-label">Price Type</Label>
-                    <Input
-                      type="select"
-                      name="price_type"
-                      onChange={(e) => {
-                        setPriceTypeSelected(e.target.value);
-                      }}
-                      onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
-                    >
-                      <option>Select....</option>
-                      {map(priceTypeData, (type, index) => {
-                        return (
-                          <option key={index} value={type.id} selected={ dataEdit && dataEdit.pricedetails ? type.id === dataEdit.pricedetails[0].source_id : false}>
-                            {type.text}
-                          </option>
-                        );
-                      })}
-                    </Input>
-                  </div>
-                  
-                    
+                      <Label className="form-label">Price Type</Label>
+                      <Input
+                        type="select"
+                        name="price_type"
+                        onChange={(e) => {
+                          setPriceTypeSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                      >
+                        <option>Select....</option>
+                        {map(priceTypeData, (type, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? type.id ===
+                                    dataEdit.pricedetails[0].source_id
+                                  : false
+                              }
+                            >
+                              {type.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
@@ -321,7 +359,16 @@ const AddNewAirportTransfer = ({
                         <option>Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
-                            <option key={index} value={option.id} selected={ dataEdit && dataEdit.pricedetails ?  option.id === dataEdit.pricedetails[1].source_id : false}>
+                            <option
+                              key={index}
+                              value={option.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? option.id ===
+                                    dataEdit.pricedetails[1].source_id
+                                  : false
+                              }
+                            >
                               {option.text}
                             </option>
                           );
@@ -344,7 +391,16 @@ const AddNewAirportTransfer = ({
                         <option>Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
-                            <option key={index} value={collect.id} selected={ dataEdit && dataEdit.pricedetails ? collect.id === dataEdit.pricedetails[2].source_id : false}>
+                            <option
+                              key={index}
+                              value={collect.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? collect.id ===
+                                    dataEdit.pricedetails[2].source_id
+                                  : false
+                              }
+                            >
                               {collect.text}
                             </option>
                           );
@@ -370,7 +426,16 @@ const AddNewAirportTransfer = ({
                         <option>Select....</option>
                         {map(priceSeason, (season, index) => {
                           return (
-                            <option key={index} value={season.id} selected={dataEdit && dataEdit.pricedetails ? season.id === dataEdit.pricedetails[3].source_id: false}>
+                            <option
+                              key={index}
+                              value={season.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? season.id ===
+                                    dataEdit.pricedetails[3].source_id
+                                  : false
+                              }
+                            >
                               {season.text}
                             </option>
                           );
@@ -384,24 +449,25 @@ const AddNewAirportTransfer = ({
                     <Label className="form-label mt-2">Active</Label>
                     <div className="form-check form-switch form-switch-md mx-2">
                       <Input
-                        name="notification_email"
+                        name="active"
                         placeholder=""
                         type="checkbox"
+                        checked={dataEdit?.active ? true : false}
                         className="form-check-input"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
+                        value={validationType.values.active || ""}
                         invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
+                          validationType.touched.active &&
+                          validationType.errors.active
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.notification_email &&
-                      validationType.errors.notification_email ? (
+                      {validationType.touched.active &&
+                      validationType.errors.active ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.notification_email}
+                          {validationType.errors.active}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -410,24 +476,25 @@ const AddNewAirportTransfer = ({
                     <Label className="form-label mt-2">Balance Due</Label>
                     <div className="form-check form-switch form-switch-md mx-4">
                       <Input
-                        name="notification_email"
+                        name="balance_checkbox"
                         placeholder=""
                         type="checkbox"
+                        checked={dataEdit?.show_balance_due ? true : false}
                         className="form-check-input"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
+                        value={validationType.values.balance_checkbox || ""}
                         invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
+                          validationType.touched.balance_checkbox &&
+                          validationType.errors.balance_checkbox
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.notification_email &&
-                      validationType.errors.notification_email ? (
+                      {validationType.touched.balance_checkbox &&
+                      validationType.errors.balance_checkbox ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.notification_email}
+                          {validationType.errors.balance_checkbox}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -466,7 +533,16 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceTransferType, (transferType, index) => {
                         return (
-                          <option key={index} value={transferType.id} selected={ dataEdit && dataEdit.pricedetails ? transferType.id === dataEdit.pricedetails[4].source_id : false}>
+                          <option
+                            key={index}
+                            value={transferType.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? transferType.id ===
+                                  dataEdit.pricedetails[4].source_id
+                                : false
+                            }
+                          >
                             {transferType.text}
                           </option>
                         );
@@ -489,7 +565,16 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceDirection, (direction, index) => {
                         return (
-                          <option key={index} value={direction.id} selected={ dataEdit && dataEdit.pricedetails ? direction.id === dataEdit.pricedetails[5].source_id : false}>
+                          <option
+                            key={index}
+                            value={direction.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? direction.id ===
+                                  dataEdit.pricedetails[5].source_id
+                                : false
+                            }
+                          >
                             {direction.text}
                           </option>
                         );
@@ -512,7 +597,16 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceVehicle, (vehicle, index) => {
                         return (
-                          <option key={index} value={vehicle.id} selected={ dataEdit && dataEdit.pricedetails ? vehicle.id === dataEdit.pricedetails[6].source_id : false}>
+                          <option
+                            key={index}
+                            value={vehicle.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? vehicle.id ===
+                                  dataEdit.pricedetails[6].source_id
+                                : false
+                            }
+                          >
                             {vehicle.text}
                           </option>
                         );
@@ -535,7 +629,7 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceZone, (zone, index) => {
                         return (
-                          <option key={index} value={zone.id} >
+                          <option key={index} value={zone.id}>
                             {zone.text}
                           </option>
                         );
@@ -554,14 +648,12 @@ const AddNewAirportTransfer = ({
                       onBlur={validationType.handleBlur}
                       value={validationType.values.min || ""}
                       invalid={
-                        validationType.touched.min &&
-                        validationType.errors.min
+                        validationType.touched.min && validationType.errors.min
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.min &&
-                    validationType.errors.min ? (
+                    {validationType.touched.min && validationType.errors.min ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.min}
                       </FormFeedback>
@@ -579,14 +671,12 @@ const AddNewAirportTransfer = ({
                       onBlur={validationType.handleBlur}
                       value={validationType.values.max || ""}
                       invalid={
-                        validationType.touched.max &&
-                        validationType.errors.max
+                        validationType.touched.max && validationType.errors.max
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.max &&
-                    validationType.errors.max ? (
+                    {validationType.touched.max && validationType.errors.max ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.max}
                       </FormFeedback>

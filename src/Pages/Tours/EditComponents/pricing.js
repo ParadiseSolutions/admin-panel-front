@@ -9,6 +9,7 @@ import AddNewTransportation from "../../../Components/Common/Modals/PricingModal
 import {
   getPricesPricingAPI,
   getAddonsPricingAPI,
+  deletePriceAPI,
 } from "../../../Utils/API/Tours";
 
 import { TabPane, Row, Button, UncontrolledTooltip } from "reactstrap";
@@ -32,6 +33,11 @@ const Pricing = ({ history, id, tourData }) => {
     });
   }, [id]);
 
+  const refreshTable = () =>{
+    getPricesPricingAPI(id).then((resp) => {
+      setPricesData(resp.data.data);
+    });
+  }
   console.log(pricesData)
 
   //
@@ -45,28 +51,29 @@ const Pricing = ({ history, id, tourData }) => {
   //table actions
   const onDelete = (depData) => {
     Swal.fire({
-      title: "Delete Department?",
+      title: "Delete Price?",
       icon: "question",
-      text: `Do you want delete ${depData.name}`,
+      text: `Do you want delete ${depData.label}`,
       showCancelButton: true,
       confirmButtonText: "Yes",
       confirmButtonColor: "#F38430",
       cancelButtonText: "Cancel",
     }).then((resp) => {
       if (resp.isConfirmed) {
-        // departmentDelete(depData.id)
-        //   .then((resp) => {
-        //     const departmentsRequest = () => dispatch(departmentsData());
-        //     departmentsRequest();
-        //     Swal.fire(
-        //       "Deleted!",
-        //       "The department has been deleted.",
-        //       "success"
-        //     );
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //   });
+        deletePriceAPI(depData.id)
+          .then((resp) => {
+            getPricesPricingAPI(id).then((resp) => {
+              setPricesData(resp.data.data);
+            });
+            Swal.fire(
+              "Deleted!",
+              "The Price has been deleted.",
+              "success"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     });
   };
@@ -196,8 +203,8 @@ const Pricing = ({ history, id, tourData }) => {
                 Edit
               </UncontrolledTooltip>
             </div>
-            <Link
-              to="#"
+            <div
+            
               className="text-danger"
               onClick={() => {
                 const depData = cellProps.row.original;
@@ -210,7 +217,7 @@ const Pricing = ({ history, id, tourData }) => {
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete
               </UncontrolledTooltip>
-            </Link>
+            </div>
           </div>
         );
       },
@@ -423,36 +430,42 @@ const Pricing = ({ history, id, tourData }) => {
         setAddNewProduct={setAddNewProduct}
         editProductID={editProductID}
         tourData={tourData}
+        refreshTable={refreshTable}
       />
       <AddNewAirportTransfer
         addNewAirportTransfer={addNewAirportTransfer}
         setAddNewAirportTransfer={setAddNewAirportTransfer}
         editProductID={editProductID}
         tourData={tourData}
+        refreshTable={refreshTable}
       />
       <Fishing
         addNewFishing={addNewFishing}
         setAddNewFishing={setAddNewFishing}
         editProductID={editProductID}
         tourData={tourData}
+        refreshTable={refreshTable}
       />
       <AddNewPrivateCharter
         newPrivateCharter={newPrivateCharter}
         setNewPrivateCharter={setNewPrivateCharter}
         editProductID={editProductID}
         tourData={tourData}
+        refreshTable={refreshTable}
       />
       <AddNewPrivateTour
         newPrivateTour={newPrivateTour}
         setNewPrivateTour={setNewPrivateTour}
         editProductID={editProductID}
         tourData={tourData}
+        refreshTable={refreshTable}
       />
       <AddNewTransportation
         newTransportation={newTransportation}
         setNewTransportation={setNewTransportation}
         editProductID={editProductID}
         tourData={tourData}
+        refreshTable={refreshTable}
       />
     </TabPane>
   );

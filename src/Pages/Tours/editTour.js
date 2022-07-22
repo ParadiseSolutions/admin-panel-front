@@ -160,7 +160,7 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Extras</span>
+                    <span className="d-none d-sm-block">+ Schedule</span>
                   </NavLink>
                 </NavItem>
               </Nav>
