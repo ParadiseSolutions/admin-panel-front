@@ -24,21 +24,21 @@ import { map } from "lodash";
 const AddNewTransportation = ({
   newTransportation,
   setNewTransportation,
+  refreshTable,
   editProductID,
   tourData,
 }) => {
+  //edit data
+  const [dataEdit, setDataEdit] = useState();
+  useEffect(() => {
+    if (editProductID !== null) {
+      getPriceAPI(editProductID).then((resp) => {
+        setDataEdit(resp.data.data[0]);
+      });
+    }
+  }, [editProductID]);
 
-   //edit data
-   const [dataEdit, setDataEdit] = useState();
-   useEffect(() => {
-     if (editProductID !== null) {
-       getPriceAPI(editProductID).then((resp) => {
-         setDataEdit(resp.data.data[0]);
-       });
-     }
-   }, [editProductID]);
- 
-  //  console.log('transportation',dataEdit);
+  console.log("transportation", dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -52,7 +52,8 @@ const AddNewTransportation = ({
   const [priceOptionSelected, setPriceOptionSelected] = useState(null);
   const [priceCollectSelected, setPriceCollectSelected] = useState(null);
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(null);
-  const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState(null);
+  const [priceTransferTypeSelected, setPriceTransferTypeSelected] =
+    useState(null);
   const [priceDirectionSelected, setPriceDirectonSelected] = useState(null);
   const [priceZoneSelected, setPriceZoneSelected] = useState(null);
   const [priceVehicleSelected, setPriceVehicleSelected] = useState(null);
@@ -104,7 +105,9 @@ const AddNewTransportation = ({
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
       min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : ""
+      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
+      active: dataEdit?.active ? 1 : 0,
+      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -128,76 +131,94 @@ const AddNewTransportation = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
+        active: values.active ? 1 : 0,
+        show_balance_due: values.balance_checkbox ? 1 : 0,
         price_details: [
           {
             pricing_option_id: 20,
-            source_id: priceTypeSelected ? priceTypeSelected : dataEdit.pricedetails[0].source_id ,
+            source_id: priceTypeSelected
+              ? priceTypeSelected
+              : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 21,
-            source_id: priceOptionSelected ? priceOptionSelected : dataEdit.pricedetails[1].source_id ,
+            source_id: priceOptionSelected
+              ? priceOptionSelected
+              : dataEdit.pricedetails[1].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 22,
-            source_id: priceCollectSelected ? priceOptionSelected : dataEdit.pricedetails[2].source_id ,
-            min: 1,
-            max: 3,
-            label: "px",
+            source_id: priceCollectSelected
+              ? priceCollectSelected
+              : dataEdit.pricedetails[2].source_id,
+            min: null,
+            max: null,
+            label: null,
           },
           {
             pricing_option_id: 31,
-            source_id: priceSeasonSelected ? priceSeasonSelected : dataEdit.pricedetails[3].source_id ,
+            source_id: priceSeasonSelected
+              ? priceSeasonSelected
+              : dataEdit.pricedetails[3].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 46,
-            source_id: priceTransferTypeSelected ? priceTransferTypeSelected : dataEdit.pricedetails[4].source_id ,
+            source_id: priceTransferTypeSelected
+              ? priceTransferTypeSelected
+              : dataEdit.pricedetails[4].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 49,
-            source_id: priceDirectionSelected ? priceDirectionSelected : dataEdit.pricedetails[5].source_id ,
+            source_id: priceDirectionSelected
+              ? priceDirectionSelected
+              : dataEdit.pricedetails[5].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 51,
-            source_id: priceZoneSelected ? priceZoneSelected : dataEdit.pricedetails[7].source_id ,
+            source_id: priceZoneSelected
+              ? priceZoneSelected
+              : dataEdit.pricedetails[7].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 24,
-            source_id: priceVehicleSelected ? priceVehicleSelected : dataEdit.pricedetails[6].source_id ,
+            source_id: priceVehicleSelected
+              ? priceVehicleSelected
+              : dataEdit.pricedetails[6].source_id,
             min: values.min,
             max: values.max,
             label: null,
           },
-         
         ],
-        
       };
 
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
           console.log(resp);
+          refreshTable()
           setNewTransportation(false);
         });
       } else {
         postPricesAPI(data).then((resp) => {
           console.log(resp);
+          refreshTable()
           setNewTransportation(false);
         });
       }
@@ -294,9 +315,18 @@ const AddNewTransportation = ({
                       >
                         <option>Select....</option>
                         {map(priceTypeData, (type, index) => {
-                          console.log('tipo', type)
+                          console.log("tipo", type);
                           return (
-                            <option key={index} value={type.id} selected={ dataEdit && dataEdit.pricedetails ? type.id === dataEdit.pricedetails[0].source_id : false}>
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? type.id ===
+                                    dataEdit.pricedetails[0].source_id
+                                  : false
+                              }
+                            >
                               {type.text}
                             </option>
                           );
@@ -319,7 +349,16 @@ const AddNewTransportation = ({
                         <option>Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
-                            <option key={index} value={option.id} selected={ dataEdit && dataEdit.pricedetails ?  option.id === dataEdit.pricedetails[1].source_id : false}>
+                            <option
+                              key={index}
+                              value={option.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? option.id ===
+                                    dataEdit.pricedetails[1].source_id
+                                  : false
+                              }
+                            >
                               {option.text}
                             </option>
                           );
@@ -342,7 +381,16 @@ const AddNewTransportation = ({
                         <option>Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
-                            <option key={index} value={collect.id} selected={ dataEdit && dataEdit.pricedetails ? collect.id === dataEdit.pricedetails[2].source_id : false}>
+                            <option
+                              key={index}
+                              value={collect.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? collect.id ===
+                                    dataEdit.pricedetails[2].source_id
+                                  : false
+                              }
+                            >
                               {collect.text}
                             </option>
                           );
@@ -368,7 +416,16 @@ const AddNewTransportation = ({
                         <option>Select....</option>
                         {map(priceSeason, (season, index) => {
                           return (
-                            <option key={index} value={season.id} selected={dataEdit && dataEdit.pricedetails ? season.id === dataEdit.pricedetails[3].source_id: false}>
+                            <option
+                              key={index}
+                              value={season.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? season.id ===
+                                    dataEdit.pricedetails[3].source_id
+                                  : false
+                              }
+                            >
                               {season.text}
                             </option>
                           );
@@ -381,25 +438,26 @@ const AddNewTransportation = ({
                   <Col className="col-6">
                     <Label className="form-label mt-2">Active</Label>
                     <div className="form-check form-switch form-switch-md mx-2">
-                      <Input
-                        name="notification_email"
+                    <Input
+                        name="active"
                         placeholder=""
                         type="checkbox"
+                        checked={dataEdit?.active ? true : false}
                         className="form-check-input"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
+                        value={validationType.values.active || ""}
                         invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
+                          validationType.touched.active &&
+                          validationType.errors.active
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.notification_email &&
-                      validationType.errors.notification_email ? (
+                      {validationType.touched.active &&
+                      validationType.errors.active ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.notification_email}
+                          {validationType.errors.active}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -407,25 +465,26 @@ const AddNewTransportation = ({
                   <Col className="col-6">
                     <Label className="form-label mt-2">Balance Due</Label>
                     <div className="form-check form-switch form-switch-md mx-4">
-                      <Input
-                        name="notification_email"
+                    <Input
+                        name="balance_checkbox"
                         placeholder=""
                         type="checkbox"
+                        checked={dataEdit?.show_balance_due ? true : false}
                         className="form-check-input"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
+                        value={validationType.values.balance_checkbox || ""}
                         invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
+                          validationType.touched.balance_checkbox &&
+                          validationType.errors.balance_checkbox
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.notification_email &&
-                      validationType.errors.notification_email ? (
+                      {validationType.touched.balance_checkbox &&
+                      validationType.errors.balance_checkbox ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.notification_email}
+                          {validationType.errors.balance_checkbox}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -455,20 +514,29 @@ const AddNewTransportation = ({
                     <Input
                       type="select"
                       name=""
-                      onChange={(e) =>{
-                        setPriceTransferTypeSelected(e.target.value)
+                      onChange={(e) => {
+                        setPriceTransferTypeSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceTransferType, (transferType, index) => {
-                                    return (
-                                      <option key={index} value={transferType.id} selected={dataEdit && dataEdit.pricedetails ? transferType.id === dataEdit.pricedetails[4].source_id: false}>
-                                        {transferType.text}
-                                      </option>
-                                    );
-                                  })}
+                        return (
+                          <option
+                            key={index}
+                            value={transferType.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? transferType.id ===
+                                  dataEdit.pricedetails[4].source_id
+                                : false
+                            }
+                          >
+                            {transferType.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -478,20 +546,29 @@ const AddNewTransportation = ({
                     <Input
                       type="select"
                       name=""
-                      onChange={(e) =>{
-                        setPriceDirectonSelected(e.target.value)
+                      onChange={(e) => {
+                        setPriceDirectonSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceDirection, (direction, index) => {
-                                    return (
-                                      <option key={index} value={direction.id} selected={dataEdit && dataEdit.pricedetails ? direction.id === dataEdit.pricedetails[5].source_id: false}>
-                                        {direction.text}
-                                      </option>
-                                    );
-                                  })}
+                        return (
+                          <option
+                            key={index}
+                            value={direction.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? direction.id ===
+                                  dataEdit.pricedetails[5].source_id
+                                : false
+                            }
+                          >
+                            {direction.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -501,20 +578,29 @@ const AddNewTransportation = ({
                     <Input
                       type="select"
                       name=""
-                      onChange={(e) =>{
-                        setPriceVehicleSelected(e.target.value)
+                      onChange={(e) => {
+                        setPriceVehicleSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceVehicle, (vehicle, index) => {
-                                    return (
-                                      <option key={index} value={vehicle.id}  selected={dataEdit && dataEdit.pricedetails ? vehicle.id === dataEdit.pricedetails[6].source_id: false}>
-                                        {vehicle.text}
-                                      </option>
-                                    );
-                                  })}
+                        return (
+                          <option
+                            key={index}
+                            value={vehicle.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? vehicle.id ===
+                                  dataEdit.pricedetails[6].source_id
+                                : false
+                            }
+                          >
+                            {vehicle.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -524,8 +610,8 @@ const AddNewTransportation = ({
                     <Input
                       type="select"
                       name=""
-                      onChange={(e) =>{
-                        setPriceZoneSelected(e.target.value)
+                      onChange={(e) => {
+                        setPriceZoneSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
@@ -533,9 +619,17 @@ const AddNewTransportation = ({
                       <option>Select....</option>
                       {map(priceZone, (zone, index) => {
                         return (
-                          <option key={index} value={zone.id}  selected={dataEdit && dataEdit.pricedetails ? zone.id === dataEdit.pricedetails[7].source_id: false}>
-                          {zone.text}
-                        </option>
+                          <option
+                            key={index}
+                            value={zone.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? zone.id === dataEdit.pricedetails[7].source_id
+                                : false
+                            }
+                          >
+                            {zone.text}
+                          </option>
                         );
                       })}
                     </Input>
@@ -552,14 +646,12 @@ const AddNewTransportation = ({
                       onBlur={validationType.handleBlur}
                       value={validationType.values.min || ""}
                       invalid={
-                        validationType.touched.min &&
-                        validationType.errors.min
+                        validationType.touched.min && validationType.errors.min
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.min &&
-                    validationType.errors.min ? (
+                    {validationType.touched.min && validationType.errors.min ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.min}
                       </FormFeedback>
@@ -578,14 +670,12 @@ const AddNewTransportation = ({
                       onBlur={validationType.handleBlur}
                       value={validationType.values.max || ""}
                       invalid={
-                        validationType.touched.max &&
-                        validationType.errors.max
+                        validationType.touched.max && validationType.errors.max
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.max &&
-                    validationType.errors.max ? (
+                    {validationType.touched.max && validationType.errors.max ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.max}
                       </FormFeedback>
