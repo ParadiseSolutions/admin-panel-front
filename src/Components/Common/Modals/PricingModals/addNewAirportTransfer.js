@@ -124,7 +124,6 @@ const AddNewAirportTransfer = ({
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values) => {
-      console.log(values)
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,

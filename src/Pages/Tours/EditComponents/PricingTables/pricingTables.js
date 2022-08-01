@@ -19,6 +19,7 @@ const PricingTables = ({
   productsTable,
   addonsTable,
   onClickNewProduct,
+  onClickNewAddon,
 }) => {
   const {
     getTableProps,
@@ -58,20 +59,34 @@ const PricingTables = ({
   };
   return (
     <Fragment>
+
       {productsTable && (
-        <Col sm="12">
+        <Col sm="12" className="">
           <div className="text-sm-end">
-           
-              <Button
-                type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
-                onClick={onClickNewProduct}
-              >
-                <i className="mdi mdi-plus me-1" />
-                New Product
-              </Button>
-            
+            <Button
+              type="button"
+              style={{ backgroundColor: "#F6851F", border: "none" }}
+              className="waves-effect waves-light mb-3 btn btn-success"
+              onClick={onClickNewProduct}
+            >
+              <i className="mdi mdi-plus me-1" />
+              New Product
+            </Button>
+          </div>
+        </Col>
+      )}
+      {addonsTable && (
+        <Col sm="12" className="">
+          <div className="text-sm-end">
+            <Button
+              type="button"
+              style={{ backgroundColor: "#F6851F", border: "none" }}
+              className="waves-effect waves-light mb-3 btn btn-success mt-3"
+              onClick={onClickNewAddon}
+            >
+              <i className="mdi mdi-plus me-1" />
+              New Add-On
+            </Button>
           </div>
         </Col>
       )}

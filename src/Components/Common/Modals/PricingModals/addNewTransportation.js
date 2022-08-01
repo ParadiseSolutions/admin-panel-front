@@ -38,7 +38,6 @@ const AddNewTransportation = ({
     }
   }, [editProductID]);
 
-  console.log("transportation", dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -211,13 +210,13 @@ const AddNewTransportation = ({
 
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+        
           refreshTable()
           setNewTransportation(false);
         });
       } else {
         postPricesAPI(data).then((resp) => {
-          console.log(resp);
+          
           refreshTable()
           setNewTransportation(false);
         });
@@ -315,7 +314,7 @@ const AddNewTransportation = ({
                       >
                         <option>Select....</option>
                         {map(priceTypeData, (type, index) => {
-                          console.log("tipo", type);
+                          
                           return (
                             <option
                               key={index}

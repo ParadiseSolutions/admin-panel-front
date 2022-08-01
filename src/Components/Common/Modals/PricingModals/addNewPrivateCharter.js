@@ -32,7 +32,6 @@ const AddNewPrivateCharter = ({
     }
   }, [editProductID]);
 
-  console.log('charter',dataEdit);
 
    //combo box request
    const [priceTypeData, setPriceTypeData] = useState([]);
@@ -175,13 +174,13 @@ const AddNewPrivateCharter = ({
       };
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+          
           setNewPrivateCharter(false);
           refreshTable()
         });
       } else {
         postPricesAPI(data).then((resp) => {
-          console.log(resp);
+          
           setNewPrivateCharter(false);
           refreshTable()
         });

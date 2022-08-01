@@ -139,3 +139,34 @@ export const getPricingZoneOptionsAPI = (id, provider_id) => {
     headers: options,
   });
 };
+
+
+//addons
+
+export const postAddonsAPI = (body) => {
+  const url = `${API_URL}/addons`;
+  return axios.post (url,body, {
+    headers: options,
+  });
+};
+
+
+export const getAddonAPI = (id) => {
+  const url = `${API_URL}/addons/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const putAddonAPI = (id, body) => {
+  const url = `${API_URL}/addons/${id}`;
+  return axios.put (url, body,{
+    headers: options,
+  });
+};
+
+export const deleteAddonAPI = (id) => {
+  const url = `${API_URL}/addons/${id}`;
+  return axios.delete (url, {
+    headers: options,
+  });
+};

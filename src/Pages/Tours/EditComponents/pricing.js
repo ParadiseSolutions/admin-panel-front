@@ -6,10 +6,12 @@ import Fishing from "../../../Components/Common/Modals/PricingModals/fishing";
 import AddNewPrivateCharter from "../../../Components/Common/Modals/PricingModals/addNewPrivateCharter";
 import AddNewPrivateTour from "../../../Components/Common/Modals/PricingModals/addNewPrivateTour";
 import AddNewTransportation from "../../../Components/Common/Modals/PricingModals/addNewTransportation";
+import Addons from "../../../Components/Common/Modals/PricingModals/addons";
 import {
   getPricesPricingAPI,
   getAddonsPricingAPI,
   deletePriceAPI,
+  deleteAddonAPI
 } from "../../../Utils/API/Tours";
 
 import { TabPane, Row, Button, UncontrolledTooltip } from "reactstrap";
@@ -24,12 +26,15 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
 const Pricing = ({ history, id, tourData }) => {
-  console.log(tourData);
+  
   //prices request
   const [pricesData, setPricesData] = useState([]);
   useEffect(() => {
     getPricesPricingAPI(id).then((resp) => {
       setPricesData(resp.data.data);
+    });
+    getAddonsPricingAPI(id).then((resp) => {
+      setAddonsData(resp.data.data);
     });
   }, [id]);
 
@@ -38,7 +43,7 @@ const Pricing = ({ history, id, tourData }) => {
       setPricesData(resp.data.data);
     });
   }
-  console.log(pricesData)
+  
 
   //
   const [addonsData, setAddonsData] = useState([]);
@@ -68,6 +73,34 @@ const Pricing = ({ history, id, tourData }) => {
             Swal.fire(
               "Deleted!",
               "The Price has been deleted.",
+              "success"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+  };
+  const onDeleteAddon = (depData) => {
+    Swal.fire({
+      title: "Delete Addon?",
+      icon: "question",
+      text: `Do you want delete ${depData.label}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        deleteAddonAPI(depData.id)
+          .then((resp) => {
+            getAddonsPricingAPI(id).then((resp) => {
+              setAddonsData(resp.data.data);
+            });
+            Swal.fire(
+              "Deleted!",
+              "The Addon has been deleted.",
               "success"
             );
           })
@@ -315,19 +348,24 @@ const Pricing = ({ history, id, tourData }) => {
           const depData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link to={`/departments/${depData.id}`} className="text-success">
+              <div 
+              onClick={() =>{ 
+                setNewAddon(true)
+                setEditProductID(depData.id)
+              }}
+              className="text-success">
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
-              </Link>
+              </div>
               <Link
                 to="#"
                 className="text-danger"
                 onClick={() => {
                   const depData = cellProps.row.original;
                   // setconfirm_alert(true);
-                  onDelete(depData);
+                  onDeleteAddon(depData);
                 }}
               >
                 <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
@@ -374,6 +412,14 @@ const Pricing = ({ history, id, tourData }) => {
     }
   };
 
+  //add new addon
+  const [newAddon, setNewAddon] = useState(false)
+  
+  const onClickNewAddon = () =>{
+    
+    setNewAddon(!newAddon)
+  }
+
   return (
     <TabPane tabId="1" className="">
       <Row xl={12}>
@@ -394,8 +440,8 @@ const Pricing = ({ history, id, tourData }) => {
             data={addonsData}
             isGlobalFilter={true}
             addonsTable={true}
-            isAddOrder={true}
-            // handleOrderClicks={handleOrderClicks}
+            onClickNewAddon={onClickNewAddon}
+            
           />
         ) : null}
       </Row>
@@ -466,6 +512,14 @@ const Pricing = ({ history, id, tourData }) => {
         editProductID={editProductID}
         tourData={tourData}
         refreshTable={refreshTable}
+      />
+
+      <Addons 
+      newAddon={newAddon}
+      setNewAddon={setNewAddon}
+      tourData={tourData}
+      refreshTable={refreshTable}
+      editProductID={editProductID}
       />
     </TabPane>
   );

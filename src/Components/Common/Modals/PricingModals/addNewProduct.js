@@ -37,7 +37,6 @@ const AddNewProductPricing = ({
     }
   }, [editProductID]);
 
-  console.log('private tour',dataEdit);
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -146,17 +145,16 @@ const AddNewProductPricing = ({
         ],
       };
 
-      console.log(data);
 
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+          
           setAddNewProduct(false);
           refreshTable()
         });
       } else {
         postPricesAPI(data).then((resp) => {
-          console.log(resp);
+         
           setAddNewProduct(false);
           refreshTable()
         });
