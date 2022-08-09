@@ -171,3 +171,32 @@ export const deleteAddonAPI = (id) => {
   });
 };
 
+
+
+//URLs Tab
+
+export const getURLsAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/tourUrls`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getURLTypeAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/urlTypes`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getURLAvailableFromAPI = (tourID, TypeID) => {
+  const url = `${API_URL}/tours/${tourID}/urlType/${TypeID}/availablesFrom`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getPathAPI = (tourID, TypeID, locationID) => {
+  const url = `${API_URL}/tours/${tourID}/urlType/${TypeID}/availablesFrom/${locationID}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+

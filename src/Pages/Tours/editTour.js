@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import EditGeneralInformation from "./EditComponents/editGeneralInfo";
 import Settings from "./EditComponents/settings";
 import Pricing from "./EditComponents/pricing";
+import URL from "./EditComponents/url";
 import { getTourAPI, getTourSettingsAPI } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -179,7 +180,10 @@ const EditTour = ({ history }) => {
                   : null}
                 </TabPane>
                 <TabPane tabId="3">
-                  <h1>url</h1>
+                {tourData ? 
+                  
+                  <URL tourData={tourData} />
+                  : null}
                 </TabPane>
                 <TabPane tabId="4">
                   <Pricing id={id} tourData={tourData}/>
