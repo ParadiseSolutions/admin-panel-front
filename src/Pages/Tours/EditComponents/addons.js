@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import PricingTables from "./PricingTables/pricingTables";
+import AddonsTables from "./PricingTables/addonsTables";
 import AddNewProductPricing from "../../../Components/Common/Modals/PricingModals/addNewProduct";
 import AddNewAirportTransfer from "../../../Components/Common/Modals/PricingModals/addNewAirportTransfer";
 import Fishing from "../../../Components/Common/Modals/PricingModals/fishing";
@@ -11,22 +12,17 @@ import {
   getPricesPricingAPI,
   getAddonsPricingAPI,
   deletePriceAPI,
-  deleteAddonAPI
+  deleteAddonAPI,
 } from "../../../Utils/API/Tours";
 
 import { TabPane, Row, Button, UncontrolledTooltip } from "reactstrap";
 
-import {
-  Name,
-  Code,
-  Members,
-} from "../EditComponents/PricingTables/DepartmentsCols";
+import { Name, Code, Members } from "./PricingTables/DepartmentsCols";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-const Pricing = ({ history, id, tourData }) => {
-  
+const AddonsComponent = ({ history, id, tourData }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
   useEffect(() => {
@@ -38,12 +34,11 @@ const Pricing = ({ history, id, tourData }) => {
     });
   }, [id]);
 
-  const refreshTable = () =>{
+  const refreshTable = () => {
     getPricesPricingAPI(id).then((resp) => {
       setPricesData(resp.data.data);
     });
-  }
-  
+  };
 
   //
   const [addonsData, setAddonsData] = useState([]);
@@ -70,11 +65,7 @@ const Pricing = ({ history, id, tourData }) => {
             getPricesPricingAPI(id).then((resp) => {
               setPricesData(resp.data.data);
             });
-            Swal.fire(
-              "Deleted!",
-              "The Price has been deleted.",
-              "success"
-            );
+            Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })
           .catch((error) => {
             console.log(error);
@@ -98,11 +89,7 @@ const Pricing = ({ history, id, tourData }) => {
             getAddonsPricingAPI(id).then((resp) => {
               setAddonsData(resp.data.data);
             });
-            Swal.fire(
-              "Deleted!",
-              "The Addon has been deleted.",
-              "success"
-            );
+            Swal.fire("Deleted!", "The Addon has been deleted.", "success");
           })
           .catch((error) => {
             console.log(error);
@@ -111,7 +98,7 @@ const Pricing = ({ history, id, tourData }) => {
     });
   };
 
-  const [editProductID, setEditProductID] = useState(null)
+  const [editProductID, setEditProductID] = useState(null);
 
   const columnsProducts = useMemo(() => [
     {
@@ -186,50 +173,48 @@ const Pricing = ({ history, id, tourData }) => {
         return <Members {...cellProps} />;
       },
     },
-    
 
     {
       Header: "Action",
       accessor: "action",
       disableFilters: true,
       Cell: (cellProps) => {
-        
         return (
           <div className="d-flex gap-3">
-            <div 
-            className="text-success"
-            onClick={() =>{
-              const prodData = cellProps.row.original
-              console.log("data del producto", prodData)
-              
-              switch (tourData.type_id) {
-                case 2:
-                  setAddNewProduct(!addNewProduct);
-                  setEditProductID(prodData.id)
-                  break;
-                case 3:
-                  setAddNewAirportTransfer(!addNewAirportTransfer);
-                  setEditProductID(prodData.id)
-                  break;
-                case 4:
-                  setNewTransportation(!newTransportation);
-                  setEditProductID(prodData.id)
-                  break;
-                case 5:
-                  setAddNewFishing(!addNewFishing);
-                  setEditProductID(prodData.id)
-                  break;
-                case 6:
-                  setNewPrivateCharter(!newPrivateCharter);
-                  setEditProductID(prodData.id)
-                  break;
-          
-                default:
-                  setAddNewProduct(!addNewProduct);
-                  setEditProductID(prodData.id)
-                  break;
-              }
-            }}
+            <div
+              className="text-success"
+              onClick={() => {
+                const prodData = cellProps.row.original;
+                console.log("data del producto", prodData);
+
+                switch (tourData.type_id) {
+                  case 2:
+                    setAddNewProduct(!addNewProduct);
+                    setEditProductID(prodData.id);
+                    break;
+                  case 3:
+                    setAddNewAirportTransfer(!addNewAirportTransfer);
+                    setEditProductID(prodData.id);
+                    break;
+                  case 4:
+                    setNewTransportation(!newTransportation);
+                    setEditProductID(prodData.id);
+                    break;
+                  case 5:
+                    setAddNewFishing(!addNewFishing);
+                    setEditProductID(prodData.id);
+                    break;
+                  case 6:
+                    setNewPrivateCharter(!newPrivateCharter);
+                    setEditProductID(prodData.id);
+                    break;
+
+                  default:
+                    setAddNewProduct(!addNewProduct);
+                    setEditProductID(prodData.id);
+                    break;
+                }
+              }}
             >
               <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
               <UncontrolledTooltip placement="top" target="edittooltip">
@@ -237,13 +222,11 @@ const Pricing = ({ history, id, tourData }) => {
               </UncontrolledTooltip>
             </div>
             <div
-            
               className="text-danger"
               onClick={() => {
                 const depData = cellProps.row.original;
                 // setconfirm_alert(true);
                 onDelete(depData);
-
               }}
             >
               <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
@@ -348,12 +331,13 @@ const Pricing = ({ history, id, tourData }) => {
           const depData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <div 
-              onClick={() =>{ 
-                setNewAddon(true)
-                setEditProductID(depData.id)
-              }}
-              className="text-success">
+              <div
+                onClick={() => {
+                  setNewAddon(true);
+                  setEditProductID(depData.id);
+                }}
+                className="text-success"
+              >
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
@@ -413,27 +397,25 @@ const Pricing = ({ history, id, tourData }) => {
   };
 
   //add new addon
-  const [newAddon, setNewAddon] = useState(false)
-  
-  const onClickNewAddon = () =>{
-    
-    setNewAddon(!newAddon)
-  }
+  const [newAddon, setNewAddon] = useState(false);
+
+  const onClickNewAddon = () => {
+    setNewAddon(!newAddon);
+  };
 
   return (
     <TabPane tabId="1" className="">
       <Row xl={12}>
-        {pricesData ? (
-          <PricingTables
-            columns={columnsProducts}
-            data={pricesData}
+        {addonsData ? (
+          <AddonsTables
+            columns={columnsAddons}
+            data={addonsData}
             isGlobalFilter={true}
-            productsTable={true}
-            onClickNewProduct={onClickNewProduct}
+            addonsTable={true}
+            onClickNewAddon={onClickNewAddon}
           />
         ) : null}
       </Row>
-     
       <Row xl={12}>
         <Row
           className="col-12 d-flex justify-content-end mt-5"
@@ -503,15 +485,15 @@ const Pricing = ({ history, id, tourData }) => {
         refreshTable={refreshTable}
       />
 
-      <Addons 
-      newAddon={newAddon}
-      setNewAddon={setNewAddon}
-      tourData={tourData}
-      refreshTable={refreshTable}
-      editProductID={editProductID}
+      <Addons
+        newAddon={newAddon}
+        setNewAddon={setNewAddon}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        editProductID={editProductID}
       />
     </TabPane>
   );
 };
 
-export default Pricing;
+export default AddonsComponent;

@@ -31,6 +31,8 @@ const TableContainer = ({
   contactsProvidersTable,
   operatorsTable,
   toursTable,
+  productsTour,
+  URLTourTable,
   handleUserClicks,
   onClickAddNew,
   onClickAddCategory,
@@ -846,6 +848,86 @@ const TableContainer = ({
         </div>
       )}
       {operatorsTable && (
+        <div className="table-responsive">
+          <Table bordered hover {...getTableProps()} className="react_table">
+            <thead className="table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th key={column.id}>
+                      <div {...column.getSortByToggleProps()}>
+                        {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
+                      </div>
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
+      {productsTour && (
+        <div className="table-responsive">
+          <Table bordered hover {...getTableProps()} className="react_table">
+            <thead className="table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th key={column.id}>
+                      <div {...column.getSortByToggleProps()}>
+                        {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
+                      </div>
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      )}
+      {URLTourTable && (
         <div className="table-responsive">
           <Table bordered hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">

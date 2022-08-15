@@ -200,3 +200,17 @@ export const getPathAPI = (tourID, TypeID, locationID) => {
   });
 };
 
+
+export const postURLAPI = (body) => {
+  const url = `${API_URL}/tour_urls`
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const updateURLAPI = (id, body) => {
+  const url = `${API_URL}/tour_urls/${id}`
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+

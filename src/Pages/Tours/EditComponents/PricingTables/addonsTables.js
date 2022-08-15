@@ -13,7 +13,7 @@ import {
 import { Table, Row, Col, Button, Input } from "reactstrap";
 import { Link } from "react-router-dom";
 
-const PricingTables = ({
+const AddonsTables = ({
   columns,
   data,
   productsTable,
@@ -60,23 +60,24 @@ const PricingTables = ({
   return (
     <Fragment>
 
-      {productsTable && (
+      
+      {addonsTable && (
         <Col sm="12" className="">
           <div className="text-sm-end">
             <Button
               type="button"
               style={{ backgroundColor: "#F6851F", border: "none" }}
-              className="waves-effect waves-light mb-3 btn btn-success"
-              onClick={onClickNewProduct}
+              className="waves-effect waves-light mb-3 btn btn-success mt-3"
+              onClick={onClickNewAddon}
             >
               <i className="mdi mdi-plus me-1" />
-              New Product
+              New Add-On
             </Button>
           </div>
         </Col>
       )}
-    
-      {productsTable && (
+
+      {addonsTable && (
         <div className="table-responsive">
           <Table bordered hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
@@ -86,7 +87,9 @@ const PricingTables = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
+                        {/* {generateSortingIndicator(column)} */}
                       </div>
+                      {/* <Filter column={column} /> */}
                     </th>
                   ))}
                 </tr>
@@ -114,7 +117,6 @@ const PricingTables = ({
           </Table>
         </div>
       )}
-     
 
       <Row className="justify-content-md-end justify-content-center align-items-center">
         <Col className="col-md-auto">
@@ -178,4 +180,4 @@ const PricingTables = ({
   );
 };
 
-export default PricingTables;
+export default AddonsTables;

@@ -147,10 +147,10 @@ const NewTour = ({ history }) => {
             if (resp.data.status === 201) {
               Swal.fire(
                 "Created!",
-                "The Rol has been created.",
+                "Tour has been created.",
                 "success"
               ).then(() => {
-                history.goBack();
+                history.push(`/tours/${resp.data.data.id}`);
               });
             }
           })
@@ -238,7 +238,20 @@ const NewTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Pricing</span>
+                    <span className="d-none d-sm-block">+ Products</span>
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    style={{ cursor: "pointer" }}
+                    className={classnames({
+                      active: activeTab === "3",
+                    })}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-envelope"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ Addons</span>
                   </NavLink>
                 </NavItem>
                 <NavItem>
