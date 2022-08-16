@@ -23,6 +23,8 @@ const AddNewPrivateCharter = ({
   editProductID
 }) => {
 
+  console.log('charter', tourData);
+
   const [dataEdit, setDataEdit] = useState();
   useEffect(() => {
     if (editProductID !== null) {
@@ -334,6 +336,7 @@ const AddNewPrivateCharter = ({
                     </div>
                   </Col>
                   <Col className="col-2">
+                    {tourData?.seasonality === 1 ?  
                     <div
                       className="form-outline"
                       style={{ marginRight: "20px", marginLeft: "-20px" }}
@@ -358,6 +361,8 @@ const AddNewPrivateCharter = ({
                         })}
                       </Input>
                     </div>
+                    
+                    : null}
                   </Col>
                 </Col>
                 <Col className="col-3 d-flex justify-content-between">

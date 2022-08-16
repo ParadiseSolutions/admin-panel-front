@@ -227,6 +227,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData }) => {
                     </div>
                   </Col>
                   <Col className="col-2">
+                  {tourData?.seasonality === 1 ?  
                     <div
                       className="form-outline"
                       style={{ marginRight: "20px", marginLeft: "-20px" }}
@@ -251,6 +252,8 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData }) => {
                         })}
                       </Input>
                     </div>
+                  
+                  : null}
                   </Col>
                 </Col>
                 <Col className="col-3 d-flex justify-content-between">

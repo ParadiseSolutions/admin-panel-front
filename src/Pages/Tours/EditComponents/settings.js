@@ -29,8 +29,7 @@ import { Select } from "antd";
 const { Option } = Select;
 
 const Settings = ({ history, tourSettings, id }) => {
-
-  console.log('settings', tourSettings)
+  console.log("settings", tourSettings);
 
   //seasons request
   const [seasonData, setSeasonData] = useState();
@@ -77,6 +76,13 @@ const Settings = ({ history, tourSettings, id }) => {
     setAvailableFromIDs(tourSettings.available_from);
   }, [tourSettings]);
 
+  //seasonal price
+  const [seasonalPrice, setSeasonalPrice] = useState(null);
+  useEffect(() => {
+    setSeasonalPrice(
+      tourSettings?.seasonality && tourSettings.seasonality === 1 ? true : false
+    );
+  }, [tourSettings]);
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -140,6 +146,7 @@ const Settings = ({ history, tourSettings, id }) => {
         teenagers_range_to: values.teenagers_range_to
           ? values.teenagers_range_to
           : "",
+        seasonality: seasonalPrice === true ? 1 : 0,
       };
 
       putSettingsAPI(id, data)
@@ -276,24 +283,25 @@ const Settings = ({ history, tourSettings, id }) => {
                 <Label className="form-label mt-2">Seasonal Prices</Label>
                 <div className="form-check form-switch form-switch-md mx-4 ">
                   <Input
-                    name="notification_email"
+                    name="seasonality"
                     placeholder=""
                     type="checkbox"
+                    checked={seasonalPrice}
                     className="form-check-input"
-                    onChange={validationType.handleChange}
+                    onChange={() => setSeasonalPrice(!seasonalPrice)}
                     onBlur={validationType.handleBlur}
-                    value={validationType.values.notification_email || ""}
+                    value={seasonalPrice}
                     invalid={
-                      validationType.touched.notification_email &&
-                      validationType.errors.notification_email
+                      validationType.touched.seasonality &&
+                      validationType.errors.seasonality
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.notification_email &&
-                  validationType.errors.notification_email ? (
+                  {validationType.touched.seasonality &&
+                  validationType.errors.seasonality ? (
                     <FormFeedback type="invalid">
-                      {validationType.errors.notification_email}
+                      {validationType.errors.seasonality}
                     </FormFeedback>
                   ) : null}
                 </div>

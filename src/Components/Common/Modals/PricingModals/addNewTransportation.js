@@ -210,14 +210,12 @@ const AddNewTransportation = ({
 
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-        
-          refreshTable()
+          refreshTable();
           setNewTransportation(false);
         });
       } else {
         postPricesAPI(data).then((resp) => {
-          
-          refreshTable()
+          refreshTable();
           setNewTransportation(false);
         });
       }
@@ -314,7 +312,6 @@ const AddNewTransportation = ({
                       >
                         <option>Select....</option>
                         {map(priceTypeData, (type, index) => {
-                          
                           return (
                             <option
                               key={index}
@@ -398,46 +395,48 @@ const AddNewTransportation = ({
                     </div>
                   </Col>
                   <Col className="col-2">
-                    <div
-                      className="form-outline"
-                      style={{ marginRight: "20px", marginLeft: "-20px" }}
-                    >
-                      <Label className="form-label">Season</Label>
-                      <Input
-                        type="select"
-                        name="season"
-                        onChange={(e) => {
-                          setPriceSeasonSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                    {tourData?.seasonality === 1 ? (
+                      <div
+                        className="form-outline"
+                        style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <option>Select....</option>
-                        {map(priceSeason, (season, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={season.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? season.id ===
-                                    dataEdit.pricedetails[3].source_id
-                                  : false
-                              }
-                            >
-                              {season.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
+                        <Label className="form-label">Season</Label>
+                        <Input
+                          type="select"
+                          name="season"
+                          onChange={(e) => {
+                            setPriceSeasonSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                          //   value={validationType.values.department || ""}
+                        >
+                          <option>Select....</option>
+                          {map(priceSeason, (season, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={season.id}
+                                selected={
+                                  dataEdit && dataEdit.pricedetails
+                                    ? season.id ===
+                                      dataEdit.pricedetails[3].source_id
+                                    : false
+                                }
+                              >
+                                {season.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    ) : null}
                   </Col>
                 </Col>
                 <Col className="col-3 d-flex justify-content-between">
                   <Col className="col-6">
                     <Label className="form-label mt-2">Active</Label>
                     <div className="form-check form-switch form-switch-md mx-2">
-                    <Input
+                      <Input
                         name="active"
                         placeholder=""
                         type="checkbox"
@@ -464,7 +463,7 @@ const AddNewTransportation = ({
                   <Col className="col-6">
                     <Label className="form-label mt-2">Balance Due</Label>
                     <div className="form-check form-switch form-switch-md mx-4">
-                    <Input
+                      <Input
                         name="balance_checkbox"
                         placeholder=""
                         type="checkbox"

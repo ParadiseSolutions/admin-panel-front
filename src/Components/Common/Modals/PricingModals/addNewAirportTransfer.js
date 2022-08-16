@@ -37,8 +37,6 @@ const AddNewAirportTransfer = ({
       });
     }
   }, [editProductID]);
-
-  //  console.log('airport', dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -222,14 +220,13 @@ const AddNewAirportTransfer = ({
         updatePriceAPI(editProductID, data).then((resp) => {
           // console.log(resp);
           setAddNewAirportTransfer(false);
-          refreshTable()
-          
+          refreshTable();
         });
       } else {
         postPricesAPI(data).then((resp) => {
           // console.log(resp);
           setAddNewAirportTransfer(false);
-          refreshTable()
+          refreshTable();
         });
       }
     },
@@ -408,39 +405,41 @@ const AddNewAirportTransfer = ({
                     </div>
                   </Col>
                   <Col className="col-2">
-                    <div
-                      className="form-outline"
-                      style={{ marginRight: "20px", marginLeft: "-20px" }}
-                    >
-                      <Label className="form-label">Season</Label>
-                      <Input
-                        type="select"
-                        name="season"
-                        onChange={(e) => {
-                          setPriceSeasonSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                    {tourData?.seasonality === 1 ? (
+                      <div
+                        className="form-outline"
+                        style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <option>Select....</option>
-                        {map(priceSeason, (season, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={season.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? season.id ===
-                                    dataEdit.pricedetails[3].source_id
-                                  : false
-                              }
-                            >
-                              {season.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
+                        <Label className="form-label">Season</Label>
+                        <Input
+                          type="select"
+                          name="season"
+                          onChange={(e) => {
+                            setPriceSeasonSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                          //   value={validationType.values.department || ""}
+                        >
+                          <option>Select....</option>
+                          {map(priceSeason, (season, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={season.id}
+                                selected={
+                                  dataEdit && dataEdit.pricedetails
+                                    ? season.id ===
+                                      dataEdit.pricedetails[3].source_id
+                                    : false
+                                }
+                              >
+                                {season.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    ) : null}
                   </Col>
                 </Col>
                 <Col className="col-3 d-flex justify-content-between">

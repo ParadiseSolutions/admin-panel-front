@@ -46,7 +46,7 @@ export const statusUpdateTour = (id, body) => {
     });
   };
   export const getAvailableFromAPI = () => {
-    const url = `${API_URL}/availableFrom`;
+    const url = `${API_URL}/seasons`;
     return axios.get (url, {
       headers: options,
     });
