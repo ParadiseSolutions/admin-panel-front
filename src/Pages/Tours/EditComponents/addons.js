@@ -35,8 +35,8 @@ const AddonsComponent = ({ history, id, tourData }) => {
   }, [id]);
 
   const refreshTable = () => {
-    getPricesPricingAPI(id).then((resp) => {
-      setPricesData(resp.data.data);
+    getAddonsPricingAPI(id).then((resp) => {
+      setAddonsData(resp.data.data);
     });
   };
 
@@ -100,145 +100,7 @@ const AddonsComponent = ({ history, id, tourData }) => {
 
   const [editProductID, setEditProductID] = useState(null);
 
-  const columnsProducts = useMemo(() => [
-    {
-      Header: <h2 className="text-paradise font-weight-bold">Products</h2>,
-      accessor: "label",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
-      },
-    },
-    {
-      Header: "SKU",
-      accessor: "sku",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Code {...cellProps} />;
-      },
-    },
-    {
-      Header: "Reg. Price",
-      accessor: "public",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
-    {
-      Header: "Our Price",
-      accessor: "price",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
-    {
-      Header: "Save",
-      accessor: "you_save",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
-    {
-      Header: "Rate %",
-      accessor: "rate",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
-    {
-      Header: "Comm.",
-      accessor: "commission",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
-    {
-      Header: "Net Price",
-      accessor: "net_price",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
-
-    {
-      Header: "Action",
-      accessor: "action",
-      disableFilters: true,
-      Cell: (cellProps) => {
-        return (
-          <div className="d-flex gap-3">
-            <div
-              className="text-success"
-              onClick={() => {
-                const prodData = cellProps.row.original;
-                console.log("data del producto", prodData);
-
-                switch (tourData.type_id) {
-                  case 2:
-                    setAddNewProduct(!addNewProduct);
-                    setEditProductID(prodData.id);
-                    break;
-                  case 3:
-                    setAddNewAirportTransfer(!addNewAirportTransfer);
-                    setEditProductID(prodData.id);
-                    break;
-                  case 4:
-                    setNewTransportation(!newTransportation);
-                    setEditProductID(prodData.id);
-                    break;
-                  case 5:
-                    setAddNewFishing(!addNewFishing);
-                    setEditProductID(prodData.id);
-                    break;
-                  case 6:
-                    setNewPrivateCharter(!newPrivateCharter);
-                    setEditProductID(prodData.id);
-                    break;
-
-                  default:
-                    setAddNewProduct(!addNewProduct);
-                    setEditProductID(prodData.id);
-                    break;
-                }
-              }}
-            >
-              <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
-              <UncontrolledTooltip placement="top" target="edittooltip">
-                Edit
-              </UncontrolledTooltip>
-            </div>
-            <div
-              className="text-danger"
-              onClick={() => {
-                const depData = cellProps.row.original;
-                // setconfirm_alert(true);
-                onDelete(depData);
-              }}
-            >
-              <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
-              <UncontrolledTooltip placement="top" target="deletetooltip">
-                Delete
-              </UncontrolledTooltip>
-            </div>
-          </div>
-        );
-      },
-    },
-  ]);
+ 
   const columnsAddons = useMemo(
     () => [
       {
@@ -372,29 +234,7 @@ const AddonsComponent = ({ history, id, tourData }) => {
   const [newPrivateCharter, setNewPrivateCharter] = useState(false);
   const [newPrivateTour, setNewPrivateTour] = useState(false);
   const [newTransportation, setNewTransportation] = useState(false);
-  const onClickNewProduct = () => {
-    switch (tourData.type_id) {
-      case 2:
-        setAddNewProduct(!addNewProduct);
-        break;
-      case 3:
-        setAddNewAirportTransfer(!addNewAirportTransfer);
-        break;
-      case 4:
-        setNewTransportation(!newTransportation);
-        break;
-      case 5:
-        setAddNewFishing(!addNewFishing);
-        break;
-      case 6:
-        setNewPrivateCharter(!newPrivateCharter);
-        break;
-
-      default:
-        setAddNewProduct(!addNewProduct);
-        break;
-    }
-  };
+  
 
   //add new addon
   const [newAddon, setNewAddon] = useState(false);

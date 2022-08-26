@@ -104,7 +104,7 @@ const EditTour = ({ history }) => {
                   </NavLink>
                 </NavItem>
 
-                {tourData?.website_id !== 3 ? (
+                {tourData?.website_id === 3 ? (
                   <NavItem>
                     <NavLink
                       style={{

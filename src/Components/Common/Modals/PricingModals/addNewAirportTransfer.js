@@ -121,14 +121,14 @@ const AddNewAirportTransfer = ({
     //   last_name: Yup.string().required("Last Name is required"),
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
         public: values.public_price,
         provider_price: values.provider_price,
         rate: values.rate,
-        net_price: values.net_price,
+        net_rate: values.net_price,
         compare_at_url: values.compare_at_url,
         ship_price: values.ship_price,
         compare_at: values.compare_at,
@@ -229,6 +229,7 @@ const AddNewAirportTransfer = ({
           refreshTable();
         });
       }
+      resetForm({values: ''})
     },
   });
   return (

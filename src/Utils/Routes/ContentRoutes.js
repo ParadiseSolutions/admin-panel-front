@@ -15,11 +15,17 @@ import LocationsRoutes from "./LocationsRoutes";
 import OperatorsRoutes from "./OperatorsRoutes";
 import TourRoutes from "./ToursRoutes";
 import Layout from "../../Components/Layout";
+import { getStorageSync } from "../API";
 
 
 const Fallback = () => <div>loading.....</div>;
 
 const ContentRoutes = ({ isLogged, ...rest }) => {
+  const loged = JSON.parse(getStorageSync('token'))
+
+
+  console.log('token', loged)
+
   return (
     <>
       <Layout>

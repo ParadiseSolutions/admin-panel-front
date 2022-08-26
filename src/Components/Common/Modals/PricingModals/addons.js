@@ -115,7 +115,7 @@ const Addons = ({
     //   last_name: Yup.string().required("Last Name is required"),
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       let data = {
         tour_id: tourData.id,
         match_qty_id: matchQuantitySelected
@@ -140,7 +140,7 @@ const Addons = ({
         rate: values.rate,
         commission: values.commission,
         deposit: values.deposit,
-        net_price: values.net_price,
+        net_rate: values.net_price,
         min_qty: values.min_qty,
         max_qty: values.max_qty,
       };
@@ -158,6 +158,7 @@ const Addons = ({
           refreshTable();
         });
       }
+      resetForm({values: ''})
     },
   });
   return (

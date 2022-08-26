@@ -25,7 +25,6 @@ const EditProvider = () => {
 
   
 
-
     return ( 
         <>
         <div className="page-content">

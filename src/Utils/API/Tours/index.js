@@ -51,6 +51,12 @@ export const statusUpdateTour = (id, body) => {
       headers: options,
     });
   };
+  export const getAvailableAPI = () => {
+    const url = `${API_URL}/availableFrom`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 
   export const shoppingCartWebsite = (id) => {
     const url = `${API_URL}/websites/${id}/carts`;

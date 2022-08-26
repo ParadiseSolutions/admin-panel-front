@@ -4,6 +4,7 @@ import {
   getSeasonsAPI,
   getAvailableFromAPI,
   putSettingsAPI,
+  getAvailableAPI,
 } from "../../../Utils/API/Tours";
 import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
 import SettingsImageTwo from "../../../Components/Assets/images/settings2.png";
@@ -40,9 +41,13 @@ const Settings = ({ history, tourSettings, id }) => {
   }, []);
   //seasons request
   const [availableData, setAvailableData] = useState([]);
+  const [availableFromData, setAvailableFormData] = useState([])
   useEffect(() => {
     getAvailableFromAPI().then((resp) => {
       setAvailableData(resp.data.data);
+    });
+    getAvailableAPI().then((resp) => {
+      setAvailableFormData(resp.data.data);
     });
   }, []);
   const [initialOptionsArea, setInitialOptionsArea] = useState([]);
@@ -333,9 +338,9 @@ const Settings = ({ history, tourSettings, id }) => {
               </Col>
 
               <Col className="d-flex">
-                {availableData.length > 0 ? (
+                {availableFromData.length > 0 ? (
                   <>
-                    {map(availableData, (available, index) => {
+                    {map(availableFromData, (available, index) => {
                       return (
                         <Col key={index} className="">
                           <div className="form-check mt-5">

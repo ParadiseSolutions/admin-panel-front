@@ -185,7 +185,7 @@ const Users = () => {
                     data={data}
                     isGlobalFilter={true}
                     usersTable={true}
-                    isAddOrder={true}
+                    
                     onClickAddNew={onClickAddNew}
                     //  handleOrderClicks={() => onClickAddNew()}
                   />

@@ -30,7 +30,7 @@ const EditGeneralInformation = ({ data }) => {
   const [initialData, setInitialData] = useState();
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
-  const [notification, setNotification] = useState();
+  const [notification, setNotification] = useState(initialData && initialData.notification_email);
   useEffect(() => {
     setInitialData(data);
   }, [data]);
@@ -145,10 +145,7 @@ const EditGeneralInformation = ({ data }) => {
           ? values.reservation_email
           : "",
         cc_email: values.cc_email ? values.cc_email : "",
-        notification_email:
-          values.notification_email && values.notification_email === true
-            ? 1
-            : 0,
+        notification_email: notification === true ? 1 : 0,
         description: values.description ? values.description : "",
         phone1: values.phone1 ? values.phone1 : "",
         phone2: values.phone2 ? values.phone2 : "",
