@@ -86,6 +86,39 @@ export const statusUpdateTour = (id, body) => {
     });
   };
 
+
+//high seasons
+export const getSeasonsListAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/seasons`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getSeasonsNameAPI = () => {
+  const url = `${API_URL}/tours/seasons`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const postSeasonalityAPI = (tourID, body) => {
+  const url = `${API_URL}/tours/${tourID}/seasonality`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const statusSeasonalityAPI = (tourID, body) => {
+  const url = `${API_URL}/tours/${tourID}/seasonality/status`;
+  return axios.put (url,body, {
+    headers: options,
+  });
+};
+export const deleteSeasonalityAPI = (tourID, seasonID) => {
+  const url = `${API_URL}/tours/${tourID}/seasonality/${seasonID}`;
+  return axios.delete (url, {
+    headers: options,
+  });
+};
+
 //Pricing
 export const getPricesPricingAPI = (id) => {
   const url = `${API_URL}/tours/${id}/prices`;

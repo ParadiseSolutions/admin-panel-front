@@ -71,8 +71,20 @@ const AddNewProductPricing = ({
     }
   }, [addNewProduct]);
 
-  // console.log(priceOptions);
-  // console.log(priceTypeSelected);
+  //checkbox
+  const [activeCheckbox, setActiveCheckbox] = useState(null);
+  const [balanceDueCheckbox, setBalanceDueCheckbox] = useState(null);
+
+  useEffect(() => {
+    setActiveCheckbox(dataEdit?.active === 1 ? true : false);
+    setBalanceDueCheckbox(dataEdit?.show_balance_due === 1 ? true : false);
+  }, [dataEdit]);
+  const onChangeActiveToggle = () => {
+    setActiveCheckbox(!activeCheckbox);
+  };
+  const onChangeBalanceDueToggle = () => {
+    setBalanceDueCheckbox(!balanceDueCheckbox);
+  };
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -101,7 +113,7 @@ const AddNewProductPricing = ({
     //   last_name: Yup.string().required("Last Name is required"),
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -118,8 +130,8 @@ const AddNewProductPricing = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
-        active: values.active ? 1 : 0,
-        show_balance_due: values.balance_checkbox ? 1 : 0,
+        active: activeCheckbox ? 1 : 0,
+        show_balance_due: balanceDueCheckbox ? 1 : 0,
         price_details: [
           {
             pricing_option_id: 1,
@@ -163,7 +175,7 @@ const AddNewProductPricing = ({
           refreshTable();
         });
       }
-      resetForm({values: ''})
+      resetForm({ values: "" });
     },
   });
   return (
@@ -376,60 +388,65 @@ const AddNewProductPricing = ({
                   </Col>
                 </Col>
                 <Col className="col-3 d-flex justify-content-between">
-                  <Col className="col-6">
-                    <Label className="form-label mt-2">Active</Label>
-                    <div className="form-check form-switch form-switch-md mx-2">
-                      <Input
-                        name="active"
-                        placeholder=""
-                        type="checkbox"
-                        checked={dataEdit?.active ? true : false}
-                        className="form-check-input"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.active || ""}
-                        invalid={
-                          validationType.touched.active &&
-                          validationType.errors.active
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.active &&
-                      validationType.errors.active ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.active}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-6">
-                    <Label className="form-label mt-2">Balance Due</Label>
-                    <div className="form-check form-switch form-switch-md mx-4">
-                      <Input
-                        name="balance_checkbox"
-                        placeholder=""
-                        type="checkbox"
-                        checked={dataEdit?.show_balance_due ? true : false}
-                        className="form-check-input"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.balance_checkbox || ""}
-                        invalid={
-                          validationType.touched.balance_checkbox &&
-                          validationType.errors.balance_checkbox
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.balance_checkbox &&
-                      validationType.errors.balance_checkbox ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.balance_checkbox}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
+                  {activeCheckbox !== null ? (
+                    <Col className="col-6">
+                      <Label className="form-label mt-2">Active</Label>
+                      <div className="form-check form-switch form-switch-md mx-2">
+                        <Input
+                          name="active"
+                          placeholder=""
+                          type="checkbox"
+                          checked={activeCheckbox}
+                          className="form-check-input"
+                          onChange={() => onChangeActiveToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.active || ""}
+                          invalid={
+                            validationType.touched.active &&
+                            validationType.errors.active
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.active &&
+                        validationType.errors.active ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.active}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </Col>
+                  ) : null}
+
+                  {balanceDueCheckbox !== null ? (
+                    <Col className="col-6">
+                      <Label className="form-label mt-2">Balance Due</Label>
+                      <div className="form-check form-switch form-switch-md mx-4">
+                        <Input
+                          name="balance_checkbox"
+                          placeholder=""
+                          type="checkbox"
+                          checked={balanceDueCheckbox}
+                          className="form-check-input"
+                          onChange={() => onChangeBalanceDueToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.balance_checkbox || ""}
+                          invalid={
+                            validationType.touched.balance_checkbox &&
+                            validationType.errors.balance_checkbox
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.balance_checkbox &&
+                        validationType.errors.balance_checkbox ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.balance_checkbox}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </Col>
+                  ) : null}
                 </Col>
               </Row>
               <Row

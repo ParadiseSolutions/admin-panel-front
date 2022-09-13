@@ -55,7 +55,7 @@ const URL = ({ tourData }) => {
     });
   }, [urlTypeSelected, locationSelected]);
 
-  console.log("data de urls", data);
+  
 
   const [editTypeURL, setEditTypeURL] = useState(null);
   const [editLocationURL, setEditLocationURL] = useState(null);

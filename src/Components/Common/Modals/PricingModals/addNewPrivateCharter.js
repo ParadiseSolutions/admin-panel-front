@@ -12,7 +12,12 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { getPriceAPI, getPricingOptionsAPI, postPricesAPI, updatePriceAPI } from "../../../../Utils/API/Tours";
+import {
+  getPriceAPI,
+  getPricingOptionsAPI,
+  postPricesAPI,
+  updatePriceAPI,
+} from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
 const AddNewPrivateCharter = ({
@@ -20,11 +25,8 @@ const AddNewPrivateCharter = ({
   setNewPrivateCharter,
   refreshTable,
   tourData,
-  editProductID
+  editProductID,
 }) => {
-
-  console.log('charter', tourData);
-
   const [dataEdit, setDataEdit] = useState();
   useEffect(() => {
     if (editProductID !== null) {
@@ -34,47 +36,69 @@ const AddNewPrivateCharter = ({
     }
   }, [editProductID]);
 
+  //combo box request
+  const [priceTypeData, setPriceTypeData] = useState([]);
+  const [priceOptions, setPriceOptions] = useState([]);
+  const [priceCollect, setPriceCollect] = useState([]);
+  const [priceSeason, setPriceSeason] = useState([]);
+  const [priceCharterType, setPriceCharterType] = useState([]);
+  const [priceDuration, setPriceDuration] = useState([]);
+  const [priceLocation, setPriceLocation] = useState([]);
+  const [priceTypeSelected, setPriceTypeSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
+  );
+  const [priceOptionSelected, setPriceOptionSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
+  );
+  const [priceCollectSelected, setPriceCollectSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
+  );
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+  );
+  const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState();
+  const [priceDurationSelected, setPriceDurationSelected] = useState();
+  const [priceLocationSelected, setPriceLocationSelected] = useState();
+  useEffect(() => {
+    if (newPrivateCharter) {
+      getPricingOptionsAPI(38).then((resp) => {
+        setPriceTypeData(resp.data.data);
+      });
+      getPricingOptionsAPI(39).then((resp) => {
+        setPriceOptions(resp.data.data);
+      });
+      getPricingOptionsAPI(41).then((resp) => {
+        setPriceCollect(resp.data.data);
+      });
+      getPricingOptionsAPI(44).then((resp) => {
+        setPriceSeason(resp.data.data);
+      });
+      getPricingOptionsAPI(48).then((resp) => {
+        setPriceCharterType(resp.data.data);
+      });
+      getPricingOptionsAPI(40).then((resp) => {
+        setPriceDuration(resp.data.data);
+      });
+      getPricingOptionsAPI(42).then((resp) => {
+        setPriceLocation(resp.data.data);
+      });
+    }
+  }, [newPrivateCharter]);
 
-   //combo box request
-   const [priceTypeData, setPriceTypeData] = useState([]);
-   const [priceOptions, setPriceOptions] = useState([]);
-   const [priceCollect, setPriceCollect] = useState([]);
-   const [priceSeason, setPriceSeason] = useState([]);
-   const [priceCharterType, setPriceCharterType] = useState([]);
-   const [priceDuration, setPriceDuration] = useState([]);
-   const [priceLocation, setPriceLocation] = useState([]);
-   const [priceTypeSelected, setPriceTypeSelected] = useState( dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : '' );
-   const [priceOptionSelected, setPriceOptionSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : '');
-   const [priceCollectSelected, setPriceCollectSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : '');
-   const [priceSeasonSelected, setPriceSeasonSelected] = useState(dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : '');
-   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState();
-   const [priceDurationSelected, setPriceDurationSelected] = useState();
-   const [priceLocationSelected, setPriceLocationSelected] = useState();
-   useEffect(() => {
-     if (newPrivateCharter) {
-       getPricingOptionsAPI(38).then((resp) => {
-         setPriceTypeData(resp.data.data);
-       });
-       getPricingOptionsAPI(39).then((resp) => {
-         setPriceOptions(resp.data.data);
-       });
-       getPricingOptionsAPI(41).then((resp) => {
-         setPriceCollect(resp.data.data);
-       });
-       getPricingOptionsAPI(44).then((resp) => {
-         setPriceSeason(resp.data.data);
-       });
-       getPricingOptionsAPI(48).then((resp) => {
-         setPriceCharterType(resp.data.data);
-       });
-       getPricingOptionsAPI(40).then((resp) => {
-         setPriceDuration(resp.data.data);
-       });
-       getPricingOptionsAPI(42).then((resp) => {
-         setPriceLocation(resp.data.data);
-       });
-     }
-   }, [newPrivateCharter]);
+  //checkbox
+  const [activeCheckbox, setActiveCheckbox] = useState(null);
+  const [balanceDueCheckbox, setBalanceDueCheckbox] = useState(null);
+
+  useEffect(() => {
+    setActiveCheckbox(dataEdit?.active === 1 ? true : false);
+    setBalanceDueCheckbox(dataEdit?.show_balance_due === 1 ? true : false);
+  }, [dataEdit]);
+  const onChangeActiveToggle = () => {
+    setActiveCheckbox(!activeCheckbox);
+  };
+  const onChangeBalanceDueToggle = () => {
+    setBalanceDueCheckbox(!balanceDueCheckbox);
+  };
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -105,7 +129,7 @@ const AddNewPrivateCharter = ({
     //   last_name: Yup.string().required("Last Name is required"),
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -122,72 +146,82 @@ const AddNewPrivateCharter = ({
         commission: values.commission,
         deposit: values.deposit,
         balance_due: values.balance_due,
-        active: values.active ? 1 : 0,
-        show_balance_due: values.balance_checkbox ? 1 : 0,
+        active: activeCheckbox ? 1 : 0,
+        show_balance_due: balanceDueCheckbox ? 1 : 0,
         price_details: [
           {
             pricing_option_id: 38,
-            source_id: priceTypeSelected ? priceTypeSelected : dataEdit.pricedetails[0].source_id ,
+            source_id: priceTypeSelected
+              ? priceTypeSelected
+              : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 39,
-            source_id: priceOptionSelected ? priceOptionSelected : dataEdit.pricedetails[1].source_id ,
+            source_id: priceOptionSelected
+              ? priceOptionSelected
+              : dataEdit.pricedetails[1].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 41,
-            source_id: priceCollectSelected ? priceCollectSelected : dataEdit.pricedetails[2].source_id ,
+            source_id: priceCollectSelected
+              ? priceCollectSelected
+              : dataEdit.pricedetails[2].source_id,
             min: 1,
             max: 3,
             label: "px",
           },
           {
             pricing_option_id: 44,
-            source_id: priceSeasonSelected ? priceSeasonSelected : dataEdit.pricedetails[3].source_id ,
+            source_id: priceSeasonSelected
+              ? priceSeasonSelected
+              : dataEdit.pricedetails[3].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 48,
-            source_id: priceCharterTypeSelected ? priceCharterTypeSelected : dataEdit.pricedetails[4].source_id ,
+            source_id: priceCharterTypeSelected
+              ? priceCharterTypeSelected
+              : dataEdit.pricedetails[4].source_id,
             min: values.min,
             max: values.max,
             label: null,
           },
           {
             pricing_option_id: 40,
-            source_id: priceDurationSelected ? priceDurationSelected : dataEdit.pricedetails[5].source_id ,
+            source_id: priceDurationSelected
+              ? priceDurationSelected
+              : dataEdit.pricedetails[5].source_id,
             label: null,
           },
           {
             pricing_option_id: 42,
-            source_id: priceLocationSelected ? priceLocationSelected : dataEdit.pricedetails[6].source_id ,
+            source_id: priceLocationSelected
+              ? priceLocationSelected
+              : dataEdit.pricedetails[6].source_id,
             label: null,
           },
-         
         ],
-        
       };
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          
           setNewPrivateCharter(false);
-          refreshTable()
+          refreshTable();
         });
       } else {
         postPricesAPI(data).then((resp) => {
-          
           setNewPrivateCharter(false);
-          refreshTable()
+          refreshTable();
         });
       }
-      resetForm({values: ''})
+      resetForm({ values: "" });
     },
   });
   return (
@@ -282,7 +316,16 @@ const AddNewPrivateCharter = ({
                         <option>Select....</option>
                         {map(priceTypeData, (type, index) => {
                           return (
-                            <option key={index} value={type.id} selected={ dataEdit && dataEdit.pricedetails ? type.id === dataEdit.pricedetails[0].source_id : false}>
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? type.id ===
+                                    dataEdit.pricedetails[0].source_id
+                                  : false
+                              }
+                            >
                               {type.text}
                             </option>
                           );
@@ -305,7 +348,16 @@ const AddNewPrivateCharter = ({
                         <option>Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
-                            <option key={index} value={option.id} selected={ dataEdit && dataEdit.pricedetails ?  option.id === dataEdit.pricedetails[1].source_id : false}>
+                            <option
+                              key={index}
+                              value={option.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? option.id ===
+                                    dataEdit.pricedetails[1].source_id
+                                  : false
+                              }
+                            >
                               {option.text}
                             </option>
                           );
@@ -328,7 +380,16 @@ const AddNewPrivateCharter = ({
                         <option>Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
-                            <option key={index} value={collect.id} selected={ dataEdit && dataEdit.pricedetails ? collect.id === dataEdit.pricedetails[2].source_id : false}>
+                            <option
+                              key={index}
+                              value={collect.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? collect.id ===
+                                    dataEdit.pricedetails[2].source_id
+                                  : false
+                              }
+                            >
                               {collect.text}
                             </option>
                           );
@@ -337,90 +398,104 @@ const AddNewPrivateCharter = ({
                     </div>
                   </Col>
                   <Col className="col-2">
-                    {tourData?.seasonality === 1 ?  
-                    <div
-                      className="form-outline"
-                      style={{ marginRight: "20px", marginLeft: "-20px" }}
-                    >
-                      <Label className="form-label">Season</Label>
-                      <Input
-                        type="select"
-                        name="season"
-                        onChange={(e) => {
-                          setPriceSeasonSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                    {tourData?.seasonality === 1 ? (
+                      <div
+                        className="form-outline"
+                        style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <option>Select....</option>
-                        {map(priceSeason, (season, index) => {
-                          return (
-                            <option key={index} value={season.id} selected={dataEdit && dataEdit.pricedetails ? season.id === dataEdit.pricedetails[3].source_id: false}>
-                              {season.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                    
-                    : null}
+                        <Label className="form-label">Season</Label>
+                        <Input
+                          type="select"
+                          name="season"
+                          onChange={(e) => {
+                            setPriceSeasonSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                          //   value={validationType.values.department || ""}
+                        >
+                          <option>Select....</option>
+                          {map(priceSeason, (season, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={season.id}
+                                selected={
+                                  dataEdit && dataEdit.pricedetails
+                                    ? season.id ===
+                                      dataEdit.pricedetails[3].source_id
+                                    : false
+                                }
+                              >
+                                {season.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    ) : null}
                   </Col>
                 </Col>
+
                 <Col className="col-3 d-flex justify-content-between">
-                  <Col className="col-6">
-                    <Label className="form-label mt-2">Active</Label>
-                    <div className="form-check form-switch form-switch-md mx-2">
-                    <Input
-                        name="active"
-                        placeholder=""
-                        type="checkbox"
-                        checked={dataEdit?.active ? true : false}
-                        className="form-check-input"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.active || ""}
-                        invalid={
-                          validationType.touched.active &&
-                          validationType.errors.active
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.active &&
-                      validationType.errors.active ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.active}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-6">
-                    <Label className="form-label mt-2">Balance Due</Label>
-                    <div className="form-check form-switch form-switch-md mx-4">
-                    <Input
-                        name="balance_checkbox"
-                        placeholder=""
-                        type="checkbox"
-                        checked={dataEdit?.show_balance_due ? true : false}
-                        className="form-check-input"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.balance_checkbox || ""}
-                        invalid={
-                          validationType.touched.balance_checkbox &&
-                          validationType.errors.balance_checkbox
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.balance_checkbox &&
-                      validationType.errors.balance_checkbox ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.balance_checkbox}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
+                  {activeCheckbox !== null ? (
+                    <Col className="col-6">
+                      <Label className="form-label mt-2">Active</Label>
+                      <div className="form-check form-switch form-switch-md mx-2">
+                        <Input
+                          name="active"
+                          placeholder=""
+                          type="checkbox"
+                          checked={activeCheckbox}
+                          className="form-check-input"
+                          onChange={() => onChangeActiveToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.active || ""}
+                          invalid={
+                            validationType.touched.active &&
+                            validationType.errors.active
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.active &&
+                        validationType.errors.active ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.active}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </Col>
+                  ) : null}
+
+                  {balanceDueCheckbox !== null ? (
+                    <Col className="col-6">
+                      <Label className="form-label mt-2">Balance Due</Label>
+                      <div className="form-check form-switch form-switch-md mx-4">
+                        <Input
+                          name="balance_checkbox"
+                          placeholder=""
+                          type="checkbox"
+                          checked={balanceDueCheckbox}
+                          className="form-check-input"
+                          onChange={() => onChangeBalanceDueToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.balance_checkbox || ""}
+                          invalid={
+                            validationType.touched.balance_checkbox &&
+                            validationType.errors.balance_checkbox
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.balance_checkbox &&
+                        validationType.errors.balance_checkbox ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.balance_checkbox}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </Col>
+                  ) : null}
                 </Col>
               </Row>
               <Row
@@ -446,20 +521,29 @@ const AddNewPrivateCharter = ({
                     <Input
                       type="select"
                       name=""
-                      onChange={(e) =>{
-                        setPriceCharterTypeSelected(e.target.value)
+                      onChange={(e) => {
+                        setPriceCharterTypeSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceCharterType, (charterType, index) => {
-                                    return (
-                                      <option key={index} value={charterType.id} selected={ dataEdit && dataEdit.pricedetails ?  charterType.id === dataEdit.pricedetails[4].source_id : false}>
-                                        {charterType.text}
-                                      </option>
-                                    );
-                                  })}
+                        return (
+                          <option
+                            key={index}
+                            value={charterType.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? charterType.id ===
+                                  dataEdit.pricedetails[4].source_id
+                                : false
+                            }
+                          >
+                            {charterType.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -469,20 +553,29 @@ const AddNewPrivateCharter = ({
                     <Input
                       type="select"
                       name=""
-                      onChange={(e) =>{
-                        setPriceDurationSelected(e.target.value)
+                      onChange={(e) => {
+                        setPriceDurationSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceDuration, (duration, index) => {
-                                    return (
-                                      <option key={index} value={duration.id} selected={ dataEdit && dataEdit.pricedetails ?  duration.id === dataEdit.pricedetails[5].source_id : false}>
-                                        {duration.text}
-                                      </option>
-                                    );
-                                  })}
+                        return (
+                          <option
+                            key={index}
+                            value={duration.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? duration.id ===
+                                  dataEdit.pricedetails[5].source_id
+                                : false
+                            }
+                          >
+                            {duration.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -497,14 +590,12 @@ const AddNewPrivateCharter = ({
                       onBlur={validationType.handleBlur}
                       value={validationType.values.min || ""}
                       invalid={
-                        validationType.touched.min &&
-                        validationType.errors.min
+                        validationType.touched.min && validationType.errors.min
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.min &&
-                    validationType.errors.min ? (
+                    {validationType.touched.min && validationType.errors.min ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.min}
                       </FormFeedback>
@@ -523,14 +614,12 @@ const AddNewPrivateCharter = ({
                       onBlur={validationType.handleBlur}
                       value={validationType.values.max || ""}
                       invalid={
-                        validationType.touched.max &&
-                        validationType.errors.max
+                        validationType.touched.max && validationType.errors.max
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.max &&
-                    validationType.errors.max ? (
+                    {validationType.touched.max && validationType.errors.max ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.max}
                       </FormFeedback>
@@ -543,20 +632,29 @@ const AddNewPrivateCharter = ({
                     <Input
                       type="select"
                       name=""
-                      onChange={(e) =>{
-                        setPriceLocationSelected(e.target.value)
+                      onChange={(e) => {
+                        setPriceLocationSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceLocation, (location, index) => {
-                                    return (
-                                      <option key={index} value={location.id} selected={ dataEdit && dataEdit.pricedetails ?  location.id === dataEdit.pricedetails[6].source_id : false}>
-                                        {location.text}
-                                      </option>
-                                    );
-                                  })}
+                        return (
+                          <option
+                            key={index}
+                            value={location.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? location.id ===
+                                  dataEdit.pricedetails[6].source_id
+                                : false
+                            }
+                          >
+                            {location.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </div>
                 </Col>
@@ -925,33 +1023,31 @@ const AddNewPrivateCharter = ({
                 </Col>
               </Row>
               <Row xl={12}>
-            <Row
-              className="col-12 d-flex justify-content-end mt-4"
-              style={{ paddingRight: "30px" }}
-            >
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light col-2 mx-4"
-                type="button"
-                onClick={() => setNewPrivateCharter(false)}
-              >
-                Close
-              </Button>
-              <Button
-                style={{ backgroundColor: "#F6851F" }}
-                type="submit"
-                className="font-16 btn-block col-2"
-                // onClick={toggleCategory}
-              >
-                Save
-              </Button>
-            </Row>
-          </Row>
+                <Row
+                  className="col-12 d-flex justify-content-end mt-4"
+                  style={{ paddingRight: "30px" }}
+                >
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light col-2 mx-4"
+                    type="button"
+                    onClick={() => setNewPrivateCharter(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    style={{ backgroundColor: "#F6851F" }}
+                    type="submit"
+                    className="font-16 btn-block col-2"
+                    // onClick={toggleCategory}
+                  >
+                    Save
+                  </Button>
+                </Row>
+              </Row>
             </Col>
-            
           </Row>
-          
         </Form>
       </div>
     </Modal>

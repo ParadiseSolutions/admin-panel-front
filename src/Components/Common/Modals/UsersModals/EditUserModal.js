@@ -46,11 +46,11 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
     });
   }, []);
   // selects
-  const [department, setDepartment] = useState([]);
+  const [department, setDepartment] = useState( dataUser?.department_id);
   const onChangeSelectionDep = (value) => {
     setDepartment(value);
   };
-  const [rol, setRol] = useState([]);
+  const [rol, setRol] = useState(dataUser?.role_id);
   const onChangeSelectionRol = (value) => {
     setRol(value);
   };
@@ -263,7 +263,8 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                         return (
                           <option
                             selected={
-                              dataUser && dataUser.department_id === department.id
+                              dataUser &&
+                              dataUser.department_id === department.id
                                 ? true
                                 : false
                             }
@@ -292,7 +293,9 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                         return (
                           <option
                             selected={
-                              dataUser && dataUser.role_id === rol.id ? true : false
+                              dataUser && dataUser.role_id === rol.id
+                                ? true
+                                : false
                             }
                             value={rol.id}
                           >
