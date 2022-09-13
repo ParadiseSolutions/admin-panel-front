@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c8f2b65c.css",
-    "main.js": "/static/js/main.167bfa6f.js",
+    "main.js": "/static/js/main.5a555773.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -17,6 +17,7 @@
     "static/media/private-tour.png": "/static/media/private-tour.42904d2f9a828e233569.png",
     "static/media/settings3.png": "/static/media/settings3.c2e71127b1446c0fa42f.png",
     "static/media/settings1.png": "/static/media/settings1.f550dc7e64c320dd47df.png",
+    "static/media/highSeason.png": "/static/media/highSeason.bb61452597766670c5ac.png",
     "static/media/materialdesignicons-webfont.woff?v=5.8.55": "/static/media/materialdesignicons-webfont.d06df622bc47f0db9812.woff",
     "static/media/materialdesignicons-webfont.woff2?v=5.8.55": "/static/media/materialdesignicons-webfont.6147fc3741c622c5de2c.woff2",
     "static/media/newProductPricing.png": "/static/media/newProductPricing.aba6929a0ff1935e5f6b.png",
@@ -53,11 +54,11 @@
     "index.html": "/index.html",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.c8f2b65c.css.map": "/static/css/main.c8f2b65c.css.map",
-    "main.167bfa6f.js.map": "/static/js/main.167bfa6f.js.map",
+    "main.5a555773.js.map": "/static/js/main.5a555773.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c8f2b65c.css",
-    "static/js/main.167bfa6f.js"
+    "static/js/main.5a555773.js"
   ]
 }
