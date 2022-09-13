@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditGeneralInformation from "./EditComponents/editGeneralInfo";
 import Settings from "./EditComponents/settings";
+import HighSeasons from "./EditComponents/highSeasons";
 import Pricing from "./EditComponents/pricing";
 import AddonsComponent from "./EditComponents/addons";
 import URL from "./EditComponents/url";
@@ -103,6 +104,26 @@ const EditTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Settings</span>
                   </NavLink>
                 </NavItem>
+                <NavItem>
+                  <NavLink
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "3" ? "white" : ""}`,
+                    }}
+                    className={classnames({
+                      active: activeTab === "3",
+                    })}
+                    onClick={() => {
+                      toggle("3");
+                    }}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-user"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ High Season Dates</span>
+                  </NavLink>
+                </NavItem>
 
                 {tourData?.website_id === 3 ? (
                   <NavItem>
@@ -110,15 +131,15 @@ const EditTour = ({ history }) => {
                       style={{
                         cursor: "pointer",
                         backgroundColor: `${
-                          activeTab === "3" ? "#F6851F" : ""
+                          activeTab === "4" ? "#F6851F" : ""
                         }`,
-                        color: `${activeTab === "3" ? "white" : ""}`,
+                        color: `${activeTab === "4" ? "white" : ""}`,
                       }}
                       className={classnames({
-                        active: activeTab === "3",
+                        active: activeTab === "4",
                       })}
                       onClick={() => {
-                        toggle("3");
+                        toggle("4");
                       }}
                     >
                       <span className="d-block d-sm-none">
@@ -129,26 +150,6 @@ const EditTour = ({ history }) => {
                   </NavItem>
                 ) : null}
 
-                <NavItem>
-                  <NavLink
-                    style={{
-                      cursor: "pointer",
-                      backgroundColor: `${activeTab === "4" ? "#F6851F" : ""}`,
-                      color: `${activeTab === "4" ? "white" : ""}`,
-                    }}
-                    className={classnames({
-                      active: activeTab === "4",
-                    })}
-                    onClick={() => {
-                      toggle("4");
-                    }}
-                  >
-                    <span className="d-block d-sm-none">
-                      <i className="far fa-envelope"></i>
-                    </span>
-                    <span className="d-none d-sm-block">+ Products</span>
-                  </NavLink>
-                </NavItem>
                 <NavItem>
                   <NavLink
                     style={{
@@ -166,14 +167,14 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Addons</span>
+                    <span className="d-none d-sm-block">+ Products</span>
                   </NavLink>
                 </NavItem>
                 <NavItem>
                   <NavLink
                     style={{
                       cursor: "pointer",
-                      backgroundColor: `${activeTab === "6" ? "#F6851F" : ""}`,
+                      backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
                     }}
                     className={classnames({
@@ -181,6 +182,26 @@ const EditTour = ({ history }) => {
                     })}
                     onClick={() => {
                       toggle("6");
+                    }}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-envelope"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ Addons</span>
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "7" ? "white" : ""}`,
+                    }}
+                    className={classnames({
+                      active: activeTab === "7",
+                    })}
+                    onClick={() => {
+                      toggle("7");
                     }}
                   >
                     <span className="d-block d-sm-none">
@@ -198,20 +219,23 @@ const EditTour = ({ history }) => {
                   ) : null}
                 </TabPane>
                 <TabPane tabId="2">
-                  {tourSettings ? (
+                {tourSettings ? (
                     <Settings tourSettings={tourSettings} id={id} />
                   ) : null}
                 </TabPane>
                 <TabPane tabId="3">
-                  {tourData ? <URL tourData={tourData} /> : null}
+                  <HighSeasons tourData={tourData} />
                 </TabPane>
                 <TabPane tabId="4">
-                  <Pricing id={id} tourData={tourData} />
+                  {tourData ? <URL tourData={tourData} /> : null}
                 </TabPane>
                 <TabPane tabId="5">
-                  <AddonsComponent id={id} tourData={tourData} />
+                  <Pricing id={id} tourData={tourData} />
                 </TabPane>
                 <TabPane tabId="6">
+                  <AddonsComponent id={id} tourData={tourData} />
+                </TabPane>
+                <TabPane tabId="7">
                   <h1>schedule</h1>
                 </TabPane>
               </TabContent>
