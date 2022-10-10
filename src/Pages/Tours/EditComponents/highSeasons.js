@@ -7,6 +7,7 @@ import {
   getSeasonsListAPI,
   deleteSeasonalityAPI,
   statusSeasonalityAPI,
+  putSeasonalityAPI,
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -52,9 +53,14 @@ const HighSeasons = ({ tourData }) => {
   //edit season
   const [dateFromEdit, setDataFromEdit] = useState(null);
   const [dateToEdit, setDataToEdit] = useState(null);
+  const [seasonToEdit, setSeasonToEdit] = useState(null);
+  const [idEdit, setIDEdit] = useState(null);
   const onEditSeason = (data) => {
+    console.log(data);
+    setIDEdit(data.id);
     setDataFromEdit(data.start_date);
     setDataToEdit(data.end_date);
+    setSeasonToEdit(data.season_id);
   };
 
   //delete season
@@ -108,6 +114,11 @@ const HighSeasons = ({ tourData }) => {
     );
   };
   const [activeDep, setActiveDep] = useState(false);
+  useEffect(() => {
+    if (tourData?.seasonality) {
+      setActiveDep(tourData.seasonality === 1 ? true : false);
+    }
+  }, [tourData]);
   const onChangeActive = (data) => {
     setActiveDep(!activeDep);
     console.log(data);
@@ -136,27 +147,51 @@ const HighSeasons = ({ tourData }) => {
     //     .required("Max 2 chars"),
     // }),
     onSubmit: (values) => {
-      let data = {
-        season_id: seasonSelected,
-        start_date: values.from,
-        end_date: values.to,
-      };
-      // console.log(data);
-      postSeasonalityAPI(tourData.id, data)
-        .then((resp) => {
-          console.log(resp.data);
-          if (resp.data.status === 201) {
-            Swal.fire("Created!", "Season has been created.", "success").then(
-              () => {
-                // history.goBack();
-              }
-            );
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-          Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
-        });
+      if (seasonToEdit) {
+        let data = {
+          id: idEdit,
+          season_id: seasonToEdit,
+          start_date: values.from,
+          end_date: values.to,
+        };
+
+        putSeasonalityAPI(tourData.id, data)
+          .then((resp) => {
+            console.log(resp.data);
+            if (resp.data.status === 200) {
+              Swal.fire("Edited!", "Season has been edited.", "success").then(
+                () => {
+                  // history.goBack();
+                }
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+            Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+          });
+      } else {
+        let data = {
+          season_id: seasonSelected,
+          start_date: values.from,
+          end_date: values.to,
+        };
+        postSeasonalityAPI(tourData.id, data)
+          .then((resp) => {
+            console.log(resp.data);
+            if (resp.data.status === 201) {
+              Swal.fire("Created!", "Season has been created.", "success").then(
+                () => {
+                  // history.goBack();
+                }
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+            Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+          });
+      }
     },
   });
 
@@ -215,7 +250,15 @@ const HighSeasons = ({ tourData }) => {
                         <option>Select....</option>
                         {map(seasonNames, (season, index) => {
                           return (
-                            <option key={index} value={season.id}>
+                            <option
+                              key={index}
+                              value={season.id}
+                              selected={
+                                seasonToEdit
+                                  ? seasonToEdit === season.id
+                                  : false
+                              }
+                            >
                               {season.name}
                             </option>
                           );
@@ -294,7 +337,8 @@ const HighSeasons = ({ tourData }) => {
                         className="waves-effect waves-light col-12"
                         type="submit"
                       >
-                        + Add
+                        {seasonToEdit ? "+ Edit" : '+ Add'}
+                        
                       </Button>
                     </div>
                   </Col>

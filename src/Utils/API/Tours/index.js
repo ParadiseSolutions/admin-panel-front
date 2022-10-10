@@ -95,7 +95,7 @@ export const getSeasonsListAPI = (id) => {
   });
 };
 export const getSeasonsNameAPI = () => {
-  const url = `${API_URL}/tours/seasons`;
+  const url = `${API_URL}/seasons`;
   return axios.get (url, {
     headers: options,
   });
@@ -106,6 +106,13 @@ export const postSeasonalityAPI = (tourID, body) => {
     headers: options,
   });
 };
+export const putSeasonalityAPI = (tourID, body) => {
+  const url = `${API_URL}/tours/${tourID}/seasonality`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
 export const statusSeasonalityAPI = (tourID, body) => {
   const url = `${API_URL}/tours/${tourID}/seasonality/status`;
   return axios.put (url,body, {
@@ -252,4 +259,30 @@ export const updateURLAPI = (id, body) => {
     headers: options,
   });
 };
+
+//schedules
+
+export const getScheduleTimeAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/scheduleTimes`
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const getScheduleDatesOverrideAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/scheduleDatesOverride`
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const getScheduleTypesAPI = () => {
+  const url = `${API_URL}/scheduletypes/times`
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+
+// overrite dates
 
