@@ -9,9 +9,12 @@ import {
   statusSeasonalityAPI,
   getScheduleTimeAPI,
   getScheduleDatesOverrideAPI,
+  getSeasonalityAPI,
+  deleteOverriteDate
 } from "../../../Utils/API/Tours";
 import AddNewScheduleModal from "../../../Components/Common/Modals/ScheduleModals/newSchedule";
 import AddNewOverriteDate from "../../../Components/Common/Modals/CalendarOverrideModal/addNewOverriteDate";
+import EdditOverriteDate from "../../../Components/Common/Modals/CalendarOverrideModal/editOverriteDate";
 import {
   TabPane,
   Row,
@@ -37,6 +40,7 @@ const Schedules = ({ tourData }) => {
   //get initial Data
   const [schedulesData, setSchedulesData] = useState([]);
   const [datesOverrideData, setDatesOverrideData] = useState([]);
+  const [seasonalityData, setSeasonalityData] = useState([])
   useEffect(() => {
     getScheduleTimeAPI(TourID).then((resp) => {
       setSchedulesData(resp.data.data);
@@ -44,6 +48,9 @@ const Schedules = ({ tourData }) => {
     getScheduleDatesOverrideAPI(TourID).then((resp) => {
       setDatesOverrideData(resp.data.data);
     });
+    getSeasonalityAPI(TourID).then((resp) =>{
+      setSeasonalityData(resp.data.data)
+    })
   }, [TourID]);
   const [seasonNames, setSeasonNames] = useState([]);
   const [seasonSelected, setSeasonSelected] = useState("");
@@ -57,6 +64,8 @@ const Schedules = ({ tourData }) => {
   const [newSchedule, setNewSchedule] = useState(false);
   //add new overrite date
   const [newOverriteDate, setNewOverriteDate] = useState(false)
+  const [editOverriteDate, setEditOverriteDate] = useState(false)
+  const [editOverriteDateData, setEditOverriteDateData] = useState(null)
 
   //edit season
   const [dateFromEdit, setDataFromEdit] = useState(null);
@@ -78,60 +87,16 @@ const Schedules = ({ tourData }) => {
     });
   };
 
-  //switch seasonality
-  const Offsymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        No
-      </div>
-    );
-  };
 
-  const OnSymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        Yes
-      </div>
-    );
-  };
-  const [activeDep, setActiveDep] = useState(false);
-  useEffect(() => {
-    if (tourData?.seasonality) {
-      setActiveDep(tourData.seasonality === 1 ? true : false);
-    }
-  }, [tourData]);
-  const onChangeActive = (data) => {
-    setActiveDep(!activeDep);
-    console.log(data);
-    if (data) {
-      data = { active: 1 };
-      statusSeasonalityAPI(tourData.id, data);
-    } else {
-      data = { active: 0 };
-      statusSeasonalityAPI(tourData.id, data);
-    }
+  //delete overrite date
+  const onDeleteOverriteDate = (data) => {
+    deleteOverriteDate(tourData.id, data.id).then((resp) => {
+      Swal.fire("Deleted!", "Season has been deleted.", "success")
+      getScheduleDatesOverrideAPI(TourID).then((resp) => {
+        setDatesOverrideData(resp.data.data);
+      });
+      
+    });
   };
 
   //form creation
@@ -151,16 +116,17 @@ const Schedules = ({ tourData }) => {
     // }),
     onSubmit: (values) => {
       let data = {
-        season_id: seasonSelected,
+        type_id: seasonSelected,
         start_date: values.from,
         end_date: values.to,
+        id: seasonalityData[0].id
       };
       // console.log(data);
       postSeasonalityAPI(tourData.id, data)
         .then((resp) => {
           console.log(resp.data);
           if (resp.data.status === 201) {
-            Swal.fire("Created!", "Season has been created.", "success").then(
+            Swal.fire("Created!", "Seasonality has been created.", "success").then(
               () => {
                 // history.goBack();
               }
@@ -312,9 +278,9 @@ const Schedules = ({ tourData }) => {
                             {map(datesOverrideData, (dates, index) => {
                               return (
                                 <tr key={index}>
-                                  <th scope="row">{dates.name}</th>
-                                  <td>{dates.start_date}</td>
-                                  <td>{dates.end_date}</td>
+                                  <th scope="row">{dates.type_id === 1 ? 'Range' : dates.type_id === 2 ? 'Weekdays' : dates.type_id === 3 ? 'Month' : dates.type_id === 4 ? 'Fix Date' : ''  }</th>
+                                  <td>{dates.from ? dates.from : 'N/A'}</td>
+                                  <td>{dates.to ? dates.to : 'N/A'}</td>
                                   <td>
                                     <div
                                       style={{ cursor: "pointer" }}
@@ -322,7 +288,8 @@ const Schedules = ({ tourData }) => {
                                     >
                                       <div
                                         onClick={() => {
-                                          onEditSeason(dates);
+                                          setEditOverriteDateData(dates)
+                                          setEditOverriteDate(true)
                                         }}
                                         className="text-success"
                                       >
@@ -341,7 +308,7 @@ const Schedules = ({ tourData }) => {
                                         style={{ cursor: "pointer" }}
                                         className="text-danger"
                                         onClick={() => {
-                                          onDeleteSeason(dates);
+                                          onDeleteOverriteDate(dates);
                                         }}
                                       >
                                         <i
@@ -357,6 +324,7 @@ const Schedules = ({ tourData }) => {
                                       </div>
                                     </div>
                                   </td>
+                                  <td>{dates.action}</td>
                                 </tr>
                               );
                             })}
@@ -405,13 +373,9 @@ const Schedules = ({ tourData }) => {
                       onBlur={validationType.handleBlur}
                     >
                       <option>Select....</option>
-                      {map(seasonNames, (season, index) => {
-                        return (
-                          <option key={index} value={season.id}>
-                            {season.name}
-                          </option>
-                        );
-                      })}
+                      <option value='5'>Specific Dates</option>
+                      <option value='7' selected >All Year Long</option>
+                     
                     </Input>
                   </div>
                 </Col>
@@ -498,7 +462,7 @@ const Schedules = ({ tourData }) => {
               </Button>
               <Button
                 style={{ backgroundColor: "#F6851F" }}
-                type="button"
+                type="submit"
                 className="font-16 btn-block col-2"
                 // onClick={toggleCategory}
               >
@@ -517,7 +481,12 @@ const Schedules = ({ tourData }) => {
       <AddNewOverriteDate
         newOverriteDate={newOverriteDate}
         setNewOverriteDate={setNewOverriteDate}
-        tourData={tourData}
+        
+      />
+      <EdditOverriteDate
+        editOverriteDate={editOverriteDate}
+        setEditOverriteDate={setEditOverriteDate}
+        editOverriteDateData={editOverriteDateData}
       />
     </>
   );

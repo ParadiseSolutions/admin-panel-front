@@ -17,17 +17,38 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 
-const AddNewOverriteDate = ({
-  newOverriteDate,
-  setNewOverriteDate,
-  onClickAddLocation,
+const EdditOverriteDate = ({
+  editOverriteDate,
+  setEditOverriteDate,
+  editOverriteDateData,
 }) => {
   //initial data
   const { id } = useParams();
-  const [typeSelected, setTypeSelected] = useState(null);
-  const [repeatSelected, setRepeatSelected] = useState(null)
-  const [daySelected, setDaySelected] = useState(null)
-  console.log(typeSelected);
+  const [typeSelected, setTypeSelected] = useState(
+    editOverriteDateData?.type_id.toString()
+  );
+  const [repeatSelected, setRepeatSelected] = useState(null);
+  const [daySelected, setDaySelected] = useState(+editOverriteDateData?.on);
+  const [dayRageFromEdit, setDayRageFromSelected] = useState(null);
+  const [dayRagetoEdit, setDayRagetoSelected] = useState(null);
+  const [dayWeekfromEdit, setDayWeekFromSelected] = useState(null);
+  const [dayWeektoEdit, setDayWeektoSelected] = useState(null);
+  const [dayFixEdit, setdayFixSelected] = useState(null);
+
+  console.log("data inicial", editOverriteDateData);
+
+  useEffect(() => {
+    if (editOverriteDateData !== null) {
+      setTypeSelected(editOverriteDateData?.type_id.toString());
+      setRepeatSelected(editOverriteDateData?.recurrency);
+      setDayRageFromSelected(editOverriteDateData?.from);
+      setDayRagetoSelected(editOverriteDateData?.to);
+      setDaySelected(+editOverriteDateData?.on);
+      setDayWeekFromSelected(editOverriteDateData?.from);
+      setDayWeektoSelected(editOverriteDateData?.to);
+      setdayFixSelected(editOverriteDateData?.from)
+    }
+  }, [editOverriteDateData]);
 
   //checkbox list
   const [daysList, setDayList] = useState([]);
@@ -43,64 +64,79 @@ const AddNewOverriteDate = ({
   };
 
   const validationType = useFormik({
-    ableReinitialize: true,
-
+    enableReinitialize: true,
     initialValues: {
-      // name: "",
+      range_from_date: dayRageFromEdit ? dayRageFromEdit : null,
+      range_to_date: dayRagetoEdit ? dayRagetoEdit : null,
+      weekdays_from_date: dayWeekfromEdit ? dayWeekfromEdit : null,
+      weekdays_to_date: dayWeektoEdit ? dayWeektoEdit : null,
+      fixed_date: dayFixEdit ? dayFixEdit : null
     },
     validationSchema: Yup.object().shape({
       // name: Yup.string().required("Name is required"),
     }),
 
-    onSubmit: (values, {resetForm}) => {
-
+    onSubmit: (values, { resetForm }) => {
       let data = {
         type_id: typeSelected,
         repeat_id: repeatSelected,
         action: "Available",
-        on: daySelected ? daySelected.toString() : daysList.length > 0 ? daysList.toString() : '',
-        from: values.range_from_date ? values.range_from_date : values.weekdays_from_date ? values.weekdays_from_date : values.fixed_date ? values.fixed_date : null,
-        to: values.range_to_date ? values.range_to_date : values.weekdays_to_date ? values.weekdays_to_date : null,
+        on: daySelected
+          ? daySelected.toString()
+          : daysList.length > 0
+          ? daysList.toString()
+          : "",
+        from: values.range_from_date
+          ? values.range_from_date
+          : values.weekdays_from_date
+          ? values.weekdays_from_date
+          : values.fixed_date
+          ? values.fixed_date
+          : null,
+        to: values.range_to_date
+          ? values.range_to_date
+          : values.weekdays_to_date
+          ? values.weekdays_to_date
+          : null,
         recurrency: repeatSelected,
       };
 
-      console.log(data)
+      console.log(data);
 
-    
-      postOverriteDate(id, data)
-        .then((resp) => {
-          if (resp.data.status === 201) {
-            Swal.fire("Success!", "Location has been created", "success").then(
-              () => {
-                setNewOverriteDate(false)
-                
-              }
-            );
-          }
-        })
-        .catch((error) => {
-          let errorMessages = [];
-          Object.entries(error.response.data.data).map((item) => {
-            errorMessages.push(item[1]);
-          });
+      // postOverriteDate(id, data)
+      //   .then((resp) => {
+      //     if (resp.data.status === 201) {
+      //       Swal.fire("Success!", "Location has been created", "success").then(
+      //         () => {
+      //           setEditOverriteDate(false);
+      //         }
+      //       );
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     let errorMessages = [];
+      //     Object.entries(error.response.data.data).map((item) => {
+      //       errorMessages.push(item[1]);
+      //     });
 
-          Swal.fire(
-            "Error!",
-            // {error.response.},
-            String(errorMessages[0])
-          );
-        });
-        resetForm({})
+      //     Swal.fire(
+      //       "Error!",
+      //       // {error.response.},
+      //       String(errorMessages[0])
+      //     );
+      //   });
+      // resetForm({});
     },
   });
+
   return (
     <>
       <Modal
         size="lg"
         centered
-        isOpen={newOverriteDate}
+        isOpen={editOverriteDate}
         toggle={() => {
-          onClickAddLocation();
+          // onClickAddLocation();
         }}
       >
         <div
@@ -110,7 +146,7 @@ const AddNewOverriteDate = ({
           <h1 className="modal-title mt-0 text-white">+ Calendar Override</h1>
           <button
             onClick={() => {
-              setNewOverriteDate(false);
+              setEditOverriteDate(false);
             }}
             type="button"
             className="close"
@@ -155,17 +191,50 @@ const AddNewOverriteDate = ({
                         onBlur={validationType.handleBlur}
                       >
                         <option>Select....</option>
-                        <option value={"1"}>Range</option>
-                        <option value={"2"}>Weekdays</option>
-                        <option value={"3"}>Month</option>
-                        <option value={"4"}>Fixed Date</option>
-                        {/* {map(productsData, (product, index) => {
-                        return (
-                          <option key={index} value={product.id}>
-                            {product.label}
-                          </option>
-                        );
-                      })} */}
+                        <option
+                          value={"1"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.type_id === 1
+                              ? true
+                              : false
+                          }
+                        >
+                          Range
+                        </option>
+                        <option
+                          value={"2"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.type_id === 2
+                              ? true
+                              : false
+                          }
+                        >
+                          Weekdays
+                        </option>
+                        <option
+                          value={"3"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.type_id === 3
+                              ? true
+                              : false
+                          }
+                        >
+                          Month
+                        </option>
+                        <option
+                          value={"4"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.type_id === 4
+                              ? true
+                              : false
+                          }
+                        >
+                          Fixed Date
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -175,14 +244,34 @@ const AddNewOverriteDate = ({
                       <Input
                         type="select"
                         name=""
-                          onChange={(e) => {
-                            setRepeatSelected(e.target.value);
-                          }}
+                        onChange={(e) => {
+                          setRepeatSelected(e.target.value);
+                        }}
                         onBlur={validationType.handleBlur}
                       >
                         <option>Select....</option>
-                        <option value={'1'}>One Time Event</option>
-                        <option value={'2'}>Yearly</option>
+                        <option
+                          value={"1"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.recurrency === "1"
+                              ? true
+                              : false
+                          }
+                        >
+                          One Time Event
+                        </option>
+                        <option
+                          value={"2"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.recurrency === "2"
+                              ? true
+                              : false
+                          }
+                        >
+                          Yearly
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -207,8 +296,8 @@ const AddNewOverriteDate = ({
                                 validationType.values.range_from_date || ""
                               }
                               invalid={
-                                validationType.touched.range_from_date &&
-                                validationType.errors.range_from_date
+                                validationType.touched.from &&
+                                validationType.errors.from
                                   ? true
                                   : false
                               }
@@ -264,21 +353,88 @@ const AddNewOverriteDate = ({
                         <Input
                           type="select"
                           name=""
-                            onChange={(e) => {
-                              setDaySelected(e.target.value);
-                            }}
+                          onChange={(e) => {
+                            setDaySelected(e.target.value);
+                          }}
                           onBlur={validationType.handleBlur}
                         >
-                          <option value={0}>Sunday</option>
-                          <option value={1}>Monday</option>
-                          <option value={2}>Tuesday</option>
-                          <option value={3}>Wednesday</option>
-                          <option value={4}>Thursday</option>
-                          <option value={5}>Friday</option>
-                          <option value={6}>Saturday</option>
-                          
-                          
-                        
+                          <option
+                            value={0}
+                            selected={
+                              editOverriteDateData &&
+                              +editOverriteDateData.on === 0
+                                ? true
+                                : false
+                            }
+                          >
+                            Sunday
+                          </option>
+                          <option
+                            value={1}
+                            selected={
+                              editOverriteDateData &&
+                              +editOverriteDateData.on === 1
+                                ? true
+                                : false
+                            }
+                          >
+                            Monday
+                          </option>
+                          <option
+                            value={2}
+                            selected={
+                              editOverriteDateData &&
+                              +editOverriteDateData.on === 2
+                                ? true
+                                : false
+                            }
+                          >
+                            Tuesday
+                          </option>
+                          <option
+                            value={3}
+                            selected={
+                              editOverriteDateData &&
+                              +editOverriteDateData.on === 3
+                                ? true
+                                : false
+                            }
+                          >
+                            Wednesday
+                          </option>
+                          <option
+                            value={4}
+                            selected={
+                              editOverriteDateData &&
+                              +editOverriteDateData.on === 4
+                                ? true
+                                : false
+                            }
+                          >
+                            Thursday
+                          </option>
+                          <option
+                            value={5}
+                            selected={
+                              editOverriteDateData &&
+                              +editOverriteDateData.on === 5
+                                ? true
+                                : false
+                            }
+                          >
+                            Friday
+                          </option>
+                          <option
+                            value={6}
+                            selected={
+                              editOverriteDateData &&
+                              +editOverriteDateData.on === 6
+                                ? true
+                                : false
+                            }
+                          >
+                            Saturday
+                          </option>
                         </Input>
                       </div>
                     </Col>
@@ -412,4 +568,4 @@ const AddNewOverriteDate = ({
   );
 };
 
-export default AddNewOverriteDate;
+export default EdditOverriteDate;
