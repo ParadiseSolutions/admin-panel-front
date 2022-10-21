@@ -106,7 +106,7 @@ const EdditOverriteDate = ({
       // postOverriteDate(id, data)
       //   .then((resp) => {
       //     if (resp.data.status === 201) {
-      //       Swal.fire("Success!", "Location has been created", "success").then(
+      //       Swal.fire("Success!", "Date has been created", "success").then(
       //         () => {
       //           setEditOverriteDate(false);
       //         }
@@ -508,7 +508,7 @@ const EdditOverriteDate = ({
                 ) : null}
                 {typeSelected === "3" ? (
                   <Row>
-                    <CheckBoxs onAddDay={onAddDay} />
+                    <CheckBoxs onAddDay={onAddDay} editOverriteDateData={editOverriteDateData}/>
                   </Row>
                 ) : null}
                 {typeSelected === "4" ? (
