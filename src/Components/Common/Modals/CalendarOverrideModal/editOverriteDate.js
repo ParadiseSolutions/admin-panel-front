@@ -508,7 +508,7 @@ const EdditOverriteDate = ({
                 ) : null}
                 {typeSelected === "3" ? (
                   <Row>
-                    <CheckBoxs onAddDay={onAddDay} />
+                    <CheckBoxs onAddDay={onAddDay} editOverriteDateData={editOverriteDateData}/>
                   </Row>
                 ) : null}
                 {typeSelected === "4" ? (
