@@ -289,11 +289,25 @@ export const getScheduleTypesAPI = () => {
   });
 };
 
+export const postSchedule = (id, body) => {
+  const url = `${API_URL}/tours/${id}/scheduleDate`
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
 
 // overrite dates
 export const postOverriteDate = (id, body) => {
   const url = `${API_URL}/tours/${id}/scheduleDateOverride`
   return axios.post (url, body, {
+    headers: options,
+  });
+};
+
+export const putOverriteDate = (id, body) => {
+  const url = `${API_URL}/tours/${id}/scheduleDateOverride`
+  return axios.put (url, body, {
     headers: options,
   });
 };

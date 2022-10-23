@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import ScheduleImage from "../../../Assets/images/schedule.png";
 import CheckBoxs from "./Components/checkboxs";
-
+import Swal from "sweetalert2";
 import {
   getScheduleTypesAPI,
   getPricesPricingAPI,
+  postSchedule
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -20,8 +21,10 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Switch from "react-switch";
+import { useParams } from "react-router-dom";
 
 const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
+  const { id } = useParams();
   //initial Data
   const [scheduleTypesData, setSchedulesTypesData] = useState([]);
   const [productsData, setProductsData] = useState([]);
@@ -117,11 +120,15 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
   const [timeFrameMulti4, setTimeFrameMulti4] = useState('AM')
   const [timeFrameMulti5, setTimeFrameMulti5] = useState('AM')
   const [timeFrameMulti6, setTimeFrameMulti6] = useState('AM')
+  const [timeFrameIntervalFrom, setTimeFrameIntervalFrom] = useState('AM')
+  const [timeFrameIntervalTo, setTimeFrameIntervalTo] = useState('AM')
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
       start_time_single: '',
+      from_intervals: '',
+      to_intervals:'',
       duration: '',
       from: '',
       to: '',
@@ -140,6 +147,8 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
     onSubmit: (values, { resetForm }) => {
       console.log('valores',values)
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
+      const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
+      const startTimeIntervalsTo = `${values.to_intervals} ${timeFrameIntervalTo}`;
       const daysListString = daysList.toString();
       
       let multiTimesList = []
@@ -153,8 +162,8 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
       let data = {
         type_id: typeSelected,
         detail: multiTimesList.toString(),
-        from: startTimeSingle, // cambiarlo despues por una validacion
-        to: "04:00 PM",
+        from: values.start_time_single ? startTimeSingle : values.from_intervals ? startTimeIntervalsFrom : '', // cambiarlo despues por una validacion
+        to: values.to_intervals ? startTimeIntervalsTo : '',
         runs: daysListString,
         temporary_schedule: activeDep === true ? 1 : 0,
         from_date: values.from_date,
@@ -164,16 +173,35 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
         price_id: productSelected,
       };
 
-      data.toMama = ''
+      
       console.log("data a enviar", data);
-      // postPricesAPI(data).then((resp) => {
-      //   console.log(resp);
-      //   setNewSchedule(false);
-      // });
+      postSchedule(id, data).then((resp) => {
+        if (resp.data.status === 201) {
+          Swal.fire("Success!", "Schedule has been created", "success").then(
+            () => {
+              setNewSchedule(false)
+              
+            }
+          );
+        }
+      })
+      .catch((error) => {
+        let errorMessages = [];
+        Object.entries(error.response.data.data).map((item) => {
+          return errorMessages.push(item[1]);
+        });
 
-      // resetForm({ values: "" });
+        Swal.fire(
+          "Error!",
+          // {error.response.},
+          String(errorMessages[0])
+        );
+      });
+
+      resetForm({ values: "" });
     },
   });
+  console.log(typeSelected)
   return (
     <Modal
       centered
@@ -432,34 +460,34 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
                       <div className="input-group">
                         <div className="input-group-text">From</div>
                         <Input
-                          name="from"
+                          name="from_intervals"
                           className="form-control"
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
-                          value={validationType.values.from || ""}
+                          value={validationType.values.from_intervals || ""}
                           invalid={
-                            validationType.touched.from &&
-                            validationType.errors.from
+                            validationType.touched.from_intervals &&
+                            validationType.errors.from_intervals
                               ? true
                               : false
                           }
                         />
-                        {validationType.touched.from &&
-                        validationType.errors.from ? (
+                        {validationType.touched.from_intervals &&
+                        validationType.errors.from_intervals ? (
                           <FormFeedback type="invalid">
-                            {validationType.errors.from}
+                            {validationType.errors.from_intervals}
                           </FormFeedback>
                         ) : null}
                         <Input
                           type="select"
                           name=""
-                          onChange={validationType.handleChange}
+                          onChange={(e) => setTimeFrameIntervalFrom(e.target.value)}
                           onBlur={validationType.handleBlur}
                           // value={validationType.values.start_time || ""}
                         >
-                          <option>AM</option>
-                          <option>PM</option>
+                          <option value={'AM'}>AM</option>
+                          <option value={'PM'}>PM</option>
                         </Input>
                       </div>
                     </div>
@@ -467,34 +495,34 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
                       <div className="input-group">
                         <div className="input-group-text">To</div>
                         <Input
-                          name="to"
+                          name="to_intervals"
                           className="form-control"
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.to || ""}
                           invalid={
-                            validationType.touched.to &&
-                            validationType.errors.to
+                            validationType.touched.to_intervals &&
+                            validationType.errors.to_intervals
                               ? true
                               : false
                           }
                         />
-                        {validationType.touched.to &&
-                        validationType.errors.to ? (
+                        {validationType.touched.to_intervals &&
+                        validationType.errors.to_intervals ? (
                           <FormFeedback type="invalid">
-                            {validationType.errors.to}
+                            {validationType.errors.to_intervals}
                           </FormFeedback>
                         ) : null}
                         <Input
                           type="select"
                           name=""
-                          onChange={validationType.handleChange}
+                          onChange={(e) => setTimeFrameIntervalTo(e.target.value)}
                           onBlur={validationType.handleBlur}
                           // value={validationType.values.start_time || ""}
                         >
-                          <option>AM</option>
-                          <option>PM</option>
+                          <option value={'AM'}>AM</option>
+                          <option value={'PM'}>PM</option>
                         </Input>
                       </div>
                     </div>

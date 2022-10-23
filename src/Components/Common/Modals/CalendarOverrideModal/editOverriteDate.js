@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import OverriteDateImg from "../../../../Components/Assets/images/overriteDates.png";
-import { postOverriteDate } from "../../../../Utils/API/Tours";
+import { putOverriteDate } from "../../../../Utils/API/Tours";
 import CheckBoxs from "./Components/checkboxs";
 import {
   Row,
@@ -103,29 +103,29 @@ const EdditOverriteDate = ({
 
       console.log(data);
 
-      // postOverriteDate(id, data)
-      //   .then((resp) => {
-      //     if (resp.data.status === 201) {
-      //       Swal.fire("Success!", "Location has been created", "success").then(
-      //         () => {
-      //           setEditOverriteDate(false);
-      //         }
-      //       );
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     let errorMessages = [];
-      //     Object.entries(error.response.data.data).map((item) => {
-      //       errorMessages.push(item[1]);
-      //     });
+      putOverriteDate(id, data)
+        .then((resp) => {
+          if (resp.data.status === 201) {
+            Swal.fire("Success!", "Location has been created", "success").then(
+              () => {
+                setEditOverriteDate(false);
+              }
+            );
+          }
+        })
+        .catch((error) => {
+          let errorMessages = [];
+          Object.entries(error.response.data.data).map((item) => {
+            errorMessages.push(item[1]);
+          });
 
-      //     Swal.fire(
-      //       "Error!",
-      //       // {error.response.},
-      //       String(errorMessages[0])
-      //     );
-      //   });
-      // resetForm({});
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(errorMessages[0])
+          );
+        });
+      resetForm({});
     },
   });
 
