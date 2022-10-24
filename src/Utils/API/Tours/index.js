@@ -95,17 +95,30 @@ export const getSeasonsListAPI = (id) => {
   });
 };
 export const getSeasonsNameAPI = () => {
-  const url = `${API_URL}/tours/seasons`;
+  const url = `${API_URL}/seasons`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getSeasonalityAPI = (tourID) => {
+  const url = `${API_URL}/tours/${tourID}/scheduleDates`;
   return axios.get (url, {
     headers: options,
   });
 };
 export const postSeasonalityAPI = (tourID, body) => {
-  const url = `${API_URL}/tours/${tourID}/seasonality`;
-  return axios.post (url, body, {
+  const url = `${API_URL}/tours/${tourID}/scheduleDate`;
+  return axios.put (url, body, {
     headers: options,
   });
 };
+export const putSeasonalityAPI = (tourID, body) => {
+  const url = `${API_URL}/tours/${tourID}/seasonality`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
 export const statusSeasonalityAPI = (tourID, body) => {
   const url = `${API_URL}/tours/${tourID}/seasonality/status`;
   return axios.put (url,body, {
@@ -253,3 +266,56 @@ export const updateURLAPI = (id, body) => {
   });
 };
 
+//schedules
+
+export const getScheduleTimeAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/scheduleTimes`
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const getScheduleDatesOverrideAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/scheduleDatesOverride`
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const getScheduleTypesAPI = () => {
+  const url = `${API_URL}/scheduletypes/times`
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const postSchedule = (id, body) => {
+  const url = `${API_URL}/tours/${id}/scheduleDate`
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
+
+// overrite dates
+export const postOverriteDate = (id, body) => {
+  const url = `${API_URL}/tours/${id}/scheduleDateOverride`
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
+export const putOverriteDate = (id, body) => {
+  const url = `${API_URL}/tours/${id}/scheduleDateOverride`
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
+
+export const deleteOverriteDate = (Tourid, dateID) => {
+  const url = `${API_URL}/tours/${Tourid}/scheduleDate/${dateID}`
+  return axios.delete (url, {
+    headers: options,
+  });
+};

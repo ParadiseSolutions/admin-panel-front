@@ -5,6 +5,7 @@ import HighSeasons from "./EditComponents/highSeasons";
 import Pricing from "./EditComponents/pricing";
 import AddonsComponent from "./EditComponents/addons";
 import URL from "./EditComponents/url";
+import Schedules from "./EditComponents/schedules";
 import { getTourAPI, getTourSettingsAPI } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -236,7 +237,7 @@ const EditTour = ({ history }) => {
                   <AddonsComponent id={id} tourData={tourData} />
                 </TabPane>
                 <TabPane tabId="7">
-                  <h1>schedule</h1>
+                  <Schedules id={id} tourData={tourData}/>
                 </TabPane>
               </TabContent>
             </CardBody>
