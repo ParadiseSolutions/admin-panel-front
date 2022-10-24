@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c8f2b65c.css",
-    "main.js": "/static/js/main.5a555773.js",
+    "main.js": "/static/js/main.aca2282e.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -19,6 +19,8 @@
     "static/media/settings1.png": "/static/media/settings1.f550dc7e64c320dd47df.png",
     "static/media/highSeason.png": "/static/media/highSeason.bb61452597766670c5ac.png",
     "static/media/materialdesignicons-webfont.woff?v=5.8.55": "/static/media/materialdesignicons-webfont.d06df622bc47f0db9812.woff",
+    "static/media/overriteDates.png": "/static/media/overriteDates.8f460b1431a92f3ded40.png",
+    "static/media/schedulesDolphins.png": "/static/media/schedulesDolphins.ad5dd21efab6bc2b6efc.png",
     "static/media/materialdesignicons-webfont.woff2?v=5.8.55": "/static/media/materialdesignicons-webfont.6147fc3741c622c5de2c.woff2",
     "static/media/newProductPricing.png": "/static/media/newProductPricing.aba6929a0ff1935e5f6b.png",
     "static/media/boat.png": "/static/media/boat.e6c7c078603b28932384.png",
@@ -29,6 +31,7 @@
     "static/media/fa-solid-900.ttf": "/static/media/fa-solid-900.32267f3b4db33a7c85ee.ttf",
     "static/media/alpaca.png": "/static/media/alpaca.f9c5f45f084369f228d3.png",
     "static/media/adventure-bg-hub.jpg": "/static/media/adventure-bg-hub.da1d1842c715b5e6acb0.jpg",
+    "static/media/schedule.png": "/static/media/schedule.0cc165ca5efb0e150568.png",
     "static/media/newTourGI.jpg": "/static/media/newTourGI.abf8ab286931acb5867f.jpg",
     "static/media/fa-regular-400.svg": "/static/media/fa-regular-400.f4f60ace2cf62f2cba66.svg",
     "static/media/fa-brands-400.eot": "/static/media/fa-brands-400.607a77859353c0cc1882.eot",
@@ -54,11 +57,11 @@
     "index.html": "/index.html",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.c8f2b65c.css.map": "/static/css/main.c8f2b65c.css.map",
-    "main.5a555773.js.map": "/static/js/main.5a555773.js.map",
+    "main.aca2282e.js.map": "/static/js/main.aca2282e.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c8f2b65c.css",
-    "static/js/main.5a555773.js"
+    "static/js/main.aca2282e.js"
   ]
 }
