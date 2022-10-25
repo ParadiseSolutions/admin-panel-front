@@ -27,6 +27,7 @@ const AddNewTransportation = ({
   refreshTable,
   editProductID,
   tourData,
+  copyProduct
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
@@ -37,6 +38,7 @@ const AddNewTransportation = ({
       });
     }
   }, [editProductID]);
+  console.log(copyProduct)
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -145,7 +147,7 @@ const AddNewTransportation = ({
         eff_rate: values.eff_rate,
         commission: values.commission,
         deposit: values.deposit,
-        balance_due: values.balance_due,
+        net_price: values.balance_due,
         active: activeCheckbox ? 1 : 0,
         show_balance_due: balanceDueCheckbox ? 1 : 0,
         price_details: [
@@ -229,7 +231,8 @@ const AddNewTransportation = ({
           refreshTable();
           setNewTransportation(false);
         });
-      } else {
+      } 
+      if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           refreshTable();
           setNewTransportation(false);

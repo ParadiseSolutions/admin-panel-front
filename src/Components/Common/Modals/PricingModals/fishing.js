@@ -26,6 +26,7 @@ const Fishing = ({
   tourData,
   refreshTable,
   editProductID,
+  copyProduct
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
@@ -148,7 +149,7 @@ const Fishing = ({
         eff_rate: values.eff_rate,
         commission: values.commission,
         deposit: values.deposit,
-        balance_due: values.balance_due,
+        net_price: values.balance_due,
         active: activeCheckbox ? 1 : 0,
         show_balance_due: balanceDueCheckbox ? 1 : 0,
         price_details: [
@@ -212,7 +213,8 @@ const Fishing = ({
           refreshTable();
           setAddNewFishing(false);
         });
-      } else {
+      } 
+      if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           console.log(resp);
           refreshTable();
