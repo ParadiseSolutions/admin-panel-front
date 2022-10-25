@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import { getPricingOptionsAPI, postPricesAPI } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
-const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData }) => {
+const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProduct }) => {
 
    //combo box request
    const [priceTypeData, setPriceTypeData] = useState([]);
