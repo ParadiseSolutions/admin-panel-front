@@ -27,7 +27,7 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 import Switch from "react-switch";
 
-const HighSeasons = ({ tourData }) => {
+const HighSeasons = ({ tourData, toggle }) => {
   const history = useHistory();
 
   console.log("tour data", tourData);
@@ -441,10 +441,7 @@ const HighSeasons = ({ tourData }) => {
                 outline
                 className="waves-effect waves-light col-2 mx-4"
                 type="button"
-                onClick={() => {
-                  console.log("asdas");
-                  history.goBack();
-                }}
+                onClick={() => toggle('2')}
               >
                 <i className="uil-angle-double-left" />
                 Back
@@ -453,7 +450,7 @@ const HighSeasons = ({ tourData }) => {
                 style={{ backgroundColor: "#F6851F" }}
                 type="button"
                 className="font-16 btn-block col-2"
-                // onClick={toggleCategory}
+                onClick={() => toggle('4')}
               >
                 Continue
                 <i className="uil-angle-double-right mx-1 " />

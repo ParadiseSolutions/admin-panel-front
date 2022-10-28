@@ -31,7 +31,7 @@ import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
 
-const Schedules = ({ tourData }) => {
+const Schedules = ({ tourData, toggle }) => {
   const history = useHistory();
 
   console.log("tour data", tourData);
@@ -447,19 +447,16 @@ const Schedules = ({ tourData }) => {
               </Row>
             </Col>
             <Row className="col-12 d-flex justify-content-end mt-5">
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light col-2 mx-4"
-                type="button"
-                onClick={() => {
-                  console.log("asdas");
-                  history.goBack();
-                }}
-              >
-                <i className="uil-angle-double-left" />
-                Back
-              </Button>
+            <Button
+            color="paradise"
+            outline
+            className="waves-effect waves-light col-2 mx-4"
+            type="button"
+            onClick={() => toggle('6')}
+          >
+            <i className="uil-angle-double-left" />
+            Back
+          </Button>
               <Button
                 style={{ backgroundColor: "#F6851F" }}
                 type="submit"

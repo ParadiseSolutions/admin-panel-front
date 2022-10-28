@@ -25,7 +25,7 @@ import {
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-const Pricing = ({ history, id, tourData }) => {
+const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
   useEffect(() => {
@@ -346,7 +346,7 @@ const Pricing = ({ history, id, tourData }) => {
             outline
             className="waves-effect waves-light col-2 mx-4"
             type="button"
-            // onClick={() => history.goBack()}
+             onClick={() => toggle('4')}
           >
             <i className="uil-angle-double-left" />
             Back
@@ -355,7 +355,7 @@ const Pricing = ({ history, id, tourData }) => {
             style={{ backgroundColor: "#F6851F" }}
             type="submit"
             className="font-16 btn-block col-2"
-            // onClick={toggleCategory}
+             onClick={() => toggle('6')}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />

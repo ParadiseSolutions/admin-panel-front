@@ -216,28 +216,28 @@ const EditTour = ({ history }) => {
               <TabContent activeTab={activeTab} className="p-3 text-muted">
                 <TabPane tabId="1">
                   {tourData ? (
-                    <EditGeneralInformation tourData={tourData} />
+                    <EditGeneralInformation tourData={tourData} toggle={toggle} />
                   ) : null}
                 </TabPane>
                 <TabPane tabId="2">
                 {tourSettings ? (
-                    <Settings tourSettings={tourSettings} id={id} />
+                    <Settings tourSettings={tourSettings} id={id} toggle={toggle} />
                   ) : null}
                 </TabPane>
                 <TabPane tabId="3">
-                  <HighSeasons tourData={tourData} />
+                  <HighSeasons tourData={tourData} toggle={toggle}/>
                 </TabPane>
                 <TabPane tabId="4">
-                  {tourData ? <URL tourData={tourData} /> : null}
+                  {tourData ? <URL tourData={tourData} toggle={toggle} /> : null}
                 </TabPane>
                 <TabPane tabId="5">
-                  <Pricing id={id} tourData={tourData} />
+                  <Pricing id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
                 <TabPane tabId="6">
-                  <AddonsComponent id={id} tourData={tourData} />
+                  <AddonsComponent id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
                 <TabPane tabId="7">
-                  <Schedules id={id} tourData={tourData}/>
+                  <Schedules id={id} tourData={tourData} toggle={toggle}/>
                 </TabPane>
               </TabContent>
             </CardBody>
