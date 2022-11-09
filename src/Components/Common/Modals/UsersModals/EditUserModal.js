@@ -35,8 +35,8 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
   }, [userId]);
 
   //departments request
-  const [dataDepartments, setDataDepartments] = useState([]);
-  const [dataRoles, setDataRoles] = useState([]);
+  const [dataDepartments, setDataDepartments] = useState(null);
+  const [dataRoles, setDataRoles] = useState(null);
   useEffect(() => {
     getUserDepAPI().then((resp) => {
       setDataDepartments(resp.data.data);

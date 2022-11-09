@@ -290,7 +290,7 @@ export const getScheduleTypesAPI = () => {
 };
 
 export const postSchedule = (id, body) => {
-  const url = `${API_URL}/tours/${id}/scheduleDate`
+  const url = `${API_URL}/tours/${id}/scheduleTime`
   return axios.post (url, body, {
     headers: options,
   });

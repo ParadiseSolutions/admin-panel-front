@@ -34,7 +34,7 @@ const Users = () => {
 
   const onDelete = (userData) => {
     Swal.fire({
-      title: "Delete Department?",
+      title: "Delete User?",
       icon: "question",
       text: `Do you want delete ${userData.first_name}`,
       showCancelButton: true,
