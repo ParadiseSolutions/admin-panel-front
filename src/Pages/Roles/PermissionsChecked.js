@@ -4,6 +4,8 @@ const PermissionsChecked = ({ perm, permsIds, setPermsIds }) => {
 
   const isChecked = permsIds.includes(perm) ? true : false;
 
+  console.log(permsIds)
+
   const [checked, setChecked] = useState(
     permsIds.includes(perm) ? true : false
   );
@@ -13,7 +15,7 @@ const PermissionsChecked = ({ perm, permsIds, setPermsIds }) => {
       
       setChecked(permsIds.includes(perm.id) ? true : false);
     }
-  }, [isChecked]);
+  }, [permsIds, perm]);
 
   const onChangeModules = (e) => {
     setChecked(!checked);

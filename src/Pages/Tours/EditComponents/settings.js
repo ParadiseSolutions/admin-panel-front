@@ -29,7 +29,7 @@ import Swal from "sweetalert2";
 import { Select } from "antd";
 const { Option } = Select;
 
-const Settings = ({ history, tourSettings, id }) => {
+const Settings = ({ history, tourSettings, id, toggle }) => {
   console.log("settings", tourSettings);
 
   //seasons request
@@ -159,6 +159,7 @@ const Settings = ({ history, tourSettings, id }) => {
           console.log(resp.data);
           if (resp.data.status === 200) {
             Swal.fire("Edited!", "Settings has been created.", "success");
+            toggle('3')
           }
         })
         .catch((error) => {
@@ -550,7 +551,7 @@ const Settings = ({ history, tourSettings, id }) => {
               outline
               className="waves-effect waves-light col-2 mx-4"
               type="button"
-              onClick={() => history.goBack()}
+              onClick={() => toggle('1')}
             >
               <i className="uil-angle-double-left" />
               Back

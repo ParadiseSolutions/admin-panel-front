@@ -22,7 +22,7 @@ import { Name, Code, Members } from "./PricingTables/DepartmentsCols";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-const AddonsComponent = ({ history, id, tourData }) => {
+const AddonsComponent = ({ history, id, tourData, toggle }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
   useEffect(() => {
@@ -266,7 +266,7 @@ const AddonsComponent = ({ history, id, tourData }) => {
             outline
             className="waves-effect waves-light col-2 mx-4"
             type="button"
-            // onClick={() => history.goBack()}
+            onClick={() => toggle('5')}
           >
             <i className="uil-angle-double-left" />
             Back
@@ -275,7 +275,7 @@ const AddonsComponent = ({ history, id, tourData }) => {
             style={{ backgroundColor: "#F6851F" }}
             type="submit"
             className="font-16 btn-block col-2"
-            // onClick={toggleCategory}
+            onClick={() => toggle('7')}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />

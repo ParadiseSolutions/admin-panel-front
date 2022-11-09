@@ -77,13 +77,13 @@ const TableContainer = ({
     useRowSelect
   );
 
-  const generateSortingIndicator = (column) => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
-  };
+  // const generateSortingIndicator = (column) => {
+  //   return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+  // };
 
-  const onChangeInSelect = (event) => {
-    setPageSize(Number(event.target.value));
-  };
+  // const onChangeInSelect = (event) => {
+  //   setPageSize(Number(event.target.value));
+  // };
 
   const onChangeInInput = (event) => {
     const page = event.target.value ? Number(event.target.value) - 1 : 0;

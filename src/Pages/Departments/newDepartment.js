@@ -158,7 +158,7 @@ const NewDepartment = ({ history }) => {
               </div>
               <div className="text-sm-end">
                 <Button
-                  type="button"
+                  type="submit"
                   style={{ backgroundColor: "#F6851F", borderColor: "#F6851F" }}
                   className="waves-effect waves-light mb-3 btn btn-success"
                   // onClick={() => onClickNewContactProvider()}

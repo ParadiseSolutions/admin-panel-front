@@ -6,7 +6,7 @@ const Dashboard = () => {
         <div className="page-content">
         <Container fluid>
 
-        <h1>desde Dashboard</h1>
+        <h1> Dashboard</h1>
         </Container>
         </div>
         </>

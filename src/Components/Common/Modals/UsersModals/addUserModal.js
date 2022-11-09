@@ -37,11 +37,11 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
   }, []);
 
   // selects
-  const [department, setDepartment] = useState([]);
+  const [department, setDepartment] = useState(null);
   const onChangeSelectionDep = (value) => {
     setDepartment(value);
   };
-  const [rol, setRol] = useState([]);
+  const [rol, setRol] = useState(null);
   const onChangeSelectionRol = (value) => {
     setRol(value);
   };
@@ -78,8 +78,8 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
     }),
     onSubmit: (values) => {
       let data = {
-        department_id: department,
-        role_id: rol,
+        department_id: department ? department : null,
+        role_id: rol ? rol : null,
         first_name: values.first_name,
         last_name: values.last_name,
         email: values.email,
