@@ -86,55 +86,91 @@ useEffect(() =>{
       <Label className="form-label">Runs</Label>
       <div className="row">
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'1'} checked={janChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'1'} checked={janChecked} onChange={(e) => {
+            onClickDay(e.target.value) 
+            setJanChecked(!janChecked)}} 
+            />
           <Label className="form-label">Jan</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'2'} checked={febChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'2'} checked={febChecked} onChange={(e) => {
+            onClickDay(e.target.value) 
+            setfebChecked(!febChecked)}} />
           <Label className="form-label">Feb</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'3'} checked={marChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'3'} checked={marChecked} onChange={(e) =>{ 
+            onClickDay(e.target.value)
+            setmarChecked(!marChecked)
+          }
+            } />
           <Label className="form-label">Mar</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'4'} checked={aprChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'4'} checked={aprChecked} onChange={(e) =>{ 
+            onClickDay(e.target.value)
+            setaprChecked(!aprChecked)
+            }} />
           <Label className="form-label">Apr</Label> 
         </div>
       </div>
       <div className="row mt-3">
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'5'} checked={mayChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'5'} checked={mayChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setmayChecked(!mayChecked)}
+            } />
           <Label className="form-label">May</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'6'} checked={junChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'6'} checked={junChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setjunChecked(!junChecked)
+            }} />
           <Label className="form-label">Jun</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'7'} checked={julChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'7'} checked={julChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setjulChecked(!julChecked)
+            }} />
           <Label className="form-label">Jul</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'8'} checked={augChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'8'} checked={augChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setaugChecked(!augChecked)
+            }} />
           <Label className="form-label">Aug</Label>
         </div>
       </div>
       <div className="row mt-3">
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'9'} checked={sepChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'9'} checked={sepChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setsepChecked(!sepChecked)
+            }} />
           <Label className="form-label">Sep</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'10'} checked={octChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'10'} checked={octChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setoctChecked(!octChecked)
+            }} />
           <Label className="form-label">Oct</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'11'} checked={novChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'11'} checked={novChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setnovChecked(!novChecked)
+            }} />
           <Label className="form-label">Nov</Label>
         </div>
         <div className="col d-flex">
-          <Input type="checkbox" className="mx-2" value={'12'} checked={dicChecked} onChange={(e) => onClickDay(e.target.value)} />
+          <Input type="checkbox" className="mx-2" value={'12'} checked={dicChecked} onChange={(e) => {
+            onClickDay(e.target.value)
+            setdicChecked(!dicChecked)
+            }} />
           <Label className="form-label">Dec</Label>
         </div>
       </div>

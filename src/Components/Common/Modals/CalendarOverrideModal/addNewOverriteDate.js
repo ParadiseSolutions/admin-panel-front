@@ -21,6 +21,7 @@ const AddNewOverriteDate = ({
   newOverriteDate,
   setNewOverriteDate,
   onClickAddLocation,
+  refresh
 }) => {
   //initial data
   const { id } = useParams();
@@ -73,6 +74,7 @@ const AddNewOverriteDate = ({
             Swal.fire("Success!", "Date has been created", "success").then(
               () => {
                 setNewOverriteDate(false)
+                refresh()
                 
               }
             );

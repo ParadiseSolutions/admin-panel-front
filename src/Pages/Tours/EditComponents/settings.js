@@ -89,6 +89,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
     );
   }, [tourSettings]);
   //form creation
+
+  console.log('id',availableFromIDs)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -285,6 +287,10 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           </Row>
           <Row className="col-12 d-flex justify-content-start">
             <Row>
+
+              {tourSettings?.website_id !== 3 
+              ? 
+              <>
               <Col className="col-1">
                 <Label className="form-label mt-2">Seasonal Prices</Label>
                 <div className="form-check form-switch form-switch-md mx-4 ">
@@ -334,6 +340,9 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   </Select>
                 </div>
               </Col>
+              </>
+              :
+              <>
               <Col className="col-2 d-flex justify-content-center ">
                 <Label className="form-label mt-5">Available From: </Label>
               </Col>
@@ -357,6 +366,12 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   </>
                 ) : null}
               </Col>
+              </>
+              }
+              
+
+
+              
             </Row>
           </Row>
           <Row className="col-12 p-1" style={{ backgroundColor: "#FFEFDE" }}>

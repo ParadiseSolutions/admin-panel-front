@@ -60,6 +60,19 @@ const Schedules = ({ tourData, toggle }) => {
     });
   }, [tourData]);
 
+  //refresh tables
+  const refresh = () =>{
+    getScheduleTimeAPI(TourID).then((resp) => {
+      setSchedulesData(resp.data.data);
+    });
+    getScheduleDatesOverrideAPI(TourID).then((resp) => {
+      setDatesOverrideData(resp.data.data);
+    });
+    getSeasonalityAPI(TourID).then((resp) =>{
+      setSeasonalityData(resp.data.data)
+    })
+  }
+
   //add new schedule
   const [newSchedule, setNewSchedule] = useState(false);
   //add new overrite date
@@ -474,16 +487,18 @@ const Schedules = ({ tourData, toggle }) => {
         newSchedule={newSchedule}
         setNewSchedule={setNewSchedule}
         tourData={tourData}
+        refresh={refresh}
       />
       <AddNewOverriteDate
         newOverriteDate={newOverriteDate}
         setNewOverriteDate={setNewOverriteDate}
-        
+        refresh={refresh}
       />
       <EdditOverriteDate
         editOverriteDate={editOverriteDate}
         setEditOverriteDate={setEditOverriteDate}
         editOverriteDateData={editOverriteDateData}
+        refresh={refresh}
       />
     </>
   );

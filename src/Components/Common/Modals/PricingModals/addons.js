@@ -57,6 +57,9 @@ const Addons = ({
   const [matchQuantitySelected, setMatchQuantitySelected] = useState(
     dataEdit ? dataEdit?.match_qty_id : ""
   );
+  const [balance, setBalance] = useState(
+    dataEdit?.active === 1 ? true : false
+  );
   useEffect(() => {
     if (newAddon) {
       getPricingOptionsAPI(52).then((resp) => {
@@ -71,8 +74,15 @@ const Addons = ({
       getPricingOptionsAPI(55).then((resp) => {
         setPriceCollect(resp.data.data);
       });
+      
     }
+
   }, [newAddon]);
+
+  useEffect(() => {
+    setBalance(dataEdit?.active === 1 ? true : false)
+  }, [dataEdit]);
+
 
   // console.log(priceOptions);
   // console.log(priceTypeSelected);
@@ -100,10 +110,10 @@ const Addons = ({
       title: "Masseuse ($300)",
       description: null,
       option_label: null,
-      show_balance_due: 0,
+      show_balance_due: balance,
       price: dataEdit?.price ? dataEdit?.price : "",
       you_save: dataEdit?.you_save ? dataEdit?.you_save : "",
-      rate: dataEdit?.rate ? dataEdit?.rate : "",
+      net_rate: dataEdit?.net_rate ? dataEdit?.net_rate : "",
       commission: dataEdit?.commission ? dataEdit?.commission : "",
       deposit: dataEdit?.deposit ? dataEdit?.deposit : "",
       net_price: dataEdit?.net_price ? dataEdit?.net_price : "",
@@ -134,13 +144,13 @@ const Addons = ({
         // title: "Masseuse ($300)",
         // description: null,
         // option_label: null,
-        show_balance_due: 0,
+        show_balance_due: balance,
         price: values.price,
         you_save: values.you_save,
-        rate: values.rate,
+        net_rate: values.net_rate,
         commission: values.commission,
         deposit: values.deposit,
-        net_rate: values.net_price,
+        net_price: values.net_price,
         min_qty: values.min_qty,
         max_qty: values.max_qty,
       };
@@ -369,9 +379,9 @@ const Addons = ({
                             name="active"
                             placeholder=""
                             type="checkbox"
-                            checked={dataEdit?.active ? true : false}
+                            checked={balance}
                             className="form-check-input"
-                            onChange={validationType.handleChange}
+                            onChange={() => setBalance(!balance)}
                             onBlur={validationType.handleBlur}
                             value={validationType.values.active || ""}
                             invalid={
@@ -517,23 +527,23 @@ const Addons = ({
                   <div className="form-outline mb-4">
                     <Label className="form-label">Rate %</Label>
                     <Input
-                      name="rate"
+                      name="net_rate"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.rate || ""}
+                      value={validationType.values.net_rate || ""}
                       invalid={
-                        validationType.touched.rate &&
-                        validationType.errors.rate
+                        validationType.touched.net_rate &&
+                        validationType.errors.net_rate
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.rate &&
-                    validationType.errors.rate ? (
+                    {validationType.touched.net_rate &&
+                    validationType.errors.net_rate ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.rate}
+                        {validationType.errors.net_rate}
                       </FormFeedback>
                     ) : null}
                   </div>

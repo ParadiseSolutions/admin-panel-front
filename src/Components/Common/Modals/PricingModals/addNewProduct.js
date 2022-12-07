@@ -165,7 +165,7 @@ const AddNewProductPricing = ({
         ],
       };
 
-      if (dataEdit) {
+      if (dataEdit && copyProduct === false) {
         updatePriceAPI(editProductID, data).then((resp) => {
           setAddNewProduct(false);
           refreshTable();
