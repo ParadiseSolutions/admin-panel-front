@@ -21,6 +21,7 @@ const EdditOverriteDate = ({
   editOverriteDate,
   setEditOverriteDate,
   editOverriteDateData,
+  refresh
 }) => {
   //initial data
   const { id } = useParams();
@@ -109,6 +110,7 @@ const EdditOverriteDate = ({
             Swal.fire("Success!", "Location has been created", "success").then(
               () => {
                 setEditOverriteDate(false);
+                refresh()
               }
             );
           }

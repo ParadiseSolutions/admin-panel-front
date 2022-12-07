@@ -34,7 +34,6 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
     });
   }, [newSchedule]);
 
-  console.log("tourData", tourData);
   useEffect(() => {
     if (tourData) {
       getPricesPricingAPI(tourData.id).then((resp) => {
@@ -46,7 +45,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
   // type onChange
   const [typeSelected, setTypeSelected] = useState(null);
   const onChangeType = (selectionType) => {
-    console.log(selectionType);
+   
     setTypeSelected(selectionType);
   };
 
@@ -128,7 +127,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
     initialValues: {
       start_time_single: '',
       from_intervals: '',
-      to_intervals:'',
+      to_interval:'',
       duration: '',
       from: '',
       to: '',
@@ -145,10 +144,10 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values, { resetForm }) => {
-      console.log('valores',values)
+      
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
       const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
-      const startTimeIntervalsTo = `${values.to_intervals} ${timeFrameIntervalTo}`;
+      const startTimeIntervalsTo = `${values.to_interval} ${timeFrameIntervalTo}`;
       const daysListString = daysList.toString();
       
       let multiTimesList = []
@@ -163,7 +162,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
         type_id: typeSelected,
         detail: multiTimesList.toString(),
         from: values.start_time_single ? startTimeSingle : values.from_intervals ? startTimeIntervalsFrom : '', // cambiarlo despues por una validacion
-        to: values.to_intervals ? startTimeIntervalsTo : '',
+        to: values.to_interval ? startTimeIntervalsTo : '',
         runs: daysListString,
         temporary_schedule: activeDep === true ? 1 : 0,
         from_date: values.from_date,
@@ -174,7 +173,6 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
       };
 
       
-      console.log("data a enviar", data);
       postSchedule(id, data).then((resp) => {
         if (resp.data.status === 201) {
           Swal.fire("Success!", "Schedule has been created", "success").then(
@@ -201,7 +199,6 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
       resetForm({ values: "" });
     },
   });
-  console.log(typeSelected)
   return (
     <Modal
       centered
@@ -494,24 +491,25 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
                     <div className="col-4 d-flex mt-5">
                       <div className="input-group">
                         <div className="input-group-text">To</div>
+                        
                         <Input
-                          name="to_intervals"
+                          name="to_interval"
                           className="form-control"
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
-                          value={validationType.values.to || ""}
+                          value={validationType.values.to_interval || ""}
                           invalid={
-                            validationType.touched.to_intervals &&
-                            validationType.errors.to_intervals
+                            validationType.touched.to_interval &&
+                            validationType.errors.to_interval
                               ? true
                               : false
                           }
                         />
-                        {validationType.touched.to_intervals &&
-                        validationType.errors.to_intervals ? (
+                        {validationType.touched.to_interval &&
+                        validationType.errors.to_interval ? (
                           <FormFeedback type="invalid">
-                            {validationType.errors.to_intervals}
+                            {validationType.errors.to_interval}
                           </FormFeedback>
                         ) : null}
                         <Input
