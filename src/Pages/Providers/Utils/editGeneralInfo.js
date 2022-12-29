@@ -162,29 +162,29 @@ const EditGeneralInformation = ({ data }) => {
 
       console.log(data);
 
-      updateProviderAPI(initialData.id, data)
-        .then((resp) => {
-          console.log(resp.data);
-          if (resp.data.status === 200) {
-            Swal.fire(
-              "Edited!",
-              "General Information has been edited.",
-              "success"
-            ).then(() => {});
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-          Swal.fire(
-            "Error!",
-            `${
-              error.response.data.data.name
-                ? error.response.data.data.name
-                : error.response.data.data.code
-            }`,
-            "error"
-          );
-        });
+      // updateProviderAPI(initialData.id, data)
+      //   .then((resp) => {
+      //     console.log(resp.data);
+      //     if (resp.data.status === 200) {
+      //       Swal.fire(
+      //         "Edited!",
+      //         "General Information has been edited.",
+      //         "success"
+      //       ).then(() => {});
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log(error.response);
+      //     Swal.fire(
+      //       "Error!",
+      //       `${
+      //         error.response.data.data.name
+      //           ? error.response.data.data.name
+      //           : error.response.data.data.code
+      //       }`,
+      //       "error"
+      //     );
+      //   });
     },
   });
 
@@ -354,7 +354,7 @@ const EditGeneralInformation = ({ data }) => {
                         placeholder=""
                         type="checkbox"
                         className="form-check-input"
-                        onChange={validationType.handleChange}
+                        onChange={() => setNotification(!notification)}
                         defaultChecked={notification}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.notification_email || ""}

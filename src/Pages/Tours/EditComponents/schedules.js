@@ -90,12 +90,15 @@ const Schedules = ({ tourData, toggle }) => {
 
   //delete season
   const onDeleteSeason = (data) => {
+    refresh()
     deleteSeasonalityAPI(tourData.id, data.id).then((resp) => {
-      Swal.fire("Deleted!", "Season has been deleted.", "success").then(() => {
+      Swal.fire("Deleted!", "Time has been deleted.", "success").then(() => {
         // history.goBack();
+       
       });
       getSeasonsListAPI(tourData.id).then((resp) => {
         // setSeasonsData(resp.data.data);
+   
       });
     });
   };
@@ -103,8 +106,11 @@ const Schedules = ({ tourData, toggle }) => {
 
   //delete overrite date
   const onDeleteOverriteDate = (data) => {
+
     deleteOverriteDate(tourData.id, data.id).then((resp) => {
-      Swal.fire("Deleted!", "Season has been deleted.", "success")
+      refresh()
+      Swal.fire("Deleted!", "Time has been deleted.", "success")
+      
       getScheduleDatesOverrideAPI(TourID).then((resp) => {
         setDatesOverrideData(resp.data.data);
       });
@@ -112,6 +118,7 @@ const Schedules = ({ tourData, toggle }) => {
     });
   };
 
+  console.log('tiempos ----',schedulesData)
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -141,6 +148,7 @@ const Schedules = ({ tourData, toggle }) => {
           if (resp.data.status === 201) {
             Swal.fire("Created!", "Seasonality has been created.", "success").then(
               () => {
+                refresh()
                 // history.goBack();
               }
             );
@@ -201,7 +209,9 @@ const Schedules = ({ tourData, toggle }) => {
                               return (
                                 <tr key={index}>
                                   <th scope="row">{schedule.name}</th>
-                                  <td>{schedule.start_date}</td>
+                                  <td>{schedule.type_id === 4 ? 'Single Schedule' : schedule.type_id === 3 ? 'Multiple Schedule' : 'Intervals'}</td>
+                                  <td>{schedule.detail === '' ? ` ${schedule.from} ${schedule.to} ` : schedule.detail}</td>
+                                  <td> {schedule.type_id === 3 ? '-' : `${schedule.duration} ${schedule.units}`}  </td>
                                   <td>{schedule.end_date}</td>
                                   <td>
                                     <div

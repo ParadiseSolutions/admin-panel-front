@@ -108,7 +108,7 @@ export const getSeasonalityAPI = (tourID) => {
 };
 export const postSeasonalityAPI = (tourID, body) => {
   const url = `${API_URL}/tours/${tourID}/seasonality`;
-  return axios.put (url, body, {
+  return axios.post (url, body, {
     headers: options,
   });
 };

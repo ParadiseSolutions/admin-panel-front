@@ -23,7 +23,7 @@ import { map } from "lodash";
 import Switch from "react-switch";
 import { useParams } from "react-router-dom";
 
-const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
+const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh }) => {
   const { id } = useParams();
   //initial Data
   const [scheduleTypesData, setSchedulesTypesData] = useState([]);
@@ -178,7 +178,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
           Swal.fire("Success!", "Schedule has been created", "success").then(
             () => {
               setNewSchedule(false)
-              
+              refresh()
             }
           );
         }
@@ -379,30 +379,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData }) => {
                         </Col>
                       </>
                     ) : null}
-                    {typeSelected && typeSelected === "3" ? (
-                      <>
-                        <Col className="col-4">
-                          <Label className="form-label">Time Slots</Label>
-                          <div className="input-group">
-                            <Input
-                              type="select"
-                              name=""
-                              onChange={(e) => {
-                                onChangeType(e.target.value);
-                              }}
-                              onBlur={validationType.handleBlur}
-                            >
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
-                              <option>5</option>
-                              <option>6</option>
-                            </Input>
-                          </div>
-                        </Col>
-                      </>
-                    ) : null}
+                    
                     {typeSelected && typeSelected === "6" ? (
                       <>
                         <Col className="col-4 ">
