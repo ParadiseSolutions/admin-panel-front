@@ -121,6 +121,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
   const [timeFrameMulti6, setTimeFrameMulti6] = useState('AM')
   const [timeFrameIntervalFrom, setTimeFrameIntervalFrom] = useState('AM')
   const [timeFrameIntervalTo, setTimeFrameIntervalTo] = useState('AM')
+  const [unitSelected, setUnitSelected] = useState('Hours')
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -155,7 +156,19 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
         multiTimesList.push([ ...multiTimesList, `${values.first_field_multi} ${timeFrameMulti1}`])
       }
       if (values.second_field_multi !== '') {
-        multiTimesList.push([ ...multiTimesList, `${values.second_field_multi} ${timeFrameMulti1}`])
+        multiTimesList.push([ ...multiTimesList, `${values.second_field_multi} ${timeFrameMulti2}`])
+      }
+      if (values.third_field_multi !== '') {
+        multiTimesList.push([ ...multiTimesList, `${values.third_field_multi} ${timeFrameMulti3}`])
+      }
+      if (values.fourth_field_multi !== '') {
+        multiTimesList.push([ ...multiTimesList, `${values.fourth_field_multi} ${timeFrameMulti4}`])
+      }
+      if (values.fifth_field_multi !== '') {
+        multiTimesList.push([ ...multiTimesList, `${values.fifth_field_multi} ${timeFrameMulti5}`])
+      }
+      if (values.sixth_field_multi !== '') {
+        multiTimesList.push([ ...multiTimesList, `${values.sixth_field_multi} ${timeFrameMulti6}`])
       }
 
       let data = {
@@ -167,7 +180,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
         temporary_schedule: activeDep === true ? 1 : 0,
         from_date: values.from_date,
         to_date: values.to_date,
-        units: "Hours",
+        units: unitSelected,
         duration: values.duration ? values.duration : "",
         price_id: productSelected,
       };
@@ -341,14 +354,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                           <div className="form-outline">
                             <Input
                               type="select"
-                              name=""
-                              // onChange={(e) => {
-                              //   onChangeType(e.target.value);
-                              // }}
+                              name="time_unit"
+                              onChange={(e) => {
+                                setUnitSelected(e.target.value);
+                              }}
                               onBlur={validationType.handleBlur}
                             >
-                              <option>Hours</option>
-                              <option>Minutes</option>
+                              <option value='Hours'>Hours</option>
+                              <option value='Minutes'>Minutes</option>
                             </Input>
                           </div>
                         </Col>
@@ -389,12 +402,12 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                               type="select"
                               name=""
                               onChange={(e) => {
-                                onChangeType(e.target.value);
+                                setUnitSelected(e.target.value);
                               }}
                               onBlur={validationType.handleBlur}
                             >
-                              <option>Hours</option>
-                              <option>Minutes</option>
+                              <option value='Hours'>Hours</option>
+                              <option value='Minutes'>Minutes</option>
                             </Input>
                           </div>
                         </Col>
