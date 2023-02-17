@@ -126,7 +126,6 @@ const EditTour = ({ history }) => {
                   </NavLink>
                 </NavItem>
 
-                {tourData?.website_id === 3 ? (
                   <NavItem>
                     <NavLink
                       style={{
@@ -149,7 +148,6 @@ const EditTour = ({ history }) => {
                       <span className="d-none d-sm-block">+ URLs</span>
                     </NavLink>
                   </NavItem>
-                ) : null}
 
                 <NavItem>
                   <NavLink
