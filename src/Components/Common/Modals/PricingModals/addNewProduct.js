@@ -53,20 +53,20 @@ const AddNewProductPricing = ({
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
   );
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
   useEffect(() => {
     if (addNewProduct) {
-      getPricingOptionsAPI(6).then((resp) => {
+      getPricingOptionsAPI(1).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
-      getPricingOptionsAPI(7).then((resp) => {
+      getPricingOptionsAPI(2).then((resp) => {
         setPriceOptions(resp.data.data);
       });
-      getPricingOptionsAPI(9).then((resp) => {
+      getPricingOptionsAPI(4).then((resp) => {
         setPriceCollect(resp.data.data);
       });
-      getPricingOptionsAPI(29).then((resp) => {
+      getPricingOptionsAPI(28).then((resp) => {
         setPriceSeason(resp.data.data);
       });
     }
@@ -374,9 +374,9 @@ const AddNewProductPricing = ({
                                 key={index}
                                 value={season.id}
                                 selected={
-                                  dataEdit && dataEdit.pricedetails
+                                  dataEdit && dataEdit.pricedetails && dataEdit.pricedetails.length > 3
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >

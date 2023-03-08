@@ -58,7 +58,7 @@ const Fishing = ({
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
   );
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
 
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] =
@@ -123,8 +123,8 @@ const Fishing = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[4]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[4]?.max : "",
+      min: dataEdit ? dataEdit?.pricedetails[5]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[5]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
@@ -170,9 +170,9 @@ const Fishing = ({
           {
             pricing_option_id: 36,
             source_id: priceCollectSelected,
-            min: 1,
-            max: 3,
-            label: "px",
+            min: null,
+            max: null,
+            label: null,
           },
           {
             pricing_option_id: 32,
@@ -186,8 +186,6 @@ const Fishing = ({
             source_id: priceCharterTypeSelected
               ? priceCharterType
               : dataEdit.pricedetails[4].source_id,
-            min: values.min,
-            max: values.max,
             label: null,
           },
           {
@@ -195,6 +193,8 @@ const Fishing = ({
             source_id: priceDurationSelected
               ? priceDurationSelected
               : dataEdit.pricedetails[5].source_id,
+            min: values.min,
+            max: values.max,
             label: null,
           },
           {
@@ -421,7 +421,7 @@ const Fishing = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >

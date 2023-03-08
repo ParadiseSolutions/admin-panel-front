@@ -59,7 +59,7 @@ const AddNewAirportTransfer = ({
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
   );
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
   const [priceDirectionSelected, setPriceDirectionSelected] = useState();
@@ -71,13 +71,13 @@ const AddNewAirportTransfer = ({
       getPricingOptionsAPI(10).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
-      getPricingOptionsAPI(7).then((resp) => {
+      getPricingOptionsAPI(11).then((resp) => {
         setPriceOptions(resp.data.data);
       });
-      getPricingOptionsAPI(9).then((resp) => {
+      getPricingOptionsAPI(14).then((resp) => {
         setPriceCollect(resp.data.data);
       });
-      getPricingOptionsAPI(29).then((resp) => {
+      getPricingOptionsAPI(30).then((resp) => {
         setPriceSeason(resp.data.data);
       });
       getPricingOptionsAPI(12).then((resp) => {
@@ -171,7 +171,7 @@ const AddNewAirportTransfer = ({
             label: null,
           },
           {
-            pricing_option_id: 7,
+            pricing_option_id: 11,
             source_id: priceOptionSelected
               ? priceOptionSelected
               : dataEdit.pricedetails[1].source_id,
@@ -180,7 +180,7 @@ const AddNewAirportTransfer = ({
             label: null,
           },
           {
-            pricing_option_id: 9,
+            pricing_option_id: 14,
             source_id: priceCollectSelected
               ? priceCollectSelected
               : dataEdit.pricedetails[2].source_id,
@@ -189,10 +189,10 @@ const AddNewAirportTransfer = ({
             label: "px",
           },
           {
-            pricing_option_id: 29,
+            pricing_option_id: 30,
             source_id: priceSeasonSelected
               ? priceSeasonSelected
-              : dataEdit.pricedetails[3].source_id,
+              : dataEdit.pricedetails[3]?.source_id,
             min: null,
             max: null,
             label: null,
@@ -452,7 +452,7 @@ const AddNewAirportTransfer = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >
