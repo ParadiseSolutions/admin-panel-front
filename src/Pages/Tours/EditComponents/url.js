@@ -164,17 +164,18 @@ const URL = ({ tourData, toggle }) => {
       console.log(values);
       let data = {
         tour_id: tourData.id,
-        path_type_id: urlTypeSelected,
+        path_type_id: urlTypeSelected ? urlTypeSelected : editTypeURL,
         available_from_id: locationSelected ? locationSelected : "",
         url: `${values.path}${values.complement}`,
       };
+      console.log(data)
 
       if (editURLID) {
         updateURLAPI(editURLID, data)
           .then((resp) => {
             console.log(resp.data);
-            if (resp.data.status === 201) {
-              Swal.fire("Created!", "URL has been created.", "success");
+            if (resp.data.status === 200) {
+              Swal.fire("Edited!", "URL has been created.", "success");
               getURLsAPI(tourData.id).then((resp) => {
                 setData(resp.data.data);
               });
@@ -188,7 +189,7 @@ const URL = ({ tourData, toggle }) => {
         postURLAPI(data)
           .then((resp) => {
             console.log(resp.data);
-            if (resp.data.status === 201) {
+            if (resp.data.status === 200) {
               Swal.fire("Edited!", "URL has been edited.", "success");
               getURLsAPI(tourData.id).then((resp) => {
                 setData(resp.data.data);

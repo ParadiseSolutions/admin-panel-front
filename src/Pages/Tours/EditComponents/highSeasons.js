@@ -131,6 +131,8 @@ const HighSeasons = ({ tourData, toggle }) => {
     }
   };
 
+  console.log(seasonToEdit)
+
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -154,11 +156,14 @@ const HighSeasons = ({ tourData, toggle }) => {
           start_date: values.from,
           end_date: values.to,
         };
-
+        console.log('desde put', data)
         putSeasonalityAPI(tourData.id, data)
           .then((resp) => {
             console.log(resp.data);
             if (resp.data.status === 200) {
+              getSeasonsListAPI(tourData.id).then((resp) => {
+                setSeasonsData(resp.data.data);
+              });
               Swal.fire("Edited!", "Season has been edited.", "success").then(
                 () => {
                   // history.goBack();
@@ -176,10 +181,16 @@ const HighSeasons = ({ tourData, toggle }) => {
           start_date: values.from,
           end_date: values.to,
         };
+        console.log('desde post', data)
         postSeasonalityAPI(tourData.id, data)
           .then((resp) => {
             console.log(resp.data);
             if (resp.data.status === 201) {
+              if (tourData?.id) {
+                getSeasonsListAPI(tourData.id).then((resp) => {
+                  setSeasonsData(resp.data.data);
+                });
+              }
               Swal.fire("Created!", "Season has been created.", "success").then(
                 () => {
                   // history.goBack();
@@ -244,6 +255,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                         name=""
                         onChange={(e) => {
                           setSeasonSelected(e.target.value);
+                          setSeasonToEdit(e.target.value)
                         }}
                         onBlur={validationType.handleBlur}
                       >
