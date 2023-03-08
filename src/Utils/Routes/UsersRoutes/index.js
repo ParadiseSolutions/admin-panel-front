@@ -1,13 +1,14 @@
 import React from 'react'
 import { Route, Switch } from "react-router-dom";
-import Users from '../../../Pages/Users'
+import Users from '../../../Pages/Users';
 
-const UsersRoutes = () => {
+const DepartmentsRoutes = () => {
     return (
         <Switch>
             <Route exact path="/users" component={Users} />
+            
         </Switch>
     )
 }
 
-export default UsersRoutes
+export default DepartmentsRoutes

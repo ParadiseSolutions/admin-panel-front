@@ -22,9 +22,9 @@ body[data-layout-size="boxed"] {
     }
 
     &.vertical-collpsed {
-        #page-topbar {
-            max-width: calc(#{$boxed-layout-width} - #{$sidebar-collapsed-width});
-        }
+        // #page-topbar {
+        //     max-width: calc(#{$boxed-layout-width} - #{$sidebar-collapsed-width});
+        // }
         .footer {
             max-width: calc(#{$boxed-layout-width} - #{$sidebar-collapsed-width});
         }

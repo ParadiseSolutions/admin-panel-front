@@ -54,6 +54,7 @@
 .main-content {
     margin-left: $sidebar-width;
     overflow: hidden;
+    background-color: #3dc7f4;
 
     .content {
         padding: 0 15px 10px 15px;
@@ -227,9 +228,9 @@
 // Enlarge menu
 .vertical-collpsed {
 
-    @media (min-width: 769px) {
-        min-height: 1450px;
-    }
+    // @media (min-width: 769px) {
+    //     min-height: 1450px;
+    // }
 
     .main-content {
         margin-left: $sidebar-collapsed-width;
