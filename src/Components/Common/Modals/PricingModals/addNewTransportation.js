@@ -182,7 +182,7 @@ const AddNewTransportation = ({
             pricing_option_id: 31,
             source_id: priceSeasonSelected
               ? priceSeasonSelected
-              : dataEdit.pricedetails[3].source_id,
+              : dataEdit.pricedetails[3]?.source_id,
             min: null,
             max: null,
             label: null,
@@ -439,7 +439,7 @@ const AddNewTransportation = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >
