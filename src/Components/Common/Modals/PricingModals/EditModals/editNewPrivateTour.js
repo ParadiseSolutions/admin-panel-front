@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import NewProductPricingImage from "../../../Assets/images/newProductPricing.png";
-import {
-  getPricingOptionsAPI,
-  postPricesAPI,
-  getPriceAPI,
-  updatePriceAPI,
-} from "../../../../Utils/API/Tours";
+import PrivateTourImage from "../../../../Assets/images/private-tour.png";
 import {
   Row,
   Col,
@@ -18,104 +12,49 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { getPricingOptionsAPI, postPricesAPI } from "../../../../../Utils/API/Tours";
 import { map } from "lodash";
 
-const AddNewProductPricing = ({
-  addNewProduct,
-  setAddNewProduct,
-  refreshTable,
-  editProductID,
-  tourData,
-  copyProduct
-}) => {
-  //edit data
-  const [dataEdit, setDataEdit] = useState();
-  useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
-        setDataEdit(resp.data.data[0]);
-      });
-    }
-  }, [editProductID]);
+const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProduct }) => {
 
-  //combo box request
-  const [priceTypeData, setPriceTypeData] = useState([]);
-  const [priceOptions, setPriceOptions] = useState([]);
-  const [priceCollect, setPriceCollect] = useState([]);
-  const [priceSeason, setPriceSeason] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
-  );
-  const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
-  );
-  const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
-  );
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
-  );
-  useEffect(() => {
-    if (addNewProduct) {
-      getPricingOptionsAPI(6).then((resp) => {
-        setPriceTypeData(resp.data.data);
-      });
-      getPricingOptionsAPI(7).then((resp) => {
-        setPriceOptions(resp.data.data);
-      });
-      getPricingOptionsAPI(9).then((resp) => {
-        setPriceCollect(resp.data.data);
-      });
-      getPricingOptionsAPI(29).then((resp) => {
-        setPriceSeason(resp.data.data);
-      });
-    }
-  }, [addNewProduct]);
-
-  //checkbox
-  const [activeCheckbox, setActiveCheckbox] = useState(null);
-  const [balanceDueCheckbox, setBalanceDueCheckbox] = useState(null);
-
-  useEffect(() => {
-    setActiveCheckbox(dataEdit?.active === 1 ? true : false);
-    setBalanceDueCheckbox(dataEdit?.show_balance_due === 1 ? true : false);
-  }, [dataEdit]);
-  const onChangeActiveToggle = () => {
-    setActiveCheckbox(!activeCheckbox);
-  };
-  const onChangeBalanceDueToggle = () => {
-    setBalanceDueCheckbox(!balanceDueCheckbox);
-  };
-
+   //combo box request
+   const [priceTypeData, setPriceTypeData] = useState([]);
+   const [priceOptions, setPriceOptions] = useState([]);
+   const [priceCollect, setPriceCollect] = useState([]);
+   const [priceSeason, setPriceSeason] = useState([]);
+   const [priceTypeSelected, setPriceTypeSelected] = useState();
+   const [priceOptionSelected, setPriceOptionSelected] = useState();
+   const [priceCollectSelected, setPriceCollectSelected] = useState();
+   const [priceSeasonSelected, setPriceSeasonSelected] = useState();
+   useEffect(() => {
+     if (newPrivateTour) {
+       getPricingOptionsAPI(6).then((resp) => {
+         setPriceTypeData(resp.data.data);
+       });
+       getPricingOptionsAPI(7).then((resp) => {
+         setPriceOptions(resp.data.data);
+       });
+       getPricingOptionsAPI(9).then((resp) => {
+         setPriceCollect(resp.data.data);
+       });
+       getPricingOptionsAPI(29).then((resp) => {
+         setPriceSeason(resp.data.data);
+       });
+     }
+   }, [newPrivateTour]);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
       product_name: tourData ? tourData.name : "",
       sku: tourData ? tourData.sku : "",
-      public_price: dataEdit ? dataEdit.public : "",
-      provider_price: dataEdit ? dataEdit.provider_price : "",
-      rate: dataEdit ? dataEdit.rate : "",
-      net_price: dataEdit ? dataEdit.net_rate : "",
-      compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
-      ship_price: dataEdit ? dataEdit.ship_price : "",
-      compare_at: dataEdit ? dataEdit.compare_at : "",
-      our_price: dataEdit ? dataEdit.price : "",
-      you_save: dataEdit ? dataEdit.you_save : "",
-      eff_rate: dataEdit ? dataEdit.eff_rate : "",
-      commission: dataEdit ? dataEdit.commission : "",
-      deposit: dataEdit ? dataEdit.deposit : "",
-      balance_due: dataEdit ? dataEdit.net_price : "",
-      active: dataEdit?.active ? 1 : 0,
-      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
     //   last_name: Yup.string().required("Last Name is required"),
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
-    onSubmit: (values, { resetForm }) => {
-     
+    onSubmit: (values, {resetForm}) => {
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -131,61 +70,23 @@ const AddNewProductPricing = ({
         eff_rate: values.eff_rate,
         commission: values.commission,
         deposit: values.deposit,
-        net_price: values.balance_due,
-        active: activeCheckbox ? 1 : 0,
-        show_balance_due: balanceDueCheckbox ? 1 : 0,
-        price_details: [
-          {
-            pricing_option_id: 1,
-            source_id: priceTypeSelected,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 2,
-            source_id: priceOptionSelected,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 4,
-            source_id: priceCollectSelected,
-            min: 1,
-            max: 3,
-            label: "px",
-          },
-          {
-            pricing_option_id: 28,
-            source_id: priceSeasonSelected,
-            min: null,
-            max: null,
-            label: null,
-          },
-        ],
+        balance_due: values.balance_due,
+
       };
 
-      if (dataEdit && copyProduct === false) {
-        updatePriceAPI(editProductID, data).then((resp) => {
-          setAddNewProduct(false);
-          refreshTable();
-        });
-      } 
-      if(copyProduct || dataEdit === undefined){
-        postPricesAPI(data).then((resp) => {
-          setAddNewProduct(false);
-          refreshTable();
-        });
-      }
-      resetForm({ values: "" });
+      postPricesAPI(data).then((resp) =>{
+        console.log(resp)
+        setNewPrivateTour(false);
+      })
+
+      resetForm({values: ''})
     },
   });
   return (
     <Modal
       centered
       size="xl"
-      isOpen={addNewProduct}
+      isOpen={newPrivateTour}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -194,10 +95,12 @@ const AddNewProductPricing = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ New Product - Tour</h1>
+        <h1 className="modal-title mt-0 text-white">
+          + New Product - Private Tour
+        </h1>
         <button
           onClick={() => {
-            setAddNewProduct(false);
+            setNewPrivateTour(false);
           }}
           type="button"
           className="close"
@@ -214,7 +117,7 @@ const AddNewProductPricing = ({
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            validationType.handleSubmit();
+            // validationType.handleSubmit();
             return false;
           }}
           className="custom-validation"
@@ -222,9 +125,9 @@ const AddNewProductPricing = ({
           <Row xl={12} className="d-flex">
             <Col className="col-3">
               <img
-                src={NewProductPricingImage}
+                src={PrivateTourImage}
                 alt="new-product"
-                style={{ height: "560px", width: "260px" }}
+                style={{ height: "590px", width: "260px" }}
               />
             </Col>
             <Col className="col-9">
@@ -271,16 +174,7 @@ const AddNewProductPricing = ({
                         <option>Select....</option>
                         {map(priceTypeData, (type, index) => {
                           return (
-                            <option
-                              key={index}
-                              value={type.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? type.id ===
-                                    dataEdit.pricedetails[0].source_id
-                                  : false
-                              }
-                            >
+                            <option key={index} value={type.id}>
                               {type.text}
                             </option>
                           );
@@ -303,16 +197,7 @@ const AddNewProductPricing = ({
                         <option>Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
-                            <option
-                              key={index}
-                              value={option.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? option.id ===
-                                    dataEdit.pricedetails[1].source_id
-                                  : false
-                              }
-                            >
+                            <option key={index} value={option.id}>
                               {option.text}
                             </option>
                           );
@@ -335,16 +220,7 @@ const AddNewProductPricing = ({
                         <option>Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
-                            <option
-                              key={index}
-                              value={collect.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? collect.id ===
-                                    dataEdit.pricedetails[2].source_id
-                                  : false
-                              }
-                            >
+                            <option key={index} value={collect.id}>
                               {collect.text}
                             </option>
                           );
@@ -353,107 +229,93 @@ const AddNewProductPricing = ({
                     </div>
                   </Col>
                   <Col className="col-2">
-                    {tourData?.seasonality === 1 ? (
-                      <div
-                        className="form-outline"
-                        style={{ marginRight: "20px", marginLeft: "-20px" }}
+                  {tourData?.seasonality === 1 ?  
+                    <div
+                      className="form-outline"
+                      style={{ marginRight: "20px", marginLeft: "-20px" }}
+                    >
+                      <Label className="form-label">Season</Label>
+                      <Input
+                        type="select"
+                        name="season"
+                        onChange={(e) => {
+                          setPriceSeasonSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
                       >
-                        <Label className="form-label">Season</Label>
-                        <Input
-                          type="select"
-                          name="season"
-                          onChange={(e) => {
-                            setPriceSeasonSelected(e.target.value);
-                          }}
-                          onBlur={validationType.handleBlur}
-                          //   value={validationType.values.department || ""}
-                        >
-                          <option>Select....</option>
-                          {map(priceSeason, (season, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={season.id}
-                                selected={
-                                  dataEdit && dataEdit.pricedetails
-                                    ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
-                                    : false
-                                }
-                              >
-                                {season.text}
-                              </option>
-                            );
-                          })}
-                        </Input>
-                      </div>
-                    ) : null}
+                        <option>Select....</option>
+                        {map(priceSeason, (season, index) => {
+                          return (
+                            <option key={index} value={season.id}>
+                              {season.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  
+                  : null}
                   </Col>
                 </Col>
                 <Col className="col-3 d-flex justify-content-between">
-                  {activeCheckbox !== null ? (
-                    <Col className="col-6">
-                      <Label className="form-label mt-2">Active</Label>
-                      <div className="form-check form-switch form-switch-md mx-2">
-                        <Input
-                          name="active"
-                          placeholder=""
-                          type="checkbox"
-                          checked={activeCheckbox}
-                          className="form-check-input"
-                          onChange={() => onChangeActiveToggle()}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.active || ""}
-                          invalid={
-                            validationType.touched.active &&
-                            validationType.errors.active
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.active &&
-                        validationType.errors.active ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.active}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </Col>
-                  ) : null}
-
-                  {balanceDueCheckbox !== null ? (
-                    <Col className="col-6">
-                      <Label className="form-label mt-2">Balance Due</Label>
-                      <div className="form-check form-switch form-switch-md mx-4">
-                        <Input
-                          name="balance_checkbox"
-                          placeholder=""
-                          type="checkbox"
-                          checked={balanceDueCheckbox}
-                          className="form-check-input"
-                          onChange={() => onChangeBalanceDueToggle()}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.balance_checkbox || ""}
-                          invalid={
-                            validationType.touched.balance_checkbox &&
-                            validationType.errors.balance_checkbox
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.balance_checkbox &&
-                        validationType.errors.balance_checkbox ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.balance_checkbox}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </Col>
-                  ) : null}
+                  <Col className="col-6">
+                    <Label className="form-label mt-2">Active</Label>
+                    <div className="form-check form-switch form-switch-md mx-2">
+                      <Input
+                        name="notification_email"
+                        placeholder=""
+                        type="checkbox"
+                        className="form-check-input"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.notification_email || ""}
+                        invalid={
+                          validationType.touched.notification_email &&
+                          validationType.errors.notification_email
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.notification_email &&
+                      validationType.errors.notification_email ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.notification_email}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col className="col-6">
+                    <Label className="form-label mt-2">Balance Due</Label>
+                    <div className="form-check form-switch form-switch-md mx-4">
+                      <Input
+                        name="notification_email"
+                        placeholder=""
+                        type="checkbox"
+                        className="form-check-input"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.notification_email || ""}
+                        invalid={
+                          validationType.touched.notification_email &&
+                          validationType.errors.notification_email
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.notification_email &&
+                      validationType.errors.notification_email ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.notification_email}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
                 </Col>
               </Row>
+
               <Row
-                className="col-12 p-1 mt-4 mb-2"
+                className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#E9F4FF" }}
               >
                 <p
@@ -470,7 +332,7 @@ const AddNewProductPricing = ({
               </Row>
               <Row className="col-12 d-flex">
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Public Price</Label>
                     <Input
                       name="public_price"
@@ -495,7 +357,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Provider Price</Label>
                     <Input
                       name="provider_price"
@@ -520,7 +382,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Rate %</Label>
                     <Input
                       name="rate"
@@ -545,24 +407,24 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Net Rate</Label>
                     <Input
-                      name="net_price"
+                      name="net_rate"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.net_price || ""}
+                      value={validationType.values.net_rate || ""}
                       invalid={
-                        validationType.touched.net_price &&
-                        validationType.errors.net_price
+                        validationType.touched.net_rate &&
+                        validationType.errors.net_rate
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.net_price &&
-                    validationType.errors.net_price ? (
+                    {validationType.touched.net_rate &&
+                    validationType.errors.net_rate ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.net_rate}
                       </FormFeedback>
@@ -570,7 +432,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-4">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
@@ -596,7 +458,7 @@ const AddNewProductPricing = ({
                 </Col>
               </Row>
               <Row
-                className="col-12 p-1 mt-4 mb-2"
+                className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
@@ -613,7 +475,7 @@ const AddNewProductPricing = ({
               </Row>
               <Row className="col-12 d-flex">
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Ship Price</Label>
                     <Input
                       name="ship_price"
@@ -638,7 +500,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Compare At</Label>
                     <Input
                       name="compare_at"
@@ -663,7 +525,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Our Price</Label>
                     <Input
                       name="our_price"
@@ -688,7 +550,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">You Save</Label>
                     <Input
                       name="you_save"
@@ -715,7 +577,7 @@ const AddNewProductPricing = ({
               </Row>
               <Row className="col-12 d-flex">
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Eff. Rate</Label>
                     <Input
                       name="eff_rate"
@@ -740,7 +602,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Commission</Label>
                     <Input
                       name="commission"
@@ -765,7 +627,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Deposit</Label>
                     <Input
                       name="deposit"
@@ -790,7 +652,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Balance Due</Label>
                     <Input
                       name="balance_due"
@@ -815,31 +677,31 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
               </Row>
+              <Row xl={12}>
+                <Row
+                  className="col-12 d-flex justify-content-end mt-4"
+                  style={{ paddingRight: "30px" }}
+                >
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light col-2 mx-4"
+                    type="button"
+                    onClick={() => setNewPrivateTour(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    style={{ backgroundColor: "#F6851F" }}
+                    type="submit"
+                    className="font-16 btn-block col-2"
+                    // onClick={toggleCategory}
+                  >
+                    Save
+                  </Button>
+                </Row>
+              </Row>
             </Col>
-          </Row>
-          <Row xl={12}>
-            <Row
-              className="col-12 d-flex justify-content-end mt-5"
-              style={{ paddingRight: "30px" }}
-            >
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light col-2 mx-4"
-                type="button"
-                onClick={() => setAddNewProduct(false)}
-              >
-                Close
-              </Button>
-              <Button
-                style={{ backgroundColor: "#F6851F" }}
-                type="submit"
-                className="font-16 btn-block col-2"
-                // onClick={toggleCategory}
-              >
-                Save
-              </Button>
-            </Row>
           </Row>
         </Form>
       </div>
@@ -847,4 +709,4 @@ const AddNewProductPricing = ({
   );
 };
 
-export default AddNewProductPricing;
+export default EditPrivateTour;

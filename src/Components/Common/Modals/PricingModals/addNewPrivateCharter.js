@@ -21,8 +21,8 @@ import {
 import { map } from "lodash";
 
 const AddNewPrivateCharter = ({
-  newPrivateCharter,
-  setNewPrivateCharter,
+  addNewPrivateCharter,
+  setAddNewPrivateCharter,
   refreshTable,
   tourData,
   editProductID,
@@ -61,7 +61,7 @@ const AddNewPrivateCharter = ({
   const [priceDurationSelected, setPriceDurationSelected] = useState();
   const [priceLocationSelected, setPriceLocationSelected] = useState();
   useEffect(() => {
-    if (newPrivateCharter) {
+    if (addNewPrivateCharter) {
       getPricingOptionsAPI(38).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
@@ -84,7 +84,7 @@ const AddNewPrivateCharter = ({
         setPriceLocation(resp.data.data);
       });
     }
-  }, [newPrivateCharter]);
+  }, [addNewPrivateCharter]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
@@ -213,13 +213,13 @@ const AddNewPrivateCharter = ({
       };
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          setNewPrivateCharter(false);
+          setAddNewPrivateCharter(false);
           refreshTable();
         });
       } 
       if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
-          setNewPrivateCharter(false);
+          setAddNewPrivateCharter(false);
           refreshTable();
         });
       }
@@ -230,7 +230,7 @@ const AddNewPrivateCharter = ({
     <Modal
       centered
       size="xl"
-      isOpen={newPrivateCharter}
+      isOpen={addNewPrivateCharter}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -244,7 +244,7 @@ const AddNewPrivateCharter = ({
         </h1>
         <button
           onClick={() => {
-            setNewPrivateCharter(false);
+            setAddNewPrivateCharter(false);
           }}
           type="button"
           className="close"
@@ -1034,7 +1034,7 @@ const AddNewPrivateCharter = ({
                     outline
                     className="waves-effect waves-light col-2 mx-4"
                     type="button"
-                    onClick={() => setNewPrivateCharter(false)}
+                    onClick={() => setAddNewPrivateCharter(false)}
                   >
                     Close
                   </Button>

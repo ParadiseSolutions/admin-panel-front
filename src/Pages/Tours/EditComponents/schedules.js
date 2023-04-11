@@ -90,7 +90,7 @@ const Schedules = ({ tourData, toggle }) => {
 
   //delete season
   const onDeleteSeason = (data) => {
-    refresh()
+    
     deleteSeasonalityAPI(tourData.id, data.id).then((resp) => {
       Swal.fire("Deleted!", "Time has been deleted.", "success").then(() => {
         // history.goBack();
@@ -101,6 +101,7 @@ const Schedules = ({ tourData, toggle }) => {
    
       });
     });
+    refresh()
   };
 
 
@@ -108,7 +109,7 @@ const Schedules = ({ tourData, toggle }) => {
   const onDeleteOverriteDate = (data) => {
 
     deleteOverriteDate(tourData.id, data.id).then((resp) => {
-      refresh()
+      
       Swal.fire("Deleted!", "Time has been deleted.", "success")
       
       getScheduleDatesOverrideAPI(TourID).then((resp) => {
@@ -116,6 +117,7 @@ const Schedules = ({ tourData, toggle }) => {
       });
       
     });
+    refresh()
   };
 
   console.log('tiempos ----',schedulesData)

@@ -7,6 +7,13 @@ import AddNewPrivateCharter from "../../../Components/Common/Modals/PricingModal
 import AddNewPrivateTour from "../../../Components/Common/Modals/PricingModals/addNewPrivateTour";
 import AddNewTransportation from "../../../Components/Common/Modals/PricingModals/addNewTransportation";
 import Addons from "../../../Components/Common/Modals/PricingModals/addons";
+import EditProductPricing from "../../../Components/Common/Modals/PricingModals/EditModals/editNewProduct";
+import EditAirportTransfer from "../../../Components/Common/Modals/PricingModals/EditModals/editNewAirportTransfer";
+import EditFishing from "../../../Components/Common/Modals/PricingModals/EditModals/editfishing";
+import EditPrivateCharter from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateCharter";
+import EditPrivateTour from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateTour";
+import EditTransportation from "../../../Components/Common/Modals/PricingModals/EditModals/editNewTransportation";
+import EditAddons from "../../../Components/Common/Modals/PricingModals/EditModals/editAddons";
 import {
   getPricesPricingAPI,
   getAddonsPricingAPI,
@@ -201,7 +208,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 4:
-                    setNewTransportation(!newTransportation);
+                    setAddNewTransportation(!newTransportation);
                     setEditProductID(prodData.id);
                     break;
                   case 5:
@@ -209,7 +216,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 6:
-                    setNewPrivateCharter(!newPrivateCharter);
+                    setAddNewPrivateCharter(!newPrivateCharter);
                     setEditProductID(prodData.id);
                     break;
 
@@ -241,7 +248,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 4:
-                    setNewTransportation(!newTransportation);
+                    setAddNewTransportation(!newTransportation);
                     setEditProductID(prodData.id);
                     break;
                   case 5:
@@ -249,7 +256,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 6:
-                    setNewPrivateCharter(!newPrivateCharter);
+                    setAddNewPrivateCharter(!newPrivateCharter);
                     setEditProductID(prodData.id);
                     break;
 
@@ -261,9 +268,9 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 setCopyProduct(!copyProduct);
               }}
             >
-              <i className="mdi mdi-content-copy font-size-18" id="deletetooltip" />
-              <UncontrolledTooltip placement="top" target="deletetooltip">
-                Delete
+              <i className="mdi mdi-content-copy font-size-18" id="copytooltip" />
+              <UncontrolledTooltip placement="top" target="copytooltip">
+                Copy
               </UncontrolledTooltip>
             </div>
             <div
@@ -288,22 +295,30 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const [addNewProduct, setAddNewProduct] = useState(false);
   const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);
   const [addNewFishing, setAddNewFishing] = useState(false);
+  
+  const [addNewPrivateCharter, setAddNewPrivateCharter] = useState(false);
+  const [addNewPrivateTour, setAddNewPrivateTour] = useState(false);
+  const [addNewTransportation, setAddNewTransportation] = useState(false);
+
+  const [newProduct, setNewProduct] = useState(false);
+  const [newAirportTransfer, setNewAirportTransfer] = useState(false);
+  const [newFishing, setNewFishing] = useState(false);
   const [newPrivateCharter, setNewPrivateCharter] = useState(false);
   const [newPrivateTour, setNewPrivateTour] = useState(false);
   const [newTransportation, setNewTransportation] = useState(false);
   const onClickNewProduct = () => {
     switch (tourData.type_id) {
       case 2:
-        setAddNewProduct(!addNewProduct);
+        setNewProduct(!addNewProduct);
         break;
       case 3:
-        setAddNewAirportTransfer(!addNewAirportTransfer);
+        setNewAirportTransfer(!addNewAirportTransfer);
         break;
       case 4:
         setNewTransportation(!newTransportation);
         break;
       case 5:
-        setAddNewFishing(!addNewFishing);
+        setNewFishing(!addNewFishing);
         break;
       case 6:
         setNewPrivateCharter(!newPrivateCharter);
@@ -387,24 +402,24 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         copyProduct={copyProduct}
       />
       <AddNewPrivateCharter
-        newPrivateCharter={newPrivateCharter}
-        setNewPrivateCharter={setNewPrivateCharter}
+        addNewPrivateCharter={addNewPrivateCharter}
+        setAddNewPrivateCharter={setAddNewPrivateCharter}
         editProductID={editProductID}
         tourData={tourData}
         refreshTable={refreshTable}
         copyProduct={copyProduct}
       />
       <AddNewPrivateTour
-        newPrivateTour={newPrivateTour}
-        setNewPrivateTour={setNewPrivateTour}
+        addNewPrivateTour={addNewPrivateTour}
+        setAddNewPrivateTour={setAddNewPrivateTour}
         editProductID={editProductID}
         tourData={tourData}
         refreshTable={refreshTable}
         copyProduct={copyProduct}
       />
       <AddNewTransportation
-        newTransportation={newTransportation}
-        setNewTransportation={setNewTransportation}
+        addNewTransportation={addNewTransportation}
+        setAddNewTransportation={setAddNewTransportation}
         editProductID={editProductID}
         tourData={tourData}
         refreshTable={refreshTable}
@@ -417,6 +432,66 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         tourData={tourData}
         refreshTable={refreshTable}
         editProductID={editProductID}
+      />
+
+
+
+
+      <EditProductPricing
+        newProduct={newProduct}
+        setNewProduct={setNewProduct}
+        // editProductID={editProductID}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        // copyProduct={copyProduct}
+      />
+      <EditAirportTransfer
+        newAirportTransfer={newAirportTransfer}
+        setNewAirportTransfer={setNewAirportTransfer}
+        // editProductID={editProductID}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        // copyProduct={copyProduct}
+      />
+      <EditFishing
+        newFishing={newFishing}
+        setNewFishing={setNewFishing}
+        // editProductID={editProductID}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        // copyProduct={copyProduct}
+      />
+      <EditPrivateCharter
+        newPrivateCharter={newPrivateCharter}
+        setNewPrivateCharter={setNewPrivateCharter}
+        // editProductID={editProductID}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        // copyProduct={copyProduct}
+      />
+      <EditPrivateTour
+        newPrivateTour={newPrivateTour}
+        setNewPrivateTour={setNewPrivateTour}
+        // editProductID={editProductID}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        // copyProduct={copyProduct}
+      />
+      <EditTransportation
+        newTransportation={newTransportation}
+        setNewTransportation={setNewTransportation}
+        // editProductID={editProductID}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        // copyProduct={copyProduct}
+      />
+
+      <EditAddons
+        newAddon={newAddon}
+        setNewAddon={setNewAddon}
+        tourData={tourData}
+        refreshTable={refreshTable}
+        // editProductID={editProductID}
       />
     </TabPane>
   );

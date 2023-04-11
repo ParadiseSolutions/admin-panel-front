@@ -22,8 +22,8 @@ import {
 import { map } from "lodash";
 
 const AddNewTransportation = ({
-  newTransportation,
-  setNewTransportation,
+  addNewTransportation,
+  setAddNewTransportation,
   refreshTable,
   editProductID,
   tourData,
@@ -59,7 +59,7 @@ const AddNewTransportation = ({
   const [priceZoneSelected, setPriceZoneSelected] = useState(null);
   const [priceVehicleSelected, setPriceVehicleSelected] = useState(null);
   useEffect(() => {
-    if (newTransportation) {
+    if (addNewTransportation) {
       getPricingOptionsAPI(20).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
@@ -85,7 +85,7 @@ const AddNewTransportation = ({
         setPriceZone(resp.data.data);
       });
     }
-  }, [newTransportation]);
+  }, [addNewTransportation]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
@@ -229,13 +229,13 @@ const AddNewTransportation = ({
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
           refreshTable();
-          setNewTransportation(false);
+          setAddNewTransportation(false);
         });
       } 
       if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           refreshTable();
-          setNewTransportation(false);
+          setAddNewTransportation(false);
         });
       }
       resetForm({ values: "" });
@@ -245,7 +245,7 @@ const AddNewTransportation = ({
     <Modal
       centered
       size="xl"
-      isOpen={newTransportation}
+      isOpen={addNewTransportation}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -259,7 +259,7 @@ const AddNewTransportation = ({
         </h1>
         <button
           onClick={() => {
-            setNewTransportation(false);
+            setAddNewTransportation(false);
           }}
           type="button"
           className="close"
@@ -1079,7 +1079,7 @@ const AddNewTransportation = ({
                     outline
                     className="waves-effect waves-light col-2 mx-4"
                     type="button"
-                    onClick={() => setNewTransportation(false)}
+                    onClick={() => setAddNewTransportation(false)}
                   >
                     Close
                   </Button>

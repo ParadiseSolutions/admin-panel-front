@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import NewProductPricingImage from "../../../Assets/images/newProductPricing.png";
-import {
-  getPricingOptionsAPI,
-  postPricesAPI,
-  getPriceAPI,
-  updatePriceAPI,
-} from "../../../../Utils/API/Tours";
+import TransportationImage from "../../../../Assets/images/transportation.png";
 import {
   Row,
   Col,
@@ -18,11 +12,18 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import {
+  getPriceAPI,
+  getPricingOptionsAPI,
+  getPricingZoneOptionsAPI,
+  postPricesAPI,
+  updatePriceAPI,
+} from "../../../../../Utils/API/Tours";
 import { map } from "lodash";
 
-const AddNewProductPricing = ({
-  addNewProduct,
-  setAddNewProduct,
+const EditTransportation = ({
+  newTransportation,
+  setNewTransportation,
   refreshTable,
   editProductID,
   tourData,
@@ -37,40 +38,54 @@ const AddNewProductPricing = ({
       });
     }
   }, [editProductID]);
+  console.log(copyProduct)
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
   const [priceCollect, setPriceCollect] = useState([]);
   const [priceSeason, setPriceSeason] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
-  );
-  const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
-  );
-  const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
-  );
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
-  );
+  const [priceZone, setPriceZone] = useState([]);
+  const [priceTransferType, setPriceTransferType] = useState([]);
+  const [priceDirection, setPriceDirection] = useState([]);
+  const [priceVehicle, setVehicleZone] = useState([]);
+  const [priceTypeSelected, setPriceTypeSelected] = useState(null);
+  const [priceOptionSelected, setPriceOptionSelected] = useState(null);
+  const [priceCollectSelected, setPriceCollectSelected] = useState(null);
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState(null);
+  const [priceTransferTypeSelected, setPriceTransferTypeSelected] =
+    useState(null);
+  const [priceDirectionSelected, setPriceDirectonSelected] = useState(null);
+  const [priceZoneSelected, setPriceZoneSelected] = useState(null);
+  const [priceVehicleSelected, setPriceVehicleSelected] = useState(null);
   useEffect(() => {
-    if (addNewProduct) {
-      getPricingOptionsAPI(6).then((resp) => {
+    if (newTransportation) {
+      getPricingOptionsAPI(20).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
-      getPricingOptionsAPI(7).then((resp) => {
+      getPricingOptionsAPI(21).then((resp) => {
         setPriceOptions(resp.data.data);
       });
-      getPricingOptionsAPI(9).then((resp) => {
+      getPricingOptionsAPI(22).then((resp) => {
         setPriceCollect(resp.data.data);
       });
-      getPricingOptionsAPI(29).then((resp) => {
+      getPricingOptionsAPI(31).then((resp) => {
         setPriceSeason(resp.data.data);
       });
+      getPricingOptionsAPI(46).then((resp) => {
+        setPriceTransferType(resp.data.data);
+      });
+      getPricingOptionsAPI(49).then((resp) => {
+        setPriceDirection(resp.data.data);
+      });
+      getPricingOptionsAPI(24).then((resp) => {
+        setVehicleZone(resp.data.data);
+      });
+      getPricingZoneOptionsAPI(51, tourData.provider_id).then((resp) => {
+        setPriceZone(resp.data.data);
+      });
     }
-  }, [addNewProduct]);
+  }, [newTransportation]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
@@ -106,6 +121,8 @@ const AddNewProductPricing = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
+      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
@@ -115,7 +132,6 @@ const AddNewProductPricing = ({
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values, { resetForm }) => {
-     
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -136,46 +152,90 @@ const AddNewProductPricing = ({
         show_balance_due: balanceDueCheckbox ? 1 : 0,
         price_details: [
           {
-            pricing_option_id: 1,
-            source_id: priceTypeSelected,
+            pricing_option_id: 20,
+            source_id: priceTypeSelected
+              ? priceTypeSelected
+              : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
-            pricing_option_id: 2,
-            source_id: priceOptionSelected,
+            pricing_option_id: 21,
+            source_id: priceOptionSelected
+              ? priceOptionSelected
+              : dataEdit.pricedetails[1].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
-            pricing_option_id: 4,
-            source_id: priceCollectSelected,
-            min: 1,
-            max: 3,
-            label: "px",
-          },
-          {
-            pricing_option_id: 28,
-            source_id: priceSeasonSelected,
+            pricing_option_id: 22,
+            source_id: priceCollectSelected
+              ? priceCollectSelected
+              : dataEdit.pricedetails[2].source_id,
             min: null,
             max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 31,
+            source_id: priceSeasonSelected
+              ? priceSeasonSelected
+              : dataEdit.pricedetails[3].source_id,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 46,
+            source_id: priceTransferTypeSelected
+              ? priceTransferTypeSelected
+              : dataEdit.pricedetails[4].source_id,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 49,
+            source_id: priceDirectionSelected
+              ? priceDirectionSelected
+              : dataEdit.pricedetails[5].source_id,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 51,
+            source_id: priceZoneSelected
+              ? priceZoneSelected
+              : dataEdit.pricedetails[7].source_id,
+            min: null,
+            max: null,
+            label: null,
+          },
+          {
+            pricing_option_id: 24,
+            source_id: priceVehicleSelected
+              ? priceVehicleSelected
+              : dataEdit.pricedetails[6].source_id,
+            min: values.min,
+            max: values.max,
             label: null,
           },
         ],
       };
 
-      if (dataEdit && copyProduct === false) {
+      if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          setAddNewProduct(false);
           refreshTable();
+          setNewTransportation(false);
         });
       } 
-      if(copyProduct || dataEdit === undefined){
+      if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
-          setAddNewProduct(false);
           refreshTable();
+          setNewTransportation(false);
         });
       }
       resetForm({ values: "" });
@@ -185,7 +245,7 @@ const AddNewProductPricing = ({
     <Modal
       centered
       size="xl"
-      isOpen={addNewProduct}
+      isOpen={newTransportation}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -194,10 +254,12 @@ const AddNewProductPricing = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ New Product - Tour</h1>
+        <h1 className="modal-title mt-0 text-white">
+          + New Product - Transportation
+        </h1>
         <button
           onClick={() => {
-            setAddNewProduct(false);
+            setNewTransportation(false);
           }}
           type="button"
           className="close"
@@ -222,9 +284,9 @@ const AddNewProductPricing = ({
           <Row xl={12} className="d-flex">
             <Col className="col-3">
               <img
-                src={NewProductPricingImage}
+                src={TransportationImage}
                 alt="new-product"
-                style={{ height: "560px", width: "260px" }}
+                style={{ height: "770px", width: "260px" }}
               />
             </Col>
             <Col className="col-9">
@@ -453,8 +515,200 @@ const AddNewProductPricing = ({
                 </Col>
               </Row>
               <Row
-                className="col-12 p-1 mt-4 mb-2"
+                className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#E9F4FF" }}
+              >
+                <p
+                  className="py-2"
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    color: "#495057",
+                    marginBottom: "0px",
+                  }}
+                >
+                  Transfer Options
+                </p>
+              </Row>
+              <Row className="col-12 d-flex">
+                <Col className="col-2">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Transfer Type</Label>
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setPriceTransferTypeSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceTransferType, (transferType, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={transferType.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? transferType.id ===
+                                  dataEdit.pricedetails[4].source_id
+                                : false
+                            }
+                          >
+                            {transferType.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Direction</Label>
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setPriceDirectonSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceDirection, (direction, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={direction.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? direction.id ===
+                                  dataEdit.pricedetails[5].source_id
+                                : false
+                            }
+                          >
+                            {direction.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Vehicle</Label>
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setPriceVehicleSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceVehicle, (vehicle, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={vehicle.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? vehicle.id ===
+                                  dataEdit.pricedetails[6].source_id
+                                : false
+                            }
+                          >
+                            {vehicle.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Zone Name</Label>
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setPriceZoneSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceZone, (zone, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={zone.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? zone.id === dataEdit.pricedetails[7].source_id
+                                : false
+                            }
+                          >
+                            {zone.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Min. Pax.</Label>
+                    <Input
+                      name="min"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.min || ""}
+                      invalid={
+                        validationType.touched.min && validationType.errors.min
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.min && validationType.errors.min ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.min}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+
+                <Col className="col-2">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Max. Pax.</Label>
+                    <Input
+                      name="max"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.max || ""}
+                      invalid={
+                        validationType.touched.max && validationType.errors.max
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.max && validationType.errors.max ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.max}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+              </Row>
+              <Row
+                className="col-12 p-1 my-2"
+                style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
                   className="py-2"
@@ -470,7 +724,7 @@ const AddNewProductPricing = ({
               </Row>
               <Row className="col-12 d-flex">
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Public Price</Label>
                     <Input
                       name="public_price"
@@ -495,7 +749,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Provider Price</Label>
                     <Input
                       name="provider_price"
@@ -520,7 +774,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Rate %</Label>
                     <Input
                       name="rate"
@@ -545,7 +799,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Net Rate</Label>
                     <Input
                       name="net_price"
@@ -564,13 +818,13 @@ const AddNewProductPricing = ({
                     {validationType.touched.net_price &&
                     validationType.errors.net_price ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.net_rate}
+                        {validationType.errors.net_price}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
                 <Col className="col-4">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
@@ -596,8 +850,8 @@ const AddNewProductPricing = ({
                 </Col>
               </Row>
               <Row
-                className="col-12 p-1 mt-4 mb-2"
-                style={{ backgroundColor: "#FFEFDE" }}
+                className="col-12 p-1 my-2"
+                style={{ backgroundColor: "#FFFBC8" }}
               >
                 <p
                   className="py-2"
@@ -613,7 +867,7 @@ const AddNewProductPricing = ({
               </Row>
               <Row className="col-12 d-flex">
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Ship Price</Label>
                     <Input
                       name="ship_price"
@@ -638,7 +892,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Compare At</Label>
                     <Input
                       name="compare_at"
@@ -663,7 +917,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Our Price</Label>
                     <Input
                       name="our_price"
@@ -688,7 +942,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">You Save</Label>
                     <Input
                       name="you_save"
@@ -715,7 +969,7 @@ const AddNewProductPricing = ({
               </Row>
               <Row className="col-12 d-flex">
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Eff. Rate</Label>
                     <Input
                       name="eff_rate"
@@ -740,7 +994,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Commission</Label>
                     <Input
                       name="commission"
@@ -765,7 +1019,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Deposit</Label>
                     <Input
                       name="deposit"
@@ -790,7 +1044,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-4">
+                  <div className="form-outline mb-2">
                     <Label className="form-label">Balance Due</Label>
                     <Input
                       name="balance_due"
@@ -815,31 +1069,31 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
               </Row>
+              <Row xl={12}>
+                <Row
+                  className="col-12 d-flex justify-content-end mt-4"
+                  style={{ paddingRight: "30px" }}
+                >
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light col-2 mx-4"
+                    type="button"
+                    onClick={() => setNewTransportation(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    style={{ backgroundColor: "#F6851F" }}
+                    type="submit"
+                    className="font-16 btn-block col-2"
+                    // onClick={toggleCategory}
+                  >
+                    Save
+                  </Button>
+                </Row>
+              </Row>
             </Col>
-          </Row>
-          <Row xl={12}>
-            <Row
-              className="col-12 d-flex justify-content-end mt-5"
-              style={{ paddingRight: "30px" }}
-            >
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light col-2 mx-4"
-                type="button"
-                onClick={() => setAddNewProduct(false)}
-              >
-                Close
-              </Button>
-              <Button
-                style={{ backgroundColor: "#F6851F" }}
-                type="submit"
-                className="font-16 btn-block col-2"
-                // onClick={toggleCategory}
-              >
-                Save
-              </Button>
-            </Row>
           </Row>
         </Form>
       </div>
@@ -847,4 +1101,4 @@ const AddNewProductPricing = ({
   );
 };
 
-export default AddNewProductPricing;
+export default EditTransportation;

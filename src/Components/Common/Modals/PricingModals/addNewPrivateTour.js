@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import { getPricingOptionsAPI, postPricesAPI } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
-const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProduct }) => {
+const AddNewPrivateTour = ({ addNewPrivateTour, setAddNewPrivateTour, tourData, copyProduct }) => {
 
    //combo box request
    const [priceTypeData, setPriceTypeData] = useState([]);
@@ -27,7 +27,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
    const [priceCollectSelected, setPriceCollectSelected] = useState();
    const [priceSeasonSelected, setPriceSeasonSelected] = useState();
    useEffect(() => {
-     if (newPrivateTour) {
+     if (addNewPrivateTour) {
        getPricingOptionsAPI(6).then((resp) => {
          setPriceTypeData(resp.data.data);
        });
@@ -41,7 +41,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
          setPriceSeason(resp.data.data);
        });
      }
-   }, [newPrivateTour]);
+   }, [addNewPrivateTour]);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -76,7 +76,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
 
       postPricesAPI(data).then((resp) =>{
         console.log(resp)
-        setNewPrivateTour(false);
+        setAddNewPrivateTour(false);
       })
 
       resetForm({values: ''})
@@ -86,7 +86,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
     <Modal
       centered
       size="xl"
-      isOpen={newPrivateTour}
+      isOpen={addNewPrivateTour}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -100,7 +100,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
         </h1>
         <button
           onClick={() => {
-            setNewPrivateTour(false);
+            setAddNewPrivateTour(false);
           }}
           type="button"
           className="close"
@@ -687,7 +687,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                     outline
                     className="waves-effect waves-light col-2 mx-4"
                     type="button"
-                    onClick={() => setNewPrivateTour(false)}
+                    onClick={() => setAddNewPrivateTour(false)}
                   >
                     Close
                   </Button>

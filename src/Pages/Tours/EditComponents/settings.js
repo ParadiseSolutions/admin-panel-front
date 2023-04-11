@@ -77,6 +77,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
 
   //available from
   const [availableFromIDs, setAvailableFromIDs] = useState([]);
+  const [newListID, setNewListID] = useState([]);
+  
   useEffect(() => {
     setAvailableFromIDs(tourSettings.available_from);
   }, [tourSettings]);
@@ -155,6 +157,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           : "",
         seasonality: seasonalPrice === true ? 1 : 0,
       };
+
+     console.log('data a enviar', data) 
 
       putSettingsAPI(id, data)
         .then((resp) => {
@@ -357,6 +361,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                             <AvailableCheckbox
                               available={available}
                               availableFromIDs={availableFromIDs}
+                              setNewListID={setNewListID}
                               setAvailableFromIDs={setAvailableFromIDs}
                             />
                           </div>

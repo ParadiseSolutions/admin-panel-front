@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import NewProductPricingImage from "../../../Assets/images/newProductPricing.png";
+import NewProductPricingImage from "../../../../Assets/images/newProductPricing.png";
 import {
   getPricingOptionsAPI,
   postPricesAPI,
   getPriceAPI,
   updatePriceAPI,
-} from "../../../../Utils/API/Tours";
+} from "../../../../../Utils/API/Tours";
 import {
   Row,
   Col,
@@ -20,9 +20,9 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 
-const AddNewProductPricing = ({
-  addNewProduct,
-  setAddNewProduct,
+const EditProductPricing = ({
+  newProduct,
+  setNewProduct,
   refreshTable,
   editProductID,
   tourData,
@@ -56,7 +56,7 @@ const AddNewProductPricing = ({
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
   );
   useEffect(() => {
-    if (addNewProduct) {
+    if (newProduct) {
       getPricingOptionsAPI(6).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
@@ -70,7 +70,7 @@ const AddNewProductPricing = ({
         setPriceSeason(resp.data.data);
       });
     }
-  }, [addNewProduct]);
+  }, [newProduct]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
@@ -168,13 +168,13 @@ const AddNewProductPricing = ({
 
       if (dataEdit && copyProduct === false) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          setAddNewProduct(false);
+          setNewProduct(false);
           refreshTable();
         });
       } 
       if(copyProduct || dataEdit === undefined){
         postPricesAPI(data).then((resp) => {
-          setAddNewProduct(false);
+          setNewProduct(false);
           refreshTable();
         });
       }
@@ -185,7 +185,7 @@ const AddNewProductPricing = ({
     <Modal
       centered
       size="xl"
-      isOpen={addNewProduct}
+      isOpen={newProduct}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -197,7 +197,7 @@ const AddNewProductPricing = ({
         <h1 className="modal-title mt-0 text-white">+ New Product - Tour</h1>
         <button
           onClick={() => {
-            setAddNewProduct(false);
+            setNewProduct(false);
           }}
           type="button"
           className="close"
@@ -827,7 +827,7 @@ const AddNewProductPricing = ({
                 outline
                 className="waves-effect waves-light col-2 mx-4"
                 type="button"
-                onClick={() => setAddNewProduct(false)}
+                onClick={() => setNewProduct(false)}
               >
                 Close
               </Button>
@@ -847,4 +847,4 @@ const AddNewProductPricing = ({
   );
 };
 
-export default AddNewProductPricing;
+export default EditProductPricing;
