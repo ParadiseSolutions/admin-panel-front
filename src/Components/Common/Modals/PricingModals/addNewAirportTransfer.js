@@ -163,7 +163,7 @@ const AddNewAirportTransfer = ({
         price_details: [
           {
             pricing_option_id: 10,
-            source_id: priceTypeSelected
+            source_id: priceTypeSelected !== ''
               ? priceTypeSelected
               : dataEdit.pricedetails[0].source_id,
             min: null,
@@ -172,7 +172,7 @@ const AddNewAirportTransfer = ({
           },
           {
             pricing_option_id: 11,
-            source_id: priceOptionSelected
+            source_id: priceOptionSelected !== ''
               ? priceOptionSelected
               : dataEdit.pricedetails[1].source_id,
             min: null,
@@ -181,7 +181,7 @@ const AddNewAirportTransfer = ({
           },
           {
             pricing_option_id: 14,
-            source_id: priceCollectSelected
+            source_id: priceCollectSelected !== ''
               ? priceCollectSelected
               : dataEdit.pricedetails[2].source_id,
             min: 1,
@@ -190,7 +190,7 @@ const AddNewAirportTransfer = ({
           },
           {
             pricing_option_id: 30,
-            source_id: priceSeasonSelected
+            source_id: priceSeasonSelected !== ''
               ? priceSeasonSelected
               : dataEdit.pricedetails[3]?.source_id,
             min: null,
@@ -199,7 +199,7 @@ const AddNewAirportTransfer = ({
           },
           {
             pricing_option_id: 12,
-            source_id: priceTransferTypeSelected
+            source_id: priceTransferTypeSelected !== ''
               ? priceTransferTypeSelected
               : dataEdit.pricedetails[4].source_id,
             min: null,
@@ -208,7 +208,7 @@ const AddNewAirportTransfer = ({
           },
           {
             pricing_option_id: 13,
-            source_id: priceDirectionSelected
+            source_id: priceDirectionSelected !== ''
               ? priceDirectionSelected
               : dataEdit.pricedetails[5].source_id,
             min: null,
@@ -217,7 +217,7 @@ const AddNewAirportTransfer = ({
           },
           {
             pricing_option_id: 50,
-            source_id: priceZoneSelected
+            source_id: priceZoneSelected !== ''
               ? priceZoneSelected
               : dataEdit.pricedetails[7].source_id,
             min: null,
@@ -226,7 +226,7 @@ const AddNewAirportTransfer = ({
           },
           {
             pricing_option_id: 17,
-            source_id: priceVehicleSelected
+            source_id: priceVehicleSelected !== ''
               ? priceVehicleSelected
               : dataEdit.pricedetails[6].source_id,
             min: values.min,
@@ -343,7 +343,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value={null}>Select....</option>
                         {map(priceTypeData, (type, index) => {
                           return (
                             <option

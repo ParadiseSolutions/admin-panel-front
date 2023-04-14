@@ -137,21 +137,21 @@ const AddNewProductPricing = ({
         price_details: [
           {
             pricing_option_id: 1,
-            source_id: priceTypeSelected,
+            source_id: priceTypeSelected !== '' ? priceTypeSelected : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 2,
-            source_id: priceOptionSelected,
+            source_id: priceOptionSelected !== "" ? priceOptionSelected : dataEdit.pricedetails[1].source_id ,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 4,
-            source_id: priceCollectSelected,
+            source_id: priceCollectSelected !== "" ? priceCollectSelected : dataEdit.pricedetails[2].source_id,
             min: 1,
             max: 3,
             label: "px",
@@ -165,20 +165,21 @@ const AddNewProductPricing = ({
           },
         ],
       };
-
       if (dataEdit && copyProduct === false) {
         updatePriceAPI(editProductID, data).then((resp) => {
           setAddNewProduct(false);
           refreshTable();
+          resetForm({ values: "" });
         });
       } 
       if(copyProduct || dataEdit === undefined){
         postPricesAPI(data).then((resp) => {
           setAddNewProduct(false);
           refreshTable();
+          resetForm({ values: "" });
         });
       }
-      resetForm({ values: "" });
+      
     },
   });
   return (

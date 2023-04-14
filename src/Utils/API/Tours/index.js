@@ -126,7 +126,7 @@ export const statusSeasonalityAPI = (tourID, body) => {
   });
 };
 export const deleteSeasonalityAPI = (tourID, seasonID) => {
-  const url = `${API_URL}/tours/${tourID}/scheduleTime/${seasonID}`;
+  const url = `${API_URL}/tours/${tourID}/seasonality/${seasonID}`;
   return axios.delete (url, {
     headers: options,
   });

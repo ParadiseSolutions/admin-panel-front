@@ -86,7 +86,7 @@ const EditProductPricing = ({
   const onChangeBalanceDueToggle = () => {
     setBalanceDueCheckbox(!balanceDueCheckbox);
   };
-
+console.log('data de editar', dataEdit)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,

@@ -54,6 +54,7 @@ const HighSeasons = ({ tourData, toggle }) => {
   const [dateFromEdit, setDataFromEdit] = useState(null);
   const [dateToEdit, setDataToEdit] = useState(null);
   const [seasonToEdit, setSeasonToEdit] = useState(null);
+  const [isEdit, setIsEdit] = useState(false)
   const [idEdit, setIDEdit] = useState(null);
   const onEditSeason = (data) => {
     console.log(data);
@@ -149,7 +150,7 @@ const HighSeasons = ({ tourData, toggle }) => {
     //     .required("Max 2 chars"),
     // }),
     onSubmit: (values) => {
-      if (seasonToEdit) {
+      if (isEdit) {
         let data = {
           id: idEdit,
           season_id: seasonToEdit,
@@ -167,6 +168,7 @@ const HighSeasons = ({ tourData, toggle }) => {
               Swal.fire("Edited!", "Season has been edited.", "success").then(
                 () => {
                   // history.goBack();
+                  setIsEdit(false)
                 }
               );
             }
@@ -255,7 +257,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                         name=""
                         onChange={(e) => {
                           setSeasonSelected(e.target.value);
-                          setSeasonToEdit(e.target.value)
+                          setSeasonToEdit(+e.target.value)
                         }}
                         onBlur={validationType.handleBlur}
                       >
@@ -349,7 +351,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                         className="waves-effect waves-light col-12"
                         type="submit"
                       >
-                        {seasonToEdit ? "+ Edit" : '+ Add'}
+                        {isEdit ? "+ Edit" : '+ Add'}
                         
                       </Button>
                     </div>
@@ -400,6 +402,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                                     <div
                                       onClick={() => {
                                         onEditSeason(season);
+                                        setIsEdit(true)
                                       }}
                                       className="text-success"
                                     >
