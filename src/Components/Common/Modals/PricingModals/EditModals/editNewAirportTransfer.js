@@ -39,7 +39,7 @@ const EditAirportTransfer = ({
     }
   }, [editProductID]);
 
-  console.log("data editar", dataEdit);
+  // console.log("data editar", dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -136,11 +136,12 @@ const EditAirportTransfer = ({
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
@@ -236,6 +237,8 @@ const EditAirportTransfer = ({
         ],
       };
 
+      // console.log(data)
+
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
           // console.log(resp);
@@ -244,7 +247,7 @@ const EditAirportTransfer = ({
         });
       } 
       
-      if(copyProduct || dataEdit === undefined) {
+      if(dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           // console.log(resp);
           setNewAirportTransfer(false);

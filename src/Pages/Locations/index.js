@@ -26,7 +26,7 @@ const Locations = () => {
 	//saving locations data into variable
 	
 	const data = useSelector((state) => state.locations.locations.data);
-	console.log(data)
+	// console.log(data)
 
 		//delete Location
 		const locationsRequest = () => dispatch(locationsData());
@@ -48,7 +48,7 @@ const Locations = () => {
 							Swal.fire("Deleted!", "Location has been deleted.", "success");
 						})
 						.catch((error) => {
-							console.log(error);
+							// console.log(error);
 						});
 				}
 			});

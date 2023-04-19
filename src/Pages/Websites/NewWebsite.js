@@ -70,7 +70,7 @@ const NewWebsite = () => {
       }
         createWebsite(data)
           .then((resp) => {
-            console.log(resp.data)
+            // console.log(resp.data)
             if (resp.data.status === 201) {
               Swal.fire(
                 "Success!",

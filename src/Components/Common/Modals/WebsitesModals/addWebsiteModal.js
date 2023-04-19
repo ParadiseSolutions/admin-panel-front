@@ -70,7 +70,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
       secondary_color: Yup.string().required("Secondary Color is required"),
     }),
     onSubmit: (values) => {
-      console.log("values are", values);
+      // console.log("values are", values);
       let data = {
         company_name: values.company_name,
         code: values.code,
@@ -86,7 +86,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
       };
       createWebsite(data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire(
               "Success!",

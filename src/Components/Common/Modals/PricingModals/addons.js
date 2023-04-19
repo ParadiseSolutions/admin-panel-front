@@ -37,7 +37,7 @@ const Addons = ({
     }
   }, [editProductID]);
 
-  console.log("addons", dataEdit);
+  // console.log("addons", dataEdit);
 
   //combo box request
   const [priceMatchQuantityData, setPriceMatchQuantityData] = useState([]);
@@ -157,13 +157,13 @@ const Addons = ({
 
       if (dataEdit) {
         putAddonAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           setNewAddon(false);
           refreshTable();
         });
       } else {
         postAddonsAPI(data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           setNewAddon(false);
           refreshTable();
         });

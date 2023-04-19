@@ -49,11 +49,12 @@ const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProd
       product_name: tourData ? tourData.name : "",
       sku: tourData ? tourData.sku : "",
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, {resetForm}) => {
       let data = {
         tour_id: tourData.id,
@@ -75,7 +76,7 @@ const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProd
       };
 
       postPricesAPI(data).then((resp) =>{
-        console.log(resp)
+        // console.log(resp)
         setNewPrivateTour(false);
       })
 

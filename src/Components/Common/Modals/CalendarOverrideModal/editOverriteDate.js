@@ -36,7 +36,7 @@ const EdditOverriteDate = ({
   const [dayWeektoEdit, setDayWeektoSelected] = useState(null);
   const [dayFixEdit, setdayFixSelected] = useState(null);
 
-  console.log("data inicial", editOverriteDateData);
+  // console.log("data inicial", editOverriteDateData);
 
   useEffect(() => {
     if (editOverriteDateData !== null) {
@@ -102,7 +102,7 @@ const EdditOverriteDate = ({
         recurrency: repeatSelected,
       };
 
-      console.log(data);
+      // console.log(data);
 
       putOverriteDate(id, data)
         .then((resp) => {

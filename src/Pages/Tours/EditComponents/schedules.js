@@ -34,7 +34,7 @@ import Swal from "sweetalert2";
 const Schedules = ({ tourData, toggle }) => {
   const history = useHistory();
 
-  console.log("tour data", tourData);
+  // console.log("tour data", tourData);
   const TourID = tourData?.id;
 
   //get initial Data
@@ -120,7 +120,7 @@ const Schedules = ({ tourData, toggle }) => {
     refresh()
   };
 
-  console.log('tiempos ----',schedulesData)
+  // console.log('tiempos ----',schedulesData)
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -146,7 +146,7 @@ const Schedules = ({ tourData, toggle }) => {
       // console.log(data);
       postSeasonalityAPI(tourData.id, data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire("Created!", "Seasonality has been created.", "success").then(
               () => {
@@ -157,7 +157,7 @@ const Schedules = ({ tourData, toggle }) => {
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
         });
     },

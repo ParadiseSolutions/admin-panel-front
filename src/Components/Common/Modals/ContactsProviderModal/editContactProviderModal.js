@@ -64,7 +64,7 @@ const EditContactProviderModal = ({ editContactModal, setEditContactModal, onCli
     }),
     onSubmit: (values) => {
 
-      console.log(values)
+      // console.log(values)
       let data = {
         foreign_key: id,
         title: values.title,
@@ -92,7 +92,7 @@ const EditContactProviderModal = ({ editContactModal, setEditContactModal, onCli
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
         });
     },

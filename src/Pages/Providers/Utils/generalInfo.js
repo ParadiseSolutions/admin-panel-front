@@ -67,7 +67,7 @@ const GeneralInformation = () => {
         .required("Max 3 chars"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
 
       Swal.fire({
         title: "Operator Request",
@@ -114,11 +114,11 @@ const GeneralInformation = () => {
 
           createProviderAPI(data)
             .then((resp) => {
-              console.log(resp);
+              // console.log(resp);
               history.push(`/providers/${resp.data.data.id}`);
             })
             .catch((error) => {
-              console.log(error);
+              // console.log(error);
               
             });
         } else {
@@ -157,11 +157,11 @@ const GeneralInformation = () => {
           
           createProviderAPI(data)
             .then((resp) => {
-              console.log(resp);
+              // console.log(resp);
               history.push(`/providers/${resp.data.data.id}`);
             })
             .catch((error) => {
-              console.log(error);
+              // console.log(error);
               
             });
         }

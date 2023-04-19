@@ -28,14 +28,21 @@ const AddNewPrivateCharter = ({
   editProductID,
   copyProduct
 }) => {
+  let id = "";
+  id = editProductID;
+  //edit data
   const [dataEdit, setDataEdit] = useState();
   useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
+    if (id) {
+      getPriceAPI(id).then((resp) => {
+        // console.log(
+        //   "data que viene al editar-------------------",
+        //   resp.data.data
+        // );
         setDataEdit(resp.data.data[0]);
       });
     }
-  }, [editProductID]);
+  }, [id, addNewPrivateCharter]);
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);

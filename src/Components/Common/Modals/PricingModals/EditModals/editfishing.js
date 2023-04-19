@@ -128,11 +128,12 @@ const EditFishing = ({
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
@@ -209,14 +210,14 @@ const EditFishing = ({
 
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           refreshTable();
           setNewFishing(false);
         });
       } 
       if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           refreshTable();
           setNewFishing(false);
         });

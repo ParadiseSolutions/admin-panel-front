@@ -20,7 +20,7 @@ const AvailableCheckbox = ({ available, availableFromIDs,  setNewListID, setAvai
     
     const selection = e.target.value;
     // const selectionFlag = availableFromIDs ? availableFromIDs.includes(selection) : [];
-    console.log('---------------',availableFromIDs)
+    // console.log('---------------',availableFromIDs)
     let idsTemp = []
     
     
@@ -36,7 +36,7 @@ const AvailableCheckbox = ({ available, availableFromIDs,  setNewListID, setAvai
 
       });
 
-      console.log('ids a enviar', idsTemp)
+      // console.log('ids a enviar', idsTemp)
       
       // setNewListID(idsTemp);
       setAvailableFromIDs(idsTemp)

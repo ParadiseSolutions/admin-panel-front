@@ -89,7 +89,7 @@ const NewDepartment = ({ history }) => {
         .required("Max 3 chars"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       let data = {
         name: values.name,
         code: values.code,
@@ -98,7 +98,7 @@ const NewDepartment = ({ history }) => {
       };
       createDepartment(data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire(
               "Created!",
@@ -110,7 +110,7 @@ const NewDepartment = ({ history }) => {
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire(
             "Error!",
             `${

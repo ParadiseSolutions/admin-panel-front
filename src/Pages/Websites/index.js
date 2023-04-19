@@ -25,10 +25,10 @@ const Websites = () => {
 
   //get info
   const data = useSelector((state) => state.websites.websites.data);
-  console.log(data)
+  // console.log(data)
   
   const onEdit = () => {
-    console.log("on edit");
+    // console.log("on edit");
   };
   const onDelete = (siteData) => {
     Swal.fire({
@@ -52,7 +52,7 @@ const Websites = () => {
             );
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

@@ -53,7 +53,7 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
       };
 
       editUserAPI(userData.id, data).then((resp) =>{
-        console.log(resp)
+        // console.log(resp)
         setProfileModal(false);
       })
     },

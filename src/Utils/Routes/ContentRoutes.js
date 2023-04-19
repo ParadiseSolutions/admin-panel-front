@@ -24,7 +24,7 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
   const loged = JSON.parse(getStorageSync('token'))
 
 
-  console.log('token', loged)
+  // console.log('token', loged)
 
   return (
     <>

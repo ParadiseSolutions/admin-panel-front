@@ -14,7 +14,7 @@ export const paymentTypesData = () => {
       };
 
       const dataResult = await getData();
-      console.log(dataResult)
+      // console.log(dataResult)
       dispatch(getPaymentSuccess(dataResult.data));
     } catch (error) {
       getPaymentError(error);

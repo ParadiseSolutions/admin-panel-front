@@ -50,7 +50,7 @@ const Users = () => {
             Swal.fire("Deleted!", "The User has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

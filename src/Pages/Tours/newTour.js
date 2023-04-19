@@ -140,10 +140,10 @@ const NewTour = ({ history }) => {
         name: values.tour_name,
         code: values.code,
       };
-      console.log(data);
+      // console.log(data);
         createTourAPI(data)
           .then((resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
             if (resp.data.status === 201) {
               Swal.fire(
                 "Created!",
@@ -155,7 +155,7 @@ const NewTour = ({ history }) => {
             }
           })
           .catch((error) => {
-            console.log(error.response);
+            // console.log(error.response);
             Swal.fire(
               "Error!",
               `${

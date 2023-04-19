@@ -105,7 +105,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         name: values.tour_name,
         code: values.code,
       };
-      console.log(data);
+      // console.log(data);
       //   createRol(data)
       //     .then((resp) => {
       //       console.log(resp.data);

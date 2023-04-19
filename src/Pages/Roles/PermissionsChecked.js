@@ -4,7 +4,7 @@ const PermissionsChecked = ({ perm, permsIds, setPermsIds }) => {
 
   const isChecked = permsIds.includes(perm) ? true : false;
 
-  console.log(permsIds)
+  // console.log(permsIds)
 
   const [checked, setChecked] = useState(
     permsIds.includes(perm) ? true : false

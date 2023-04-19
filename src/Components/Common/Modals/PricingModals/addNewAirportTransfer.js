@@ -29,17 +29,24 @@ const AddNewAirportTransfer = ({
   tourData,
   copyProduct
 }) => {
+    
+  let id = "";
+  id = editProductID;
   //edit data
   const [dataEdit, setDataEdit] = useState();
   useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
+    if (id) {
+      getPriceAPI(id).then((resp) => {
+        // console.log(
+        //   "data que viene al editar-------------------",
+        //   resp.data.data
+        // );
         setDataEdit(resp.data.data[0]);
       });
     }
-  }, [editProductID]);
+  }, [id, addNewAirportTransfer]);
 
-  console.log("data editar", dataEdit);
+  // console.log("data editar", dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -49,17 +56,13 @@ const AddNewAirportTransfer = ({
   const [priceDirection, setPriceDirection] = useState([]);
   const [priceVehicle, setPriceVehicle] = useState([]);
   const [priceZone, setPriceZone] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
+  const [priceTypeSelected, setPriceTypeSelected] = useState( ""
   );
-  const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
+  const [priceOptionSelected, setPriceOptionSelected] = useState( ""
   );
-  const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
+  const [priceCollectSelected, setPriceCollectSelected] = useState( ""
   );
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState( ""
   );
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
   const [priceDirectionSelected, setPriceDirectionSelected] = useState();

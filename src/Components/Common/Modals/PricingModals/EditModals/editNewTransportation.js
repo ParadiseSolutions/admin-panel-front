@@ -27,7 +27,7 @@ const EditTransportation = ({
   refreshTable,
   editProductID,
   tourData,
-  copyProduct
+  copyProduct,
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
@@ -38,7 +38,7 @@ const EditTransportation = ({
       });
     }
   }, [editProductID]);
-  console.log(copyProduct)
+  // console.log(copyProduct);
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -126,11 +126,12 @@ const EditTransportation = ({
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
@@ -231,8 +232,8 @@ const EditTransportation = ({
           refreshTable();
           setNewTransportation(false);
         });
-      } 
-      if(copyProduct || dataEdit === undefined) {
+      }
+      if (copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           refreshTable();
           setNewTransportation(false);

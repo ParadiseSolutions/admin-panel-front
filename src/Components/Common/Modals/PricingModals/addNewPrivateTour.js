@@ -75,7 +75,7 @@ const AddNewPrivateTour = ({ addNewPrivateTour, setAddNewPrivateTour, tourData, 
       };
 
       postPricesAPI(data).then((resp) =>{
-        console.log(resp)
+        // console.log(resp)
         setAddNewPrivateTour(false);
       })
 

@@ -19,7 +19,7 @@ import { useHistory } from 'react-router-dom'
 const SocialMedia = ({socialData, id}) => {
 
   // const {id} = useHistory()
-  console.log(id)
+  // console.log(id)
   //initial info
   const [initialData, setInitialData] = useState({})
   
@@ -60,10 +60,10 @@ const SocialMedia = ({socialData, id}) => {
         yelp: values.yelp ? values.yelp : '',
         foreign_key: id
         };
-     console.log(data)
+    //  console.log(data)
         updateSocialProviderAPI(initialData.id, data)
           .then((resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
             if (resp.data.status === 200) {
               Swal.fire(
                 "Edited!",
@@ -75,7 +75,7 @@ const SocialMedia = ({socialData, id}) => {
             }
           })
           .catch((error) => {
-            console.log(error.response);
+            // console.log(error.response);
             Swal.fire(
               "Error!",
               `${

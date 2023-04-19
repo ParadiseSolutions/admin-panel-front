@@ -27,7 +27,7 @@ const EditCartModal = ({ editCartModal, setEditCartModal, onClickEditCart, cartI
     })
   }, [cartID]);
 
-console.log(dataCarts)
+// console.log(dataCarts)
   const dispatch = useDispatch();
   //websites request
   useEffect(() => {
@@ -80,7 +80,7 @@ console.log(dataCarts)
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
         });
     },

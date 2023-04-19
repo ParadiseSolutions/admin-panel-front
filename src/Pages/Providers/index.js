@@ -57,7 +57,7 @@ const Providers = () => {
             Swal.fire("Deleted!", "Provider has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

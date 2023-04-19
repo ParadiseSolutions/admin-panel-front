@@ -30,13 +30,22 @@ const Fishing = ({
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
+
+  
+  let id = "";
+  id = editProductID;
+
   useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
+    if (id) {
+      getPriceAPI(id).then((resp) => {
+        // console.log(
+        //   "data que viene al editar-------------------",
+        //   resp.data.data
+        // );
         setDataEdit(resp.data.data[0]);
       });
     }
-  }, [editProductID]);
+  }, [id, addNewFishing]);
 
   // console.log('fishing',dataEdit);
 
@@ -209,14 +218,14 @@ const Fishing = ({
 
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           refreshTable();
           setAddNewFishing(false);
         });
       } 
       if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           refreshTable();
           setAddNewFishing(false);
         });

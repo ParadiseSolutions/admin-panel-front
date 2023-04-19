@@ -29,16 +29,25 @@ const AddNewTransportation = ({
   tourData,
   copyProduct
 }) => {
-  //edit data
-  const [dataEdit, setDataEdit] = useState();
-  useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
-        setDataEdit(resp.data.data[0]);
-      });
-    }
-  }, [editProductID]);
-  console.log(copyProduct)
+    //edit data
+    const [dataEdit, setDataEdit] = useState();
+
+  
+    let id = "";
+    id = editProductID;
+  
+    useEffect(() => {
+      if (id) {
+        getPriceAPI(id).then((resp) => {
+          // console.log(
+          //   "data que viene al editar-------------------",
+          //   resp.data.data
+          // );
+          setDataEdit(resp.data.data[0]);
+        });
+      }
+    }, [id, addNewTransportation]);
+  // console.log(copyProduct)
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);

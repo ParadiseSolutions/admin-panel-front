@@ -34,7 +34,7 @@ const GeneralInformation = () => {
   const data = useSelector((state) => state.serviceArea.serviceArea.data);
   const [selectionID, setSelectionID] = useState([]);
   function handleMulti(selected) {
-    console.log(selected)
+    // console.log(selected)
     setSelectionID(selected);
   }
   
@@ -62,7 +62,7 @@ const GeneralInformation = () => {
         .required("Max 3 chars"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
 
       let data = {
         name: values.name ? values.name : "",
@@ -93,11 +93,11 @@ const GeneralInformation = () => {
       
       createOperatorAPI(data)
         .then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           history.push(`/operators/${resp.data.data.id}`);
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
     },
   });

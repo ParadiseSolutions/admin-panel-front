@@ -13,7 +13,7 @@ const CartID = (cell) => {
 
 
 const Active = (cell) => {
-  console.log(cell.row.original.active)
+  // console.log(cell.row.original.active)
   const dispatch = useDispatch();
   const id = cell.row.original.id;
   const Offsymbol = () => {
@@ -66,7 +66,7 @@ const Active = (cell) => {
       statusUpdatePayments(id, data).then((resp) => {
         var providersRequest = () => dispatch(paymentTypesData());
     providersRequest();
-        console.log(resp);
+        // console.log(resp);
       });
     }
     if (cell.value === 0) {
@@ -76,10 +76,10 @@ const Active = (cell) => {
           var providersRequest = () => dispatch(paymentTypesData());
           providersRequest();
 
-          console.log(resp);
+          // console.log(resp);
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           setTimeout(() => {
             <Toast>
               <ToastHeader

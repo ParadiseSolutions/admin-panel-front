@@ -52,7 +52,7 @@ const ShoppingCarts = () => {
           Swal.fire("Deleted!", "The Cart has been deleted.", "success");
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
     }
   });

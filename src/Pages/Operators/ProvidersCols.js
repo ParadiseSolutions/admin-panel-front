@@ -73,7 +73,7 @@ const Active = (cell) => {
       updateOperatorStatus(id, data).then((resp) => {
         var providersRequest = () => dispatch(operatorsData());
         providersRequest();
-        console.log(resp);
+        // console.log(resp);
       });
     }
     if (cell.value === 0) {
@@ -83,10 +83,10 @@ const Active = (cell) => {
           var providersRequest = () => dispatch(operatorsData());
           providersRequest();
 
-          console.log(resp);
+          // console.log(resp);
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           setTimeout(() => {
             <Toast>
               <ToastHeader

@@ -160,11 +160,11 @@ const EditGeneralInformation = ({ data }) => {
           selectionID.length > 0 ? selectionID : initialData.service_areas_ids,
       };
 
-      console.log(data);
+      // console.log(data);
 
       updateProviderAPI(initialData.id, data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 200) {
             Swal.fire(
               "Edited!",
@@ -174,7 +174,7 @@ const EditGeneralInformation = ({ data }) => {
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire(
             "Error!",
             `${

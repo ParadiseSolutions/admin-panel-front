@@ -78,7 +78,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });
@@ -102,7 +102,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             Swal.fire("Deleted!", "The Addon has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });
@@ -196,7 +196,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               className="text-success"
               onClick={() => {
                 const prodData = cellProps.row.original;
-                console.log("data del producto", prodData);
+                // console.log("data del producto", prodData);
 
                 switch (tourData.type_id) {
                   case 2:
@@ -236,7 +236,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               className="text-warning"
               onClick={() => {
                 const prodData = cellProps.row.original;
-                console.log("data del producto", prodData);
+                // console.log("data del producto", prodData);
 
                 switch (tourData.type_id) {
                   case 2:

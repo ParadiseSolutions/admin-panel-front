@@ -30,7 +30,7 @@ import Switch from "react-switch";
 const HighSeasons = ({ tourData, toggle }) => {
   const history = useHistory();
 
-  console.log("tour data", tourData);
+  // console.log("tour data", tourData);
 
   //get initial Data
   const [seasonsData, setSeasonsData] = useState([]);
@@ -57,7 +57,7 @@ const HighSeasons = ({ tourData, toggle }) => {
   const [isEdit, setIsEdit] = useState(false)
   const [idEdit, setIDEdit] = useState(null);
   const onEditSeason = (data) => {
-    console.log(data);
+    // console.log(data);
     setIDEdit(data.id);
     setDataFromEdit(data.start_date);
     setDataToEdit(data.end_date);
@@ -122,7 +122,7 @@ const HighSeasons = ({ tourData, toggle }) => {
   }, [tourData]);
   const onChangeActive = (data) => {
     setActiveDep(!activeDep);
-    console.log(data);
+    // console.log(data);
     if (data) {
       data = { active: 1 };
       statusSeasonalityAPI(tourData.id, data);
@@ -132,7 +132,7 @@ const HighSeasons = ({ tourData, toggle }) => {
     }
   };
 
-  console.log(seasonToEdit)
+  // console.log(seasonToEdit)
 
   //form creation
   const validationType = useFormik({
@@ -157,10 +157,10 @@ const HighSeasons = ({ tourData, toggle }) => {
           start_date: values.from,
           end_date: values.to,
         };
-        console.log('desde put', data)
+        // console.log('desde put', data)
         putSeasonalityAPI(tourData.id, data)
           .then((resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
             if (resp.data.status === 200) {
               getSeasonsListAPI(tourData.id).then((resp) => {
                 setSeasonsData(resp.data.data);
@@ -174,7 +174,7 @@ const HighSeasons = ({ tourData, toggle }) => {
             }
           })
           .catch((error) => {
-            console.log(error.response);
+            // console.log(error.response);
             Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
           });
       } else {
@@ -183,10 +183,10 @@ const HighSeasons = ({ tourData, toggle }) => {
           start_date: values.from,
           end_date: values.to,
         };
-        console.log('desde post', data)
+        // console.log('desde post', data)
         postSeasonalityAPI(tourData.id, data)
           .then((resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
             if (resp.data.status === 201) {
               if (tourData?.id) {
                 getSeasonsListAPI(tourData.id).then((resp) => {
@@ -201,7 +201,7 @@ const HighSeasons = ({ tourData, toggle }) => {
             }
           })
           .catch((error) => {
-            console.log(error.response);
+            // console.log(error.response);
             Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
           });
       }

@@ -84,16 +84,16 @@ const NewRol = ({ history }) => {
       
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       let data = {
         name: values.name,
         permission_type_ids: actionsAdded,
         user_ids: membersAdded,
       };
-      console.log(data)
+      // console.log(data)
       createRol(data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire(
               "Created!",
@@ -105,7 +105,7 @@ const NewRol = ({ history }) => {
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire(
             "Error!",
             `${

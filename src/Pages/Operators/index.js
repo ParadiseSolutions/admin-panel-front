@@ -42,7 +42,7 @@ const Operators = () => {
             Swal.fire("Deleted!", "Operator has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

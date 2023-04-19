@@ -27,7 +27,7 @@ const ForgotPassword = () => {
         .required("Email is required"),
     }),
     onSubmit: (values) => {
-      console.log("values", values);
+      // console.log("values", values);
       let data = {
         email: values.email,
       };
@@ -39,7 +39,7 @@ const ForgotPassword = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           setError(true);
         });
     },
