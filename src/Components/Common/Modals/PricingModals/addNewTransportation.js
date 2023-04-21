@@ -130,8 +130,8 @@ const AddNewTransportation = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
+      min: dataEdit ? dataEdit?.pricedetails[7]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[7]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
@@ -625,7 +625,7 @@ const AddNewTransportation = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? vehicle.id ===
-                                  dataEdit.pricedetails[6].source_id
+                                  dataEdit.pricedetails[7].source_id
                                 : false
                             }
                           >
@@ -656,7 +656,7 @@ const AddNewTransportation = ({
                             value={zone.id}
                             selected={
                               dataEdit && dataEdit.pricedetails
-                                ? zone.id === dataEdit.pricedetails[7].source_id
+                                ? zone.id === dataEdit.pricedetails[6].source_id
                                 : false
                             }
                           >

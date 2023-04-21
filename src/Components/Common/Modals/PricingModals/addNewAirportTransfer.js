@@ -27,9 +27,8 @@ const AddNewAirportTransfer = ({
   refreshTable,
   editProductID,
   tourData,
-  copyProduct
+  copyProduct,
 }) => {
-    
   let id = "";
   id = editProductID;
   //edit data
@@ -56,18 +55,14 @@ const AddNewAirportTransfer = ({
   const [priceDirection, setPriceDirection] = useState([]);
   const [priceVehicle, setPriceVehicle] = useState([]);
   const [priceZone, setPriceZone] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState( ""
-  );
-  const [priceOptionSelected, setPriceOptionSelected] = useState( ""
-  );
-  const [priceCollectSelected, setPriceCollectSelected] = useState( ""
-  );
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState( ""
-  );
-  const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
-  const [priceDirectionSelected, setPriceDirectionSelected] = useState();
-  const [priceVehicleSelected, setPriceVehicleSelected] = useState();
-  const [priceZoneSelected, setPriceZoneSelected] = useState();
+  const [priceTypeSelected, setPriceTypeSelected] = useState("");
+  const [priceOptionSelected, setPriceOptionSelected] = useState("");
+  const [priceCollectSelected, setPriceCollectSelected] = useState("");
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
+  const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState("");
+  const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
+  const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
+  const [priceZoneSelected, setPriceZoneSelected] = useState("");
 
   useEffect(() => {
     if (addNewAirportTransfer) {
@@ -166,72 +161,79 @@ const AddNewAirportTransfer = ({
         price_details: [
           {
             pricing_option_id: 10,
-            source_id: priceTypeSelected !== ''
-              ? priceTypeSelected
-              : dataEdit.pricedetails[0].source_id,
+            source_id:
+              priceTypeSelected !== ""
+                ? priceTypeSelected
+                : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 11,
-            source_id: priceOptionSelected !== ''
-              ? priceOptionSelected
-              : dataEdit.pricedetails[1].source_id,
+            source_id:
+              priceOptionSelected !== ""
+                ? priceOptionSelected
+                : dataEdit.pricedetails[1].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 14,
-            source_id: priceCollectSelected !== ''
-              ? priceCollectSelected
-              : dataEdit.pricedetails[2].source_id,
+            source_id:
+              priceCollectSelected !== ""
+                ? priceCollectSelected
+                : dataEdit.pricedetails[2].source_id,
             min: 1,
             max: 3,
             label: "px",
           },
-          {
-            pricing_option_id: 30,
-            source_id: priceSeasonSelected !== ''
-              ? priceSeasonSelected
-              : dataEdit.pricedetails[3]?.source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
+          // {
+          //   pricing_option_id: 30,
+          //   source_id: priceSeasonSelected !== ''
+          //     ? priceSeasonSelected
+          //     : dataEdit.pricedetails[3]?.source_id,
+          //   min: null,
+          //   max: null,
+          //   label: null,
+          // },
           {
             pricing_option_id: 12,
-            source_id: priceTransferTypeSelected !== ''
-              ? priceTransferTypeSelected
-              : dataEdit.pricedetails[4].source_id,
+            source_id:
+              priceTransferTypeSelected !== ""
+                ? priceTransferTypeSelected
+                : dataEdit.pricedetails[4].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 13,
-            source_id: priceDirectionSelected !== ''
-              ? priceDirectionSelected
-              : dataEdit.pricedetails[5].source_id,
+            source_id:
+              priceDirectionSelected !== ""
+                ? priceDirectionSelected
+                : dataEdit.pricedetails[5].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 50,
-            source_id: priceZoneSelected !== ''
-              ? priceZoneSelected
-              : dataEdit.pricedetails[7].source_id,
+            source_id:
+              priceZoneSelected !== ""
+                ? priceZoneSelected
+                : dataEdit.pricedetails[7].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 17,
-            source_id: priceVehicleSelected !== ''
-              ? priceVehicleSelected
-              : dataEdit.pricedetails[6].source_id,
+            source_id:
+              priceVehicleSelected !== ""
+                ? priceVehicleSelected
+                : dataEdit.pricedetails[6].source_id,
             min: values.min,
             max: values.max,
             label: null,
@@ -245,9 +247,9 @@ const AddNewAirportTransfer = ({
           setAddNewAirportTransfer(false);
           refreshTable();
         });
-      } 
-      
-      if(copyProduct || dataEdit === undefined) {
+      }
+
+      if (copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           // console.log(resp);
           setAddNewAirportTransfer(false);

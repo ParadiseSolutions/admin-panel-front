@@ -164,72 +164,56 @@ const EditAirportTransfer = ({
         price_details: [
           {
             pricing_option_id: 10,
-            source_id: priceTypeSelected
-              ? priceTypeSelected
-              : dataEdit.pricedetails[0].source_id,
+            source_id: priceTypeSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 7,
-            source_id: priceOptionSelected
-              ? priceOptionSelected
-              : dataEdit.pricedetails[1].source_id,
+            source_id: priceOptionSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 9,
-            source_id: priceCollectSelected
-              ? priceCollectSelected
-              : dataEdit.pricedetails[2].source_id,
+            source_id: priceCollectSelected,
             min: 1,
             max: 3,
             label: "px",
           },
           {
             pricing_option_id: 29,
-            source_id: priceSeasonSelected
-              ? priceSeasonSelected
-              : dataEdit.pricedetails[3].source_id,
+            source_id: priceSeasonSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 12,
-            source_id: priceTransferTypeSelected
-              ? priceTransferTypeSelected
-              : dataEdit.pricedetails[4].source_id,
+            source_id: priceTransferTypeSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 13,
-            source_id: priceDirectionSelected
-              ? priceDirectionSelected
-              : dataEdit.pricedetails[5].source_id,
+            source_id: priceDirectionSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 50,
-            source_id: priceZoneSelected
-              ? priceZoneSelected
-              : dataEdit.pricedetails[7].source_id,
+            source_id: priceZoneSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 17,
-            source_id: priceVehicleSelected
-              ? priceVehicleSelected
-              : dataEdit.pricedetails[6].source_id,
+            source_id: priceVehicleSelected,
             min: values.min,
             max: values.max,
             label: null,
@@ -633,7 +617,7 @@ const EditAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? vehicle.id ===
-                                  dataEdit.pricedetails[6].source_id
+                                  dataEdit.pricedetails[7].source_id
                                 : false
                             }
                           >
@@ -654,12 +638,18 @@ const EditAirportTransfer = ({
                         setPriceZoneSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
+                      
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceZone, (zone, index) => {
                         return (
-                          <option key={index} value={zone.id}>
+                          <option key={index} value={zone.id}  selected={
+                            dataEdit && dataEdit.pricedetails
+                              ? zone.id ===
+                                dataEdit.pricedetails[6].source_id
+                              : false
+                          }>
                             {zone.text}
                           </option>
                         );

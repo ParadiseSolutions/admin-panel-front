@@ -64,9 +64,9 @@ const AddNewPrivateCharter = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
-  const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState();
-  const [priceDurationSelected, setPriceDurationSelected] = useState();
-  const [priceLocationSelected, setPriceLocationSelected] = useState();
+  const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
+  const [priceDurationSelected, setPriceDurationSelected] = useState("");
+  const [priceLocationSelected, setPriceLocationSelected] = useState("");
   useEffect(() => {
     if (addNewPrivateCharter) {
       getPricingOptionsAPI(38).then((resp) => {
@@ -127,8 +127,8 @@ const AddNewPrivateCharter = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[5]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[5]?.max : "",
+      min: dataEdit ? dataEdit?.pricedetails[4]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[4]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
@@ -184,15 +184,15 @@ const AddNewPrivateCharter = ({
             max: null,
             label: null,
           },
-          {
-            pricing_option_id: 44,
-            source_id: priceSeasonSelected !== ''
-              ? priceSeasonSelected
-              : dataEdit.pricedetails[3]?.source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
+          // {
+          //   pricing_option_id: 44,
+          //   source_id: priceSeasonSelected !== ''
+          //     ? priceSeasonSelected
+          //     : dataEdit.pricedetails[3]?.source_id,
+          //   min: null,
+          //   max: null,
+          //   label: null,
+          // },
           {
             pricing_option_id: 48,
             source_id: priceCharterTypeSelected !== ''

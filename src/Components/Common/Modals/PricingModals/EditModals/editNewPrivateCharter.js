@@ -153,61 +153,47 @@ const EditPrivateCharter = ({
         price_details: [
           {
             pricing_option_id: 38,
-            source_id: priceTypeSelected
-              ? priceTypeSelected
-              : dataEdit.pricedetails[0].source_id,
+            source_id: priceTypeSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 39,
-            source_id: priceOptionSelected
-              ? priceOptionSelected
-              : dataEdit.pricedetails[1].source_id,
+            source_id: priceOptionSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 41,
-            source_id: priceCollectSelected
-              ? priceCollectSelected
-              : dataEdit.pricedetails[2].source_id,
+            source_id: priceCollectSelected,
             min: 1,
             max: 3,
             label: "px",
           },
           {
             pricing_option_id: 44,
-            source_id: priceSeasonSelected
-              ? priceSeasonSelected
-              : dataEdit.pricedetails[3].source_id,
+            source_id: priceSeasonSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 48,
-            source_id: priceCharterTypeSelected
-              ? priceCharterTypeSelected
-              : dataEdit.pricedetails[4].source_id,
+            source_id: priceCharterTypeSelected,
             min: values.min,
             max: values.max,
             label: null,
           },
           {
             pricing_option_id: 40,
-            source_id: priceDurationSelected
-              ? priceDurationSelected
-              : dataEdit.pricedetails[5].source_id,
+            source_id: priceDurationSelected,
             label: null,
           },
           {
             pricing_option_id: 42,
-            source_id: priceLocationSelected
-              ? priceLocationSelected
-              : dataEdit.pricedetails[6].source_id,
+            source_id: priceLocationSelected,
             label: null,
           },
         ],

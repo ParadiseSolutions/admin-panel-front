@@ -139,9 +139,7 @@ const AddNewProductPricing = ({
           {
             pricing_option_id: 1,
             source_id:
-              priceTypeSelected !== ""
-                ? priceTypeSelected
-                : dataEdit.pricedetails[0].source_id,
+              priceTypeSelected,
             min: null,
             max: null,
             label: null,
@@ -149,9 +147,7 @@ const AddNewProductPricing = ({
           {
             pricing_option_id: 2,
             source_id:
-              priceOptionSelected !== ""
-                ? priceOptionSelected
-                : dataEdit.pricedetails[1].source_id,
+              priceOptionSelected,
             min: null,
             max: null,
             label: null,
@@ -159,9 +155,7 @@ const AddNewProductPricing = ({
           {
             pricing_option_id: 4,
             source_id:
-              priceCollectSelected !== ""
-                ? priceCollectSelected
-                : dataEdit.pricedetails[2].source_id,
+              priceCollectSelected,
             min: 1,
             max: 3,
             label: "px",
@@ -267,7 +261,6 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
               </Row>
-              {dataEdit && dataEdit.pricedetails ? (
                 <>
                   <Row className="d-flex">
                     <Col className="col-9 d-flex justify-content-between">
@@ -472,7 +465,6 @@ const AddNewProductPricing = ({
                     </Col>
                   </Row>
                 </>
-              ) : null}
 
               <Row
                 className="col-12 p-1 mt-4 mb-2"
