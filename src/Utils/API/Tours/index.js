@@ -119,6 +119,13 @@ export const putSeasonalityAPI = (tourID, body) => {
   });
 };
 
+export const putSeasonalAPI = (tourID, body) => {
+  const url = `${API_URL}/tours/${tourID}/scheduleDate`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
 export const statusSeasonalityAPI = (tourID, body) => {
   const url = `${API_URL}/tours/${tourID}/seasonality/status`;
   return axios.put (url,body, {

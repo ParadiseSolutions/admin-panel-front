@@ -200,7 +200,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
                 switch (tourData.type_id) {
                   case 2:
-                    setAddNewProduct(!addNewProduct);
+                    // setAddNewProduct(!addNewProduct);
+                    setAddNewPrivateTour(!addNewPrivateTour)
                     setEditProductID(prodData.id);
                     break;
                   case 3:
@@ -240,7 +241,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
                 switch (tourData.type_id) {
                   case 2:
-                    setAddNewProduct(!addNewProduct);
+                    // setAddNewProduct(!addNewProduct);
+                    setAddNewPrivateTour(!addNewPrivateTour)
                     setEditProductID(prodData.id);
                     break;
                   case 3:
@@ -309,7 +311,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const onClickNewProduct = () => {
     switch (tourData.type_id) {
       case 2:
-        setNewProduct(!addNewProduct);
+        // setNewProduct(!addNewProduct);
+        setNewPrivateTour(!addNewPrivateTour)
         break;
       case 3:
         setNewAirportTransfer(!addNewAirportTransfer);

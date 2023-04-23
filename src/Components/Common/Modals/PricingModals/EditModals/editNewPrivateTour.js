@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import { getPricingOptionsAPI, postPricesAPI } from "../../../../../Utils/API/Tours";
 import { map } from "lodash";
 
-const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProduct }) => {
+const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProduct, refreshTable }) => {
 
    //combo box request
    const [priceTypeData, setPriceTypeData] = useState([]);
@@ -62,7 +62,7 @@ const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProd
         public: values.public_price,
         provider_price: values.provider_price,
         rate: values.rate,
-        net_rate: values.net_price,
+        net_rate: values.net_rate,
         compare_at_url: values.compare_at_url,
         ship_price: values.ship_price,
         compare_at: values.compare_at,
@@ -71,13 +71,36 @@ const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProd
         eff_rate: values.eff_rate,
         commission: values.commission,
         deposit: values.deposit,
-        balance_due: values.balance_due,
-
+        net_price: values.balance_due,
+        price_details: [
+          {
+            pricing_option_id: 6,
+            source_id: priceTypeSelected,
+            
+          },
+          {
+            pricing_option_id: 7,
+            source_id: priceOptionSelected,
+            
+          },
+          {
+            pricing_option_id: 9,
+            source_id: priceCollectSelected,
+            
+          },
+          {
+            pricing_option_id: 29,
+            source_id: priceSeasonSelected,
+            
+          },
+        ],
       };
 
+      console.log(data)
       postPricesAPI(data).then((resp) =>{
         // console.log(resp)
         setNewPrivateTour(false);
+        refreshTable()
       })
 
       resetForm({values: ''})
@@ -118,7 +141,7 @@ const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProd
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            // validationType.handleSubmit();
+            validationType.handleSubmit();
             return false;
           }}
           className="custom-validation"
