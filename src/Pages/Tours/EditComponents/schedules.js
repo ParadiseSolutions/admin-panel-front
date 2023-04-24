@@ -11,6 +11,7 @@ import {
   getScheduleDatesOverrideAPI,
   getSeasonalityAPI,
   deleteOverriteDate,
+  deleteSchedule,
 } from "../../../Utils/API/Tours";
 import AddNewScheduleModal from "../../../Components/Common/Modals/ScheduleModals/newSchedule";
 import EditScheduleModal from "../../../Components/Common/Modals/ScheduleModals/editSchedule";
@@ -113,7 +114,7 @@ const Schedules = ({ tourData, toggle }) => {
   }, [seasonalityData]);
   //delete season
   const onDeleteSeason = (data) => {
-    deleteSeasonalityAPI(tourData.id, data.id).then((resp) => {
+    deleteSchedule(tourData.id, data.id).then((resp) => {
       Swal.fire("Deleted!", "Time has been deleted.", "success").then(() => {
         // history.goBack();
       });

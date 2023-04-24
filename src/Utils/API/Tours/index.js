@@ -304,6 +304,14 @@ export const postSchedule = (id, body) => {
 };
 
 
+export const deleteSchedule = (Tourid, dateID) => {
+  const url = `${API_URL}/tours/${Tourid}/scheduleTime/${dateID}`
+  return axios.delete (url, {
+    headers: options,
+  });
+};
+
+
 // overrite dates
 export const postOverriteDate = (id, body) => {
   const url = `${API_URL}/tours/${id}/scheduleDateOverride`
