@@ -56,7 +56,7 @@ const Schedules = ({ tourData, toggle }) => {
       setDatesOverrideData(resp.data.data);
     });
     getSeasonalityAPI(TourID).then((resp) => {
-      console.log(resp);
+      // console.log(resp);
 
       setSeasonalityData(resp.data.data);
     });
@@ -75,7 +75,7 @@ const Schedules = ({ tourData, toggle }) => {
     }
   }, [seasonalityData]);
 
-  console.log("seasonality data", seasonalityData);
+  // console.log("seasonality data", seasonalityData);
   //refresh tables
   const refresh = () => {
     getScheduleTimeAPI(TourID).then((resp) => {

@@ -5,7 +5,8 @@ import Swal from "sweetalert2";
 import {
   getScheduleTypesAPI,
   getPricesPricingAPI,
-  postSchedule
+  putSchedule,
+  getScheduleEditDataAPI,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -23,11 +24,131 @@ import { map } from "lodash";
 import Switch from "react-switch";
 import { useParams } from "react-router-dom";
 
-const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh }) => {
+const timeFrameOptions = [
+  { value: "AM", label: "AM" },
+  { value: "PM", label: "PM" },
+];
+const hoursFrameOptions = [
+  { value: "Hours", label: "Hours" },
+  { value: "Minutes", label: "Minutes" },
+];
+
+const EditScheduleModal = ({
+  editSchedule,
+  setEditSchedule,
+  tourData,
+  refresh,
+  scheduleEditID,
+}) => {
   const { id } = useParams();
-  //initial Data
+
+  console.log(scheduleEditID);
+  //edit data
+  const [dataEdit, setDataEdit] = useState([]);
   const [scheduleTypesData, setSchedulesTypesData] = useState([]);
   const [productsData, setProductsData] = useState([]);
+  const [typeSelected, setTypeSelected] = useState(null);
+
+  const [daysList, setDayList] = useState([]);
+  const [activeDep, setActiveDep] = useState(false);
+  const [productSelected, setProductSelected] = useState(null);
+  const [timeFrameSingleSchedule, setTimeFrameSingleSchedule] = useState("AM");
+  const [timeFrameMulti1, setTimeFrameMulti1] = useState("AM");
+  const [timeFrameMulti2, setTimeFrameMulti2] = useState("AM");
+  const [timeFrameMulti3, setTimeFrameMulti3] = useState("AM");
+  const [timeFrameMulti4, setTimeFrameMulti4] = useState("AM");
+  const [timeFrameMulti5, setTimeFrameMulti5] = useState("AM");
+  const [timeFrameMulti6, setTimeFrameMulti6] = useState("AM");
+  const [timeFrameIntervalFrom, setTimeFrameIntervalFrom] = useState("AM");
+  const [timeFrameIntervalTo, setTimeFrameIntervalTo] = useState("AM");
+  const [unitSelected, setUnitSelected] = useState("Hours");
+
+  useEffect(() => {
+    if (scheduleEditID) {
+      getScheduleEditDataAPI(id, scheduleEditID.id).then((response) => {
+        console.log("respuesta a editar", response.data.data);
+        setDataEdit(response.data.data);
+      });
+    }
+  }, [scheduleEditID]);
+
+  //asignacion de data
+  //states to edit
+  const [productToEdit, setProductToEdit] = useState(null);
+  const [typeToEdit, setTypeToEdit] = useState(null);
+  const [startTimeSS, setStartTimeSS] = useState(null);
+  const [timeFrameSS, setTimeFrameSS] = useState(null);
+  const [unitSS, setUnitSS] = useState(null);
+  const [durationSS, setDurationSS] = useState(null);
+
+  const [unitI, setUnitI] = useState(null);
+  const [durationI, setDurationI] = useState(null);
+  const [startTimeI, setStartTimeI] = useState(null);
+  const [startFrameI, setStartFrameI] = useState(null);
+  const [endTimeI, setEndTimeI] = useState(null);
+  const [endFrameI, setEndFrameI] = useState(null);
+
+  const [editTimeM1, setEditTimeM1] = useState(null);
+  const [editFrameM1, setEditFrameM1] = useState(null);
+  const [editTimeM2, setEditTimeM2] = useState(null);
+  const [editFrameM2, setEditFrameM2] = useState(null);
+  const [editTimeM3, setEditTimeM3] = useState(null);
+  const [editFrameM3, setEditFrameM3] = useState(null);
+  const [editTimeM4, setEditTimeM4] = useState(null);
+  const [editFrameM4, setEditFrameM4] = useState(null);
+  const [editTimeM5, setEditTimeM5] = useState(null);
+  const [editFrameM5, setEditFrameM5] = useState(null);
+  const [editTimeM6, setEditTimeM6] = useState(null);
+  const [editFrameM6, setEditFrameM6] = useState(null);
+  const [fromDateEdit, setFromDateEdit] = useState(null);
+  const [toDateEdit, setToDateEdit] = useState(null);
+  useEffect(() => {
+    if (dataEdit.type_id === 4) {
+      let from_time = dataEdit.from.split(" ");
+      setUnitSS(dataEdit.units);
+      setStartTimeSS(from_time[0]);
+      setTimeFrameSS(from_time[1]);
+      setDurationSS(dataEdit.duration);
+    }
+    if (dataEdit.type_id === 6) {
+      let from_time = dataEdit.from.split(" ");
+      let to_time = dataEdit.to.split(" ");
+      setUnitI(dataEdit.units);
+      setDurationI(dataEdit.duration);
+      setStartTimeI(from_time[0]);
+      setStartFrameI(from_time[1]);
+      setEndTimeI(to_time[0]);
+      setEndFrameI(to_time[1]);
+    }
+    if (dataEdit.type_id === 3) {
+      let detailData = dataEdit.detail.split(",");
+      let newArr = [];
+      detailData.forEach((element) => {
+        newArr.push(element.split(" "));
+      });
+      setEditTimeM1(newArr[0][0]);
+      setEditFrameM1(newArr[0][1]);
+      setEditTimeM2(newArr[1][0]);
+      setEditFrameM2(newArr[1][1]);
+      setEditTimeM3(newArr[2][0]);
+      setEditFrameM3(newArr[2][1]);
+      setEditTimeM4(newArr[3][0]);
+      setEditFrameM4(newArr[3][1]);
+      setEditTimeM5(newArr[4][0]);
+      setEditFrameM5(newArr[4][1]);
+      setEditTimeM6(newArr[5][0]);
+      setEditFrameM6(newArr[5][1]);
+      // console.log(newArr);
+    }
+    setTypeToEdit(dataEdit.type_id);
+    setProductToEdit(dataEdit.price_id);
+    setFromDateEdit(dataEdit.from_date);
+    setToDateEdit(dataEdit.to_date);
+    setDayList(dataEdit.runs)
+  }, [dataEdit, editSchedule]);
+
+  //initial Data
+
   useEffect(() => {
     getScheduleTypesAPI().then((resp) => {
       setSchedulesTypesData(resp.data.data);
@@ -40,17 +161,16 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
         setProductsData(resp.data.data);
       });
     }
-  }, [tourData]);
+  }, [tourData, editSchedule]);
 
   // type onChange
-  const [typeSelected, setTypeSelected] = useState(null);
+
   const onChangeType = (selectionType) => {
-   
     setTypeSelected(selectionType);
   };
 
   // checkbox list
-  const [daysList, setDayList] = useState([]);
+
   const onAddDay = (day) => {
     const selection = +day;
     const selectionFlag = daysList.includes(selection);
@@ -100,44 +220,31 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
       </div>
     );
   };
-  const [activeDep, setActiveDep] = useState(false);
-  // useEffect(() => {
-  //   if (tourData?.seasonality) {
-  //     setActiveDep(tourData.seasonality === 1 ? true : false);
-  //   }
-  // }, [tourData]);
+
   const onChangeActive = (data) => {
     setActiveDep(!activeDep);
   };
 
   //ids selected
-  const [productSelected, setProductSelected] = useState(null);
-  const [timeFrameSingleSchedule, setTimeFrameSingleSchedule] = useState("AM");
-  const [timeFrameMulti1, setTimeFrameMulti1] = useState('AM')
-  const [timeFrameMulti2, setTimeFrameMulti2] = useState('AM')
-  const [timeFrameMulti3, setTimeFrameMulti3] = useState('AM')
-  const [timeFrameMulti4, setTimeFrameMulti4] = useState('AM')
-  const [timeFrameMulti5, setTimeFrameMulti5] = useState('AM')
-  const [timeFrameMulti6, setTimeFrameMulti6] = useState('AM')
-  const [timeFrameIntervalFrom, setTimeFrameIntervalFrom] = useState('AM')
-  const [timeFrameIntervalTo, setTimeFrameIntervalTo] = useState('AM')
-  const [unitSelected, setUnitSelected] = useState('Hours')
+
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      start_time_single: '',
-      from_intervals: '',
-      to_interval:'',
-      duration: '',
-      from: '',
-      to: '',
-      first_field_multi: '',
-      second_field_multi: '',
-      third_field_multi:'',
-      fourth_field_multi: '',
-      fifth_field_multi: '',
-      sixth_field_multi: ''
+      start_time_single: startTimeSS ? startTimeSS : "",
+      from_intervals: startTimeI ? startTimeI : "",
+      to_interval: endTimeI ? endTimeI : "",
+      duration: durationSS ? durationSS : durationI ? durationI : "",
+      from: "",
+      to: "",
+      first_field_multi: editTimeM1 ? editTimeM1 : "",
+      second_field_multi: editTimeM2 ? editTimeM2 : "",
+      third_field_multi: editTimeM3 ? editTimeM3 : "",
+      fourth_field_multi: editTimeM4 ? editTimeM4 : "",
+      fifth_field_multi: editTimeM5 ? editTimeM5 : "",
+      sixth_field_multi: editTimeM6 ? editTimeM6 : "",
+      from_date: fromDateEdit ? fromDateEdit : "",
+      to_date: toDateEdit ? toDateEdit : "",
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -145,37 +252,40 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values, { resetForm }) => {
-      
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
       const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
       const startTimeIntervalsTo = `${values.to_interval} ${timeFrameIntervalTo}`;
       const daysListString = daysList.toString();
-      
-      let multiTimesList = []
-      if (values.first_field_multi !== '') {
-        multiTimesList.push(`${values.first_field_multi} ${timeFrameMulti1}`)
+
+      let multiTimesList = [];
+      if (values.first_field_multi !== "") {
+        multiTimesList.push(`${values.first_field_multi} ${timeFrameMulti1}`);
       }
-      if (values.second_field_multi !== '') {
-        multiTimesList.push(`${values.second_field_multi} ${timeFrameMulti2}`)
+      if (values.second_field_multi !== "") {
+        multiTimesList.push(`${values.second_field_multi} ${timeFrameMulti2}`);
       }
-      if (values.third_field_multi !== '') {
-        multiTimesList.push(`${values.third_field_multi} ${timeFrameMulti3}`)
+      if (values.third_field_multi !== "") {
+        multiTimesList.push(`${values.third_field_multi} ${timeFrameMulti3}`);
       }
-      if (values.fourth_field_multi !== '') {
-        multiTimesList.push(`${values.fourth_field_multi} ${timeFrameMulti4}`)
+      if (values.fourth_field_multi !== "") {
+        multiTimesList.push(`${values.fourth_field_multi} ${timeFrameMulti4}`);
       }
-      if (values.fifth_field_multi !== '') {
-        multiTimesList.push(`${values.fifth_field_multi} ${timeFrameMulti5}`)
+      if (values.fifth_field_multi !== "") {
+        multiTimesList.push(`${values.fifth_field_multi} ${timeFrameMulti5}`);
       }
-      if (values.sixth_field_multi !== '') {
-        multiTimesList.push(`${values.sixth_field_multi} ${timeFrameMulti6}`)
+      if (values.sixth_field_multi !== "") {
+        multiTimesList.push(`${values.sixth_field_multi} ${timeFrameMulti6}`);
       }
 
       let data = {
-        type_id: typeSelected,
+        type_id: typeSelected ? typeSelected : dataEdit.type_id,
         detail: multiTimesList.toString(),
-        from: values.start_time_single ? startTimeSingle : values.from_intervals ? startTimeIntervalsFrom : '', // cambiarlo despues por una validacion
-        to: values.to_interval ? startTimeIntervalsTo : '',
+        from: values.start_time_single
+          ? startTimeSingle
+          : values.from_intervals
+          ? startTimeIntervalsFrom
+          : "", // cambiarlo despues por una validacion
+        to: values.to_interval ? startTimeIntervalsTo : "",
         runs: daysListString,
         temporary_schedule: activeDep === true ? 1 : 0,
         from_date: values.from_date,
@@ -184,34 +294,35 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
         duration: values.duration ? values.duration : "",
         price_id: productSelected,
       };
+console.log(data)
+putSchedule(id, data)
+        .then((resp) => {
+          if (resp.data.status === 201) {
+            Swal.fire("Success!", "Schedule has been created", "success").then(
+              () => {
+                setEditSchedule(false);
+                refresh();
+              }
+            );
+          }
+        })
+        .catch((error) => {
+          let errorMessages = [];
+          Object.entries(error.response.data.data).map((item) => {
+            return errorMessages.push(item[1]);
+          });
 
-      
-      postSchedule(id, data).then((resp) => {
-        if (resp.data.status === 201) {
-          Swal.fire("Success!", "Schedule has been created", "success").then(
-            () => {
-              setEditSchedule(false)
-              refresh()
-            }
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(errorMessages[0])
           );
-        }
-      })
-      .catch((error) => {
-        let errorMessages = [];
-        Object.entries(error.response.data.data).map((item) => {
-          return errorMessages.push(item[1]);
         });
-
-        Swal.fire(
-          "Error!",
-          // {error.response.},
-          String(errorMessages[0])
-        );
-      });
 
       resetForm({ values: "" });
     },
   });
+
   return (
     <Modal
       centered
@@ -229,27 +340,27 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
         }}
         className="custom-validation"
       >
-      <div
-        className="modal-header"
-        style={{ backgroundColor: "#3DC7F4", border: "none" }}
-      >
-        <h1 className="modal-title mt-0 text-white">+ Edit Schedule Entry</h1>
-        <button
-          onClick={() => {
-            setEditSchedule(false);
-          }}
-          type="button"
-          className="close"
-          style={{ color: "white" }}
-          data-dismiss="modal"
-          aria-label="Close"
+        <div
+          className="modal-header"
+          style={{ backgroundColor: "#3DC7F4", border: "none" }}
         >
-          <span aria-hidden="true" className="text-white bg-white">
-            &times;
-          </span>
-        </button>
-      </div>
-      <div className="modal-body">
+          <h1 className="modal-title mt-0 text-white">+ Edit Schedule Entry</h1>
+          <button
+            onClick={() => {
+              setEditSchedule(false);
+            }}
+            type="button"
+            className="close"
+            style={{ color: "white" }}
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true" className="text-white bg-white">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div className="modal-body">
           <Row xl={12} className="d-flex">
             <Col className="col-3">
               <img
@@ -274,7 +385,13 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                       <option>Select....</option>
                       {map(productsData, (product, index) => {
                         return (
-                          <option key={index} value={product.id}>
+                          <option
+                            key={index}
+                            value={product.id}
+                            selected={
+                              +product.id === +productToEdit ? true : false
+                            }
+                          >
                             {product.label}
                           </option>
                         );
@@ -298,7 +415,11 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                       <option>Select....</option>
                       {map(scheduleTypesData, (type, index) => {
                         return (
-                          <option key={index} value={type.id}>
+                          <option
+                            key={index}
+                            value={type.id}
+                            selected={typeToEdit === type.id ? true : false}
+                          >
                             {type.name}
                           </option>
                         );
@@ -309,7 +430,7 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
 
                 <Col className="col-9">
                   <Row className="d-flex">
-                    {typeSelected && typeSelected === "4" ? (
+                    {typeSelected === "4" || typeToEdit === 4 ? (
                       <>
                         <Col className="col-4">
                           <Label className="form-label">Start Time</Label>
@@ -344,8 +465,19 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               }}
                               onBlur={validationType.handleBlur}
                             >
-                              <option value={"AM"}>AM</option>
-                              <option value={"PM"}>PM</option>
+                              {timeFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      timeFrameSS === item.value ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </Col>
@@ -360,8 +492,19 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               }}
                               onBlur={validationType.handleBlur}
                             >
-                              <option value='Hours'>Hours</option>
-                              <option value='Minutes'>Minutes</option>
+                              {hoursFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      item.value === unitSS ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </Col>
@@ -392,8 +535,8 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                         </Col>
                       </>
                     ) : null}
-                    
-                    {typeSelected && typeSelected === "6" ? (
+
+                    {typeSelected === "6" || typeToEdit === 6 ? (
                       <>
                         <Col className="col-4 ">
                           <Label className="form-label">Time Unit</Label>
@@ -406,8 +549,19 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               }}
                               onBlur={validationType.handleBlur}
                             >
-                              <option value='Hours'>Hours</option>
-                              <option value='Minutes'>Minutes</option>
+                              {hoursFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      item.value === unitI ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </Col>
@@ -441,7 +595,7 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                   </Row>
                 </Col>
 
-                {typeSelected && typeSelected === "6" ? (
+                {typeSelected === "6" || typeToEdit === 6 ? (
                   <Row className="d-flex">
                     <div className="col-4 d-flex mt-5">
                       <div className="input-group">
@@ -469,19 +623,32 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                         <Input
                           type="select"
                           name=""
-                          onChange={(e) => setTimeFrameIntervalFrom(e.target.value)}
+                          onChange={(e) =>
+                            setTimeFrameIntervalFrom(e.target.value)
+                          }
                           onBlur={validationType.handleBlur}
                           // value={validationType.values.start_time || ""}
                         >
-                          <option value={'AM'}>AM</option>
-                          <option value={'PM'}>PM</option>
+                          {timeFrameOptions.map((item, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={item.value}
+                                selected={
+                                  item.value === startFrameI ? true : false
+                                }
+                              >
+                                {item.label}
+                              </option>
+                            );
+                          })}
                         </Input>
                       </div>
                     </div>
                     <div className="col-4 d-flex mt-5">
                       <div className="input-group">
                         <div className="input-group-text">To</div>
-                        
+
                         <Input
                           name="to_interval"
                           className="form-control"
@@ -505,19 +672,32 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                         <Input
                           type="select"
                           name=""
-                          onChange={(e) => setTimeFrameIntervalTo(e.target.value)}
+                          onChange={(e) =>
+                            setTimeFrameIntervalTo(e.target.value)
+                          }
                           onBlur={validationType.handleBlur}
                           // value={validationType.values.start_time || ""}
                         >
-                          <option value={'AM'}>AM</option>
-                          <option value={'PM'}>PM</option>
+                          {timeFrameOptions.map((item, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={item.value}
+                                selected={
+                                  item.value === endFrameI ? true : false
+                                }
+                              >
+                                {item.label}
+                              </option>
+                            );
+                          })}
                         </Input>
                       </div>
                     </div>
                   </Row>
                 ) : null}
 
-                {typeSelected && typeSelected === "3" ? (
+                {typeSelected === "3" || typeToEdit === 3 ? (
                   <Col className="col-12 mt-3">
                     <div className="mt-4">
                       <Row>
@@ -530,7 +710,9 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.first_field_multi || ""}
+                              value={
+                                validationType.values.first_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.first_field_multi &&
                                 validationType.errors.first_field_multi
@@ -547,12 +729,25 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti1(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti1(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              {timeFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      editFrameM1 === item.value ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </div>
@@ -565,7 +760,9 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.second_field_multi || ""}
+                              value={
+                                validationType.values.second_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.second_field_multi &&
                                 validationType.errors.second_field_multi
@@ -582,12 +779,25 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti2(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti2(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              {timeFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      editFrameM2 === item.value ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </div>
@@ -600,7 +810,9 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.third_field_multi || ""}
+                              value={
+                                validationType.values.third_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.third_field_multi &&
                                 validationType.errors.third_field_multi
@@ -617,12 +829,25 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti3(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti3(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              {timeFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      editFrameM3 === item.value ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </div>
@@ -637,7 +862,9 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.fourth_field_multi || ""}
+                              value={
+                                validationType.values.fourth_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.fourth_field_multi &&
                                 validationType.errors.fourth_field_multi
@@ -654,12 +881,25 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti4(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti4(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              {timeFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      editFrameM4 === item.value ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </div>
@@ -672,7 +912,9 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.fifth_field_multi || ""}
+                              value={
+                                validationType.values.fifth_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.fifth_field_multi &&
                                 validationType.errors.fifth_field_multi
@@ -689,12 +931,25 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti5(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti5(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              {timeFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      editFrameM5 === item.value ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </div>
@@ -707,7 +962,9 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.sixth_field_multi || ""}
+                              value={
+                                validationType.values.sixth_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.sixth_field_multi &&
                                 validationType.errors.sixth_field_multi
@@ -724,12 +981,25 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti6(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti6(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              {timeFrameOptions.map((item, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={item.value}
+                                    selected={
+                                      editFrameM6 === item.value ? true : false
+                                    }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </div>
                         </div>
@@ -737,14 +1007,11 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
                     </div>
                   </Col>
                 ) : null}
-                {typeSelected &&
-                (typeSelected === "4" ||
-                  typeSelected === "3" ||
-                  typeSelected === "6") ? (
+                
                   <Col className="col-12 mt-3">
-                    <CheckBoxs onAddDay={onAddDay} />
+                    <CheckBoxs onAddDay={onAddDay} scheduleEditID={scheduleEditID} />
                   </Col>
-                ) : null}
+                
 
                 <Col className="col-9 mt-3">
                   <Row className="">
@@ -856,8 +1123,8 @@ const EditScheduleModal = ({ editSchedule, setEditSchedule, tourData, refresh })
               </Row>
             </Col>
           </Row>
-      </div>
-        </Form>
+        </div>
+      </Form>
     </Modal>
   );
 };

@@ -302,7 +302,19 @@ export const postSchedule = (id, body) => {
     headers: options,
   });
 };
+export const putSchedule = (id, body) => {
+  const url = `${API_URL}/tours/${id}/scheduleTime`
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
 
+export const getScheduleEditDataAPI = (tour_id, id) => {
+  const url = `${API_URL}/tours/${tour_id}/scheduleTime/${id}`
+  return axios.get (url, {
+    headers: options,
+  });
+};
 
 export const deleteSchedule = (Tourid, dateID) => {
   const url = `${API_URL}/tours/${Tourid}/scheduleTime/${dateID}`
