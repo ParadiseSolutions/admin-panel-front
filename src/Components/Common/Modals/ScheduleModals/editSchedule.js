@@ -42,7 +42,7 @@ const EditScheduleModal = ({
 }) => {
   const { id } = useParams();
 
-  console.log(scheduleEditID);
+  console.log('data',scheduleEditID);
   //edit data
   const [dataEdit, setDataEdit] = useState([]);
   const [scheduleTypesData, setSchedulesTypesData] = useState([]);
@@ -278,6 +278,7 @@ const EditScheduleModal = ({
       }
 
       let data = {
+        id: scheduleEditID.id,
         type_id: typeSelected ? typeSelected : dataEdit.type_id,
         detail: multiTimesList.toString(),
         from: values.start_time_single
