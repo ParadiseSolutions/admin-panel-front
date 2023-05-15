@@ -23,6 +23,7 @@ body {
   * {
     outline: none;
   }
+  overflow-y: hidden;
 }
 
 .react-bootstrap-table-page-btns-ul {
@@ -151,7 +152,7 @@ body {
     tr {
       th {
         div:last-child {
-          min-height: 38px;
+          min-height: auto;
         }
       }
     }
