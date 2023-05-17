@@ -66,7 +66,7 @@ const Active = (cell) => {
     if (cell.value === 1) {
       let data = { active: 0 };
       statusUpdate(id, data).then((resp) => {
-        console.log("was 1 so changing to 0 ", resp);
+        // console.log("was 1 so changing to 0 ", resp);
 
         categoriesRequest();
       });
@@ -75,12 +75,12 @@ const Active = (cell) => {
       let data = { active: 1 };
       statusUpdate(id, data)
         .then((resp) => {
-          console.log("was 0 so changing to 1 ", resp);
+          // console.log("was 0 so changing to 1 ", resp);
 
           categoriesRequest();
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           setTimeout(() => {
             <Toast>
               <ToastHeader icon={<Spinner type="grow" size="sm" color="danger" />}>Oops...</ToastHeader>

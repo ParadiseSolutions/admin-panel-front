@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const AvailableCheckbox = ({ available, availableFromIDs,  setAvailableFromIDs }) => {
+const AvailableCheckbox = ({ available, availableFromIDs,  setNewListID, setAvailableFromIDs }) => {
 
  
   const isChecked = availableFromIDs ?  availableFromIDs.includes(available.id) ? true : false : false;
@@ -17,17 +17,37 @@ const AvailableCheckbox = ({ available, availableFromIDs,  setAvailableFromIDs }
 
   const onChangeMembers = (e) => {
     setChecked(!checked);
-    console.log(checked);
-    const selection = e.target.value;
-    const selectionFlag = availableFromIDs.includes(selection);
-
     
-    if (!selectionFlag) {
-      setAvailableFromIDs([...availableFromIDs, e.target.value]);
+    const selection = e.target.value;
+    // const selectionFlag = availableFromIDs ? availableFromIDs.includes(selection) : [];
+    // console.log('---------------',availableFromIDs)
+    let idsTemp = []
+    
+    
+
+    if ( availableFromIDs ) {
+      
+      availableFromIDs.forEach(id => {
+        if (id !== selection) {
+          idsTemp.push( ...availableFromIDs, selection)
+        }else{
+          idsTemp = availableFromIDs.filter((ele) => ele !== selection)
+        }
+
+      });
+
+      // console.log('ids a enviar', idsTemp)
+      
+      // setNewListID(idsTemp);
+      setAvailableFromIDs(idsTemp)
+    }else{
+      // setNewListID([selection])
+      setAvailableFromIDs([selection])
     }
-    if (selectionFlag) {
-      setAvailableFromIDs(availableFromIDs.filter((ele) => ele !== selection));
-    }
+    // if (selectionFlag) {
+    //   console.log('si esta', availableFromIDs)
+    //   setAvailableFromIDs(availableFromIDs.filter((ele) => ele !== selection));
+    // }
   };
   return (
     <div className="controls my-4">

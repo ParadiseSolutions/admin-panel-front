@@ -21,21 +21,28 @@ import {
 import { map } from "lodash";
 
 const AddNewPrivateCharter = ({
-  newPrivateCharter,
-  setNewPrivateCharter,
+  addNewPrivateCharter,
+  setAddNewPrivateCharter,
   refreshTable,
   tourData,
   editProductID,
   copyProduct
 }) => {
+  let id = "";
+  id = editProductID;
+  //edit data
   const [dataEdit, setDataEdit] = useState();
   useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
+    if (id) {
+      getPriceAPI(id).then((resp) => {
+        // console.log(
+        //   "data que viene al editar-------------------",
+        //   resp.data.data
+        // );
         setDataEdit(resp.data.data[0]);
       });
     }
-  }, [editProductID]);
+  }, [id, addNewPrivateCharter]);
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -57,11 +64,11 @@ const AddNewPrivateCharter = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
-  const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState();
-  const [priceDurationSelected, setPriceDurationSelected] = useState();
-  const [priceLocationSelected, setPriceLocationSelected] = useState();
+  const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
+  const [priceDurationSelected, setPriceDurationSelected] = useState("");
+  const [priceLocationSelected, setPriceLocationSelected] = useState("");
   useEffect(() => {
-    if (newPrivateCharter) {
+    if (addNewPrivateCharter) {
       getPricingOptionsAPI(38).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
@@ -84,7 +91,7 @@ const AddNewPrivateCharter = ({
         setPriceLocation(resp.data.data);
       });
     }
-  }, [newPrivateCharter]);
+  }, [addNewPrivateCharter]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
@@ -120,8 +127,8 @@ const AddNewPrivateCharter = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[5]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[5]?.max : "",
+      min: dataEdit ? dataEdit?.pricedetails[4]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[4]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
@@ -152,7 +159,7 @@ const AddNewPrivateCharter = ({
         price_details: [
           {
             pricing_option_id: 38,
-            source_id: priceTypeSelected
+            source_id: priceTypeSelected !== ''
               ? priceTypeSelected
               : dataEdit.pricedetails[0].source_id,
             min: null,
@@ -161,7 +168,7 @@ const AddNewPrivateCharter = ({
           },
           {
             pricing_option_id: 39,
-            source_id: priceOptionSelected
+            source_id: priceOptionSelected !== ''
               ? priceOptionSelected
               : dataEdit.pricedetails[1].source_id,
             min: null,
@@ -170,32 +177,32 @@ const AddNewPrivateCharter = ({
           },
           {
             pricing_option_id: 41,
-            source_id: priceCollectSelected
+            source_id: priceCollectSelected !== ''
               ? priceCollectSelected
               : dataEdit.pricedetails[2].source_id,
             min: null,
             max: null,
             label: null,
           },
-          {
-            pricing_option_id: 44,
-            source_id: priceSeasonSelected
-              ? priceSeasonSelected
-              : dataEdit.pricedetails[3]?.source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
+          // {
+          //   pricing_option_id: 44,
+          //   source_id: priceSeasonSelected !== ''
+          //     ? priceSeasonSelected
+          //     : dataEdit.pricedetails[3]?.source_id,
+          //   min: null,
+          //   max: null,
+          //   label: null,
+          // },
           {
             pricing_option_id: 48,
-            source_id: priceCharterTypeSelected
+            source_id: priceCharterTypeSelected !== ''
               ? priceCharterTypeSelected
               : dataEdit.pricedetails[4].source_id,
             label: null,
           },
           {
             pricing_option_id: 40,
-            source_id: priceDurationSelected
+            source_id: priceDurationSelected !== ''
               ? priceDurationSelected
               : dataEdit.pricedetails[5].source_id,
             min: values.min,
@@ -204,7 +211,7 @@ const AddNewPrivateCharter = ({
           },
           {
             pricing_option_id: 42,
-            source_id: priceLocationSelected
+            source_id: priceLocationSelected !== ''
               ? priceLocationSelected
               : dataEdit.pricedetails[6].source_id,
             label: null,
@@ -213,13 +220,13 @@ const AddNewPrivateCharter = ({
       };
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          setNewPrivateCharter(false);
+          setAddNewPrivateCharter(false);
           refreshTable();
         });
       } 
       if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
-          setNewPrivateCharter(false);
+          setAddNewPrivateCharter(false);
           refreshTable();
         });
       }
@@ -230,7 +237,7 @@ const AddNewPrivateCharter = ({
     <Modal
       centered
       size="xl"
-      isOpen={newPrivateCharter}
+      isOpen={addNewPrivateCharter}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -244,7 +251,7 @@ const AddNewPrivateCharter = ({
         </h1>
         <button
           onClick={() => {
-            setNewPrivateCharter(false);
+            setAddNewPrivateCharter(false);
           }}
           type="button"
           className="close"
@@ -1034,7 +1041,7 @@ const AddNewPrivateCharter = ({
                     outline
                     className="waves-effect waves-light col-2 mx-4"
                     type="button"
-                    onClick={() => setNewPrivateCharter(false)}
+                    onClick={() => setAddNewPrivateCharter(false)}
                   >
                     Close
                   </Button>

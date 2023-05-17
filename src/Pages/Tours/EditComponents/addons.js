@@ -68,7 +68,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
             Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });
@@ -92,7 +92,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
             Swal.fire("Deleted!", "The Addon has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

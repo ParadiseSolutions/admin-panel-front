@@ -22,23 +22,32 @@ import {
 import { map } from "lodash";
 
 const AddNewTransportation = ({
-  newTransportation,
-  setNewTransportation,
+  addNewTransportation,
+  setAddNewTransportation,
   refreshTable,
   editProductID,
   tourData,
   copyProduct
 }) => {
-  //edit data
-  const [dataEdit, setDataEdit] = useState();
-  useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
-        setDataEdit(resp.data.data[0]);
-      });
-    }
-  }, [editProductID]);
-  console.log(copyProduct)
+    //edit data
+    const [dataEdit, setDataEdit] = useState();
+
+  
+    let id = "";
+    id = editProductID;
+  
+    useEffect(() => {
+      if (id) {
+        getPriceAPI(id).then((resp) => {
+          // console.log(
+          //   "data que viene al editar-------------------",
+          //   resp.data.data
+          // );
+          setDataEdit(resp.data.data[0]);
+        });
+      }
+    }, [id, addNewTransportation]);
+  // console.log(copyProduct)
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -59,7 +68,7 @@ const AddNewTransportation = ({
   const [priceZoneSelected, setPriceZoneSelected] = useState(null);
   const [priceVehicleSelected, setPriceVehicleSelected] = useState(null);
   useEffect(() => {
-    if (newTransportation) {
+    if (addNewTransportation) {
       getPricingOptionsAPI(20).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
@@ -85,7 +94,7 @@ const AddNewTransportation = ({
         setPriceZone(resp.data.data);
       });
     }
-  }, [newTransportation]);
+  }, [addNewTransportation]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
@@ -121,8 +130,8 @@ const AddNewTransportation = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
+      min: dataEdit ? dataEdit?.pricedetails[7]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[7]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
@@ -153,7 +162,7 @@ const AddNewTransportation = ({
         price_details: [
           {
             pricing_option_id: 20,
-            source_id: priceTypeSelected
+            source_id: priceTypeSelected !== ''
               ? priceTypeSelected
               : dataEdit.pricedetails[0].source_id,
             min: null,
@@ -162,7 +171,7 @@ const AddNewTransportation = ({
           },
           {
             pricing_option_id: 21,
-            source_id: priceOptionSelected
+            source_id: priceOptionSelected !== ''
               ? priceOptionSelected
               : dataEdit.pricedetails[1].source_id,
             min: null,
@@ -171,7 +180,7 @@ const AddNewTransportation = ({
           },
           {
             pricing_option_id: 22,
-            source_id: priceCollectSelected
+            source_id: priceCollectSelected !== ''
               ? priceCollectSelected
               : dataEdit.pricedetails[2].source_id,
             min: null,
@@ -180,7 +189,7 @@ const AddNewTransportation = ({
           },
           {
             pricing_option_id: 31,
-            source_id: priceSeasonSelected
+            source_id: priceSeasonSelected !== ''
               ? priceSeasonSelected
               : dataEdit.pricedetails[3]?.source_id,
             min: null,
@@ -189,7 +198,7 @@ const AddNewTransportation = ({
           },
           {
             pricing_option_id: 46,
-            source_id: priceTransferTypeSelected
+            source_id: priceTransferTypeSelected !== ''
               ? priceTransferTypeSelected
               : dataEdit.pricedetails[4].source_id,
             min: null,
@@ -198,7 +207,7 @@ const AddNewTransportation = ({
           },
           {
             pricing_option_id: 49,
-            source_id: priceDirectionSelected
+            source_id: priceDirectionSelected !== ''
               ? priceDirectionSelected
               : dataEdit.pricedetails[5].source_id,
             min: null,
@@ -207,7 +216,7 @@ const AddNewTransportation = ({
           },
           {
             pricing_option_id: 51,
-            source_id: priceZoneSelected
+            source_id: priceZoneSelected !== ''
               ? priceZoneSelected
               : dataEdit.pricedetails[7].source_id,
             min: null,
@@ -216,7 +225,7 @@ const AddNewTransportation = ({
           },
           {
             pricing_option_id: 24,
-            source_id: priceVehicleSelected
+            source_id: priceVehicleSelected !== ''
               ? priceVehicleSelected
               : dataEdit.pricedetails[6].source_id,
             min: values.min,
@@ -229,13 +238,13 @@ const AddNewTransportation = ({
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
           refreshTable();
-          setNewTransportation(false);
+          setAddNewTransportation(false);
         });
       } 
       if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           refreshTable();
-          setNewTransportation(false);
+          setAddNewTransportation(false);
         });
       }
       resetForm({ values: "" });
@@ -245,7 +254,7 @@ const AddNewTransportation = ({
     <Modal
       centered
       size="xl"
-      isOpen={newTransportation}
+      isOpen={addNewTransportation}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -259,7 +268,7 @@ const AddNewTransportation = ({
         </h1>
         <button
           onClick={() => {
-            setNewTransportation(false);
+            setAddNewTransportation(false);
           }}
           type="button"
           className="close"
@@ -616,7 +625,7 @@ const AddNewTransportation = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? vehicle.id ===
-                                  dataEdit.pricedetails[6].source_id
+                                  dataEdit.pricedetails[7].source_id
                                 : false
                             }
                           >
@@ -647,7 +656,7 @@ const AddNewTransportation = ({
                             value={zone.id}
                             selected={
                               dataEdit && dataEdit.pricedetails
-                                ? zone.id === dataEdit.pricedetails[7].source_id
+                                ? zone.id === dataEdit.pricedetails[6].source_id
                                 : false
                             }
                           >
@@ -1079,7 +1088,7 @@ const AddNewTransportation = ({
                     outline
                     className="waves-effect waves-light col-2 mx-4"
                     type="button"
-                    onClick={() => setNewTransportation(false)}
+                    onClick={() => setAddNewTransportation(false)}
                   >
                     Close
                   </Button>

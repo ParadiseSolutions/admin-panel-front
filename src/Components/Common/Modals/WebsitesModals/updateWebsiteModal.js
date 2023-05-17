@@ -110,7 +110,7 @@ const EditWebsiteModal = ({
       };
       editWebsite(siteId, dataBackend)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 200) {
             Swal.fire(
               "Success!",

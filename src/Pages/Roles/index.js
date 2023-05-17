@@ -26,7 +26,7 @@ const Roles = () => {
   //get info
   const data = useSelector((state) => state.roles.roles.data);
 
-  console.log(data);
+  // console.log(data);
   const onDelete = (rolData) => {
     Swal.fire({
       title: "Delete Department?",
@@ -49,7 +49,7 @@ const Roles = () => {
             );
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

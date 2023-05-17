@@ -54,7 +54,7 @@ const EditGeneralInformation = ({ data }) => {
     }
   }, [initialData]);
 
-  console.log(initialData);
+  // console.log(initialData);
   // console.log(notification);
   const [col1, setcol1] = useState(false);
 
@@ -127,7 +127,7 @@ const EditGeneralInformation = ({ data }) => {
         .required("Max 3 chars"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       let data = {
         name: values.name ? values.name : "",
         legal_name: values.legal_name ? values.legal_name : "",
@@ -157,7 +157,7 @@ const EditGeneralInformation = ({ data }) => {
 
       updateOperator(initialData.id, data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 200) {
             Swal.fire(
               "Edited!",
@@ -167,7 +167,7 @@ const EditGeneralInformation = ({ data }) => {
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire(
             "Error!",
             `${

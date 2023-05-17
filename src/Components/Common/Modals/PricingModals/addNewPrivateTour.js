@@ -12,49 +12,121 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { getPricingOptionsAPI, postPricesAPI } from "../../../../Utils/API/Tours";
+import {
+  getPriceAPI,
+  getPricingOptionsAPI,
+  postPricesAPI,
+  updatePriceAPI,
+} from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 
-const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProduct }) => {
+const AddNewPrivateTour = ({
+  addNewPrivateTour,
+  setAddNewPrivateTour,
+  tourData,
+  copyProduct,
+  editProductID,
+  refreshTable
+}) => {
+  //edit data
+  const [dataEdit, setDataEdit] = useState();
 
-   //combo box request
-   const [priceTypeData, setPriceTypeData] = useState([]);
-   const [priceOptions, setPriceOptions] = useState([]);
-   const [priceCollect, setPriceCollect] = useState([]);
-   const [priceSeason, setPriceSeason] = useState([]);
-   const [priceTypeSelected, setPriceTypeSelected] = useState();
-   const [priceOptionSelected, setPriceOptionSelected] = useState();
-   const [priceCollectSelected, setPriceCollectSelected] = useState();
-   const [priceSeasonSelected, setPriceSeasonSelected] = useState();
-   useEffect(() => {
-     if (newPrivateTour) {
-       getPricingOptionsAPI(6).then((resp) => {
-         setPriceTypeData(resp.data.data);
-       });
-       getPricingOptionsAPI(7).then((resp) => {
-         setPriceOptions(resp.data.data);
-       });
-       getPricingOptionsAPI(9).then((resp) => {
-         setPriceCollect(resp.data.data);
-       });
-       getPricingOptionsAPI(29).then((resp) => {
-         setPriceSeason(resp.data.data);
-       });
-     }
-   }, [newPrivateTour]);
+  
+  let id = "";
+  id = editProductID;
+
+  useEffect(() => {
+    if (id) {
+      getPriceAPI(id).then((resp) => {
+        // console.log(
+        //   "data que viene al editar-------------------",
+        //   resp.data.data
+        // );
+        setDataEdit(resp.data.data[0]);
+      });
+    }
+  }, [id, addNewPrivateTour]);
+
+  // console.log(dataEdit);
+
+  //combo box request
+  const [priceTypeData, setPriceTypeData] = useState([]);
+  const [priceOptions, setPriceOptions] = useState([]);
+  const [priceCollect, setPriceCollect] = useState([]);
+  const [priceSeason, setPriceSeason] = useState([]);
+  const [priceTypeSelected, setPriceTypeSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
+  );
+  const [priceOptionSelected, setPriceOptionSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
+  );
+  const [priceCollectSelected, setPriceCollectSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
+  );
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+  );
+  useEffect(() => {
+    if (addNewPrivateTour) {
+      getPricingOptionsAPI(6).then((resp) => {
+        setPriceTypeData(resp.data.data);
+      });
+      getPricingOptionsAPI(7).then((resp) => {
+        setPriceOptions(resp.data.data);
+      });
+      getPricingOptionsAPI(9).then((resp) => {
+        setPriceCollect(resp.data.data);
+      });
+      getPricingOptionsAPI(29).then((resp) => {
+        setPriceSeason(resp.data.data);
+      });
+    }
+  }, [addNewPrivateTour]);
+
+  //checkbox
+  const [activeCheckbox, setActiveCheckbox] = useState(null);
+  const [balanceDueCheckbox, setBalanceDueCheckbox] = useState(null);
+
+  useEffect(() => {
+    setActiveCheckbox(dataEdit?.active === 1 ? true : false);
+    setBalanceDueCheckbox(dataEdit?.show_balance_due === 1 ? true : false);
+  }, [dataEdit]);
+  const onChangeActiveToggle = () => {
+    setActiveCheckbox(!activeCheckbox);
+  };
+  const onChangeBalanceDueToggle = () => {
+    setBalanceDueCheckbox(!balanceDueCheckbox);
+  };
+
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
       product_name: tourData ? tourData.name : "",
       sku: tourData ? tourData.sku : "",
+      public_price: dataEdit ? dataEdit.public : "",
+      provider_price: dataEdit ? dataEdit.provider_price : "",
+      rate: dataEdit ? dataEdit.rate : "",
+      net_price: dataEdit ? dataEdit.net_rate : "",
+      compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
+      ship_price: dataEdit ? dataEdit.ship_price : "",
+      compare_at: dataEdit ? dataEdit.compare_at : "",
+      our_price: dataEdit ? dataEdit.price : "",
+      you_save: dataEdit ? dataEdit.you_save : "",
+      eff_rate: dataEdit ? dataEdit.eff_rate : "",
+      commission: dataEdit ? dataEdit.commission : "",
+      deposit: dataEdit ? dataEdit.deposit : "",
+      balance_due: dataEdit ? dataEdit.net_price : "",
+      active: dataEdit?.active ? 1 : 0,
+      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
-    onSubmit: (values, {resetForm}) => {
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
+    onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -70,23 +142,56 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
         eff_rate: values.eff_rate,
         commission: values.commission,
         deposit: values.deposit,
-        balance_due: values.balance_due,
-
+        net_price: values.balance_due,
+        active: activeCheckbox ? 1 : 0,
+        show_balance_due: balanceDueCheckbox ? 1 : 0,
+        price_details: [
+          {
+            pricing_option_id: 6,
+            source_id: priceTypeSelected,
+            
+          },
+          {
+            pricing_option_id: 7,
+            source_id: priceOptionSelected,
+            
+          },
+          {
+            pricing_option_id: 9,
+            source_id: priceCollectSelected,
+            
+          },
+          {
+            pricing_option_id: 29,
+            source_id: priceSeasonSelected,
+            
+          },
+        ],
       };
 
-      postPricesAPI(data).then((resp) =>{
-        console.log(resp)
-        setNewPrivateTour(false);
-      })
+      console.log(data)
 
-      resetForm({values: ''})
+      if (dataEdit && copyProduct === false) {
+        updatePriceAPI(editProductID, data).then((resp) => {
+          setAddNewPrivateTour(false);
+          refreshTable();
+        });
+      } 
+      if(copyProduct || dataEdit === undefined){
+        postPricesAPI(data).then((resp) => {
+          setAddNewPrivateTour(false);
+          refreshTable();
+        });
+      }
+
+      resetForm({ values: "" });
     },
   });
   return (
     <Modal
       centered
       size="xl"
-      isOpen={newPrivateTour}
+      isOpen={addNewPrivateTour}
       toggle={() => {
         // onClickAddNew();
       }}
@@ -96,11 +201,11 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
         <h1 className="modal-title mt-0 text-white">
-          + New Product - Private Tour
+          + Edit Product - Private Tour
         </h1>
         <button
           onClick={() => {
-            setNewPrivateTour(false);
+            setAddNewPrivateTour(false);
           }}
           type="button"
           className="close"
@@ -117,7 +222,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            // validationType.handleSubmit();
+            validationType.handleSubmit();
             return false;
           }}
           className="custom-validation"
@@ -174,7 +279,16 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                         <option>Select....</option>
                         {map(priceTypeData, (type, index) => {
                           return (
-                            <option key={index} value={type.id}>
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? type.id ===
+                                    dataEdit.pricedetails[0].source_id
+                                  : false
+                              }
+                            >
                               {type.text}
                             </option>
                           );
@@ -197,7 +311,16 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                         <option>Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
-                            <option key={index} value={option.id}>
+                            <option
+                              key={index}
+                              value={option.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? option.id ===
+                                    dataEdit.pricedetails[1].source_id
+                                  : false
+                              }
+                            >
                               {option.text}
                             </option>
                           );
@@ -220,7 +343,16 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                         <option>Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
-                            <option key={index} value={collect.id}>
+                            <option
+                              key={index}
+                              value={collect.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? collect.id ===
+                                    dataEdit.pricedetails[2].source_id
+                                  : false
+                              }
+                            >
                               {collect.text}
                             </option>
                           );
@@ -229,54 +361,63 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                     </div>
                   </Col>
                   <Col className="col-2">
-                  {tourData?.seasonality === 1 ?  
-                    <div
-                      className="form-outline"
-                      style={{ marginRight: "20px", marginLeft: "-20px" }}
-                    >
-                      <Label className="form-label">Season</Label>
-                      <Input
-                        type="select"
-                        name="season"
-                        onChange={(e) => {
-                          setPriceSeasonSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                    {tourData?.seasonality === 1 ? (
+                      <div
+                        className="form-outline"
+                        style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <option>Select....</option>
-                        {map(priceSeason, (season, index) => {
-                          return (
-                            <option key={index} value={season.id}>
-                              {season.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  
-                  : null}
+                        <Label className="form-label">Season</Label>
+                        <Input
+                          type="select"
+                          name="season"
+                          onChange={(e) => {
+                            setPriceSeasonSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                          //   value={validationType.values.department || ""}
+                        >
+                          <option>Select....</option>
+                          {map(priceSeason, (season, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={season.id}
+                                selected={
+                                  dataEdit && dataEdit.pricedetails
+                                    ? season.id ===
+                                      dataEdit.pricedetails[3].source_id
+                                    : false
+                                }
+                              >
+                                {season.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    ) : null}
                   </Col>
                 </Col>
                 <Col className="col-3 d-flex justify-content-between">
                   <Col className="col-6">
                     <Label className="form-label mt-2">Active</Label>
                     <div className="form-check form-switch form-switch-md mx-2">
-                      <Input
-                        name="notification_email"
-                        placeholder=""
-                        type="checkbox"
-                        className="form-check-input"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
-                        invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
-                            ? true
-                            : false
-                        }
-                      />
+                    <Input
+                          name="active"
+                          placeholder=""
+                          type="checkbox"
+                          checked={activeCheckbox}
+                          className="form-check-input"
+                          onChange={() => onChangeActiveToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.active || ""}
+                          invalid={
+                            validationType.touched.active &&
+                            validationType.errors.active
+                              ? true
+                              : false
+                          }
+                        />
                       {validationType.touched.notification_email &&
                       validationType.errors.notification_email ? (
                         <FormFeedback type="invalid">
@@ -288,21 +429,22 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                   <Col className="col-6">
                     <Label className="form-label mt-2">Balance Due</Label>
                     <div className="form-check form-switch form-switch-md mx-4">
-                      <Input
-                        name="notification_email"
-                        placeholder=""
-                        type="checkbox"
-                        className="form-check-input"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.notification_email || ""}
-                        invalid={
-                          validationType.touched.notification_email &&
-                          validationType.errors.notification_email
-                            ? true
-                            : false
-                        }
-                      />
+                    <Input
+                          name="balance_checkbox"
+                          placeholder=""
+                          type="checkbox"
+                          checked={balanceDueCheckbox}
+                          className="form-check-input"
+                          onChange={() => onChangeBalanceDueToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.balance_checkbox || ""}
+                          invalid={
+                            validationType.touched.balance_checkbox &&
+                            validationType.errors.balance_checkbox
+                              ? true
+                              : false
+                          }
+                        />
                       {validationType.touched.notification_email &&
                       validationType.errors.notification_email ? (
                         <FormFeedback type="invalid">
@@ -410,15 +552,15 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                   <div className="form-outline mb-2">
                     <Label className="form-label">Net Rate</Label>
                     <Input
-                      name="net_rate"
+                      name="net_price"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.net_rate || ""}
+                      value={validationType.values.net_price || ""}
                       invalid={
-                        validationType.touched.net_rate &&
-                        validationType.errors.net_rate
+                        validationType.touched.net_price &&
+                        validationType.errors.net_price
                           ? true
                           : false
                       }
@@ -687,7 +829,7 @@ const AddNewPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyPr
                     outline
                     className="waves-effect waves-light col-2 mx-4"
                     type="button"
-                    onClick={() => setNewPrivateTour(false)}
+                    onClick={() => setAddNewPrivateTour(false)}
                   >
                     Close
                   </Button>

@@ -32,7 +32,7 @@ const Login = () => {
         .required("Username is required"),
     }),
     onSubmit: (values) => {
-      console.log("values", values);
+      // console.log("values", values);
       let data = {
         email: values.email,
         password: values.password,
@@ -47,7 +47,7 @@ const Login = () => {
         })
         .catch((error) => {
           setError(true);
-          console.log(error);
+          // console.log(error);
         });
     },
   });

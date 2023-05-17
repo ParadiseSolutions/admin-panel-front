@@ -47,7 +47,7 @@ const Tours = () => {
             Swal.fire("Deleted!", "The Tour has been deleted.", "success");
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

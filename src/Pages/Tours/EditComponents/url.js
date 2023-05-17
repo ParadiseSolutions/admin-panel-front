@@ -49,7 +49,7 @@ const URL = ({ tourData, toggle }) => {
   }, [urlTypeSelected]);
 
   useEffect(() => {
-    console.log("llamado");
+    // console.log("llamado");
     getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
       setPathData(resp.data.data);
     });
@@ -71,7 +71,7 @@ const URL = ({ tourData, toggle }) => {
       setEditBasePath(url.base_path);
       setEditURLID(url.id);
     });
-    console.log(url);
+    // console.log(url);
   };
 
   const columns = useMemo(
@@ -161,19 +161,19 @@ const URL = ({ tourData, toggle }) => {
     //     .required("Max 2 chars"),
     // }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       let data = {
         tour_id: tourData.id,
         path_type_id: urlTypeSelected ? urlTypeSelected : editTypeURL,
         available_from_id: locationSelected ? locationSelected : "",
         url: `${values.path}${values.complement}`,
       };
-      console.log(data)
+      // console.log(data)
 
       if (editURLID) {
         updateURLAPI(editURLID, data)
           .then((resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
             if (resp.data.status === 200) {
               Swal.fire("Edited!", "URL has been created.", "success");
               getURLsAPI(tourData.id).then((resp) => {
@@ -182,13 +182,13 @@ const URL = ({ tourData, toggle }) => {
             }
           })
           .catch((error) => {
-            console.log(error.response);
+            // console.log(error.response);
             Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
           });
       } else {
         postURLAPI(data)
           .then((resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
             if (resp.data.status === 200) {
               Swal.fire("Edited!", "URL has been edited.", "success");
               getURLsAPI(tourData.id).then((resp) => {
@@ -197,7 +197,7 @@ const URL = ({ tourData, toggle }) => {
             }
           })
           .catch((error) => {
-            console.log(error.response);
+            // console.log(error.response);
             Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
           });
       }

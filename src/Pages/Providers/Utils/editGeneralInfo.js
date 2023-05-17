@@ -160,31 +160,31 @@ const EditGeneralInformation = ({ data }) => {
           selectionID.length > 0 ? selectionID : initialData.service_areas_ids,
       };
 
-      console.log(data);
+      // console.log(data);
 
-      // updateProviderAPI(initialData.id, data)
-      //   .then((resp) => {
-      //     console.log(resp.data);
-      //     if (resp.data.status === 200) {
-      //       Swal.fire(
-      //         "Edited!",
-      //         "General Information has been edited.",
-      //         "success"
-      //       ).then(() => {});
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.log(error.response);
-      //     Swal.fire(
-      //       "Error!",
-      //       `${
-      //         error.response.data.data.name
-      //           ? error.response.data.data.name
-      //           : error.response.data.data.code
-      //       }`,
-      //       "error"
-      //     );
-      //   });
+      updateProviderAPI(initialData.id, data)
+        .then((resp) => {
+          // console.log(resp.data);
+          if (resp.data.status === 200) {
+            Swal.fire(
+              "Edited!",
+              "General Information has been edited.",
+              "success"
+            ).then(() => {});
+          }
+        })
+        .catch((error) => {
+          // console.log(error.response);
+          Swal.fire(
+            "Error!",
+            `${
+              error.response.data.data.name
+                ? error.response.data.data.name
+                : error.response.data.data.code
+            }`,
+            "error"
+          );
+        });
     },
   });
 

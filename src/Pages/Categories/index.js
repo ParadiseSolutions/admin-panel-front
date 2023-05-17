@@ -45,7 +45,7 @@ const Categories = () => {
 						Swal.fire("Deleted!", "Category has been deleted.", "success");
 					})
 					.catch((error) => {
-						console.log("jalopy",error);
+						// console.log("jalopy",error);
 					});
 			}
 		});

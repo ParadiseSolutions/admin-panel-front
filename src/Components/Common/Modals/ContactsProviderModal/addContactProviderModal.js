@@ -33,24 +33,24 @@ const AddContactProviderModal = ({ addContactModal, setAddContactModal, onClickN
     notes:""
     },
     validationSchema: Yup.object().shape({
-      job_title: Yup.string().required("Field required"),
+      // job_title: Yup.string().required("Field required"),
       first_name: Yup.string().required("Field required"),
       last_name: Yup.string().required("Field required"),
-      surname: Yup.string().required("Field required"),
-      primary_email:  Yup.string()
-      .email("Must be a valid Email")
-      .max(255)
-      .required("Email is required"),
-      secondary_email:  Yup.string()
-      .email("Must be a valid Email")
-      .max(255)
-      .required("Email is required"),
-      business_phone: Yup.number().required(
-        "Please Enter Your Number"
-      ),
-      mobile_phone: Yup.number().required(
-        "Please Enter Your Number"
-      ),
+      // surname: Yup.string().required("Field required"),
+      // primary_email:  Yup.string()
+      // .email("Must be a valid Email")
+      // .max(255)
+      // .required("Email is required"),
+      // secondary_email:  Yup.string()
+      // .email("Must be a valid Email")
+      // .max(255)
+      // .required("Email is required"),
+      // business_phone: Yup.number().required(
+      //   "Please Enter Your Number"
+      // ),
+      // mobile_phone: Yup.number().required(
+      //   "Please Enter Your Number"
+      // ),
       
     }),
     onSubmit: (values) => {
@@ -82,7 +82,7 @@ const AddContactProviderModal = ({ addContactModal, setAddContactModal, onClickN
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
         });
     },

@@ -70,17 +70,17 @@ const Active = (cell) => {
     if (cell.value === 1) {
       let data = { active: 0 };
       statusUpdate(id, data).then((resp) => {
-        console.log(resp);
+        // console.log(resp);
       });
     }
     if (cell.value === 0) {
       let data = { active: 1 };
       statusUpdate(id, data)
         .then((resp) => {
-          console.log(resp);
+          // console.log(resp);
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           setTimeout(() => {
             <Toast>
               <ToastHeader

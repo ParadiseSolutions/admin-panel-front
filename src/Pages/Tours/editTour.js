@@ -47,7 +47,7 @@ const EditTour = ({ history }) => {
     });
   }, [id]);
 
-  console.log("tourData", tourData);
+  // console.log("tourData", tourData);
 
   return (
     <div className="page-content">

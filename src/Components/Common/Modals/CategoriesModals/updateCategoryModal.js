@@ -57,7 +57,7 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 			})
 		}
 	},[categoryId])
-	console.log(categoryData)
+	// console.log(categoryData)
 	//select
 	const [parent, setParent] = useState([]);
 	const onChangeSelectionParent = (value) => {

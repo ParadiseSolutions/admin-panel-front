@@ -26,35 +26,36 @@ const AddNewProductPricing = ({
   refreshTable,
   editProductID,
   tourData,
-  copyProduct
+  copyProduct,
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
+
+  
+  let id = "";
+  id = editProductID;
+
   useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
+    if (id) {
+      getPriceAPI(id).then((resp) => {
+        // console.log(
+        //   "data que viene al editar-------------------",
+        //   resp.data.data
+        // );
         setDataEdit(resp.data.data[0]);
       });
     }
-  }, [editProductID]);
-
+  }, [id, addNewProduct]);
+  
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
   const [priceCollect, setPriceCollect] = useState([]);
   const [priceSeason, setPriceSeason] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
-  );
-  const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
-  );
-  const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
-  );
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
-  );
+  const [priceTypeSelected, setPriceTypeSelected] = useState("");
+  const [priceOptionSelected, setPriceOptionSelected] = useState("");
+  const [priceCollectSelected, setPriceCollectSelected] = useState("");
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
   useEffect(() => {
     if (addNewProduct) {
       getPricingOptionsAPI(1).then((resp) => {
@@ -86,7 +87,7 @@ const AddNewProductPricing = ({
   const onChangeBalanceDueToggle = () => {
     setBalanceDueCheckbox(!balanceDueCheckbox);
   };
-
+  // console.log(dataEdit);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -109,11 +110,12 @@ const AddNewProductPricing = ({
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
@@ -136,21 +138,24 @@ const AddNewProductPricing = ({
         price_details: [
           {
             pricing_option_id: 1,
-            source_id: priceTypeSelected,
+            source_id:
+              priceTypeSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 2,
-            source_id: priceOptionSelected,
+            source_id:
+              priceOptionSelected,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 4,
-            source_id: priceCollectSelected,
+            source_id:
+              priceCollectSelected,
             min: 1,
             max: 3,
             label: "px",
@@ -164,20 +169,23 @@ const AddNewProductPricing = ({
           },
         ],
       };
-
       if (dataEdit && copyProduct === false) {
         updatePriceAPI(editProductID, data).then((resp) => {
           setAddNewProduct(false);
           refreshTable();
+          resetForm({ values: "" });
         });
-      } 
-      if(copyProduct || dataEdit === undefined){
+      }
+      if (copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
           setAddNewProduct(false);
           refreshTable();
+          resetForm({ values: "" });
         });
       }
+      refreshTable();
       resetForm({ values: "" });
+
     },
   });
   return (
@@ -253,204 +261,211 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
               </Row>
-              <Row className="d-flex">
-                <Col className="col-9 d-flex justify-content-between">
-                  <Col className="col-2">
-                    <div className="form-outline">
-                      <Label className="form-label">Price Type</Label>
-                      <Input
-                        type="select"
-                        name="price_type"
-                        onChange={(e) => {
-                          setPriceTypeSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceTypeData, (type, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={type.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? type.id ===
-                                    dataEdit.pricedetails[0].source_id
-                                  : false
-                              }
+                <>
+                  <Row className="d-flex">
+                    <Col className="col-9 d-flex justify-content-between">
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Price Type</Label>
+                          <Input
+                            type="select"
+                            name="price_type"
+                            onChange={(e) => {
+                              setPriceTypeSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(priceTypeData, (type, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={type.id}
+                                  selected={
+                                    dataEdit && dataEdit.pricedetails
+                                      ? type.id ===
+                                        dataEdit.pricedetails[0].source_id
+                                      : false
+                                  }
+                                >
+                                  {type.text}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Price Option</Label>
+                          <Input
+                            type="select"
+                            name="price_options"
+                            onChange={(e) => {
+                              setPriceOptionSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(priceOptions, (option, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={option.id}
+                                  selected={
+                                    dataEdit && dataEdit.pricedetails
+                                      ? option.id ===
+                                        dataEdit.pricedetails[1].source_id
+                                      : false
+                                  }
+                                >
+                                  {option.text}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Collect</Label>
+                          <Input
+                            type="select"
+                            name="collect"
+                            onChange={(e) => {
+                              setPriceCollectSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(priceCollect, (collect, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={collect.id}
+                                  selected={
+                                    dataEdit && dataEdit.pricedetails
+                                      ? collect.id ===
+                                        dataEdit.pricedetails[2].source_id
+                                      : false
+                                  }
+                                >
+                                  {collect.text}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        {tourData?.seasonality === 1 ? (
+                          <div
+                            className="form-outline"
+                            style={{ marginRight: "20px", marginLeft: "-20px" }}
+                          >
+                            <Label className="form-label">Season</Label>
+                            <Input
+                              type="select"
+                              name="season"
+                              onChange={(e) => {
+                                setPriceSeasonSelected(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                              //   value={validationType.values.department || ""}
                             >
-                              {type.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline">
-                      <Label className="form-label">Price Option</Label>
-                      <Input
-                        type="select"
-                        name="price_options"
-                        onChange={(e) => {
-                          setPriceOptionSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceOptions, (option, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={option.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? option.id ===
-                                    dataEdit.pricedetails[1].source_id
-                                  : false
-                              }
-                            >
-                              {option.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline">
-                      <Label className="form-label">Collect</Label>
-                      <Input
-                        type="select"
-                        name="collect"
-                        onChange={(e) => {
-                          setPriceCollectSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceCollect, (collect, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={collect.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? collect.id ===
-                                    dataEdit.pricedetails[2].source_id
-                                  : false
-                              }
-                            >
-                              {collect.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    {tourData?.seasonality === 1 ? (
-                      <div
-                        className="form-outline"
-                        style={{ marginRight: "20px", marginLeft: "-20px" }}
-                      >
-                        <Label className="form-label">Season</Label>
-                        <Input
-                          type="select"
-                          name="season"
-                          onChange={(e) => {
-                            setPriceSeasonSelected(e.target.value);
-                          }}
-                          onBlur={validationType.handleBlur}
-                          //   value={validationType.values.department || ""}
-                        >
-                          <option>Select....</option>
-                          {map(priceSeason, (season, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={season.id}
-                                selected={
-                                  dataEdit && dataEdit.pricedetails && dataEdit.pricedetails.length > 3
-                                    ? season.id ===
-                                      dataEdit.pricedetails[3]?.source_id
-                                    : false
-                                }
-                              >
-                                {season.text}
-                              </option>
-                            );
-                          })}
-                        </Input>
-                      </div>
-                    ) : null}
-                  </Col>
-                </Col>
-                <Col className="col-3 d-flex justify-content-between">
-                  {activeCheckbox !== null ? (
-                    <Col className="col-6">
-                      <Label className="form-label mt-2">Active</Label>
-                      <div className="form-check form-switch form-switch-md mx-2">
-                        <Input
-                          name="active"
-                          placeholder=""
-                          type="checkbox"
-                          checked={activeCheckbox}
-                          className="form-check-input"
-                          onChange={() => onChangeActiveToggle()}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.active || ""}
-                          invalid={
-                            validationType.touched.active &&
-                            validationType.errors.active
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.active &&
-                        validationType.errors.active ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.active}
-                          </FormFeedback>
+                              <option>Select....</option>
+                              {map(priceSeason, (season, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={season.id}
+                                    selected={
+                                      dataEdit &&
+                                      dataEdit.pricedetails &&
+                                      dataEdit.pricedetails.length > 3
+                                        ? season.id ===
+                                          dataEdit.pricedetails[3]?.source_id
+                                        : false
+                                    }
+                                  >
+                                    {season.text}
+                                  </option>
+                                );
+                              })}
+                            </Input>
+                          </div>
                         ) : null}
-                      </div>
+                      </Col>
                     </Col>
-                  ) : null}
+                    <Col className="col-3 d-flex justify-content-between">
+                      {activeCheckbox !== null ? (
+                        <Col className="col-6">
+                          <Label className="form-label mt-2">Active</Label>
+                          <div className="form-check form-switch form-switch-md mx-2">
+                            <Input
+                              name="active"
+                              placeholder=""
+                              type="checkbox"
+                              checked={activeCheckbox}
+                              className="form-check-input"
+                              onChange={() => onChangeActiveToggle()}
+                              onBlur={validationType.handleBlur}
+                              value={validationType.values.active || ""}
+                              invalid={
+                                validationType.touched.active &&
+                                validationType.errors.active
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.active &&
+                            validationType.errors.active ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.active}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                      ) : null}
 
-                  {balanceDueCheckbox !== null ? (
-                    <Col className="col-6">
-                      <Label className="form-label mt-2">Balance Due</Label>
-                      <div className="form-check form-switch form-switch-md mx-4">
-                        <Input
-                          name="balance_checkbox"
-                          placeholder=""
-                          type="checkbox"
-                          checked={balanceDueCheckbox}
-                          className="form-check-input"
-                          onChange={() => onChangeBalanceDueToggle()}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.balance_checkbox || ""}
-                          invalid={
-                            validationType.touched.balance_checkbox &&
-                            validationType.errors.balance_checkbox
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.balance_checkbox &&
-                        validationType.errors.balance_checkbox ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.balance_checkbox}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
+                      {balanceDueCheckbox !== null ? (
+                        <Col className="col-6">
+                          <Label className="form-label mt-2">Balance Due</Label>
+                          <div className="form-check form-switch form-switch-md mx-4">
+                            <Input
+                              name="balance_checkbox"
+                              placeholder=""
+                              type="checkbox"
+                              checked={balanceDueCheckbox}
+                              className="form-check-input"
+                              onChange={() => onChangeBalanceDueToggle()}
+                              onBlur={validationType.handleBlur}
+                              value={
+                                validationType.values.balance_checkbox || ""
+                              }
+                              invalid={
+                                validationType.touched.balance_checkbox &&
+                                validationType.errors.balance_checkbox
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.balance_checkbox &&
+                            validationType.errors.balance_checkbox ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.balance_checkbox}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                      ) : null}
                     </Col>
-                  ) : null}
-                </Col>
-              </Row>
+                  </Row>
+                </>
+
               <Row
                 className="col-12 p-1 mt-4 mb-2"
                 style={{ backgroundColor: "#E9F4FF" }}

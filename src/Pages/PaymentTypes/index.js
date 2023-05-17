@@ -32,7 +32,7 @@ const PaymentTypes = () => {
   //get info
   const data = useSelector((state) => state.paymentTypes.paymentTypes.data);
 
-  console.log(data)
+  // console.log(data)
  //delete
 
  const onDelete = (payment) =>{
@@ -53,7 +53,7 @@ const PaymentTypes = () => {
           Swal.fire("Deleted!", "Payment Type has been deleted.", "success");
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
     }
   });

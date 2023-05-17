@@ -30,7 +30,7 @@ import { Select } from "antd";
 const { Option } = Select;
 
 const Settings = ({ history, tourSettings, id, toggle }) => {
-  console.log("settings", tourSettings);
+  // console.log("settings", tourSettings);
 
   //seasons request
   const [seasonData, setSeasonData] = useState();
@@ -77,6 +77,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
 
   //available from
   const [availableFromIDs, setAvailableFromIDs] = useState([]);
+  const [newListID, setNewListID] = useState([]);
+  
   useEffect(() => {
     setAvailableFromIDs(tourSettings.available_from);
   }, [tourSettings]);
@@ -90,7 +92,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   }, [tourSettings]);
   //form creation
 
-  console.log('id',availableFromIDs)
+  // console.log('id',availableFromIDs)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -156,16 +158,18 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         seasonality: seasonalPrice === true ? 1 : 0,
       };
 
+    //  console.log('data a enviar', data) 
+
       putSettingsAPI(id, data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 200) {
             Swal.fire("Edited!", "Settings has been created.", "success");
             toggle('3')
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
         });
     },
@@ -357,6 +361,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                             <AvailableCheckbox
                               available={available}
                               availableFromIDs={availableFromIDs}
+                              setNewListID={setNewListID}
                               setAvailableFromIDs={setAvailableFromIDs}
                             />
                           </div>

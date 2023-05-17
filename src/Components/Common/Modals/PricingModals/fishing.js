@@ -30,13 +30,22 @@ const Fishing = ({
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
+
+  
+  let id = "";
+  id = editProductID;
+
   useEffect(() => {
-    if (editProductID !== null) {
-      getPriceAPI(editProductID).then((resp) => {
+    if (id) {
+      getPriceAPI(id).then((resp) => {
+        // console.log(
+        //   "data que viene al editar-------------------",
+        //   resp.data.data
+        // );
         setDataEdit(resp.data.data[0]);
       });
     }
-  }, [editProductID]);
+  }, [id, addNewFishing]);
 
   // console.log('fishing',dataEdit);
 
@@ -155,42 +164,42 @@ const Fishing = ({
         price_details: [
           {
             pricing_option_id: 33,
-            source_id: priceTypeSelected,
+            source_id: priceTypeSelected !== '' ? priceTypeSelected : dataEdit.pricedetails[0].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 34,
-            source_id: priceOptionSelected,
+            source_id: priceOptionSelected !== '' ? priceOptionSelected : dataEdit.pricedetails[1].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 36,
-            source_id: priceCollectSelected,
+            source_id: priceCollectSelected !== '' ? priceCollectSelected : dataEdit.pricedetails[2].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 32,
-            source_id: priceSeasonSelected,
+            source_id: priceSeasonSelected !== '' ? priceSeasonSelected : dataEdit.pricedetails[3].source_id,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 47,
-            source_id: priceCharterTypeSelected
+            source_id: priceCharterTypeSelected !== ''
               ? priceCharterType
               : dataEdit.pricedetails[4].source_id,
             label: null,
           },
           {
             pricing_option_id: 35,
-            source_id: priceDurationSelected
+            source_id: priceDurationSelected !== ''
               ? priceDurationSelected
               : dataEdit.pricedetails[5].source_id,
             min: values.min,
@@ -199,7 +208,7 @@ const Fishing = ({
           },
           {
             pricing_option_id: 37,
-            source_id: priceLocationSelected
+            source_id: priceLocationSelected !== ''
               ? priceLocationSelected
               : dataEdit.pricedetails[6].source_id,
             label: null,
@@ -209,14 +218,14 @@ const Fishing = ({
 
       if (dataEdit) {
         updatePriceAPI(editProductID, data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           refreshTable();
           setAddNewFishing(false);
         });
       } 
       if(copyProduct || dataEdit === undefined) {
         postPricesAPI(data).then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           refreshTable();
           setAddNewFishing(false);
         });

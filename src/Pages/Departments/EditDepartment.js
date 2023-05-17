@@ -118,7 +118,7 @@ const EditDepartment = ({ history }) => {
         .required("Max 3 chars"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       let data = {
         name: values.name,
         code: values.code,
@@ -127,7 +127,7 @@ const EditDepartment = ({ history }) => {
       };
       editDepartment(id, data)
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           if (resp.data.status === 200) {
             Swal.fire(
               "Edited!",
@@ -139,7 +139,7 @@ const EditDepartment = ({ history }) => {
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire(
             "Error!",
             `${

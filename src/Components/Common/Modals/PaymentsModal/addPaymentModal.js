@@ -43,7 +43,7 @@ const AddPaymentModal = ({ addPaymentModal, setPaymentModal, onClickAddNewPaymen
           }
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
         });
     },

@@ -24,7 +24,7 @@ const TourTypes = () => {
 
 	//saving tour types data into variable
 	const data = useSelector((state) => state.tourTypes.tourTypes.data);
-	console.log(data);
+	// console.log(data);
 
 	//delete Tour Type
 	const tourTypesRequest = () => dispatch(tourTypesData());
@@ -46,7 +46,7 @@ const TourTypes = () => {
 						Swal.fire("Deleted!", "Tour Type has been deleted.", "success");
 					})
 					.catch((error) => {
-						console.log(error);
+						// console.log(error);
 					});
 			}
 		});

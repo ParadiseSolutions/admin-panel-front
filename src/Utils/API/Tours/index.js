@@ -119,6 +119,13 @@ export const putSeasonalityAPI = (tourID, body) => {
   });
 };
 
+export const putSeasonalAPI = (tourID, body) => {
+  const url = `${API_URL}/tours/${tourID}/scheduleDate`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
 export const statusSeasonalityAPI = (tourID, body) => {
   const url = `${API_URL}/tours/${tourID}/seasonality/status`;
   return axios.put (url,body, {
@@ -126,7 +133,7 @@ export const statusSeasonalityAPI = (tourID, body) => {
   });
 };
 export const deleteSeasonalityAPI = (tourID, seasonID) => {
-  const url = `${API_URL}/tours/${tourID}/scheduleTime/${seasonID}`;
+  const url = `${API_URL}/tours/${tourID}/seasonality/${seasonID}`;
   return axios.delete (url, {
     headers: options,
   });
@@ -292,6 +299,26 @@ export const getScheduleTypesAPI = () => {
 export const postSchedule = (id, body) => {
   const url = `${API_URL}/tours/${id}/scheduleTime`
   return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const putSchedule = (id, body) => {
+  const url = `${API_URL}/tours/${id}/scheduleTime`
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
+export const getScheduleEditDataAPI = (tour_id, id) => {
+  const url = `${API_URL}/tours/${tour_id}/scheduleTime/${id}`
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const deleteSchedule = (Tourid, dateID) => {
+  const url = `${API_URL}/tours/${Tourid}/scheduleTime/${dateID}`
+  return axios.delete (url, {
     headers: options,
   });
 };

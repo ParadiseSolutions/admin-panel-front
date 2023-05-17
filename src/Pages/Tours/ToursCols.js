@@ -76,7 +76,7 @@ const Active = (cell) => {
     if (cell.value === 1) {
       let data = { active: 0 };
       statusUpdateTour(id, data).then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         const toursRequest = () => dispatch(toursData());
           toursRequest();
       });
@@ -85,12 +85,12 @@ const Active = (cell) => {
       let data = { active: 1 };
       statusUpdateTour(id, data)
         .then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           const toursRequest = () => dispatch(toursData());
           toursRequest();
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           setTimeout(() => {
             <Toast>
               <ToastHeader

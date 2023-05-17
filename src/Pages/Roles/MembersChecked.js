@@ -15,11 +15,11 @@ const MembersChecked = ({ user, membersIds, setMembersIds }) => {
 
   const onChangeMembers = (e) => {
     setChecked(!checked);
-    console.log(checked);
+    // console.log(checked);
     const selection = Number(e.target.value);
     const selectionFlag = membersIds.includes(selection);
 
-    console.log(typeof selection);
+    // console.log(typeof selection);
     if (!selectionFlag) {
       setMembersIds([...membersIds, e.target.value]);
     }

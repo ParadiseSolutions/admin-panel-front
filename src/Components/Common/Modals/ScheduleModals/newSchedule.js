@@ -153,22 +153,22 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
       
       let multiTimesList = []
       if (values.first_field_multi !== '') {
-        multiTimesList.push([ ...multiTimesList, `${values.first_field_multi} ${timeFrameMulti1}`])
+        multiTimesList.push(`${values.first_field_multi} ${timeFrameMulti1}`)
       }
       if (values.second_field_multi !== '') {
-        multiTimesList.push([ ...multiTimesList, `${values.second_field_multi} ${timeFrameMulti2}`])
+        multiTimesList.push(`${values.second_field_multi} ${timeFrameMulti2}`)
       }
       if (values.third_field_multi !== '') {
-        multiTimesList.push([ ...multiTimesList, `${values.third_field_multi} ${timeFrameMulti3}`])
+        multiTimesList.push(`${values.third_field_multi} ${timeFrameMulti3}`)
       }
       if (values.fourth_field_multi !== '') {
-        multiTimesList.push([ ...multiTimesList, `${values.fourth_field_multi} ${timeFrameMulti4}`])
+        multiTimesList.push(`${values.fourth_field_multi} ${timeFrameMulti4}`)
       }
       if (values.fifth_field_multi !== '') {
-        multiTimesList.push([ ...multiTimesList, `${values.fifth_field_multi} ${timeFrameMulti5}`])
+        multiTimesList.push(`${values.fifth_field_multi} ${timeFrameMulti5}`)
       }
       if (values.sixth_field_multi !== '') {
-        multiTimesList.push([ ...multiTimesList, `${values.sixth_field_multi} ${timeFrameMulti6}`])
+        multiTimesList.push(`${values.sixth_field_multi} ${timeFrameMulti6}`)
       }
 
       let data = {

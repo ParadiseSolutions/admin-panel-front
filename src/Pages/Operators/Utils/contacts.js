@@ -58,7 +58,7 @@ const Contacts = ({contacts}) => {
             document.location.reload();
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           });
       }
     });

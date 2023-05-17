@@ -12,7 +12,7 @@ const ResetPassword = () => {
 
   //get params
   const queryString = window.location.search;
-  console.log(queryString);
+  // console.log(queryString);
   const urlParams = new URLSearchParams(queryString);
   const token = urlParams.get('token')
 
@@ -38,7 +38,7 @@ const ResetPassword = () => {
       }),
      }),
      onSubmit: (values) => {
-       console.log("values", values);
+      //  console.log("values", values);
        let data = {
         token: token,
         password: values.password,
@@ -51,7 +51,7 @@ const ResetPassword = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
      },
    });

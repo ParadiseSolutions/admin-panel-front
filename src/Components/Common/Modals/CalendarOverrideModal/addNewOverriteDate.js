@@ -28,7 +28,7 @@ const AddNewOverriteDate = ({
   const [typeSelected, setTypeSelected] = useState(null);
   const [repeatSelected, setRepeatSelected] = useState(null)
   const [daySelected, setDaySelected] = useState(null)
-  console.log(typeSelected);
+  // console.log(typeSelected);
 
   //checkbox list
   const [daysList, setDayList] = useState([]);
@@ -65,7 +65,7 @@ const AddNewOverriteDate = ({
         recurrency: repeatSelected,
       };
 
-      console.log(data)
+      // console.log(data)
 
     
       postOverriteDate(id, data)
