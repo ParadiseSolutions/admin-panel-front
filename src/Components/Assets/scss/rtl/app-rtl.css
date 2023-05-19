@@ -1924,10 +1924,10 @@ input[type=checkbox].tui-full-calendar-checkbox-round + span {
   color: #50a5f1; }
 
 .swal2-icon.swal2-success [class^=swal2-success-line] {
-  background-color: #34c38f; }
+  background-color: #00A1D5; }
 
 .swal2-icon.swal2-success .swal2-success-ring {
-  border-color: rgba(52, 195, 143, 0.3); }
+  border-color: rgba(0, 161, 213, 0.3); }
 
 .swal2-icon.swal2-warning {
   border-color: #f1b44c;

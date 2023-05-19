@@ -169,7 +169,7 @@ const EditDepartment = ({ history }) => {
                 className="display-5 fw-bold text-paradise"
                 // style={{ color: "#3DC7F4" }}
               >
-                + EDIT DEPARTMENT
+                EDIT DEPARTMENT
               </h1>
             </div>
             <Col sm="12" className="d-flex justify-content-end">

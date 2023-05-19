@@ -107,8 +107,7 @@ const TableContainer = ({
               <Link to="/departments/new">
                 <Button
                   type="button"
-                  style={{ backgroundColor: "#F6851F", border: "none" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
+                  className="waves-effect waves-light mb-3 btn btn-orange"
                   onClick={handleUserClicks}
                 >
                   <i className="mdi mdi-plus me-1" />
@@ -125,8 +124,8 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddCategory()}
               >
                 <i className="mdi mdi-plus me-1" />
@@ -141,11 +140,11 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddLocation()}
               >
-                <i className="mdi mdi-plus me-1" />
+                
                 Add New Location
               </Button>
             </div>
@@ -157,11 +156,11 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddNewWebsite()}
               >
-                <i className="mdi mdi-plus me-1" />
+                
                 Add New Website
               </Button>
             </div>
@@ -173,11 +172,11 @@ const TableContainer = ({
               <Link to="/roles/new">
                 <Button
                   type="button"
-                  style={{ backgroundColor: "#F6851F", border: "none" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
+                  
+                  className="waves-effect waves-light mb-3 btn btn-orange"
                   onClick={handleUserClicks}
                 >
-                  <i className="mdi mdi-plus me-1" />
+                  
                   Add New Rol
                 </Button>
               </Link>
@@ -190,8 +189,8 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddNew()}
               >
                 <i className="mdi mdi-plus me-1" />
@@ -206,8 +205,8 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddNewPayment()}
               >
                 <i className="mdi mdi-plus me-1" />
@@ -222,8 +221,8 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddTourType()}
               >
                 <i className="mdi mdi-plus me-1" />
@@ -239,8 +238,8 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddNewCart()}
               >
                 <i className="mdi mdi-plus me-1" />
@@ -255,8 +254,8 @@ const TableContainer = ({
               <Link to={"/providers/new"}>
                 <Button
                   type="button"
-                  style={{ backgroundColor: "#F6851F", border: "none" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
+                  
+                  className="waves-effect waves-light mb-3 btn btn-orange"
                   onClick={() => onClickNewProvider()}
                 >
                   <i className="mdi mdi-plus me-1" />
@@ -271,8 +270,8 @@ const TableContainer = ({
             <div className="text-sm-end">
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickNewContactProvider()}
               >
                 <i className="mdi mdi-plus me-1" />
@@ -287,8 +286,8 @@ const TableContainer = ({
               <Link to={'/operators/new'}>
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 // onClick={() => onClickNewContactProvider()}
               >
                 <i className="mdi mdi-plus me-1" />
@@ -305,8 +304,8 @@ const TableContainer = ({
               <Link to={'/tours/new'}>
               <Button
                 type="button"
-                style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                
+                className="waves-effect waves-light mb-3 btn btn-orange"
                 // onClick={() => onClickNewContactProvider()}
               >
                 <i className="mdi mdi-plus me-1" />

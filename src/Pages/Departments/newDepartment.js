@@ -102,8 +102,8 @@ const NewDepartment = ({ history }) => {
           // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire(
-              "Created!",
-              "The department has been created.",
+              "Hooray!",
+              "You added a New Department.",
               "success"
             ).then(() => {
               history.goBack();
@@ -141,7 +141,7 @@ const NewDepartment = ({ history }) => {
                 className="fw-bold text-paradise"
                 // style={{ color: "#3DC7F4" }}
               >
-                + ADD NEW DEPARTMENT
+                <i className="mdi mdi-plus me-1" /> ADD NEW DEPARTMENT
               </h1>
             </div>
             <Row className="">
@@ -160,13 +160,12 @@ const NewDepartment = ({ history }) => {
                 </div>
                 <div className="text-sm-end">
                   <Button
-                    type="submit"
-                    style={{ backgroundColor: "#F6851F", borderColor: "#F6851F" }}
-                    className="waves-effect waves-light mb-3 btn btn-success"
+                    type="submit"                    
+                    className="waves-effect waves-light mb-3 btn btn-orange"
                     // onClick={() => onClickNewContactProvider()}
                   >
-                    <i className="mdi mdi-plus me-1" />
-                    Add Department
+                    
+                    Create Department
                   </Button>
                 </div>
               </Col>
