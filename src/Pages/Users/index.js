@@ -95,7 +95,7 @@ const Users = () => {
         },
       },
       {
-        Header: "Rol",
+        Header: "Role",
         accessor: "role",
         disableFilters: true,
         filterable: false,
@@ -120,9 +120,9 @@ const Users = () => {
           const userData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <div className="text-success">
+              <div className="text-paradise">
                 <i
-                  className="mdi mdi-pencil font-size-18"
+                  className="mdi mdi-pencil-outline font-size-18"
                   id="edittooltip"
                   onClick={() => {
                     setUserId(userData.id);
@@ -142,7 +142,7 @@ const Users = () => {
                   onDelete(userData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -166,9 +166,9 @@ const Users = () => {
   return (
     <div className="page-content">
       <Container fluid>
-        <div className=" mx-5">
+        <div className=" mx-2">
           <h1
-            className="display-5 fw-bold cursor-pointer"
+            className="fw-bold cursor-pointer"
             style={{ color: "#3DC7F4" }}
           >
             USERS
@@ -177,8 +177,7 @@ const Users = () => {
 
         <Row>
           <Col xs="12">
-            <Card>
-              <CardBody>
+            
                 {data ? (
                   <TableContainer
                     columns={columns}
@@ -190,8 +189,7 @@ const Users = () => {
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}
-              </CardBody>
-            </Card>
+              
           </Col>
         </Row>
 

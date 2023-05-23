@@ -10,7 +10,7 @@ import {
   usePagination,
   useRowSelect,
 } from "react-table";
-import { Table, Row, Col, Button, Input } from "reactstrap";
+import { Table, Row, Col, Button, Input,Card,CardBody, } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 
@@ -92,6 +92,8 @@ const TableContainer = ({
 
   return (
     <Fragment>
+      <Card>
+        <CardBody>
       <Row className="mb-3">
         {isGlobalFilter && (
           <GlobalFilter
@@ -336,7 +338,7 @@ const TableContainer = ({
 
       {departmentTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -376,7 +378,7 @@ const TableContainer = ({
       )}
       {providersTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -619,7 +621,7 @@ const TableContainer = ({
       )}
       {usersTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table mb-0">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -937,62 +939,58 @@ const TableContainer = ({
           </Table>
         </div>
       )}
-
+        </CardBody>
+      </Card>
       <Row className="justify-content-md-end justify-content-center align-items-center">
         <Col className="col-md-auto">
-          <div className="d-flex gap-1">
-            <Button
-              // color="info"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
-              onClick={() => gotoPage(0)}
-              disabled={!canPreviousPage}
-            >
-              {"<<"}
-            </Button>
-            <Button
-              // color="primary"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
-              onClick={previousPage}
-              disabled={!canPreviousPage}
-            >
-              {"<"}
-            </Button>
-          </div>
-        </Col>
-        <Col className="col-md-auto d-none d-md-block">
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>
-        </Col>
-        <Col className="col-md-auto">
-          <Input
-            type="number"
-            min={1}
-            style={{ width: 70 }}
-            max={pageOptions.length}
-            defaultValue={pageIndex + 1}
-            onChange={onChangeInInput}
-          />
-        </Col>
-
-        <Col className="col-md-auto">
-          <div className="d-flex gap-1">
-            <Button
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
-              onClick={nextPage}
-              disabled={!canNextPage}
-            >
-              {">"}
-            </Button>
-            <Button
-              // color="primary"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
-              onClick={() => gotoPage(pageCount - 1)}
-              disabled={!canNextPage}
-            >
-              {">>"}
-            </Button>
+          <div className="d-flex btn-group" role="group">
+              <Button
+                className="btn btn-orange" 
+                onClick={() => gotoPage(0)}
+                disabled={!canPreviousPage}
+              >
+                {"<<"}
+              </Button>
+              <Button
+                // color="primary"
+                className="btn btn-orange"
+                onClick={previousPage}
+                disabled={!canPreviousPage}
+              >
+                {"<"}
+              </Button>
+              <div className="d-flex justify-content-center align-items-center input-group">
+                <div className="input-group-text rounded-0 border-start-0">
+                  Page{" "}
+                  <strong>
+                    {pageIndex + 1} of {pageOptions.length}
+                  </strong>
+                </div>  
+                
+                  <Input
+                  type="number"
+                  min={1}
+                  className="text-center input-group-text bg-white rounded-0"
+                  max={pageOptions.length}
+                  defaultValue={pageIndex + 1}
+                  onChange={onChangeInInput}
+                  />
+                  
+              </div>            
+              <Button
+                className="btn-orange"
+                onClick={nextPage}
+                disabled={!canNextPage}
+              >
+                {">"}
+              </Button>
+              <Button              
+                className="btn-orange"
+                onClick={() => gotoPage(pageCount - 1)}
+                disabled={!canNextPage}
+              >
+                {">>"}
+              </Button>          
           </div>
         </Col>
       </Row>

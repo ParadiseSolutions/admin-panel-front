@@ -169,3 +169,11 @@ body {
   border-color: #FFD500;
   color: #0700D8;
 }
+.btn-orange:disabled, .btn-orange.disabled {
+  color: #fff;
+  background-color: #f6b479;
+  border-color: #f6b479;
+}
+.border-orange{
+  border-color: #F6851F;
+}

@@ -113,7 +113,7 @@ const Departments = () => {
                 className="text-success"
                 
               >
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+                <i className="mdi mdi-pencil-outline font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -127,7 +127,7 @@ const Departments = () => {
                   onDelete(depData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -151,8 +151,7 @@ const Departments = () => {
 
           <Row>
             <Col xs="12">
-              <Card>
-                <CardBody>
+              
                   {data ? (
                     <TableContainer
                       columns={columns}
@@ -163,8 +162,7 @@ const Departments = () => {
                       // handleOrderClicks={handleOrderClicks}
                     />
                   ) : null}
-                </CardBody>
-              </Card>
+                
             </Col>
           </Row>
         </Container>

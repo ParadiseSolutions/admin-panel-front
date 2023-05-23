@@ -18,6 +18,7 @@ import {
   CardBody,
   Container,
   TabPane,
+  CardHeader,
 } from "reactstrap";
 import classnames from "classnames";
 import { useParams } from "react-router-dom";
@@ -53,7 +54,7 @@ const EditTour = ({ history }) => {
     <div className="page-content">
       <Container fluid>
         <div className=" mx-4">
-          <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
+          <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
             {tourData ? tourData.name : ""}
           </h1>
         </div>
@@ -61,14 +62,15 @@ const EditTour = ({ history }) => {
       <Row>
         <Col xl={12}>
           <Card>
-            <CardBody>
-              <Nav tabs className="nav-justified">
+            <CardHeader className="p-0">
+            <Nav tabs className="nav-justified border-orange">
                 <NavItem>
                   <NavLink
                     style={{
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "1" ? "#F6851F" : ""}`,
                       color: `${activeTab === "1" ? "white" : ""}`,
+                      border:"none",
                     }}
                     className={classnames({
                       active: activeTab === "1",
@@ -91,6 +93,7 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "2" ? "#F6851F" : ""}`,
                       color: `${activeTab === "2" ? "white" : ""}`,
+                      border:"none",
                     }}
                     className={classnames({
                       active: activeTab === "2",
@@ -111,6 +114,7 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
                       color: `${activeTab === "3" ? "white" : ""}`,
+                      border:"none",
                     }}
                     className={classnames({
                       active: activeTab === "3",
@@ -134,6 +138,7 @@ const EditTour = ({ history }) => {
                           activeTab === "4" ? "#F6851F" : ""
                         }`,
                         color: `${activeTab === "4" ? "white" : ""}`,
+                        border:"none",
                       }}
                       className={classnames({
                         active: activeTab === "4",
@@ -155,6 +160,7 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
                       color: `${activeTab === "5" ? "white" : ""}`,
+                      border:"none",
                     }}
                     className={classnames({
                       active: activeTab === "5",
@@ -175,6 +181,7 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
+                      border:"none",
                     }}
                     className={classnames({
                       active: activeTab === "6",
@@ -195,6 +202,7 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
+                      border:"none",
                     }}
                     className={classnames({
                       active: activeTab === "7",
@@ -210,8 +218,9 @@ const EditTour = ({ history }) => {
                   </NavLink>
                 </NavItem>
               </Nav>
-
-              <TabContent activeTab={activeTab} className="p-3 text-muted">
+            </CardHeader>
+            <CardBody className="p-0">
+              <TabContent activeTab={activeTab} className="p-4 text-muted">
                 <TabPane tabId="1">
                   {tourData ? (
                     <EditGeneralInformation tourData={tourData} toggle={toggle} />
