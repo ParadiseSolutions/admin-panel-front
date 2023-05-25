@@ -123,9 +123,9 @@ const Providers = () => {
               to={`/providers/${providersData.id}  `}
               >
               
-              <div className="text-success">
+              <div className="text-paradise">
                 <i
-                  className="mdi mdi-pencil font-size-18"
+                  className="mdi mdi-pencil-outline font-size-18"
                   id="edittooltip"
                   
                 />
@@ -143,7 +143,7 @@ const Providers = () => {
                   onDelete(providerInfo);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -167,9 +167,9 @@ const Providers = () => {
   return (
     <div className="page-content">
       <Container fluid>
-        <div className=" mx-5">
+        <div className=" mx-1">
           <h1
-            className="display-5 fw-bold cursor-pointer"
+            className="fw-bold cursor-pointer"
             style={{ color: "#3DC7F4" }}
           >
             PROVIDERS
@@ -178,8 +178,7 @@ const Providers = () => {
 
         <Row>
           <Col xs="12">
-            <Card>
-              <CardBody>
+            
                 {data ? (
                   <TableContainer
                     columns={columns}
@@ -191,8 +190,7 @@ const Providers = () => {
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}
-              </CardBody>
-            </Card>
+              
           </Col>
         </Row>
 

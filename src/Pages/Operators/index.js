@@ -106,7 +106,7 @@ const Operators = () => {
             <div className="d-flex gap-3">
               <Link to={`/operators/${providersData.id}  `}>
                 <div className="text-success">
-                  <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+                  <i className="mdi mdi-pencil-outline font-size-18" id="edittooltip" />
                   <UncontrolledTooltip placement="top" target="edittooltip">
                     Edit
                   </UncontrolledTooltip>
@@ -121,7 +121,7 @@ const Operators = () => {
                   onDelete(operatorInfo);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -137,9 +137,9 @@ const Operators = () => {
     <>
       <div className="page-content">
         <Container fluid>
-          <div className=" mx-5">
+          <div className=" mx-1">
             <h1
-              className="display-5 fw-bold cursor-pointer"
+              className="fw-bold cursor-pointer"
               style={{ color: "#3DC7F4" }}
             >
               OPERATORS
@@ -147,8 +147,7 @@ const Operators = () => {
           </div>
           <Row>
             <Col xs="12">
-              <Card>
-                <CardBody>
+              
                   {data ? (
                     <TableContainer
                       columns={columns}
@@ -160,8 +159,7 @@ const Operators = () => {
                       //  handleOrderClicks={() => onClickAddNew()}
                     />
                   ) : null}
-                </CardBody>
-              </Card>
+                
             </Col>
           </Row>
         </Container>

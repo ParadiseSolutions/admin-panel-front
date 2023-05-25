@@ -21,11 +21,11 @@
   }
   &.swal2-success {
     [class^=swal2-success-line]{
-      background-color: $success;
+      background-color: $hooray;
     }
 
     .swal2-success-ring{
-      border-color: rgba($success, 0.3);
+      border-color: rgba($hooray, 0.3);
     }
   }
   &.swal2-warning{

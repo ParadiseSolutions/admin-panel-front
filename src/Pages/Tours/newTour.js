@@ -281,7 +281,7 @@ const NewTour = ({ history }) => {
                   <TabPane tabId="1">
                     <Row xl={12}>
                       <Col className="col-4">
-                        <img src={newTourGi} alt="new tour girl" />
+                        <img src={newTourGi} alt="new tour girl" className="img-fluid"/>
                       </Col>
                       <Col className="col-8">
                         <Row className="d-flex justify-content-start">

@@ -16,6 +16,7 @@ import {
   Input,
   FormFeedback,
   Form,
+  CardHeader,
 } from "reactstrap";
 // Formik validation
 import * as Yup from "yup";
@@ -101,8 +102,8 @@ const NewDepartment = ({ history }) => {
           // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire(
-              "Created!",
-              "The department has been created.",
+              "Hooray!",
+              "You added a New Department.",
               "success"
             ).then(() => {
               history.goBack();
@@ -125,8 +126,8 @@ const NewDepartment = ({ history }) => {
   });
   return (
     <>
-      <div className="page-content">
-        <Container fluid>
+      <div className="page-content px-0">
+        <Container fluid className="px-5">
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -135,144 +136,179 @@ const NewDepartment = ({ history }) => {
             }}
             className="custom-validation"
           >
-            <div className=" mx-5">
+            <div className="">
               <h1
-                className="display-5 fw-bold text-paradise"
+                className="fw-bold text-paradise"
                 // style={{ color: "#3DC7F4" }}
               >
-                + ADD NEW DEPARTMENT
+                <i className="mdi mdi-plus me-1" /> ADD NEW DEPARTMENT
               </h1>
             </div>
-            <Col sm="12" className="d-flex justify-content-end">
-              <div className="text-sm-end mx-2">
-                <Button
-                  color="paradise"
-                  outline
-                  className="waves-effect waves-light"
-                  type="button"
-                  onClick={() => history.goBack()}
-                >
-                  <i className="uil-angle-double-left" />
-                  Back
-                </Button>
-              </div>
-              <div className="text-sm-end">
-                <Button
-                  type="submit"
-                  style={{ backgroundColor: "#F6851F", borderColor: "#F6851F" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
-                  // onClick={() => onClickNewContactProvider()}
-                >
-                  <i className="mdi mdi-plus me-1" />
-                  Add Department
-                </Button>
-              </div>
-            </Col>
             <Row className="">
-              <Col className="col-12 mx-5">
-                <Row className="d-flex justify-content-between">
-                  <Col lg={3} style={{ height: "75vh" }}>
-                    <Card>
-                      <CardBody className="d-grid px-2 pt-0">
-                        <Row
-                          className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3"
-                          style={{ paddingLeft: "20px" }}
-                        >
-                          <h5 className="text-white col-8 pl-5">
-                            + General Information
-                          </h5>
-                        </Row>
-                        <Row className="justify-content-center mt-4">
-                          <div className="form-outline mb-4 col-11">
-                            <Label className="form-label">Name</Label>
-                            <Input
-                              name="name"
-                              placeholder=""
-                              type="text"
-                              onChange={validationType.handleChange}
-                              onBlur={validationType.handleBlur}
-                              value={validationType.values.name || ""}
-                              invalid={
-                                validationType.touched.name &&
-                                validationType.errors.name
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validationType.touched.name &&
-                            validationType.errors.name ? (
-                              <FormFeedback type="invalid">
-                                {validationType.errors.name}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
+              <Col md="12" className="d-flex justify-content-end">
+                <div className="text-sm-end mx-2">
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    <i className="uil-angle-double-left" />
+                    Back
+                  </Button>
+                </div>
+                <div className="text-sm-end">
+                  <Button
+                    type="submit"                    
+                    className="waves-effect waves-light mb-3 btn btn-orange"
+                    // onClick={() => onClickNewContactProvider()}
+                  >
+                    
+                    Create Department
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+            
+            
+              <Row className="g-5">
+                <Col lg={4}>
+                  <Card className="border-0 mb-5">
+                    <CardHeader className="bg-paradise">
+                    <h5 className="text-white m-1">
+                          + General Information
+                        </h5>
+                    </CardHeader>
+                    <CardBody className="">
+                      
+                      <Row className="justify-content-center mt-4">
+                        <div className="form-outline mb-4 col-11">
+                          <Label className="form-label">Name</Label>
+                          <Input
+                            name="name"
+                            placeholder=""
+                            type="text"
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={validationType.values.name || ""}
+                            invalid={
+                              validationType.touched.name &&
+                              validationType.errors.name
+                                ? true
+                                : false
+                            }
+                          />
+                          {validationType.touched.name &&
+                          validationType.errors.name ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.name}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
 
-                          <div className="form-outline mb-4 col-11">
-                            <Label>Code</Label>
-                            <Input
-                              name="code"
-                              type="text"
-                              placeholder=""
-                              onChange={validationType.handleChange}
-                              onBlur={validationType.handleBlur}
-                              value={validationType.values.code || ""}
-                              invalid={
-                                validationType.touched.code &&
-                                validationType.errors.code
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validationType.touched.code &&
-                            validationType.errors.code ? (
-                              <FormFeedback type="invalid">
-                                {validationType.errors.code}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </Row>
-                      </CardBody>
-                    </Card>
-                    <div style={{ border: "none" }}>
-                      <img
-                        src={BoatImage}
-                        alt="boat"
-                        style={{
-                          width: "103%",
-                          height: "400px",
-                          marginLeft: "-5px",
-                        }}
-                      />
-                    </div>
-                  </Col>
-                  <Col lg={4}>
-                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
-                      <Row
-                        className="justify-content-center bg-paradise pt-3 pb-2 shadow"
-                        style={{ paddingLeft: "20px" }}
-                      >
-                        <h5 className="text-white">+ Select Members</h5>
+                        <div className="form-outline mb-4 col-11">
+                          <Label>Code</Label>
+                          <Input
+                            name="code"
+                            type="text"
+                            placeholder=""
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={validationType.values.code || ""}
+                            invalid={
+                              validationType.touched.code &&
+                              validationType.errors.code
+                                ? true
+                                : false
+                            }
+                          />
+                          {validationType.touched.code &&
+                          validationType.errors.code ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.code}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
                       </Row>
-                      <CardBody className="overflow-auto">
-                        <Row className="justify-content-center">
-                          {dataUsers ? (
+                    </CardBody>
+                  </Card>
+                  <Card className="border-0">
+                    <img
+                      src={BoatImage}
+                      alt="boat"
+                      class="card-img-top"
+                    />
+                  </Card>
+                </Col>
+                <Col lg={4} className="d-flex align-items-stretch">
+                  <Card className="border-0">
+                  <CardHeader className="bg-paradise">
+                    <h5 className="text-white m-1">
+                      + Select Members
+                    </h5>
+                    </CardHeader>
+                    
+                    <CardBody className="overflow-auto">
+                      <Row className="justify-content-center">
+                        {dataUsers ? (
+                          <>
+                            {map(dataUsers, (user, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="controls my-2"
+                                >
+                                  <div className="form-check px-5">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      value={user.id}
+                                      name={validationType.values.members}
+                                      onChange={(e) => onChangeMembers(e)}
+                                    />
+                                    <label className="form-check-label">
+                                      {`${user.first_name} ${user.last_name}`}
+                                    </label>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </>
+                        ) : null}
+                      </Row>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col lg={4} className="d-flex align-items-stretch">
+                  <Card className="">
+                  <CardHeader className="bg-paradise">
+                    <h5 className="text-white m-1">
+                      + Permissionss
+                    </h5>
+                    </CardHeader>
+                    
+                    <CardBody className="overflow-auto">
+                      <Row className="d-flex justify-content-center">
+                        
+                          {dataModules ? (
                             <>
-                              {map(dataUsers, (user, index) => {
+                              {map(dataModules, (module, index) => {
                                 return (
-                                  <div
-                                    key={index}
-                                    className="controls my-4"
-                                  >
-                                    <div className="form-check px-5">
+                                  <div key={index} className=" my-2 col-5">
+                                    <div className="form-check">
                                       <input
                                         className="form-check-input"
                                         type="checkbox"
-                                        value={user.id}
-                                        name={validationType.values.members}
-                                        onChange={(e) => onChangeMembers(e)}
+                                        value={module.id}
+                                        name={
+                                          validationType.values.permissions
+                                        }
+                                        onChange={(e) => onChangeModules(e)}
+                                        onBlur={validationType.handleBlur}
                                       />
                                       <label className="form-check-label">
-                                        {`${user.first_name} ${user.last_name}`}
+                                        {`${module.name}`}
                                       </label>
                                     </div>
                                   </div>
@@ -280,54 +316,13 @@ const NewDepartment = ({ history }) => {
                               })}
                             </>
                           ) : null}
-                        </Row>
-                      </CardBody>
-                    </Card>
-                  </Col>
-                  <Col lg={4}>
-                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
-                      <Row
-                        className="justify-content-center bg-paradise pt-3 pb-2 shadow"
-                        style={{ paddingLeft: "20px" }}
-                      >
-                        <h5 className="text-white">+ Permissionss</h5>
+                        
                       </Row>
-                      <CardBody className="overflow-auto">
-                        <Row className="d-flex justify-content-center">
-                         
-                            {dataModules ? (
-                              <>
-                                {map(dataModules, (module, index) => {
-                                  return (
-                                    <div key={index} className=" my-4 col-5">
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="checkbox"
-                                          value={module.id}
-                                          name={
-                                            validationType.values.permissions
-                                          }
-                                          onChange={(e) => onChangeModules(e)}
-                                          onBlur={validationType.handleBlur}
-                                        />
-                                        <label className="form-check-label">
-                                          {`${module.name}`}
-                                        </label>
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </>
-                            ) : null}
-                          
-                        </Row>
-                      </CardBody>
-                    </Card>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+              
           </Form>
         </Container>
       </div>

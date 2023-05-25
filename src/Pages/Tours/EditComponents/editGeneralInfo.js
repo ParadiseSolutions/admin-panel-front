@@ -142,56 +142,38 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       className="custom-validation"
     >
       <TabPane tabId="1">
-        <Row xl={12}>
+        <Row className="g-5">
           <Col className="col-4">
-            <img src={newTourGi} alt="new tour girl" />
+            <img src={newTourGi} alt="new tour girl" className="img-fluid w-100" />
           </Col>
           <Col className="col-8">
-            <Row className="d-flex justify-content-start">
-              <div className="col-2">
-                <p
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                    color: "#495057",
-                  }}
-                >
-                  {" "}
-                  INSTRUCTIONS.
-                </p>
-              </div>
-              <Col>
-                <p style={{ fontSize: "16px", marginTop: "5px" }}>
-                  To create a new tour please fill out the following
-                  information. Once you've completed this first screen, you can
+            <Row className="d-flex justify-content-start mb-3">              
+              <Col className="col-12">
+                <div className="p-3" style={{backgroundColor: "#d9f0ff"}}>
+                <p className="mb-0 fs-6 lh-2">
+                  <span className="fs-4 fw-bold text-uppercase text-dark">Instructions:</span> To create a new tour please fill out the following
+                  information. Once you've completed this first screen, you can through the tabs and complete the information. Once you're
+                  done with a section, press "Continue" to save your changes.
                   navigate
                 </p>
+                </div>
+                
               </Col>
             </Row>
-            <Row className="d-flex justify-content-start">
-              <Col>
-                <p style={{ fontSize: "16px", marginTop: "-12px" }}>
-                  through the tabs and complete the information. Once you're
-                  done with a section, press "Continue" to save your changes.
-                </p>
-              </Col>
-            </Row>
-            <Row className="col-12 p-1" style={{ backgroundColor: "#E9F4FF" }}>
-              <p
-                className="py-2"
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  color: "#495057",
-                  marginBottom: "0px",
-                }}
+            
+            <Row className="mb-3">
+              <Col className="col-12">
+                <div className="p-3" style={{ backgroundColor: "#E9F4FF" }}>
+                <p
+                className="fs-4 fw-bold text-uppercase text-dark mb-0"
+                
               >
                 TOUR SETTINGS
               </p>
-            </Row>
-            <Row className="col-12 d-flex justify-content-start">
-              <Row>
-                <Col className="col-4">
+                </div>
+              
+              </Col>
+              <Col className="col-4">
                   <div className="form-outline mt-2">
                     <Label className="form-label">Tour Type</Label>
                     <Input
@@ -274,10 +256,6 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     </Input>
                   </div>
                 </Col>
-              </Row>
-            </Row>
-            <Row className="col-12 d-flex justify-content-start">
-              <Row>
                 <Col className="col-4">
                   <div className="form-outline my-2">
                     <Label className="form-label">Provider</Label>
@@ -326,22 +304,21 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     </Input>
                   </div>
                 </Col>
-              </Row>
             </Row>
-            <Row className="col-12 p-1" style={{ backgroundColor: "#FFEFDE" }}>
-              <p
-                className="py-2"
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  color: "#495057",
-                  marginBottom: "0px",
-                }}
+            
+            <Row>
+            <Col className="col-12">
+            <div className="p-3" style={{ backgroundColor: "#FFEFDE" }}>
+                <p
+                className="fs-4 fw-bold text-uppercase text-dark mb-0"
+                
               >
                 TOUR DETAILS
               </p>
+                </div>
+            </Col>
             </Row>
-            <Row className="col-12 d-flex justify-content-start">
+            <Row className="d-flex justify-content-start">
               <Row>
                 <Col className="col-8">
                   <div className="form-outline mt-2">
@@ -478,9 +455,9 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               style={{ paddingRight: "30px" }}
             >
               <Button
-                style={{ backgroundColor: "#F6851F" }}
+                
                 type="submit"
-                className="font-16 btn-block col-2"
+                className="font-16 btn-block col-2 btn-orange"
                 onClick={() => toggle("2")}
               >
                 Continue

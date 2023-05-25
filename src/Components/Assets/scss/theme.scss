@@ -23,6 +23,7 @@ body {
   * {
     outline: none;
   }
+  overflow-y: hidden;
 }
 
 .react-bootstrap-table-page-btns-ul {
@@ -151,9 +152,28 @@ body {
     tr {
       th {
         div:last-child {
-          min-height: 38px;
+          min-height: auto;
         }
       }
     }
   }
+}
+
+//Buttons classes
+.btn-orange{
+  background-color: #F6851F;
+  border-color: #F6851F;
+}
+.btn-orange:hover{
+  background-color: #FFD500;
+  border-color: #FFD500;
+  color: #0700D8;
+}
+.btn-orange:disabled, .btn-orange.disabled {
+  color: #fff;
+  background-color: #f6b479;
+  border-color: #f6b479;
+}
+.border-orange{
+  border-color: #F6851F;
 }
