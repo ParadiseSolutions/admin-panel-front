@@ -20,6 +20,7 @@ import {
   getPricingZoneOptionsAPI,
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
+import Swal from "sweetalert2";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
@@ -42,6 +43,8 @@ const AddNewAirportTransfer = ({
         // );
         setDataEdit(resp.data.data[0]);
       });
+    } else {
+      setDataEdit(null)
     }
   }, [id, addNewAirportTransfer]);
 
@@ -134,129 +137,149 @@ const AddNewAirportTransfer = ({
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, { resetForm }) => {
-      let data = {
-        tour_id: tourData.id,
-        sku: tourData.sku,
-        public: values.public_price,
-        provider_price: values.provider_price,
-        rate: values.rate,
-        net_rate: values.net_price,
-        compare_at_url: values.compare_at_url,
-        ship_price: values.ship_price,
-        compare_at: values.compare_at,
-        price: values.our_price,
-        you_save: values.you_save,
-        eff_rate: values.eff_rate,
-        commission: values.commission,
-        deposit: values.deposit,
-        net_price: values.balance_due,
-        active: activeCheckbox ? 1 : 0,
-        show_balance_due: balanceDueCheckbox ? 1 : 0,
-        price_details: [
-          {
-            pricing_option_id: 10,
-            source_id:
-              priceTypeSelected !== ""
-                ? priceTypeSelected
-                : dataEdit.pricedetails[0].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 11,
-            source_id:
-              priceOptionSelected !== ""
-                ? priceOptionSelected
-                : dataEdit.pricedetails[1].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 14,
-            source_id:
-              priceCollectSelected !== ""
-                ? priceCollectSelected
-                : dataEdit.pricedetails[2].source_id,
-            min: 1,
-            max: 3,
-            label: "px",
-          },
-          // {
-          //   pricing_option_id: 30,
-          //   source_id: priceSeasonSelected !== ''
-          //     ? priceSeasonSelected
-          //     : dataEdit.pricedetails[3]?.source_id,
-          //   min: null,
-          //   max: null,
-          //   label: null,
-          // },
-          {
-            pricing_option_id: 12,
-            source_id:
-              priceTransferTypeSelected !== ""
-                ? priceTransferTypeSelected
-                : dataEdit.pricedetails[4].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 13,
-            source_id:
-              priceDirectionSelected !== ""
-                ? priceDirectionSelected
-                : dataEdit.pricedetails[5].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 50,
-            source_id:
-              priceZoneSelected !== ""
-                ? priceZoneSelected
-                : dataEdit.pricedetails[7].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 17,
-            source_id:
-              priceVehicleSelected !== ""
-                ? priceVehicleSelected
-                : dataEdit.pricedetails[6].source_id,
-            min: values.min,
-            max: values.max,
-            label: null,
-          },
-        ],
-      };
+      let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[0].source_id
+        : null):priceTypeSelected
 
-      if (dataEdit) {
-        updatePriceAPI(editProductID, data).then((resp) => {
-          // console.log(resp);
-          setAddNewAirportTransfer(false);
-          refreshTable();
-        });
-      }
+      let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[1].source_id
+        : null):priceOptionSelected
 
-      if (copyProduct || dataEdit === undefined) {
-        postPricesAPI(data).then((resp) => {
-          // console.log(resp);
-          setAddNewAirportTransfer(false);
-          refreshTable();
-        });
+      let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[2].source_id
+        : null):priceCollectSelected
+
+      let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[3]?.source_id
+        : null):priceSeasonSelected
+
+      let transfer_type = (priceTransferTypeSelected == '' || priceTransferTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+          ? dataEdit.pricedetails[4]?.source_id
+          : null):priceTransferTypeSelected
+
+      let direction = (priceDirectionSelected == '' || priceDirectionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[5]?.source_id
+        : null):priceDirectionSelected
+
+      let vehicle = (priceVehicleSelected == '' || priceVehicleSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[6]?.source_id
+        : null):priceVehicleSelected
+
+      let price_zone = (priceZoneSelected == '' || priceZoneSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[7]?.source_id
+        : null):priceZoneSelected  
+
+      if(price_type && price_option && price_collect && transfer_type && direction && price_zone) {
+        let data = {
+          tour_id: tourData.id,
+          sku: tourData.sku,
+          public: values.public_price,
+          provider_price: values.provider_price,
+          rate: values.rate,
+          net_rate: values.net_price,
+          compare_at_url: values.compare_at_url,
+          ship_price: values.ship_price,
+          compare_at: values.compare_at,
+          price: values.our_price,
+          you_save: values.you_save,
+          eff_rate: values.eff_rate,
+          commission: values.commission,
+          deposit: values.deposit,
+          net_price: values.balance_due,
+          active: activeCheckbox ? 1 : 0,
+          show_balance_due: balanceDueCheckbox ? 1 : 0,
+          price_details: [
+            {
+              pricing_option_id: 10,
+              source_id: price_type,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 11,
+              source_id: price_option,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 14,
+              source_id: price_collect,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 30,
+              source_id: price_season,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 12,
+              source_id: transfer_type,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 13,
+              source_id: direction,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 17,
+              source_id: vehicle,
+              min: (values.min == "")?null:values.min,
+              max: (values.max == "")?null:values.max,
+              label: null,
+            },
+            {
+              pricing_option_id: 50,
+              source_id: price_zone,
+              min: null,
+              max: null,
+              label: null,
+            },
+          ],
+        };
+  
+        if (dataEdit && copyProduct === false) {
+            updatePriceAPI(editProductID, data).then((resp) => {
+            // console.log(resp);
+            setAddNewAirportTransfer(false);
+            refreshTable();
+            resetForm({ values: "" });
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        } else if (copyProduct || dataEdit === undefined || dataEdit == null) {
+            postPricesAPI(data).then((resp) => {
+            // console.log(resp);
+            setAddNewAirportTransfer(false);
+            refreshTable();
+            resetForm({ values: "" });
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        }
+      } else {
+        Swal.fire('Complete Required Fields')
       }
-      resetForm({ values: "" });
+      refreshTable();
     },
   });
   return (
@@ -272,9 +295,26 @@ const AddNewAirportTransfer = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">
-          + New Product - Airport Transfer
-        </h1>
+
+        {
+          copyProduct ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Copy Product - Airport Transfer</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Edit Product - Airport Transfer</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && !dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ New Product - Airport Transfer</h1>
+          ) : null
+        }
+        
         <button
           onClick={() => {
             setAddNewAirportTransfer(false);
@@ -338,7 +378,7 @@ const AddNewAirportTransfer = ({
                 <Col className="col-9 d-flex justify-content-between">
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Type</Label>
+                      <Label className="form-label">Price Type*</Label>
                       <Input
                         type="select"
                         name="price_type"
@@ -370,7 +410,7 @@ const AddNewAirportTransfer = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Option</Label>
+                      <Label className="form-label">Price Option*</Label>
                       <Input
                         type="select"
                         name="price_options"
@@ -402,7 +442,7 @@ const AddNewAirportTransfer = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Collect</Label>
+                      <Label className="form-label">Collect*</Label>
                       <Input
                         type="select"
                         name="collect"
@@ -438,7 +478,7 @@ const AddNewAirportTransfer = ({
                         className="form-outline"
                         style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <Label className="form-label">Season</Label>
+                        <Label className="form-label">Season*</Label>
                         <Input
                           type="select"
                           name="season"
@@ -552,7 +592,7 @@ const AddNewAirportTransfer = ({
               <Row className="col-12 d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Transfer Type</Label>
+                    <Label className="form-label">Transfer Type*</Label>
                     <Input
                       type="select"
                       name=""
@@ -584,7 +624,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Direction</Label>
+                    <Label className="form-label">Direction*</Label>
                     <Input
                       type="select"
                       name=""
@@ -603,7 +643,7 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? direction.id ===
-                                  dataEdit.pricedetails[5].source_id
+                                  dataEdit.pricedetails[5]?.source_id
                                 : false
                             }
                           >
@@ -635,7 +675,7 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? vehicle.id ===
-                                  dataEdit.pricedetails[6].source_id
+                                  dataEdit.pricedetails[6]?.source_id
                                 : false
                             }
                           >
@@ -648,7 +688,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Zone Name</Label>
+                    <Label className="form-label">Zone Name*</Label>
                     <Input
                       type="select"
                       name=""
@@ -661,7 +701,15 @@ const AddNewAirportTransfer = ({
                       <option>Select....</option>
                       {map(priceZone, (zone, index) => {
                         return (
-                          <option key={index} value={zone.id}>
+                          <option
+                            key={index}
+                            value={zone.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? zone.id ===
+                                  dataEdit.pricedetails[7]?.source_id
+                                : false
+                            }>
                             {zone.text}
                           </option>
                         );
@@ -928,7 +976,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Our Price</Label>
+                    <Label className="form-label">Our Price*</Label>
                     <Input
                       name="our_price"
                       placeholder=""
@@ -1005,7 +1053,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Commission</Label>
+                    <Label className="form-label">Commission*</Label>
                     <Input
                       name="commission"
                       placeholder=""
@@ -1030,7 +1078,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Deposit</Label>
+                    <Label className="form-label">Deposit*</Label>
                     <Input
                       name="deposit"
                       placeholder=""
@@ -1055,7 +1103,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Balance Due</Label>
+                    <Label className="form-label">Balance Due*</Label>
                     <Input
                       name="balance_due"
                       placeholder=""
