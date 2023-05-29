@@ -185,112 +185,112 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
       className="custom-validation"
     >
       <TabPane tabId="1" className="">
-        <Row xl={12} className=" d-flex justify-content-between pb-4 ">
-          <Col className="col-4">
+        <Row className=" d-flex justify-content-between pb-4 ">
+          <Col className="col-md-4">
             <img
               src={SettingsImageThree}
               alt="image1"
-              style={{ width: "480px", height: "146px" }}
+              className="w-100"
             />
           </Col>
-          <Col className="col-4">
+          <Col className="col-md-4">
             <img
               src={SettingsImageOne}
               alt="image1"
-              style={{ width: "480px", height: "146px" }}
+              className="w-100"
             />
           </Col>
-          <Col className="col-4">
+          <Col className="col-md-4">
             <img
               src={SettingsImageTwo}
               alt="image1"
-              style={{ width: "480px", height: "146px" }}
+              className="w-100"
             />
           </Col>
         </Row>
 
-        <Row xl={12}>
-          <Row className="col-12 p-1" style={{ backgroundColor: "#E9F4FF" }}>
-            <p
-              className="py-2"
-              style={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                color: "#495057",
-                marginBottom: "0px",
-              }}
-            >
-              TOUR SETTINGS
-            </p>
-          </Row>
-          <Row className="col-12 d-flex justify-content-start">
-            <Row>
-              <Col className="col-1">
-                <div className="form-outline mt-2">
-                  <Label className="form-label">Tour ID</Label>
-                  <Input
-                    name="tour_id"
-                    placeholder=""
-                    type="text"
-                    disabled
-                    value={validationType.values.tour_id || ""}
-                  />
-                </div>
-              </Col>
-              <Col className="col-6">
-                <div className="form-outline mt-2">
-                  <Label className="form-label">Provider Tour Name</Label>
-                  <Input
-                    name="provider_tour_name"
-                    placeholder=""
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.provider_tour_name || ""}
-                    invalid={
-                      validationType.touched.provider_tour_name &&
-                      validationType.errors.provider_tour_name
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.provider_tour_name &&
-                  validationType.errors.provider_tour_name ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.provider_tour_name}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
-              <Col className="col-5">
-                <div className="form-outline mt-2">
-                  <Label className="form-label">Provider Tour URL</Label>
-                  <Input
-                    name="provider_tour_url"
-                    placeholder=""
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.provider_tour_url || ""}
-                    invalid={
-                      validationType.touched.provider_tour_url &&
-                      validationType.errors.provider_tour_url
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.provider_tour_url &&
-                  validationType.errors.provider_tour_url ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.provider_tour_url}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
-            </Row>
-          </Row>
-          <Row className="col-12 d-flex justify-content-start">
-            <Row>
+        <Row>
+          <Col className="col-12">
+            <div className="mb-2 p-2" style={{ backgroundColor: "#E9F4FF" }}>
+              <p
+                className="px-2"
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  color: "#495057",
+                  marginBottom: "0px",
+                }}
+              >
+                TOUR SETTINGS
+              </p>
+            </div>            
+          </Col>                   
+          <Col className="col-1">
+            <div className="form-outline mt-2">
+              <Label className="form-label">Tour ID</Label>
+              <Input
+                name="tour_id"
+                placeholder=""
+                type="text"
+                disabled
+                value={validationType.values.tour_id || ""}
+              />
+            </div>
+          </Col>
+          <Col className="col-6">
+            <div className="form-outline mt-2">
+              <Label className="form-label">Provider Tour Name</Label>
+              <Input
+                name="provider_tour_name"
+                placeholder=""
+                type="text"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.provider_tour_name || ""}
+                invalid={
+                  validationType.touched.provider_tour_name &&
+                  validationType.errors.provider_tour_name
+                    ? true
+                    : false
+                }
+              />
+              {validationType.touched.provider_tour_name &&
+              validationType.errors.provider_tour_name ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.provider_tour_name}
+                </FormFeedback>
+              ) : null}
+            </div>
+          </Col>
+          <Col className="col-5">
+            <div className="form-outline mt-2">
+              <Label className="form-label">Provider Tour URL</Label>
+              <Input
+                name="provider_tour_url"
+                placeholder=""
+                type="text"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.provider_tour_url || ""}
+                invalid={
+                  validationType.touched.provider_tour_url &&
+                  validationType.errors.provider_tour_url
+                    ? true
+                    : false
+                }
+              />
+              {validationType.touched.provider_tour_url &&
+              validationType.errors.provider_tour_url ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.provider_tour_url}
+                </FormFeedback>
+              ) : null}
+            </div>
+          </Col>
+          </Row>  
+          
+          <Row>
+            
 
               {tourSettings?.website_id !== 3 
               ? 
@@ -347,17 +347,17 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               </>
               :
               <>
-              <Col className="col-2 d-flex justify-content-center ">
-                <Label className="form-label mt-5">Available From: </Label>
+              <Col className="d-flex align-items-center">
+                <Label className="form-label mb-0">Available From: </Label>
               </Col>
 
-              <Col className="d-flex">
+              
                 {availableFromData.length > 0 ? (
                   <>
                     {map(availableFromData, (available, index) => {
                       return (
-                        <Col key={index} className="">
-                          <div className="form-check mt-5">
+                        <Col key={index} className="col">
+                          <div className="form-check">
                             <AvailableCheckbox
                               available={available}
                               availableFromIDs={availableFromIDs}
@@ -370,37 +370,40 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                     })}
                   </>
                 ) : null}
-              </Col>
+              
               </>
               }
               
 
 
               
-            </Row>
+            
           </Row>
-          <Row className="col-12 p-1" style={{ backgroundColor: "#FFEFDE" }}>
-            <p
-              className="py-2"
-              style={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                color: "#495057",
-                marginBottom: "0px",
-              }}
-            >
-              AGES
-            </p>
+          <Row>
+            <Col className="col-12" >
+            <div className="mb-4 py-2 px-3" style={{ backgroundColor: "#FFEFDE" }}>
+              <p
+                
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  color: "#495057",
+                  marginBottom: "0px",
+                }}
+              >
+                AGES
+              </p>
+            </div>
+
+            </Col>
+            
           </Row>
-          <Row className="col-12 d-flex justify-content-start mt-4">
-            <Row>
-              <Col className="d-flex col-4 ">
-                <Col className="col-2">
-                  <Label className="form-label">Infants</Label>
-                </Col>
-                <Col className="col-3 mx-2">
-                  <div className="form-outline d-flex mt-2">
-                    <Input name="" placeholder="From" type="text" disabled />
+          <Row className="row">
+            
+              <Col className="col-md-4 col-12 d-flex align-items-center px-md-5">
+                <Label className="form-label me-4 mb-md-0">Infants</Label>
+                  <div className="input-group me-4">
+                    <span className="input-group-text">From</span>
                     <Input
                       name="infants_range_from"
                       placeholder=""
@@ -421,11 +424,10 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                         {validationType.errors.infants_range_from}
                       </FormFeedback>
                     ) : null}
-                  </div>
-                </Col>
-                <Col className="col-3 mx-4">
-                  <div className="form-outline d-flex mt-2">
-                    <Input name="" placeholder="To" type="text" disabled />
+                  </div>              
+                
+                  <div className="input-group">
+                    <span className="input-group-text">To</span>
                     <Input
                       name="infants_range_to"
                       placeholder=""
@@ -447,40 +449,37 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       </FormFeedback>
                     ) : null}
                   </div>
-                </Col>
+                
               </Col>
-              <Col className="d-flex col-4 ">
-                <Col className="col-2">
-                  <Label className="form-label">Kids</Label>
-                </Col>
-                <Col className="col-3 mx-2">
-                  <div className="form-outline d-flex mt-2">
-                    <Input name="" placeholder="From" type="text" disabled />
-                    <Input
-                      name="kids_range_from"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.kids_range_from || ""}
-                      invalid={
-                        validationType.touched.kids_range_from &&
-                        validationType.errors.kids_range_from
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.kids_range_from &&
-                    validationType.errors.kids_range_from ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.kids_range_from}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-3 mx-4">
-                  <div className="form-outline d-flex mt-2">
-                    <Input name="" placeholder="To" type="text" disabled />
+              <Col className="col-md-4 col-12 d-flex align-items-center px-md-5">                
+                <Label className="form-label me-4 mb-0">Kids</Label>                
+                <div className="input-group me-4">
+                <span className="input-group-text">From</span>
+                  <Input
+                    name="kids_range_from"
+                    placeholder=""
+                    type="text"
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.kids_range_from || ""}
+                    invalid={
+                      validationType.touched.kids_range_from &&
+                      validationType.errors.kids_range_from
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.kids_range_from &&
+                  validationType.errors.kids_range_from ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.kids_range_from}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                
+                
+                  <div className="input-group">
+                  <span className="input-group-text">To</span>
                     <Input
                       name="kids_range_to"
                       placeholder=""
@@ -502,40 +501,38 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       </FormFeedback>
                     ) : null}
                   </div>
-                </Col>
+                
               </Col>
-              <Col className="d-flex col-4 ">
-                <Col className="col-2">
-                  <Label className="form-label">Teenagers</Label>
-                </Col>
-                <Col className="col-3 mx-2">
-                  <div className="form-outline d-flex mt-2">
-                    <Input name="" placeholder="From" type="text" disabled />
-                    <Input
-                      name="teenagers_range_from"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.teenagers_range_from || ""}
-                      invalid={
-                        validationType.touched.teenagers_range_from &&
-                        validationType.errors.teenagers_range_from
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.teenagers_range_from &&
-                    validationType.errors.teenagers_range_from ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.teenagers_range_from}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-3 mx-4">
-                  <div className="form-outline d-flex mt-2">
-                    <Input name="" placeholder="To" type="text" disabled />
+              <Col className="d-flex col-md-4 col-12 align-items-center px-md-5">
+                
+                <Label className="form-label me-4 mb-0">Teenagers</Label>                
+                <div className="input-group me-4">
+                  <span className="input-group-text">From</span>
+                  <Input
+                    name="teenagers_range_from"
+                    placeholder=""
+                    type="text"
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.teenagers_range_from || ""}
+                    invalid={
+                      validationType.touched.teenagers_range_from &&
+                      validationType.errors.teenagers_range_from
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.teenagers_range_from &&
+                  validationType.errors.teenagers_range_from ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.teenagers_range_from}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                
+                
+                  <div className="input-group">
+                  <span className="input-group-text">To</span>
                     <Input
                       name="teenagers_range_to"
                       placeholder=""
@@ -557,36 +554,35 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       </FormFeedback>
                     ) : null}
                   </div>
-                </Col>
+                
               </Col>
-            </Row>
+            
           </Row>
 
-          <Row
-            className="col-12 d-flex justify-content-end mt-5"
-            style={{ paddingRight: "30px" }}
-          >
+          <Row>
+            <div className="col-12 d-flex justify-content-end mt-5">
             <Button
               color="paradise"
               outline
-              className="waves-effect waves-light col-2 mx-4"
+              className="waves-effect waves-light me-2"
               type="button"
               onClick={() => toggle('1')}
             >
               <i className="uil-angle-double-left" />
               Back
             </Button>
-            <Button
-              style={{ backgroundColor: "#F6851F" }}
+            <Button              
               type="submit"
-              className="font-16 btn-block col-2"
+              className="font-16 btn-orange"
               // onClick={toggleCategory}
             >
               Continue
               <i className="uil-angle-double-right mx-1 " />
             </Button>
+            </div>
+            
           </Row>
-        </Row>
+        
       </TabPane>
     </Form>
   );

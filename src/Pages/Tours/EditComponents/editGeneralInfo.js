@@ -150,28 +150,23 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
             <Row className="d-flex justify-content-start mb-3">              
               <Col className="col-12">
                 <div className="p-3" style={{backgroundColor: "#d9f0ff"}}>
-                <p className="mb-0 fs-6 lh-2">
-                  <span className="fs-4 fw-bold text-uppercase text-dark">Instructions:</span> To create a new tour please fill out the following
-                  information. Once you've completed this first screen, you can through the tabs and complete the information. Once you're
-                  done with a section, press "Continue" to save your changes.
-                  navigate
-                </p>
+                  <p className="mb-0 lh-2" style={{fontSize:"16px"}}>
+                  <i class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center" style={{width:"32px",height:"32px"}}></i> To create a new tour please fill out the following
+                    information. Once you've completed this first screen, you can through the tabs and complete the information. Once you're
+                    done with a section, press "Continue" to save your changes.
+                    navigate
+                  </p>
                 </div>
                 
               </Col>
-            </Row>
-            
+            </Row>            
             <Row className="mb-3">
               <Col className="col-12">
                 <div className="p-3" style={{ backgroundColor: "#E9F4FF" }}>
-                <p
-                className="fs-4 fw-bold text-uppercase text-dark mb-0"
-                
-              >
-                TOUR SETTINGS
-              </p>
-                </div>
-              
+                  <p className="fs-4 fw-bold text-uppercase text-dark mb-0">
+                    TOUR SETTINGS
+                  </p>
+                </div>              
               </Col>
               <Col className="col-4">
                   <div className="form-outline mt-2">
@@ -317,9 +312,9 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </p>
                 </div>
             </Col>
-            </Row>
-            <Row className="d-flex justify-content-start">
-              <Row>
+          </Row>
+          <Row className="d-flex justify-content-start">
+              
                 <Col className="col-8">
                   <div className="form-outline mt-2">
                     <Label className="form-label">Tour Name</Label>
@@ -370,10 +365,6 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     </Input>
                   </div>
                 </Col>
-              </Row>
-            </Row>
-            <Row className="col-12 d-flex justify-content-start">
-              <Row>
                 <Col className="col-4">
                   <div className="form-outline my-2">
                     <Label className="form-label">Main Category</Label>
@@ -448,12 +439,10 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     ) : null}
                   </div>
                 </Col>
-              </Row>
             </Row>
-            <Row
-              className="col-12 d-flex justify-content-end mt-5"
-              style={{ paddingRight: "30px" }}
-            >
+            
+            <Row>
+              <Col className="col-12 d-flex justify-content-end mt-5">
               <Button
                 
                 type="submit"
@@ -463,6 +452,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                 Continue
                 <i className="uil-angle-double-right mx-1 " />
               </Button>
+              </Col>              
             </Row>
           </Col>
         </Row>

@@ -53,7 +53,7 @@ const EditTour = ({ history }) => {
   return (
     <div className="page-content">
       <Container fluid>
-        <div className=" mx-4">
+        <div className=" mx-1">
           <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
             {tourData ? tourData.name : ""}
           </h1>
@@ -63,7 +63,7 @@ const EditTour = ({ history }) => {
         <Col xl={12}>
           <Card>
             <CardHeader className="p-0">
-            <Nav tabs className="nav-justified border-orange">
+              <Nav tabs className="nav-justified border-orange">
                 <NavItem>
                   <NavLink
                     style={{

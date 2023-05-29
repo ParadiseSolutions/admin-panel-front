@@ -34,6 +34,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+import { CardHeader } from "@material-ui/core";
 
 const NewTour = ({ history }) => {
   //tabs
@@ -169,8 +170,8 @@ const NewTour = ({ history }) => {
   return (
     <div className="page-content">
       <Container fluid>
-        <div className=" mx-4">
-          <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
+        <div className=" mx-1">
+          <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
             CREATE NEW TOUR
           </h1>
         </div>
@@ -178,8 +179,8 @@ const NewTour = ({ history }) => {
       <Row>
         <Col xl={12}>
           <Card>
-            <CardBody>
-              <Nav tabs className="nav-justified">
+            <div className="p-0 card-header">
+              <Nav tabs className="nav-justified border-orange">
                 <NavItem>
                   <NavLink
                     style={{
@@ -268,8 +269,9 @@ const NewTour = ({ history }) => {
                   </NavLink>
                 </NavItem>
               </Nav>
-
-              <TabContent activeTab={activeTab} className="p-3 text-muted">
+            </div>
+            <CardBody className="p-0">
+              <TabContent activeTab={activeTab} className="p-4 text-muted">
                 <Form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -279,143 +281,111 @@ const NewTour = ({ history }) => {
                   className="custom-validation"
                 >
                   <TabPane tabId="1">
-                    <Row xl={12}>
+                    <Row className="g-5">
                       <Col className="col-4">
-                        <img src={newTourGi} alt="new tour girl" className="img-fluid"/>
+                        <img src={newTourGi} alt="new tour girl" className="img-fluid w-100"/>
                       </Col>
                       <Col className="col-8">
-                        <Row className="d-flex justify-content-start">
-                          <div className="col-2">
-                            <p
-                              style={{
-                                fontSize: "20px",
-                                fontWeight: "bold",
-                                color: "#495057",
-                              }}
-                            >
-                              {" "}
-                              INSTRUCTIONS.
+                        <Row className="d-flex justify-content-start mb-3">
+                        <Col className="col-12">
+                          <div className="p-3" style={{backgroundColor: "#d9f0ff"}}>
+                            <p className="mb-0 fs-6 lh-2">
+                              <span className="fs-4 fw-bold text-uppercase text-dark">Instructions:</span> To create a new tour please fill out the following
+                              information. Once you've completed this first screen, you can through the tabs and complete the information. Once you're
+                              done with a section, press "Continue" to save your changes.
+                              navigate
                             </p>
-                          </div>
-                          <Col>
-                            <p style={{ fontSize: "16px", marginTop: "5px" }}>
-                              To create a new tour please fill out the following
-                              information. Once you've completed this first
-                              screen, you can navigate
-                            </p>
+                          </div>                          
+                        </Col>
+                        </Row>                        
+                        <Row className="mb-3">     
+                          <Col className="col-12">
+                            <div className="p-3" style={{ backgroundColor: "#E9F4FF" }}>
+                              <p className="fs-4 fw-bold text-uppercase text-dark mb-0">
+                                TOUR SETTINGS
+                              </p>
+                            </div>                        
+                          </Col>                     
+                          <Col className="col-md-4">
+                            <div className="form-outline mt-2">
+                              <Label className="form-label">Tour Type</Label>
+                              <Input
+                                type="select"
+                                name=""
+                                onChange={(e) =>{
+                                  setTourTypeID(e.target.value)
+                                }}
+                                onBlur={validationType.handleBlur}
+                                //   value={validationType.values.department || ""}
+                              >
+                                <option>Select....</option>
+                                {map(dataTourType, (tourType, index) => {
+                                  return (
+                                    <option key={index} value={tourType.id}>
+                                      {tourType.name}
+                                    </option>
+                                  );
+                                })}
+                              </Input>
+                            </div>
                           </Col>
-                        </Row>
-                        <Row className="d-flex justify-content-start">
-                          <Col>
-                            <p style={{ fontSize: "16px", marginTop: "-12px" }}>
-                              through the tabs and complete the information.
-                              Once you're done with a section, press "Continue"
-                              to save your changes.
-                            </p>
+                          <Col className="col-md-4">
+                            <div className="form-outline mt-2">
+                              <Label className="form-label">Website</Label>
+                              <Input
+                                type="select"
+                                name=""
+                                onChange={(e) =>{
+                                  onChangeWebsite(e.target.value)
+                                  setWebsiteID(e.target.value)
+                                }}
+                                onBlur={validationType.handleBlur}
+                                //   value={validationType.values.department || ""}
+                              >
+                                <option>Select....</option>
+                                {map(dataWebsite, (website, index) => {
+                                  return (
+                                    <option key={index} value={website.id}>
+                                      {website.company_name}
+                                    </option>
+                                  );
+                                })}
+                              </Input>
+                            </div>
                           </Col>
-                        </Row>
-                        <Row
-                          className="col-12 p-1"
-                          style={{ backgroundColor: "#E9F4FF" }}
-                        >
-                          <p
-                            className="py-2"
-                            style={{
-                              fontSize: "20px",
-                              fontWeight: "bold",
-                              color: "#495057",
-                              marginBottom: "0px",
-                            }}
-                          >
-                            TOUR SETTINGS
-                          </p>
-                        </Row>
-                        <Row className="col-12 d-flex justify-content-start">
-                          <Row>
-                            <Col className="col-4">
-                              <div className="form-outline mt-2">
-                                <Label className="form-label">Tour Type</Label>
-                                <Input
-                                  type="select"
-                                  name=""
-                                  onChange={(e) =>{
-                                    setTourTypeID(e.target.value)
-                                  }}
-                                  onBlur={validationType.handleBlur}
-                                  //   value={validationType.values.department || ""}
-                                >
-                                  <option>Select....</option>
-                                  {map(dataTourType, (tourType, index) => {
+                          <Col className="col-md-4">
+                            <div className="form-outline mt-2">
+                              <Label className="form-label">
+                                Shopping Cart
+                              </Label>
+                              <Input
+                                type="select"
+                                name="department"
+                                disabled={shoppingCartData ? false : true}
+                                onChange={(e) =>{
+                                  setShoppingCartID(e.target.value)
+                                }}
+                                onBlur={validationType.handleBlur}
+                                //   value={validationType.values.department || ""}
+                              >
+                                <option>Select....</option>
+                                {map(
+                                  shoppingCartData,
+                                  (shoppingCart, index) => {
                                     return (
-                                      <option key={index} value={tourType.id}>
-                                        {tourType.name}
+                                      <option
+                                        key={index}
+                                        value={shoppingCart.id}
+                                      >
+                                        {shoppingCart.name}
                                       </option>
                                     );
-                                  })}
-                                </Input>
-                              </div>
-                            </Col>
-                            <Col className="col-4">
-                              <div className="form-outline mt-2">
-                                <Label className="form-label">Website</Label>
-                                <Input
-                                  type="select"
-                                  name=""
-                                  onChange={(e) =>{
-                                    onChangeWebsite(e.target.value)
-                                    setWebsiteID(e.target.value)
-                                  }}
-                                  onBlur={validationType.handleBlur}
-                                  //   value={validationType.values.department || ""}
-                                >
-                                  <option>Select....</option>
-                                  {map(dataWebsite, (website, index) => {
-                                    return (
-                                      <option key={index} value={website.id}>
-                                        {website.company_name}
-                                      </option>
-                                    );
-                                  })}
-                                </Input>
-                              </div>
-                            </Col>
-                            <Col className="col-4">
-                              <div className="form-outline mt-2">
-                                <Label className="form-label">
-                                  Shopping Cart
-                                </Label>
-                                <Input
-                                  type="select"
-                                  name="department"
-                                  disabled={shoppingCartData ? false : true}
-                                  onChange={(e) =>{
-                                    setShoppingCartID(e.target.value)
-                                  }}
-                                  onBlur={validationType.handleBlur}
-                                  //   value={validationType.values.department || ""}
-                                >
-                                  <option>Select....</option>
-                                  {map(
-                                    shoppingCartData,
-                                    (shoppingCart, index) => {
-                                      return (
-                                        <option
-                                          key={index}
-                                          value={shoppingCart.id}
-                                        >
-                                          {shoppingCart.name}
-                                        </option>
-                                      );
-                                    }
-                                  )}
-                                </Input>
-                              </div>
-                            </Col>
-                          </Row>
-                        </Row>
-                        <Row className="col-12 d-flex justify-content-start">
-                          <Row>
-                            <Col className="col-4">
+                                  }
+                                )}
+                              </Input>
+                            </div>
+                          </Col>
+                          <Col className="col-md-4">
                               <div className="form-outline my-2">
                                 <Label className="form-label">Provider</Label>
                                 <Input
@@ -442,7 +412,7 @@ const NewTour = ({ history }) => {
                                 </Input>
                               </div>
                             </Col>
-                            <Col className="col-4">
+                            <Col className="col-md-4">
                               <div className="form-outline my-2">
                                 <Label className="form-label">Operator</Label>
                                 <Input
@@ -469,26 +439,17 @@ const NewTour = ({ history }) => {
                                 </Input>
                               </div>
                             </Col>
-                          </Row>
+                        </Row>                        
+                        <Row>
+                          <Col className="col-12">
+                            <div className="p-3" style={{ backgroundColor: "#FFEFDE" }}>
+                              <p className="fs-4 fw-bold text-uppercase text-dark mb-0">
+                                TOUR DETAILS
+                              </p>
+                            </div>
+                          </Col>
                         </Row>
-                        <Row
-                          className="col-12 p-1"
-                          style={{ backgroundColor: "#FFEFDE" }}
-                        >
-                          <p
-                            className="py-2"
-                            style={{
-                              fontSize: "20px",
-                              fontWeight: "bold",
-                              color: "#495057",
-                              marginBottom: "0px",
-                            }}
-                          >
-                            TOUR DETAILS
-                          </p>
-                        </Row>
-                        <Row className="col-12 d-flex justify-content-start">
-                          <Row>
+                        <Row className="d-flex justify-content-start">                          
                             <Col className="col-8">
                               <div className="form-outline mt-2">
                                 <Label className="form-label">Tour Name</Label>
@@ -538,10 +499,10 @@ const NewTour = ({ history }) => {
                                 </Input>
                               </div>
                             </Col>
-                          </Row>
+                          
                         </Row>
-                        <Row className="col-12 d-flex justify-content-start">
-                          <Row>
+                        <Row className="d-flex justify-content-start">
+                          
                             <Col className="col-4">
                               <div className="form-outline my-2">
                                 <Label className="form-label">
@@ -630,31 +591,30 @@ const NewTour = ({ history }) => {
                                 ) : null}
                               </div>
                             </Col>
-                          </Row>
+                          
                         </Row>
-                        <Row
-                          className="col-12 d-flex justify-content-end mt-5"
-                          style={{ paddingRight: "30px" }}
-                        >
-                          <Button
-                            color="paradise"
-                            outline
-                            className="waves-effect waves-light col-2 mx-4"
-                            type="button"
-                            onClick={() => history.goBack()}
-                          >
-                            <i className="uil-angle-double-left" />
-                            Back
-                          </Button>
-                          <Button
-                            style={{ backgroundColor: "#F6851F" }}
-                            type="submit"
-                            className="font-16 btn-block col-2"
-                            // onClick={toggleCategory}
-                          >
-                            Continue
-                            <i className="uil-angle-double-right mx-1 " />
-                          </Button>
+                        <Row>
+                          <Col className="col-12 d-flex justify-content-end mt-5">
+                            <Button
+                              color="paradise"
+                              outline
+                              className="waves-effect waves-light col-2 mx-4"
+                              type="button"
+                              onClick={() => history.goBack()}
+                            >
+                              <i className="uil-angle-double-left" />
+                              Back
+                            </Button>
+                            <Button
+                              
+                              type="submit"
+                              className="font-16 btn-block col-2 btn-orange"
+                              // onClick={toggleCategory}
+                            >
+                              Continue
+                              <i className="uil-angle-double-right mx-1 " />
+                            </Button>
+                          </Col>
                         </Row>
                       </Col>
                     </Row>
