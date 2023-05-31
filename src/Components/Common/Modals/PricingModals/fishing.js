@@ -149,13 +149,13 @@ const Fishing = ({
         ? dataEdit.pricedetails[0].source_id
         : null):priceTypeSelected
         
-        let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
-          ? dataEdit.pricedetails[1].source_id
-          : null):priceOptionSelected
-          
-          let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails[2].source_id
-            : null):priceCollectSelected
+      let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[1].source_id
+        : null):priceOptionSelected
+        
+      let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[2].source_id
+        : null):priceCollectSelected
             
       let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
         ? dataEdit.pricedetails[3]?.source_id
