@@ -197,6 +197,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               onClick={() => {
                 const prodData = cellProps.row.original;
                 // console.log("data del producto", prodData);
+                setCopyProduct(false);
+                setEditProductID(null)
 
                 switch (tourData.type_id) {
                   case 2:
@@ -209,7 +211,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 4:
-                    setAddNewTransportation(!newTransportation);
+                    setAddNewTransportation(!addNewTransportation);
                     setEditProductID(prodData.id);
                     break;
                   case 5:
@@ -217,7 +219,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 6:
-                    setAddNewPrivateCharter(!newPrivateCharter);
+                    setAddNewPrivateCharter(!addNewPrivateCharter);
                     setEditProductID(prodData.id);
                     break;
 
@@ -238,6 +240,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               onClick={() => {
                 const prodData = cellProps.row.original;
                 // console.log("data del producto", prodData);
+                setEditProductID(null)
+                setCopyProduct(true);
 
                 switch (tourData.type_id) {
                   case 2:
@@ -258,7 +262,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 6:
-                    setAddNewPrivateCharter(!newPrivateCharter);
+                    setAddNewPrivateCharter(!addNewPrivateCharter);
                     setEditProductID(prodData.id);
                     break;
 
@@ -267,7 +271,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                 }
-                setCopyProduct(!copyProduct);
               }}
             >
               <i className="mdi mdi-content-copy font-size-18" id="copytooltip" />
@@ -320,13 +323,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         setAddNewAirportTransfer(!addNewAirportTransfer);
         break;
       case 4:
-        setAddNewTransportation(!newTransportation);
+        setAddNewTransportation(!addNewTransportation);
         break;
       case 5:
         setAddNewFishing(!addNewFishing);
         break;
       case 6:
-        setAddNewPrivateCharter(!newPrivateCharter);
+        setAddNewPrivateCharter(!addNewPrivateCharter);
         break;
 
       default:

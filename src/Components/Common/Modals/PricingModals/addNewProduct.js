@@ -37,6 +37,10 @@ const AddNewProductPricing = ({
   id = editProductID;
 
   useEffect(() => {
+    setPriceTypeSelected("")
+    setPriceOptionSelected("")
+    setPriceCollectSelected("")
+    setPriceSeasonSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
         // console.log(

@@ -35,6 +35,14 @@ const AddNewAirportTransfer = ({
   //edit data
   const [dataEdit, setDataEdit] = useState();
   useEffect(() => {
+    setPriceTypeSelected("")
+    setPriceOptionSelected("")
+    setPriceCollectSelected("")
+    setPriceSeasonSelected("")
+    setPriceTransferTypeSelected("")
+    setPriceDirectionSelected("")
+    setPriceZoneSelected("")
+    setPriceVehicleSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
         // console.log(
@@ -64,8 +72,8 @@ const AddNewAirportTransfer = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState("");
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
-  const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
+  const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
 
   useEffect(() => {
     if (addNewAirportTransfer) {

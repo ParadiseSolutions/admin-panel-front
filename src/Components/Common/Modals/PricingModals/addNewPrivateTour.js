@@ -37,6 +37,10 @@ const AddNewPrivateTour = ({
   id = editProductID;
 
   useEffect(() => {
+    setPriceTypeSelected("")
+    setPriceOptionSelected("")
+    setPriceCollectSelected("")
+    setPriceSeasonSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
         // console.log(
@@ -196,8 +200,6 @@ const AddNewPrivateTour = ({
             },
           ],
         };
-  
-        console.log(data)
   
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data).then((resp) => {

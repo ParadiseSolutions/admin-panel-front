@@ -19,6 +19,7 @@ import {
   updatePriceAPI,
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
+import Swal from "sweetalert2";
 
 const Fishing = ({
   addNewFishing,
@@ -36,6 +37,13 @@ const Fishing = ({
   id = editProductID;
 
   useEffect(() => {
+    setPriceTypeSelected("")
+    setPriceOptionSelected("")
+    setPriceCollectSelected("")
+    setPriceSeasonSelected("")
+    setPriceCharterTypeSelected("")
+    setPriceDurationSelected("")
+    setPriceLocationSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
         // console.log(
@@ -44,6 +52,8 @@ const Fishing = ({
         // );
         setDataEdit(resp.data.data[0]);
       });
+    } else {
+      setDataEdit(null)
     }
   }, [id, addNewFishing]);
 
@@ -57,23 +67,14 @@ const Fishing = ({
   const [priceCharterType, setPriceCharterType] = useState([]);
   const [priceDuration, setPriceDuration] = useState([]);
   const [priceLocation, setPriceLocation] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
-  );
-  const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
-  );
-  const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
-  );
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
-  );
+  const [priceTypeSelected, setPriceTypeSelected] = useState("");
+  const [priceOptionSelected, setPriceOptionSelected] = useState("");
+  const [priceCollectSelected, setPriceCollectSelected] = useState("");
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
 
-  const [priceCharterTypeSelected, setPriceCharterTypeSelected] =
-    useState(null);
-  const [priceDurationSelected, setPriceDurationSelected] = useState(null);
-  const [priceLocationSelected, setPriceLocationSelected] = useState(null);
+  const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
+  const [priceDurationSelected, setPriceDurationSelected] = useState("");
+  const [priceLocationSelected, setPriceLocationSelected] = useState("");
   useEffect(() => {
     if (addNewFishing) {
       getPricingOptionsAPI(33).then((resp) => {
@@ -137,101 +138,134 @@ const Fishing = ({
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, { resetForm }) => {
-      let data = {
-        tour_id: tourData.id,
-        sku: tourData.sku,
-        public: values.public_price,
-        provider_price: values.provider_price,
-        rate: values.rate,
-        net_rate: values.net_price,
-        compare_at_url: values.compare_at_url,
-        ship_price: values.ship_price,
-        compare_at: values.compare_at,
-        price: values.our_price,
-        you_save: values.you_save,
-        eff_rate: values.eff_rate,
-        commission: values.commission,
-        deposit: values.deposit,
-        net_price: values.balance_due,
-        active: activeCheckbox ? 1 : 0,
-        show_balance_due: balanceDueCheckbox ? 1 : 0,
-        price_details: [
-          {
-            pricing_option_id: 33,
-            source_id: priceTypeSelected !== '' ? priceTypeSelected : dataEdit.pricedetails[0].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 34,
-            source_id: priceOptionSelected !== '' ? priceOptionSelected : dataEdit.pricedetails[1].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 36,
-            source_id: priceCollectSelected !== '' ? priceCollectSelected : dataEdit.pricedetails[2].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 32,
-            source_id: priceSeasonSelected !== '' ? priceSeasonSelected : dataEdit.pricedetails[3].source_id,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 47,
-            source_id: priceCharterTypeSelected !== ''
-              ? priceCharterType
-              : dataEdit.pricedetails[4].source_id,
-            label: null,
-          },
-          {
-            pricing_option_id: 35,
-            source_id: priceDurationSelected !== ''
-              ? priceDurationSelected
-              : dataEdit.pricedetails[5].source_id,
-            min: values.min,
-            max: values.max,
-            label: null,
-          },
-          {
-            pricing_option_id: 37,
-            source_id: priceLocationSelected !== ''
-              ? priceLocationSelected
-              : dataEdit.pricedetails[6].source_id,
-            label: null,
-          },
-        ],
-      };
+      let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[0].source_id
+        : null):priceTypeSelected
+        
+        let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+          ? dataEdit.pricedetails[1].source_id
+          : null):priceOptionSelected
+          
+          let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails[2].source_id
+            : null):priceCollectSelected
+            
+      let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[3]?.source_id
+        : null):priceSeasonSelected
 
-      if (dataEdit) {
-        updatePriceAPI(editProductID, data).then((resp) => {
-          // console.log(resp);
-          refreshTable();
-          setAddNewFishing(false);
-        });
-      } 
-      if(copyProduct || dataEdit === undefined) {
-        postPricesAPI(data).then((resp) => {
-          // console.log(resp);
-          refreshTable();
-          setAddNewFishing(false);
-        });
+      let charter_type = (priceCharterTypeSelected == '' || priceCharterTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[4]?.source_id
+        : null):priceCharterTypeSelected
+
+      let price_duration = (priceDurationSelected == '' || priceDurationSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[5]?.source_id
+        : null):priceDurationSelected
+
+      let price_location = (priceLocationSelected == '' || priceLocationSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[6]?.source_id
+        : null):priceLocationSelected
+
+      if(price_type && price_option && price_collect) {
+        let data = {
+          tour_id: tourData.id,
+          sku: tourData.sku,
+          public: values.public_price,
+          provider_price: values.provider_price,
+          rate: values.rate,
+          net_rate: values.net_price,
+          compare_at_url: values.compare_at_url,
+          ship_price: values.ship_price,
+          compare_at: values.compare_at,
+          price: values.our_price,
+          you_save: values.you_save,
+          eff_rate: values.eff_rate,
+          commission: values.commission,
+          deposit: values.deposit,
+          net_price: values.balance_due,
+          active: activeCheckbox ? 1 : 0,
+          show_balance_due: balanceDueCheckbox ? 1 : 0,
+          price_details: [
+            {
+              pricing_option_id: 33,
+              source_id: price_type,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 34,
+              source_id: price_option,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 36,
+              source_id: price_collect,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 32,
+              source_id: price_season,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 47,
+              source_id: charter_type,
+              label: null,
+            },
+            {
+              pricing_option_id: 35,
+              source_id: price_duration,
+              min: (values.min == "")?null:values.min,
+              max: (values.max == "")?null:values.max,
+              label: null,
+            },
+            {
+              pricing_option_id: 37,
+              source_id: price_location,
+              label: null,
+            },
+          ],
+        };
+
+        if (dataEdit && copyProduct === false) {
+          updatePriceAPI(editProductID, data).then((resp) => {
+            // console.log(resp);
+            refreshTable();
+            setAddNewFishing(false);
+            resetForm({ values: "" });
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        } else if(copyProduct || dataEdit === undefined || dataEdit == null) {
+          postPricesAPI(data).then((resp) => {
+            // console.log(resp);
+            refreshTable();
+            setAddNewFishing(false);
+            resetForm({ values: "" });
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        }
+      } else {
+        Swal.fire('Complete Required Fields')
       }
-
-      resetForm({ values: "" });
+      refreshTable();
     },
   });
   return (
@@ -247,7 +281,24 @@ const Fishing = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ New Product - Fishing</h1>
+        {
+          copyProduct ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Copy Product - Fishing</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Edit Product - Fishing</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && !dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ New Product - Fishing</h1>
+          ) : null
+        }
         <button
           onClick={() => {
             setAddNewFishing(false);
@@ -311,7 +362,7 @@ const Fishing = ({
                 <Col className="col-9 d-flex justify-content-between">
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Type</Label>
+                      <Label className="form-label">Price Type*</Label>
                       <Input
                         type="select"
                         name="price_type"
@@ -343,7 +394,7 @@ const Fishing = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Option</Label>
+                      <Label className="form-label">Price Option*</Label>
                       <Input
                         type="select"
                         name="price_options"
@@ -375,7 +426,7 @@ const Fishing = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Collect</Label>
+                      <Label className="form-label">Collect*</Label>
                       <Input
                         type="select"
                         name="collect"
@@ -411,7 +462,7 @@ const Fishing = ({
                         className="form-outline"
                         style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <Label className="form-label">Season</Label>
+                        <Label className="form-label">Season*</Label>
                         <Input
                           type="select"
                           name="season"
@@ -543,7 +594,7 @@ const Fishing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? charterType.id ===
-                                  dataEdit.pricedetails[4].source_id
+                                  dataEdit.pricedetails[4]?.source_id
                                 : false
                             }
                           >
@@ -575,7 +626,7 @@ const Fishing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? duration.id ===
-                                  dataEdit.pricedetails[5].source_id
+                                  dataEdit.pricedetails[5]?.source_id
                                 : false
                             }
                           >
@@ -654,7 +705,7 @@ const Fishing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? location.id ===
-                                  dataEdit.pricedetails[6].source_id
+                                  dataEdit.pricedetails[6]?.source_id
                                 : false
                             }
                           >
@@ -878,7 +929,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Our Price</Label>
+                    <Label className="form-label">Our Price*</Label>
                     <Input
                       name="our_price"
                       placeholder=""
@@ -955,7 +1006,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Commission</Label>
+                    <Label className="form-label">Commission*</Label>
                     <Input
                       name="commission"
                       placeholder=""
@@ -980,7 +1031,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Deposit</Label>
+                    <Label className="form-label">Deposit*</Label>
                     <Input
                       name="deposit"
                       placeholder=""
@@ -1005,7 +1056,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Balance Due</Label>
+                    <Label className="form-label">Balance Due*</Label>
                     <Input
                       name="balance_due"
                       placeholder=""
