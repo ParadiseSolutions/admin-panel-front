@@ -19,6 +19,7 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
+import Swal from "sweetalert2";
 
 const AddNewProductPricing = ({
   addNewProduct,
@@ -36,6 +37,10 @@ const AddNewProductPricing = ({
   id = editProductID;
 
   useEffect(() => {
+    setPriceTypeSelected("")
+    setPriceOptionSelected("")
+    setPriceCollectSelected("")
+    setPriceSeasonSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
         // console.log(
@@ -44,6 +49,8 @@ const AddNewProductPricing = ({
         // );
         setDataEdit(resp.data.data[0]);
       });
+    } else {
+      setDataEdit(null)
     }
   }, [id, addNewProduct]);
   
@@ -117,75 +124,96 @@ const AddNewProductPricing = ({
       balance_due: Yup.string().required("Field Require"),
     }),
     onSubmit: (values, { resetForm }) => {
-      let data = {
-        tour_id: tourData.id,
-        sku: tourData.sku,
-        public: values.public_price,
-        provider_price: values.provider_price,
-        rate: values.rate,
-        net_rate: values.net_price,
-        compare_at_url: values.compare_at_url,
-        ship_price: values.ship_price,
-        compare_at: values.compare_at,
-        price: values.our_price,
-        you_save: values.you_save,
-        eff_rate: values.eff_rate,
-        commission: values.commission,
-        deposit: values.deposit,
-        net_price: values.balance_due,
-        active: activeCheckbox ? 1 : 0,
-        show_balance_due: balanceDueCheckbox ? 1 : 0,
-        price_details: [
-          {
-            pricing_option_id: 1,
-            source_id:
-              priceTypeSelected,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 2,
-            source_id:
-              priceOptionSelected,
-            min: null,
-            max: null,
-            label: null,
-          },
-          {
-            pricing_option_id: 4,
-            source_id:
-              priceCollectSelected,
-            min: 1,
-            max: 3,
-            label: "px",
-          },
-          {
-            pricing_option_id: 28,
-            source_id: priceSeasonSelected,
-            min: null,
-            max: null,
-            label: null,
-          },
-        ],
-      };
-      if (dataEdit && copyProduct === false) {
-        updatePriceAPI(editProductID, data).then((resp) => {
-          setAddNewProduct(false);
-          refreshTable();
-          resetForm({ values: "" });
-        });
-      }
-      if (copyProduct || dataEdit === undefined) {
-        postPricesAPI(data).then((resp) => {
-          setAddNewProduct(false);
-          refreshTable();
-          resetForm({ values: "" });
-        });
+      let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[0].source_id
+        : null):priceTypeSelected
+
+      let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[1].source_id
+        : null):priceOptionSelected
+
+      let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[2].source_id
+        : null):priceCollectSelected
+
+      let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[3]?.source_id
+        : null):priceSeasonSelected
+      
+      if(price_type && price_option && price_collect) {
+        let data = {
+          tour_id: tourData.id,
+          sku: tourData.sku,
+          public: values.public_price,
+          provider_price: values.provider_price,
+          rate: values.rate,
+          net_rate: values.net_price,
+          compare_at_url: values.compare_at_url,
+          ship_price: values.ship_price,
+          compare_at: values.compare_at,
+          price: values.our_price,
+          you_save: values.you_save,
+          eff_rate: values.eff_rate,
+          commission: values.commission,
+          deposit: values.deposit,
+          net_price: values.balance_due,
+          active: activeCheckbox ? 1 : 0,
+          show_balance_due: balanceDueCheckbox ? 1 : 0,
+          price_details: [
+            {
+              pricing_option_id: 1,
+              source_id: price_type,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 2,
+              source_id: price_option,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 4,
+              source_id: price_collect,
+                min: null,
+                max: null,
+                label: null,
+            },
+            {
+              pricing_option_id: 28,
+              source_id: price_season,
+              min: null,
+              max: null,
+              label: null,
+            },
+          ],
+        };
+        
+        if (dataEdit && copyProduct === false) {
+          updatePriceAPI(editProductID, data).then((resp) => {
+            setAddNewProduct(false);
+            refreshTable();
+            resetForm({ values: "" });
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        } else if (copyProduct || dataEdit === undefined || dataEdit == null) {
+          postPricesAPI(data).then((resp) => {
+            setAddNewProduct(false);
+            refreshTable();
+            resetForm({ values: "" });
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        }
+      } else {
+        Swal.fire('Complete Required Fields')
       }
       refreshTable();
-      resetForm({ values: "" });
-
     },
   });
   return (
@@ -201,7 +229,25 @@ const AddNewProductPricing = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ New Product - Tour</h1>
+        {
+          copyProduct ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Copy Product - Tour</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Edit Product - Tour</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && !dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ New Product - Tour</h1>
+          ) : null
+        }
+        
         <button
           onClick={() => {
             setAddNewProduct(false);
@@ -266,7 +312,7 @@ const AddNewProductPricing = ({
                     <Col className="col-9 d-flex justify-content-between">
                       <Col className="col-2">
                         <div className="form-outline">
-                          <Label className="form-label">Price Type</Label>
+                          <Label className="form-label">Price Type*</Label>
                           <Input
                             type="select"
                             name="price_type"
@@ -298,7 +344,7 @@ const AddNewProductPricing = ({
                       </Col>
                       <Col className="col-2">
                         <div className="form-outline">
-                          <Label className="form-label">Price Option</Label>
+                          <Label className="form-label">Price Option*</Label>
                           <Input
                             type="select"
                             name="price_options"
@@ -330,7 +376,7 @@ const AddNewProductPricing = ({
                       </Col>
                       <Col className="col-2">
                         <div className="form-outline">
-                          <Label className="form-label">Collect</Label>
+                          <Label className="form-label">Collect*</Label>
                           <Input
                             type="select"
                             name="collect"
@@ -366,7 +412,7 @@ const AddNewProductPricing = ({
                             className="form-outline"
                             style={{ marginRight: "20px", marginLeft: "-20px" }}
                           >
-                            <Label className="form-label">Season</Label>
+                            <Label className="form-label">Season*</Label>
                             <Input
                               type="select"
                               name="season"
@@ -678,7 +724,7 @@ const AddNewProductPricing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Our Price</Label>
+                    <Label className="form-label">Our Price*</Label>
                     <Input
                       name="our_price"
                       placeholder=""
@@ -755,7 +801,7 @@ const AddNewProductPricing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Commission</Label>
+                    <Label className="form-label">Commission*</Label>
                     <Input
                       name="commission"
                       placeholder=""
@@ -780,7 +826,7 @@ const AddNewProductPricing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Deposit</Label>
+                    <Label className="form-label">Deposit*</Label>
                     <Input
                       name="deposit"
                       placeholder=""
@@ -805,7 +851,7 @@ const AddNewProductPricing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Balance Due</Label>
+                    <Label className="form-label">Balance Due*</Label>
                     <Input
                       name="balance_due"
                       placeholder=""

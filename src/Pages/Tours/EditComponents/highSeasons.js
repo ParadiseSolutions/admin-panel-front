@@ -218,37 +218,41 @@ const HighSeasons = ({ tourData, toggle }) => {
       className="custom-validation"
     >
       <TabPane tabId="3">
-        <Row xl={12} className="d-flex">
+        <Row className="g-4">
           <Col className="col-3">
             <img
               src={HighSeasonImg}
               alt="new tour girl"
-              style={{ width: "396px" }}
+              className="img-fluid"
             />
           </Col>
-          <Col className="col-9" style={{ paddingLeft: "50px" }}>
+          <Col className="col-9">
             <Row>
+              <Col className="col-12">
               <div
                 style={{
                   backgroundColor: "rgba(0, 157, 255, 0.2)",
-                  padding: "3px",
+                  
                 }}
+                className="p-3"
               >
-                <p style={{ fontSize: "16px", color: "#495057" }}>
-                  In this tab you can add the dates for the different seasonal
+                <p style={{ fontSize: "16px", color: "#495057" }} className="m-0">                
+                <i class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center" style={{width:"32px",height:"32px"}}></i> In this tab you can add the dates for the different seasonal
                   pricing. Select the name of the season, add the start and end
                   date, and click on “add”. You can add multiple entries under
                   the same season name. Once you create an entry, the record
                   will show in the table below.
                 </p>
               </div>
+              </Col>
+              
             </Row>
             <Row className="col-12 d-flex mt-5">
-              <Col className="col-4 d-flex justify-content-center">
-                <Row className="d-flex flex-column">
-                  <Col className="">
+              <Col className="col-4 d-flex justify-content-center border-end border-4 border-info">
+                <Row className="d-flex flex-column mx-4">
+                  
                     <h1 className="text-paradise">New Date Entry</h1>
-                  </Col>
+                  
                   <Col className="">
                     <div className="form-outline my-2">
                       <Label className="form-label">Season Name</Label>
@@ -375,7 +379,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                 </Row>
               </Col>
               <Col className="col-8 ">
-                <div className="table-responsive">
+                <div className="table-responsive ms-5">
                   <Table className="table mb-0">
                     <thead>
                       <tr>
@@ -462,9 +466,9 @@ const HighSeasons = ({ tourData, toggle }) => {
                 Back
               </Button>
               <Button
-                style={{ backgroundColor: "#F6851F" }}
+                
                 type="button"
-                className="font-16 btn-block col-2"
+                className="font-16 btn-block col-2 btn-orange"
                 onClick={() => toggle('4')}
               >
                 Continue

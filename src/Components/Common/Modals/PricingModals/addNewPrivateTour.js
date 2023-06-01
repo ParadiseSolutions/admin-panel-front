@@ -19,6 +19,7 @@ import {
   updatePriceAPI,
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
+import Swal from "sweetalert2";
 
 const AddNewPrivateTour = ({
   addNewPrivateTour,
@@ -36,6 +37,10 @@ const AddNewPrivateTour = ({
   id = editProductID;
 
   useEffect(() => {
+    setPriceTypeSelected("")
+    setPriceOptionSelected("")
+    setPriceCollectSelected("")
+    setPriceSeasonSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
         // console.log(
@@ -44,6 +49,8 @@ const AddNewPrivateTour = ({
         // );
         setDataEdit(resp.data.data[0]);
       });
+    } else {
+      setDataEdit(null)
     }
   }, [id, addNewPrivateTour]);
 
@@ -64,7 +71,7 @@ const AddNewPrivateTour = ({
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
   );
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
   useEffect(() => {
     if (addNewPrivateTour) {
@@ -127,64 +134,91 @@ const AddNewPrivateTour = ({
       balance_due: Yup.string().required("Field Require"),
     }),
     onSubmit: (values, { resetForm }) => {
-      let data = {
-        tour_id: tourData.id,
-        sku: tourData.sku,
-        public: values.public_price,
-        provider_price: values.provider_price,
-        rate: values.rate,
-        net_rate: values.net_price,
-        compare_at_url: values.compare_at_url,
-        ship_price: values.ship_price,
-        compare_at: values.compare_at,
-        price: values.our_price,
-        you_save: values.you_save,
-        eff_rate: values.eff_rate,
-        commission: values.commission,
-        deposit: values.deposit,
-        net_price: values.balance_due,
-        active: activeCheckbox ? 1 : 0,
-        show_balance_due: balanceDueCheckbox ? 1 : 0,
-        price_details: [
-          {
-            pricing_option_id: 6,
-            source_id: priceTypeSelected,
-            
-          },
-          {
-            pricing_option_id: 7,
-            source_id: priceOptionSelected,
-            
-          },
-          {
-            pricing_option_id: 9,
-            source_id: priceCollectSelected,
-            
-          },
-          {
-            pricing_option_id: 29,
-            source_id: priceSeasonSelected,
-            
-          },
-        ],
-      };
+      let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[0].source_id
+        : null):priceTypeSelected
 
-      console.log(data)
+      let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[1].source_id
+        : null):priceOptionSelected
 
-      if (dataEdit && copyProduct === false) {
-        updatePriceAPI(editProductID, data).then((resp) => {
-          setAddNewPrivateTour(false);
-          refreshTable();
-        });
-      } 
-      if(copyProduct || dataEdit === undefined){
-        postPricesAPI(data).then((resp) => {
-          setAddNewPrivateTour(false);
-          refreshTable();
-        });
+      let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[2].source_id
+        : null):priceCollectSelected
+
+      let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[3]?.source_id
+        : null):priceSeasonSelected
+
+      if(price_type && price_option && price_collect) {
+        let data = {
+          tour_id: tourData.id,
+          sku: tourData.sku,
+          public: values.public_price,
+          provider_price: values.provider_price,
+          rate: values.rate,
+          net_rate: values.net_price,
+          compare_at_url: values.compare_at_url,
+          ship_price: values.ship_price,
+          compare_at: values.compare_at,
+          price: values.our_price,
+          you_save: values.you_save,
+          eff_rate: values.eff_rate,
+          commission: values.commission,
+          deposit: values.deposit,
+          net_price: values.balance_due,
+          active: activeCheckbox ? 1 : 0,
+          show_balance_due: balanceDueCheckbox ? 1 : 0,
+          price_details: [
+            {
+              pricing_option_id: 6,
+              source_id: price_type,
+              min: null,
+              max: null,
+              label: null,            
+            },
+            {
+              pricing_option_id: 7,
+              source_id: price_option,
+              min: null,
+              max: null,
+              label: null,            
+            },
+            {
+              pricing_option_id: 9,
+              source_id: price_collect,
+              min: null,
+              max: null,
+              label: null,            
+            },
+            {
+              pricing_option_id: 29,
+              source_id: price_season,
+              min: null,
+              max: null,
+              label: null,            
+            },
+          ],
+        };
+  
+        if (dataEdit && copyProduct === false) {
+          updatePriceAPI(editProductID, data).then((resp) => {
+            setAddNewPrivateTour(false);
+            refreshTable();
+            resetForm({ values: "" });
+          });
+        } 
+        if(copyProduct || dataEdit === undefined || dataEdit === null){
+          postPricesAPI(data).then((resp) => {
+            setAddNewPrivateTour(false);
+            refreshTable();
+            resetForm({ values: "" });
+          });
+        }
+
+      } else {
+        Swal.fire('Complete Required Fields')
       }
-
-      resetForm({ values: "" });
     },
   });
   return (
@@ -200,9 +234,25 @@ const AddNewPrivateTour = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">
-          + Edit Product - Private Tour
-        </h1>
+        {
+          copyProduct ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Copy Product - Private Tour</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Edit Product - Private Tour</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && !dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ New Product - Private Tour</h1>
+          ) : null
+        }
+
         <button
           onClick={() => {
             setAddNewPrivateTour(false);
@@ -266,7 +316,7 @@ const AddNewPrivateTour = ({
                 <Col className="col-9 d-flex justify-content-between">
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Type</Label>
+                      <Label className="form-label">Price Type*</Label>
                       <Input
                         type="select"
                         name="price_type"
@@ -298,7 +348,7 @@ const AddNewPrivateTour = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Option</Label>
+                      <Label className="form-label">Price Option*</Label>
                       <Input
                         type="select"
                         name="price_options"
@@ -330,7 +380,7 @@ const AddNewPrivateTour = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Collect</Label>
+                      <Label className="form-label">Collect*</Label>
                       <Input
                         type="select"
                         name="collect"
@@ -366,7 +416,7 @@ const AddNewPrivateTour = ({
                         className="form-outline"
                         style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <Label className="form-label">Season</Label>
+                        <Label className="form-label">Season*</Label>
                         <Input
                           type="select"
                           name="season"
@@ -385,7 +435,7 @@ const AddNewPrivateTour = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >
@@ -668,7 +718,7 @@ const AddNewPrivateTour = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Our Price</Label>
+                    <Label className="form-label">Our Price*</Label>
                     <Input
                       name="our_price"
                       placeholder=""
@@ -745,7 +795,7 @@ const AddNewPrivateTour = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Commission</Label>
+                    <Label className="form-label">Commission*</Label>
                     <Input
                       name="commission"
                       placeholder=""
@@ -770,7 +820,7 @@ const AddNewPrivateTour = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Deposit</Label>
+                    <Label className="form-label">Deposit*</Label>
                     <Input
                       name="deposit"
                       placeholder=""
@@ -795,7 +845,7 @@ const AddNewPrivateTour = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Balance Due</Label>
+                    <Label className="form-label">Balance Due*</Label>
                     <Input
                       name="balance_due"
                       placeholder=""

@@ -7,13 +7,13 @@ import AddNewPrivateCharter from "../../../Components/Common/Modals/PricingModal
 import AddNewPrivateTour from "../../../Components/Common/Modals/PricingModals/addNewPrivateTour";
 import AddNewTransportation from "../../../Components/Common/Modals/PricingModals/addNewTransportation";
 import Addons from "../../../Components/Common/Modals/PricingModals/addons";
-import EditProductPricing from "../../../Components/Common/Modals/PricingModals/EditModals/editNewProduct";
-import EditAirportTransfer from "../../../Components/Common/Modals/PricingModals/EditModals/editNewAirportTransfer";
-import EditFishing from "../../../Components/Common/Modals/PricingModals/EditModals/editfishing";
-import EditPrivateCharter from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateCharter";
-import EditPrivateTour from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateTour";
-import EditTransportation from "../../../Components/Common/Modals/PricingModals/EditModals/editNewTransportation";
-import EditAddons from "../../../Components/Common/Modals/PricingModals/EditModals/editAddons";
+//import EditProductPricing from "../../../Components/Common/Modals/PricingModals/EditModals/editNewProduct";
+//import EditAirportTransfer from "../../../Components/Common/Modals/PricingModals/EditModals/editNewAirportTransfer";
+//import EditFishing from "../../../Components/Common/Modals/PricingModals/EditModals/editfishing";
+//import EditPrivateCharter from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateCharter";
+//import EditPrivateTour from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateTour";
+//import EditTransportation from "../../../Components/Common/Modals/PricingModals/EditModals/editNewTransportation";
+//import EditAddons from "../../../Components/Common/Modals/PricingModals/EditModals/editAddons";
 import {
   getPricesPricingAPI,
   getAddonsPricingAPI,
@@ -197,6 +197,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               onClick={() => {
                 const prodData = cellProps.row.original;
                 // console.log("data del producto", prodData);
+                setCopyProduct(false);
+                setEditProductID(null)
 
                 switch (tourData.type_id) {
                   case 2:
@@ -209,7 +211,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 4:
-                    setAddNewTransportation(!newTransportation);
+                    setAddNewTransportation(!addNewTransportation);
                     setEditProductID(prodData.id);
                     break;
                   case 5:
@@ -217,7 +219,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 6:
-                    setAddNewPrivateCharter(!newPrivateCharter);
+                    setAddNewPrivateCharter(!addNewPrivateCharter);
                     setEditProductID(prodData.id);
                     break;
 
@@ -238,6 +240,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               onClick={() => {
                 const prodData = cellProps.row.original;
                 // console.log("data del producto", prodData);
+                setEditProductID(null)
+                setCopyProduct(true);
 
                 switch (tourData.type_id) {
                   case 2:
@@ -258,7 +262,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 6:
-                    setAddNewPrivateCharter(!newPrivateCharter);
+                    setAddNewPrivateCharter(!addNewPrivateCharter);
                     setEditProductID(prodData.id);
                     break;
 
@@ -267,7 +271,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                 }
-                setCopyProduct(!copyProduct);
               }}
             >
               <i className="mdi mdi-content-copy font-size-18" id="copytooltip" />
@@ -309,22 +312,24 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const [newPrivateTour, setNewPrivateTour] = useState(false);
   const [newTransportation, setNewTransportation] = useState(false);
   const onClickNewProduct = () => {
+    setEditProductID(null)
+    setCopyProduct(false)
     switch (tourData.type_id) {
       case 2:
         // setNewProduct(!addNewProduct);
-        setNewPrivateTour(!addNewPrivateTour)
+        setAddNewPrivateTour(!addNewPrivateTour)
         break;
       case 3:
-        setNewAirportTransfer(!addNewAirportTransfer);
+        setAddNewAirportTransfer(!addNewAirportTransfer);
         break;
       case 4:
-        setNewTransportation(!newTransportation);
+        setAddNewTransportation(!addNewTransportation);
         break;
       case 5:
-        setNewFishing(!addNewFishing);
+        setAddNewFishing(!addNewFishing);
         break;
       case 6:
-        setNewPrivateCharter(!newPrivateCharter);
+        setAddNewPrivateCharter(!addNewPrivateCharter);
         break;
 
       default:
@@ -435,66 +440,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         tourData={tourData}
         refreshTable={refreshTable}
         editProductID={editProductID}
-      />
-
-
-
-
-      <EditProductPricing
-        newProduct={newProduct}
-        setNewProduct={setNewProduct}
-        // editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        // copyProduct={copyProduct}
-      />
-      <EditAirportTransfer
-        newAirportTransfer={newAirportTransfer}
-        setNewAirportTransfer={setNewAirportTransfer}
-        // editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        // copyProduct={copyProduct}
-      />
-      <EditFishing
-        newFishing={newFishing}
-        setNewFishing={setNewFishing}
-        // editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        // copyProduct={copyProduct}
-      />
-      <EditPrivateCharter
-        newPrivateCharter={newPrivateCharter}
-        setNewPrivateCharter={setNewPrivateCharter}
-        // editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        // copyProduct={copyProduct}
-      />
-      <EditPrivateTour
-        newPrivateTour={newPrivateTour}
-        setNewPrivateTour={setNewPrivateTour}
-        // editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        // copyProduct={copyProduct}
-      />
-      <EditTransportation
-        newTransportation={newTransportation}
-        setNewTransportation={setNewTransportation}
-        // editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        // copyProduct={copyProduct}
-      />
-
-      <EditAddons
-        newAddon={newAddon}
-        setNewAddon={setNewAddon}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        // editProductID={editProductID}
       />
     </TabPane>
   );

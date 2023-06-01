@@ -19,6 +19,7 @@ import {
   updatePriceAPI,
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
+import Swal from "sweetalert2";
 
 const AddNewPrivateCharter = ({
   addNewPrivateCharter,
@@ -33,6 +34,13 @@ const AddNewPrivateCharter = ({
   //edit data
   const [dataEdit, setDataEdit] = useState();
   useEffect(() => {
+    setPriceTypeSelected("")
+    setPriceOptionSelected("")
+    setPriceCollectSelected("")
+    setPriceSeasonSelected("")
+    setPriceCharterTypeSelected("")
+    setPriceDurationSelected("")
+    setPriceLocationSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
         // console.log(
@@ -41,6 +49,8 @@ const AddNewPrivateCharter = ({
         // );
         setDataEdit(resp.data.data[0]);
       });
+    } else {
+      setDataEdit(null)
     }
   }, [id, addNewPrivateCharter]);
 
@@ -52,18 +62,10 @@ const AddNewPrivateCharter = ({
   const [priceCharterType, setPriceCharterType] = useState([]);
   const [priceDuration, setPriceDuration] = useState([]);
   const [priceLocation, setPriceLocation] = useState([]);
-  const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
-  );
-  const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
-  );
-  const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
-  );
-  const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
-  );
+  const [priceTypeSelected, setPriceTypeSelected] = useState("");
+  const [priceOptionSelected, setPriceOptionSelected] = useState("");
+  const [priceCollectSelected, setPriceCollectSelected] = useState("");
+  const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
   const [priceLocationSelected, setPriceLocationSelected] = useState("");
@@ -127,17 +129,46 @@ const AddNewPrivateCharter = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[4]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[4]?.max : "",
+      min: dataEdit ? dataEdit?.pricedetails[5]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[5]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      our_price: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      balance_due: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, { resetForm }) => {
+      let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[0].source_id
+        : null):priceTypeSelected
+        
+        let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+          ? dataEdit.pricedetails[1].source_id
+          : null):priceOptionSelected
+          
+          let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails[2].source_id
+            : null):priceCollectSelected
+            
+      let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[3]?.source_id
+        : null):priceSeasonSelected
+
+      let charter_type = (priceCharterTypeSelected == '' || priceCharterTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[4]?.source_id
+        : null):priceCharterTypeSelected
+
+      let price_duration = (priceDurationSelected == '' || priceDurationSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[5]?.source_id
+        : null):priceDurationSelected
+
+      let price_location = (priceLocationSelected == '' || priceLocationSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        ? dataEdit.pricedetails[6]?.source_id
+        : null):priceLocationSelected
+
       let data = {
         tour_id: tourData.id,
         sku: tourData.sku,
@@ -159,78 +190,75 @@ const AddNewPrivateCharter = ({
         price_details: [
           {
             pricing_option_id: 38,
-            source_id: priceTypeSelected !== ''
-              ? priceTypeSelected
-              : dataEdit.pricedetails[0].source_id,
+            source_id: price_type,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 39,
-            source_id: priceOptionSelected !== ''
-              ? priceOptionSelected
-              : dataEdit.pricedetails[1].source_id,
+            source_id: price_option,
             min: null,
             max: null,
             label: null,
           },
           {
             pricing_option_id: 41,
-            source_id: priceCollectSelected !== ''
-              ? priceCollectSelected
-              : dataEdit.pricedetails[2].source_id,
+            source_id: price_collect,
             min: null,
             max: null,
             label: null,
           },
-          // {
-          //   pricing_option_id: 44,
-          //   source_id: priceSeasonSelected !== ''
-          //     ? priceSeasonSelected
-          //     : dataEdit.pricedetails[3]?.source_id,
-          //   min: null,
-          //   max: null,
-          //   label: null,
-          // },
+          {
+            pricing_option_id: 44,
+            source_id: price_season,
+            min: null,
+            max: null,
+            label: null,
+          },
           {
             pricing_option_id: 48,
-            source_id: priceCharterTypeSelected !== ''
-              ? priceCharterTypeSelected
-              : dataEdit.pricedetails[4].source_id,
+            source_id: charter_type,
             label: null,
           },
           {
             pricing_option_id: 40,
-            source_id: priceDurationSelected !== ''
-              ? priceDurationSelected
-              : dataEdit.pricedetails[5].source_id,
-            min: values.min,
-            max: values.max,
+            source_id: price_duration,
+            min: (values.min == "")?null:values.min,
+            max: (values.max == "")?null:values.max,
             label: null,
           },
           {
             pricing_option_id: 42,
-            source_id: priceLocationSelected !== ''
-              ? priceLocationSelected
-              : dataEdit.pricedetails[6].source_id,
+            source_id: price_location,
             label: null,
           },
         ],
       };
-      if (dataEdit) {
-        updatePriceAPI(editProductID, data).then((resp) => {
-          setAddNewPrivateCharter(false);
-          refreshTable();
-        });
-      } 
-      if(copyProduct || dataEdit === undefined) {
-        postPricesAPI(data).then((resp) => {
-          setAddNewPrivateCharter(false);
-          refreshTable();
-        });
+      if(price_type && price_option && price_collect) {
+        if (dataEdit && copyProduct === false) {
+          updatePriceAPI(editProductID, data).then((resp) => {
+            setAddNewPrivateCharter(false);
+            resetForm({ values: "" });
+            refreshTable();
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        } else if(copyProduct || dataEdit === undefined || dataEdit == null) {
+          postPricesAPI(data).then((resp) => {
+            setAddNewPrivateCharter(false);
+            resetForm({ values: "" });
+            refreshTable();
+          }).catch((error) => {
+            Swal.fire("Error. Please check your info before retry")
+            console.log(error.response)
+          });
+        }
+      } else {
+        Swal.fire('Complete Required Fields')
       }
-      resetForm({ values: "" });
+      refreshTable();
     },
   });
   return (
@@ -246,9 +274,24 @@ const AddNewPrivateCharter = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">
-          + New Product - Private Charter
-        </h1>
+        {
+          copyProduct ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Copy Product - Private Charter</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ Edit Product - Private Charter</h1>
+          ) : null
+        }
+        {
+          copyProduct == false && !dataEdit ?
+          (
+            <h1 className="modal-title mt-0 text-white">+ New Product - Private Charter</h1>
+          ) : null
+        }
         <button
           onClick={() => {
             setAddNewPrivateCharter(false);
@@ -312,7 +355,7 @@ const AddNewPrivateCharter = ({
                 <Col className="col-9 d-flex justify-content-between">
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Type</Label>
+                      <Label className="form-label">Price Type*</Label>
                       <Input
                         type="select"
                         name="price_type"
@@ -344,7 +387,7 @@ const AddNewPrivateCharter = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Price Option</Label>
+                      <Label className="form-label">Price Option*</Label>
                       <Input
                         type="select"
                         name="price_options"
@@ -376,7 +419,7 @@ const AddNewPrivateCharter = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline">
-                      <Label className="form-label">Collect</Label>
+                      <Label className="form-label">Collect*</Label>
                       <Input
                         type="select"
                         name="collect"
@@ -412,7 +455,7 @@ const AddNewPrivateCharter = ({
                         className="form-outline"
                         style={{ marginRight: "20px", marginLeft: "-20px" }}
                       >
-                        <Label className="form-label">Season</Label>
+                        <Label className="form-label">Season*</Label>
                         <Input
                           type="select"
                           name="season"
@@ -545,7 +588,7 @@ const AddNewPrivateCharter = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? charterType.id ===
-                                  dataEdit.pricedetails[4].source_id
+                                  dataEdit.pricedetails[4]?.source_id
                                 : false
                             }
                           >
@@ -577,7 +620,7 @@ const AddNewPrivateCharter = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? duration.id ===
-                                  dataEdit.pricedetails[5].source_id
+                                  dataEdit.pricedetails[5]?.source_id
                                 : false
                             }
                           >
@@ -656,7 +699,7 @@ const AddNewPrivateCharter = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? location.id ===
-                                  dataEdit.pricedetails[6].source_id
+                                  dataEdit.pricedetails[6]?.source_id
                                 : false
                             }
                           >
@@ -880,7 +923,7 @@ const AddNewPrivateCharter = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Our Price</Label>
+                    <Label className="form-label">Our Price*</Label>
                     <Input
                       name="our_price"
                       placeholder=""
@@ -957,7 +1000,7 @@ const AddNewPrivateCharter = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Commission</Label>
+                    <Label className="form-label">Commission*</Label>
                     <Input
                       name="commission"
                       placeholder=""
@@ -982,7 +1025,7 @@ const AddNewPrivateCharter = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Deposit</Label>
+                    <Label className="form-label">Deposit*</Label>
                     <Input
                       name="deposit"
                       placeholder=""
@@ -1007,7 +1050,7 @@ const AddNewPrivateCharter = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Balance Due</Label>
+                    <Label className="form-label">Balance Due*</Label>
                     <Input
                       name="balance_due"
                       placeholder=""
