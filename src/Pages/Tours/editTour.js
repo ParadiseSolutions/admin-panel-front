@@ -64,13 +64,16 @@ const EditTour = ({ history }) => {
           <Card>
             <CardHeader className="p-0">
               <Nav tabs className="nav-justified border-orange">
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "1" ? "#F6851F" : ""}`,
                       color: `${activeTab === "1" ? "white" : ""}`,
                       border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
                     }}
                     className={classnames({
                       active: activeTab === "1",
@@ -87,13 +90,16 @@ const EditTour = ({ history }) => {
                     </span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "2" ? "#F6851F" : ""}`,
                       color: `${activeTab === "2" ? "white" : ""}`,
                       border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
                     }}
                     className={classnames({
                       active: activeTab === "2",
@@ -108,13 +114,16 @@ const EditTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Settings</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
                       color: `${activeTab === "3" ? "white" : ""}`,
                       border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
                     }}
                     className={classnames({
                       active: activeTab === "3",
@@ -130,7 +139,7 @@ const EditTour = ({ history }) => {
                   </NavLink>
                 </NavItem>
 
-                  <NavItem>
+                  <NavItem className="d-flex">
                     <NavLink
                       style={{
                         cursor: "pointer",
@@ -139,6 +148,9 @@ const EditTour = ({ history }) => {
                         }`,
                         color: `${activeTab === "4" ? "white" : ""}`,
                         border:"none",
+                        flexWrap: "wrap",
+                        display:"grid",
+                        alignContent: "center",
                       }}
                       className={classnames({
                         active: activeTab === "4",
@@ -154,13 +166,16 @@ const EditTour = ({ history }) => {
                     </NavLink>
                   </NavItem>
 
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
                       color: `${activeTab === "5" ? "white" : ""}`,
                       border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
                     }}
                     className={classnames({
                       active: activeTab === "5",
@@ -175,13 +190,16 @@ const EditTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Products</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
                       border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
                     }}
                     className={classnames({
                       active: activeTab === "6",
@@ -196,13 +214,16 @@ const EditTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Addons</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
                       border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",                      
                     }}
                     className={classnames({
                       active: activeTab === "7",

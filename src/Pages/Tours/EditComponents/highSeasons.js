@@ -248,7 +248,7 @@ const HighSeasons = ({ tourData, toggle }) => {
               
             </Row>
             <Row className="col-12 d-flex mt-5">
-              <Col className="col-4 d-flex justify-content-center border-end border-4 border-info">
+              <Col className="col-4 d-flex justify-content-center border-end border-4 border-paradise">
                 <Row className="d-flex flex-column mx-4">
                   
                     <h1 className="text-paradise">New Date Entry</h1>

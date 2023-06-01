@@ -289,8 +289,8 @@ const NewTour = ({ history }) => {
                         <Row className="d-flex justify-content-start mb-3">
                         <Col className="col-12">
                           <div className="p-3" style={{backgroundColor: "#d9f0ff"}}>
-                            <p className="mb-0 fs-6 lh-2">
-                              <span className="fs-4 fw-bold text-uppercase text-dark">Instructions:</span> To create a new tour please fill out the following
+                            <p className="mb-0 lh-2" style={{fontSize:"16px"}}>
+                            <i class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center" style={{width:"32px",height:"32px"}}></i> To create a new tour please fill out the following
                               information. Once you've completed this first screen, you can through the tabs and complete the information. Once you're
                               done with a section, press "Continue" to save your changes.
                               navigate
