@@ -400,9 +400,10 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           </Row>
           <Row className="row">
             
-              <Col className="col-md-4 col-12 d-flex align-items-center px-md-5">
-                <Label className="form-label me-4 mb-md-0">Infants</Label>
-                  <div className="input-group me-4">
+              <Col className="col-md-4 col-12 px-xxl-5">
+                <Label className="form-label">Infants</Label>
+                <div className="d-flex align-items-center">
+                <div className="input-group me-4">
                     <span className="input-group-text">From</span>
                     <Input
                       name="infants_range_from"
@@ -424,10 +425,9 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                         {validationType.errors.infants_range_from}
                       </FormFeedback>
                     ) : null}
-                  </div>              
-                
+                  </div>                
                   <div className="input-group">
-                    <span className="input-group-text">To</span>
+                    <span className="input-group-text text-center" style={{minWidth:"59px"}}>To</span>
                     <Input
                       name="infants_range_to"
                       placeholder=""
@@ -449,63 +449,66 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       </FormFeedback>
                     ) : null}
                   </div>
+                </div>
+                  
                 
               </Col>
-              <Col className="col-md-4 col-12 d-flex align-items-center px-md-5">                
-                <Label className="form-label me-4 mb-0">Kids</Label>                
-                <div className="input-group me-4">
-                <span className="input-group-text">From</span>
-                  <Input
-                    name="kids_range_from"
-                    placeholder=""
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.kids_range_from || ""}
-                    invalid={
-                      validationType.touched.kids_range_from &&
-                      validationType.errors.kids_range_from
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.kids_range_from &&
-                  validationType.errors.kids_range_from ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.kids_range_from}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                
-                
-                  <div className="input-group">
-                  <span className="input-group-text">To</span>
+              <Col className="col-md-4 col-12 px-xxl-5">                
+                <Label className="form-label">Kids</Label>
+                <div className="d-flex align-items-center">
+                  <div className="input-group me-4">
+                  <span className="input-group-text">From</span>
                     <Input
-                      name="kids_range_to"
+                      name="kids_range_from"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.kids_range_to || ""}
+                      value={validationType.values.kids_range_from || ""}
                       invalid={
-                        validationType.touched.kids_range_to &&
-                        validationType.errors.kids_range_to
+                        validationType.touched.kids_range_from &&
+                        validationType.errors.kids_range_from
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.kids_range_to &&
-                    validationType.errors.kids_range_to ? (
+                    {validationType.touched.kids_range_from &&
+                    validationType.errors.kids_range_from ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.kids_range_to}
+                        {validationType.errors.kids_range_from}
                       </FormFeedback>
                     ) : null}
                   </div>
+                  <div className="input-group">
+                    <span className="input-group-text" style={{minWidth:"59px"}}>To</span>
+                      <Input
+                        name="kids_range_to"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.kids_range_to || ""}
+                        invalid={
+                          validationType.touched.kids_range_to &&
+                          validationType.errors.kids_range_to
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.kids_range_to &&
+                      validationType.errors.kids_range_to ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.kids_range_to}
+                        </FormFeedback>
+                      ) : null}
+                  </div>
+                </div>
                 
               </Col>
-              <Col className="d-flex col-md-4 col-12 align-items-center px-md-5">
+              <Col className="col-md-4 col-12 px-xxl-5">
                 
-                <Label className="form-label me-4 mb-0">Teenagers</Label>                
+                <Label className="form-label">Teenagers</Label>
+                <div className="d-flex align-items-center">
                 <div className="input-group me-4">
                   <span className="input-group-text">From</span>
                   <Input
@@ -529,10 +532,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                     </FormFeedback>
                   ) : null}
                 </div>
-                
-                
-                  <div className="input-group">
-                  <span className="input-group-text">To</span>
+                <div className="input-group">
+                  <span className="input-group-text" style={{minWidth:"59px"}}>To</span>
                     <Input
                       name="teenagers_range_to"
                       placeholder=""
@@ -554,7 +555,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       </FormFeedback>
                     ) : null}
                   </div>
-                
+                </div>
               </Col>
             
           </Row>
