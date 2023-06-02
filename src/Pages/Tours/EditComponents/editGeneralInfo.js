@@ -9,6 +9,7 @@ import {
   shoppingCartWebsite,
   providerWebsite,
   operatorWebsite,
+  putTourNameEditAPI
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -20,7 +21,6 @@ import {
   FormFeedback,
   Button,
 } from "reactstrap";
-import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
@@ -95,40 +95,33 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     }),
     onSubmit: (values) => {
       let data = {
-        cart_id: shoppingCartID,
-        website_id: websiteID,
-        type_id: tourTypeID,
-        category_id: mainCatID,
-        location_id: locationID,
-        provider_id: providerID,
-        operator_id: operatorID,
-        name: values.tour_name,
-        code: values.code,
+       name: values.tour_name
       };
-      // console.log(data);
-      //   createRol(data)
-      //     .then((resp) => {
-      //       console.log(resp.data);
-      //       if (resp.data.status === 201) {
-      //         Swal.fire(
-      //           "Created!",
-      //           "The Rol has been created.",
-      //           "success"
-      //         ).then(() => {
-      //           history.goBack();
-      //         });
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log(error.response);
-      //       Swal.fire(
-      //         "Error!",
-      //         `${
-      //           error.response.data.data[0]
-      //         }`,
-      //         "error"
-      //       );
-      //     });
+      console.log(data);
+      putTourNameEditAPI( tourData.id, data)
+          .then((resp) => {
+            console.log(resp.data);
+            if (resp.data.status === 200) {
+              Swal.fire(
+                "Edited!",
+                "Tour Name has been edited.",
+                "success"
+              ).then(() => {
+                onChangeWebsite();
+                toggle("2")
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+            Swal.fire(
+              "Error!",
+              `${
+                error.response.data.data[0]
+              }`,
+              "error"
+            );
+          });
     },
   });
 
@@ -447,7 +440,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                 
                 type="submit"
                 className="font-16 btn-block col-2 btn-orange"
-                onClick={() => toggle("2")}
+                // onClick={() => toggle("2")}
               >
                 Continue
                 <i className="uil-angle-double-right mx-1 " />

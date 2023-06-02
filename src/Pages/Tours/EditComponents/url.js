@@ -175,7 +175,7 @@ const URL = ({ tourData, toggle }) => {
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 200) {
-              Swal.fire("Edited!", "URL has been created.", "success");
+              Swal.fire("Edited!", "URL has been edited.", "success");
               getURLsAPI(tourData.id).then((resp) => {
                 setData(resp.data.data);
               });
@@ -189,8 +189,8 @@ const URL = ({ tourData, toggle }) => {
         postURLAPI(data)
           .then((resp) => {
             // console.log(resp.data);
-            if (resp.data.status === 200) {
-              Swal.fire("Edited!", "URL has been edited.", "success");
+            if (resp.data.status === 201) {
+              Swal.fire("Created!", "URL has been created.", "success");
               getURLsAPI(tourData.id).then((resp) => {
                 setData(resp.data.data);
               });
