@@ -183,6 +183,13 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/providers" className=" waves-effect">
+                    <i className="uil-bus-school"></i>
+                    
+                    <span>{"Providers"}</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/operators" className=" waves-effect">
                     <i className="uil uil-users-alt"></i>
                     
@@ -203,13 +210,7 @@ const Sidebar = () => {
                     <span>{"Payment Types"}</span>
                   </Link>
                 </li>
-                <li>
-                  <Link to="/providers" className=" waves-effect">
-                    <i className="uil-bus-school"></i>
-                    
-                    <span>{"Providers"}</span>
-                  </Link>
-                </li>
+                
                 <li>
                   <Link to="/tours" className=" waves-effect">
                     <i className="uil-image"></i>

@@ -29,6 +29,13 @@ export const statusUpdateTour = (id, body) => {
       headers: options,
     });
   };
+  export const putTourNameEditAPI = (id, body) => {
+    const url = `${API_URL}/tours/${id}/name `;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+
 
 
 

@@ -65,6 +65,11 @@ const GeneralInformation = () => {
         .required("Code is required")
         .max(3, "Must be exactly 3 chars")
         .required("Max 3 chars"),
+        address1: Yup.string().required("Address is required"),
+        city: Yup.string().required("City is required"),
+        state: Yup.string().required("State/Province/Region is required"),
+        zip: Yup.string().required("ZIP is required"),
+        country: Yup.string().required("Country is required"),
     }),
     onSubmit: (values) => {
       // console.log(values);
@@ -118,7 +123,16 @@ const GeneralInformation = () => {
               history.push(`/providers/${resp.data.data.id}`);
             })
             .catch((error) => {
-              // console.log(error);
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
               
             });
         } else {
@@ -161,8 +175,16 @@ const GeneralInformation = () => {
               history.push(`/providers/${resp.data.data.id}`);
             })
             .catch((error) => {
-              // console.log(error);
-              
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+              console.log(errorMessages)
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
             });
         }
       });
