@@ -32,8 +32,8 @@ body {
 .close {
   background: transparent;
   border: 0;
-  font-size: 10px;
-  padding: 1.35rem 1.25rem;
+  font-size: 18px;
+  padding: 2.35rem 2.25rem;
   background: transparent escape-svg($btn-close-bg-dark) center /
     $btn-close-width auto no-repeat;
   position: absolute;
@@ -41,7 +41,7 @@ body {
   right: 0;
   opacity: 0.5;
   width: 1em;
-  height: 1em;
+  height: 4.75em;
   z-index: 2;
   span {
     display: none;
@@ -180,3 +180,13 @@ body {
 .border-paradise{
   border-color: rgb(61, 199, 244);
 }
+.modal-content{
+  border: none;
+  border-radius: 1rem;
+}
+.modal-header{
+  border-top-left-radius:1rem;
+  border-top-right-radius:1rem;
+}
+
+
