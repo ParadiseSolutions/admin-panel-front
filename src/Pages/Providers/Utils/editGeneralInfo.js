@@ -128,7 +128,6 @@ const EditGeneralInformation = ({ data }) => {
         .required("Code is required")
         .max(3, "Must be exactly 3 chars")
         .required("Max 3 chars"),
-        address1: Yup.string().required("Address is required"),
         city: Yup.string().required("City is required"),
         state: Yup.string().required("State/Province/Region is required"),
         zip: Yup.string().required("ZIP is required"),

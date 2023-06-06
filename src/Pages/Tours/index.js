@@ -65,7 +65,7 @@ const Tours = () => {
       },
       {
         Header: "Website",
-        accessor: "tour_page_url",
+        accessor: "website_name",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
@@ -73,8 +73,26 @@ const Tours = () => {
         },
       },
       {
+        Header: "Provider",
+        accessor: "provider_name",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Server {...cellProps} />;
+        },
+      },
+      {
         Header: "Category",
-        accessor: "server",
+        accessor: "category_name",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Server {...cellProps} />;
+        },
+      },
+      {
+        Header: "Operator",
+        accessor: "operator_name",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {

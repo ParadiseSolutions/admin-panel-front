@@ -17,7 +17,7 @@ import {
 
 import { TabPane, Row, Button, UncontrolledTooltip } from "reactstrap";
 
-import { Name, Code, Members } from "./PricingTables/DepartmentsCols";
+import { Name, Code, Members, Price } from "./PricingTables/DepartmentsCols";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -122,30 +122,12 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         },
       },
       {
-        Header: "Reg. Price",
-        accessor: "reg_price",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <Members {...cellProps} />;
-        },
-      },
-      {
         Header: "Our Price",
-        accessor: "our_price",
+        accessor: "price",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Members {...cellProps} />;
-        },
-      },
-      {
-        Header: "Save",
-        accessor: "save",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <Members {...cellProps} />;
+          return <Price {...cellProps} />;
         },
       },
       {
@@ -163,7 +145,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Members {...cellProps} />;
+          return <Price {...cellProps} />;
         },
       },
       {
@@ -172,16 +154,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Members {...cellProps} />;
-        },
-      },
-      {
-        Header: "Balance",
-        accessor: "balance",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <Members {...cellProps} />;
+          return <Price {...cellProps} />;
         },
       },
 

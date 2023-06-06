@@ -17,6 +17,10 @@ const Code = (cell) => {
 const Members = (cell) => {
   return cell.value ? cell.value : "";
 };
+
+const Price = (cell) => {
+  return cell.value ? "$" + cell.value : "";
+};
 const Date = (cell) => {
   return cell.value ? cell.value : "";
 };
@@ -116,4 +120,4 @@ const Active = (cell) => {
 //     )
 // };
 
-export { Name, Code, Date, Members, Active };
+export { Name, Code, Date, Members, Price, Active };
