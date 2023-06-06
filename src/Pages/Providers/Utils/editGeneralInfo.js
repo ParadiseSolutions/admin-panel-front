@@ -128,6 +128,10 @@ const EditGeneralInformation = ({ data }) => {
         .required("Code is required")
         .max(3, "Must be exactly 3 chars")
         .required("Max 3 chars"),
+        city: Yup.string().required("City is required"),
+        state: Yup.string().required("State/Province/Region is required"),
+        zip: Yup.string().required("ZIP is required"),
+        country: Yup.string().required("Country is required"),
     }),
     onSubmit: (values) => {
       let data = {
@@ -174,16 +178,16 @@ const EditGeneralInformation = ({ data }) => {
           }
         })
         .catch((error) => {
-          // console.log(error.response);
-          Swal.fire(
-            "Error!",
-            `${
-              error.response.data.data.name
-                ? error.response.data.data.name
-                : error.response.data.data.code
-            }`,
-            "error"
-          );
+          let errorMessages = [];
+					Object.entries(error.response.data.data).map((item) => {
+						errorMessages.push(item[1]);
+					});
+
+					Swal.fire(
+						"Error!",
+						// {error.response.},
+						String(errorMessages[0])
+					);
         });
     },
   });

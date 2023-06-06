@@ -13,7 +13,7 @@ const CartName = (cell) => {
   return cell.value ? cell.value : "";
 };
 const CartID = (cell) => {
-  return cell.value ? <a href={`${cell.value}`} target='_blank' rel="noreferrer"> {`${cell.value}`} </a> : "";
+  return cell.value ? cell.value : "";
 };
 
 const Server = (cell) => {

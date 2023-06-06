@@ -27,6 +27,7 @@ import {
   Name,
   Code,
   Members,
+  Price,
 } from "../EditComponents/PricingTables/DepartmentsCols";
 
 import Swal from "sweetalert2";
@@ -131,30 +132,21 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       },
     },
     {
-      Header: "Reg. Price",
-      accessor: "public",
-      disableFilters: true,
-      filterable: false,
-      Cell: (cellProps) => {
-        return <Members {...cellProps} />;
-      },
-    },
-    {
       Header: "Our Price",
       accessor: "price",
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
-        return <Members {...cellProps} />;
+        return <Price {...cellProps} />;
       },
     },
     {
-      Header: "Save",
-      accessor: "you_save",
+      Header: "Deposit",
+      accessor: "deposit",
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
-        return <Members {...cellProps} />;
+        return <Price {...cellProps} />;
       },
     },
     {
@@ -172,7 +164,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
-        return <Members {...cellProps} />;
+        return <Price {...cellProps} />;
       },
     },
     {
@@ -181,7 +173,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
-        return <Members {...cellProps} />;
+        return <Price {...cellProps} />;
       },
     },
 

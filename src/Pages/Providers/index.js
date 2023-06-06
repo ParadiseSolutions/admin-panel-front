@@ -85,7 +85,7 @@ const Providers = () => {
       },
       {
         Header: "Phone",
-        accessor: "email",
+        accessor: "phone1",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
@@ -94,7 +94,7 @@ const Providers = () => {
       },
       {
         Header: "Reservation Email",
-        accessor: "department",
+        accessor: "reservation_email",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
