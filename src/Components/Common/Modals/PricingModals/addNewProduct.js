@@ -219,7 +219,7 @@ const AddNewProductPricing = ({
   return (
     <Modal
       centered
-      size="xl"
+      className="modal-xl"
       isOpen={addNewProduct}
       toggle={() => {
         // onClickAddNew();
@@ -263,7 +263,7 @@ const AddNewProductPricing = ({
           </span>
         </button>
       </div>
-      <div className="modal-body">
+      <div className="modal-body p-4">
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -272,16 +272,16 @@ const AddNewProductPricing = ({
           }}
           className="custom-validation"
         >
-          <Row xl={12} className="d-flex">
+          <Row className="g-4">
             <Col className="col-3">
               <img
                 src={NewProductPricingImage}
                 alt="new-product"
-                style={{ height: "560px", width: "260px" }}
+                className="w-100"
               />
             </Col>
             <Col className="col-9">
-              <Row className="col-12 d-flex">
+              <Row className="d-flex">
                 <Col className="col-9">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Product Name</Label>
@@ -306,218 +306,215 @@ const AddNewProductPricing = ({
                     />
                   </div>
                 </Col>
-              </Row>
-                <>
-                  <Row className="d-flex">
-                    <Col className="col-9 d-flex justify-content-between">
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Price Type*</Label>
-                          <Input
-                            type="select"
-                            name="price_type"
-                            onChange={(e) => {
-                              setPriceTypeSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+              </Row>                
+              <Row className="d-flex">                
+                <Col className="col">
+                  <div className="form-outline">
+                    <Label className="form-label">Price Type*</Label>
+                    <Input
+                      type="select"
+                      name="price_type"
+                      onChange={(e) => {
+                        setPriceTypeSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceTypeData, (type, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={type.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? type.id ===
+                                  dataEdit.pricedetails[0].source_id
+                                : false
+                            }
                           >
-                            <option>Select....</option>
-                            {map(priceTypeData, (type, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={type.id}
-                                  selected={
-                                    dataEdit && dataEdit.pricedetails
-                                      ? type.id ===
-                                        dataEdit.pricedetails[0].source_id
-                                      : false
-                                  }
-                                >
-                                  {type.text}
-                                </option>
-                              );
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Price Option*</Label>
-                          <Input
-                            type="select"
-                            name="price_options"
-                            onChange={(e) => {
-                              setPriceOptionSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                            {type.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col">
+                  <div className="form-outline">
+                    <Label className="form-label">Price Option*</Label>
+                    <Input
+                      type="select"
+                      name="price_options"
+                      onChange={(e) => {
+                        setPriceOptionSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceOptions, (option, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={option.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? option.id ===
+                                  dataEdit.pricedetails[1].source_id
+                                : false
+                            }
                           >
-                            <option>Select....</option>
-                            {map(priceOptions, (option, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={option.id}
-                                  selected={
-                                    dataEdit && dataEdit.pricedetails
-                                      ? option.id ===
-                                        dataEdit.pricedetails[1].source_id
-                                      : false
-                                  }
-                                >
-                                  {option.text}
-                                </option>
-                              );
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Collect*</Label>
-                          <Input
-                            type="select"
-                            name="collect"
-                            onChange={(e) => {
-                              setPriceCollectSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                            {option.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col">
+                  <div className="form-outline">
+                    <Label className="form-label">Collect*</Label>
+                    <Input
+                      type="select"
+                      name="collect"
+                      onChange={(e) => {
+                        setPriceCollectSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceCollect, (collect, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={collect.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? collect.id ===
+                                  dataEdit.pricedetails[2].source_id
+                                : false
+                            }
                           >
-                            <option>Select....</option>
-                            {map(priceCollect, (collect, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={collect.id}
-                                  selected={
-                                    dataEdit && dataEdit.pricedetails
-                                      ? collect.id ===
-                                        dataEdit.pricedetails[2].source_id
-                                      : false
-                                  }
-                                >
-                                  {collect.text}
-                                </option>
-                              );
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        {tourData?.seasonality === 1 ? (
-                          <div
-                            className="form-outline"
-                            style={{ marginRight: "20px", marginLeft: "-20px" }}
-                          >
-                            <Label className="form-label">Season*</Label>
-                            <Input
-                              type="select"
-                              name="season"
-                              onChange={(e) => {
-                                setPriceSeasonSelected(e.target.value);
-                              }}
-                              onBlur={validationType.handleBlur}
-                              //   value={validationType.values.department || ""}
+                            {collect.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                {tourData?.seasonality === 1 ? (
+                <Col className="col">                  
+                    <div
+                      className="form-outline"
+                    >
+                      <Label className="form-label">Season*</Label>
+                      <Input
+                        type="select"
+                        name="season"
+                        onChange={(e) => {
+                          setPriceSeasonSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                      >
+                        <option>Select....</option>
+                        {map(priceSeason, (season, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={season.id}
+                              selected={
+                                dataEdit &&
+                                dataEdit.pricedetails &&
+                                dataEdit.pricedetails.length > 3
+                                  ? season.id ===
+                                    dataEdit.pricedetails[3]?.source_id
+                                  : false
+                              }
                             >
-                              <option>Select....</option>
-                              {map(priceSeason, (season, index) => {
-                                return (
-                                  <option
-                                    key={index}
-                                    value={season.id}
-                                    selected={
-                                      dataEdit &&
-                                      dataEdit.pricedetails &&
-                                      dataEdit.pricedetails.length > 3
-                                        ? season.id ===
-                                          dataEdit.pricedetails[3]?.source_id
-                                        : false
-                                    }
-                                  >
-                                    {season.text}
-                                  </option>
-                                );
-                              })}
-                            </Input>
-                          </div>
+                              {season.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  
+                </Col>
+                ) : null}
+                <Col className="col-3 d-flex">
+                  {activeCheckbox !== null ? (
+                    <div className="d-flex flex-column align-items-center w-50">
+                      <Label className="form-label mt-2">Active</Label>
+                      <div className="form-check form-switch form-switch-md">
+                        <Input
+                          name="active"
+                          placeholder=""
+                          type="checkbox"
+                          checked={activeCheckbox}
+                          className="form-check-input start-0"
+                          onChange={() => onChangeActiveToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.active || ""}
+                          invalid={
+                            validationType.touched.active &&
+                            validationType.errors.active
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.active &&
+                        validationType.errors.active ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.active}
+                          </FormFeedback>
                         ) : null}
-                      </Col>
-                    </Col>
-                    <Col className="col-3 d-flex justify-content-between">
-                      {activeCheckbox !== null ? (
-                        <Col className="col-6">
-                          <Label className="form-label mt-2">Active</Label>
-                          <div className="form-check form-switch form-switch-md mx-2">
-                            <Input
-                              name="active"
-                              placeholder=""
-                              type="checkbox"
-                              checked={activeCheckbox}
-                              className="form-check-input"
-                              onChange={() => onChangeActiveToggle()}
-                              onBlur={validationType.handleBlur}
-                              value={validationType.values.active || ""}
-                              invalid={
-                                validationType.touched.active &&
-                                validationType.errors.active
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validationType.touched.active &&
-                            validationType.errors.active ? (
-                              <FormFeedback type="invalid">
-                                {validationType.errors.active}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                      ) : null}
+                      </div>
+                    </div>
+                  ) : null}
 
-                      {balanceDueCheckbox !== null ? (
-                        <Col className="col-6">
-                          <Label className="form-label mt-2">Balance Due</Label>
-                          <div className="form-check form-switch form-switch-md mx-4">
-                            <Input
-                              name="balance_checkbox"
-                              placeholder=""
-                              type="checkbox"
-                              checked={balanceDueCheckbox}
-                              className="form-check-input"
-                              onChange={() => onChangeBalanceDueToggle()}
-                              onBlur={validationType.handleBlur}
-                              value={
-                                validationType.values.balance_checkbox || ""
-                              }
-                              invalid={
-                                validationType.touched.balance_checkbox &&
-                                validationType.errors.balance_checkbox
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validationType.touched.balance_checkbox &&
-                            validationType.errors.balance_checkbox ? (
-                              <FormFeedback type="invalid">
-                                {validationType.errors.balance_checkbox}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                      ) : null}
-                    </Col>
-                  </Row>
-                </>
+                  {balanceDueCheckbox !== null ? (
+                    <div className="d-flex flex-column align-items-center w-50">
+                      <Label className="form-label mt-2">Balance Due</Label>
+                      <div className="form-check form-switch form-switch-md">
+                        <Input
+                          name="balance_checkbox"
+                          placeholder=""
+                          type="checkbox"
+                          checked={balanceDueCheckbox}
+                          className="form-check-input start-0"
+                          onChange={() => onChangeBalanceDueToggle()}
+                          onBlur={validationType.handleBlur}
+                          value={
+                            validationType.values.balance_checkbox || ""
+                          }
+                          invalid={
+                            validationType.touched.balance_checkbox &&
+                            validationType.errors.balance_checkbox
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.balance_checkbox &&
+                        validationType.errors.balance_checkbox ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.balance_checkbox}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
+                </Col>
+              </Row>
+                
 
-              <Row
+              <Col
                 className="col-12 p-1 mt-4 mb-2"
                 style={{ backgroundColor: "#E9F4FF" }}
               >
                 <p
-                  className="py-2"
+                  className="p-2"
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -527,8 +524,8 @@ const AddNewProductPricing = ({
                 >
                   Provider Pricing
                 </p>
-              </Row>
-              <Row className="col-12 d-flex">
+              </Col>
+              <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Public Price</Label>
@@ -655,12 +652,12 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
               </Row>
-              <Row
-                className="col-12 p-1 mt-4 mb-2"
+              <Col
+                className="col-12 p-1 mb-2"
                 style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
-                  className="py-2"
+                  className="p-2"
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -670,8 +667,8 @@ const AddNewProductPricing = ({
                 >
                   Our Pricing
                 </p>
-              </Row>
-              <Row className="col-12 d-flex">
+              </Col>
+              <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Ship Price</Label>
@@ -773,7 +770,7 @@ const AddNewProductPricing = ({
                   </div>
                 </Col>
               </Row>
-              <Row className="col-12 d-flex">
+              <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Eff. Rate</Label>
@@ -877,10 +874,10 @@ const AddNewProductPricing = ({
               </Row>
             </Col>
           </Row>
-          <Row xl={12}>
-            <Row
+          <Row>
+            <Col
               className="col-12 d-flex justify-content-end mt-5"
-              style={{ paddingRight: "30px" }}
+              
             >
               <Button
                 color="paradise"
@@ -892,14 +889,14 @@ const AddNewProductPricing = ({
                 Close
               </Button>
               <Button
-                style={{ backgroundColor: "#F6851F" }}
+                
                 type="submit"
-                className="font-16 btn-block col-2"
+                className="font-16 btn-block col-2 btn-orange"
                 // onClick={toggleCategory}
               >
                 Save
               </Button>
-            </Row>
+            </Col>
           </Row>
         </Form>
       </div>
