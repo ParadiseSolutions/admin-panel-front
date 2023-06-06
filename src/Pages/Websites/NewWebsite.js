@@ -50,13 +50,7 @@ const NewWebsite = () => {
       company_name: Yup.string().required("Name is required"),
       code: Yup.string().required("Code is required").min(2, "Code must be 2-character long").max(2, "Code must be 2-character long"),
       domain: Yup.string().required("Domain is required"),
-      url: Yup.string().required("URL is required"),
-      cpanel_account: Yup.string().required("cPanel Account Name is required"),
-      root_folder: Yup.string().required("Root Folder Name is required"),
-      user_folder: Yup.string().required("User Folder Name is required"),
-      accent_color: Yup.string().required("Accent Color is required"),
-      primary_color: Yup.string().required("Primary Color is required"),
-      secondary_color: Yup.string().required("Secondary Color is required"),
+      url: Yup.string().required("URL is required")
     }),
     onSubmit: (values) => {
         let data = {
