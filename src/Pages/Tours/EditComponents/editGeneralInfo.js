@@ -113,13 +113,15 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
             }
           })
           .catch((error) => {
-            console.log(error.response);
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
             Swal.fire(
               "Error!",
-              `${
-                error.response.data.data[0]
-              }`,
-              "error"
+              // {error.response.},
+              String(errorMessages[0])
             );
           });
     },

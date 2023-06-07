@@ -156,14 +156,16 @@ const NewTour = ({ history }) => {
             }
           })
           .catch((error) => {
-            // console.log(error.response);
-            Swal.fire(
-              "Error!",
-              `${
-                error.response.data.data[0]
-              }`,
-              "error"
-            );
+            let errorMessages = [];
+					Object.entries(error.response.data.data).map((item) => {
+						errorMessages.push(item[1]);
+					});
+
+					Swal.fire(
+						"Error!",
+						// {error.response.},
+						String(errorMessages[0])
+					);
           });
     },
   });
