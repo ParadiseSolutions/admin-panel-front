@@ -45,7 +45,16 @@ const Categories = () => {
 						Swal.fire("Deleted!", "Category has been deleted.", "success");
 					})
 					.catch((error) => {
-						// console.log("jalopy",error);
+						let errorMessages = [];
+					Object.entries(error.response.data.data).map((item) => {
+						errorMessages.push(item[1]);
+					});
+
+					Swal.fire(
+						"Error!",
+						// {error.response.},
+						String(errorMessages[0])
+					);
 					});
 			}
 		});
