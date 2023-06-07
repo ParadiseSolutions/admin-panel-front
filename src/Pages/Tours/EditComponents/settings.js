@@ -221,9 +221,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           <Col className="col-12">
             <div className="mb-2 p-2" style={{ backgroundColor: "#E9F4FF" }}>
               <p
-                className="px-2"
-                style={{
-                  fontSize: "20px",
+                className="px-2 fs-5"
+                style={{                  
                   fontWeight: "bold",
                   color: "#495057",
                   marginBottom: "0px",
@@ -391,9 +390,9 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
             <Col className="col-12" >
             <div className="mb-4 py-2 px-3" style={{ backgroundColor: "#FFEFDE" }}>
               <p
-                
+                className="fs-5"
                 style={{
-                  fontSize: "20px",
+                  
                   fontWeight: "bold",
                   color: "#495057",
                   marginBottom: "0px",

@@ -158,7 +158,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
             <Row className="mb-3">
               <Col className="col-12">
                 <div className="p-3" style={{ backgroundColor: "#E9F4FF" }}>
-                  <p className="fs-4 fw-bold text-uppercase text-dark mb-0">
+                  <p className="fs-5 fw-bold text-uppercase text-dark mb-0">
                     TOUR SETTINGS
                   </p>
                 </div>              
@@ -300,7 +300,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
             <Col className="col-12">
             <div className="p-3" style={{ backgroundColor: "#FFEFDE" }}>
                 <p
-                className="fs-4 fw-bold text-uppercase text-dark mb-0"
+                className="fs-5 fw-bold text-uppercase text-dark mb-0"
                 
               >
                 TOUR DETAILS

@@ -70,7 +70,7 @@ const Operators = () => {
       },
       {
         Header: "Phone",
-        accessor: "email",
+        accessor: "phone1",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
@@ -78,8 +78,8 @@ const Operators = () => {
         },
       },
       {
-        Header: "Reservation Email",
-        accessor: "department",
+        Header: "Email",
+        accessor: "email1",
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {

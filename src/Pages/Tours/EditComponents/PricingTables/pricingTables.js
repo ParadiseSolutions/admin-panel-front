@@ -65,8 +65,8 @@ const PricingTables = ({
           <div className="text-sm-end">
             <Button
               type="button"
-              style={{ backgroundColor: "#F6851F", border: "none" }}
-              className="waves-effect waves-light mb-3 btn btn-success"
+              
+              className="waves-effect waves-light mb-3 btn btn-orange"
               onClick={onClickNewProduct}
             >
               <i className="mdi mdi-plus me-1" />
@@ -116,34 +116,32 @@ const PricingTables = ({
       )}
      
 
-      <Row className="justify-content-md-end justify-content-center align-items-center">
-        <Col className="col-md-auto">
-          <div className="d-flex gap-1">
-            <Button
-              // color="info"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
-              onClick={() => gotoPage(0)}
-              disabled={!canPreviousPage}
-            >
-              {"<<"}
-            </Button>
-            <Button
-              // color="primary"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
-              onClick={previousPage}
-              disabled={!canPreviousPage}
-            >
-              {"<"}
-            </Button>
-          </div>
-        </Col>
-        <Col className="col-md-auto d-none d-md-block">
+      <div className="d-flex justify-content-md-end justify-content-center align-items-center col-12">
+        
+          <div className="btn-group" role="group">
+          <Button
+                className="btn btn-orange" 
+                onClick={() => gotoPage(0)}
+                disabled={!canPreviousPage}
+              >
+                {"<<"}
+              </Button>
+              <Button
+                // color="primary"
+                className="btn btn-orange"
+                onClick={previousPage}
+                disabled={!canPreviousPage}
+              >
+                {"<"}
+              </Button>
+          
+          <div className="d-flex justify-content-center align-items-center input-group">
+                <div className="input-group-text rounded-0 border-start-0">
           Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>
-        </Col>
-        <Col className="col-md-auto">
+              </div>
           <Input
             type="number"
             min={1}
@@ -152,12 +150,10 @@ const PricingTables = ({
             defaultValue={pageIndex + 1}
             onChange={onChangeInInput}
           />
-        </Col>
-
-        <Col className="col-md-auto">
-          <div className="d-flex gap-1">
+          </div>
+          
             <Button
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
+              className="btn-orange"
               onClick={nextPage}
               disabled={!canNextPage}
             >
@@ -165,15 +161,15 @@ const PricingTables = ({
             </Button>
             <Button
               // color="primary"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
+              className="btn-orange"
               onClick={() => gotoPage(pageCount - 1)}
               disabled={!canNextPage}
             >
               {">>"}
             </Button>
           </div>
-        </Col>
-      </Row>
+        
+      </div>
     </Fragment>
   );
 };
