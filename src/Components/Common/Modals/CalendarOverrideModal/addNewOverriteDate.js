@@ -28,6 +28,7 @@ const AddNewOverriteDate = ({
   const [typeSelected, setTypeSelected] = useState(null);
   const [repeatSelected, setRepeatSelected] = useState(null)
   const [daySelected, setDaySelected] = useState(null)
+  const [statusSelected, setStatusSelected] = useState(null)
   // console.log(typeSelected);
 
   //checkbox list
@@ -58,16 +59,12 @@ const AddNewOverriteDate = ({
       let data = {
         type_id: typeSelected,
         repeat_id: repeatSelected,
-        action: "Available",
+        action: statusSelected,
         on: daySelected ? daySelected.toString() : daysList.length > 0 ? daysList.toString() : '',
         from: values.range_from_date ? values.range_from_date : values.weekdays_from_date ? values.weekdays_from_date : values.fixed_date ? values.fixed_date : null,
         to: values.range_to_date ? values.range_to_date : values.weekdays_to_date ? values.weekdays_to_date : null,
         recurrency: repeatSelected,
       };
-
-      // console.log(data)
-
-    
       postOverriteDate(id, data)
         .then((resp) => {
           if (resp.data.status === 201) {
@@ -188,6 +185,27 @@ const AddNewOverriteDate = ({
                       </Input>
                     </div>
                   </Col>
+                </Row>
+                <Row>
+                  <Col className="col-6">
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Status</Label>
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setStatusSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                      >
+                        <option>Select....</option>
+                        <option value={"Available"}>Available</option>
+                        <option value={"Unavailable"}>Unavailable</option>
+                       
+                      </Input>
+                    </div>
+                  </Col>
+                  
                 </Row>
 
                 {typeSelected === "1" ? (
