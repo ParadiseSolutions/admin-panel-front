@@ -20,6 +20,7 @@ import {
   getPathAPI,
   postURLAPI,
   updateURLAPI,
+  deleteURL
 } from "../../../Utils/API/Tours";
 import { map } from "lodash";
 import { useFormik } from "formik";
@@ -74,6 +75,19 @@ const URL = ({ tourData, toggle }) => {
     // console.log(url);
   };
 
+  const onDeleteURL = (urlData) => {
+    deleteURL(urlData.id)
+          .then((resp) => {
+            // console.log(resp.data);
+            if (resp.data.status === 200) {
+              Swal.fire("Deleted!", "URL has been deleted.", "success");
+              getURLsAPI(tourData.id).then((resp) => {
+                setData(resp.data.data);
+              });
+            }
+          })
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -123,20 +137,20 @@ const URL = ({ tourData, toggle }) => {
                   </UncontrolledTooltip>
                 </div>
               </div>
-              <Link
-                to="#"
+              <div
+                
                 className="text-danger"
                 onClick={() => {
-                  const tourData = cellProps.row.original;
+                  const urlData = cellProps.row.original;
                   // setconfirm_alert(true);
-                  //   onDelete(tourData);
+                  onDeleteURL(urlData);
                 }}
               >
                 <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
-              </Link>
+              </div>
             </div>
           );
         },
