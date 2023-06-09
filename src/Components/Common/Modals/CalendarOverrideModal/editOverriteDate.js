@@ -35,7 +35,7 @@ const EdditOverriteDate = ({
   const [dayWeekfromEdit, setDayWeekFromSelected] = useState(null);
   const [dayWeektoEdit, setDayWeektoSelected] = useState(null);
   const [dayFixEdit, setdayFixSelected] = useState(null);
-
+  const [statusSelected, setStatusSelected] = useState(null)
   // console.log("data inicial", editOverriteDateData);
 
   useEffect(() => {
@@ -48,6 +48,7 @@ const EdditOverriteDate = ({
       setDayWeekFromSelected(editOverriteDateData?.from);
       setDayWeektoSelected(editOverriteDateData?.to);
       setdayFixSelected(editOverriteDateData?.from)
+      setStatusSelected(editOverriteDate?.action)
     }
   }, [editOverriteDateData]);
 
@@ -79,9 +80,10 @@ const EdditOverriteDate = ({
 
     onSubmit: (values, { resetForm }) => {
       let data = {
+        id: editOverriteDateData.id,
         type_id: typeSelected,
         repeat_id: repeatSelected,
-        action: "Available",
+        action: statusSelected,
         on: daySelected
           ? daySelected.toString()
           : daysList.length > 0
@@ -106,8 +108,8 @@ const EdditOverriteDate = ({
 
       putOverriteDate(id, data)
         .then((resp) => {
-          if (resp.data.status === 201) {
-            Swal.fire("Success!", "Location has been created", "success").then(
+          if (resp.data.status === 200) {
+            Swal.fire("Success!", "Schedule has been edited", "success").then(
               () => {
                 setEditOverriteDate(false);
                 refresh()
@@ -278,7 +280,42 @@ const EdditOverriteDate = ({
                     </div>
                   </Col>
                 </Row>
-
+                <Row>
+                  <Col className="col-6">
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Status</Label>
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setStatusSelected(e.target.value);
+                        }}
+                        
+                        onBlur={validationType.handleBlur}
+                      >
+                        <option>Select....</option>
+                        <option value={"Available"}
+                         selected={
+                          editOverriteDateData &&
+                          editOverriteDateData.action === 'Available'
+                            ? true
+                            : false
+                        }
+                        >Available</option>
+                        <option value={"Unavailable"}
+                         selected={
+                          editOverriteDateData &&
+                          editOverriteDateData.action === 'Unavailable'
+                            ? true
+                            : false
+                        }
+                        >Unavailable</option>
+                       
+                      </Input>
+                    </div>
+                  </Col>
+                  
+                </Row>
                 {typeSelected === "1" ? (
                   <Row>
                     <Col className="col-12">

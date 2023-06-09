@@ -249,17 +249,18 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
           </span>
         </button>
       </div>
-      <div className="modal-body">
-          <Row xl={12} className="d-flex">
-            <Col className="col-3">
+      <div className="modal-body p-4">
+          <Row className="d-flex g-4">
+            <Col className="col-4">
               <img
+              className="w-100"
                 src={ScheduleImage}
                 alt="new-product"
                 // style={{ height: "590px", width: "260px" }}
               />
             </Col>
-            <Col className="col-9">
-              <Row className="">
+            <Col className="col-8">
+              <Row>
                 <Col>
                   <div className="form-outline">
                     <Label className="form-label">Products</Label>
@@ -284,7 +285,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                 </Col>
               </Row>
               <Row className="mt-4 d-flex">
-                <Col className="col-3">
+                <Col className="col-4">
                   <div className="form-outline">
                     <Label className="form-label">Type</Label>
                     <Input
@@ -307,11 +308,10 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                   </div>
                 </Col>
 
-                <Col className="col-9">
-                  <Row className="d-flex">
+                
                     {typeSelected && typeSelected === "4" ? (
                       <>
-                        <Col className="col-4">
+                        <Col className="col">
                           <Label className="form-label">Start Time</Label>
                           <div className="input-group">
                             <Input
@@ -349,7 +349,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             </Input>
                           </div>
                         </Col>
-                        <Col className="col-4 ">
+                        <Col className="col">
                           <Label className="form-label">Time Unit</Label>
                           <div className="form-outline">
                             <Input
@@ -365,7 +365,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             </Input>
                           </div>
                         </Col>
-                        <Col className="col-4 ">
+                        <Col className="col">
                           <Label className="form-label">Duration</Label>
                           <div className="form-outline">
                             <Input
@@ -395,7 +395,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                     
                     {typeSelected && typeSelected === "6" ? (
                       <>
-                        <Col className="col-4 ">
+                        <Col className="col">
                           <Label className="form-label">Time Unit</Label>
                           <div className="form-outline">
                             <Input
@@ -411,7 +411,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             </Input>
                           </div>
                         </Col>
-                        <Col className="col-4 ">
+                        <Col className="col">
                           <Label className="form-label">Duration</Label>
                           <div className="form-outline">
                             <Input
@@ -438,12 +438,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                         </Col>
                       </>
                     ) : null}
-                  </Row>
-                </Col>
+                  
 
                 {typeSelected && typeSelected === "6" ? (
+                  <Col className="col-12 mt-4">                    
                   <Row className="d-flex">
-                    <div className="col-4 d-flex mt-5">
+                  <Label>Available Time</Label>
+                    <div className="col-4 d-flex">
+                    
                       <div className="input-group">
                         <div className="input-group-text">From</div>
                         <Input
@@ -478,7 +480,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                         </Input>
                       </div>
                     </div>
-                    <div className="col-4 d-flex mt-5">
+                    <div className="col-4 d-flex">
                       <div className="input-group">
                         <div className="input-group-text">To</div>
                         
@@ -515,6 +517,8 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                       </div>
                     </div>
                   </Row>
+                  </Col>
+                  
                 ) : null}
 
                 {typeSelected && typeSelected === "3" ? (
@@ -748,7 +752,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
 
                 <Col className="col-9 mt-3">
                   <Row className="">
-                    <div className="form-check form-switch form-switch-md mt-1">
+                    <div className="mt-1">
                       <Label className="form-label mt-2 ">
                         Temporary Schedule
                       </Label>
@@ -830,10 +834,10 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                 </Col>
               </Row>
 
-              <Row xl={12}>
-                <Row
+              <Row>
+                <Col
                   className="col-12 d-flex justify-content-end mt-4"
-                  style={{ paddingRight: "30px" }}
+                  
                 >
                   <Button
                     color="paradise"
@@ -846,13 +850,13 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                   </Button>
                   <Button
                     type="submit"
-                    style={{ backgroundColor: "#F6851F" }}
-                    className="font-16 btn-block col-2"
+                    
+                    className="font-16 btn-block col-2 btn-orange"
                     // onClick={toggleCategory}
                   >
                     Save
                   </Button>
-                </Row>
+                </Col>
               </Row>
             </Col>
           </Row>

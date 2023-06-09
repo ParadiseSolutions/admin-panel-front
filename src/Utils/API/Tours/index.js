@@ -280,6 +280,12 @@ export const updateURLAPI = (id, body) => {
   });
 };
 
+export const deleteURL = (urlID) => {
+  const url = `${API_URL}/tour_urls/${urlID}`
+  return axios.delete (url, {
+    headers: options,
+  });
+};
 //schedules
 
 export const getScheduleTimeAPI = (id) => {

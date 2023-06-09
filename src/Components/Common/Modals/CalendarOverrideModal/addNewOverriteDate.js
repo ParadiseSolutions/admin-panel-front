@@ -28,6 +28,7 @@ const AddNewOverriteDate = ({
   const [typeSelected, setTypeSelected] = useState(null);
   const [repeatSelected, setRepeatSelected] = useState(null)
   const [daySelected, setDaySelected] = useState(null)
+  const [statusSelected, setStatusSelected] = useState(null)
   // console.log(typeSelected);
 
   //checkbox list
@@ -58,16 +59,12 @@ const AddNewOverriteDate = ({
       let data = {
         type_id: typeSelected,
         repeat_id: repeatSelected,
-        action: "Available",
+        action: statusSelected,
         on: daySelected ? daySelected.toString() : daysList.length > 0 ? daysList.toString() : '',
         from: values.range_from_date ? values.range_from_date : values.weekdays_from_date ? values.weekdays_from_date : values.fixed_date ? values.fixed_date : null,
         to: values.range_to_date ? values.range_to_date : values.weekdays_to_date ? values.weekdays_to_date : null,
         recurrency: repeatSelected,
       };
-
-      // console.log(data)
-
-    
       postOverriteDate(id, data)
         .then((resp) => {
           if (resp.data.status === 201) {
@@ -126,7 +123,7 @@ const AddNewOverriteDate = ({
         {
           //modal body
         }
-        <div className="modal-body">
+        <div className="modal-body p-4">
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -135,18 +132,18 @@ const AddNewOverriteDate = ({
             }}
             className="custom-validation"
           >
-            <Row>
-              <Col className="col-6 ">
+            <Row className="g-5">
+              <Col className="col-5 ">
                 <img
                   src={OverriteDateImg}
                   alt="overrite"
-                  style={{ width: "350px", height: "370px" }}
+                  className="img-fluid"
                 />
               </Col>
-              <Col className="col-6">
-                <Row>
+              <Col className="col-7">
+                <Row className="mb-3">
                   <Col className="col-6">
-                    <div className="form-outline mb-4">
+                    <div className="form-outline">
                       <Label className="form-label">Type</Label>
                       <Input
                         type="select"
@@ -172,7 +169,7 @@ const AddNewOverriteDate = ({
                     </div>
                   </Col>
                   <Col className="col-6">
-                    <div className="form-outline mb-4">
+                    <div className="form-outline">
                       <Label className="form-label">Recurrency</Label>
                       <Input
                         type="select"
@@ -189,11 +186,32 @@ const AddNewOverriteDate = ({
                     </div>
                   </Col>
                 </Row>
+                <Row>
+                  <Col className="col-6">
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Status</Label>
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setStatusSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                      >
+                        <option>Select....</option>
+                        <option value={"Available"}>Available</option>
+                        <option value={"Unavailable"}>Unavailable</option>
+                       
+                      </Input>
+                    </div>
+                  </Col>
+                  
+                </Row>
 
                 {typeSelected === "1" ? (
                   <Row>
                     <Col className="col-12">
-                      <div className="form-outline my-3">
+                      <div className="form-outline my-4">
                         <div className="d-flex">
                           <div className="input-group">
                             <div className="input-group-text">From</div>
@@ -397,8 +415,8 @@ const AddNewOverriteDate = ({
                   <Col className="col-12 mt-2 d-flex justify-content-end">
                     <Button
                       type="submit"
-                      style={{ backgroundColor: "#F6851F", border: "none" }}
-                      className="waves-effect waves-light btn btn-success"
+                      
+                      className="waves-effect waves-light btn btn-orange"
                     >
                       <i className="mdi mdi-plus me-1" />
                       Submit

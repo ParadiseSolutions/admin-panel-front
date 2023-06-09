@@ -484,7 +484,7 @@ const AddNewAirportTransfer = ({
                   
                     <div
                       className="form-outline"
-                      style={{ marginRight: "20px", marginLeft: "-20px" }}
+                      
                     >
                       <Label className="form-label">Season*</Label>
                       <Input
@@ -580,12 +580,12 @@ const AddNewAirportTransfer = ({
                   ) : null}
                 </Col>
               </Row>
-              <Row
+              <Col
                 className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#E9F4FF" }}
               >
                 <p
-                  className="py-2"
+                  className="p-2"
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -595,8 +595,8 @@ const AddNewAirportTransfer = ({
                 >
                   Transfer Options
                 </p>
-              </Row>
-              <Row className="col-12 d-flex">
+              </Col>
+              <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Transfer Type*</Label>
@@ -693,7 +693,7 @@ const AddNewAirportTransfer = ({
                     </Input>
                   </div>
                 </Col>
-                <Col className="col-2">
+                <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Zone Name*</Label>
                     <Input
@@ -724,33 +724,32 @@ const AddNewAirportTransfer = ({
                     </Input>
                   </div>
                 </Col>
-                <Col className="col-2">
+                <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Min. Pax</Label>
-                    <Input
-                      name="min"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.min || ""}
-                      invalid={
-                        validationType.touched.min && validationType.errors.min
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.min && validationType.errors.min ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.min}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Max. Pax</Label>
-                    <Input
+                    <Label className="form-label">Passangers</Label>
+                    <div className="input-group">
+                    <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>Min</span>
+                      <Input
+                        name="min"
+                        placeholder=""
+                        className="me-1"
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.min || ""}
+                        invalid={
+                          validationType.touched.min && validationType.errors.min
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.min && validationType.errors.min ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.min}
+                        </FormFeedback>
+                      ) : null}
+                      <span class="input-group-text fw-bold bg-paradise text-white border-0 ms-1" id="basic-addon1" style={{fontSize:"0.85em"}}>Max</span>
+                      <Input
                       name="max"
                       placeholder=""
                       type="text"
@@ -768,15 +767,19 @@ const AddNewAirportTransfer = ({
                         {validationType.errors.max}
                       </FormFeedback>
                     ) : null}
+                    </div>
+                    
+                    
                   </div>
                 </Col>
+                
               </Row>
-              <Row
+              <Col
                 className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
-                  className="py-2"
+                  className="p-2"
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -786,8 +789,8 @@ const AddNewAirportTransfer = ({
                 >
                   Provider Pricing
                 </p>
-              </Row>
-              <Row className="col-12 d-flex">
+              </Col>
+              <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Public Price</Label>
@@ -914,12 +917,12 @@ const AddNewAirportTransfer = ({
                   </div>
                 </Col>
               </Row>
-              <Row
+              <Col
                 className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#FFFBC8" }}
               >
                 <p
-                  className="py-2"
+                  className="p-2"
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -929,8 +932,8 @@ const AddNewAirportTransfer = ({
                 >
                   Our Pricing
                 </p>
-              </Row>
-              <Row className="col-12 d-flex">
+              </Col>
+              <Row className=" d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Ship Price</Label>
@@ -1032,7 +1035,7 @@ const AddNewAirportTransfer = ({
                   </div>
                 </Col>
               </Row>
-              <Row className="col-12 d-flex">
+              <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Eff. Rate</Label>
@@ -1134,10 +1137,10 @@ const AddNewAirportTransfer = ({
                   </div>
                 </Col>
               </Row>
-              <Row xl={12}>
-                <Row
+              <Row>
+                <Col
                   className="col-12 d-flex justify-content-end mt-4"
-                  style={{ paddingRight: "30px" }}
+                  
                 >
                   <Button
                     color="paradise"
@@ -1149,14 +1152,14 @@ const AddNewAirportTransfer = ({
                     Close
                   </Button>
                   <Button
-                    style={{ backgroundColor: "#F6851F" }}
+                    
                     type="submit"
-                    className="font-16 btn-block col-2"
+                    className="font-16 btn-block col-2 btn-orange"
                     // onClick={toggleCategory}
                   >
                     Save
                   </Button>
-                </Row>
+                </Col>
               </Row>
             </Col>
           </Row>
