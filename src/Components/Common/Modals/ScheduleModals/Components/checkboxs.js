@@ -46,8 +46,8 @@ const onClickDay = (day) =>{
   //  }
 }
   return (
-    <div className="container">
-      <Label className="form-label">Runs</Label>
+    <div className="border-bottom border-dark pb-4 my-3">
+      <Label className="form-label mb-3">Runs</Label>
       <div className="row">
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={1} checked={monChecked} onChange={(e) => {
@@ -78,7 +78,7 @@ const onClickDay = (day) =>{
           <Label className="form-label">Thursday</Label>
         </div>
       </div>
-      <div className="row mt-3">
+      <div className="row mt-2">
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={5} checked={friChecked} onChange={(e) => {
             setFriChecked(!friChecked)

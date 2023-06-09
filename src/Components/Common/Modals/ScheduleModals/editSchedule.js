@@ -362,11 +362,12 @@ putSchedule(id, data)
           </button>
         </div>
         <div className="modal-body">
-          <Row xl={12} className="d-flex">
+          <Row className="d-flex">
             <Col className="col-3">
               <img
                 src={ScheduleImage}
                 alt="new-product"
+                className="img-fluid"
                 // style={{ height: "590px", width: "260px" }}
               />
             </Col>
