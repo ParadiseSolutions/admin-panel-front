@@ -138,13 +138,12 @@ const NewDepartment = ({ history }) => {
           >
             <div className="">
               <h1
-                className="fw-bold text-paradise"
-                // style={{ color: "#3DC7F4" }}
+                className="fw-bold text-paradise"                
               >
                 <i className="mdi mdi-plus me-1" /> ADD NEW DEPARTMENT
               </h1>
             </div>
-            <Row className="">
+            <Row>
               <Col md="12" className="d-flex justify-content-end">
                 <div className="text-sm-end mx-2">
                   <Button
@@ -242,7 +241,7 @@ const NewDepartment = ({ history }) => {
                   </Card>
                 </Col>
                 <Col lg={4} className="d-flex align-items-stretch">
-                  <Card className="border-0">
+                  <Card style={{ maxHeight: "87vh" }} className="border-0">
                   <CardHeader className="bg-paradise">
                     <h5 className="text-white m-1">
                       + Select Members

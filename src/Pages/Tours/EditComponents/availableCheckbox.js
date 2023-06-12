@@ -50,7 +50,7 @@ const AvailableCheckbox = ({ available, availableFromIDs,  setNewListID, setAvai
     // }
   };
   return (
-    <div className="controls my-4">
+    <div className="controls my-2">
       <div className="form-check">
         <input
           className="form-check-input"

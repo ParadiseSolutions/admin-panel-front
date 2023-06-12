@@ -31,7 +31,7 @@ const PermissionsChecked = ({ perm, permsIds, setPermsIds }) => {
   };
 
   return (
-    <div className="controls my-4 px-5">
+    <div className="controls my-2 px-5">
       <div className="form-check px-5">
         <input
           className="form-check-input"

@@ -179,7 +179,7 @@ const TableContainer = ({
                   onClick={handleUserClicks}
                 >
                   
-                  Add New Rol
+                  Add New Role
                 </Button>
               </Link>
             </div>

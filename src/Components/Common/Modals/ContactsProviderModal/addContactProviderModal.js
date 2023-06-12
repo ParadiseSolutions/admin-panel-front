@@ -116,7 +116,7 @@ const AddContactProviderModal = ({ addContactModal, setAddContactModal, onClickN
           </span>
         </button>
       </div>
-      <div className="modal-body">
+      <div className="modal-body p-4">
         <Form
           onSubmit={(e) => {
             e.preventDefault();
