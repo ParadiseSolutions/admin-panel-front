@@ -28,7 +28,7 @@ const MembersChecked = ({ user, membersIds, setMembersIds }) => {
     }
   };
   return (
-    <div className="controls my-4 mx-5 px-5">
+    <div className="controls my-2 mx-5 px-5">
       <div className="form-check px-5">
         <input
           className="form-check-input"

@@ -282,8 +282,8 @@ const SocialMedia = ({socialData, id}) => {
                 <Col className=" d-flex justify-content-end">
                   <Button
                     type="submit"
-                    style={{ backgroundColor: "#F6851F", border: "none" }}
-                    className="waves-effect waves-light mb-3 btn btn-success"
+                    
+                    className="waves-effect waves-light mb-3 btn btn-orange"
                   >
                     <i className="mdi mdi-plus me-1" />
                     Save Changes

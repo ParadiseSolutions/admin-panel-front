@@ -16,6 +16,7 @@ import {
   Input,
   FormFeedback,
   Form,
+  CardHeader,
 } from "reactstrap";
 // Formik validation
 import * as Yup from "yup";
@@ -121,10 +122,10 @@ const NewRol = ({ history }) => {
   return (
     <>
       <div className="page-content">
-        <Container fluid>
-          <div className=" mx-5">
-            <h1 className="display-5 fw-bold" style={{ color: "#3DC7F4" }}>
-              + ADD NEW ROL
+        <Container fluid className="px-5">
+          <div className="">
+            <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
+              + ADD NEW ROLE
             </h1>
           </div>
           <Form
@@ -135,18 +136,17 @@ const NewRol = ({ history }) => {
             }}
             className="custom-validation"
           >
-            <Row>
-              <Col className="col-12 mx-5">
-                <Row>
-                  <Col lg={3}>
-                    <Card>
-                    <CardBody className="d-grid px-2 pt-0">
-                    <Row className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3">
-                          
-                          <h5 className="text-white col-8">+ General Information</h5>
-                        <img src={Inter1} alt='inter1' style={{width: '100px', marginTop:'-15px', marginRight:'-10px'}} />
-                        </Row>
-                        <Row className="justify-content-center mt-4">
+            <Row className="g-5">
+              
+                  <Col lg={4}>
+                    <Card className="mb-5">
+                    <CardHeader className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3">                          
+                          <h5 className="text-white">+ General Information</h5>
+                        <img src={Inter1} alt='inter1' style={{width: '100px', marginTop:'-15px', marginRight:'-20px'}} />
+                    </CardHeader>
+                    <CardBody className="d-grid p-5">
+                    
+                        <Row className="justify-content-center">
                           <div className="form-outline mb-4">
                             <Label className="form-label">Name</Label>
                             <Input
@@ -180,7 +180,7 @@ const NewRol = ({ history }) => {
                               className="waves-effect waves-light"
                             >
                               <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Rol
+                              Create New Role
                             </Button>
                           </>
                         ) : (
@@ -192,7 +192,7 @@ const NewRol = ({ history }) => {
                               // onClick={toggleCategory}
                             >
                               <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Rol
+                              Create New Role
                             </Button>
                           </>
                         )}
@@ -202,19 +202,15 @@ const NewRol = ({ history }) => {
                       <img
                         src={BoatImage}
                         alt="boat"
-                        style={{
-                          width: "103%",
-                          height: "363px",
-                          marginLeft: "-5px",
-                        }}
+                        className="w-100"
                       />
                     </div>
                   </Col>
-                  <Col lg={4}>
-                  <Card style={{ height: "65vh" }} className='px-2 pt-0'>
-                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                  <Col lg={4} className="d-flex align-items-stretch">
+                  <Card style={{ maxHeight: "87vh" }} className="border-0">
+                    <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow">
                           <h5 className="text-white">+ Select Members</h5>
-                        </Row>
+                    </CardHeader>
                       <CardBody className="overflow-auto">
                         <Row className="justify-content-center mt-4">
                           {dataUsers ? (
@@ -223,7 +219,7 @@ const NewRol = ({ history }) => {
                                 return (
                                   <div
                                     key={index}
-                                    className="controls my-4 mx-5 px-5"
+                                    className="controls my-2 mx-5 px-5"
                                   >
                                     <div className="form-check px-5">
                                       <input
@@ -246,8 +242,8 @@ const NewRol = ({ history }) => {
                       </CardBody>
                     </Card>
                   </Col>
-                  <Col lg={4}>
-                  <Card style={{ height: "65vh" }} className='px-2 pt-0'>
+                  <Col lg={4} className="d-flex align-items-stretch">
+                  <Card className='px-2 pt-0'>
                     <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
                           <h5 className="text-white">+ Select Actions</h5>
                         </Row>
@@ -259,7 +255,7 @@ const NewRol = ({ history }) => {
                                 return (
                                   <div
                                     key={index}
-                                    className="controls my-4 mx-5 px-5"
+                                    className="controls my-2 mx-5 px-5"
                                   >
                                     <div className="form-check px-5">
                                       <input
@@ -283,8 +279,7 @@ const NewRol = ({ history }) => {
                     </Card>
                   </Col>
                  
-                </Row>
-              </Col>
+                
             </Row>
           </Form>
         </Container>

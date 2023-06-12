@@ -154,8 +154,8 @@ const EditDepartment = ({ history }) => {
   });
   return (
     <>
-      <div className="page-content">
-        <Container fluid>
+      <div className="page-content px-0">
+        <Container fluid className="px-5">
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -172,37 +172,39 @@ const EditDepartment = ({ history }) => {
                 EDIT DEPARTMENT
               </h1>
             </div>
-            <Col sm="12" className="d-flex justify-content-end">
-              <div className="text-sm-end mx-2">
-                <Button
-                  color="paradise"
-                  outline
-                  type="button"
-                  className="waves-effect waves-light"
-                  onClick={() => history.goBack()}
-                >
-                  <i className="uil-angle-double-left" />
-                  Back
-                </Button>
-              </div>
-              <div className="text-sm-end">
-                <Button
-                  type="submit"
-                  style={{ backgroundColor: "#F6851F", borderColor: "#F6851F" }}
-                  className="waves-effect waves-light mb-3 btn btn-success"
-                  // onClick={() => onClickNewContactProvider()}
-                >
-                  <i className="mdi mdi-plus me-1" />
-                  Edit Department
-                </Button>
-              </div>
-            </Col>
-
             <Row>
-              <Col className="col-12 mx-5">
-                <Row className="d-flex justify-content-between">
-                  <Col lg={3}>
-                    <Card>
+              <Col className="col-12 d-flex justify-content-end">
+                <div className="text-sm-end mx-2">
+                  <Button
+                    color="paradise"
+                    outline
+                    type="button"
+                    className="waves-effect waves-light"
+                    onClick={() => history.goBack()}
+                  >
+                    <i className="uil-angle-double-left" />
+                    Back
+                  </Button>
+                </div>
+                <div className="text-sm-end">
+                  <Button
+                    type="submit"
+                    
+                    className="waves-effect waves-light mb-3 btn btn-orange"
+                    // onClick={() => onClickNewContactProvider()}
+                  >
+                    <i className="mdi mdi-plus me-1" />
+                    Edit Department
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+            
+
+            <Row className="g-5">
+              
+                  <Col lg={4}>
+                    <Card className="mb-5">
                       <CardBody className="d-grid px-2 pt-0">
                         <Row
                           className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3"
@@ -267,16 +269,12 @@ const EditDepartment = ({ history }) => {
                       <img
                         src={BoatImage}
                         alt="boat"
-                        style={{
-                          width: "103%",
-                          height: "400px",
-                          marginLeft: "-5px",
-                        }}
+                        className="w-100"
                       />
                     </div>
                   </Col>
-                  <Col lg={4}>
-                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
+                  <Col lg={4} className="d-flex align-items-stretch">
+                    <Card style={{ maxHeight: "87vh" }} className="px-2 pt-0">
                       <Row
                         className="justify-content-center bg-paradise pt-3 pb-2 shadow"
                         style={{ paddingLeft: "20px" }}
@@ -303,8 +301,8 @@ const EditDepartment = ({ history }) => {
                       </CardBody>
                     </Card>
                   </Col>
-                  <Col lg={4}>
-                    <Card style={{ height: "75vh" }} className="px-2 pt-0">
+                  <Col lg={4} className="d-flex align-items-stretch">
+                    <Card className="px-2 pt-0">
                       <Row
                         className="justify-content-center bg-paradise pt-3 pb-2 shadow"
                         style={{ paddingLeft: "20px" }}
@@ -318,7 +316,7 @@ const EditDepartment = ({ history }) => {
                               <>
                                 {map(dataModules, (module, index) => {
                                   return (
-                                    <div key={index} className=" my-4 col-5 ">
+                                    <div key={index} className=" my-2 col-5 ">
                                       <PermissionsChecked
                                         key={index}
                                         module={module}
@@ -335,8 +333,7 @@ const EditDepartment = ({ history }) => {
                       </CardBody>
                     </Card>
                   </Col>
-                </Row>
-              </Col>
+                
             </Row>
           </Form>
         </Container>

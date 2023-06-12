@@ -59,10 +59,9 @@ const AddonsTables = ({
   };
   return (
     <Fragment>
-
-      
+      <Row>
       {addonsTable && (
-        <Col sm="12" className="">
+        <Col sm="12">
           <div className="text-sm-end">
             <Button
               type="button"
@@ -117,13 +116,17 @@ const AddonsTables = ({
           </Table>
         </div>
       )}
+      </Row>
+      
+      
 
       <Row className="justify-content-md-end justify-content-center align-items-center">
         <Col className="col-md-auto">
-          <div className="d-flex gap-1">
+          
+        <div className="d-flex btn-group" role="group">
             <Button
               // color="info"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
+              className="btn-orange"
               onClick={() => gotoPage(0)}
               disabled={!canPreviousPage}
             >
@@ -131,35 +134,33 @@ const AddonsTables = ({
             </Button>
             <Button
               // color="primary"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
+              className="btn-orange"
               onClick={previousPage}
               disabled={!canPreviousPage}
             >
               {"<"}
             </Button>
-          </div>
-        </Col>
-        <Col className="col-md-auto d-none d-md-block">
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>
-        </Col>
-        <Col className="col-md-auto">
+          <div className="d-flex justify-content-center align-items-center input-group">
+        
+          <div className="input-group-text rounded-0 border-start-0">
+                  Page{" "}
+                  <strong>
+                    {pageIndex + 1} of {pageOptions.length}
+                  </strong>
+                </div>
+        
           <Input
             type="number"
             min={1}
-            style={{ width: 70 }}
+            className="text-center input-group-text bg-white rounded-0"
             max={pageOptions.length}
             defaultValue={pageIndex + 1}
             onChange={onChangeInInput}
           />
-        </Col>
-
-        <Col className="col-md-auto">
-          <div className="d-flex gap-1">
+          </div>
+          
             <Button
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
+              className="btn-orange"
               onClick={nextPage}
               disabled={!canNextPage}
             >
@@ -167,7 +168,7 @@ const AddonsTables = ({
             </Button>
             <Button
               // color="primary"
-              style={{ backgroundColor: "#3DC7F4", border: "none" }}
+              className="btn-orange"
               onClick={() => gotoPage(pageCount - 1)}
               disabled={!canNextPage}
             >

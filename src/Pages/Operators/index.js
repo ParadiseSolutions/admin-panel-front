@@ -106,7 +106,7 @@ const Operators = () => {
             <div className="d-flex gap-3">
               <Link to={`/operators/${providersData.id}  `}>
                 <div className="text-success">
-                  <i className="mdi mdi-pencil-outline font-size-18" id="edittooltip" />
+                  <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" />
                   <UncontrolledTooltip placement="top" target="edittooltip">
                     Edit
                   </UncontrolledTooltip>
