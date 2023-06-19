@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LoginImage from "../../../Components/Assets/images/adventure-bg-hub.jpg";
 import Alpaca from "../../../Components/Assets/images/alpaca.png";
-import ParadiseLogo from "../../../Components/Assets/images/paradise-logo.png";
+import ParadiseLogo from "../../../Components/Assets/images/paradise-logo-color.png";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { ForgotPasswordAction } from "../../../Utils/Redux/Actions/ForgotPassword";
 import { Label, Input, FormFeedback, Form } from "reactstrap";
@@ -45,11 +45,12 @@ const ForgotPassword = () => {
     },
   });
   return (
-    <section className="vh-100">
-      <div className="container-fluid">
-        <div className="row align-items-center">
-          <div className="col-6">
-
+    <div className="container-fluid" style={{overflowY:'auto'}}>
+    <section className="row vh-100">
+      
+        
+          <div className="col-6 d-flex align-items-center">
+          <div className="w-100 py-5">
             <div
               style={{
                 position: "absolute",
@@ -61,33 +62,25 @@ const ForgotPassword = () => {
                 src={Alpaca}
                 class="rounded"
                 alt="alpaca"
-                style={{ position: "relative", zIndex: "1" }}
+                style={{ position: "relative", zIndex: "0" }}
               />
             </div>
-            <div className="row justify-content-end col-12" style={{marginLeft: '-110px'}}>
-              <div className="col-8" >
-                <span
-                  className="h1 fw-bold mb-0 mx-5"
-                  style={{ color: "#3DC7F4", fontSize: "130px" }}
-                >
+            
+              
+                <h1 className="fw-bold mx-5 text-paradise text-center mb-2" style={{fontSize:"7rem"}}>
                   Uh-Oh!
-                </span>
-              </div>
-            </div>
-            <div className="row justify-content-center">
-              <div className="col-6">
-                <span
-                  className="h1 mb-0 fw-bold"
-                  style={{ color: "#74788D", fontSize: "22px", paddingLeft:'28px' }}
+                </h1>
+                <h2
+                  className="mb-0 fw-bold text-center fs-4"
+                  style={{ color: "#74788D" }}
                 >
                   Looks like someone forgot their password.
-                </span>
-              </div>
-            </div>
+                </h2>
+              
 
             <div className="row justify-content-center">
-              <div className="col-7 mt-3">
-                <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+              <div className="col-7 col-xxl-5 mt-3">
+                <div className="">
                   <Form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -96,8 +89,7 @@ const ForgotPassword = () => {
                     }}
                     className="custom-validation"
                   >
-                    <div className="row justify-content-center mb-4">
-                      <div className="col-5">
+                    
                         <p
                           style={{
                             color: "#74788D",
@@ -105,33 +97,34 @@ const ForgotPassword = () => {
                             marginLeft: "8px",
                             fontWeight:'bold'
                           }}
+                          className="text-center"
                         >
                           Reset Password
                         </p>
-                      </div>
+                      
 
-                      <div className="col-12">
+                      
                         <div
-                          className="form-control"
+                          className="rounded rounded-2 p-3"
                           style={{
-                            backgroundColor: "#C7E3EB",
+                            backgroundColor: "#d9f7ff",
                             border: "none",
+                            marginBottom: "1rem"
                           }}
                         >
+                          <p className="fw-bold mb-1"><i class="far fa-lightbulb"></i> Info:</p>
                           <p
                             style={{
-                              padding: "5px",
-                              marginBottom: 0,
-                              marginLeft: "1rem",
+                              
+                              marginBottom: 0,                              
                               color: "#2986A4",
                             }}
                           >
-                            Enter your Email and instructions will be sent to
-                            you!
+                            Write your email below and instructions will be sent to
+                            your inbox!
                           </p>
                         </div>
-                      </div>
-                    </div>
+                      
 
                     <div className="form-outline mb-4">
                       <Label className="form-label">Email</Label>
@@ -178,10 +171,9 @@ const ForgotPassword = () => {
                         </p>
                       </div>
                     ) : null}
-                    <div className="mt-5 row justify-content-center">
-                      <div className="col-5" style={{ marginLeft: "1rem" }}>
-                        <p style={{ fontSize: "14.4px" }}>
-                          Remember It ?{" "}
+                    
+                        <p className="text-center mt-4" style={{ fontSize: "14.4px" }}>
+                          Remember It?{" "}
                           <a
                             href="/login"
                             style={{ fontSize: "14.4px" }}
@@ -190,18 +182,17 @@ const ForgotPassword = () => {
                             Sign in
                           </a>
                         </p>
-                      </div>
-                    </div>
+                      
                    
                     <div className=" row justify-content-center">
                       <div
                         className="col-4 mt-2"
-                        style={{ marginLeft: "1rem" }}
+                        
                       >
                         <img
                           src={ParadiseLogo}
                           alt="logo"
-                          style={{ width: "100px" }}
+                          className="img-fluid"
                         />
                       </div>
                     </div>
@@ -209,8 +200,9 @@ const ForgotPassword = () => {
                 </div>
               </div>
             </div>
+            </div>
           </div>
-          <div className="col-sm-6 px-0 d-none d-sm-block">
+          <div className="col-6 d-flex justify-content-center" style={{backgroundImage:'url(' + LoginImage + ')',backgroundSize:'cover', backgroundRepeat:'no-repeat', backgroundPosition:'center'}}>
             {custom_div1 ? (
               <SweetAlert
                 title="Please check your email for further instructions."
@@ -227,16 +219,12 @@ const ForgotPassword = () => {
               ></SweetAlert>
             ) : null}
 
-            <img
-              src={LoginImage}
-              alt="LoginImage"
-              className="w-100 vh-100"
-              style={{ objectFit: "cover", objectPosition: "left" }}
-            />
+            
           </div>
-        </div>
-      </div>
+        
+      
     </section>
+    </div>
   );
 };
 
