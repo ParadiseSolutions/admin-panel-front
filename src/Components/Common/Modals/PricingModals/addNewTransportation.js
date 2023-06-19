@@ -177,15 +177,15 @@ const AddNewTransportation = ({
         ? dataEdit.pricedetails[5]?.source_id
         : null):priceDirectionSelected
 
-      let vehicle = (priceVehicleSelected == '' || priceVehicleSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[6]?.source_id
-        : null):priceVehicleSelected
-
-      let price_zone = (priceZoneSelected == '' || priceZoneSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[7]?.source_id
-        : null):priceZoneSelected  
+        let vehicle = (priceVehicleSelected == '' || priceVehicleSelected === undefined)?(dataEdit && dataEdit.pricedetails
+          ? (dataEdit.pricedetails[6]?.source_id === undefined?null:dataEdit.pricedetails[6]?.source_id)
+          : null):priceVehicleSelected
+  
+        let price_zone = (priceZoneSelected == '' || priceZoneSelected === undefined)?(dataEdit && dataEdit.pricedetails
+          ? (dataEdit.pricedetails[7]?.source_id === undefined?null:dataEdit.pricedetails[7]?.source_id)
+          : null):priceZoneSelected 
       
-      if(price_type && price_option && price_collect && transfer_type && direction && price_zone) {
+      if(price_type && price_option && price_collect && transfer_type && direction) {
         let data = {
           tour_id: tourData.id,
           sku: tourData.sku,
