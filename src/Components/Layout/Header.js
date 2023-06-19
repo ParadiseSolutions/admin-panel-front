@@ -44,7 +44,7 @@ const Header = () => {
           // // style={{ backgroundColor: "#3DC7F4", width: "100%" }}
         >
           <div className="d-flex">
-            <div className="navbar-brand-box">
+            <div className="navbar-brand-box" style={{backgroundColor:"#3DC7F4"}}>
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
                   <img src={logoSm} alt="" height="40" />
