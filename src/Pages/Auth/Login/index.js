@@ -1,6 +1,6 @@
 import { useState } from "react";
 import LoginImage from "../../../Components/Assets/images/adventure-bg-hub.jpg";
-import ParadiseLogo from "../../../Components/Assets/images/paradise-logo.png";
+import ParadiseLogo from "../../../Components/Assets/images/paradise-logo-color.png";
 import { LoginData } from "../../../Utils/Redux/Actions/LoginActions";
 import { createStorageSync } from "../../../Utils/API";
 import { useHistory } from "react-router-dom";
@@ -205,7 +205,13 @@ const Login = () => {
             </div>
             
           </div>
-          <div className="col-6 d-flex justify-content-center" style={{backgroundImage:'url(' + LoginImage + ')',backgroundSize:'contain', backgroundRepeat:'no-repeat'}}>
+          <div 
+            className="col-6 d-flex justify-content-center" 
+            style={{backgroundImage:'url(' + LoginImage + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'center'}}
+          >
             
           
           </div>

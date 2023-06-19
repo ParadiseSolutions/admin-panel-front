@@ -101,7 +101,7 @@ const Sidebar = () => {
         >
           <Link to="/dashboard" className="logo logo-dark">
             <span className="logo-sm">
-              <img src={logoSm} alt="" height="22" />
+              <img src={logoSm} alt="" height="42" />
             </span>
             <span className="logo-lg">
               <img src={paradiseLogo} alt="" height="70" style={{marginLeft: '50px', marginTop: '5px'}} />

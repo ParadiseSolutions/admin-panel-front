@@ -44,10 +44,10 @@ const Header = () => {
           // // style={{ backgroundColor: "#3DC7F4", width: "100%" }}
         >
           <div className="d-flex">
-            <div className="navbar-brand-box">
+            <div className="navbar-brand-box" style={{backgroundColor:"#3DC7F4"}}>
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={logoSm} alt="" height="22" />
+                  <img src={logoSm} alt="" height="40" />
                 </span>
                 <span className="logo-lg">
                   <img src={logoDark} alt="" height="20" />
@@ -56,7 +56,7 @@ const Header = () => {
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logoSm} alt="" height="22" />
+                  <img src={logoSm} alt="" height="40" />
                 </span>
                 <span className="logo-lg">
                   <img src={logoLight} alt="" height="20" />

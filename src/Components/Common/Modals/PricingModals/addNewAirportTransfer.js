@@ -177,14 +177,14 @@ const AddNewAirportTransfer = ({
         : null):priceDirectionSelected
 
       let vehicle = (priceVehicleSelected == '' || priceVehicleSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[6]?.source_id
+        ? (dataEdit.pricedetails[6]?.source_id === undefined?null:dataEdit.pricedetails[6]?.source_id)
         : null):priceVehicleSelected
 
       let price_zone = (priceZoneSelected == '' || priceZoneSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[7]?.source_id
+        ? (dataEdit.pricedetails[7]?.source_id === undefined?null:dataEdit.pricedetails[7]?.source_id)
         : null):priceZoneSelected  
 
-      if(price_type && price_option && price_collect && transfer_type && direction && price_zone) {
+      if(price_type && price_option && price_collect && transfer_type && direction) {
         let data = {
           tour_id: tourData.id,
           sku: tourData.sku,
@@ -695,7 +695,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Zone Name*</Label>
+                    <Label className="form-label">Zone Name</Label>
                     <Input
                       type="select"
                       name=""
