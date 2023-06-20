@@ -43,7 +43,8 @@ const SocialMedia = ({socialData, id}) => {
       youtube: initialData && initialData[2]?.url ? initialData[2].url : '',
       twitter: initialData && initialData[3]?.url ? initialData[3].url : '',
       trip_advisor: initialData && initialData[4]?.url ? initialData[4].url : '',
-      yelp: initialData && initialData[5]?.url ? initialData[5].url : ''
+      yelp: initialData && initialData[5]?.url ? initialData[5].url : '',
+      others: initialData && initialData[6]?.url ? initialData[6].url : ''
       
     },
     validationSchema: Yup.object().shape({
@@ -58,6 +59,7 @@ const SocialMedia = ({socialData, id}) => {
         twitter: values.twitter ? values.instagram : '',
         trip_advisor: values.trip_advisor ? values.trip_advisor : '',
         yelp: values.yelp ? values.yelp : '',
+        others: values.others ? values.others : '',
         foreign_key: id
         };
     //  console.log(data)
@@ -277,13 +279,41 @@ const SocialMedia = ({socialData, id}) => {
                 </Col>
                 
               </Row>
+              <Row>
+                <Col className="col-6">
+                  <div className="form-outline mb-2">
+                    <Label className="form-label">Others</Label>
+                    <Input
+                      name="others"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.others || ""}
+                      invalid={
+                        validationType.touched.others &&
+                        validationType.errors.others
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.others &&
+                    validationType.errors.others ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.others}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+                
+              </Row>
               
               <Row>
                 <Col className=" d-flex justify-content-end">
                   <Button
                     type="submit"
-                    style={{ backgroundColor: "#F6851F", border: "none" }}
-                    className="waves-effect waves-light mb-3 btn btn-success"
+                    
+                    className="waves-effect waves-light mb-3 btn btn-orange"
                   >
                     <i className="mdi mdi-plus me-1" />
                     Save Changes

@@ -15,7 +15,7 @@ import {
   deleteAddonAPI,
 } from "../../../Utils/API/Tours";
 
-import { TabPane, Row, Button, UncontrolledTooltip } from "reactstrap";
+import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
 
 import { Name, Code, Members, Price } from "./PricingTables/DepartmentsCols";
 
@@ -238,15 +238,15 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           />
         ) : null}
       </Row>
-      <Row xl={12}>
-        <Row
+      <Row>
+        <Col
           className="col-12 d-flex justify-content-end mt-5"
-          style={{ paddingRight: "30px" }}
+          
         >
           <Button
             color="paradise"
             outline
-            className="waves-effect waves-light col-2 mx-4"
+            className="waves-effect waves-light mx-4"
             type="button"
             onClick={() => toggle('5')}
           >
@@ -254,15 +254,15 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
             Back
           </Button>
           <Button
-            style={{ backgroundColor: "#F6851F" }}
+            
             type="submit"
-            className="font-16 btn-block col-2"
+            className="font-16 btn-block btn-orange"
             onClick={() => toggle('7')}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />
           </Button>
-        </Row>
+        </Col>
       </Row>
       <AddNewProductPricing
         addNewProduct={addNewProduct}

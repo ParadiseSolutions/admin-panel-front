@@ -88,7 +88,7 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
           </span>
         </button>
       </div>
-      <div className="modal-body">
+      <div className="modal-body py-5 pe-5">
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -98,15 +98,17 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
           className="custom-validation"
         >
           <Row>
-            <Col className="col-4 p-5">
-
+            <Col className="col-4 d-flex justify-content-center">
+            <div className="p-1">
             <img
-                  className="rounded-circle"
+                  className="rounded-circle img-fluid border border-5 border-paradise"
                   src={user4}
                   alt="Header Avatar"
                 />
+            </div>
+            
             </Col>
-            <Col className=" p-5">
+            <Col>
               <Row>
                 <Col className="col-6">
                   <div className="form-outline mb-4">
@@ -236,9 +238,8 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
               <Row>
                 <Col className="mt-2 d-flex justify-content-end">
                   <Button
-                    type="submit"
-                    style={{ backgroundColor: "#F6851F", border: "none" }}
-                    className="waves-effect waves-light mb-3 btn btn-success"
+                    type="submit"                    
+                    className="waves-effect waves-light mb-3 btn btn-success btn-orange"
                   >
                     <i className="mdi mdi-plus me-1" />
                     Save Changes

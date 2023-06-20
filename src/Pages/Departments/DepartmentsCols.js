@@ -88,7 +88,7 @@ const Active = (cell) => {
               >
                 Oops...
               </ToastHeader>
-              <ToastBody>Something goes wrong try again later!!!</ToastBody>
+              <ToastBody>Something went wrong. Please, try again later.</ToastBody>
             </Toast>;
           }, 5000);
         });

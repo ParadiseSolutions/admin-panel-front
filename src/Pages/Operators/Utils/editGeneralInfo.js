@@ -271,6 +271,7 @@ const EditGeneralInformation = ({ data }) => {
                   <div className="form-outline mb-2">
                     <Label className="form-label">2-Digit Code</Label>
                     <Input
+                      disabled="true"
                       name="code"
                       placeholder=""
                       type="text"

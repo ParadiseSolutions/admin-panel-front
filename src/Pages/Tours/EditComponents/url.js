@@ -351,9 +351,9 @@ const URL = ({ tourData, toggle }) => {
           <Col>
             <Col className=" d-flex justify-content-end mt-4">
               <Button
-                style={{ backgroundColor: "#F6851F", marginTop: "13px" }}
+                style={{ marginTop: "13px" }}
                 type="submit"
-                className="font-16 btn-block col"
+                className="font-16 btn-block btn-orange col"
                 // onClick={toggleCategory}
               >
                 + Add URL
@@ -367,14 +367,14 @@ const URL = ({ tourData, toggle }) => {
           <TableContainer columns={columns} data={data} URLTourTable={true} />
         ) : null}
       </Row>
-      <Row
+      <Col
               className="col-12 d-flex justify-content-end mt-5"
               style={{ paddingRight: "30px" }}
             >
               <Button
                 color="paradise"
                 outline
-                className="waves-effect waves-light col-2 mx-4"
+                className="waves-effect waves-light me-3"
                 type="button"
                 onClick={() => toggle('3')}
               >
@@ -382,15 +382,15 @@ const URL = ({ tourData, toggle }) => {
                 Back
               </Button>
               <Button
-                style={{ backgroundColor: "#F6851F" }}
+                
                 type="button"
-                className="font-16 btn-block col-2"
+                className="font-16 btn-block btn-orange"
                 onClick={() => toggle('5')}
               >
                 Continue
                 <i className="uil-angle-double-right mx-1 " />
               </Button>
-            </Row>
+            </Col>
     </Row>
   );
 };

@@ -91,7 +91,7 @@ const TourTypes = () => {
 					  setTourTypesId(tourTypeData.id);
 					}}
 				  >
-					<i className="mdi mdi-pencil-outline font-size-18" id="edittooltip" />
+					<i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" />
 					<UncontrolledTooltip placement="top" target="edittooltip">
 					  Edit
 					</UncontrolledTooltip>

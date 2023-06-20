@@ -104,7 +104,7 @@ const PaymentTypes = () => {
               
               <div className="text-success">
                 <i
-                  className="mdi mdi-pencil-outline font-size-18"
+                  className="mdi mdi-pencil-outline font-size-18 text-paradise"
                   id="edittooltip"
                   
                 />

@@ -268,7 +268,7 @@ const AddNewPrivateTour = ({
           </span>
         </button>
       </div>
-      <div className="modal-body">
+      <div className="modal-body p-4">
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -277,16 +277,16 @@ const AddNewPrivateTour = ({
           }}
           className="custom-validation"
         >
-          <Row xl={12} className="d-flex">
+          <Row className="g-4">
             <Col className="col-3">
               <img
                 src={PrivateTourImage}
                 alt="new-product"
-                style={{ height: "590px", width: "260px" }}
+                className="img-fluid"
               />
             </Col>
             <Col className="col-9">
-              <Row className="col-12 d-flex">
+              <Row className="d-flex">
                 <Col className="col-9">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Product Name</Label>
@@ -312,9 +312,9 @@ const AddNewPrivateTour = ({
                   </div>
                 </Col>
               </Row>
-              <Row className="d-flex">
-                <Col className="col-9 d-flex justify-content-between">
-                  <Col className="col-2">
+              <Row className="d-flex mb-4">
+                
+                  <Col className="col">
                     <div className="form-outline">
                       <Label className="form-label">Price Type*</Label>
                       <Input
@@ -346,7 +346,7 @@ const AddNewPrivateTour = ({
                       </Input>
                     </div>
                   </Col>
-                  <Col className="col-2">
+                  <Col className="col">
                     <div className="form-outline">
                       <Label className="form-label">Price Option*</Label>
                       <Input
@@ -378,7 +378,7 @@ const AddNewPrivateTour = ({
                       </Input>
                     </div>
                   </Col>
-                  <Col className="col-2">
+                  <Col className="col">
                     <div className="form-outline">
                       <Label className="form-label">Collect*</Label>
                       <Input
@@ -410,11 +410,12 @@ const AddNewPrivateTour = ({
                       </Input>
                     </div>
                   </Col>
-                  <Col className="col-2">
-                    {tourData?.seasonality === 1 ? (
+                  {tourData?.seasonality === 1 ? (
+                  <Col className="col">
+                    
                       <div
                         className="form-outline"
-                        style={{ marginRight: "20px", marginLeft: "-20px" }}
+                        
                       >
                         <Label className="form-label">Season*</Label>
                         <Input
@@ -445,13 +446,14 @@ const AddNewPrivateTour = ({
                           })}
                         </Input>
                       </div>
-                    ) : null}
+                    
                   </Col>
-                </Col>
+                  ) : null}
+                
                 <Col className="col-3 d-flex justify-content-between">
-                  <Col className="col-6">
+                  <div className="d-flex flex-column align-items-center w-50">
                     <Label className="form-label mt-2">Active</Label>
-                    <div className="form-check form-switch form-switch-md mx-2">
+                    <div className="form-check form-switch form-switch-md">
                     <Input
                           name="active"
                           placeholder=""
@@ -475,10 +477,10 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                  </Col>
-                  <Col className="col-6">
+                  </div>
+                  <div className="d-flex flex-column align-items-center w-50">
                     <Label className="form-label mt-2">Balance Due</Label>
-                    <div className="form-check form-switch form-switch-md mx-4">
+                    <div className="form-check form-switch form-switch-md">
                     <Input
                           name="balance_checkbox"
                           placeholder=""
@@ -502,16 +504,16 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                  </Col>
+                  </div>
                 </Col>
               </Row>
 
-              <Row
+              <Col
                 className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#E9F4FF" }}
               >
                 <p
-                  className="py-2"
+                  className="p-2"
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -521,8 +523,8 @@ const AddNewPrivateTour = ({
                 >
                   Provider Pricing
                 </p>
-              </Row>
-              <Row className="col-12 d-flex">
+              </Col>
+              <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Public Price</Label>
@@ -649,12 +651,12 @@ const AddNewPrivateTour = ({
                   </div>
                 </Col>
               </Row>
-              <Row
+              <Col
                 className="col-12 p-1 my-2"
                 style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
-                  className="py-2"
+                  className="p-2"
                   style={{
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -664,8 +666,8 @@ const AddNewPrivateTour = ({
                 >
                   Our Pricing
                 </p>
-              </Row>
-              <Row className="col-12 d-flex">
+              </Col>
+              <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Ship Price</Label>
@@ -767,7 +769,7 @@ const AddNewPrivateTour = ({
                   </div>
                 </Col>
               </Row>
-              <Row className="col-12 d-flex">
+              <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Eff. Rate</Label>
@@ -869,29 +871,29 @@ const AddNewPrivateTour = ({
                   </div>
                 </Col>
               </Row>
-              <Row xl={12}>
-                <Row
+              <Row>
+                <Col
                   className="col-12 d-flex justify-content-end mt-4"
-                  style={{ paddingRight: "30px" }}
+                  
                 >
                   <Button
                     color="paradise"
                     outline
-                    className="waves-effect waves-light col-2 mx-4"
+                    className="waves-effect waves-light col-2 me-4"
                     type="button"
                     onClick={() => setAddNewPrivateTour(false)}
                   >
                     Close
                   </Button>
                   <Button
-                    style={{ backgroundColor: "#F6851F" }}
+                    
                     type="submit"
-                    className="font-16 btn-block col-2"
+                    className="font-16 btn-block col-2 btn-orange"
                     // onClick={toggleCategory}
                   >
                     Save
                   </Button>
-                </Row>
+                </Col>
               </Row>
             </Col>
           </Row>

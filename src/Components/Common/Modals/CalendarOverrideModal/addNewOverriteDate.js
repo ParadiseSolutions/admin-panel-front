@@ -123,7 +123,7 @@ const AddNewOverriteDate = ({
         {
           //modal body
         }
-        <div className="modal-body">
+        <div className="modal-body p-4">
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -132,18 +132,18 @@ const AddNewOverriteDate = ({
             }}
             className="custom-validation"
           >
-            <Row>
-              <Col className="col-6 ">
+            <Row className="g-5">
+              <Col className="col-5 ">
                 <img
                   src={OverriteDateImg}
                   alt="overrite"
-                  style={{ width: "350px", height: "370px" }}
+                  className="img-fluid"
                 />
               </Col>
-              <Col className="col-6">
-                <Row>
+              <Col className="col-7">
+                <Row className="mb-3">
                   <Col className="col-6">
-                    <div className="form-outline mb-4">
+                    <div className="form-outline">
                       <Label className="form-label">Type</Label>
                       <Input
                         type="select"
@@ -169,7 +169,7 @@ const AddNewOverriteDate = ({
                     </div>
                   </Col>
                   <Col className="col-6">
-                    <div className="form-outline mb-4">
+                    <div className="form-outline">
                       <Label className="form-label">Recurrency</Label>
                       <Input
                         type="select"
@@ -211,7 +211,7 @@ const AddNewOverriteDate = ({
                 {typeSelected === "1" ? (
                   <Row>
                     <Col className="col-12">
-                      <div className="form-outline my-3">
+                      <div className="form-outline my-4">
                         <div className="d-flex">
                           <div className="input-group">
                             <div className="input-group-text">From</div>
@@ -415,8 +415,8 @@ const AddNewOverriteDate = ({
                   <Col className="col-12 mt-2 d-flex justify-content-end">
                     <Button
                       type="submit"
-                      style={{ backgroundColor: "#F6851F", border: "none" }}
-                      className="waves-effect waves-light btn btn-success"
+                      
+                      className="waves-effect waves-light btn btn-orange"
                     >
                       <i className="mdi mdi-plus me-1" />
                       Submit
