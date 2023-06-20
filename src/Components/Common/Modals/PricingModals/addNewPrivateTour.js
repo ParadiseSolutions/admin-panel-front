@@ -110,7 +110,7 @@ const AddNewPrivateTour = ({
     enableReinitialize: true,
     initialValues: {
       product_name: tourData ? tourData.name : "",
-      sku: tourData ? tourData.sku : "",
+      sku: dataEdit ? dataEdit.sku : "",
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
       rate: dataEdit ? dataEdit.rate : "",
@@ -153,7 +153,6 @@ const AddNewPrivateTour = ({
       if(price_type && price_option && price_collect) {
         let data = {
           tour_id: tourData.id,
-          sku: tourData.sku,
           public: values.public_price,
           provider_price: values.provider_price,
           rate: values.rate,
