@@ -341,7 +341,9 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                             textAlign: "center",
                             color: "#707070",
                             fontWeight: "bold",
-                            fontSize: "20px",
+                            fontSize: "16px",
+                            fontFamily: "Arial, sans-serif",
+                            fontWeight: "700"
                           }}
                           type="text"
                           value={titleExample}
@@ -352,14 +354,19 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                     <Col className="col-12 d-flex justify-content-center">
                       <div className="form-outline mb-2">
                         <Input
-                          name="Instruction_title"
+                          name="instruction_description"
                           placeholder=""
                           style={{
-                            width: "425px",
-                            height: "115px",
+                            width: "470px",
+                            height: "90px",
                             border: "1px solid #3CC6F380",
                             borderRadius: "4px",
-                            textAlign: "start",
+                            textAlign: "center",
+                            fontFamily: "Arial, sans-serif",
+                            fontSize: "13px",
+                            fontWeight: "400",
+                            lineHeight: "17px",
+                            padding: "16px 24px"
                           }}
                           type="textarea"
                           value={instructionDescriptionExample}
