@@ -1,12 +1,7 @@
 {
   "files": {
-<<<<<<< HEAD
-    "main.css": "/static/css/main.bbaeb4ce.css",
-    "main.js": "/static/js/main.da5d75c5.js",
-=======
-    "main.css": "/static/css/main.a78da12d.css",
-    "main.js": "/static/js/main.9ea9e7e7.js",
->>>>>>> bceebd251d9c7a9e9e6769669c6e7251a4539bb5
+    "main.css": "/static/css/main.ff2d24de.css",
+    "main.js": "/static/js/main.e2816357.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -66,22 +61,12 @@
     "static/media/logo-sm.png": "/static/media/logo-sm.021cb2acd539eec27872.png",
     "index.html": "/index.html",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
-<<<<<<< HEAD
-    "main.bbaeb4ce.css.map": "/static/css/main.bbaeb4ce.css.map",
-    "main.da5d75c5.js.map": "/static/js/main.da5d75c5.js.map",
+    "main.ff2d24de.css.map": "/static/css/main.ff2d24de.css.map",
+    "main.e2816357.js.map": "/static/js/main.e2816357.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.bbaeb4ce.css",
-    "static/js/main.da5d75c5.js"
-=======
-    "main.a78da12d.css.map": "/static/css/main.a78da12d.css.map",
-    "main.9ea9e7e7.js.map": "/static/js/main.9ea9e7e7.js.map",
-    "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
-  },
-  "entrypoints": [
-    "static/css/main.a78da12d.css",
-    "static/js/main.9ea9e7e7.js"
->>>>>>> bceebd251d9c7a9e9e6769669c6e7251a4539bb5
+    "static/css/main.ff2d24de.css",
+    "static/js/main.e2816357.js"
   ]
 }

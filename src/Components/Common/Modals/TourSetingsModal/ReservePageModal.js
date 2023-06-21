@@ -7,7 +7,16 @@ import {
   getTourAPI,
   updateBookingSettings,
 } from "../../../../Utils/API/Tours/setingsTemplate";
-import { Row, Col, Modal, Form, Label, Input, Button } from "reactstrap";
+import {
+  Row,
+  Col,
+  Modal,
+  Form,
+  Label,
+  Input,
+  Button,
+  FormFeedback,
+} from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
@@ -57,7 +66,12 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       // parent_category: "",
     },
     validationSchema: Yup.object().shape({
-      // name: Yup.string().required("Name is required"),
+      description: Yup.string()
+        .required("Description should be max 210 chars")
+        .max(210, "Description should be max 210 chars"),
+      title: Yup.string()
+        .required("Title should be max 50 chars")
+        .max(50, "Title should be max 50 chars"),
       // code: Yup.string().required("Code is required"),
     }),
 
@@ -284,19 +298,33 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <div className="form-outline mb-2 col-10">
                     <Label className="form-label">Instruction Title</Label>
                     <Input
-                      name="Instruction_title"
+                      name="title"
                       placeholder=""
                       type="text"
                       onChange={(e) => setTitleExample(e.target.value)}
                       value={titleExample}
+                      
+                      onBlur={validationType.handleBlur}
+                      invalid={
+                        validationType.touched.title &&
+                        validationType.errors.title
+                          ? true
+                          : false
+                      }
                     />
+                    {validationType.touched.title &&
+                    validationType.errors.title ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.title}
+                      </FormFeedback>
+                    ) : null}
                   </div>
                   <div className="form-outline mb-2 col-10">
                     <Label className="form-label">
                       Instruction Description
                     </Label>
                     <Input
-                      name="instruction_description"
+                      name="description"
                       placeholder=""
                       type="textarea"
                       style={{ height: 200 }}
@@ -304,7 +332,20 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                         setInstructionDescriptionExample(e.target.value)
                       }
                       value={instructionDescriptionExample}
+                      onBlur={validationType.handleBlur}
+                      invalid={
+                        validationType.touched.description &&
+                        validationType.errors.description
+                          ? true
+                          : false
+                      }
                     />
+                    {validationType.touched.description &&
+                    validationType.errors.description ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.description}
+                      </FormFeedback>
+                    ) : null}
                   </div>
                 </Col>
                 <Col>
@@ -319,13 +360,12 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   >
                     <Col className="col-12 m-2" style={{ color: "#495057" }}>
                       <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in
-                        reprehenderit in voluptate velit esse cillum dolore eu
-                        fugiat nulla pariatur.
+                        Please use the small preview of your title and text
+                        shown below as a guide to make sure everything fits in
+                        with the rest of the reserve page settings. This is a
+                        small preview with the actual settings of a Reserve
+                        Page. You have a maximum of 50 characters for the Title
+                        Field and 210 characters for the Text Field.
                       </p>
                     </Col>
                     <Col className="col-12 d-flex justify-content-center">
