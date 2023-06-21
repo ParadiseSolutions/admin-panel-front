@@ -49,7 +49,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       });
   }, []);
 
-  console.log(initialData);
+  // console.log(initialData);
   useEffect(() => {
     if (initialData) {
       setTitleExample(initialData.instructions_title);
@@ -61,21 +61,25 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
   const validationType = useFormik({
     enableReinitialize: true,
     initialValues: {
-      // name: "",
-      // code: "",
-      // parent_category: "",
+      description: "",
+      title: "",
     },
     validationSchema: Yup.object().shape({
-      description: Yup.string()
-        .required("Description should be max 210 chars")
-        .max(210, "Description should be max 210 chars"),
-      title: Yup.string()
-        .required("Title should be max 50 chars")
-        .max(50, "Title should be max 50 chars"),
+      // description: Yup.string().min(1).max(10).required(),
+      // title: Yup.string().min(1).max(10).required()
+      // description: Yup.string()
+      //   .required("Description should be max 210 chars")
+      //   .min(1)
+      //   .max(210, "Description should be max 210 chars"),
+      // title: Yup.string()
+      // .min(1)
+      // .max(50, "Title should be max 50 chars")
+      // .required("Title should be max 50 chars")
       // code: Yup.string().required("Code is required"),
     }),
 
     onSubmit: (values) => {
+      console.log('asdasdasd')
       let data = {
         template_id: templateType,
         instructions_title: titleExample,
@@ -303,21 +307,13 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       type="text"
                       onChange={(e) => setTitleExample(e.target.value)}
                       value={titleExample}
-                      
-                      onBlur={validationType.handleBlur}
-                      invalid={
-                        validationType.touched.title &&
-                        validationType.errors.title
-                          ? true
-                          : false
-                      }
+                      maxLength={50}
                     />
-                    {validationType.touched.title &&
-                    validationType.errors.title ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.title}
-                      </FormFeedback>
-                    ) : null}
+                    
+                      <p style={{fontSize: '12px', fontWeight:'lighter'}}>
+                      * Title should be max 50 chars
+                      </p>
+                   
                   </div>
                   <div className="form-outline mb-2 col-10">
                     <Label className="form-label">
@@ -332,20 +328,11 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                         setInstructionDescriptionExample(e.target.value)
                       }
                       value={instructionDescriptionExample}
-                      onBlur={validationType.handleBlur}
-                      invalid={
-                        validationType.touched.description &&
-                        validationType.errors.description
-                          ? true
-                          : false
-                      }
+                     
                     />
-                    {validationType.touched.description &&
-                    validationType.errors.description ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.description}
-                      </FormFeedback>
-                    ) : null}
+                    <p style={{fontSize: '12px', fontWeight:'lighter'}}>
+                      * Description should be max 210 chars
+                      </p>
                   </div>
                 </Col>
                 <Col>

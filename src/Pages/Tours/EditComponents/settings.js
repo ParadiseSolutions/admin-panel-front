@@ -189,6 +189,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   });
 
   return (
+    <>
     <Form
       onSubmit={(e) => {
         e.preventDefault();
@@ -537,13 +538,15 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           </div>
         </Row>
 
+      </TabPane>
+    </Form>
         <ReservePageModal 
         reserveModal = {reserveModal} 
         setReserveModal = {setReserveModal}
         id={id}
         />
-      </TabPane>
-    </Form>
+    
+    </>
   );
 };
 
