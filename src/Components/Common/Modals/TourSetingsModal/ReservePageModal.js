@@ -328,7 +328,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                         setInstructionDescriptionExample(e.target.value)
                       }
                       value={instructionDescriptionExample}
-                     
+                      maxLength={210}
                     />
                     <p style={{fontSize: '12px', fontWeight:'lighter'}}>
                       * Description should be max 210 chars
