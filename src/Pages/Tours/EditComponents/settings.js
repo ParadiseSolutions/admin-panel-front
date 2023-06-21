@@ -292,55 +292,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         <Row>
           {tourSettings?.website_id !== 3 ? (
             <>
-              <Col className="col-1">
-                <Label className="form-label mt-2">Seasonal Prices</Label>
-                <div className="form-check form-switch form-switch-md mx-4 ">
-                  <Input
-                    name="seasonality"
-                    placeholder=""
-                    type="checkbox"
-                    checked={seasonalPrice}
-                    className="form-check-input"
-                    onChange={() => setSeasonalPrice(!seasonalPrice)}
-                    onBlur={validationType.handleBlur}
-                    value={seasonalPrice}
-                    invalid={
-                      validationType.touched.seasonality &&
-                      validationType.errors.seasonality
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.seasonality &&
-                  validationType.errors.seasonality ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.seasonality}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
-              <Col className="col-3">
-                <div className="form-outline my-2">
-                  <Label className="form-label">Available Seasons</Label>
-
-                  <Select
-                    mode="multiple"
-                    allowClear
-                    style={{ width: "100%", paddingTop: "5px" }}
-                    placeholder="Please select"
-                    defaultValue={initialOptionsArea}
-                    onChange={handleMulti}
-                  >
-                    {map(availableData, (item, index) => {
-                      return (
-                        <Option key={index} value={item.id}>
-                          {item.name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </div>
-              </Col>
+              
             </>
           ) : (
             <>

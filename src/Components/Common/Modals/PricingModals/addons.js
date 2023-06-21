@@ -92,7 +92,7 @@ const Addons = ({
     enableReinitialize: true,
     initialValues: {
       product_name: tourData ? tourData.name : "",
-      sku: tourData ? tourData.sku : "",
+      sku: dataEdit ? dataEdit.sku : "",
       // tour_id: 37,
       match_qty_id: matchQuantitySelected
         ? matchQuantitySelected
