@@ -269,8 +269,16 @@ const AddNewAirportTransfer = ({
             refreshTable();
             resetForm({ values: "" });
           }).catch((error) => {
-            Swal.fire("Error. Please check your info before retry")
-            console.log(error.response)
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
           });
         } else if (copyProduct || dataEdit === undefined || dataEdit == null) {
             postPricesAPI(data).then((resp) => {
@@ -279,8 +287,16 @@ const AddNewAirportTransfer = ({
             refreshTable();
             resetForm({ values: "" });
           }).catch((error) => {
-            Swal.fire("Error. Please check your info before retry")
-            console.log(error.response)
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
           });
         }
       } else {

@@ -19,6 +19,7 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
+import Swal from "sweetalert2";
 
 const Addons = ({
   newAddon,
@@ -107,7 +108,7 @@ const Addons = ({
         ? priceCollectSelected
         : dataEdit?.collect_id,
       display_option: 1,
-      title: "Masseuse ($300)",
+      title: "",
       description: null,
       option_label: null,
       show_balance_due: balance,
@@ -120,11 +121,12 @@ const Addons = ({
       min_qty: dataEdit?.min_qty ? dataEdit?.min_qty : "",
       max_qty: dataEdit?.max_qty ? dataEdit?.max_qty : "",
     },
-    // validationSchema: Yup.object().shape({
-    //   first_name: Yup.string().required("First Name is required"),
-    //   last_name: Yup.string().required("Last Name is required"),
-    //   phone_number: Yup.string().required("Phone Number is required"),
-    // }),
+    validationSchema: Yup.object().shape({
+      price: Yup.string().required("Field Require"),
+      deposit: Yup.string().required("Field Require"),
+      commission: Yup.string().required("Field Require"),
+      net_price: Yup.string().required("Field Require"),
+    }),
     onSubmit: (values, {resetForm}) => {
       let data = {
         tour_id: tourData.id,
@@ -160,15 +162,38 @@ const Addons = ({
           // console.log(resp);
           setNewAddon(false);
           refreshTable();
+          resetForm({values: ''})
+        }).catch((error) => {
+          let errorMessages = [];
+          Object.entries(error.response.data.data).map((item) => {
+            errorMessages.push(item[1]);
+          });
+
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(errorMessages[0])
+          );
         });
       } else {
         postAddonsAPI(data).then((resp) => {
           // console.log(resp);
           setNewAddon(false);
           refreshTable();
+          resetForm({values: ''})
+        }).catch((error) => {
+          let errorMessages = [];
+          Object.entries(error.response.data.data).map((item) => {
+            errorMessages.push(item[1]);
+          });
+
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(errorMessages[0])
+          );
         });
       }
-      resetForm({values: ''})
     },
   });
   return (
