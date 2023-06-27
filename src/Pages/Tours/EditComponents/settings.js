@@ -226,7 +226,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               </p>
             </div>
           </Col>
-          <Col className="col-1">
+          <Col className="col-1 mb-4">
             <div className="form-outline mt-2">
               <Label className="form-label">Tour ID</Label>
               <Input
@@ -238,7 +238,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               />
             </div>
           </Col>
-          <Col className="col-6">
+          <Col className="col-4">
             <div className="form-outline mt-2">
               <Label className="form-label">Provider Tour Name</Label>
               <Input
@@ -288,6 +288,14 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               ) : null}
             </div>
           </Col>
+          <Col className="mb-2 col-2" style={{paddingTop:'37px'}}>
+            <Button type="button"
+              className="font-16 btn-orange"
+              
+              onClick={() => {setReserveModal(true)}}
+              > + Set Up Reserve Page Template 
+            </Button>
+          </Col>
         </Row>
 
         <Row>
@@ -322,13 +330,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
             </>
           )}
 
-          <Col className="mb-2 col-2">
-            <Button type="button"
-              className="font-16 btn-orange"
-              onClick={() => {setReserveModal(true)}}
-              > + Set Up Reserve Page Template 
-            </Button>
-          </Col>
+          
         </Row>
 
         <Row>

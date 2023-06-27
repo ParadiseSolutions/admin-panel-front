@@ -189,7 +189,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <img
                     src={OneVariantIMG}
                     alt="one-variant"
-                    style={{ width: "350px", margin: "10px" }}
+                    style={{ width: "350px", margin: "10px", marginTop:'13px' }}
                   />
                 </div>
               </Col>
@@ -299,7 +299,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
             {instructionArea ? (
               <Row className="row-12">
                 <Col>
-                  <div className="form-outline mb-2 col-10">
+                  <div className="form-outline mb-2 col-11">
                     <Label className="form-label">Instruction Title</Label>
                     <Input
                       name="title"
@@ -315,7 +315,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       </p>
                    
                   </div>
-                  <div className="form-outline mb-2 col-10">
+                  <div className="form-outline mb-2 col-11">
                     <Label className="form-label">
                       Instruction Description
                     </Label>
