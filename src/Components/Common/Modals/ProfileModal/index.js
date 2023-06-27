@@ -117,6 +117,7 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
                       name="first_name"
                       placeholder=""
                       type="text"
+                      disabled
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.first_name || ""}
@@ -142,6 +143,7 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
                       name="last_name"
                       placeholder=""
                       type="text"
+                      disabled
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.last_name || ""}
@@ -183,7 +185,9 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
                     <Input
                       name="phone_number"
                       placeholder=""
-                      type="text"
+                      type="tel"
+                      inputMode="numeric"
+                      onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.phone_number || ""}

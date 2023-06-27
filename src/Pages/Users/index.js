@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from "react";
 import TableContainer from "../../Components/Common/TableContainer";
-import { Name, Department, Active, LastName, Email, Rol } from "./UsersCols";
+import { Name, Department, Active, LastName, Email, Rol, Job } from "./UsersCols";
 import { usersData } from "../../Utils/Redux/Actions/UsersActions";
 import { deleteUser } from "../../Utils/API/Users";
 import AddUserModal from "../../Components/Common/Modals/UsersModals/addUserModal";
@@ -36,11 +36,12 @@ const Users = () => {
     Swal.fire({
       title: "Delete User?",
       icon: "question",
-      text: `Do you want delete ${userData.first_name}`,
+      text: `${userData.first_name} ${userData.last_name}`,
       showCancelButton: true,
       confirmButtonText: "Yes",
       confirmButtonColor: "#F38430",
       cancelButtonText: "Cancel",
+      cancelButtonColor: "#a7b6c4",
     }).then((resp) => {
       if (resp.isConfirmed) {
         deleteUser(userData.id)
@@ -83,6 +84,15 @@ const Users = () => {
         filterable: false,
         Cell: (cellProps) => {
           return <Email {...cellProps} />;
+        },
+      },
+      {
+        Header: "Job Title",
+        accessor: "job_title",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Job {...cellProps} />;
         },
       },
       {

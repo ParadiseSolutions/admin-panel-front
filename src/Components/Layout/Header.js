@@ -106,6 +106,7 @@ const Header = () => {
                   <i className="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i>
                   {"View Profile"}
                 </DropdownItem>
+                {/*
                 <DropdownItem tag="a" href="/">
                   <i className="uil uil-wallet font-size-18 align-middle me-1 text-muted"></i>
                   {"My Wallet"}
@@ -120,7 +121,7 @@ const Header = () => {
                 <DropdownItem tag="a" href="auth-lock-screen">
                   <i className="uil uil-lock-alt font-size-18 align-middle me-1 text-muted"></i>
                   {"Lock screen"}
-                </DropdownItem>
+                </DropdownItem> */}
                 <div className="dropdown-divider" />
                 <div
                   onClick={() => onLogOut()}

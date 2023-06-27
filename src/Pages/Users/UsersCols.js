@@ -13,6 +13,9 @@ const LastName = (cell) => {
 const Email = (cell) => {
   return cell.value ? cell.value : "";
 };
+const Job = (cell) => {
+  return cell.value ? cell.value : "";
+};
 const Department = (cell) => {
   return cell.value ? cell.value : "";
 };
@@ -116,4 +119,4 @@ const Active = (cell) => {
 //     )
 // };
 
-export { Name, Department, Active, LastName, Email, Rol };
+export { Name, Department, Active, LastName, Email, Rol, Job };
