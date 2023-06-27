@@ -7,6 +7,9 @@ import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 const Name = (cell) => {
   return cell.value ? cell.value : "";
 };
+const FullName = (cell) => {
+  return cell.value ? cell.value : "";
+}
 const LastName = (cell) => {
   return cell.value ? cell.value : "";
 };
@@ -17,6 +20,9 @@ const Job = (cell) => {
   return cell.value ? cell.value : "";
 };
 const Department = (cell) => {
+  return cell.value ? cell.value : "";
+};
+const JobTitle = (cell) => {
   return cell.value ? cell.value : "";
 };
 const Rol = (cell) => {
@@ -119,4 +125,4 @@ const Active = (cell) => {
 //     )
 // };
 
-export { Name, Department, Active, LastName, Email, Rol, Job };
+export { FullName, Name, Department, Active, LastName, Email, Rol, Job };

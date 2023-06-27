@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from "react";
 import TableContainer from "../../Components/Common/TableContainer";
-import { Name, Department, Active, LastName, Email, Rol, Job } from "./UsersCols";
+import { FullName, Job, Name, Department, Active, LastName, Email, Rol } from "./UsersCols";
 import { usersData } from "../../Utils/Redux/Actions/UsersActions";
 import { deleteUser } from "../../Utils/API/Users";
 import AddUserModal from "../../Components/Common/Modals/UsersModals/addUserModal";
@@ -61,27 +61,29 @@ const Users = () => {
     () => [
       {
         Header: "Name",
-        accessor: "first_name",
-        disableFilters: true,
-        filterable: false,
+        accessor: "fullname",
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
-          return <Name {...cellProps} />;
-        },
-      },
-      {
-        Header: "Last Name",
-        accessor: "last_name",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <LastName {...cellProps} />;
+          const userData = cellProps.row.original;
+          return (
+            <>
+            <img
+                  className="rounded-circle header-profile-user"
+                  src={userData.picture ? userData.picture : "https://jstourandtravel.com/js-websites/global-resources/adminpanel/undefined.png" }
+                  alt="Header Avatar"
+                />
+            {" "}
+            <FullName {...cellProps} />
+            </>
+          );
         },
       },
       {
         Header: "Email",
         accessor: "email",
-        disableFilters: true,
-        filterable: false,
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
           return <Email {...cellProps} />;
         },
@@ -98,8 +100,8 @@ const Users = () => {
       {
         Header: "Department",
         accessor: "department",
-        disableFilters: true,
-        filterable: false,
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
           return <Department {...cellProps} />;
         },
@@ -107,8 +109,8 @@ const Users = () => {
       {
         Header: "Role",
         accessor: "role",
-        disableFilters: true,
-        filterable: false,
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
           return <Rol {...cellProps} />;
         },
@@ -116,8 +118,8 @@ const Users = () => {
       {
         Header: "Active",
         accessor: "active",
-        disableFilters: true,
-        filterable: false,
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
           return <Active {...cellProps} />;
         },
@@ -125,7 +127,7 @@ const Users = () => {
       {
         Header: "Action",
         accessor: "action",
-        disableFilters: true,
+        disableFilters: false,
         Cell: (cellProps) => {
           const userData = cellProps.row.original;
           return (

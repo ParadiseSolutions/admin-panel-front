@@ -25,9 +25,11 @@ const Header = () => {
   const token = JSON.parse(getStorageSync("token"));
   const [menu, setMenu] = useState(false);
   const [username, setusername] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
 
   useEffect(() => {
     setusername(token.user.first_name);
+    setProfilePicture(token.user.picture)
   }, []);
 
   //logOut
@@ -88,7 +90,7 @@ const Header = () => {
               >
                 <img
                   className="rounded-circle header-profile-user"
-                  src={user4}
+                  src={profilePicture ? profilePicture : "https://jstourandtravel.com/js-websites/global-resources/adminpanel/undefined.png"}
                   alt="Header Avatar"
                 />
                 <span className="d-none d-xl-inline-block ms-1 fw-medium font-size-15">
