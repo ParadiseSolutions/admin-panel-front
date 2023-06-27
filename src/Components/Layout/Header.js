@@ -25,9 +25,11 @@ const Header = () => {
   const token = JSON.parse(getStorageSync("token"));
   const [menu, setMenu] = useState(false);
   const [username, setusername] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
 
   useEffect(() => {
     setusername(token.user.first_name);
+    setProfilePicture(token.user.picture)
   }, []);
 
   //logOut
@@ -88,7 +90,7 @@ const Header = () => {
               >
                 <img
                   className="rounded-circle header-profile-user"
-                  src={user4}
+                  src={profilePicture ? profilePicture : "https://jstourandtravel.com/js-websites/global-resources/adminpanel/undefined.png"}
                   alt="Header Avatar"
                 />
                 <span className="d-none d-xl-inline-block ms-1 fw-medium font-size-15">
@@ -106,6 +108,7 @@ const Header = () => {
                   <i className="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i>
                   {"View Profile"}
                 </DropdownItem>
+                {/*
                 <DropdownItem tag="a" href="/">
                   <i className="uil uil-wallet font-size-18 align-middle me-1 text-muted"></i>
                   {"My Wallet"}
@@ -120,7 +123,7 @@ const Header = () => {
                 <DropdownItem tag="a" href="auth-lock-screen">
                   <i className="uil uil-lock-alt font-size-18 align-middle me-1 text-muted"></i>
                   {"Lock screen"}
-                </DropdownItem>
+                </DropdownItem> */}
                 <div className="dropdown-divider" />
                 <div
                   onClick={() => onLogOut()}

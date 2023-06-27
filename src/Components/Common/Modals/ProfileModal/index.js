@@ -19,10 +19,12 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
  
 
   const [userData, setUserData] = useState([])
+  const [profilePicture, setProfilePicture] = useState("");
   useEffect(() => {
      getUserAPI(token.user.id).then((resp) =>{
         setUserData(resp.data.data)
      })
+    setProfilePicture(token.user.picture)
   }, [profileModal, token]);
 
   const validationType = useFormik({
@@ -102,7 +104,7 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
             <div className="p-1">
             <img
                   className="rounded-circle img-fluid border border-5 border-paradise"
-                  src={user4}
+                  src={profilePicture}
                   alt="Header Avatar"
                 />
             </div>
@@ -117,6 +119,7 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
                       name="first_name"
                       placeholder=""
                       type="text"
+                      disabled="true"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.first_name || ""}
@@ -142,6 +145,7 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
                       name="last_name"
                       placeholder=""
                       type="text"
+                      disabled="true"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.last_name || ""}
@@ -183,7 +187,9 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
                     <Input
                       name="phone_number"
                       placeholder=""
-                      type="text"
+                      type="tel"
+                      inputMode="numeric"
+                      onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.phone_number || ""}

@@ -620,13 +620,13 @@ const TableContainer = ({
         </div>
       )}
       {usersTable && (
-        <div className="table-responsive">
+        <div className="table-responsive" style={{minHeight:"581px"}}>
           <Table hover {...getTableProps()} className="react_table mb-0">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} style={{width:"5%"}}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
