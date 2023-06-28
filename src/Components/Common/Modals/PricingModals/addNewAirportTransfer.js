@@ -761,7 +761,7 @@ const AddNewAirportTransfer = ({
                         name="min"
                         placeholder=""
                         className="me-1"
-                        type="text"
+                        type="number"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.min || ""}
@@ -780,7 +780,7 @@ const AddNewAirportTransfer = ({
                       <Input
                       name="max"
                       placeholder=""
-                      type="text"
+                      type="number"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.max || ""}
@@ -851,77 +851,86 @@ const AddNewAirportTransfer = ({
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Provider Price</Label>
-                    <Input
-                      name="provider_price"
-                      placeholder="0.00"
-                      type="number"
-                      min="0"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.provider_price || ""}
-                      invalid={
-                        validationType.touched.provider_price &&
-                        validationType.errors.provider_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.provider_price &&
-                    validationType.errors.provider_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.provider_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="provider_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.provider_price || ""}
+                        invalid={
+                          validationType.touched.provider_price &&
+                          validationType.errors.provider_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.provider_price &&
+                      validationType.errors.provider_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.provider_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Rate %</Label>
-                    <Input
-                      name="rate"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.rate || ""}
-                      invalid={
-                        validationType.touched.rate &&
-                        validationType.errors.rate
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.rate &&
-                    validationType.errors.rate ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.rate}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <Input
+                        name="rate"
+                        placeholder="0.0000"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.rate || ""}
+                        invalid={
+                          validationType.touched.rate &&
+                          validationType.errors.rate
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.rate &&
+                      validationType.errors.rate ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.rate}
+                        </FormFeedback>
+                      ) : null}
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Net Rate</Label>
-                    <Input
-                      name="net_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.net_price || ""}
-                      invalid={
-                        validationType.touched.net_price &&
-                        validationType.errors.net_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.net_price &&
-                    validationType.errors.net_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.net_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="net_price"
+                        placeholder=""
+                        type="text"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.net_price || ""}
+                        invalid={
+                          validationType.touched.net_price &&
+                          validationType.errors.net_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.net_price &&
+                      validationType.errors.net_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.net_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-4">

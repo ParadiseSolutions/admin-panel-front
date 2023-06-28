@@ -14,7 +14,7 @@ const LastName = (cell) => {
   return cell.value ? cell.value : "";
 };
 const Email = (cell) => {
-  return cell.value ? cell.value : "";
+  return cell.value ?  <a href={`mailto:${cell.value}`} target="_blank">{cell.value}</a> : "";
 };
 const Job = (cell) => {
   return cell.value ? cell.value : "";
