@@ -103,6 +103,11 @@ const NewTour = ({ history }) => {
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
+      if (shoppingCartData.length === 1) {
+        setShoppingCartID(resp.data.data[0].id)
+      }else{
+        setShoppingCartID(null)
+      }
     });
     providerWebsite(id).then((resp) => {
       setProviderData(resp.data.data);
@@ -141,32 +146,32 @@ const NewTour = ({ history }) => {
         name: values.tour_name,
         code: values.code,
       };
-      // console.log(data);
-        createTourAPI(data)
-          .then((resp) => {
-            // console.log(resp.data);
-            if (resp.data.status === 201) {
-              Swal.fire(
-                "Created!",
-                "Tour has been created.",
-                "success"
-              ).then(() => {
-                history.push(`/tours/${resp.data.data.id}`);
-              });
-            }
-          })
-          .catch((error) => {
-            let errorMessages = [];
-					Object.entries(error.response.data.data).map((item) => {
-						errorMessages.push(item[1]);
-					});
+      console.log(data);
+        // createTourAPI(data)
+        //   .then((resp) => {
+        //     // console.log(resp.data);
+        //     if (resp.data.status === 201) {
+        //       Swal.fire(
+        //         "Created!",
+        //         "Tour has been created.",
+        //         "success"
+        //       ).then(() => {
+        //         history.push(`/tours/${resp.data.data.id}`);
+        //       });
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     let errorMessages = [];
+				// 	Object.entries(error.response.data.data).map((item) => {
+				// 		errorMessages.push(item[1]);
+				// 	});
 
-					Swal.fire(
-						"Error!",
-						// {error.response.},
-						String(errorMessages[0])
-					);
-          });
+				// 	Swal.fire(
+				// 		"Error!",
+				// 		// {error.response.},
+				// 		String(errorMessages[0])
+				// 	);
+        //   });
     },
   });
   return (
@@ -378,6 +383,7 @@ const NewTour = ({ history }) => {
                                       <option
                                         key={index}
                                         value={shoppingCart.id}
+                                        selected={ index === 0 && shoppingCartData.length === 1 ? true : false }
                                       >
                                         {shoppingCart.name}
                                       </option>

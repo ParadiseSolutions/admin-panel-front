@@ -20,6 +20,7 @@ const AddonsTables = ({
   addonsTable,
   onClickNewProduct,
   onClickNewAddon,
+  onClickInstructions
 }) => {
   const {
     getTableProps,
@@ -67,6 +68,18 @@ const AddonsTables = ({
               type="button"
               style={{ backgroundColor: "#F6851F", border: "none" }}
               className="waves-effect waves-light mb-3 btn btn-success mt-3"
+              onClick={() => {
+              console.log('tabla')
+                onClickInstructions()
+              }}
+            >
+              <i className="mdi mdi-plus me-1" />
+               Set Add-Ons Instructions
+            </Button>
+            <Button
+              type="button"
+              style={{ backgroundColor: "#F6851F", border: "none" }}
+              className="waves-effect waves-light mb-3 btn btn-success mt-3 mx-5"
               onClick={onClickNewAddon}
             >
               <i className="mdi mdi-plus me-1" />

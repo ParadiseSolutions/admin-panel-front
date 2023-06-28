@@ -23,7 +23,7 @@ const AddPaymentModal = ({ addPaymentModal, setPaymentModal, onClickAddNewPaymen
       default_label:''
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required("Cart Name is required"),
+      name: Yup.string().required("Name is required"),
       default_label: Yup.string().required("Default Label is required"),
     }),
     onSubmit: (values) => {
@@ -93,7 +93,7 @@ const AddPaymentModal = ({ addPaymentModal, setPaymentModal, onClickAddNewPaymen
                     <Label className="form-label">Name</Label>
                     <Input
                       name="name"
-                      placeholder=""
+                      placeholder="Deposit"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -118,7 +118,7 @@ const AddPaymentModal = ({ addPaymentModal, setPaymentModal, onClickAddNewPaymen
                     <Label className="form-label">Default Label</Label>
                     <Input
                       name="default_label"
-                      placeholder=""
+                      placeholder="25% Deposit"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}

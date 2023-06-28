@@ -18,7 +18,6 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 
 const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
-
   const dispatch = useDispatch();
   //websites request
   useEffect(() => {
@@ -26,15 +25,13 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
     websitesRequest();
   }, [dispatch]);
 
-
   //get info
   const dataWebsites = useSelector((state) => state.websites.websites.data);
 
-
-  const [websiteID, setWebsiteID] = useState([])
-  const onChangeSelectionWeb = (selection) =>{
-    setWebsiteID(selection)
-  }
+  const [websiteID, setWebsiteID] = useState([]);
+  const onChangeSelectionWeb = (selection) => {
+    setWebsiteID(selection);
+  };
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -44,21 +41,22 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
       cart_number: "",
       server: "",
       test_link: "",
-      website_id:''
+      website_id: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Cart Name is required"),
       cart_number: Yup.string().required("Cart ID is required"),
-      server: Yup.string().required("Server is required").max(3, 'no more than 3 characters')
+      server: Yup.string()
+        .required("Server is required")
+        .max(3, "no more than 3 characters"),
     }),
     onSubmit: (values) => {
-
       let data = {
         name: values.name,
         cart_number: values.cart_number,
         server: values.server,
-        test_link: values.test_link ? values.test_link : '',
-        website_id:websiteID
+        test_link: values.test_link ? values.test_link : "",
+        website_id: websiteID,
       };
       createCartAPI(data)
         .then((resp) => {
@@ -122,7 +120,7 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                     <Label className="form-label">Cart Name</Label>
                     <Input
                       name="name"
-                      placeholder=""
+                      placeholder="Cabo Fishing"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -147,7 +145,7 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                     <Label className="form-label">Cart ID</Label>
                     <Input
                       name="cart_number"
-                      placeholder=""
+                      placeholder="885151"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -174,7 +172,7 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                     <Label className="form-label">Server</Label>
                     <Input
                       name="server"
-                      placeholder=""
+                      placeholder="ww5"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -199,7 +197,7 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                     <Label className="form-label">Test Link</Label>
                     <Input
                       name="test_link"
-                      placeholder=""
+                      placeholder="www.test.com"
                       type=""
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -220,7 +218,7 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                   </div>
                 </Col>
               </Row>
-              
+
               <Row>
                 <Col lg={5}>
                   <div className="form-outline mb-4">
@@ -244,16 +242,18 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                     </Input>
                   </div>
                 </Col>
-               
               </Row>
               <Row>
                 <Col className="col-10 mx-4 mt-2 d-flex justify-content-end">
                   <Button
-                    type={websiteID.length > 0 ? 'submit' : 'button'}
-                    style={{ backgroundColor: websiteID.length > 0 ? "#F6851F" : 'gray', border: "none" }}
+                    type={websiteID.length > 0 ? "submit" : "button"}
+                    style={{
+                      backgroundColor:
+                        websiteID.length > 0 ? "#F6851F" : "gray",
+                      border: "none",
+                    }}
                     className="waves-effect waves-light mb-3 btn btn-success"
                   >
-                    
                     Save Changes
                   </Button>
                 </Col>

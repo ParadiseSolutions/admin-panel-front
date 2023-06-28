@@ -14,7 +14,7 @@ import {
   deletePriceAPI,
   deleteAddonAPI,
 } from "../../../Utils/API/Tours";
-
+import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
 
 import { Name, Code, Members, Price } from "./PricingTables/DepartmentsCols";
@@ -93,15 +93,15 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           })
           .catch((error) => {
             let errorMessages = [];
-					Object.entries(error.response.data.data).map((item) => {
-						errorMessages.push(item[1]);
-					});
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
 
-					Swal.fire(
-						"Error!",
-						// {error.response.},
-						String(errorMessages[0])
-					);
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
           });
       }
     });
@@ -109,7 +109,6 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
 
   const [editProductID, setEditProductID] = useState(null);
 
- 
   const columnsAddons = useMemo(
     () => [
       {
@@ -216,10 +215,15 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
   const [newPrivateCharter, setNewPrivateCharter] = useState(false);
   const [newPrivateTour, setNewPrivateTour] = useState(false);
   const [newTransportation, setNewTransportation] = useState(false);
-  
 
   //add new addon
   const [newAddon, setNewAddon] = useState(false);
+
+  // template instruction
+  const [instructionModal, setInstructionModal] = useState(false);
+  const onClickInstructions = () => {
+    setInstructionModal(!instructionModal);
+  };
 
   const onClickNewAddon = () => {
     setNewAddon(!newAddon);
@@ -235,29 +239,26 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
             isGlobalFilter={true}
             addonsTable={true}
             onClickNewAddon={onClickNewAddon}
+            onClickInstructions={onClickInstructions}
           />
         ) : null}
       </Row>
       <Row>
-        <Col
-          className="col-12 d-flex justify-content-end mt-5"
-          
-        >
+        <Col className="col-12 d-flex justify-content-end mt-5">
           <Button
             color="paradise"
             outline
             className="waves-effect waves-light mx-4"
             type="button"
-            onClick={() => toggle('5')}
+            onClick={() => toggle("5")}
           >
             <i className="uil-angle-double-left" />
             Back
           </Button>
           <Button
-            
             type="submit"
             className="font-16 btn-block btn-orange"
-            onClick={() => toggle('7')}
+            onClick={() => toggle("7")}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />
@@ -313,6 +314,11 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         tourData={tourData}
         refreshTable={refreshTable}
         editProductID={editProductID}
+      />
+      <AddonsInstructionModal
+        instructionModal={instructionModal}
+        setInstructionModal={setInstructionModal}
+        id={id}
       />
     </TabPane>
   );

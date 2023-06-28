@@ -125,7 +125,7 @@ const NewWebsite = () => {
                       <Label className="form-label">Website Name</Label>
                       <Input
                         name="company_name"
-                        placeholder=""
+                        placeholder="Cancun Discount"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -149,7 +149,7 @@ const NewWebsite = () => {
                       <Label className="form-label">2-Digit Code</Label>
                       <Input
                         name="code"
-                        placeholder=""
+                        placeholder="CD"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -173,7 +173,7 @@ const NewWebsite = () => {
                       <Label className="form-label">Domain</Label>
                       <Input
                         name="domain"
-                        placeholder=""
+                        placeholder="/cancun"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -197,7 +197,7 @@ const NewWebsite = () => {
                       <Label className="form-label">Website URL</Label>
                       <Input
                         name="url"
-                        placeholder=""
+                        placeholder="www.cancundiscount.com"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -218,7 +218,7 @@ const NewWebsite = () => {
                     </div>
 
                     <div className="form-outline mb-4">
-                      <Label className="form-label">cPanel Account</Label>
+                      <Label className="form-label">cPanel Accountsss</Label>
                       <Input
                         name="cpanel_account"
                         placeholder=""

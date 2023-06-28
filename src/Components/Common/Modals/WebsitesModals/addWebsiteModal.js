@@ -61,13 +61,16 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
         .min(2, "Code must be 2-character long")
         .max(2, "Code must be 2-character long"),
       domain: Yup.string().required("Domain is required"),
-      url: Yup.string().required("URL is required"),
-      cpanel_account: Yup.string().required("cPanel Account Name is required"),
-      root_folder: Yup.string().required("Root Folder Name is required"),
-      user_folder: Yup.string().required("User Folder Name is required"),
-      accent_color: Yup.string().required("Accent Color is required"),
-      primary_color: Yup.string().required("Primary Color is required"),
-      secondary_color: Yup.string().required("Secondary Color is required"),
+      url: Yup.string().required("URL is required").matches(
+        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+        "Enter correct url!"
+      ),
+      // cpanel_account: Yup.string().required("cPanel Account Name is required"),
+      // root_folder: Yup.string().required("Root Folder Name is required"),
+      // user_folder: Yup.string().required("User Folder Name is required"),
+      // accent_color: Yup.string().required("Accent Color is required"),
+      // primary_color: Yup.string().required("Primary Color is required"),
+      // secondary_color: Yup.string().required("Secondary Color is required"),
     }),
     onSubmit: (values) => {
       // console.log("values are", values);
@@ -162,7 +165,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">Website Name</Label>
                       <Input
                         name="company_name"
-                        placeholder=""
+                        placeholder="Cancun Discount"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -188,7 +191,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">2-Digit Code</Label>
                       <Input
                         name="code"
-                        placeholder=""
+                        placeholder="CD"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -213,7 +216,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">Root Folder</Label>
                       <Input
                         name="root_folder"
-                        placeholder=""
+                        placeholder="/cancun-discount"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -240,7 +243,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">Website URL</Label>
                       <Input
                         name="url"
-                        placeholder=""
+                        placeholder="https://www.cancun-discount.com"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -265,7 +268,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">User Folder</Label>
                       <Input
                         name="user_folder"
-                        placeholder=""
+                        placeholder="jsweb"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -292,7 +295,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">Website Domain</Label>
                       <Input
                         name="domain"
-                        placeholder=""
+                        placeholder="cancun-discount.net"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -319,7 +322,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">Accent Color</Label>
                       <Input
                         name="accent_color"
-                        placeholder=""
+                        placeholder="#FFFFFF"
                         autoComplete="false"
                         type="text"
                         onChange={validationType.handleChange}
@@ -347,7 +350,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">Primary Color</Label>
                       <Input
                         name="primary_color"
-                        placeholder=""
+                        placeholder="#FFFFFF"
                         autoComplete="false"
                         type="text"
                         onChange={validationType.handleChange}
@@ -376,7 +379,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">cPanel Account</Label>
                       <Input
                         name="cpanel_account"
-                        placeholder=""
+                        placeholder="cancun-discounts.com"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -401,7 +404,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
                       <Label className="form-label">Secondary Color</Label>
                       <Input
                         name="secondary_color"
-                        placeholder=""
+                        placeholder="#FFFFFF"
                         type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
