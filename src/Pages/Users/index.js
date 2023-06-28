@@ -134,6 +134,7 @@ const Users = () => {
                 <i
                   className="mdi mdi-pencil-outline font-size-18"
                   id="edittooltip"
+                  style={{cursor:"pointer"}}
                   onClick={() => {
                     setUserId(userData.id);
                     setEditModal(true);

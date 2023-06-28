@@ -20,6 +20,7 @@
 // @import "./rtl/text-rtl";
 
 body {
+  font-family: var(--bs-font-sans-serif) !important;
   * {
     outline: none;
   }

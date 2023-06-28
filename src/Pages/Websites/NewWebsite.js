@@ -99,7 +99,7 @@ const NewWebsite = () => {
         <Container fluid>
         <div className=" mx-5">
             <h1 className="display-5 fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
-              ADD NEW WEBSITE
+            <i class="mdi mdi-plus me-1"></i> ADD NEW WEBSITE
             </h1>
           </div>
 

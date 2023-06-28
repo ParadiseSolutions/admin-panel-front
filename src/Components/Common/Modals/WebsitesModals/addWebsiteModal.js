@@ -131,7 +131,7 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
           className="modal-header"
           style={{ backgroundColor: "#3DC7F4", border: "none" }}
         >
-          <h1 className="modal-title mt-0 text-white">+ Add New Website</h1>
+          <h1 className="modal-title mt-0 text-white"><i class="mdi mdi-plus me-1"></i> Add New Website</h1>
           <button
             onClick={() => {
               setAddModal(false);
