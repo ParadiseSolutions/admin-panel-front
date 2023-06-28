@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.ff2d24de.css",
-    "main.js": "/static/js/main.33ccb16e.js",
+    "main.css": "/static/css/main.979ff514.css",
+    "main.js": "/static/js/main.7b1010e5.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -36,7 +36,6 @@
     "static/media/fa-regular-400.svg": "/static/media/fa-regular-400.f4f60ace2cf62f2cba66.svg",
     "static/media/fa-brands-400.eot": "/static/media/fa-brands-400.607a77859353c0cc1882.eot",
     "static/media/fa-brands-400.ttf": "/static/media/fa-brands-400.5818bbd07dfd7095920a.ttf",
-    "static/media/avatar-7.jpg": "/static/media/avatar-7.6cf080adb8d02a8c14e0.jpg",
     "static/media/fa-solid-900.woff": "/static/media/fa-solid-900.a940d584750708f5435c.woff",
     "static/media/dripicons-v2.svg": "/static/media/dripicons-v2.de54f4eb6e267d60dda5.svg",
     "static/media/fa-brands-400.woff": "/static/media/fa-brands-400.ee26f57bc9e3619b022b.woff",
@@ -61,12 +60,12 @@
     "static/media/logo-sm.png": "/static/media/logo-sm.021cb2acd539eec27872.png",
     "index.html": "/index.html",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
-    "main.ff2d24de.css.map": "/static/css/main.ff2d24de.css.map",
-    "main.33ccb16e.js.map": "/static/js/main.33ccb16e.js.map",
+    "main.979ff514.css.map": "/static/css/main.979ff514.css.map",
+    "main.7b1010e5.js.map": "/static/js/main.7b1010e5.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ff2d24de.css",
-    "static/js/main.33ccb16e.js"
+    "static/css/main.979ff514.css",
+    "static/js/main.7b1010e5.js"
   ]
 }

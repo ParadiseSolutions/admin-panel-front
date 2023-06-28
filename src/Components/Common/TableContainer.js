@@ -10,7 +10,10 @@ import {
   usePagination,
   useRowSelect,
 } from "react-table";
-import { Table, Row, Col, Button, Input,Card,CardBody, } from "reactstrap";
+import { Table, Row, Col, Button, Input,Card,CardBody,
+  Pagination,
+  PaginationItem,
+  PaginationLink } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 
@@ -418,7 +421,7 @@ const TableContainer = ({
       )}
       {categoriesTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -458,7 +461,7 @@ const TableContainer = ({
       )}
       {rolesTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -498,7 +501,7 @@ const TableContainer = ({
 
       {locationsTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -540,7 +543,7 @@ const TableContainer = ({
 
       {websitesTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -581,7 +584,7 @@ const TableContainer = ({
 
       {tourTypesTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -661,7 +664,7 @@ const TableContainer = ({
       )}
       {cartsTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -701,7 +704,7 @@ const TableContainer = ({
       )}
       {paymentsTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -741,7 +744,7 @@ const TableContainer = ({
       )}
       {contactsProvidersTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -781,7 +784,7 @@ const TableContainer = ({
       )}
       {operatorsTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -821,7 +824,7 @@ const TableContainer = ({
       )}
       {productsTour && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -861,7 +864,7 @@ const TableContainer = ({
       )}
       {URLTourTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -901,7 +904,7 @@ const TableContainer = ({
       )}
       {toursTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -941,56 +944,63 @@ const TableContainer = ({
       )}
         </CardBody>
       </Card>
+      
       <Row className="justify-content-md-end justify-content-center align-items-center">
         <Col className="col-md-auto">
           <div className="d-flex btn-group" role="group">
-              <Button
-                className="btn btn-orange" 
-                onClick={() => gotoPage(0)}
-                disabled={!canPreviousPage}
-              >
-                {"<<"}
-              </Button>
-              <Button
-                // color="primary"
-                className="btn btn-orange"
-                onClick={previousPage}
-                disabled={!canPreviousPage}
-              >
-                {"<"}
-              </Button>
-              <div className="d-flex justify-content-center align-items-center input-group">
-                <div className="input-group-text rounded-0 border-start-0">
-                  Page{" "}
-                  <strong>
-                    {pageIndex + 1} of {pageOptions.length}
-                  </strong>
-                </div>  
-                
-                  <Input
-                  type="number"
-                  min={1}
-                  className="text-center input-group-text bg-white rounded-0"
-                  max={pageOptions.length}
-                  defaultValue={pageIndex + 1}
-                  onChange={onChangeInInput}
-                  />
-                  
-              </div>            
-              <Button
-                className="btn-orange"
-                onClick={nextPage}
-                disabled={!canNextPage}
-              >
-                {">"}
-              </Button>
-              <Button              
-                className="btn-orange"
-                onClick={() => gotoPage(pageCount - 1)}
-                disabled={!canNextPage}
-              >
-                {">>"}
-              </Button>          
+            <Pagination aria-label="Page navigation example">
+              {
+                pageOptions.length >= 4 && pageIndex < pageOptions.length - 1 ? (
+                <PaginationItem>
+                  <PaginationLink onClick={() => gotoPage(0)}
+                  disabled={!canPreviousPage}>First</PaginationLink>
+                </PaginationItem>
+                  ):null
+              }
+              <PaginationItem>
+                <PaginationLink onClick={previousPage}
+                disabled={!canPreviousPage}>Previous</PaginationLink>
+              </PaginationItem>
+              {
+                pageIndex >= 3 ? (
+                  <PaginationItem>
+                      <PaginationLink>...</PaginationLink>
+                    </PaginationItem>
+                ):null
+              }
+              {
+                pageOptions.map((item, index) => {
+                  return (
+                    <PaginationItem
+                    hidden={pageOptions.length < 4 || (index >= pageIndex - 2 && index <= pageIndex + 2) ? false : true}
+                    className={index === pageIndex ? "active" : ""}>
+                      <PaginationLink
+                       onClick={() => gotoPage(index)}>{index + 1}</PaginationLink>
+                    </PaginationItem>
+                  )
+                })
+              }
+              {
+                pageOptions.length >= 4 && pageIndex < pageOptions.length - 1 ? (
+                  <PaginationItem>
+                      <PaginationLink>...</PaginationLink>
+                    </PaginationItem>
+                ):null
+              }
+              
+              <PaginationItem>
+                <PaginationLink onClick={nextPage}
+                disabled={!canNextPage}>Next</PaginationLink>
+              </PaginationItem>
+              {
+                pageOptions.length >= 4 && pageIndex < pageOptions.length - 1 ? (
+                <PaginationItem>
+                  <PaginationLink onClick={() => gotoPage(pageCount - 1)}
+                  disabled={!canNextPage}>Last</PaginationLink>
+                </PaginationItem>
+                ):null
+              }
+            </Pagination>    
           </div>
         </Col>
       </Row>

@@ -21,6 +21,8 @@ import {
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+import InputMask from "react-input-mask"
+import MaterialInput from "@material-ui/core/Input"
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
@@ -74,7 +76,18 @@ const AddNewAirportTransfer = ({
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
-
+  const Currency = props => (
+    <InputMask
+      mask="$ [0-9]+.99"
+      value={props.value}
+      className="form-control input-color"
+      onChange={props.onChange}
+    >
+      {inputProps => (
+        <MaterialInput {...inputProps} prefix="$" type="tel" disableUnderline />
+      )}
+    </InputMask>
+  )
   useEffect(() => {
     if (addNewAirportTransfer) {
       getPricingOptionsAPI(10).then((resp) => {
@@ -743,7 +756,7 @@ const AddNewAirportTransfer = ({
                   <div className="form-outline mb-2">
                     <Label className="form-label">Passangers</Label>
                     <div className="input-group">
-                    <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>Min</span>
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>Min</span>
                       <Input
                         name="min"
                         placeholder=""
@@ -776,12 +789,12 @@ const AddNewAirportTransfer = ({
                           ? true
                           : false
                       }
-                    />
-                    {validationType.touched.max && validationType.errors.max ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.max}
-                      </FormFeedback>
-                    ) : null}
+                      />
+                      {validationType.touched.max && validationType.errors.max ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.max}
+                        </FormFeedback>
+                      ) : null}
                     </div>
                     
                     
@@ -809,26 +822,30 @@ const AddNewAirportTransfer = ({
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Public Price</Label>
-                    <Input
-                      name="public_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.public_price || ""}
-                      invalid={
-                        validationType.touched.public_price &&
-                        validationType.errors.public_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.public_price &&
-                    validationType.errors.public_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.public_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="public_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.public_price || ""}
+                        invalid={
+                          validationType.touched.public_price &&
+                          validationType.errors.public_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.public_price &&
+                      validationType.errors.public_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.public_price}
+                        </FormFeedback>
+                      ) : null}
+                      </div>
                   </div>
                 </Col>
                 <Col className="col-2">
@@ -836,8 +853,9 @@ const AddNewAirportTransfer = ({
                     <Label className="form-label">Provider Price</Label>
                     <Input
                       name="provider_price"
-                      placeholder=""
-                      type="text"
+                      placeholder="0.00"
+                      type="number"
+                      min="0"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.provider_price || ""}

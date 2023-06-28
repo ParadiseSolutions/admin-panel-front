@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  getSeasonsAPI,
   getAvailableFromAPI,
   putSettingsAPI,
   getAvailableAPI,
@@ -26,19 +24,10 @@ import ReservePageModal from "../../../Components/Common/Modals/TourSetingsModal
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
-import { Select } from "antd";
-const { Option } = Select;
 
 const Settings = ({ history, tourSettings, id, toggle }) => {
   // console.log("settings", tourSettings);
 
-  //seasons request
-  const [seasonData, setSeasonData] = useState();
-  useEffect(() => {
-    getSeasonsAPI().then((resp) => {
-      setSeasonData(resp.data.data);
-    });
-  }, []);
   //seasons request
   const [availableData, setAvailableData] = useState([]);
   const [availableFromData, setAvailableFormData] = useState([]);
@@ -50,7 +39,6 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
       setAvailableFormData(resp.data.data);
     });
   }, []);
-  const [initialOptionsArea, setInitialOptionsArea] = useState([]);
   useEffect(() => {
     if (tourSettings && availableData) {
       let optionsArea = [];
@@ -63,32 +51,14 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           optionsArea.push({ label: element.name, value: element.id });
         }
       });
-      setInitialOptionsArea(optionsArea);
     }
   }, [availableData, tourSettings]);
 
-  //season select
-  const [seasonSelected, setSeasonSelected] = useState(
-    tourSettings.available_seasons
-  );
-  function handleMulti(selected) {
-    setSeasonSelected(selected);
-  }
-
   //available from
   const [availableFromIDs, setAvailableFromIDs] = useState([]);
-  const [newListID, setNewListID] = useState([]);
 
   useEffect(() => {
     setAvailableFromIDs(tourSettings.available_from);
-  }, [tourSettings]);
-
-  //seasonal price
-  const [seasonalPrice, setSeasonalPrice] = useState(null);
-  useEffect(() => {
-    setSeasonalPrice(
-      tourSettings?.seasonality && tourSettings.seasonality === 1 ? true : false
-    );
   }, [tourSettings]);
 
   //modal reserve page
@@ -144,8 +114,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         provider_tour_url: values.provider_tour_url
           ? values.provider_tour_url
           : "",
-        available_seasons: seasonSelected,
-        available_from: availableFromIDs,
+        available_from: availableFromIDs ? availableFromIDs : [],
         infants_range_from: values.infants_range_from
           ? values.infants_range_from
           : "",
@@ -159,8 +128,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           : "",
         teenagers_range_to: values.teenagers_range_to
           ? values.teenagers_range_to
-          : "",
-        seasonality: seasonalPrice === true ? 1 : 0,
+          : ""
       };
 
       //  console.log('data a enviar', data)
@@ -175,9 +143,17 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         })
         .catch((error) => {
           let errorMessages = [];
-          Object.entries(error.response.data.data).map((item) => {
-            errorMessages.push(item[1]);
-          });
+          if(error.response.data.data) {
+            Object.entries(error.response.data.data).map((item) => (
+              errorMessages.push(item[1])
+            ));
+          } else {
+            if(error.response.data.message === "Array to string conversion") {
+              errorMessages.push("Available From is required")
+            } else {
+              errorMessages.push(error.response.data.message);
+            }
+          }
 
           Swal.fire(
             "Error!",
@@ -318,7 +294,6 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                           <AvailableCheckbox
                             available={available}
                             availableFromIDs={availableFromIDs}
-                            setNewListID={setNewListID}
                             setAvailableFromIDs={setAvailableFromIDs}
                           />
                         </div>

@@ -133,6 +133,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
       </div>
       <div className="modal-body">
         <Form
+          autoComplete="off"
           onSubmit={(e) => {
             e.preventDefault();
             validationType.handleSubmit();
@@ -199,6 +200,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                   <div className="form-outline mb-4">
                     <Label className="form-label">Password</Label>
                     <Input
+                      autoComplete="new-password"
                       name="password"
                       placeholder=""
                       type="password"

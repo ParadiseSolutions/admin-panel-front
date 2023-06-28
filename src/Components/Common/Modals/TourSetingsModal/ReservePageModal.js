@@ -15,12 +15,10 @@ import {
   Label,
   Input,
   Button,
-  FormFeedback,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { map } from "lodash";
 
 const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
   const [instructionArea, setInstructionArea] = useState(false);

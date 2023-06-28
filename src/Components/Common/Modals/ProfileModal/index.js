@@ -13,7 +13,6 @@ import {
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import user4 from '../../../Assets/images/users/avatar-7.jpg'
 
 const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
  

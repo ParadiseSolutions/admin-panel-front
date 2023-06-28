@@ -22,9 +22,6 @@ const Job = (cell) => {
 const Department = (cell) => {
   return cell.value ? cell.value : "";
 };
-const JobTitle = (cell) => {
-  return cell.value ? cell.value : "";
-};
 const Rol = (cell) => {
   return cell.value ? cell.value : "";
 };

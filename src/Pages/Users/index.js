@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from "react";
 import TableContainer from "../../Components/Common/TableContainer";
-import { FullName, Job, Name, Department, Active, LastName, Email, Rol } from "./UsersCols";
+import { FullName, Job, Department, Active, Email, Rol } from "./UsersCols";
 import { usersData } from "../../Utils/Redux/Actions/UsersActions";
 import { deleteUser } from "../../Utils/API/Users";
 import AddUserModal from "../../Components/Common/Modals/UsersModals/addUserModal";
@@ -9,8 +9,6 @@ import {
   Container,
   Row,
   Col,
-  Card,
-  CardBody,
   UncontrolledTooltip,
 } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -67,7 +65,7 @@ const Users = () => {
         Cell: (cellProps) => {
           const userData = cellProps.row.original;
           return (
-            <>
+            <div style={{width:"166px"}}>
             <img
                   className="rounded-circle header-profile-user"
                   src={userData.picture ? userData.picture : "https://jstourandtravel.com/js-websites/global-resources/adminpanel/undefined.png" }
@@ -75,7 +73,7 @@ const Users = () => {
                 />
             {" "}
             <FullName {...cellProps} />
-            </>
+            </div>
           );
         },
       },
