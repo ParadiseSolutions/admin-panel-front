@@ -43,8 +43,24 @@ const AddPaymentModal = ({ addPaymentModal, setPaymentModal, onClickAddNewPaymen
           }
         })
         .catch((error) => {
-          // console.log(error.response);
-          Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+          if(error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
         });
     },
   });

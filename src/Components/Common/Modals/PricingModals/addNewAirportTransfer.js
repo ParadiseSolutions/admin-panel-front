@@ -136,8 +136,10 @@ const AddNewAirportTransfer = ({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      product_name: tourData ? tourData.name : "",
+      product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
+      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
       rate: dataEdit ? dataEdit.rate : "",
@@ -151,14 +153,15 @@ const AddNewAirportTransfer = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
       // active: activeCheckbox ? 1 : 0,
       // balance_checkbox: balanceDueCheckbox? 1 : 0,
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     validationSchema: Yup.object().shape({
+      min: Yup.number().positive().integer().nullable(),
+      max: Yup.number().positive().integer().nullable(),
+      public_price: Yup.number().positive().nullable(),
       our_price: Yup.string().required("Field Require"),
       commission: Yup.string().required("Field Require"),
       deposit: Yup.string().required("Field Require"),
@@ -300,16 +303,24 @@ const AddNewAirportTransfer = ({
             refreshTable();
             resetForm({ values: "" });
           }).catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
         }
       } else {
@@ -318,6 +329,7 @@ const AddNewAirportTransfer = ({
       refreshTable();
     },
   });
+  
   return (
     <Modal
       centered
@@ -384,32 +396,37 @@ const AddNewAirportTransfer = ({
               />
             </Col>
             <Col className="col-9">
-              <Row>
-                <Col className="col-9">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">Product Name</Label>
-                    <Input
-                      name="product_name"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.product_name || ""}
-                    />
-                  </div>
-                </Col>
-                <Col className="col-3">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">SKU</Label>
-                    <Input
-                      name="sku"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.sku || ""}
-                    />
-                  </div>
-                </Col>
-              </Row>
+              {
+                dataEdit ? (
+                  <Row>
+                    <Col className="col-9">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">Product Name</Label>
+                        <Input
+                          name="product_name"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.product_name || ""}
+                        />
+                      </div>
+                    </Col>
+                    <Col className="col-3">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">SKU</Label>
+                        <Input
+                          name="sku"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.sku || ""}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                ):null
+              }
+              
               <Row>                
                 <Col className="col">
                   <div className="form-outline">
@@ -759,9 +776,10 @@ const AddNewAirportTransfer = ({
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>Min</span>
                       <Input
                         name="min"
-                        placeholder=""
+                        placeholder="0"
                         className="me-1"
-                        type="text"
+                        type="number"
+                        min="0"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.min || ""}
@@ -779,8 +797,9 @@ const AddNewAirportTransfer = ({
                       <span class="input-group-text fw-bold bg-paradise text-white border-0 ms-1" id="basic-addon1" style={{fontSize:"0.85em"}}>Max</span>
                       <Input
                       name="max"
-                      placeholder=""
-                      type="text"
+                      placeholder="0"
+                      type="number"
+                      min="0"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.max || ""}
@@ -851,77 +870,87 @@ const AddNewAirportTransfer = ({
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Provider Price</Label>
-                    <Input
-                      name="provider_price"
-                      placeholder="0.00"
-                      type="number"
-                      min="0"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.provider_price || ""}
-                      invalid={
-                        validationType.touched.provider_price &&
-                        validationType.errors.provider_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.provider_price &&
-                    validationType.errors.provider_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.provider_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="provider_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.provider_price || ""}
+                        invalid={
+                          validationType.touched.provider_price &&
+                          validationType.errors.provider_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.provider_price &&
+                      validationType.errors.provider_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.provider_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Rate %</Label>
-                    <Input
-                      name="rate"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.rate || ""}
-                      invalid={
-                        validationType.touched.rate &&
-                        validationType.errors.rate
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.rate &&
-                    validationType.errors.rate ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.rate}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <Input
+                        name="rate"
+                        placeholder="0.0000"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.rate || ""}
+                        invalid={
+                          validationType.touched.rate &&
+                          validationType.errors.rate
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.rate &&
+                      validationType.errors.rate ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.rate}
+                        </FormFeedback>
+                      ) : null}
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Net Rate</Label>
-                    <Input
-                      name="net_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.net_price || ""}
-                      invalid={
-                        validationType.touched.net_price &&
-                        validationType.errors.net_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.net_price &&
-                    validationType.errors.net_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.net_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="net_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.net_price || ""}
+                        invalid={
+                          validationType.touched.net_price &&
+                          validationType.errors.net_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.net_price &&
+                      validationType.errors.net_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.net_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-4">
@@ -929,7 +958,7 @@ const AddNewAirportTransfer = ({
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
-                      placeholder=""
+                      placeholder="https://provider.com/mitour.html"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}

@@ -23,7 +23,7 @@ const Website = (cell) => {
   return cell.value ? cell.value : "";
 };
 const TestLink = (cell) => {
-  return cell.value ?  cell.value : "";
+  return cell.value ?  <a href={cell.value} target="_blank">{cell.value}</a> : "";
 };
 const Active = (cell) => {
   const id = cell.row.original.id;

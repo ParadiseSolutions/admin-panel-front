@@ -110,7 +110,7 @@ const NewTour = ({ history }) => {
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
-      if (shoppingCartData.length === 1) {
+      if (resp.data.data.length === 1) {
         setShoppingCartID(resp.data.data[0].id)
       }else{
         setShoppingCartID(null)
@@ -161,32 +161,40 @@ setCategoryId(id)
         name: values.tour_name,
         code: values.code,
       };
-      console.log(data);
-        // createTourAPI(data)
-        //   .then((resp) => {
-        //     // console.log(resp.data);
-        //     if (resp.data.status === 201) {
-        //       Swal.fire(
-        //         "Created!",
-        //         "Tour has been created.",
-        //         "success"
-        //       ).then(() => {
-        //         history.push(`/tours/${resp.data.data.id}`);
-        //       });
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     let errorMessages = [];
-				// 	Object.entries(error.response.data.data).map((item) => {
-				// 		errorMessages.push(item[1]);
-				// 	});
-
-				// 	Swal.fire(
-				// 		"Error!",
-				// 		// {error.response.},
-				// 		String(errorMessages[0])
-				// 	);
-        //   });
+      //console.log(data);
+      createTourAPI(data)
+        .then((resp) => {
+          // console.log(resp.data);
+          if (resp.data.status === 201) {
+            Swal.fire(
+              "Created!",
+              "Tour has been created.",
+              "success"
+            ).then(() => {
+              history.push(`/tours/${resp.data.data.id}`);
+            });
+          }
+        })
+        .catch((error) => {
+          if(error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
+        });
     },
   });
   return (

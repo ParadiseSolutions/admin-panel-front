@@ -42,7 +42,24 @@ const Operators = () => {
             Swal.fire("Deleted!", "Operator has been deleted.", "success");
           })
           .catch((error) => {
-            // console.log(error);
+            let errorMessages = [];
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }            
           });
       }
     });
@@ -106,7 +123,7 @@ const Operators = () => {
             <div className="d-flex gap-3">
               <Link to={`/operators/${providersData.id}  `}>
                 <div className="text-success">
-                  <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" />
+                  <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}}/>
                   <UncontrolledTooltip placement="top" target="edittooltip">
                     Edit
                   </UncontrolledTooltip>

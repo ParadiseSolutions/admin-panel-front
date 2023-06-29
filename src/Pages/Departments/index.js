@@ -113,7 +113,7 @@ const Departments = () => {
                 className="text-success"
                 
               >
-                <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" />
+                <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}}/>
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>

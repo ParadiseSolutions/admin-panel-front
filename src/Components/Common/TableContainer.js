@@ -149,7 +149,7 @@ const TableContainer = ({
                 className="waves-effect waves-light mb-3 btn btn-orange"
                 onClick={() => onClickAddLocation()}
               >
-                
+                <i class="mdi mdi-plus me-1"></i>
                 Add New Location
               </Button>
             </div>
@@ -181,7 +181,7 @@ const TableContainer = ({
                   className="waves-effect waves-light mb-3 btn btn-orange"
                   onClick={handleUserClicks}
                 >
-                  
+                  <i class="mdi mdi-plus me-1"></i>
                   Add New Role
                 </Button>
               </Link>

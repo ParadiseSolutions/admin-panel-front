@@ -98,8 +98,24 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
           }
         })
         .catch((error) => {
-          // console.log(error.response);
-          Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+          if(error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
         });
     },
   });
@@ -149,7 +165,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     <Label className="form-label">Name</Label>
                     <Input
                       name="first_name"
-                      placeholder=""
+                      placeholder="Johann"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -174,7 +190,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     <Label className="form-label">Last Name</Label>
                     <Input
                       name="last_name"
-                      placeholder=""
+                      placeholder="Swart"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -254,7 +270,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     <Label className="form-label">Email</Label>
                     <Input
                       name="email"
-                      placeholder=""
+                      placeholder="user@jstourandtravel.com"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -279,7 +295,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     <Label className="form-label">Job Title</Label>
                     <Input
                       name="job_title"
-                      placeholder=""
+                      placeholder="Innovation Manager"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}

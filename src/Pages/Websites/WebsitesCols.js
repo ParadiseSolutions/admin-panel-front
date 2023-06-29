@@ -21,15 +21,16 @@ const Domain = (cell) => {
 };
 
 const URL = (cell) => {
-    return cell.value ? cell.value : "";
-  };
-  const Root = (cell) => {
-    return cell.value ? cell.value : "";
-  };
+  return cell.value ?  <a href={`${cell.value}`} target="_blank">{cell.value}</a> : "";
+};
 
-  const Folder = (cell) => {
-    return cell.value ? cell.value : "";
-  };
+const Root = (cell) => {
+  return cell.value ? cell.value : "";
+};
+
+const Folder = (cell) => {
+  return cell.value ? cell.value : "";
+};
 const Date = (cell) => {
   return cell.value ? cell.value : "";
 };

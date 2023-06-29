@@ -268,6 +268,7 @@ const Schedules = ({ tourData, toggle }) => {
                                     <i
                                       className="mdi mdi-pencil-outline font-size-18"
                                       id="edittooltip"
+                                      style={{cursor:"pointer"}}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
@@ -362,6 +363,7 @@ const Schedules = ({ tourData, toggle }) => {
                                     <i
                                       className="mdi mdi-pencil-outline font-size-18"
                                       id="edittooltip"
+                                      style={{cursor:"pointer"}}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"

@@ -131,7 +131,7 @@ const ShoppingCarts = () => {
                   setEditCartModal(true)
                 }}
               >
-                <i className="mdi mdi-pencil-outline font-size-18" id="edittooltip" />
+                <i className="mdi mdi-pencil-outline font-size-18" id="edittooltip" style={{cursor:"pointer"}}/>
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
