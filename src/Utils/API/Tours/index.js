@@ -36,7 +36,18 @@ export const statusUpdateTour = (id, body) => {
     });
   };
 
-
+  export const getLocationWebsitePI = (id) => {
+    const url = `${API_URL}/websites/${id}/locations`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getCategoryWebsiteAPI = (id) => {
+    const url = `${API_URL}/websites/${id}/categories`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 
 
   //settings

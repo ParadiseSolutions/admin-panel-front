@@ -10,7 +10,9 @@ import {
   shoppingCartWebsite,
   providerWebsite,
   operatorWebsite,
-  createTourAPI
+  createTourAPI, 
+  getLocationWebsitePI,
+  getCategoryWebsiteAPI
 } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -86,11 +88,13 @@ const NewTour = ({ history }) => {
   const [locationID, setLocationID] = useState(null)
   const [mainCatID, setMainCatID] = useState(null)
   const [secondCatID, setSecondCatID] = useState(null)
+  const [categoryId, setCategoryId] = useState(null)
 
     //sub categories request
   const [subCategoriesData, setSubCategoriesData] = useState(null)
     useEffect(() => {
-      getSubCategory(mainCatID).then((resp) =>{
+      console.log(mainCatID)
+      getSubCategory(websiteID, categoryId).then((resp) =>{
         setSubCategoriesData(resp.data.data)
       })
     }, [mainCatID]);
@@ -100,6 +104,9 @@ const NewTour = ({ history }) => {
   const [shoppingCartData, setShoppingCartData] = useState(null);
   const [providerData, setProviderData] = useState(null);
   const [operatorData, setOperatorData] = useState(null);
+  const [locationData, setLocationData] = useState(null)
+  const [categoryData, setCategoryData] = useState(null)
+
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
@@ -115,8 +122,16 @@ const NewTour = ({ history }) => {
     operatorWebsite(id).then((resp) => {
       setOperatorData(resp.data.data);
     });
+    getLocationWebsitePI(id).then((resp) =>{
+      setLocationData(resp.data.data)
+    })
+    getCategoryWebsiteAPI(id).then((resp) => {
+      setCategoryData(resp.data.data)
+    })
+setCategoryId(id)
   };
 
+  console.log('location', locationData)
   
   //form creation
   const validationType = useFormik({
@@ -493,11 +508,12 @@ const NewTour = ({ history }) => {
                                   onChange={(e) =>{
                                     setLocationID(e.target.value)
                                   }}
+                                  disabled={locationData ? false : true}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
                                   <option>Select....</option>
-                                  {map(dataLocations, (location, index) => {
+                                  {map(locationData, (location, index) => {
                                     return (
                                       <option key={index} value={location.id}>
                                         {location.name}
@@ -519,21 +535,22 @@ const NewTour = ({ history }) => {
                                 <Input
                                   type="select"
                                   name=""
-                                  disabled={dataCategories ? false : true}
+                                  disabled={categoryData ? false : true}
                                   onChange={(e) =>{
                                     setMainCatID(e.target.value)
+                                    setCategoryId(e.target.value)
                                   }}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
                                   <option>Select....</option>
-                                  {map(dataCategories, (category, index) => {
+                                  {map(categoryData, (category, index) => {
                                     return (
                                       <option
                                         key={index}
-                                        value={category.id}
+                                        value={category.category_id}
                                       >
-                                        {category.name}
+                                        {category.category_name}
                                       </option>
                                     );
                                   })}

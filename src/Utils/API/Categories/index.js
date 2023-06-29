@@ -32,8 +32,8 @@ export const editCategory = (id, body) => {
 	return axios.put(url, body, { headers: options });
 };
 
-export const getSubCategory = (id) => {
-	const url = `${API_URL}/categories/${id}/subcategories`;
+export const getSubCategory = (websiteId, categoryId) => {
+	const url = `${API_URL}/websites/${websiteId}/category/${categoryId}`;
 	return axios.get(url, { headers: options });
 };
 
