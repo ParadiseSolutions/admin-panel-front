@@ -318,6 +318,7 @@ const AddNewAirportTransfer = ({
       refreshTable();
     },
   });
+  
   return (
     <Modal
       centered
@@ -759,9 +760,10 @@ const AddNewAirportTransfer = ({
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>Min</span>
                       <Input
                         name="min"
-                        placeholder=""
+                        placeholder="0"
                         className="me-1"
                         type="number"
+                        min="0"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.min || ""}
@@ -779,8 +781,9 @@ const AddNewAirportTransfer = ({
                       <span class="input-group-text fw-bold bg-paradise text-white border-0 ms-1" id="basic-addon1" style={{fontSize:"0.85em"}}>Max</span>
                       <Input
                       name="max"
-                      placeholder=""
+                      placeholder="0"
                       type="number"
+                      min="0"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.max || ""}
@@ -912,8 +915,9 @@ const AddNewAirportTransfer = ({
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="net_price"
-                        placeholder=""
-                        type="text"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.net_price || ""}
@@ -938,7 +942,7 @@ const AddNewAirportTransfer = ({
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
-                      placeholder=""
+                      placeholder="https://provider.com/mitour.html"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}

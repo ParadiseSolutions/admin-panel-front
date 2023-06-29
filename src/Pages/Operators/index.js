@@ -42,7 +42,16 @@ const Operators = () => {
             Swal.fire("Deleted!", "Operator has been deleted.", "success");
           })
           .catch((error) => {
-            // console.log(error);
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
           });
       }
     });
