@@ -136,8 +136,10 @@ const AddNewAirportTransfer = ({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      product_name: tourData ? tourData.name : "",
+      product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
+      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
       rate: dataEdit ? dataEdit.rate : "",
@@ -151,14 +153,15 @@ const AddNewAirportTransfer = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
       // active: activeCheckbox ? 1 : 0,
       // balance_checkbox: balanceDueCheckbox? 1 : 0,
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     validationSchema: Yup.object().shape({
+      min: Yup.number().positive().integer().nullable(),
+      max: Yup.number().positive().integer().nullable(),
+      public_price: Yup.number().positive().nullable(),
       our_price: Yup.string().required("Field Require"),
       commission: Yup.string().required("Field Require"),
       deposit: Yup.string().required("Field Require"),
@@ -300,16 +303,24 @@ const AddNewAirportTransfer = ({
             refreshTable();
             resetForm({ values: "" });
           }).catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
         }
       } else {
@@ -385,32 +396,37 @@ const AddNewAirportTransfer = ({
               />
             </Col>
             <Col className="col-9">
-              <Row>
-                <Col className="col-9">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">Product Name</Label>
-                    <Input
-                      name="product_name"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.product_name || ""}
-                    />
-                  </div>
-                </Col>
-                <Col className="col-3">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">SKU</Label>
-                    <Input
-                      name="sku"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.sku || ""}
-                    />
-                  </div>
-                </Col>
-              </Row>
+              {
+                dataEdit ? (
+                  <Row>
+                    <Col className="col-9">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">Product Name</Label>
+                        <Input
+                          name="product_name"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.product_name || ""}
+                        />
+                      </div>
+                    </Col>
+                    <Col className="col-3">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">SKU</Label>
+                        <Input
+                          name="sku"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.sku || ""}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                ):null
+              }
+              
               <Row>                
                 <Col className="col">
                   <div className="form-outline">

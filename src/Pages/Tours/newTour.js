@@ -103,7 +103,6 @@ const NewTour = ({ history }) => {
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
-      debugger;
       if (resp.data.data.length === 1) {
         setShoppingCartID(resp.data.data[0].id)
       }else{

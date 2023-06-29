@@ -104,6 +104,11 @@ const NewTour = ({ history }) => {
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setShoppingCartID(resp.data.data[0].id)
+      }else{
+        setShoppingCartID(null)
+      }
     });
     providerWebsite(id).then((resp) => {
       setProviderData(resp.data.data);
@@ -392,6 +397,7 @@ const NewTour = ({ history }) => {
                                       <option
                                         key={index}
                                         value={shoppingCart.id}
+                                        selected={ index === 0 && shoppingCartData.length === 1 ? true : false }
                                       >
                                         {shoppingCart.name}
                                       </option>
