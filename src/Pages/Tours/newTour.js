@@ -103,7 +103,8 @@ const NewTour = ({ history }) => {
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
-      if (shoppingCartData.length === 1) {
+      debugger;
+      if (resp.data.data.length === 1) {
         setShoppingCartID(resp.data.data[0].id)
       }else{
         setShoppingCartID(null)
@@ -161,16 +162,24 @@ const NewTour = ({ history }) => {
           }
         })
         .catch((error) => {
-          let errorMessages = [];
-        Object.entries(error.response.data.data).map((item) => {
-          errorMessages.push(item[1]);
-        });
-
-        Swal.fire(
-          "Error!",
-          // {error.response.},
-          String(errorMessages[0])
-        );
+          if(error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
         });
     },
   });
