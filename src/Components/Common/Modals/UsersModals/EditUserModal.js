@@ -147,7 +147,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                     <Label className="form-label">Name</Label>
                     <Input
                       name="first_name"
-                      placeholder=""
+                      placeholder="Johann"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -172,7 +172,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                     <Label className="form-label">Last Name</Label>
                     <Input
                       name="last_name"
-                      placeholder=""
+                      placeholder="Swart"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -200,7 +200,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                     <Label className="form-label">Email</Label>
                     <Input
                       name="email"
-                      placeholder=""
+                      placeholder="user@jstourandtravel.com"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -225,7 +225,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                     <Label className="form-label">Job Title</Label>
                     <Input
                       name="job_title"
-                      placeholder=""
+                      placeholder="Innovation Manager"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}

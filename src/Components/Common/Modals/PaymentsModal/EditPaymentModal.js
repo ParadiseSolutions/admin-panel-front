@@ -105,7 +105,7 @@ const EditPaymentModal = ({ editPaymentModal, setEditPaymentModal, onClickEditPa
                     <Label className="form-label">Name</Label>
                     <Input
                       name="name"
-                      placeholder=""
+                      placeholder="Deposit"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -130,7 +130,7 @@ const EditPaymentModal = ({ editPaymentModal, setEditPaymentModal, onClickEditPa
                     <Label className="form-label">Default Label</Label>
                     <Input
                       name="default_label"
-                      placeholder=""
+                      placeholder="25% Deposit"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
