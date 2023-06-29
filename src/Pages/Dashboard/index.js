@@ -10,7 +10,9 @@ import {
   shoppingCartWebsite,
   providerWebsite,
   operatorWebsite,
-  createTourAPI
+  createTourAPI, 
+  getLocationWebsitePI,
+  getCategoryWebsiteAPI
 } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -34,7 +36,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
-import { CardHeader } from "@material-ui/core";
+import { cleanUpSpecialCharacters, capitalizeWords2, codeFormat } from "../../Utils/CommonFunctions";
 import { Link } from "react-router-dom";
 
 const NewTour = ({ history }) => {
@@ -87,13 +89,17 @@ const NewTour = ({ history }) => {
   const [locationID, setLocationID] = useState(null)
   const [mainCatID, setMainCatID] = useState(null)
   const [secondCatID, setSecondCatID] = useState(null)
+  const [categoryId, setCategoryId] = useState(null)
 
     //sub categories request
   const [subCategoriesData, setSubCategoriesData] = useState(null)
     useEffect(() => {
-      getSubCategory(mainCatID).then((resp) =>{
-        setSubCategoriesData(resp.data.data)
-      })
+      //console.log(mainCatID)
+      if(mainCatID) {
+        getSubCategory(websiteID, categoryId).then((resp) =>{
+          setSubCategoriesData(resp.data.data)
+        })
+      }      
     }, [mainCatID]);
     
 
@@ -101,6 +107,9 @@ const NewTour = ({ history }) => {
   const [shoppingCartData, setShoppingCartData] = useState(null);
   const [providerData, setProviderData] = useState(null);
   const [operatorData, setOperatorData] = useState(null);
+  const [locationData, setLocationData] = useState(null)
+  const [categoryData, setCategoryData] = useState(null)
+
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
@@ -116,8 +125,16 @@ const NewTour = ({ history }) => {
     operatorWebsite(id).then((resp) => {
       setOperatorData(resp.data.data);
     });
+    getLocationWebsitePI(id).then((resp) =>{
+      setLocationData(resp.data.data)
+    })
+    getCategoryWebsiteAPI(id).then((resp) => {
+      setCategoryData(resp.data.data)
+    })
+    setCategoryId(id)
   };
 
+  //console.log('location', locationData)
   
   //form creation
   const validationType = useFormik({
@@ -147,40 +164,40 @@ const NewTour = ({ history }) => {
         name: values.tour_name,
         code: values.code,
       };
-      // console.log(data);
-        createTourAPI(data)
-          .then((resp) => {
-            // console.log(resp.data);
-            if (resp.data.status === 201) {
-              Swal.fire(
-                "Created!",
-                "Tour has been created.",
-                "success"
-              ).then(() => {
-                history.push(`/tours/${resp.data.data.id}`);
-              });
-            }
-          })
-          .catch((error) => {
-            if(error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                // {error.response.},
-                String(error.response.data.message)
-              );
-            } else {
-              let errorMessages = [];
-              Object.entries(error.response.data.data).map((item) => {
-                errorMessages.push(item[1]);
-              });
-    
-              Swal.fire(
-                "Error!",
-                // {error.response.},
-                String(errorMessages[0])
-              );
-            }
-          });
+      //console.log(data);
+      createTourAPI(data)
+        .then((resp) => {
+          // console.log(resp.data);
+          if (resp.data.status === 201) {
+            Swal.fire(
+              "Created!",
+              "Tour has been created.",
+              "success"
+            ).then(() => {
+              history.push(`/tours/${resp.data.data.id}`);
+            });
+          }
+        })
+        .catch((error) => {
+          if(error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
+        });
     },
   });
   return (
@@ -237,25 +254,75 @@ const NewTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Settings</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "3" ? "white" : ""}`,
+                      border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
+                    }}
                     className={classnames({
                       active: activeTab === "3",
                     })}
+                    onClick={() => {
+                      toggle("3");
+                    }}
                   >
                     <span className="d-block d-sm-none">
-                      <i className="far fa-envelope"></i>
+                      <i className="far fa-user"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ URLs</span>
+                    <span className="d-none d-sm-block">+ High Season Dates</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+
+                  <NavItem className="d-flex">
+                    <NavLink
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: `${
+                          activeTab === "4" ? "#F6851F" : ""
+                        }`,
+                        color: `${activeTab === "4" ? "white" : ""}`,
+                        border:"none",
+                        flexWrap: "wrap",
+                        display:"grid",
+                        alignContent: "center",
+                      }}
+                      className={classnames({
+                        active: activeTab === "4",
+                      })}
+                      onClick={() => {
+                        toggle("4");
+                      }}
+                    >
+                      <span className="d-block d-sm-none">
+                        <i className="far fa-envelope"></i>
+                      </span>
+                      <span className="d-none d-sm-block">+ URLs</span>
+                    </NavLink>
+                  </NavItem>
+
+                <NavItem className="d-flex">
                   <NavLink
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "5" ? "white" : ""}`,
+                      border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
+                    }}
                     className={classnames({
-                      active: activeTab === "3",
+                      active: activeTab === "5",
                     })}
+                    onClick={() => {
+                      toggle("5");
+                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -263,12 +330,23 @@ const NewTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Products</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
+                      color: `${activeTab === "6" ? "white" : ""}`,
+                      border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",
+                    }}
                     className={classnames({
-                      active: activeTab === "3",
+                      active: activeTab === "6",
                     })}
+                    onClick={() => {
+                      toggle("6");
+                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -276,17 +354,28 @@ const NewTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Addons</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className="d-flex">
                   <NavLink
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "7" ? "white" : ""}`,
+                      border:"none",
+                      flexWrap: "wrap",
+                      display:"grid",
+                      alignContent: "center",                      
+                    }}
                     className={classnames({
-                      active: activeTab === "3",
+                      active: activeTab === "7",
                     })}
+                    onClick={() => {
+                      toggle("7");
+                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Extras</span>
+                    <span className="d-none d-sm-block">+ Schedule</span>
                   </NavLink>
                 </NavItem>
               </Nav>
@@ -477,10 +566,13 @@ const NewTour = ({ history }) => {
                                 <Label className="form-label">Tour Name</Label>
                                 <Input
                                   name="tour_name"
-                                  placeholder=""
+                                  placeholder="ATV Tour"
                                   type="text"
                                   onChange={validationType.handleChange}
-                                  onBlur={validationType.handleBlur}
+                                  onBlur={(e)=>{
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue('tour_name', capitalizeWords2(cleanUpSpecialCharacters(value)));
+                                  }}
                                   value={validationType.values.tour_name || ""}
                                   invalid={
                                     validationType.touched.tour_name &&
@@ -507,11 +599,12 @@ const NewTour = ({ history }) => {
                                   onChange={(e) =>{
                                     setLocationID(e.target.value)
                                   }}
+                                  disabled={locationData ? false : true}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
                                   <option>Select....</option>
-                                  {map(dataLocations, (location, index) => {
+                                  {map(locationData, (location, index) => {
                                     return (
                                       <option key={index} value={location.id}>
                                         {location.name}
@@ -533,33 +626,34 @@ const NewTour = ({ history }) => {
                                 <Input
                                   type="select"
                                   name=""
-                                  disabled={dataCategories ? false : true}
+                                  disabled={categoryData ? false : true}
                                   onChange={(e) =>{
                                     setMainCatID(e.target.value)
+                                    setCategoryId(e.target.value)
                                   }}
                                   onBlur={validationType.handleBlur}
                                   //   value={validationType.values.department || ""}
                                 >
                                   <option>Select....</option>
-                                  {map(dataCategories, (category, index) => {
+                                  {map(categoryData, (category, index) => {
                                     return (
                                       <option
                                         key={index}
-                                        value={category.id}
+                                        value={category.category_id}
                                       >
-                                        {category.name}
+                                        {category.category_name}
                                       </option>
                                     );
                                   })}
                                 </Input>
                               </div>
                             </Col>
+                                {subCategoriesData && subCategoriesData.length > 0 ? 
                             <Col className="col-4">
                               <div className="form-outline my-2">
                                 <Label className="form-label">
                                   Sub-Category
                                 </Label>
-                                {subCategoriesData ? 
                                 <Input
                                 type="select"
                                 name=""
@@ -582,10 +676,10 @@ const NewTour = ({ history }) => {
                                   );
                                 })}
                               </Input>
-                                : null}
-                                
                               </div>
                             </Col>
+                                : null}
+                                
                             <Col className="col-4">
                               <div className="form-outline my-2">
                                 <Label className="form-label">
@@ -593,10 +687,14 @@ const NewTour = ({ history }) => {
                                 </Label>
                                 <Input
                                   name="code"
-                                  placeholder=""
+                                  placeholder="SE"
                                   type="text"
+                                  max="2"
                                   onChange={validationType.handleChange}
-                                  onBlur={validationType.handleBlur}
+                                  onBlur={(e)=>{
+                                    const value = e.target.value || "";                                    
+                                    validationType.setFieldValue('code', codeFormat(cleanUpSpecialCharacters(value)));
+                                  }}
                                   value={validationType.values.code || ""}
                                   invalid={
                                     validationType.touched.code &&

@@ -42,7 +42,7 @@ const EditScheduleModal = ({
 }) => {
   const { id } = useParams();
 
-  console.log('data',scheduleEditID);
+  //console.log('data',scheduleEditID);
   //edit data
   const [dataEdit, setDataEdit] = useState([]);
   const [scheduleTypesData, setSchedulesTypesData] = useState([]);
@@ -66,7 +66,7 @@ const EditScheduleModal = ({
   useEffect(() => {
     if (scheduleEditID) {
       getScheduleEditDataAPI(id, scheduleEditID.id).then((response) => {
-        console.log("respuesta a editar", response.data.data);
+        //console.log("respuesta a editar", response.data.data);
         setDataEdit(response.data.data);
       });
     }

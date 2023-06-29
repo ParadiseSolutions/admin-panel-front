@@ -111,10 +111,11 @@ const Categories = () => {
 				  <div
 				   
 					className="text-success"
-					onClick={() => {
-					  setEditModal(true)
-					  const categoriesData = cellProps.row.original;
-					  setCategoryId(categoriesData.id);
+					onClick={() => {					  
+						setEditModal(true)
+						const categoriesData = cellProps.row.original;
+						setCategoryId(false);
+					  	setCategoryId(categoriesData.id);
 					}}
 				  >
 					<i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}} />
@@ -131,7 +132,7 @@ const Categories = () => {
 					  onDelete(categoriesData);
 					}}
 				  >
-					<i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+					<i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" style={{cursor:"pointer"}} />
 					<UncontrolledTooltip placement="top" target="deletetooltip">
 					  Delete
 					</UncontrolledTooltip>

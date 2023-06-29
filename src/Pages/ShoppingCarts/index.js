@@ -145,7 +145,7 @@ const ShoppingCarts = () => {
                   onDelete(cartData);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" style={{cursor:"pointer"}}/>
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>

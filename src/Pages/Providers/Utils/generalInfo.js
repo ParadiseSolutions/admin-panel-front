@@ -178,7 +178,7 @@ const GeneralInformation = () => {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
               });
-              console.log(errorMessages)
+              //console.log(errorMessages)
               Swal.fire(
                 "Error!",
                 // {error.response.},

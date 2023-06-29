@@ -21,8 +21,7 @@ import {
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 import Swal from "sweetalert2";
-import InputMask from "react-input-mask"
-import MaterialInput from "@material-ui/core/Input"
+import { setDecimalFormat, cleanUpSpecialCharacters, setRateFormat } from "../../../../Utils/CommonFunctions";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
@@ -76,18 +75,7 @@ const AddNewAirportTransfer = ({
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
-  const Currency = props => (
-    <InputMask
-      mask="$ [0-9]+.99"
-      value={props.value}
-      className="form-control input-color"
-      onChange={props.onChange}
-    >
-      {inputProps => (
-        <MaterialInput {...inputProps} prefix="$" type="tel" disableUnderline />
-      )}
-    </InputMask>
-  )
+
   useEffect(() => {
     if (addNewAirportTransfer) {
       getPricingOptionsAPI(10).then((resp) => {
@@ -140,10 +128,12 @@ const AddNewAirportTransfer = ({
       sku: dataEdit ? dataEdit.sku : "",
       min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
       max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
+      active: dataEdit?.active ? 1 : 0,
+      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
       rate: dataEdit ? dataEdit.rate : "",
-      net_price: dataEdit ? dataEdit.net_rate : "",
+      net_rate: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
       compare_at: dataEdit ? dataEdit.compare_at : "",
@@ -155,17 +145,21 @@ const AddNewAirportTransfer = ({
       balance_due: dataEdit ? dataEdit.net_price : "",
       // active: activeCheckbox ? 1 : 0,
       // balance_checkbox: balanceDueCheckbox? 1 : 0,
-      active: dataEdit?.active ? 1 : 0,
-      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().positive().integer().nullable(),
       max: Yup.number().positive().integer().nullable(),
       public_price: Yup.number().positive().nullable(),
-      our_price: Yup.string().required("Field Require"),
-      commission: Yup.string().required("Field Require"),
-      deposit: Yup.string().required("Field Require"),
-      balance_due: Yup.string().required("Field Require"),
+      provider_price: Yup.number().positive().nullable(),
+      rate: Yup.number().positive().nullable(),
+      net_rate: Yup.number().positive().nullable(),
+      ship_price: Yup.number().positive().nullable(),
+      compare_at: Yup.number().positive().nullable(),
+      compare_at_url: Yup.string().url().trim().nullable(),
+      our_price: Yup.number().positive().required("Field Require"),
+      commission: Yup.number().positive().required("Field Require"),
+      deposit: Yup.number().positive().required("Field Require"),
+      balance_due: Yup.number().positive().required("Field Require"),
     }),
     onSubmit: (values, { resetForm }) => {
       let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
@@ -206,7 +200,7 @@ const AddNewAirportTransfer = ({
           public: values.public_price,
           provider_price: values.provider_price,
           rate: values.rate,
-          net_rate: values.net_price,
+          net_rate: values.net_rate,
           compare_at_url: values.compare_at_url,
           ship_price: values.ship_price,
           compare_at: values.compare_at,
@@ -330,6 +324,9 @@ const AddNewAirportTransfer = ({
     },
   });
   
+  
+
+
   return (
     <Modal
       centered
@@ -849,7 +846,10 @@ const AddNewAirportTransfer = ({
                         type="number"
                         min="0"
                         onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('public_price', setDecimalFormat(value));
+                        }}
                         value={validationType.values.public_price || ""}
                         invalid={
                           validationType.touched.public_price &&
@@ -878,7 +878,10 @@ const AddNewAirportTransfer = ({
                         type="number"
                         min="0"
                         onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('provider_price', setDecimalFormat(value));
+                        }}
                         value={validationType.values.provider_price || ""}
                         invalid={
                           validationType.touched.provider_price &&
@@ -905,7 +908,10 @@ const AddNewAirportTransfer = ({
                         placeholder="0.0000"
                         type="number"
                         onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('rate', setRateFormat(value));
+                        }}
                         value={validationType.values.rate || ""}
                         invalid={
                           validationType.touched.rate &&
@@ -930,24 +936,27 @@ const AddNewAirportTransfer = ({
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
-                        name="net_price"
+                        name="net_rate"
                         placeholder="0.00"
                         type="number"
                         min="0"
                         onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.net_price || ""}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('net_rate', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.net_rate || ""}
                         invalid={
-                          validationType.touched.net_price &&
-                          validationType.errors.net_price
+                          validationType.touched.net_rate &&
+                          validationType.errors.net_rate
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.net_price &&
-                      validationType.errors.net_price ? (
+                      {validationType.touched.net_rate &&
+                      validationType.errors.net_rate ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.net_price}
+                          {validationType.errors.net_rate}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -999,101 +1008,129 @@ const AddNewAirportTransfer = ({
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Ship Price</Label>
-                    <Input
-                      name="ship_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.ship_price || ""}
-                      invalid={
-                        validationType.touched.ship_price &&
-                        validationType.errors.ship_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.ship_price &&
-                    validationType.errors.ship_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.ship_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="ship_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('ship_price', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.ship_price || ""}
+                        invalid={
+                          validationType.touched.ship_price &&
+                          validationType.errors.ship_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.ship_price &&
+                      validationType.errors.ship_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.ship_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Compare At</Label>
-                    <Input
-                      name="compare_at"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.compare_at || ""}
-                      invalid={
-                        validationType.touched.compare_at &&
-                        validationType.errors.compare_at
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.compare_at &&
-                    validationType.errors.compare_at ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.compare_at}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                        <Input
+                        name="compare_at"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('compare_at', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.compare_at || ""}
+                        invalid={
+                          validationType.touched.compare_at &&
+                          validationType.errors.compare_at
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.compare_at &&
+                      validationType.errors.compare_at ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.compare_at}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Our Price*</Label>
-                    <Input
-                      name="our_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.our_price || ""}
-                      invalid={
-                        validationType.touched.our_price &&
-                        validationType.errors.our_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.our_price &&
-                    validationType.errors.our_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.our_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="our_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('our_price', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.our_price || ""}
+                        invalid={
+                          validationType.touched.our_price &&
+                          validationType.errors.our_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.our_price &&
+                      validationType.errors.our_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.our_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">You Save</Label>
-                    <Input
-                      name="you_save"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.you_save || ""}
-                      invalid={
-                        validationType.touched.you_save &&
-                        validationType.errors.you_save
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.you_save &&
-                    validationType.errors.you_save ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.you_save}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                        <Input
+                        name="you_save"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('you_save', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.you_save || ""}
+                        invalid={
+                          validationType.touched.you_save &&
+                          validationType.errors.you_save
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.you_save &&
+                      validationType.errors.you_save ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.you_save}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -1101,101 +1138,129 @@ const AddNewAirportTransfer = ({
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Eff. Rate</Label>
-                    <Input
-                      name="eff_rate"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.eff_rate || ""}
-                      invalid={
-                        validationType.touched.eff_rate &&
-                        validationType.errors.eff_rate
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.eff_rate &&
-                    validationType.errors.eff_rate ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.eff_rate}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="eff_rate"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('eff_rate', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.eff_rate || ""}
+                        invalid={
+                          validationType.touched.eff_rate &&
+                          validationType.errors.eff_rate
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.eff_rate &&
+                      validationType.errors.eff_rate ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.eff_rate}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Commission*</Label>
-                    <Input
-                      name="commission"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.commission || ""}
-                      invalid={
-                        validationType.touched.commission &&
-                        validationType.errors.commission
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.commission &&
-                    validationType.errors.commission ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.commission}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="commission"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('commission', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.commission || ""}
+                        invalid={
+                          validationType.touched.commission &&
+                          validationType.errors.commission
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.commission &&
+                      validationType.errors.commission ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.commission}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
                     <Label className="form-label">Deposit*</Label>
-                    <Input
-                      name="deposit"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.deposit || ""}
-                      invalid={
-                        validationType.touched.deposit &&
-                        validationType.errors.deposit
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.deposit &&
-                    validationType.errors.deposit ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.deposit}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="deposit"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('deposit', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.deposit || ""}
+                        invalid={
+                          validationType.touched.deposit &&
+                          validationType.errors.deposit
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.deposit &&
+                      validationType.errors.deposit ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.deposit}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Balance Due*</Label>
-                    <Input
-                      name="balance_due"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.balance_due || ""}
-                      invalid={
-                        validationType.touched.balance_due &&
-                        validationType.errors.balance_due
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.balance_due &&
-                    validationType.errors.balance_due ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.balance_due}
-                      </FormFeedback>
-                    ) : null}
+                    <Label className="form-label">Net Price*</Label>
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="balance_due"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('balance_due', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.balance_due || ""}
+                        invalid={
+                          validationType.touched.balance_due &&
+                          validationType.errors.balance_due
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.balance_due &&
+                      validationType.errors.balance_due ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.balance_due}
+                        </FormFeedback>
+                      ) : null} 
+                    </div>
                   </div>
                 </Col>
               </Row>

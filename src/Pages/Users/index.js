@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 const Users = () => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [userId, setUserId] = useState({});
+  const [userId, setUserId] = useState(null);
   //roles request
   const dispatch = useDispatch();
   useEffect(() => {
