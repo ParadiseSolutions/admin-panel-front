@@ -159,7 +159,7 @@ const Websites = () => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-1">
-            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
+            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
               WEBSITES
             </h1>
           </div>

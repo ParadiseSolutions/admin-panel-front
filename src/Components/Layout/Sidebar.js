@@ -121,8 +121,8 @@ const Sidebar = () => {
           <SimpleBar style={{ maxHeight: "100%" }} ref={ref}>
             <div id="sidebar-menu">
               <ul className="metismenu list-unstyled" id="side-menu">
-                <li className="menu-title" style={{borderBottom:"solid 1px white", margin:"0 10px", width:"auto"}}>{"Menu"} </li>
-                <li>
+                <li className="menu-title" style={{borderBottom:"solid 1px white", margin:"0 10px 15px 10px", width:"auto"}}>{"Menu"} </li>
+                <li style={{borderBottom:"solid 1px white", margin:"0 10px 15px 10px", width:"auto", paddingBottom: "5px"}}>
                   <Link to="/dashboard" className="waves-effect">
                     <i className="uil-home-alt"></i>
                     {/* <span className="badge rounded-pill bg-primary float-end">
@@ -130,25 +130,17 @@ const Sidebar = () => {
                     </span> */}
                     <span>{"Dashboard"}</span>
                   </Link>
-                </li>
-
-                <li>
-                  <Link to="/users" className="waves-effect">
-                    <i className="uil-user"></i>
-                    <span>{"Users"}</span>
-                  </Link>
-                </li>
+                </li>   
+                <li className="menu-title has-arrow waves-effect mm-collapsed" style={{margin:"0 10px 15px 10px", width:"auto"}}>{"Manage"} </li>             
                 <li>
                   <Link to="/categories" className=" waves-effect">
-                    <i className="uil uil-apps"></i>
-                    
+                    <i className="uil uil-apps"></i>                    
                     <span>{"Categories"}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/departments" className=" waves-effect">
-                    <i className="uil uil-bag"></i>
-                    
+                    <i className="uil uil-bag"></i>                    
                     <span>{"Departments"}</span>
                   </Link>
                 </li>
@@ -160,58 +152,56 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link to="/operators" className=" waves-effect">
-                    <i className="uil uil-users-alt"></i>
-                    
+                    <i className="uil uil-users-alt"></i>                    
                     <span>{"Operators"}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/payment-types" className=" waves-effect">
-                    <i className="uil-receipt"></i>
-                    
+                    <i className="uil-receipt"></i>                    
                     <span>{"Payment Types"}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/providers" className=" waves-effect">
-                    <i className="uil-bus-school"></i>
-                    
+                    <i className="uil-bus-school"></i>                    
                     <span>{"Providers"}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/roles" className=" waves-effect">
-                    <i className="bx bx-check-shield"></i>
-                    
+                    <i className="bx bx-check-shield"></i>                    
                     <span>{"Roles"}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/shopping-carts" className=" waves-effect">
-                    <i className="uil-shopping-cart-alt"></i>
-                    
+                    <i className="uil-shopping-cart-alt"></i>                    
                     <span>{"Shopping Carts"}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/tours" className=" waves-effect">
-                    <i className="uil-image"></i>
-                    
+                    <i className="uil-image"></i>                    
                     <span>{"Tours"}</span>
                   </Link>
                 </li>
 
                 <li>
                   <Link to="/tour-types" className=" waves-effect">
-                    <i className="uil uil-list-ul"></i>
-                    
+                    <i className="uil uil-list-ul"></i>                    
                     <span>{"Tour Types"}</span>
                   </Link>
                 </li>
                 <li>
+                  <Link to="/users" className="waves-effect">
+                    <i className="uil-user"></i>
+                    <span>{"Users"}</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/websites" className=" waves-effect">
-                    <i className="uil uil-globe"></i>
-                    
+                    <i className="uil uil-globe"></i>                    
                     <span>{"Websites"}</span>
                   </Link>
                 </li>

@@ -180,7 +180,7 @@ const Users = () => {
         <div className=" mx-2">
           <h1
             className="fw-bold cursor-pointer"
-            style={{ color: "#3DC7F4" }}
+            style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
           >
             USERS
           </h1>
