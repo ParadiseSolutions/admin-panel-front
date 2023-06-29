@@ -97,12 +97,12 @@ const PaymentTypes = () => {
         Cell: (cellProps) => {
           const providersData = cellProps.row.original;
           return (
-            <div className="d-flex gap-3">
-              <Link
-              to={`/providers/${providersData.id}  `}
-              >
-              
-              <div className="text-success">
+            <div className="d-flex gap-3">              
+              <div className="text-paradise"
+                onClick={() => {
+                  setPaymentID(paymentTypesData.id)
+                  setEditPaymentModal(true)
+                }}>
                 <i
                   className="mdi mdi-pencil-outline font-size-18 text-paradise"
                   id="edittooltip"
@@ -112,7 +112,6 @@ const PaymentTypes = () => {
                   Edit
                 </UncontrolledTooltip>
               </div>
-              </Link>
               <Link
                 to="#"
                 className="text-danger"
