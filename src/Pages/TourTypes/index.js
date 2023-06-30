@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Container } from "reactstrap";
 import { tourTypesData } from "../../Utils/Redux/Actions/TourTypesActions";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
+import { Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Active } from "./TourTypesCols";
@@ -50,7 +50,24 @@ const TourTypes = () => {
             Swal.fire("Deleted!", "Tour Type has been deleted.", "success");
           })
           .catch((error) => {
-            // console.log(error);
+            let errorMessages = [];
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
       }
     });
@@ -96,6 +113,7 @@ const TourTypes = () => {
               <i
                 className="mdi mdi-pencil-outline font-size-18 text-paradise"
                 id="edittooltip"
+                style={{ cursor: "pointer" }}
               />
               <UncontrolledTooltip placement="top" target="edittooltip">
                 Edit
@@ -113,6 +131,7 @@ const TourTypes = () => {
               <i
                 className="mdi mdi-delete-outline font-size-18"
                 id="deletetooltip"
+                style={{ cursor: "pointer" }}
               />
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete

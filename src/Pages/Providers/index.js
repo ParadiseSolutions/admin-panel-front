@@ -2,11 +2,10 @@ import { useMemo, useEffect, useState } from "react";
 import TableContainer from "../../Components/Common/TableContainer";
 import {
   Name,
-  Department,
+  Phone,
   Active,
   LastName,
   Email,
-  Rol,
 } from "./ProvidersCols";
 import { providersData } from "../../Utils/Redux/Actions/ProvidersActions";
 import { deleteProviderAPI } from "../../Utils/API/Providers";
@@ -16,8 +15,6 @@ import {
   Container,
   Row,
   Col,
-  Card,
-  CardBody,
   UncontrolledTooltip,
 } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -27,13 +24,8 @@ import Swal from "sweetalert2";
 const Providers = () => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-<<<<<<< HEAD
   const [userId, setUserId] = useState({});
   const [loadingData, setLoadingData] = useState(true);
-=======
-  const [userId, setUserId] = useState(null);
-
->>>>>>> d1fc933f9883c05789468e458f365521581d3a01
   //data request
   const dispatch = useDispatch();
   useEffect(() => {
@@ -116,7 +108,7 @@ const Providers = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Email {...cellProps} />;
+          return <Phone {...cellProps} />;
         },
       },
       {
@@ -125,7 +117,7 @@ const Providers = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Department {...cellProps} />;
+          return <Email {...cellProps} />;
         },
       },
 
@@ -170,6 +162,7 @@ const Providers = () => {
                 <i
                   className="mdi mdi-delete-outline font-size-18"
                   id="deletetooltip"
+                  style={{ cursor: "pointer" }}
                 />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
@@ -195,14 +188,10 @@ const Providers = () => {
     <div className="page-content">
       <Container fluid>
         <div className=" mx-1">
-<<<<<<< HEAD
-          <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
-=======
           <h1
             className="fw-bold cursor-pointer"
             style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
           >
->>>>>>> d1fc933f9883c05789468e458f365521581d3a01
             PROVIDERS
           </h1>
         </div>

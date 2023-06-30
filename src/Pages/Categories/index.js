@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Container } from "reactstrap";
 import { categoriesData } from "../../Utils/Redux/Actions/CategoriesActions";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
+import { Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Active } from "./CategoriesCols";
@@ -50,15 +50,23 @@ const Categories = () => {
           })
           .catch((error) => {
             let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
 
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
       }
     });
@@ -138,7 +146,7 @@ const Categories = () => {
             >
               <i
                 className="mdi mdi-delete-outline font-size-18"
-                id="deletetooltip"
+                id="deletetooltip" style={{cursor:"pointer"}}
               />
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete
@@ -163,12 +171,10 @@ const Categories = () => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-1">
-            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
+            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
               CATEGORIES
             </h1>
           </div>
-
-<<<<<<< HEAD
           <Row>
             <Col xs="12">
               {loadingData ? (
@@ -217,133 +223,6 @@ const Categories = () => {
       </div>
     </>
   );
-=======
-    //categories columns 
-    const columns = useMemo(() => [
-        {
-            Header: "Name",
-            accessor: "name",
-            disableFilters: true,
-            filterable: false,
-            Cell: (cellProps) => {
-                return <Name {...cellProps} />
-            }
-        },
-        {
-            Header: "Code",
-            accessor: "code",
-            disableFilters: true,
-            filterable: false,
-            Cell: (cellProps) => {
-                return <Name {...cellProps} />
-            }
-        },
-        {
-            Header: "Parent",
-            accessor: "parent_category",
-            disableFilters: true,
-            filterable: false,
-            Cell: (cellProps) => {
-                return <Name {...cellProps} />
-            }
-
-        },
-        {
-			Header: "Active",
-			accessor: "active",
-			disableFilters: true,
-			filterable: false,
-			Cell: (cellProps) => {
-				return <Active {...cellProps} />;
-			},
-		},
-        {
-			Header: "Action",
-			accessor: "action",
-			disableFilters: true,
-			Cell: (cellProps) => {
-			  const categoriesData = cellProps.row.original;
-			  return (
-				<div className="d-flex gap-3">
-				  
-				  <div
-				   
-					className="text-success"
-					onClick={() => {					  
-						setEditModal(true)
-						const categoriesData = cellProps.row.original;
-						setCategoryId(false);
-					  	setCategoryId(categoriesData.id);
-					}}
-				  >
-					<i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}} />
-					<UncontrolledTooltip placement="top" target="edittooltip">
-					  Edit
-					</UncontrolledTooltip>
-				  </div>
-				  <Link
-					to="#"
-					className="text-danger"
-					onClick={() => {
-					  const categoriesData = cellProps.row.original;
-					  // setconfirm_alert(true);
-					  onDelete(categoriesData);
-					}}
-				  >
-					<i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" style={{cursor:"pointer"}} />
-					<UncontrolledTooltip placement="top" target="deletetooltip">
-					  Delete
-					</UncontrolledTooltip>
-				  </Link>
-				</div>
-			  );
-			},
-		  }
-    ])
-    const [ editModal, setEditModal] = useState(false)
-	const [addModal, setAddModal] = useState(false);
-	const onClickAddCategory = () => {
-		setAddModal(!addModal);
-	};
-
-	const onClickEditCategory = () => {
-		setEditModal(!editModal);
-	};
-	return (
-		<>
-			<div className="page-content">
-				<Container fluid>
-					<div className=" mx-1">
-						<h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
-							CATEGORIES
-						</h1>
-					</div>
-
-                    <Row>
-						<Col xs="12">
-							
-									{data ? (
-										<TableContainer
-											columns={columns}
-											data={data}
-											isGlobalFilter={true}
-											categoriesTable={true}
-											isAddOrder={true}
-											onClickAddCategory={onClickAddCategory}
-											onClickEditCategory={onClickEditCategory}
-											// // handleOrderClicks={handleOrderClicks}
-										/>
-									) : null}
-								
-						</Col>
-					</Row>
-                     <AddCategoryModal addModal={addModal} setAddModal={setAddModal} onClickAddCategory={onClickAddCategory} />
-					<UpdateCategoryModal categoryId = {categoryId} editModal={editModal} setEditModal={setEditModal} onClickEditCategory={onClickEditCategory} />
-				</Container>
-			</div>
-		</>
-	);
->>>>>>> d1fc933f9883c05789468e458f365521581d3a01
 };
 
 export default Categories;

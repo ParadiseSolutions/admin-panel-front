@@ -13,12 +13,8 @@ import Swal from "sweetalert2";
 const Users = () => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-<<<<<<< HEAD
   const [userId, setUserId] = useState({});
   const [loadingData, setLoadingData] = useState(true);
-=======
-  const [userId, setUserId] = useState(null);
->>>>>>> d1fc933f9883c05789468e458f365521581d3a01
   //roles request
   const dispatch = useDispatch();
   useEffect(() => {
@@ -53,7 +49,24 @@ const Users = () => {
             Swal.fire("Deleted!", "The User has been deleted.", "success");
           })
           .catch((error) => {
-            // console.log(error);
+            let errorMessages = [];
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
       }
     });
@@ -163,6 +176,7 @@ const Users = () => {
                 <i
                   className="mdi mdi-delete-outline font-size-18"
                   id="deletetooltip"
+                  style={{ cursor: "pointer" }}
                 />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
@@ -188,14 +202,10 @@ const Users = () => {
     <div className="page-content">
       <Container fluid>
         <div className=" mx-2">
-<<<<<<< HEAD
-          <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
-=======
           <h1
             className="fw-bold cursor-pointer"
             style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
           >
->>>>>>> d1fc933f9883c05789468e458f365521581d3a01
             USERS
           </h1>
         </div>

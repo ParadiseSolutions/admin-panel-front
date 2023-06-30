@@ -2,13 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { operatorsData } from "../../Utils/Redux/Actions/OperatorsActions";
 import { deleteOperatorAPI } from "../../Utils/API/Operators";
 import TableContainer from "../../Components/Common/TableContainer";
-import { Name, Department, Active, LastName, Email } from "./ProvidersCols";
+import { Name, Phone, Active, LastName, Email } from "./ProvidersCols";
 import {
   Container,
   Row,
   Col,
-  Card,
-  CardBody,
   UncontrolledTooltip,
 } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -96,7 +94,7 @@ const Operators = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Email {...cellProps} />;
+          return <Phone {...cellProps} />;
         },
       },
       {
@@ -105,7 +103,7 @@ const Operators = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Department {...cellProps} />;
+          return <Email {...cellProps} />;
         },
       },
 
@@ -150,6 +148,7 @@ const Operators = () => {
                 <i
                   className="mdi mdi-delete-outline font-size-18"
                   id="deletetooltip"
+                  style={{ cursor: "pointer" }}
                 />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
@@ -167,14 +166,10 @@ const Operators = () => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-1">
-<<<<<<< HEAD
-            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
-=======
             <h1
               className="fw-bold cursor-pointer"
               style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
             >
->>>>>>> d1fc933f9883c05789468e458f365521581d3a01
               OPERATORS
             </h1>
           </div>
