@@ -146,8 +146,6 @@ const AddNewAirportTransfer = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      // active: activeCheckbox ? 1 : 0,
-      // balance_checkbox: balanceDueCheckbox? 1 : 0,
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().positive().integer().nullable(),
@@ -301,7 +299,7 @@ const AddNewAirportTransfer = ({
               );
             }
           });
-        } else if (copyProduct || dataEdit === undefined || dataEdit == null) {
+        } else if(copyProduct || dataEdit === undefined || dataEdit == null) {
             postPricesAPI(data).then((resp) => {
             // console.log(resp);
             setAddNewAirportTransfer(false);
@@ -334,10 +332,6 @@ const AddNewAirportTransfer = ({
       refreshTable();
     },
   });
-  
-  const reset = () => {
-    validationType.resetForm({values: ""})
-  }
 
   const multipleRateCalcs = (value) => {
     const rate = setRateFormat(value);
@@ -391,7 +385,6 @@ const AddNewAirportTransfer = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-
         {
           copyProduct ?
           (
@@ -410,7 +403,6 @@ const AddNewAirportTransfer = ({
             <h1 className="modal-title mt-0 text-white">+ New Product - Airport Transfer</h1>
           ) : null
         }
-        
         <button
           onClick={() => {
             setAddNewAirportTransfer(false);
@@ -872,7 +864,6 @@ const AddNewAirportTransfer = ({
                     
                   </div>
                 </Col>
-                
               </Row>
               <Col
                 className="col-12 p-1 my-2"
@@ -1080,7 +1071,7 @@ const AddNewAirportTransfer = ({
                   Our Pricing
                 </p>
               </Col>
-              <Row className=" d-flex">
+              <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="ship_price">
                     <Label className="form-label">Ship Price</Label>
@@ -1379,8 +1370,7 @@ const AddNewAirportTransfer = ({
                 <Col
                   className="col-12 d-flex justify-content-end mt-4"
                   
-                >
-                  
+                >                  
                     <Button
                       color="paradise"
                       outline
@@ -1390,8 +1380,7 @@ const AddNewAirportTransfer = ({
                     >
                       Close
                   </Button>
-                  <Button
-                    
+                  <Button                    
                     type="submit"
                     className="font-16 btn-block col-2 btn-orange"
                     // onClick={toggleCategory}
