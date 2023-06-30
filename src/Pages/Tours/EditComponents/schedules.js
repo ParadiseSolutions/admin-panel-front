@@ -168,11 +168,27 @@ const Schedules = ({ tourData, toggle }) => {
       putSeasonalAPI(tourData.id, data)
         .then((resp) => {
           // console.log(resp.data);
-          if (resp.data.status === 201) {
+          if (resp.data.status === 200) {
             Swal.fire("Created!", "Seasonality has been created.", "success").then(
               () => {
                 refresh()
                 // history.goBack();
+                Swal.fire({
+                  title: 'Congratulation',
+                  text: "This tour has been created!",
+                  icon: 'success',
+                  showCancelButton: true,
+                  confirmButtonColor: '#F6851F',
+                  cancelButtonColor: '#d33',
+                  cancelButtonText: 'Save & Close!',
+                  confirmButtonText: 'Save & New'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    history.push('/tours/new')
+                  }else{
+                    history.push('/tours')
+                  }
+                })
               }
             );
           }
@@ -189,6 +205,7 @@ const Schedules = ({ tourData, toggle }) => {
 						String(errorMessages[0])
 					);
         });
+        
     },
   });
 

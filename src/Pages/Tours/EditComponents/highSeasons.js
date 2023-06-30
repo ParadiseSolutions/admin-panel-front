@@ -313,6 +313,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                                 ? true
                                 : false
                             }
+                            disabled={!activeDep}
                           />
                           {validationType.touched.from &&
                           validationType.errors.from ? (
@@ -344,6 +345,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                                 ? true
                                 : false
                             }
+                            disabled={!activeDep}
                           />
                           {validationType.touched.to &&
                           validationType.errors.to ? (
