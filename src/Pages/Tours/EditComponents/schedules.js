@@ -213,13 +213,12 @@ const Schedules = ({ tourData, toggle }) => {
                   onClick={() => setNewSchedule(true)}
                 >
                   + New Schedule
-                  <i className="uil-angle-double-right mx-1 " />
                 </Button>
               </section>                
               <section className="table-responsive border-top mb-5">
-                <Table className="table mb-0">
-                  <thead>
-                    <tr>
+                <Table className="table mb-0" >
+                  <thead >
+                    <tr >
                       <th className="border-0">Product</th>
                       <th className="border-0">Type</th>
                       <th className="border-0">Start Times</th>
@@ -315,18 +314,17 @@ const Schedules = ({ tourData, toggle }) => {
                   onClick={() => setNewOverriteDate(!newOverriteDate)}
                 >
                   + New Entry
-                  <i className="uil-angle-double-right mx-1 " />
                 </Button>
               </section>              
-              <section className="table-responsive">
+              <section className="table-responsive border-top mb-5">
                 <Table className="table mb-0">
                   <thead>
                     <tr>
-                      <th>Type</th>
-                      <th>From</th>
-                      <th>To</th>
-                      <th>Recurrency</th>
-                      <th>Status</th>
+                      <th className="border-0">Type</th>
+                      <th className="border-0">From</th>
+                      <th className="border-0">To</th>
+                      <th className="border-0">Recurrency</th>
+                      <th className="border-0">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -535,7 +533,6 @@ const Schedules = ({ tourData, toggle }) => {
                 Back
               </Button>
               <Button
-                
                 type="submit"
                 className="font-16 btn-block btn-orange"
                 // onClick={toggleCategory}

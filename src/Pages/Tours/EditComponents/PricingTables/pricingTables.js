@@ -60,7 +60,7 @@ const PricingTables = ({
   return (
     <Fragment>
 
-      {productsTable && (
+      {/* {productsTable && (
         <Col sm="12" className="">
           <div className="text-sm-end">
             <Button
@@ -74,7 +74,7 @@ const PricingTables = ({
             </Button>
           </div>
         </Col>
-      )}
+      )} */}
     
       {productsTable && (
         <div className="table-responsive">

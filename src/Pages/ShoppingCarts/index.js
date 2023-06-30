@@ -5,58 +5,77 @@ import AddCartModal from "../../Components/Common/Modals/ShoppingCartsModals/add
 import EditCartModal from "../../Components/Common/Modals/ShoppingCartsModals/EditCartModal";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
-import { CartName, CartID, Server, Website, TestLink, Active } from "./CartsCols";
-import { Container, Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
+import {
+  CartName,
+  CartID,
+  Server,
+  Website,
+  TestLink,
+  Active,
+} from "./CartsCols";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  UncontrolledTooltip,
+} from "reactstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ShoppingCarts = () => {
   const dispatch = useDispatch();
-   //modals
-   const [addCartModal, setAddCartModal] = useState(false)
-   const [editCartModal, setEditCartModal] = useState(false)
-   const [cartID, setCartID] = useState()
-   const onClickAddNewCart = () => {
-     setAddCartModal(!addCartModal);
-   };
-   const onClickEditCart = () => {
+  //modals
+  const [addCartModal, setAddCartModal] = useState(false);
+  const [editCartModal, setEditCartModal] = useState(false);
+  const [cartID, setCartID] = useState();
+  const onClickAddNewCart = () => {
+    setAddCartModal(!addCartModal);
+  };
+  const onClickEditCart = () => {
     setEditCartModal(!editCartModal);
-   };
+  };
+  const [loadingData, setLoadingData] = useState(true);
 
   //cart request
   useEffect(() => {
     const cartsRequest = () => dispatch(shoppingCartsData());
     cartsRequest();
   }, [dispatch, addCartModal, editCartModal]);
-  
+
   //get info
   const data = useSelector((state) => state.carts.carts.data);
-
- //delete
-
- const onDelete = (cart) =>{
-  Swal.fire({
-    title: "Delete Shopping Cart?",
-    icon: "question",
-    text: `Do you want delete ${cart.name}`,
-    showCancelButton: true,
-    confirmButtonText: "Yes",
-    confirmButtonColor: "#F38430",
-    cancelButtonText: "Cancel",
-  }).then((resp) => {
-    if (resp.isConfirmed) {
-      deleteCartAPI(cart.id)
-        .then((resp) => {
-          const cartsRequest = () => dispatch(shoppingCartsData());
-    cartsRequest();
-          Swal.fire("Deleted!", "The Cart has been deleted.", "success");
-        })
-        .catch((error) => {
-          // console.log(error);
-        });
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
     }
-  });
- }
+  }, [data]);
+  //delete
+
+  const onDelete = (cart) => {
+    Swal.fire({
+      title: "Delete Shopping Cart?",
+      icon: "question",
+      text: `Do you want delete ${cart.name}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        deleteCartAPI(cart.id)
+          .then((resp) => {
+            const cartsRequest = () => dispatch(shoppingCartsData());
+            cartsRequest();
+            Swal.fire("Deleted!", "The Cart has been deleted.", "success");
+          })
+          .catch((error) => {
+            // console.log(error);
+          });
+      }
+    });
+  };
   const columns = useMemo(
     () => [
       {
@@ -104,8 +123,7 @@ const ShoppingCarts = () => {
           return <TestLink {...cellProps} />;
         },
       },
-      
-      
+
       {
         Header: "Active",
         accessor: "active",
@@ -124,14 +142,17 @@ const ShoppingCarts = () => {
           return (
             <div className="d-flex gap-3">
               <div
-                
                 className="text-paradise"
                 onClick={() => {
-                  setCartID(cartData.id)
-                  setEditCartModal(true)
+                  setCartID(cartData.id);
+                  setEditCartModal(true);
                 }}
               >
-                <i className="mdi mdi-pencil-outline font-size-18" id="edittooltip" style={{cursor:"pointer"}}/>
+                <i
+                  className="mdi mdi-pencil-outline font-size-18"
+                  id="edittooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -145,7 +166,10 @@ const ShoppingCarts = () => {
                   onDelete(cartData);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -157,44 +181,59 @@ const ShoppingCarts = () => {
     ],
     []
   );
-    return ( 
-        <div className="page-content">
-        <Container fluid>
-          <div className=" mx-1">
-            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
-              + SHOPPING CARTS
-            </h1>
-          </div>
-          <Row>
-            <Col xs="12">
-              
-                  {data ? (
-                    <TableContainer
-                      columns={columns}
-                      data={data}
-                      isGlobalFilter={true}
-                      cartsTable={true}
-                      onClickAddNewCart={onClickAddNewCart}
-                      // handleOrderClicks={handleOrderClicks}
-                    />
-                  ) : null}
-                
-            </Col>
-          </Row>
-          <AddCartModal 
-            addCartModal={addCartModal}
-            setAddCartModal={setAddCartModal}
-            onClickAddNewCart={onClickAddNewCart}
-          />
-          <EditCartModal 
+  return (
+    <div className="page-content">
+      <Container fluid>
+        <div className=" mx-1">
+          <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
+            + SHOPPING CARTS
+          </h1>
+        </div>
+        <Row>
+          <Col xs="12">
+            {loadingData ? (
+              <div className="d-flex justify-content-center mt-5">
+                <div
+                  className="spinner-border"
+                  style={{ color: "#3DC7F4" }}
+                  role="status"
+                >
+                  <span className="sr-only">Loading...</span>
+                </div>
+                <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                  Loading...
+                </h2>
+              </div>
+            ) : (
+              <>
+                {data ? (
+                  <TableContainer
+                    columns={columns}
+                    data={data}
+                    isGlobalFilter={true}
+                    cartsTable={true}
+                    onClickAddNewCart={onClickAddNewCart}
+                    // handleOrderClicks={handleOrderClicks}
+                  />
+                ) : null}
+              </>
+            )}
+          </Col>
+        </Row>
+        <AddCartModal
+          addCartModal={addCartModal}
+          setAddCartModal={setAddCartModal}
+          onClickAddNewCart={onClickAddNewCart}
+        />
+        <EditCartModal
           editCartModal={editCartModal}
           setEditCartModal={setEditCartModal}
           onClickEditCart={onClickEditCart}
           cartID={cartID}
-          />
-          </Container>
-          </div>
-     );
-}
- 
+        />
+      </Container>
+    </div>
+  );
+};
+
 export default ShoppingCarts;

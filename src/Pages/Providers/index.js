@@ -28,7 +28,7 @@ const Providers = () => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [userId, setUserId] = useState({});
-
+  const [loadingData, setLoadingData] = useState(true);
   //data request
   const dispatch = useDispatch();
   useEffect(() => {
@@ -38,6 +38,11 @@ const Providers = () => {
 
   //get info
   const data = useSelector((state) => state.providers.providers.data);
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
 
   const onDelete = (providerInfo) => {
     Swal.fire({
@@ -58,7 +63,7 @@ const Providers = () => {
           })
           .catch((error) => {
             let errorMessages = [];
-            if(error.response.data.data === null) {
+            if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -68,13 +73,13 @@ const Providers = () => {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
               });
-    
+
               Swal.fire(
                 "Error!",
                 // {error.response.},
                 String(errorMessages[0])
               );
-            }            
+            }
           });
       }
     });
@@ -136,20 +141,17 @@ const Providers = () => {
           const providersData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link
-              to={`/providers/${providersData.id}  `}
-              >
-              
-              <div className="text-paradise">
-                <i
-                  className="mdi mdi-pencil-outline font-size-18"
-                  id="edittooltip"
-                  style={{cursor:"pointer"}}
-                />
-                <UncontrolledTooltip placement="top" target="edittooltip">
-                  Edit
-                </UncontrolledTooltip>
-              </div>
+              <Link to={`/providers/${providersData.id}  `}>
+                <div className="text-paradise">
+                  <i
+                    className="mdi mdi-pencil-outline font-size-18"
+                    id="edittooltip"
+                    style={{ cursor: "pointer" }}
+                  />
+                  <UncontrolledTooltip placement="top" target="edittooltip">
+                    Edit
+                  </UncontrolledTooltip>
+                </div>
               </Link>
               <Link
                 to="#"
@@ -160,7 +162,10 @@ const Providers = () => {
                   onDelete(providerInfo);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -185,17 +190,28 @@ const Providers = () => {
     <div className="page-content">
       <Container fluid>
         <div className=" mx-1">
-          <h1
-            className="fw-bold cursor-pointer"
-            style={{ color: "#3DC7F4" }}
-          >
+          <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
             PROVIDERS
           </h1>
         </div>
 
         <Row>
           <Col xs="12">
-            
+            {loadingData ? (
+              <div className="d-flex justify-content-center mt-5">
+                <div
+                  className="spinner-border"
+                  style={{ color: "#3DC7F4" }}
+                  role="status"
+                >
+                  <span className="sr-only">Loading...</span>
+                </div>
+                <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                  Loading...
+                </h2>
+              </div>
+            ) : (
+              <>
                 {data ? (
                   <TableContainer
                     columns={columns}
@@ -207,7 +223,8 @@ const Providers = () => {
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}
-              
+              </>
+            )}
           </Col>
         </Row>
 

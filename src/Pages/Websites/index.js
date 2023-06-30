@@ -1,32 +1,43 @@
-import {useEffect, useMemo, useState} from "react"
-import { Container } from "reactstrap"
-import {websitesData} from "../../Utils/Redux/Actions/WebsitesActions"
-import { useSelector, useDispatch } from "react-redux"
+import { useEffect, useMemo, useState } from "react";
+import { Container } from "reactstrap";
+import { websitesData } from "../../Utils/Redux/Actions/WebsitesActions";
+import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
-import { Name, Code, Date, Domain, URL, Root, Folder, Active } from "./WebsitesCols";
+import {
+  Name,
+  Code,
+  Date,
+  Domain,
+  URL,
+  Root,
+  Folder,
+  Active,
+} from "./WebsitesCols";
 import Swal from "sweetalert2";
 import { websiteDelete } from "../../Utils/API/Websites";
 import AddWebsiteModal from "../../Components/Common/Modals/WebsitesModals/addWebsiteModal";
 import UpdateWebsiteModal from "../../Components/Common/Modals/WebsitesModals/updateWebsiteModal";
 
-
-
 const Websites = () => {
-  const [siteId, setSiteId] = useState(false)
+  const [siteId, setSiteId] = useState(false);
   const dispatch = useDispatch();
+  const [loadingData, setLoadingData] = useState(true);
   //departments request
   useEffect(() => {
     const websitesRequest = () => dispatch(websitesData());
     websitesRequest();
   }, [dispatch]);
 
-
   //get info
   const data = useSelector((state) => state.websites.websites.data);
   // console.log(data)
-  
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
   const onEdit = () => {
     // console.log("on edit");
   };
@@ -45,11 +56,7 @@ const Websites = () => {
           .then((resp) => {
             const websitesRequest = () => dispatch(websitesData());
             websitesRequest();
-            Swal.fire(
-              "Deleted!",
-              "The website has been deleted.",
-              "success"
-            );
+            Swal.fire("Deleted!", "The website has been deleted.", "success");
           })
           .catch((error) => {
             // console.log(error);
@@ -78,7 +85,7 @@ const Websites = () => {
           return <Code {...cellProps} />;
         },
       },
-     
+
       {
         Header: "URL",
         accessor: "url",
@@ -89,7 +96,6 @@ const Websites = () => {
         },
       },
 
-     
       {
         Header: "Active",
         accessor: "active",
@@ -107,17 +113,19 @@ const Websites = () => {
           const siteData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              
               <div
-               
                 className="text-success"
                 onClick={() => {
-                  setEditModal(true)
+                  setEditModal(true);
                   const siteData = cellProps.row.original;
                   setSiteId(siteData.id);
                 }}
               >
-                <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}}/>
+                <i
+                  className="mdi mdi-pencil-outline font-size-18 text-paradise"
+                  id="edittooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -131,7 +139,10 @@ const Websites = () => {
                   onDelete(siteData);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -144,15 +155,15 @@ const Websites = () => {
     []
   );
   //modal new
-  const [addModal, setAddModal] = useState(false)
-  const [ editModal, setEditModal] = useState(false) 
-  const onClickAddNewWebsite = () =>{
-    setAddModal(!addModal)
-  }
-  
-  const onClickEditWebsite = () =>{
-    setEditModal(!editModal)
-  }
+  const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const onClickAddNewWebsite = () => {
+    setAddModal(!addModal);
+  };
+
+  const onClickEditWebsite = () => {
+    setEditModal(!editModal);
+  };
   /////////////////////////////////////////////
   return (
     <>
@@ -166,7 +177,21 @@ const Websites = () => {
 
           <Row>
             <Col xs="12">
-              
+              {loadingData ? (
+                <div className="d-flex justify-content-center mt-5">
+                  <div
+                    className="spinner-border"
+                    style={{ color: "#3DC7F4" }}
+                    role="status"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                  <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                    Loading...
+                  </h2>
+                </div>
+              ) : (
+                <>
                   {data ? (
                     <TableContainer
                       columns={columns}
@@ -179,23 +204,27 @@ const Websites = () => {
                       // handleOrderClicks={handleOrderClicks}
                     />
                   ) : null}
-                
+                </>
+              )}
             </Col>
           </Row>
-          <AddWebsiteModal addModal={addModal} setAddModal={setAddModal} onClickAddNewWebsite={onClickAddNewWebsite} />
+          <AddWebsiteModal
+            addModal={addModal}
+            setAddModal={setAddModal}
+            onClickAddNewWebsite={onClickAddNewWebsite}
+          />
 
-          <UpdateWebsiteModal 
-               
-          siteId ={siteId}   
-          editModal={editModal} 
-          setEditModal={setEditModal} 
-          onClickEditWebsite={onClickEditWebsite} />
+          <UpdateWebsiteModal
+            siteId={siteId}
+            editModal={editModal}
+            setEditModal={setEditModal}
+            onClickEditWebsite={onClickEditWebsite}
+          />
         </Container>
       </div>
     </>
   );
   //for the new website pop up
-  
-}
+};
 
-export default Websites
+export default Websites;

@@ -14,7 +14,7 @@ import UpdateTourTypeModal from "../../Components/Common/Modals/TourTypesModals/
 const TourTypes = () => {
   const [tourTypesId, setTourTypesId] = useState(false);
   const dispatch = useDispatch();
-
+  const [loadingData, setLoadingData] = useState(true);
   //tour types request
 
   useEffect(() => {
@@ -25,7 +25,11 @@ const TourTypes = () => {
   //saving tour types data into variable
   const data = useSelector((state) => state.tourTypes.tourTypes.data);
   // console.log(data);
-
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
   //delete Tour Type
   const tourTypesRequest = () => dispatch(tourTypesData());
   const onDelete = (tourTypeData) => {
@@ -141,6 +145,20 @@ const TourTypes = () => {
 
           <Row>
             <Col xs="12">
+              {loadingData ? (
+              <div className="d-flex justify-content-center mt-5">
+                <div
+                  className="spinner-border"
+                  style={{ color: "#3DC7F4" }}
+                  role="status"
+                >
+                  <span className="sr-only">Loading...</span>
+                </div>
+                <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                  Loading...
+                </h2>
+              </div>
+            ):<>
               {data ? (
                 <TableContainer
                   columns={columns}
@@ -153,6 +171,7 @@ const TourTypes = () => {
                   // // handleOrderClicks={handleOrderClicks}
                 />
               ) : null}
+            </>}
             </Col>
           </Row>
           <AddTourTypeModal

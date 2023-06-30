@@ -5,12 +5,7 @@ import { usersData } from "../../Utils/Redux/Actions/UsersActions";
 import { deleteUser } from "../../Utils/API/Users";
 import AddUserModal from "../../Components/Common/Modals/UsersModals/addUserModal";
 import EditUserModal from "../../Components/Common/Modals/UsersModals/EditUserModal";
-import {
-  Container,
-  Row,
-  Col,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
@@ -19,6 +14,7 @@ const Users = () => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [userId, setUserId] = useState({});
+  const [loadingData, setLoadingData] = useState(true);
   //roles request
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,9 +22,13 @@ const Users = () => {
     usersRequest();
   }, [dispatch, addModal, editModal]);
 
-
   //get info
   const data = useSelector((state) => state.users.users.data);
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
 
   const onDelete = (userData) => {
     Swal.fire({
@@ -65,14 +65,17 @@ const Users = () => {
         Cell: (cellProps) => {
           const userData = cellProps.row.original;
           return (
-            <div style={{width:"166px"}}>
-            <img
-                  className="rounded-circle header-profile-user"
-                  src={userData.picture ? userData.picture : "https://jstourandtravel.com/js-websites/global-resources/adminpanel/undefined.png" }
-                  alt="Header Avatar"
-                />
-            {" "}
-            <FullName {...cellProps} />
+            <div style={{ width: "166px" }}>
+              <img
+                className="rounded-circle header-profile-user"
+                src={
+                  userData.picture
+                    ? userData.picture
+                    : "https://jstourandtravel.com/js-websites/global-resources/adminpanel/undefined.png"
+                }
+                alt="Header Avatar"
+              />{" "}
+              <FullName {...cellProps} />
             </div>
           );
         },
@@ -134,7 +137,7 @@ const Users = () => {
                 <i
                   className="mdi mdi-pencil-outline font-size-18"
                   id="edittooltip"
-                  style={{cursor:"pointer"}}
+                  style={{ cursor: "pointer" }}
                   onClick={() => {
                     setUserId(userData.id);
                     setEditModal(true);
@@ -153,7 +156,10 @@ const Users = () => {
                   onDelete(userData);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -178,34 +184,45 @@ const Users = () => {
     <div className="page-content">
       <Container fluid>
         <div className=" mx-2">
-          <h1
-            className="fw-bold cursor-pointer"
-            style={{ color: "#3DC7F4" }}
-          >
+          <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
             USERS
           </h1>
         </div>
 
         <Row>
           <Col xs="12">
-            
+            {loadingData ? (
+              <div className="d-flex justify-content-center mt-5">
+                <div
+                  className="spinner-border"
+                  style={{ color: "#3DC7F4" }}
+                  role="status"
+                >
+                  <span className="sr-only">Loading...</span>
+                </div>
+                <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                  Loading...
+                </h2>
+              </div>
+            ) : (
+              <>
                 {data ? (
                   <TableContainer
                     columns={columns}
                     data={data}
                     isGlobalFilter={true}
                     usersTable={true}
-                    
                     onClickAddNew={onClickAddNew}
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}
-              
+              </>
+            )}
           </Col>
         </Row>
 
         <div className="modal-dialog-centered">
-          <div className="modal-content" style={{border:'none'}}>
+          <div className="modal-content" style={{ border: "none" }}>
             <AddUserModal
               addModal={addModal}
               setAddModal={setAddModal}

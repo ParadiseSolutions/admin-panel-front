@@ -123,7 +123,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   const columnsProducts = useMemo(() => [
     {
-      Header: <h2 className="text-paradise font-weight-bold">Products</h2>,
+      Header: 'Product Name',
       accessor: "label",
       disableFilters: true,
       filterable: false,
@@ -348,6 +348,26 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   return (
     <TabPane tabId="1" className="">
+      <Row>
+        <Col className="col-4">
+        
+        <h1 className="text-paradise">Products</h1>
+        </Col>
+        <Col>
+        
+        <div className="text-sm-end">
+            <Button
+              type="button"
+              
+              className="waves-effect waves-light mb-3 btn btn-orange"
+              onClick={onClickNewProduct}
+            >
+              <i className="mdi mdi-plus me-1" />
+              New Products
+            </Button>
+          </div>
+        </Col>
+      </Row>
       <Row>
         {pricesData ? (
           <PricingTables

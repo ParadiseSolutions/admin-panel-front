@@ -17,6 +17,8 @@ import Swal from "sweetalert2";
 
 const Tours = () => {
   const dispatch = useDispatch();
+  //loading
+  const [loadingData, setLoadingData] = useState(true);
 
   //cart request
   useEffect(() => {
@@ -26,6 +28,12 @@ const Tours = () => {
 
   //get info
   const data = useSelector((state) => state.tours.tours.data);
+
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
 
   //delete
 
@@ -117,16 +125,16 @@ const Tours = () => {
           return (
             <div className="d-flex gap-3">
               <div className="text-paradise">
-              <Link
-                to={`/tours/${tourData.id}`}
-                className="text-success"
-                
-              >
-                <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}}/>
-                <UncontrolledTooltip placement="top" target="edittooltip">
-                  Edit
-                </UncontrolledTooltip>
-              </Link>
+                <Link to={`/tours/${tourData.id}`} className="text-success">
+                  <i
+                    className="mdi mdi-pencil-outline font-size-18 text-paradise"
+                    id="edittooltip"
+                    style={{ cursor: "pointer" }}
+                  />
+                  <UncontrolledTooltip placement="top" target="edittooltip">
+                    Edit
+                  </UncontrolledTooltip>
+                </Link>
               </div>
               <Link
                 to="#"
@@ -137,7 +145,10 @@ const Tours = () => {
                   onDelete(tourData);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -149,20 +160,28 @@ const Tours = () => {
     ],
     []
   );
+
   return (
     <div className="page-content">
       <Container fluid>
         <div className=" mx-1">
-          <h1
-            className="fw-bold cursor-pointer"
-            style={{ color: "#3DC7F4" }}
-          >
+          <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
             + TOURS
           </h1>
         </div>
         <Row>
           <Col xs="12">
-            
+            {loadingData ? (
+              
+                <div className="d-flex justify-content-center mt-5">
+                  <div className="spinner-border" style={{ color: "#3DC7F4" }} role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                  <h2 className='mx-5' style={{ color: "#3DC7F4" }}>Loading...</h2>
+                </div>
+              
+            ) : (
+              <>
                 {data ? (
                   <TableContainer
                     columns={columns}
@@ -172,7 +191,8 @@ const Tours = () => {
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
-              
+              </>
+            )}
           </Col>
         </Row>
       </Container>

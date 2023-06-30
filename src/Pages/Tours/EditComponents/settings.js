@@ -322,7 +322,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   marginBottom: "0px",
                 }}
               >
-                AGES
+                AGE RANGES FOR PRICE TIERS
               </p>
             </div>
           </Col>
