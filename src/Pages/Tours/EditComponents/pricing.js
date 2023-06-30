@@ -28,6 +28,7 @@ import {
   Code,
   Members,
   Price,
+  Rate,
 } from "../EditComponents/PricingTables/DepartmentsCols";
 
 import Swal from "sweetalert2";
@@ -164,7 +165,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
-        return <Members {...cellProps} />;
+        return <Rate {...cellProps} />;
       },
     },
     {
@@ -363,7 +364,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               onClick={onClickNewProduct}
             >
               <i className="mdi mdi-plus me-1" />
-              New Products
+              Add New Products
             </Button>
           </div>
         </Col>

@@ -9,6 +9,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  UncontrolledTooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -19,9 +20,9 @@ import {
   updatePriceAPI,
   getPricingZoneOptionsAPI,
 } from "../../../../Utils/API/Tours";
-import { map } from "lodash";
+import { map, values } from "lodash";
 import Swal from "sweetalert2";
-import { setDecimalFormat, cleanUpSpecialCharacters, setRateFormat } from "../../../../Utils/CommonFunctions";
+import { setDecimalFormat, cleanUpSpecialCharacters, setRateFormat, calcNetRate, calcYouSave, calcEffRate, calcCommission, calcDeposit, calcNetPrice } from "../../../../Utils/CommonFunctions";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
@@ -39,6 +40,7 @@ const AddNewAirportTransfer = ({
     setPriceTypeSelected("")
     setPriceOptionSelected("")
     setPriceCollectSelected("")
+    setPriceCollectNameSelected("")
     setPriceSeasonSelected("")
     setPriceTransferTypeSelected("")
     setPriceDirectionSelected("")
@@ -70,6 +72,7 @@ const AddNewAirportTransfer = ({
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
+  const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState("");
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
@@ -132,7 +135,7 @@ const AddNewAirportTransfer = ({
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
-      rate: dataEdit ? dataEdit.rate : "",
+      rate: dataEdit ? setRateFormat(dataEdit.rate) : "",
       net_rate: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
@@ -149,17 +152,17 @@ const AddNewAirportTransfer = ({
     validationSchema: Yup.object().shape({
       min: Yup.number().positive().integer().nullable(),
       max: Yup.number().positive().integer().nullable(),
-      public_price: Yup.number().positive().nullable(),
+      public_price: Yup.number().positive().required("Field Required"),
       provider_price: Yup.number().positive().nullable(),
       rate: Yup.number().positive().nullable(),
       net_rate: Yup.number().positive().nullable(),
       ship_price: Yup.number().positive().nullable(),
-      compare_at: Yup.number().positive().nullable(),
-      compare_at_url: Yup.string().url().trim().nullable(),
-      our_price: Yup.number().positive().required("Field Require"),
-      commission: Yup.number().positive().required("Field Require"),
-      deposit: Yup.number().positive().required("Field Require"),
-      balance_due: Yup.number().positive().required("Field Require"),
+      compare_at: Yup.number().positive().required("Field Required"),
+      compare_at_url: Yup.string().url("URL invalid format").trim().nullable(),
+      our_price: Yup.number().positive().required("Field Required"),
+      commission: Yup.number().required("Field Required"),
+      deposit: Yup.number().positive().required("Field Required"),
+      balance_due: Yup.number().positive().required("Field Required"),
     }),
     onSubmit: (values, { resetForm }) => {
       let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
@@ -199,7 +202,7 @@ const AddNewAirportTransfer = ({
           tour_id: tourData.id,
           public: values.public_price,
           provider_price: values.provider_price,
-          rate: values.rate,
+          rate: ((values.rate !== "")?((values.rate > 1) ? values.rate / 100 : values.rate) : values.rate),
           net_rate: values.net_rate,
           compare_at_url: values.compare_at_url,
           ship_price: values.ship_price,
@@ -279,16 +282,24 @@ const AddNewAirportTransfer = ({
             refreshTable();
             resetForm({ values: "" });
           }).catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
         } else if (copyProduct || dataEdit === undefined || dataEdit == null) {
             postPricesAPI(data).then((resp) => {
@@ -324,8 +335,48 @@ const AddNewAirportTransfer = ({
     },
   });
   
-  
+  const reset = () => {
+    validationType.resetForm({values: ""})
+  }
 
+  const multipleRateCalcs = (value) => {
+    const rate = setRateFormat(value);
+    const net_rate = calcNetRate(validationType.values.public_price, rate, validationType.values.net_rate);
+    const commission = calcCommission(validationType.values.our_price, rate, validationType.values.commission);
+    const balance_due = calcNetPrice(validationType.values.our_price, commission, validationType.values.balance_due)
+
+    validationType.setFieldValue('rate', rate)
+    validationType.setFieldValue("net_rate", net_rate)
+    validationType.setFieldValue("commission", commission);
+    validationType.setFieldValue('balance_due', balance_due)
+    return rate;
+  }
+
+  const multipleOurPriceCalcs = (value) => {
+    const our_price = setDecimalFormat(value);
+    const you_save = calcYouSave(our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)
+    const commission = calcCommission(our_price, validationType.values.rate, validationType.values.commission)
+    const balance_due = calcNetPrice(our_price, commission, validationType.values.balance_due)
+    const eff_rate = calcEffRate(balance_due, our_price, validationType.values.eff_rate)
+    const deposit = calcDeposit(our_price, priceCollectNameSelected, commission, validationType.values.deposit)
+
+    validationType.setFieldValue('you_save', you_save)
+    validationType.setFieldValue('eff_rate', eff_rate)
+    validationType.setFieldValue('deposit', deposit)
+    validationType.setFieldValue('commission', commission)
+    validationType.setFieldValue('balance_due', balance_due)
+    return our_price;
+  }
+
+  const multipleCommissionCalcs = (value) => {
+    const commission = setDecimalFormat(value)
+
+    validationType.setFieldValue('commission', commission)
+    validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, commission, validationType.values.deposit))
+    validationType.setFieldValue('balance_due', calcNetPrice(validationType.values.our_price, commission, validationType.values.balance_due))
+
+    return commission;
+  }
 
   return (
     <Modal
@@ -497,8 +548,13 @@ const AddNewAirportTransfer = ({
                       name="collect"
                       onChange={(e) => {
                         setPriceCollectSelected(e.target.value);
+                        setPriceCollectNameSelected(e.target.selectedOptions[0].label);
                       }}
-                      onBlur={validationType.handleBlur}
+                      onBlur={(e) => {
+                        const value = e.target.value || "";
+                        validationType.setFieldValue('collect', value,
+                        validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, validationType.values.commission, validationType.values.deposit)),validationType.handleBlur)
+                      }}
                       //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
@@ -836,8 +892,8 @@ const AddNewAirportTransfer = ({
               </Col>
               <Row className="d-flex">
                 <Col className="col-2">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Public Price</Label>
+                  <div className="form-outline mb-2" id="public_price">
+                    <Label className="form-label">Public Price*</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
@@ -845,10 +901,12 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
-                          validationType.setFieldValue('public_price', setDecimalFormat(value));
+                          validationType.setFieldValue('public_price', setDecimalFormat(value),
+                          validationType.setFieldValue("net_rate", calcNetRate(validationType.values.public_price, validationType.values.rate, validationType.values.net_rate)));
                         }}
                         value={validationType.values.public_price || ""}
                         invalid={
@@ -864,11 +922,14 @@ const AddNewAirportTransfer = ({
                           {validationType.errors.public_price}
                         </FormFeedback>
                       ) : null}
-                      </div>
+                    </div>
+                    <UncontrolledTooltip placement="top" target="public_price">
+                      After discounting the tour, what our effective commission rate is (what we have left after the discount) 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="provider_price">
                     <Label className="form-label">Provider Price</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
@@ -877,6 +938,7 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
@@ -896,21 +958,25 @@ const AddNewAirportTransfer = ({
                           {validationType.errors.provider_price}
                         </FormFeedback>
                       ) : null}
-                    </div>
+                    </div>                    
+                    <UncontrolledTooltip placement="top" target="provider_price">
+                      The price the provider sells the tour for on their own website.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="rate">
                     <Label className="form-label">Rate %</Label>
                     <div className="input-group">
                       <Input
                         name="rate"
-                        placeholder="0.0000"
+                        placeholder="0.00"
                         type="number"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
-                          validationType.setFieldValue('rate', setRateFormat(value));
+                          validationType.setFieldValue('rate', multipleRateCalcs(value));
                         }}
                         value={validationType.values.rate || ""}
                         invalid={
@@ -928,10 +994,13 @@ const AddNewAirportTransfer = ({
                       ) : null}
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
                     </div>
+                    <UncontrolledTooltip placement="top" target="rate">
+                      The commission rate for the tour that is specified in our service agreement.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="net_rate">
                     <Label className="form-label">Net Rate</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
@@ -940,6 +1009,7 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
@@ -960,10 +1030,13 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                     </div>
+                    <UncontrolledTooltip placement="top" target="net_rate">
+                      The net rate specified in our service agreement for the tour. 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-4">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="compare_at_url">
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
@@ -985,7 +1058,10 @@ const AddNewAirportTransfer = ({
                         {validationType.errors.compare_at_url}
                       </FormFeedback>
                     ) : null}
-                  </div>
+                  </div>                  
+                  <UncontrolledTooltip placement="top" target="compare_at_url">
+                    The URL of the web page where the "compare at" price can be verified. 
+                  </UncontrolledTooltip>
                 </Col>
               </Row>
               <Col
@@ -1006,7 +1082,7 @@ const AddNewAirportTransfer = ({
               </Col>
               <Row className=" d-flex">
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="ship_price">
                     <Label className="form-label">Ship Price</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
@@ -1015,10 +1091,12 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
-                          validationType.setFieldValue('ship_price', setDecimalFormat(value));
+                          validationType.setFieldValue('ship_price', setDecimalFormat(value),
+                          validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)),validationType.handleBlur);
                         }}
                         value={validationType.values.ship_price || ""}
                         invalid={
@@ -1035,11 +1113,14 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                     </div>
+                    <UncontrolledTooltip placement="top" target="ship_price">
+                      The price that the most expensive cruise ship will sell this tour at.  This price should not be confused with the "From" price shown on cruise ship websites.  It is always higher.  Compare all cruise websites.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Compare At</Label>
+                  <div className="form-outline mb-2" id="compare_at">
+                    <Label className="form-label">Compare At*</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                         <Input
@@ -1047,10 +1128,12 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
-                          validationType.setFieldValue('compare_at', setDecimalFormat(value));
+                          validationType.setFieldValue('compare_at', setDecimalFormat(value),
+                          validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)),validationType.handleBlur);
                         }}
                         value={validationType.values.compare_at || ""}
                         invalid={
@@ -1067,10 +1150,13 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                     </div>
+                    <UncontrolledTooltip placement="top" target="compare_at">
+                      The price that shows as the "reg price" on our websites. This should be the most expensive price for a comparable tour you can find on the web. 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="our_price">
                     <Label className="form-label">Our Price*</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
@@ -1079,10 +1165,11 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
-                          validationType.setFieldValue('our_price', setDecimalFormat(value));
+                          validationType.setFieldValue('our_price', multipleOurPriceCalcs(value));
                         }}
                         value={validationType.values.our_price || ""}
                         invalid={
@@ -1099,18 +1186,21 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                     </div>
+                    <UncontrolledTooltip placement="top" target="our_price">
+                      The price we will sell the tour for.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">You Save</Label>
+                  <div className="form-outline mb-2" id="you_save">
+                    <Label className="form-label">You Save*</Label>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
-                        <Input
+                      <Input
                         name="you_save"
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
@@ -1130,21 +1220,25 @@ const AddNewAirportTransfer = ({
                           {validationType.errors.you_save}
                         </FormFeedback>
                       ) : null}
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
                     </div>
+                    <UncontrolledTooltip placement="top" target="you_save">
+                      This is the amount they save by booking with us compared to the "other guys" from the compare at price.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
               </Row>
               <Row className="d-flex">
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Eff. Rate</Label>
+                  <div className="form-outline mb-2" id="eff_rate">
+                    <Label className="form-label">Eff. Rate*</Label>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="eff_rate"
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
@@ -1164,11 +1258,15 @@ const AddNewAirportTransfer = ({
                           {validationType.errors.eff_rate}
                         </FormFeedback>
                       ) : null}
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
                     </div>
+                    <UncontrolledTooltip placement="top" target="eff_rate">
+                      The price the provider refers to in our service agreement as the "Public Price" or "Regular Price". 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="commission">
                     <Label className="form-label">Commission*</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
@@ -1177,10 +1275,11 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
-                          validationType.setFieldValue('commission', setDecimalFormat(value));
+                          validationType.setFieldValue('commission', multipleCommissionCalcs(value), validationType.handleBlur);
                         }}
                         value={validationType.values.commission || ""}
                         invalid={
@@ -1196,11 +1295,14 @@ const AddNewAirportTransfer = ({
                           {validationType.errors.commission}
                         </FormFeedback>
                       ) : null}
+                      <UncontrolledTooltip placement="top" target="commission">
+                        The $$ amount that we earn from the sale. 
+                      </UncontrolledTooltip>
                     </div>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="deposit">
                     <Label className="form-label">Deposit*</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
@@ -1209,6 +1311,7 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
@@ -1229,11 +1332,14 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                     </div>
+                    <UncontrolledTooltip placement="top" target="deposit">
+                      The amount we collect at the time of booking.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Net Price*</Label>
+                  <div className="form-outline mb-2" id="balance_due">
+                    <Label className="form-label">Balance Due*</Label>
                     <div className="input-group">
                       <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
@@ -1241,10 +1347,12 @@ const AddNewAirportTransfer = ({
                         placeholder="0.00"
                         type="number"
                         min="0"
+                        step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
                           const value = e.target.value || "";
-                          validationType.setFieldValue('balance_due', setDecimalFormat(value));
+                          validationType.setFieldValue('balance_due', setDecimalFormat(value),
+                          validationType.setFieldValue('eff_rate', calcEffRate(validationType.values.balance_due, validationType.values.our_price, validationType.values.eff_rate)),validationType.handleBlur);
                         }}
                         value={validationType.values.balance_due || ""}
                         invalid={
@@ -1261,6 +1369,9 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null} 
                     </div>
+                    <UncontrolledTooltip placement="top" target="balance_due">
+                      The amount due to the provider on the day of the tour.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
               </Row>
@@ -1269,14 +1380,15 @@ const AddNewAirportTransfer = ({
                   className="col-12 d-flex justify-content-end mt-4"
                   
                 >
-                  <Button
-                    color="paradise"
-                    outline
-                    className="waves-effect waves-light col-2 mx-4"
-                    type="button"
-                    onClick={() => setAddNewAirportTransfer(false)}
-                  >
-                    Close
+                  
+                    <Button
+                      color="paradise"
+                      outline
+                      className="waves-effect waves-light col-2 mx-4"
+                      type="button"
+                      onClick={() => setAddNewAirportTransfer(false)}
+                    >
+                      Close
                   </Button>
                   <Button
                     

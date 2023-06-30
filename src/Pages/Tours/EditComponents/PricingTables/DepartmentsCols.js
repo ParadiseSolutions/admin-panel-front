@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Switch from "react-switch";
 import { statusUpdate } from "../../../../Utils/API/Departments";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
+import { setRateFormat } from "../../../../Utils/CommonFunctions";
 // const OrderId = (cell) => {
 //     return (
 //         <Link to="#" className="text-body fw-bold">{cell.value ? cell.value : ''}</Link>
@@ -17,6 +18,10 @@ const Code = (cell) => {
 const Members = (cell) => {
   return cell.value ? cell.value : "";
 };
+
+const Rate = (cell) => {
+  return cell.value ? setRateFormat(cell.value) + "%" : ""
+}
 
 const Price = (cell) => {
   return cell.value ? "$" + cell.value : "";
@@ -120,4 +125,4 @@ const Active = (cell) => {
 //     )
 // };
 
-export { Name, Code, Date, Members, Price, Active };
+export { Name, Code, Date, Members, Price, Active, Rate };
