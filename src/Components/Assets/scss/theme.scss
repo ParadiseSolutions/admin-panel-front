@@ -242,6 +242,6 @@ input[type=number] {
   margin-top: 5px;
 }
 
-.mm-active>a {
+.mm-active.has-arrow.waves-effect, .sub-menu .mm-active>a {
   background-color: #f3f8fb !important;
 }
