@@ -214,3 +214,15 @@ input[type=number] {
   background-color: #F6851F;
   border-color: #F6851F;
 }
+.swal2-styled.swal2-cancel{
+  border: none;
+}
+.swal2-styled.swal2-cancel:hover{
+  background-color: #F6851F !important;
+}
+.swal2-styled.swal2-confirm {
+  border: none !important;
+}
+.swal2-styled.swal2-confirm:hover {
+  background-color: #a7b6c4 !important;
+}

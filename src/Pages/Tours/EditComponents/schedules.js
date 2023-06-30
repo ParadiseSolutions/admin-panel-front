@@ -164,7 +164,7 @@ const Schedules = ({ tourData, toggle }) => {
         on: null,
         recurrency: 1,
       };
-      console.log(data);
+      //console.log(data);
       putSeasonalAPI(tourData.id, data)
         .then((resp) => {
           // console.log(resp.data);

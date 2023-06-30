@@ -248,11 +248,10 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                   <Button
                     type={websiteID.length > 0 ? "submit" : "button"}
                     style={{
-                      backgroundColor:
-                        websiteID.length > 0 ? "#F6851F" : "gray",
+                      
                       border: "none",
                     }}
-                    className="waves-effect waves-light mb-3 btn btn-success"
+                    className="waves-effect waves-light mb-3 btn btn-orange"
                   >
                     Save Changes
                   </Button>

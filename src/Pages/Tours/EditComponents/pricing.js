@@ -231,7 +231,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 }
               }}
             >
-              <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+              <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{cursor:"pointer"}} />
               <UncontrolledTooltip placement="top" target="edittooltip">
                 Edit
               </UncontrolledTooltip>
@@ -274,7 +274,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 }
               }}
             >
-              <i className="mdi mdi-content-copy font-size-18" id="copytooltip" />
+              <i className="mdi mdi-content-copy font-size-18" id="copytooltip"  style={{cursor:"pointer"}}/>
               <UncontrolledTooltip placement="top" target="copytooltip">
                 Copy
               </UncontrolledTooltip>
@@ -287,7 +287,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 onDelete(depData);
               }}
             >
-              <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+              <i className="mdi mdi-delete font-size-18" id="deletetooltip"  style={{cursor:"pointer"}}/>
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete
               </UncontrolledTooltip>

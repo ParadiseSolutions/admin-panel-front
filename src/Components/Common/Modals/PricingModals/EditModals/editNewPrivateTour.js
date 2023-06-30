@@ -96,7 +96,7 @@ const EditPrivateTour = ({ newPrivateTour, setNewPrivateTour, tourData, copyProd
         ],
       };
 
-      console.log(data)
+      //console.log(data)
       postPricesAPI(data).then((resp) =>{
         // console.log(resp)
         setNewPrivateTour(false);

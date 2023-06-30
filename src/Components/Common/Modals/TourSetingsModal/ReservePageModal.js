@@ -77,7 +77,6 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
     }),
 
     onSubmit: (values) => {
-      console.log('asdasdasd')
       let data = {
         template_id: templateType,
         instructions_title: titleExample,

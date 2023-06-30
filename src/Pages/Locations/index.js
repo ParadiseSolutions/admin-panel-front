@@ -146,6 +146,7 @@ const Locations = () => {
             </h1>
           </div>
 
+<<<<<<< HEAD
           <Row>
             <Col xs="12">
               {loadingData ? (
@@ -194,6 +195,52 @@ const Locations = () => {
       </div>
     </>
   );
+=======
+//modal new
+const [ editModal, setEditModal] = useState(false)
+const [addModal, setAddModal] = useState(false);
+const onClickAddLocation = () => {
+	setAddModal(!addModal);
+};
+
+const onClickEditLocation = () => {
+	setEditModal(!editModal);
+};
+	return (
+		<>
+			<div className="page-content">
+				<Container fluid>
+				<div className=" mx-1">
+						<h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
+							LOCATIONS
+						</h1>
+					</div>
+
+					<Row>
+						<Col xs="12">
+							
+									{data ? (
+										<TableContainer
+											columns={columns}
+											data={data}
+											isGlobalFilter={true}
+											locationsTable={true}
+											isAddOrder={true}
+											onClickAddLocation={onClickAddLocation}
+											onClickEditLocation={onClickEditLocation}
+											// // handleOrderClicks={handleOrderClicks}
+										/>
+									) : null}
+								
+						</Col>
+					</Row>
+					<AddLocationModal addModal={addModal} setAddModal={setAddModal} onClickAddLocation={onClickAddLocation} />
+					<UpdateLocationModal locationId = {locationsId} editModal={editModal} setEditModal={setEditModal} onClickEditLocation={onClickEditLocation} />
+				</Container>
+			</div>
+		</>
+	);
+>>>>>>> d1fc933f9883c05789468e458f365521581d3a01
 };
 
 export default Locations;

@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { departmentsData } from "../../../../Utils/Redux/Actions/DepartmentsActions";
-import { rolesData } from "../../../../Utils/Redux/Actions/RolesActions";
 import {
   createUserAPI,
   getUserDepAPI,
   getRolesDepAPI,
 } from "../../../../Utils/API/Users";
-import { useSelector, useDispatch } from "react-redux";
 import {
   Row,
   Col,
@@ -21,6 +18,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+import { capitalizeWords2, cleanUpSpecialCharacters, nameFormat } from "../../../../Utils/CommonFunctions";
 
 const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
   //departments request
@@ -168,7 +166,10 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                       placeholder="Johann"
                       type="text"
                       onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
+                      onBlur={(e)=>{
+                        const value = e.target.value || "";
+                        validationType.setFieldValue('first_name', nameFormat(value));
+                      }}
                       value={validationType.values.first_name || ""}
                       invalid={
                         validationType.touched.first_name &&
@@ -193,7 +194,10 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                       placeholder="Swart"
                       type="text"
                       onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
+                      onBlur={(e)=>{
+                        const value = e.target.value || "";
+                        validationType.setFieldValue('last_name', nameFormat(value));
+                      }}
                       value={validationType.values.last_name || ""}
                       invalid={
                         validationType.touched.last_name &&
@@ -298,7 +302,10 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                       placeholder="Innovation Manager"
                       type="text"
                       onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
+                      onBlur={(e)=>{
+                        const value = e.target.value || "";
+                        validationType.setFieldValue('job_title', capitalizeWords2(cleanUpSpecialCharacters(value)));
+                      }}
                       value={validationType.values.job_title || ""}
                       invalid={
                         validationType.touched.job_title &&

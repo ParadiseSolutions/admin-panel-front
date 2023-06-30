@@ -165,8 +165,16 @@ const Tours = () => {
     <div className="page-content">
       <Container fluid>
         <div className=" mx-1">
+<<<<<<< HEAD
           <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
             + TOURS
+=======
+          <h1
+            className="fw-bold cursor-pointer"
+            style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
+          >
+            TOURS
+>>>>>>> d1fc933f9883c05789468e458f365521581d3a01
           </h1>
         </div>
         <Row>

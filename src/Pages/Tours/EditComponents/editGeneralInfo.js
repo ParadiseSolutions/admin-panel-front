@@ -25,6 +25,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+import { cleanUpSpecialCharacters, capitalizeWords2 } from "../../../Utils/CommonFunctions";
 
 const EditGeneralInformation = ({ tourData, toggle }) => {
   const history = useHistory();
@@ -97,10 +98,10 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       let data = {
        name: values.tour_name
       };
-      console.log(data);
+      //console.log(data);
       putTourNameEditAPI( tourData.id, data)
           .then((resp) => {
-            console.log(resp.data);
+            //console.log(resp.data);
             if (resp.data.status === 200) {
               Swal.fire(
                 "Edited!",
@@ -323,10 +324,13 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     <Label className="form-label">Tour Name</Label>
                     <Input
                       name="tour_name"
-                      placeholder=""
+                      placeholder="ATV Tour"
                       type="text"
                       onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
+                      onBlur={(e)=>{
+                        const value = e.target.value || "";
+                        validationType.setFieldValue('tour_name', capitalizeWords2(cleanUpSpecialCharacters(value)));
+                      }}
                       value={validationType.values.tour_name || ""}
                       invalid={
                         validationType.touched.tour_name &&

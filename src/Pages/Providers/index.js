@@ -27,8 +27,13 @@ import Swal from "sweetalert2";
 const Providers = () => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+<<<<<<< HEAD
   const [userId, setUserId] = useState({});
   const [loadingData, setLoadingData] = useState(true);
+=======
+  const [userId, setUserId] = useState(null);
+
+>>>>>>> d1fc933f9883c05789468e458f365521581d3a01
   //data request
   const dispatch = useDispatch();
   useEffect(() => {
@@ -190,7 +195,14 @@ const Providers = () => {
     <div className="page-content">
       <Container fluid>
         <div className=" mx-1">
+<<<<<<< HEAD
           <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
+=======
+          <h1
+            className="fw-bold cursor-pointer"
+            style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
+          >
+>>>>>>> d1fc933f9883c05789468e458f365521581d3a01
             PROVIDERS
           </h1>
         </div>

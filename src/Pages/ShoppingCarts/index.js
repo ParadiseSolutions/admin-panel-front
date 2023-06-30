@@ -166,10 +166,14 @@ const ShoppingCarts = () => {
                   onDelete(cartData);
                 }}
               >
+<<<<<<< HEAD
                 <i
                   className="mdi mdi-delete-outline font-size-18"
                   id="deletetooltip"
                 />
+=======
+                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" style={{cursor:"pointer"}}/>
+>>>>>>> d1fc933f9883c05789468e458f365521581d3a01
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -181,6 +185,7 @@ const ShoppingCarts = () => {
     ],
     []
   );
+<<<<<<< HEAD
   return (
     <div className="page-content">
       <Container fluid>
@@ -226,6 +231,38 @@ const ShoppingCarts = () => {
           onClickAddNewCart={onClickAddNewCart}
         />
         <EditCartModal
+=======
+    return ( 
+        <div className="page-content">
+        <Container fluid>
+          <div className=" mx-1">
+            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
+              SHOPPING CARTS
+            </h1>
+          </div>
+          <Row>
+            <Col xs="12">
+              
+                  {data ? (
+                    <TableContainer
+                      columns={columns}
+                      data={data}
+                      isGlobalFilter={true}
+                      cartsTable={true}
+                      onClickAddNewCart={onClickAddNewCart}
+                      // handleOrderClicks={handleOrderClicks}
+                    />
+                  ) : null}
+                
+            </Col>
+          </Row>
+          <AddCartModal 
+            addCartModal={addCartModal}
+            setAddCartModal={setAddCartModal}
+            onClickAddNewCart={onClickAddNewCart}
+          />
+          <EditCartModal 
+>>>>>>> d1fc933f9883c05789468e458f365521581d3a01
           editCartModal={editCartModal}
           setEditCartModal={setEditCartModal}
           onClickEditCart={onClickEditCart}
