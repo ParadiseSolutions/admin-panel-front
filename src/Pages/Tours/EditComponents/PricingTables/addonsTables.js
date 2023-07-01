@@ -69,7 +69,7 @@ const AddonsTables = ({
               style={{ backgroundColor: "#F6851F", border: "none" }}
               className="waves-effect waves-light mb-3 btn btn-success mt-3"
               onClick={() => {
-              console.log('tabla')
+              //console.log('tabla')
                 onClickInstructions()
               }}
             >
@@ -83,7 +83,7 @@ const AddonsTables = ({
               onClick={onClickNewAddon}
             >
               <i className="mdi mdi-plus me-1" />
-              New Add-On
+              Add New Add-On
             </Button>
           </div>
         </Col>

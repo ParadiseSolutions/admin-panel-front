@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Active, Date } from "./RolesCols";
 import { rolesData } from "../../Utils/Redux/Actions/RolesActions";
@@ -8,8 +8,6 @@ import {
   Container,
   Row,
   Col,
-  Card,
-  CardBody,
   UncontrolledTooltip,
 } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -17,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 const Roles = () => {
   //roles request
+  const [loadingData, setLoadingData] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     const rolesRequest = () => dispatch(rolesData());
@@ -25,7 +24,11 @@ const Roles = () => {
 
   //get info
   const data = useSelector((state) => state.roles.roles.data);
-
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
   // console.log(data);
   const onDelete = (rolData) => {
     Swal.fire({
@@ -42,14 +45,27 @@ const Roles = () => {
           .then((resp) => {
             const rolesRequest = () => dispatch(rolesData());
             rolesRequest();
-            Swal.fire(
-              "Deleted!",
-              "The Rol has been deleted.",
-              "success"
-            );
+            Swal.fire("Deleted!", "The Role has been deleted.", "success");
           })
           .catch((error) => {
-            // console.log(error);
+            let errorMessages = [];
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
       }
     });
@@ -96,7 +112,11 @@ const Roles = () => {
           return (
             <div className="d-flex gap-3">
               <Link to={`/roles/${rolData.id}`} className="text-success">
-                <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}}/>
+                <i
+                  className="mdi mdi-pencil-outline font-size-18 text-paradise"
+                  id="edittooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -110,7 +130,11 @@ const Roles = () => {
                   onDelete(rolData);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -128,7 +152,7 @@ const Roles = () => {
         <div className=" mx-1">
           <h1
             className="fw-bold cursor-pointer"
-            style={{ color: "#3DC7F4" }}
+            style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
           >
             ROLES
           </h1>
@@ -136,7 +160,21 @@ const Roles = () => {
 
         <Row>
           <Col xs="12">
-            
+            {loadingData ? (
+              <div className="d-flex justify-content-center mt-5">
+                <div
+                  className="spinner-border"
+                  style={{ color: "#3DC7F4" }}
+                  role="status"
+                >
+                  <span className="sr-only">Loading...</span>
+                </div>
+                <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                  Loading...
+                </h2>
+              </div>
+            ) : (
+              <>
                 {data ? (
                   <TableContainer
                     columns={columns}
@@ -147,7 +185,8 @@ const Roles = () => {
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
-              
+              </>
+            )}
           </Col>
         </Row>
       </Container>

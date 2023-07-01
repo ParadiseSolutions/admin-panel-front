@@ -322,7 +322,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   marginBottom: "0px",
                 }}
               >
-                AGES
+                AGE RANGES FOR PRICE TIERS
               </p>
             </div>
           </Col>
@@ -335,8 +335,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 <span className="input-group-text">From</span>
                 <Input
                   name="infants_range_from"
-                  placeholder=""
-                  type="text"
+                  placeholder="Years"
+                  type="number"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.infants_range_from || ""}
@@ -363,8 +363,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 </span>
                 <Input
                   name="infants_range_to"
-                  placeholder=""
-                  type="text"
+                  placeholder="Years"
+                  type="number"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.infants_range_to || ""}
@@ -391,8 +391,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 <span className="input-group-text">From</span>
                 <Input
                   name="kids_range_from"
-                  placeholder=""
-                  type="text"
+                  placeholder="Years"
+                  type="number"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.kids_range_from || ""}
@@ -416,8 +416,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 </span>
                 <Input
                   name="kids_range_to"
-                  placeholder=""
-                  type="text"
+                  placeholder="Years"
+                  type="number"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.kids_range_to || ""}
@@ -444,8 +444,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 <span className="input-group-text">From</span>
                 <Input
                   name="teenagers_range_from"
-                  placeholder=""
-                  type="text"
+                  placeholder="Years"
+                  type="number"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.teenagers_range_from || ""}
@@ -469,8 +469,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 </span>
                 <Input
                   name="teenagers_range_to"
-                  placeholder=""
-                  type="text"
+                  placeholder="Years"
+                  type="number"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.teenagers_range_to || ""}

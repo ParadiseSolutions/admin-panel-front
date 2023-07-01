@@ -11,10 +11,10 @@ const LastName = (cell) => {
   return cell.value ? cell.value : "";
 };
 const Email = (cell) => {
-  return cell.value ? cell.value : "";
+  return cell.value ?  <a href={`mailto:${cell.value}`} target="_blank">{cell.value}</a> : "";
 };
-const Department = (cell) => {
-  return cell.value ? cell.value : "";
+const Phone = (cell) => {
+  return cell.value ?  <a href={`tel:${cell.value}`}>{cell.value}</a> : "";
 };
 const Rol = (cell) => {
   return cell.value ? cell.value : "";
@@ -122,4 +122,4 @@ const Active = (cell) => {
 //     )
 // };
 
-export { Name, Department, Active, LastName, Email, Rol };
+export { Name, Phone, Active, LastName, Email, Rol };

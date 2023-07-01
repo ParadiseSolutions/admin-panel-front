@@ -56,7 +56,7 @@ const EditGeneralInformation = ({ data }) => {
 
   // console.log(initialData);
   // console.log(notification);
-  const [col1, setcol1] = useState(false);
+  const [col1, setcol1] = useState(true);
 
   function togglecol1() {
     setcol1(!col1);

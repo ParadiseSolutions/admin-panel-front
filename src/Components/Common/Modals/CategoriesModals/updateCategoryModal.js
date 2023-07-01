@@ -3,39 +3,17 @@ import { getCategory, editCategory } from "../../../../Utils/API/Categories";
 import { categoriesData } from "../../../../Utils/Redux/Actions/CategoriesActions";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Modal, Form, Label, Input, FormFeedback, Button } from "reactstrap";
-import Select from "react-select";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+import { cleanUpSpecialCharacters, codeFormat, nameFormat } from "../../../../Utils/CommonFunctions";
 
 const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCategory }) => {
-	
-	//cateogories
-	// const [categoryData, setCategoryData] = useState(false);
-	// const dispatch = useDispatch();
-
-	// useEffect(() => {
-	// 	const categoriesRequest = () => dispatch(categoriesData());
-	// 	categoriesRequest();
-	// }, [dispatch]);
-	// const data = useSelector((state) => state.categories.categories.data);
-
-	// console.log("wacataaa", data)
-
-	// useEffect(() => {
-	// 	if (data) {
-	// 		getCategory(categoryId).then((resp) => {
-	// 			setCategoryData(resp.data.data);
-	// 		});
-	// 	}
-	// }, [categoryId]);
 
 	const [catData, setCatData] = useState(false)
 	const [categoryData, setCategoryData] = useState()
 	const dispatch = useDispatch()
-
-	
 
 	useEffect(() => {
 		const categoriesRequest = () => dispatch(categoriesData())
@@ -49,14 +27,18 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 	});
 
 	useEffect(() => {
-		if (categoryId) {
-			getCategory(categoryId).then((resp) => {
-				
-				setCategoryData(resp.data.data)
-				
-			})
+		if(editModal === false) {
+			setCatData(null)
+			setCategoryData(null)
 		}
-	},[categoryId])
+		if (categoryId) {
+			getCategory(categoryId).then((resp) => {				
+				setCategoryData(resp.data.data)				
+			})
+		} else {
+			setCategoryData(null)
+		}
+	},[categoryId,editModal])
 	// console.log(categoryData)
 	//select
 	const [parent, setParent] = useState([]);
@@ -94,16 +76,24 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 					}
 				})
 				.catch((error) => {
+				  if(error.response.data.data === null) {
+					Swal.fire(
+					  "Error!",
+					  // {error.response.},
+					  String(error.response.data.message)
+					);
+				  } else {
 					let errorMessages = [];
 					Object.entries(error.response.data.data).map((item) => {
-						errorMessages.push(item[1]);
+					  errorMessages.push(item[1]);
 					});
-
+		  
 					Swal.fire(
-						"Error!",
-						// {error.response.},
-						String(errorMessages[0])
+					  "Error!",
+					  // {error.response.},
+					  String(errorMessages[0])
 					);
+				  }
 				});
 		},
 	});
@@ -151,10 +141,13 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 											<Label className="form-label">Category Name</Label>
 											<Input
 												name="name"
-												placeholder=""
+												placeholder="Airport Transfer"
 												type="text"
 												onChange={validationType.handleChange}
-												onBlur={validationType.handleBlur}
+												onBlur={(e)=>{
+													const value = e.target.value;
+													validationType.setFieldValue('name', nameFormat(value));
+												  }}
 												value={validationType.values.name || ""}
 												invalid={validationType.touched.name && validationType.errors.name ? true : false}
 											/>
@@ -166,10 +159,13 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 											<Label className="form-label">Category Code</Label>
 											<Input
 												name="code"
-												placeholder=""
+												placeholder="AT"
 												type="text"
 												onChange={validationType.handleChange}
-												onBlur={validationType.handleBlur}
+												onBlur={(e)=>{
+													const value = e.target.value;
+													validationType.setFieldValue('code', codeFormat(cleanUpSpecialCharacters(value)));
+												  }}
 												value={validationType.values.code || ""}
 												invalid={validationType.touched.code && validationType.errors.code ? true : false}
 											/>

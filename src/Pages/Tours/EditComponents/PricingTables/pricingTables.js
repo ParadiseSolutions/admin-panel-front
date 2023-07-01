@@ -3,23 +3,22 @@ import PropTypes from "prop-types";
 import {
   useTable,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
   useFilters,
   useExpanded,
   usePagination,
   useRowSelect,
 } from "react-table";
-import { Table, Row, Col, Button, Input } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Table, Row, Col, Button, Input,
+  Pagination,
+  PaginationItem,
+  PaginationLink } from "reactstrap";
 
 const PricingTables = ({
   columns,
   data,
   productsTable,
-  addonsTable,
   onClickNewProduct,
-  onClickNewAddon,
 }) => {
   const {
     getTableProps,
@@ -34,10 +33,6 @@ const PricingTables = ({
     gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -53,14 +48,10 @@ const PricingTables = ({
     useRowSelect
   );
 
-  const onChangeInInput = (event) => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0;
-    gotoPage(page);
-  };
   return (
     <Fragment>
 
-      {productsTable && (
+      {/* {productsTable && (
         <Col sm="12" className="">
           <div className="text-sm-end">
             <Button
@@ -70,15 +61,15 @@ const PricingTables = ({
               onClick={onClickNewProduct}
             >
               <i className="mdi mdi-plus me-1" />
-              New Product
+              Add New Product
             </Button>
           </div>
         </Col>
-      )}
+      )} */}
     
       {productsTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
@@ -116,60 +107,65 @@ const PricingTables = ({
       )}
      
 
-      <div className="d-flex justify-content-md-end justify-content-center align-items-center col-12">
-        
-          <div className="btn-group" role="group">
-          <Button
-                className="btn btn-orange" 
-                onClick={() => gotoPage(0)}
-                disabled={!canPreviousPage}
-              >
-                {"<<"}
-              </Button>
-              <Button
-                // color="primary"
-                className="btn btn-orange"
-                onClick={previousPage}
-                disabled={!canPreviousPage}
-              >
-                {"<"}
-              </Button>
-          
-          <div className="d-flex justify-content-center align-items-center input-group">
-                <div className="input-group-text rounded-0 border-start-0">
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>
-              </div>
-          <Input
-            type="number"
-            min={1}
-            style={{ width: 70 }}
-            max={pageOptions.length}
-            defaultValue={pageIndex + 1}
-            onChange={onChangeInInput}
-          />
+     <Row className="justify-content-md-end justify-content-center align-items-center">
+        <Col className="col-md-auto">
+          <div className="d-flex btn-group" role="group">
+            <Pagination aria-label="Page navigation example">
+              {
+                pageOptions.length >= 4 && pageIndex < pageOptions.length - 1 ? (
+                <PaginationItem>
+                  <PaginationLink onClick={() => gotoPage(0)}
+                  disabled={!canPreviousPage}>First</PaginationLink>
+                </PaginationItem>
+                  ):null
+              }
+              <PaginationItem>
+                <PaginationLink onClick={previousPage}
+                disabled={!canPreviousPage}>Previous</PaginationLink>
+              </PaginationItem>
+              {
+                pageIndex >= 3 ? (
+                  <PaginationItem>
+                      <PaginationLink>...</PaginationLink>
+                    </PaginationItem>
+                ):null
+              }
+              {
+                pageOptions.map((item, index) => {
+                  return (
+                    <PaginationItem
+                    hidden={pageOptions.length < 4 || (index >= pageIndex - 2 && index <= pageIndex + 2) ? false : true}
+                    className={index === pageIndex ? "active" : ""}>
+                      <PaginationLink
+                       onClick={() => gotoPage(index)}>{index + 1}</PaginationLink>
+                    </PaginationItem>
+                  )
+                })
+              }
+              {
+                pageOptions.length >= 4 && pageIndex < pageOptions.length - 1 ? (
+                  <PaginationItem>
+                      <PaginationLink>...</PaginationLink>
+                    </PaginationItem>
+                ):null
+              }
+              
+              <PaginationItem>
+                <PaginationLink onClick={nextPage}
+                disabled={!canNextPage}>Next</PaginationLink>
+              </PaginationItem>
+              {
+                pageOptions.length >= 4 && pageIndex < pageOptions.length - 1 ? (
+                <PaginationItem>
+                  <PaginationLink onClick={() => gotoPage(pageCount - 1)}
+                  disabled={!canNextPage}>Last</PaginationLink>
+                </PaginationItem>
+                ):null
+              }
+            </Pagination>    
           </div>
-          
-            <Button
-              className="btn-orange"
-              onClick={nextPage}
-              disabled={!canNextPage}
-            >
-              {">"}
-            </Button>
-            <Button
-              // color="primary"
-              className="btn-orange"
-              onClick={() => gotoPage(pageCount - 1)}
-              disabled={!canNextPage}
-            >
-              {">>"}
-            </Button>
-          </div>
-        
-      </div>
+        </Col>
+      </Row>
     </Fragment>
   );
 };

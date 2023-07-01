@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { departmentsData } from "../../Utils/Redux/Actions/DepartmentsActions";
@@ -11,17 +11,20 @@ import Swal from "sweetalert2";
 import { departmentDelete } from "../../Utils/API/Departments";
 const Departments = () => {
   const dispatch = useDispatch();
-
+  const [loadingData, setLoadingData] = useState(true);
   //departments request
   useEffect(() => {
     const departmentsRequest = () => dispatch(departmentsData());
     departmentsRequest();
   }, [dispatch]);
 
-
   //get info
   const data = useSelector((state) => state.departments.departments.data);
-
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
   //table actions
   const onDelete = (depData) => {
     Swal.fire({
@@ -108,12 +111,12 @@ const Departments = () => {
           const depData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link
-                to={`/departments/${depData.id}`}
-                className="text-success"
-                
-              >
-                <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}}/>
+              <Link to={`/departments/${depData.id}`} className="text-success">
+                <i
+                  className="mdi mdi-pencil-outline font-size-18 text-paradise"
+                  id="edittooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -127,7 +130,10 @@ const Departments = () => {
                   onDelete(depData);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -144,14 +150,28 @@ const Departments = () => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-2">
-            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
+            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
               DEPARTMENTS
             </h1>
           </div>
 
           <Row>
             <Col xs="12">
-              
+              {loadingData ? (
+                <div className="d-flex justify-content-center mt-5">
+                  <div
+                    className="spinner-border"
+                    style={{ color: "#3DC7F4" }}
+                    role="status"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                  <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                    Loading...
+                  </h2>
+                </div>
+              ) : (
+                <>
                   {data ? (
                     <TableContainer
                       columns={columns}
@@ -162,7 +182,8 @@ const Departments = () => {
                       // handleOrderClicks={handleOrderClicks}
                     />
                   ) : null}
-                
+                </>
+              )}
             </Col>
           </Row>
         </Container>

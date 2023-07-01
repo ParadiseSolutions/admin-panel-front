@@ -9,6 +9,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  UncontrolledTooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -20,6 +21,7 @@ import {
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+import { setDecimalFormat, cleanUpSpecialCharacters, setRateFormat, calcNetRate, calcYouSave, calcEffRate, calcCommission, calcDeposit, calcNetPrice } from "../../../../Utils/CommonFunctions";
 
 const AddNewPrivateCharter = ({
   addNewPrivateCharter,
@@ -37,6 +39,7 @@ const AddNewPrivateCharter = ({
     setPriceTypeSelected("")
     setPriceOptionSelected("")
     setPriceCollectSelected("")
+    setPriceCollectNameSelected("")
     setPriceSeasonSelected("")
     setPriceCharterTypeSelected("")
     setPriceDurationSelected("")
@@ -65,6 +68,7 @@ const AddNewPrivateCharter = ({
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
+  const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
@@ -114,12 +118,16 @@ const AddNewPrivateCharter = ({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      product_name: tourData ? tourData.name : "",
+      product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
+      min: dataEdit ? dataEdit?.pricedetails[5]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails[5]?.max : "",
+      active: dataEdit?.active ? 1 : 0,
+      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
-      rate: dataEdit ? dataEdit.rate : "",
-      net_price: dataEdit ? dataEdit.net_rate : "",
+      rate: dataEdit ? setRateFormat(dataEdit.rate) : "",
+      net_rate: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
       compare_at: dataEdit ? dataEdit.compare_at : "",
@@ -129,16 +137,21 @@ const AddNewPrivateCharter = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      min: dataEdit ? dataEdit?.pricedetails[5]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[5]?.max : "",
-      active: dataEdit?.active ? 1 : 0,
-      balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
     },
     validationSchema: Yup.object().shape({
-      our_price: Yup.string().required("Field Require"),
-      commission: Yup.string().required("Field Require"),
-      deposit: Yup.string().required("Field Require"),
-      balance_due: Yup.string().required("Field Require"),
+      min: Yup.number().positive().integer().nullable(),
+      max: Yup.number().positive().integer().nullable(),
+      public_price: Yup.number().positive().required("Field Required"),
+      provider_price: Yup.number().positive().nullable(),
+      rate: Yup.number().positive().nullable(),
+      net_rate: Yup.number().positive().nullable(),
+      ship_price: Yup.number().positive().nullable(),
+      compare_at: Yup.number().positive().required("Field Required"),
+      compare_at_url: Yup.string().url("URL invalid format").trim().nullable(),
+      our_price: Yup.number().positive().required("Field Required"),
+      commission: Yup.number().required("Field Required"),
+      deposit: Yup.number().positive().required("Field Required"),
+      balance_due: Yup.number().positive().required("Field Required"),
     }),
     onSubmit: (values, { resetForm }) => {
       let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
@@ -154,27 +167,27 @@ const AddNewPrivateCharter = ({
             : null):priceCollectSelected
             
       let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[3]?.source_id
+        ? (dataEdit.pricedetails[3]?.source_id === undefined?null:dataEdit.pricedetails[3]?.source_id)
         : null):priceSeasonSelected
 
       let charter_type = (priceCharterTypeSelected == '' || priceCharterTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[4]?.source_id
+        ? (dataEdit.pricedetails[4]?.source_id === undefined?null:dataEdit.pricedetails[4]?.source_id)
         : null):priceCharterTypeSelected
 
       let price_duration = (priceDurationSelected == '' || priceDurationSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[5]?.source_id
+        ? (dataEdit.pricedetails[5]?.source_id === undefined?null:dataEdit.pricedetails[5]?.source_id)
         : null):priceDurationSelected
 
       let price_location = (priceLocationSelected == '' || priceLocationSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[6]?.source_id
+        ? (dataEdit.pricedetails[6]?.source_id === undefined?null:dataEdit.pricedetails[6]?.source_id)
         : null):priceLocationSelected
 
       let data = {
         tour_id: tourData.id,
         public: values.public_price,
         provider_price: values.provider_price,
-        rate: values.rate,
-        net_rate: values.net_price,
+        rate: ((values.rate !== "")?((values.rate > 1) ? values.rate / 100 : values.rate) : values.rate),
+        net_rate: values.net_rate,
         compare_at_url: values.compare_at_url,
         ship_price: values.ship_price,
         compare_at: values.compare_at,
@@ -218,6 +231,8 @@ const AddNewPrivateCharter = ({
           {
             pricing_option_id: 48,
             source_id: charter_type,
+            min: null,
+            max: null,
             label: null,
           },
           {
@@ -230,6 +245,8 @@ const AddNewPrivateCharter = ({
           {
             pricing_option_id: 42,
             source_id: price_location,
+            min: null,
+            max: null,
             label: null,
           },
         ],
@@ -238,36 +255,52 @@ const AddNewPrivateCharter = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data).then((resp) => {
             setAddNewPrivateCharter(false);
-            resetForm({ values: "" });
             refreshTable();
+            resetForm({ values: "" });
           }).catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
         } else if(copyProduct || dataEdit === undefined || dataEdit == null) {
           postPricesAPI(data).then((resp) => {
             setAddNewPrivateCharter(false);
-            resetForm({ values: "" });
             refreshTable();
+            resetForm({ values: "" });
           }).catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
         }
       } else {
@@ -276,6 +309,46 @@ const AddNewPrivateCharter = ({
       refreshTable();
     },
   });
+
+  const multipleRateCalcs = (value) => {
+    const rate = setRateFormat(value);
+    const net_rate = calcNetRate(validationType.values.public_price, rate, validationType.values.net_rate);
+    const commission = calcCommission(validationType.values.our_price, rate, validationType.values.commission);
+    const balance_due = calcNetPrice(validationType.values.our_price, commission, validationType.values.balance_due)
+
+    validationType.setFieldValue('rate', rate)
+    validationType.setFieldValue("net_rate", net_rate)
+    validationType.setFieldValue("commission", commission);
+    validationType.setFieldValue('balance_due', balance_due)
+    return rate;
+  }
+
+  const multipleOurPriceCalcs = (value) => {
+    const our_price = setDecimalFormat(value);
+    const you_save = calcYouSave(our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)
+    const commission = calcCommission(our_price, validationType.values.rate, validationType.values.commission)
+    const balance_due = calcNetPrice(our_price, commission, validationType.values.balance_due)
+    const eff_rate = calcEffRate(balance_due, our_price, validationType.values.eff_rate)
+    const deposit = calcDeposit(our_price, priceCollectNameSelected, commission, validationType.values.deposit)
+
+    validationType.setFieldValue('you_save', you_save)
+    validationType.setFieldValue('eff_rate', eff_rate)
+    validationType.setFieldValue('deposit', deposit)
+    validationType.setFieldValue('commission', commission)
+    validationType.setFieldValue('balance_due', balance_due)
+    return our_price;
+  }
+
+  const multipleCommissionCalcs = (value) => {
+    const commission = setDecimalFormat(value)
+
+    validationType.setFieldValue('commission', commission)
+    validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, commission, validationType.values.deposit))
+    validationType.setFieldValue('balance_due', calcNetPrice(validationType.values.our_price, commission, validationType.values.balance_due))
+
+    return commission;
+  }
+
   return (
     <Modal
       centered
@@ -340,34 +413,38 @@ const AddNewPrivateCharter = ({
               />
             </Col>
             <Col className="col-9">
-              <Row className="d-flex">
-                <Col className="col-9">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">Product Name</Label>
-                    <Input
-                      name="product_name"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.product_name || ""}
-                    />
-                  </div>
-                </Col>
-                <Col className="col-3">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">SKU</Label>
-                    <Input
-                      name="sku"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.sku || ""}
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Row className="d-flex">
-                
+              {
+                dataEdit ? (
+                  <Row className="d-flex">
+                    <Col className="col-9">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">Product Name</Label>
+                        <Input
+                          name="product_name"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.product_name || ""}
+                        />
+                      </div>
+                    </Col>
+                    <Col className="col-3">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">SKU</Label>
+                        <Input
+                          name="sku"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.sku || ""}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                ):null
+              }
+
+              <Row className="d-flex">                
                   <Col className="col">
                     <div className="form-outline">
                       <Label className="form-label">Price Type*</Label>
@@ -380,7 +457,7 @@ const AddNewPrivateCharter = ({
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value={null}>Select....</option>
                         {map(priceTypeData, (type, index) => {
                           return (
                             <option
@@ -440,8 +517,13 @@ const AddNewPrivateCharter = ({
                         name="collect"
                         onChange={(e) => {
                           setPriceCollectSelected(e.target.value);
+                          setPriceCollectNameSelected(e.target.selectedOptions[0].label);
                         }}
-                        onBlur={validationType.handleBlur}
+                        onBlur={(e) => {
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('collect', value,
+                          validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, validationType.values.commission, validationType.values.deposit)),validationType.handleBlur)
+                        }}
                         //   value={validationType.values.department || ""}
                       >
                         <option>Select....</option>
@@ -512,7 +594,7 @@ const AddNewPrivateCharter = ({
                           placeholder=""
                           type="checkbox"
                           checked={activeCheckbox}
-                          className="form-check-input"
+                          className="form-check-input start-0"
                           onChange={() => onChangeActiveToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.active || ""}
@@ -542,7 +624,7 @@ const AddNewPrivateCharter = ({
                           placeholder=""
                           type="checkbox"
                           checked={balanceDueCheckbox}
-                          className="form-check-input"
+                          className="form-check-input start-0"
                           onChange={() => onChangeBalanceDueToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.balance_checkbox || ""}
@@ -650,8 +732,10 @@ const AddNewPrivateCharter = ({
                     <Label className="form-label">Min. Pax.</Label>
                     <Input
                       name="min"
-                      placeholder=""
-                      type="text"
+                      placeholder="0"
+                      className="me-1"
+                      type="number"
+                      min="0"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.min || ""}
@@ -674,8 +758,9 @@ const AddNewPrivateCharter = ({
                     <Label className="form-label">Max. Pax.</Label>
                     <Input
                       name="max"
-                      placeholder=""
-                      type="text"
+                      placeholder="0"
+                      type="number"
+                      min="0"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.max || ""}
@@ -742,112 +827,156 @@ const AddNewPrivateCharter = ({
                 </p>
               </Col>
               <Row className="d-flex">
-                <Col className="col-2">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Public Price</Label>
-                    <Input
-                      name="public_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.public_price || ""}
-                      invalid={
-                        validationType.touched.public_price &&
-                        validationType.errors.public_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.public_price &&
-                    validationType.errors.public_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.public_price}
-                      </FormFeedback>
-                    ) : null}
+              <Col className="col-2">
+                  <div className="form-outline mb-2" id="public_price">
+                    <Label className="form-label">Public Price*</Label>
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="public_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('public_price', setDecimalFormat(value),
+                          validationType.setFieldValue("net_rate", calcNetRate(validationType.values.public_price, validationType.values.rate, validationType.values.net_rate)));
+                        }}
+                        value={validationType.values.public_price || ""}
+                        invalid={
+                          validationType.touched.public_price &&
+                          validationType.errors.public_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.public_price &&
+                      validationType.errors.public_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.public_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <UncontrolledTooltip placement="top" target="public_price">
+                      After discounting the tour, what our effective commission rate is (what we have left after the discount) 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="provider_price">
                     <Label className="form-label">Provider Price</Label>
-                    <Input
-                      name="provider_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.provider_price || ""}
-                      invalid={
-                        validationType.touched.provider_price &&
-                        validationType.errors.provider_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.provider_price &&
-                    validationType.errors.provider_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.provider_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="provider_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('provider_price', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.provider_price || ""}
+                        invalid={
+                          validationType.touched.provider_price &&
+                          validationType.errors.provider_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.provider_price &&
+                      validationType.errors.provider_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.provider_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>                    
+                    <UncontrolledTooltip placement="top" target="provider_price">
+                      The price the provider sells the tour for on their own website.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="rate">
                     <Label className="form-label">Rate %</Label>
-                    <Input
-                      name="rate"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.rate || ""}
-                      invalid={
-                        validationType.touched.rate &&
-                        validationType.errors.rate
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.rate &&
-                    validationType.errors.rate ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.rate}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <Input
+                        name="rate"
+                        placeholder="0.00"
+                        type="number"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('rate', multipleRateCalcs(value));
+                        }}
+                        value={validationType.values.rate || ""}
+                        invalid={
+                          validationType.touched.rate &&
+                          validationType.errors.rate
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.rate &&
+                      validationType.errors.rate ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.rate}
+                        </FormFeedback>
+                      ) : null}
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                    </div>
+                    <UncontrolledTooltip placement="top" target="rate">
+                      The commission rate for the tour that is specified in our service agreement.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="net_rate">
                     <Label className="form-label">Net Rate</Label>
-                    <Input
-                      name="net_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.net_price || ""}
-                      invalid={
-                        validationType.touched.net_price &&
-                        validationType.errors.net_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.net_price &&
-                    validationType.errors.net_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.net_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="net_rate"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('net_rate', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.net_rate || ""}
+                        invalid={
+                          validationType.touched.net_rate &&
+                          validationType.errors.net_rate
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.net_rate &&
+                      validationType.errors.net_rate ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.net_rate}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <UncontrolledTooltip placement="top" target="net_rate">
+                      The net rate specified in our service agreement for the tour. 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-4">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="compare_at_url">
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
-                      placeholder=""
+                      placeholder="https://provider.com/mitour.html"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -865,7 +994,10 @@ const AddNewPrivateCharter = ({
                         {validationType.errors.compare_at_url}
                       </FormFeedback>
                     ) : null}
-                  </div>
+                  </div>                  
+                  <UncontrolledTooltip placement="top" target="compare_at_url">
+                    The URL of the web page where the "compare at" price can be verified. 
+                  </UncontrolledTooltip>
                 </Col>
               </Row>
               <Col
@@ -885,206 +1017,297 @@ const AddNewPrivateCharter = ({
                 </p>
               </Col>
               <Row className="d-flex">
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
+              <Col className="col-3">
+                  <div className="form-outline mb-2" id="ship_price">
                     <Label className="form-label">Ship Price</Label>
-                    <Input
-                      name="ship_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.ship_price || ""}
-                      invalid={
-                        validationType.touched.ship_price &&
-                        validationType.errors.ship_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.ship_price &&
-                    validationType.errors.ship_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.ship_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="ship_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('ship_price', setDecimalFormat(value),
+                          validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)),validationType.handleBlur);
+                        }}
+                        value={validationType.values.ship_price || ""}
+                        invalid={
+                          validationType.touched.ship_price &&
+                          validationType.errors.ship_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.ship_price &&
+                      validationType.errors.ship_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.ship_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <UncontrolledTooltip placement="top" target="ship_price">
+                      The price that the most expensive cruise ship will sell this tour at.  This price should not be confused with the "From" price shown on cruise ship websites.  It is always higher.  Compare all cruise websites.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Compare At</Label>
-                    <Input
-                      name="compare_at"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.compare_at || ""}
-                      invalid={
-                        validationType.touched.compare_at &&
-                        validationType.errors.compare_at
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.compare_at &&
-                    validationType.errors.compare_at ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.compare_at}
-                      </FormFeedback>
-                    ) : null}
+                  <div className="form-outline mb-2" id="compare_at">
+                    <Label className="form-label">Compare At*</Label>
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                        <Input
+                        name="compare_at"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('compare_at', setDecimalFormat(value),
+                          validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)),validationType.handleBlur);
+                        }}
+                        value={validationType.values.compare_at || ""}
+                        invalid={
+                          validationType.touched.compare_at &&
+                          validationType.errors.compare_at
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.compare_at &&
+                      validationType.errors.compare_at ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.compare_at}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <UncontrolledTooltip placement="top" target="compare_at">
+                      The price that shows as the "reg price" on our websites. This should be the most expensive price for a comparable tour you can find on the web. 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="our_price">
                     <Label className="form-label">Our Price*</Label>
-                    <Input
-                      name="our_price"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.our_price || ""}
-                      invalid={
-                        validationType.touched.our_price &&
-                        validationType.errors.our_price
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.our_price &&
-                    validationType.errors.our_price ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.our_price}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="our_price"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('our_price', multipleOurPriceCalcs(value));
+                        }}
+                        value={validationType.values.our_price || ""}
+                        invalid={
+                          validationType.touched.our_price &&
+                          validationType.errors.our_price
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.our_price &&
+                      validationType.errors.our_price ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.our_price}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <UncontrolledTooltip placement="top" target="our_price">
+                      The price we will sell the tour for.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">You Save</Label>
-                    <Input
-                      name="you_save"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.you_save || ""}
-                      invalid={
-                        validationType.touched.you_save &&
-                        validationType.errors.you_save
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.you_save &&
-                    validationType.errors.you_save ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.you_save}
-                      </FormFeedback>
-                    ) : null}
+                  <div className="form-outline mb-2" id="you_save">
+                    <Label className="form-label">You Save*</Label>
+                    <div className="input-group">
+                      <Input
+                        name="you_save"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('you_save', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.you_save || ""}
+                        invalid={
+                          validationType.touched.you_save &&
+                          validationType.errors.you_save
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.you_save &&
+                      validationType.errors.you_save ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.you_save}
+                        </FormFeedback>
+                      ) : null}
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                    </div>
+                    <UncontrolledTooltip placement="top" target="you_save">
+                      This is the amount they save by booking with us compared to the "other guys" from the compare at price.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
               </Row>
               <Row className="d-flex">
-                <Col className="col-3">
-                  <div className="form-outline mb-2">
-                    <Label className="form-label">Eff. Rate</Label>
-                    <Input
-                      name="eff_rate"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.eff_rate || ""}
-                      invalid={
-                        validationType.touched.eff_rate &&
-                        validationType.errors.eff_rate
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.eff_rate &&
-                    validationType.errors.eff_rate ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.eff_rate}
-                      </FormFeedback>
-                    ) : null}
+              <Col className="col-3">
+                  <div className="form-outline mb-2" id="eff_rate">
+                    <Label className="form-label">Eff. Rate*</Label>
+                    <div className="input-group">
+                      <Input
+                        name="eff_rate"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('eff_rate', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.eff_rate || ""}
+                        invalid={
+                          validationType.touched.eff_rate &&
+                          validationType.errors.eff_rate
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.eff_rate &&
+                      validationType.errors.eff_rate ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.eff_rate}
+                        </FormFeedback>
+                      ) : null}
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                    </div>
+                    <UncontrolledTooltip placement="top" target="eff_rate">
+                      The price the provider refers to in our service agreement as the "Public Price" or "Regular Price". 
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="commission">
                     <Label className="form-label">Commission*</Label>
-                    <Input
-                      name="commission"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.commission || ""}
-                      invalid={
-                        validationType.touched.commission &&
-                        validationType.errors.commission
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.commission &&
-                    validationType.errors.commission ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.commission}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="commission"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('commission', multipleCommissionCalcs(value), validationType.handleBlur);
+                        }}
+                        value={validationType.values.commission || ""}
+                        invalid={
+                          validationType.touched.commission &&
+                          validationType.errors.commission
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.commission &&
+                      validationType.errors.commission ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.commission}
+                        </FormFeedback>
+                      ) : null}
+                      <UncontrolledTooltip placement="top" target="commission">
+                        The $$ amount that we earn from the sale. 
+                      </UncontrolledTooltip>
+                    </div>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="deposit">
                     <Label className="form-label">Deposit*</Label>
-                    <Input
-                      name="deposit"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.deposit || ""}
-                      invalid={
-                        validationType.touched.deposit &&
-                        validationType.errors.deposit
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.deposit &&
-                    validationType.errors.deposit ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.deposit}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="deposit"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('deposit', setDecimalFormat(value));
+                        }}
+                        value={validationType.values.deposit || ""}
+                        invalid={
+                          validationType.touched.deposit &&
+                          validationType.errors.deposit
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.deposit &&
+                      validationType.errors.deposit ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.deposit}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <UncontrolledTooltip placement="top" target="deposit">
+                      The amount we collect at the time of booking.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-3">
-                  <div className="form-outline mb-2">
+                  <div className="form-outline mb-2" id="balance_due">
                     <Label className="form-label">Balance Due*</Label>
-                    <Input
-                      name="balance_due"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.balance_due || ""}
-                      invalid={
-                        validationType.touched.balance_due &&
-                        validationType.errors.balance_due
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.balance_due &&
-                    validationType.errors.balance_due ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.balance_due}
-                      </FormFeedback>
-                    ) : null}
+                    <div className="input-group">
+                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <Input
+                        name="balance_due"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e)=>{
+                          const value = e.target.value || "";
+                          validationType.setFieldValue('balance_due', setDecimalFormat(value),
+                          validationType.setFieldValue('eff_rate', calcEffRate(validationType.values.balance_due, validationType.values.our_price, validationType.values.eff_rate)),validationType.handleBlur);
+                        }}
+                        value={validationType.values.balance_due || ""}
+                        invalid={
+                          validationType.touched.balance_due &&
+                          validationType.errors.balance_due
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.balance_due &&
+                      validationType.errors.balance_due ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.balance_due}
+                        </FormFeedback>
+                      ) : null} 
+                    </div>
+                    <UncontrolledTooltip placement="top" target="balance_due">
+                      The amount due to the provider on the day of the tour.
+                    </UncontrolledTooltip>
                   </div>
                 </Col>
               </Row>

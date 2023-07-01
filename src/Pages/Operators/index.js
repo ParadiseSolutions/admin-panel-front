@@ -1,14 +1,12 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { operatorsData } from "../../Utils/Redux/Actions/OperatorsActions";
 import { deleteOperatorAPI } from "../../Utils/API/Operators";
 import TableContainer from "../../Components/Common/TableContainer";
-import { Name, Department, Active, LastName, Email } from "./ProvidersCols";
+import { Name, Phone, Active, LastName, Email } from "./ProvidersCols";
 import {
   Container,
   Row,
   Col,
-  Card,
-  CardBody,
   UncontrolledTooltip,
 } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -18,12 +16,17 @@ import Swal from "sweetalert2";
 const Operators = () => {
   //data request
   const dispatch = useDispatch();
+  const [loadingData, setLoadingData] = useState(true);
   useEffect(() => {
     var providersRequest = () => dispatch(operatorsData());
     providersRequest();
   }, [dispatch]);
   const data = useSelector((state) => state.operators.operators.data);
-
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
   const onDelete = (operatorInfo) => {
     Swal.fire({
       title: "Delete Operator?",
@@ -43,7 +46,7 @@ const Operators = () => {
           })
           .catch((error) => {
             let errorMessages = [];
-            if(error.response.data.data === null) {
+            if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -53,13 +56,13 @@ const Operators = () => {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
               });
-    
+
               Swal.fire(
                 "Error!",
                 // {error.response.},
                 String(errorMessages[0])
               );
-            }            
+            }
           });
       }
     });
@@ -91,7 +94,7 @@ const Operators = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Email {...cellProps} />;
+          return <Phone {...cellProps} />;
         },
       },
       {
@@ -100,7 +103,7 @@ const Operators = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Department {...cellProps} />;
+          return <Email {...cellProps} />;
         },
       },
 
@@ -123,7 +126,11 @@ const Operators = () => {
             <div className="d-flex gap-3">
               <Link to={`/operators/${providersData.id}  `}>
                 <div className="text-success">
-                  <i className="mdi mdi-pencil-outline font-size-18 text-paradise" id="edittooltip" style={{cursor:"pointer"}}/>
+                  <i
+                    className="mdi mdi-pencil-outline font-size-18 text-paradise"
+                    id="edittooltip"
+                    style={{ cursor: "pointer" }}
+                  />
                   <UncontrolledTooltip placement="top" target="edittooltip">
                     Edit
                   </UncontrolledTooltip>
@@ -138,7 +145,11 @@ const Operators = () => {
                   onDelete(operatorInfo);
                 }}
               >
-                <i className="mdi mdi-delete-outline font-size-18" id="deletetooltip" />
+                <i
+                  className="mdi mdi-delete-outline font-size-18"
+                  id="deletetooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -157,14 +168,28 @@ const Operators = () => {
           <div className=" mx-1">
             <h1
               className="fw-bold cursor-pointer"
-              style={{ color: "#3DC7F4" }}
+              style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
             >
               OPERATORS
             </h1>
           </div>
           <Row>
             <Col xs="12">
-              
+              {loadingData ? (
+                <div className="d-flex justify-content-center mt-5">
+                  <div
+                    className="spinner-border"
+                    style={{ color: "#3DC7F4" }}
+                    role="status"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                  <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                    Loading...
+                  </h2>
+                </div>
+              ) : (
+                <>
                   {data ? (
                     <TableContainer
                       columns={columns}
@@ -176,7 +201,8 @@ const Operators = () => {
                       //  handleOrderClicks={() => onClickAddNew()}
                     />
                   ) : null}
-                
+                </>
+              )}
             </Col>
           </Row>
         </Container>

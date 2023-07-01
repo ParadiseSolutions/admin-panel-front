@@ -214,3 +214,34 @@ input[type=number] {
   background-color: #F6851F;
   border-color: #F6851F;
 }
+.swal2-styled.swal2-cancel{
+  border: none;
+}
+.swal2-styled.swal2-cancel:hover{
+  background-color: #F6851F !important;
+}
+.swal2-styled.swal2-confirm {
+  border: none !important;
+}
+.swal2-styled.swal2-confirm:hover {
+  background-color: #a7b6c4 !important;
+}
+#sidebar-menu ul li ul.sub-menu li a {
+  padding: 0.4rem 1.5rem 0.4rem 1.85rem;
+  font-weight: 500;
+  color: #fff;
+  margin: 0px 10px;
+  background-color: transparent;
+  font-size: 14.4px;
+}
+
+#sidebar-menu ul li a.has-arrow.waves-effect span {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 11px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.mm-active.has-arrow.waves-effect, .sub-menu .mm-active>a {
+  background-color: #f3f8fb !important;
+}

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Container } from "reactstrap";
 import { tourTypesData } from "../../Utils/Redux/Actions/TourTypesActions";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
+import { Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Active } from "./TourTypesCols";
@@ -14,7 +14,7 @@ import UpdateTourTypeModal from "../../Components/Common/Modals/TourTypesModals/
 const TourTypes = () => {
   const [tourTypesId, setTourTypesId] = useState(false);
   const dispatch = useDispatch();
-
+  const [loadingData, setLoadingData] = useState(true);
   //tour types request
 
   useEffect(() => {
@@ -25,7 +25,11 @@ const TourTypes = () => {
   //saving tour types data into variable
   const data = useSelector((state) => state.tourTypes.tourTypes.data);
   // console.log(data);
-
+  useEffect(() => {
+    if (data) {
+      setLoadingData(false);
+    }
+  }, [data]);
   //delete Tour Type
   const tourTypesRequest = () => dispatch(tourTypesData());
   const onDelete = (tourTypeData) => {
@@ -46,7 +50,24 @@ const TourTypes = () => {
             Swal.fire("Deleted!", "Tour Type has been deleted.", "success");
           })
           .catch((error) => {
-            // console.log(error);
+            let errorMessages = [];
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
       }
     });
@@ -92,6 +113,7 @@ const TourTypes = () => {
               <i
                 className="mdi mdi-pencil-outline font-size-18 text-paradise"
                 id="edittooltip"
+                style={{ cursor: "pointer" }}
               />
               <UncontrolledTooltip placement="top" target="edittooltip">
                 Edit
@@ -109,6 +131,7 @@ const TourTypes = () => {
               <i
                 className="mdi mdi-delete-outline font-size-18"
                 id="deletetooltip"
+                style={{ cursor: "pointer" }}
               />
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete
@@ -134,13 +157,27 @@ const TourTypes = () => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-1">
-            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
+            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
               TOUR TYPES
             </h1>
           </div>
 
           <Row>
             <Col xs="12">
+              {loadingData ? (
+              <div className="d-flex justify-content-center mt-5">
+                <div
+                  className="spinner-border"
+                  style={{ color: "#3DC7F4" }}
+                  role="status"
+                >
+                  <span className="sr-only">Loading...</span>
+                </div>
+                <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                  Loading...
+                </h2>
+              </div>
+            ):<>
               {data ? (
                 <TableContainer
                   columns={columns}
@@ -153,6 +190,7 @@ const TourTypes = () => {
                   // // handleOrderClicks={handleOrderClicks}
                 />
               ) : null}
+            </>}
             </Col>
           </Row>
           <AddTourTypeModal

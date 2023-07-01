@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { map } from "lodash";
+import { cleanUpSpecialCharacters, codeFormat, nameFormat } from "../../../../Utils/CommonFunctions";
 
 const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
   const [catData, setCatData] = useState(false);
@@ -38,8 +39,7 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
   };
 
   const validationType = useFormik({
-    ableReinitialize: true,
-
+    enableReinitialize: true,
     initialValues: {
       name: "",
       code: "",
@@ -52,7 +52,6 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
         .min(2, "Code must be 2-character long")
         .max(2, "Code must be 2-character long"),
     }),
-
     onSubmit: (values) => {
       let data = {
         name: values.name,
@@ -71,16 +70,24 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
           }
         })
         .catch((error) => {
-          let errorMessages = [];
-          Object.entries(error.response.data.data).map((item) => {
-            errorMessages.push(item[1]);
-          });
-
-          Swal.fire(
-            "Error!",
-            // {error.response.},
-            String(errorMessages[0])
-          );
+          if(error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+  
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
         });
     },
   });
@@ -134,8 +141,11 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
                         placeholder="Airport Transfer"
                         type="text"
                         onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.name || ""}
+                        onBlur={(e)=>{
+                          const value = e.target.value;
+                          validationType.setFieldValue('name', nameFormat(value));
+                        }}
+                        value={validationType.values.name}
                         invalid={
                           validationType.touched.name &&
                           validationType.errors.name
@@ -159,8 +169,11 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
                         placeholder="AT"
                         type="text"
                         onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.code || ""}
+                        onBlur={(e)=>{
+                          const value = e.target.value;
+                          validationType.setFieldValue('code', codeFormat(cleanUpSpecialCharacters(value)));
+                        }}
+                        value={validationType.values.code}
                         invalid={
                           validationType.touched.code &&
                           validationType.errors.code

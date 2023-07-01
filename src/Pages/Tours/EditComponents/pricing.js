@@ -28,6 +28,7 @@ import {
   Code,
   Members,
   Price,
+  Rate,
 } from "../EditComponents/PricingTables/DepartmentsCols";
 
 import Swal from "sweetalert2";
@@ -123,7 +124,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   const columnsProducts = useMemo(() => [
     {
-      Header: <h2 className="text-paradise font-weight-bold">Products</h2>,
+      Header: 'Product Name',
       accessor: "label",
       disableFilters: true,
       filterable: false,
@@ -164,7 +165,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       disableFilters: true,
       filterable: false,
       Cell: (cellProps) => {
-        return <Members {...cellProps} />;
+        return <Rate {...cellProps} />;
       },
     },
     {
@@ -231,7 +232,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 }
               }}
             >
-              <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+              <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{cursor:"pointer"}} />
               <UncontrolledTooltip placement="top" target="edittooltip">
                 Edit
               </UncontrolledTooltip>
@@ -274,7 +275,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 }
               }}
             >
-              <i className="mdi mdi-content-copy font-size-18" id="copytooltip" />
+              <i className="mdi mdi-content-copy font-size-18" id="copytooltip"  style={{cursor:"pointer"}}/>
               <UncontrolledTooltip placement="top" target="copytooltip">
                 Copy
               </UncontrolledTooltip>
@@ -287,7 +288,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 onDelete(depData);
               }}
             >
-              <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+              <i className="mdi mdi-delete font-size-18" id="deletetooltip"  style={{cursor:"pointer"}}/>
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete
               </UncontrolledTooltip>
@@ -348,6 +349,26 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   return (
     <TabPane tabId="1" className="">
+      <Row>
+        <Col className="col-4">
+        
+        <h1 className="text-paradise">Products</h1>
+        </Col>
+        <Col>
+        
+        <div className="text-sm-end">
+            <Button
+              type="button"
+              
+              className="waves-effect waves-light mb-3 btn btn-orange"
+              onClick={onClickNewProduct}
+            >
+              <i className="mdi mdi-plus me-1" />
+              Add New Products
+            </Button>
+          </div>
+        </Col>
+      </Row>
       <Row>
         {pricesData ? (
           <PricingTables

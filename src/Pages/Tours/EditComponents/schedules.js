@@ -164,15 +164,31 @@ const Schedules = ({ tourData, toggle }) => {
         on: null,
         recurrency: 1,
       };
-      console.log(data);
+      //console.log(data);
       putSeasonalAPI(tourData.id, data)
         .then((resp) => {
           // console.log(resp.data);
-          if (resp.data.status === 201) {
+          if (resp.data.status === 200) {
             Swal.fire("Created!", "Seasonality has been created.", "success").then(
               () => {
                 refresh()
                 // history.goBack();
+                Swal.fire({
+                  title: 'Congratulation',
+                  text: "This tour has been created!",
+                  icon: 'success',
+                  showCancelButton: true,
+                  confirmButtonColor: '#F6851F',
+                  cancelButtonColor: '#d33',
+                  cancelButtonText: 'Save & Close!',
+                  confirmButtonText: 'Save & New'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    history.push('/tours/new')
+                  }else{
+                    history.push('/tours')
+                  }
+                })
               }
             );
           }
@@ -189,6 +205,7 @@ const Schedules = ({ tourData, toggle }) => {
 						String(errorMessages[0])
 					);
         });
+        
     },
   });
 
@@ -213,13 +230,12 @@ const Schedules = ({ tourData, toggle }) => {
                   onClick={() => setNewSchedule(true)}
                 >
                   + New Schedule
-                  <i className="uil-angle-double-right mx-1 " />
                 </Button>
               </section>                
               <section className="table-responsive border-top mb-5">
-                <Table className="table mb-0">
-                  <thead>
-                    <tr>
+                <Table className="table mb-0" >
+                  <thead >
+                    <tr >
                       <th className="border-0">Product</th>
                       <th className="border-0">Type</th>
                       <th className="border-0">Start Times</th>
@@ -315,18 +331,17 @@ const Schedules = ({ tourData, toggle }) => {
                   onClick={() => setNewOverriteDate(!newOverriteDate)}
                 >
                   + New Entry
-                  <i className="uil-angle-double-right mx-1 " />
                 </Button>
               </section>              
-              <section className="table-responsive">
+              <section className="table-responsive border-top mb-5">
                 <Table className="table mb-0">
                   <thead>
                     <tr>
-                      <th>Type</th>
-                      <th>From</th>
-                      <th>To</th>
-                      <th>Recurrency</th>
-                      <th>Status</th>
+                      <th className="border-0">Type</th>
+                      <th className="border-0">From</th>
+                      <th className="border-0">To</th>
+                      <th className="border-0">Recurrency</th>
+                      <th className="border-0">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -535,7 +550,6 @@ const Schedules = ({ tourData, toggle }) => {
                 Back
               </Button>
               <Button
-                
                 type="submit"
                 className="font-16 btn-block btn-orange"
                 // onClick={toggleCategory}

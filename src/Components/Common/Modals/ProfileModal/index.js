@@ -20,9 +20,12 @@ const MyProfileModal = ({ profileModal, setProfileModal, token }) => {
   const [userData, setUserData] = useState([])
   const [profilePicture, setProfilePicture] = useState("");
   useEffect(() => {
-     getUserAPI(token.user.id).then((resp) =>{
+    if(token.user.id) {
+      getUserAPI(token.user.id).then((resp) =>{
         setUserData(resp.data.data)
      })
+    }
+     
     setProfilePicture(token.user.picture)
   }, [profileModal, token]);
 

@@ -18,7 +18,7 @@ import EditContactProviderModal from "../../../Components/Common/Modals/Contacts
 const Contacts = ({contacts}) => {
 
   const {id} = useHistory()
-  const [col2, setcol2] = useState(true);
+  const [col2, setcol2] = useState(false);
   const [addContactModal, setAddContactModal] = useState(false)
   const [editContactModal, setEditContactModal] = useState(false)
   const [contactID, setContactID] = useState(false)
