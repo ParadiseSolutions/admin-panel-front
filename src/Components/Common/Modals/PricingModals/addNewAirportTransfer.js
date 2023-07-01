@@ -20,9 +20,9 @@ import {
   updatePriceAPI,
   getPricingZoneOptionsAPI,
 } from "../../../../Utils/API/Tours";
-import { map, values } from "lodash";
+import { map } from "lodash";
 import Swal from "sweetalert2";
-import { setDecimalFormat, cleanUpSpecialCharacters, setRateFormat, calcNetRate, calcYouSave, calcEffRate, calcCommission, calcDeposit, calcNetPrice } from "../../../../Utils/CommonFunctions";
+import { setDecimalFormat, setRateFormat, calcNetRate, calcYouSave, calcEffRate, calcCommission, calcDeposit, calcNetPrice } from "../../../../Utils/CommonFunctions";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
@@ -176,15 +176,15 @@ const AddNewAirportTransfer = ({
         : null):priceCollectSelected
 
       let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[3]?.source_id
+        ? (dataEdit.pricedetails[3]?.source_id === undefined?null:dataEdit.pricedetails[3]?.source_id)
         : null):priceSeasonSelected
 
       let transfer_type = (priceTransferTypeSelected == '' || priceTransferTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
-          ? dataEdit.pricedetails[4]?.source_id
+          ? (dataEdit.pricedetails[4]?.source_id === undefined?null:dataEdit.pricedetails[4]?.source_id)
           : null):priceTransferTypeSelected
 
       let direction = (priceDirectionSelected == '' || priceDirectionSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[5]?.source_id
+        ? (dataEdit.pricedetails[5]?.source_id === undefined?null:dataEdit.pricedetails[5]?.source_id)
         : null):priceDirectionSelected
 
       let vehicle = (priceVehicleSelected == '' || priceVehicleSelected === undefined)?(dataEdit && dataEdit.pricedetails
@@ -465,8 +465,7 @@ const AddNewAirportTransfer = ({
                     </Col>
                   </Row>
                 ):null
-              }
-              
+              }              
               <Row>                
                 <Col className="col">
                   <div className="form-outline">
@@ -618,7 +617,7 @@ const AddNewAirportTransfer = ({
                           placeholder=""
                           type="checkbox"
                           checked={activeCheckbox}
-                          className="form-check-input"
+                          className="form-check-input start-0"
                           onChange={() => onChangeActiveToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.active || ""}
@@ -648,7 +647,7 @@ const AddNewAirportTransfer = ({
                           placeholder=""
                           type="checkbox"
                           checked={balanceDueCheckbox}
-                          className="form-check-input"
+                          className="form-check-input start-0"
                           onChange={() => onChangeBalanceDueToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.balance_checkbox || ""}

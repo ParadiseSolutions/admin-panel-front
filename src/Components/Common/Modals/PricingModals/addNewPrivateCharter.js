@@ -39,6 +39,7 @@ const AddNewPrivateCharter = ({
     setPriceTypeSelected("")
     setPriceOptionSelected("")
     setPriceCollectSelected("")
+    setPriceCollectNameSelected("")
     setPriceSeasonSelected("")
     setPriceCharterTypeSelected("")
     setPriceDurationSelected("")
@@ -166,19 +167,19 @@ const AddNewPrivateCharter = ({
             : null):priceCollectSelected
             
       let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[3]?.source_id
+        ? (dataEdit.pricedetails[3]?.source_id === undefined?null:dataEdit.pricedetails[3]?.source_id)
         : null):priceSeasonSelected
 
       let charter_type = (priceCharterTypeSelected == '' || priceCharterTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[4]?.source_id
+        ? (dataEdit.pricedetails[4]?.source_id === undefined?null:dataEdit.pricedetails[4]?.source_id)
         : null):priceCharterTypeSelected
 
       let price_duration = (priceDurationSelected == '' || priceDurationSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[5]?.source_id
+        ? (dataEdit.pricedetails[5]?.source_id === undefined?null:dataEdit.pricedetails[5]?.source_id)
         : null):priceDurationSelected
 
       let price_location = (priceLocationSelected == '' || priceLocationSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails[6]?.source_id
+        ? (dataEdit.pricedetails[6]?.source_id === undefined?null:dataEdit.pricedetails[6]?.source_id)
         : null):priceLocationSelected
 
       let data = {
@@ -593,7 +594,7 @@ const AddNewPrivateCharter = ({
                           placeholder=""
                           type="checkbox"
                           checked={activeCheckbox}
-                          className="form-check-input"
+                          className="form-check-input start-0"
                           onChange={() => onChangeActiveToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.active || ""}
@@ -623,7 +624,7 @@ const AddNewPrivateCharter = ({
                           placeholder=""
                           type="checkbox"
                           checked={balanceDueCheckbox}
-                          className="form-check-input"
+                          className="form-check-input start-0"
                           onChange={() => onChangeBalanceDueToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.balance_checkbox || ""}
