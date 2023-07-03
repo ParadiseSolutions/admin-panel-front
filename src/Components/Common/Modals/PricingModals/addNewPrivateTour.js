@@ -128,32 +128,32 @@ const AddNewPrivateTour = ({
       balance_due: dataEdit ? dataEdit.net_price : "",
     },
     validationSchema: Yup.object().shape({
-      public_price: Yup.number().positive().required("Field Required"),
-      provider_price: Yup.number().positive().nullable(),
-      rate: Yup.number().positive().nullable(),
-      net_rate: Yup.number().positive().nullable(),
-      ship_price: Yup.number().positive().nullable(),
-      compare_at: Yup.number().positive().required("Field Required"),
+      public_price: Yup.number().required("Field Required"),
+      provider_price: Yup.number().nullable(),
+      rate: Yup.number().nullable(),
+      net_rate: Yup.number().nullable(),
+      ship_price: Yup.number().nullable(),
+      compare_at: Yup.number().required("Field Required"),
       compare_at_url: Yup.string().url("URL invalid format").trim().nullable(),
-      our_price: Yup.number().positive().required("Field Required"),
+      our_price: Yup.number().required("Field Required"),
       commission: Yup.number().required("Field Required"),
-      deposit: Yup.number().positive().required("Field Required"),
-      balance_due: Yup.number().positive().required("Field Required"),
+      deposit: Yup.number().required("Field Required"),
+      balance_due: Yup.number().required("Field Required"),
     }),
     onSubmit: (values, { resetForm }) => {
-      let price_type = (priceTypeSelected == '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+      let price_type = (priceTypeSelected === '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
         ? dataEdit.pricedetails[0].source_id
         : null):priceTypeSelected
 
-      let price_option = (priceOptionSelected == '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+      let price_option = (priceOptionSelected === '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
         ? dataEdit.pricedetails[1].source_id
         : null):priceOptionSelected
 
-      let price_collect = (priceCollectSelected == '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+      let price_collect = (priceCollectSelected === '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
         ? dataEdit.pricedetails[2].source_id
         : null):priceCollectSelected
 
-      let price_season = (priceSeasonSelected == '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
+      let price_season = (priceSeasonSelected === '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
         ? (dataEdit.pricedetails[3]?.source_id === undefined?null:dataEdit.pricedetails[3]?.source_id)
         : null):priceSeasonSelected
 
@@ -324,13 +324,13 @@ const AddNewPrivateTour = ({
           ) : null
         }
         {
-          copyProduct == false && dataEdit ?
+          copyProduct === false && dataEdit ?
           (
             <h1 className="modal-title mt-0 text-white">+ Edit Product - Private Tour</h1>
           ) : null
         }
         {
-          copyProduct == false && !dataEdit ?
+          copyProduct === false && !dataEdit ?
           (
             <h1 className="modal-title mt-0 text-white">+ New Product - Private Tour</h1>
           ) : null
@@ -573,7 +573,7 @@ const AddNewPrivateTour = ({
 
                   {balanceDueCheckbox !== null ? (
                     <div className="d-flex flex-column align-items-center w-50">
-                      <Label className="form-label mt-2">Balance Due</Label>
+                      <Label className="form-label mt-2">Balance Notify</Label>
                       <div className="form-check form-switch form-switch-md">
                       <Input
                             name="balance_checkbox"

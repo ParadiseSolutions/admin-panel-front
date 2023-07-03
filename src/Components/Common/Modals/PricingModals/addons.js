@@ -125,13 +125,13 @@ const Addons = ({
       balance_due: dataEdit?.net_price ? dataEdit?.net_price : "",
     },
     validationSchema: Yup.object().shape({
-      min: Yup.number().positive().integer().nullable(),
-      max: Yup.number().positive().integer().nullable(),
-      rate: Yup.number().positive().nullable(),
-      our_price: Yup.number().positive().required("Field Required"),
+      min: Yup.number().integer().nullable(),
+      max: Yup.number().integer().nullable(),
+      rate: Yup.number().nullable(),
+      our_price: Yup.number().required("Field Required"),
       commission: Yup.number().required("Field Required"),
-      deposit: Yup.number().positive().required("Field Required"),
-      balance_due: Yup.number().positive().required("Field Required"),
+      deposit: Yup.number().required("Field Required"),
+      balance_due: Yup.number().required("Field Required"),
     }),
     onSubmit: (values, {resetForm}) => {
       let data = {

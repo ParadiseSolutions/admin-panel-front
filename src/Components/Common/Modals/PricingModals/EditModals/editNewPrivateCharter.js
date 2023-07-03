@@ -458,7 +458,7 @@ const EditPrivateCharter = ({
 
                   {balanceDueCheckbox !== null ? (
                     <Col className="col-6">
-                      <Label className="form-label mt-2">Balance Due</Label>
+                      <Label className="form-label mt-2">Balance Notify</Label>
                       <div className="form-check form-switch form-switch-md mx-4">
                         <Input
                           name="balance_checkbox"

@@ -131,7 +131,7 @@ const URL = ({ tourData, toggle }) => {
                   className="text-success"
                   onClick={() => onEditURL(URLData)}
                 >
-                  <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+                  <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{cursor:"pointer"}} />
                   <UncontrolledTooltip placement="top" target="edittooltip">
                     Edit
                   </UncontrolledTooltip>
@@ -146,7 +146,7 @@ const URL = ({ tourData, toggle }) => {
                   onDeleteURL(urlData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i className="mdi mdi-delete font-size-18" id="deletetooltip" style={{cursor:"pointer"}} />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -165,7 +165,7 @@ const URL = ({ tourData, toggle }) => {
     enableReinitialize: true,
     initialValues: {
       path: pathData?.path ? pathData.path : "",
-      complement: editComplementURL ? editComplementURL : "",
+      complement: editComplementURL ? editComplementURL : (pathData?.url ? pathData.url : ""),
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -194,18 +194,25 @@ const URL = ({ tourData, toggle }) => {
                 setData(resp.data.data);
               });
             }
-          })
-          .catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
+          }).catch((error) => {
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
       } else {
         postURLAPI(data)
@@ -217,18 +224,25 @@ const URL = ({ tourData, toggle }) => {
                 setData(resp.data.data);
               });
             }
-          })
-          .catch((error) => {
-            let errorMessages = [];
-					Object.entries(error.response.data.data).map((item) => {
-						errorMessages.push(item[1]);
-					});
-
-					Swal.fire(
-						"Error!",
-						// {error.response.},
-						String(errorMessages[0])
-					);
+          }).catch((error) => {
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
           });
       }
     },

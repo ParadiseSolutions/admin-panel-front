@@ -1,8 +1,10 @@
 export const setDecimalFormat = (currentValue) => {
     if(currentValue !== null && !isNaN(currentValue) && currentValue !== "") {
-        return parseFloat(currentValue).toFixed(2)
+        currentValue = parseFloat(currentValue).toFixed(2)
+    } else {
+        currentValue = "0.00";
     }
-    return currentValue
+    return isNaN(currentValue) ? "0.00" : currentValue
 }
 
 export const setRateFormat = (currentValue) => {
@@ -25,7 +27,7 @@ export const cleanUpSpecialCharacters = (currentValue) => {
                 currentValue = currentValue.replaceAll(value, '');
             });
         }
-        return setDecimalFormat(currentValue)
+        return currentValue
     }
 }
 
