@@ -272,6 +272,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                           setSeasonToEdit(+e.target.value)
                         }}
                         onBlur={validationType.handleBlur}
+                        disabled={!activeDep}
                       >
                         <option>Select....</option>
                         {map(seasonNames, (season, index) => {
@@ -364,6 +365,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                         outline
                         className="waves-effect waves-light col-12"
                         type="submit"
+                        disabled={!activeDep}
                       >
                         {isEdit ? "+ Edit" : '+ Add'}
                         

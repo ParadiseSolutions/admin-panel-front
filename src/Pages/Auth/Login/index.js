@@ -178,7 +178,7 @@ const Login = () => {
                         <p className="text-center" style={{ fontSize: "14.4px" }}>
                           Don't have an account?{" "}
                           <a
-                            href="#!"
+                            href="mailto:it@jstourandtravel.com?subject=User%20creation%20request%20Admin%20Panel&body=New%20Adventure%20Station%20account"
                             style={{ fontSize: "14.4px", color:'#3DC7F4'}}
                             className="link-info mx-1"
                           >
