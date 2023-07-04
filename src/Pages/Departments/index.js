@@ -150,7 +150,10 @@ const Departments = () => {
       <div className="page-content">
         <Container fluid>
           <div className=" mx-2">
-            <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>
+            <h1
+              className="fw-bold cursor-pointer"
+              style={{ color: "#3DC7F4", fontSize: "3.5rem" }}
+            >
               DEPARTMENTS
             </h1>
           </div>
@@ -159,16 +162,10 @@ const Departments = () => {
             <Col xs="12">
               {loadingData ? (
                 <div className="d-flex justify-content-center mt-5">
-                  <div
-                    className="spinner-border"
-                    style={{ color: "#3DC7F4" }}
-                    role="status"
-                  >
+                  <div className="spinner-border text-orange" role="status">
                     <span className="sr-only">Loading...</span>
                   </div>
-                  <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
-                    Loading...
-                  </h2>
+                  <h2 className="mx-5 text-orange">Loading...</h2>
                 </div>
               ) : (
                 <>
