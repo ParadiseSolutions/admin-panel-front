@@ -156,7 +156,7 @@ const EditAddons = ({
         show_balance_due: balance,
         price: values.our_price,
         you_save: values.you_save,
-        net_rate: values.rate,
+        net_rate: ((values.rate !== "")?((values.rate > 1) ? values.rate / 100 : values.rate) : values.rate),
         commission: values.commission,
         deposit: values.deposit,
         net_price: values.balance_due,
