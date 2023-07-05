@@ -147,7 +147,7 @@ const Roles = () => {
     []
   );
   return (
-    <div className="page-content">
+    <div className="page-content pb-0">
       <Container fluid>
         <div className=" mx-1">
           <h1
@@ -189,6 +189,9 @@ const Roles = () => {
           </Col>
         </Row>
       </Container>
+      <div className="content-footer pt-2 px-4 mt-4 mx-4">
+          <p>2023 © JS Tour & Travel</p>
+        </div>
     </div>
   );
 };

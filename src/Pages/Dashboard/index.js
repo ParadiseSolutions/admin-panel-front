@@ -201,7 +201,7 @@ const NewTour = ({ history }) => {
     },
   });
   return (
-    <div className="page-content">
+    <div className="page-content pb-0">
       <Container fluid>
         <Row xl={12}>
             <div className="col-11">
@@ -745,6 +745,9 @@ const NewTour = ({ history }) => {
           </Card>
         </Col>
       </Row>
+      <div className="content-footer pt-2 px-4 mt-4 mx-4">
+          <p>{new Date().getFullYear()} © JS Tour & Travel</p>
+        </div>
     </div>
   );
 };
