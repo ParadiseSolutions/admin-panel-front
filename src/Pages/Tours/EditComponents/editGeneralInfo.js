@@ -9,7 +9,8 @@ import {
   shoppingCartWebsite,
   providerWebsite,
   operatorWebsite,
-  putTourNameEditAPI
+  putTourNameEditAPI,
+  triggerUpdate
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -103,6 +104,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
           .then((resp) => {
             //console.log(resp.data);
             if (resp.data.status === 200) {
+              triggerUpdate()
               Swal.fire(
                 "Edited!",
                 "Tour Name has been edited.",
