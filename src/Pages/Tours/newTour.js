@@ -203,7 +203,7 @@ setCategoryId(id)
     },
   });
   return (
-    <div className="page-content">
+    <div className="page-content pb-0">
       <Container fluid>
         <div className=" mx-1">
           <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
@@ -742,6 +742,9 @@ setCategoryId(id)
           </Card>
         </Col>
       </Row>
+      <div className="content-footer pt-2 px-4 mt-4 mx-4">
+          <p>{new Date().getFullYear()} © JS Tour & Travel</p>
+        </div>
     </div>
   );
 };

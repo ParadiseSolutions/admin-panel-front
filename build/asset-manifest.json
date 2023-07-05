@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.365f5c11.css",
-    "main.js": "/static/js/main.5f50cfb9.js",
+    "main.css": "/static/css/main.02abfbfe.css",
+    "main.js": "/static/js/main.ecce9f7f.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -31,7 +31,6 @@
     "static/media/alpaca.png": "/static/media/alpaca.f9c5f45f084369f228d3.png",
     "static/media/adventure-bg-hub.jpg": "/static/media/adventure-bg-hub.da1d1842c715b5e6acb0.jpg",
     "static/media/schedule.png": "/static/media/schedule.0cc165ca5efb0e150568.png",
-    "static/media/boat.png": "/static/media/boat.7b54164061950a6efab6.png",
     "static/media/newTourGI.jpg": "/static/media/newTourGI.abf8ab286931acb5867f.jpg",
     "static/media/fa-regular-400.svg": "/static/media/fa-regular-400.f4f60ace2cf62f2cba66.svg",
     "static/media/fa-brands-400.eot": "/static/media/fa-brands-400.607a77859353c0cc1882.eot",
@@ -47,6 +46,7 @@
     "static/media/fa-regular-400.eot": "/static/media/fa-regular-400.0747be4cba2f8600544f.eot",
     "static/media/fa-regular-400.ttf": "/static/media/fa-regular-400.c3146b3524e97475c094.ttf",
     "static/media/dripicons-v2.woff": "/static/media/dripicons-v2.f19dcc0358afed69d277.woff",
+    "static/media/boat.png": "/static/media/boat.296ebd4f10d768574b76.png",
     "static/media/chooseactivity.jpg": "/static/media/chooseactivity.12dab3ed435048695f7f.jpg",
     "static/media/threevariants.jpg": "/static/media/threevariants.f42139c07e073e293e5f.jpg",
     "static/media/fa-regular-400.woff": "/static/media/fa-regular-400.8b892b7904a39e37c53d.woff",
@@ -60,12 +60,12 @@
     "static/media/logo-sm.png": "/static/media/logo-sm.021cb2acd539eec27872.png",
     "index.html": "/index.html",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
-    "main.365f5c11.css.map": "/static/css/main.365f5c11.css.map",
-    "main.5f50cfb9.js.map": "/static/js/main.5f50cfb9.js.map",
+    "main.02abfbfe.css.map": "/static/css/main.02abfbfe.css.map",
+    "main.ecce9f7f.js.map": "/static/js/main.ecce9f7f.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.365f5c11.css",
-    "static/js/main.5f50cfb9.js"
+    "static/css/main.02abfbfe.css",
+    "static/js/main.ecce9f7f.js"
   ]
 }

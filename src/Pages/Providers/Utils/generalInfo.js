@@ -63,12 +63,9 @@ const GeneralInformation = () => {
       name: Yup.string().required("Name is required"),
       code: Yup.string()
         .required("Code is required")
-        .max(3, "Must be exactly 3 chars")
-        .required("Max 3 chars"),
-        city: Yup.string().required("City is required"),
-        state: Yup.string().required("State/Province/Region is required"),
-        zip: Yup.string().required("ZIP is required"),
-        country: Yup.string().required("Country is required"),
+        .max(2, "Must be exactly 2 chars")
+        .required("Max 2 chars"),
+      country: Yup.string().required("Country code is required"),
     }),
     onSubmit: (values) => {
       // console.log(values);
@@ -174,16 +171,24 @@ const GeneralInformation = () => {
               history.push(`/providers/${resp.data.data.id}`);
             })
             .catch((error) => {
-              let errorMessages = [];
-              Object.entries(error.response.data.data).map((item) => {
-                errorMessages.push(item[1]);
-              });
-              //console.log(errorMessages)
-              Swal.fire(
-                "Error!",
-                // {error.response.},
-                String(errorMessages[0])
-              );
+              if(error.response.data.data === null) {
+                Swal.fire(
+                  "Error!",
+                  // {error.response.},
+                  String(error.response.data.message)
+                );
+              } else {
+                let errorMessages = [];
+                Object.entries(error.response.data.data).map((item) => {
+                  errorMessages.push(item[1]);
+                });
+      
+                Swal.fire(
+                  "Error!",
+                  // {error.response.},
+                  String(errorMessages[0])
+                );
+              }
             });
         }
       });
@@ -222,7 +227,7 @@ const GeneralInformation = () => {
               <Row>
                 <Col className="col-5">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Name</Label>
+                    <Label className="form-label">Name*</Label>
                     <Input
                       name="name"
                       placeholder=""
@@ -272,7 +277,7 @@ const GeneralInformation = () => {
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">2-Digit Code</Label>
+                    <Label className="form-label">2-Digit Code*</Label>
                     <Input
                       name="code"
                       placeholder=""
@@ -718,10 +723,10 @@ const GeneralInformation = () => {
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Country</Label>
+                    <Label className="form-label">Country Code*</Label>
                     <Input
                       name="country"
-                      placeholder=""
+                      placeholder="MX"
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
@@ -875,8 +880,7 @@ const GeneralInformation = () => {
               <Row>
                 <Col className=" d-flex justify-content-end">
                   <Button
-                    type="submit"
-                    
+                    type="submit"                    
                     className="waves-effect waves-light mb-3 btn btn-orange"
                   >
                     <i className="mdi mdi-plus me-1" />

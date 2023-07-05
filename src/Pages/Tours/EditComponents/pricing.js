@@ -126,8 +126,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     {
       Header: "Product Name",
       accessor: "label",
-      disableFilters: true,
-      filterable: false,
+      disableFilters: false,
+      filterable: true,
       Cell: (cellProps) => {
         return <Name {...cellProps} />;
       },
@@ -135,26 +135,26 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     {
       Header: "SKU",
       accessor: "sku",
-      disableFilters: true,
-      filterable: false,
+      disableFilters: false,
+      filterable: true,
       Cell: (cellProps) => {
         return <Code {...cellProps} />;
       },
     },
     {
-      Header: "Our Price",
-      accessor: "price",
-      disableFilters: true,
-      filterable: false,
+      Header: "Deposit",
+      accessor: "deposit",
+      disableFilters: false,
+      filterable: true,
       Cell: (cellProps) => {
         return <Price {...cellProps} />;
       },
     },
     {
-      Header: "Deposit",
-      accessor: "deposit",
-      disableFilters: true,
-      filterable: false,
+      Header: "Our Price",
+      accessor: "price",
+      disableFilters: false,
+      filterable: true,
       Cell: (cellProps) => {
         return <Price {...cellProps} />;
       },
@@ -163,7 +163,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       Header: "Rate %",
       accessor: "rate",
       disableFilters: true,
-      filterable: false,
+      filterable: true,
       Cell: (cellProps) => {
         return <Rate {...cellProps} />;
       },
@@ -171,8 +171,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     {
       Header: "Comm.",
       accessor: "commission",
-      disableFilters: true,
-      filterable: false,
+      disableFilters: false,
+      filterable: true,
       Cell: (cellProps) => {
         return <Price {...cellProps} />;
       },
@@ -180,8 +180,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     {
       Header: "Net Price",
       accessor: "net_price",
-      disableFilters: true,
-      filterable: false,
+      disableFilters: false,
+      filterable: true,
       Cell: (cellProps) => {
         return <Price {...cellProps} />;
       },

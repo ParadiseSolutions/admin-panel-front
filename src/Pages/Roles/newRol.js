@@ -121,7 +121,7 @@ const NewRol = ({ history }) => {
   });
   return (
     <>
-      <div className="page-content">
+      <div className="page-content pb-0">
         <Container fluid className="px-5">
           <div className="">
             <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
@@ -283,6 +283,9 @@ const NewRol = ({ history }) => {
             </Row>
           </Form>
         </Container>
+        <div className="content-footer pt-2 px-4 mt-4 mx-4">
+          <p>2023 © JS Tour & Travel</p>
+        </div>
       </div>
     </>
   );

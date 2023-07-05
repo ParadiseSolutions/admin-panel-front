@@ -28,7 +28,7 @@ const EditOperator = () => {
 
     return ( 
         <>
-        <div className="page-content">
+        <div className="page-content pb-0">
         <Container fluid>
         <div className=" mx-5">
             <h1 className="display-5 fw-bold cursor-pointer" style={{ color: "#3DC7F4" }}>
@@ -42,6 +42,9 @@ const EditOperator = () => {
          </div>
           </Container>
           </div>
+          <div className="content-footer pt-2 px-4 mt-4 mx-4">
+          <p>{new Date().getFullYear()} © JS Tour & Travel</p>
+        </div>
         </>
      );
 }
