@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import OverriteDateImg from "../../../../Components/Assets/images/overriteDates.png";
-import { putOverriteDate } from "../../../../Utils/API/Tours";
+import { putOverriteDate, triggerUpdate } from "../../../../Utils/API/Tours";
 import CheckBoxs from "./Components/checkboxs";
 import {
   Row,
@@ -21,7 +21,7 @@ const EdditOverriteDate = ({
   editOverriteDate,
   setEditOverriteDate,
   editOverriteDateData,
-  refresh
+  refresh,
 }) => {
   //initial data
   const { id } = useParams();
@@ -35,7 +35,7 @@ const EdditOverriteDate = ({
   const [dayWeekfromEdit, setDayWeekFromSelected] = useState(null);
   const [dayWeektoEdit, setDayWeektoSelected] = useState(null);
   const [dayFixEdit, setdayFixSelected] = useState(null);
-  const [statusSelected, setStatusSelected] = useState(null)
+  const [statusSelected, setStatusSelected] = useState(null);
   // console.log("data inicial", editOverriteDateData);
 
   useEffect(() => {
@@ -47,8 +47,8 @@ const EdditOverriteDate = ({
       setDaySelected(+editOverriteDateData?.on);
       setDayWeekFromSelected(editOverriteDateData?.from);
       setDayWeektoSelected(editOverriteDateData?.to);
-      setdayFixSelected(editOverriteDateData?.from)
-      setStatusSelected(editOverriteDate?.action)
+      setdayFixSelected(editOverriteDateData?.from);
+      setStatusSelected(editOverriteDate?.action);
     }
   }, [editOverriteDateData]);
 
@@ -72,7 +72,7 @@ const EdditOverriteDate = ({
       range_to_date: dayRagetoEdit ? dayRagetoEdit : null,
       weekdays_from_date: dayWeekfromEdit ? dayWeekfromEdit : null,
       weekdays_to_date: dayWeektoEdit ? dayWeektoEdit : null,
-      fixed_date: dayFixEdit ? dayFixEdit : null
+      fixed_date: dayFixEdit ? dayFixEdit : null,
     },
     validationSchema: Yup.object().shape({
       // name: Yup.string().required("Name is required"),
@@ -109,10 +109,11 @@ const EdditOverriteDate = ({
       putOverriteDate(id, data)
         .then((resp) => {
           if (resp.data.status === 200) {
+            triggerUpdate();
             Swal.fire("Success!", "Schedule has been edited", "success").then(
               () => {
                 setEditOverriteDate(false);
-                refresh()
+                refresh();
               }
             );
           }
@@ -290,31 +291,34 @@ const EdditOverriteDate = ({
                         onChange={(e) => {
                           setStatusSelected(e.target.value);
                         }}
-                        
                         onBlur={validationType.handleBlur}
                       >
                         <option>Select....</option>
-                        <option value={"Available"}
-                         selected={
-                          editOverriteDateData &&
-                          editOverriteDateData.action === 'Available'
-                            ? true
-                            : false
-                        }
-                        >Available</option>
-                        <option value={"Unavailable"}
-                         selected={
-                          editOverriteDateData &&
-                          editOverriteDateData.action === 'Unavailable'
-                            ? true
-                            : false
-                        }
-                        >Unavailable</option>
-                       
+                        <option
+                          value={"Available"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.action === "Available"
+                              ? true
+                              : false
+                          }
+                        >
+                          Available
+                        </option>
+                        <option
+                          value={"Unavailable"}
+                          selected={
+                            editOverriteDateData &&
+                            editOverriteDateData.action === "Unavailable"
+                              ? true
+                              : false
+                          }
+                        >
+                          Unavailable
+                        </option>
                       </Input>
                     </div>
                   </Col>
-                  
                 </Row>
                 {typeSelected === "1" ? (
                   <Row>
@@ -547,7 +551,10 @@ const EdditOverriteDate = ({
                 ) : null}
                 {typeSelected === "3" ? (
                   <Row>
-                    <CheckBoxs onAddDay={onAddDay} editOverriteDateData={editOverriteDateData}/>
+                    <CheckBoxs
+                      onAddDay={onAddDay}
+                      editOverriteDateData={editOverriteDateData}
+                    />
                   </Row>
                 ) : null}
                 {typeSelected === "4" ? (

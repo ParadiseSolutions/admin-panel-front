@@ -18,6 +18,7 @@ import {
   getPricingOptionsAPI,
   postPricesAPI,
   updatePriceAPI,
+  triggerUpdate
 } from "../../../../Utils/API/Tours";
 import { map } from "lodash";
 import Swal from "sweetalert2";
@@ -258,6 +259,7 @@ const Fishing = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data).then((resp) => {
             // console.log(resp);
+            triggerUpdate()
             setAddNewFishing(false);
             refreshTable();
             resetForm({ values: "" });
@@ -283,6 +285,7 @@ const Fishing = ({
           });
         } else if(copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data).then((resp) => {
+            triggerUpdate()
             // console.log(resp);
             setAddNewFishing(false);
             refreshTable();

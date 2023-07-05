@@ -12,7 +12,8 @@ import {
   operatorWebsite,
   createTourAPI, 
   getLocationWebsitePI,
-  getCategoryWebsiteAPI
+  getCategoryWebsiteAPI,
+  triggerUpdate
 } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -174,6 +175,7 @@ setCategoryId(id)
               "Tour has been created.",
               "success"
             ).then(() => {
+              triggerUpdate()
               history.push(`/tours/${resp.data.data.id}`);
             });
           }

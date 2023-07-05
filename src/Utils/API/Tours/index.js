@@ -1,7 +1,13 @@
 import axios from "axios";
 import { API_URL, options } from "../index";
 
-
+//trigger update
+export const triggerUpdate = () => {
+  const url = `${API_URL}/tours/updatePivotTables`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 
 //general request
 export const statusUpdateTour = (id, body) => {

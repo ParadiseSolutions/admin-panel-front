@@ -7,6 +7,7 @@ import {
   getTourAPI,
   updateBookingSettings,
 } from "../../../../Utils/API/Tours/setingsTemplate";
+import { triggerUpdate } from "../../../../Utils/API/Tours";
 import {
   Row,
   Col,
@@ -90,6 +91,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
               "Booking Form Information has been edited",
               "success"
             ).then(() => {
+              triggerUpdate()
               setReserveModal(!reserveModal);
             });
           }

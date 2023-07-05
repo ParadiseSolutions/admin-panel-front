@@ -21,7 +21,8 @@ import {
   getPathAPI,
   postURLAPI,
   updateURLAPI,
-  deleteURL
+  deleteURL,
+  triggerUpdate,
 } from "../../../Utils/API/Tours";
 import { map } from "lodash";
 import { useFormik } from "formik";
@@ -38,7 +39,7 @@ const URL = ({ tourData, toggle }) => {
   const [basePath, setBasePath] = useState(null);
   const [complementURL, setComplementURL] = useState(null);
   const [editURLID, setEditURLID] = useState(null);
-  
+
   useEffect(() => {
     getURLsAPI(tourData.id).then((resp) => {
       setData(resp.data.data);
@@ -46,8 +47,8 @@ const URL = ({ tourData, toggle }) => {
 
     getURLTypeAPI(tourData.id).then((resp) => {
       setUrlTypes(resp.data.data);
-      if(resp.data.data.length > 0) {
-        setUrlTypeSelected(resp.data.data[0].url_type_id)
+      if (resp.data.data.length > 0) {
+        setUrlTypeSelected(resp.data.data[0].url_type_id);
       }
     });
   }, [tourData]);
@@ -55,10 +56,10 @@ const URL = ({ tourData, toggle }) => {
   useEffect(() => {
     getURLAvailableFromAPI(tourData.id, urlTypeSelected).then((resp) => {
       setLocationData(resp.data.data);
-      if(resp.data.data.length === 1) {
-        setLocationSelected(resp.data.data[0].available_from_id)
+      if (resp.data.data.length === 1) {
+        setLocationSelected(resp.data.data[0].available_from_id);
       } else {
-        setLocationSelected(null)
+        setLocationSelected(null);
       }
     });
   }, [urlTypeSelected]);
@@ -67,13 +68,13 @@ const URL = ({ tourData, toggle }) => {
     console.log("llamado");
     getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
       setPathData(resp.data.data);
-      setBasePath(resp.data.data.base_path)
-      console.log(resp.data.data)
+      setBasePath(resp.data.data.base_path);
+      console.log(resp.data.data);
     });
   }, [urlTypeSelected, locationSelected]);
 
   const onEditURL = (url) => {
-    console.log(url)
+    console.log(url);
     setUrlTypeSelected(url.path_type_id);
     getURLAvailableFromAPI(tourData.id, url.path_type_id).then((resp) => {
       setLocationData(resp.data.data);
@@ -91,19 +92,19 @@ const URL = ({ tourData, toggle }) => {
     setPathData(null);
     setComplementURL(null);
     setEditURLID(null);
-  }
+  };
 
   const onDeleteURL = (urlData) => {
-    deleteURL(urlData.id)
-          .then((resp) => {
-            // console.log(resp.data);
-            if (resp.data.status === 200) {
-              Swal.fire("Deleted!", "URL has been deleted.", "success");
-              getURLsAPI(tourData.id).then((resp) => {
-                setData(resp.data.data);
-              });
-            }
-          })
+    deleteURL(urlData.id).then((resp) => {
+      // console.log(resp.data);
+      if (resp.data.status === 200) {
+        Swal.fire("Deleted!", "URL has been deleted.", "success");
+        getURLsAPI(tourData.id).then((resp) => {
+          triggerUpdate();
+          setData(resp.data.data);
+        });
+      }
+    });
   };
 
   const columns = useMemo(
@@ -149,14 +150,17 @@ const URL = ({ tourData, toggle }) => {
                   className="text-success"
                   onClick={() => onEditURL(URLData)}
                 >
-                  <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{cursor:"pointer"}} />
+                  <i
+                    className="mdi mdi-pencil font-size-18"
+                    id="edittooltip"
+                    style={{ cursor: "pointer" }}
+                  />
                   <UncontrolledTooltip placement="top" target="edittooltip">
                     Edit
                   </UncontrolledTooltip>
                 </div>
               </div>
               <div
-                
                 className="text-danger"
                 onClick={() => {
                   const urlData = cellProps.row.original;
@@ -164,7 +168,11 @@ const URL = ({ tourData, toggle }) => {
                   onDeleteURL(urlData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" style={{cursor:"pointer"}} />
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -188,7 +196,7 @@ const URL = ({ tourData, toggle }) => {
     validationSchema: Yup.object().shape({
       complement: Yup.string().required("Field required"),
     }),
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       // console.log(values);
       let data = {
         tour_id: tourData.id,
@@ -196,7 +204,7 @@ const URL = ({ tourData, toggle }) => {
         available_from_id: locationSelected ? locationSelected : "",
         url: `${values.base_path}${values.complement}`,
         base_path: values.base_path,
-        filename: values.complement
+        filename: values.complement,
       };
 
       if (editURLID) {
@@ -206,12 +214,14 @@ const URL = ({ tourData, toggle }) => {
             if (resp.data.status === 200) {
               Swal.fire("Edited!", "URL has been edited.", "success");
               getURLsAPI(tourData.id).then((resp) => {
+                triggerUpdate()
                 setData(resp.data.data);
               });
               cancelEditing();
             }
-          }).catch((error) => {
-            if(error.response.data.data === null) {
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -222,7 +232,7 @@ const URL = ({ tourData, toggle }) => {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
               });
-    
+
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -241,8 +251,9 @@ const URL = ({ tourData, toggle }) => {
               });
               setComplementURL(null);
             }
-          }).catch((error) => {
-            if(error.response.data.data === null) {
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -253,7 +264,7 @@ const URL = ({ tourData, toggle }) => {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
               });
-    
+
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -262,7 +273,6 @@ const URL = ({ tourData, toggle }) => {
             }
           });
       }
-      
     },
   });
 
@@ -299,7 +309,9 @@ const URL = ({ tourData, toggle }) => {
                       key={index}
                       value={type.url_type_id}
                       selected={
-                        (urlTypeSelected ? type.url_type_id === urlTypeSelected : false)
+                        urlTypeSelected
+                          ? type.url_type_id === urlTypeSelected
+                          : false
                       }
                     >
                       {type.url_type_name}
@@ -309,10 +321,8 @@ const URL = ({ tourData, toggle }) => {
               </Input>
             </div>
           </Col>
-          {
-            locationData && locationData?.length > 0 ?
-            (
-              <Col className="col-2">
+          {locationData && locationData?.length > 0 ? (
+            <Col className="col-2">
               <div className="form-outline my-2">
                 <Label className="form-label">Location</Label>
                 <Input
@@ -331,7 +341,9 @@ const URL = ({ tourData, toggle }) => {
                         key={index}
                         value={location.available_from_id}
                         selected={
-                          (locationSelected ? location.available_from_id === locationSelected : false)
+                          locationSelected
+                            ? location.available_from_id === locationSelected
+                            : false
                         }
                       >
                         {location.available_from_name}
@@ -341,8 +353,7 @@ const URL = ({ tourData, toggle }) => {
                 </Input>
               </div>
             </Col>
-            ) : null
-          }
+          ) : null}
           <Col>
             <div className="form-outline my-2">
               <Label className="form-label">Enter File Name</Label>
@@ -383,9 +394,8 @@ const URL = ({ tourData, toggle }) => {
               </Col>
             </div>
           </Col>
-          {
-            editURLID ? (
-              <>
+          {editURLID ? (
+            <>
               <Col className="col-1">
                 <Col className=" d-flex justify-content-end mt-4">
                   <Button
@@ -410,23 +420,21 @@ const URL = ({ tourData, toggle }) => {
                   </Button>
                 </Col>
               </Col>
-              </>
-            ) : (
-              <Col className="col-1">
-                <Col className=" d-flex justify-content-end mt-4">
-                  <Button
-                    style={{ marginTop: "13px" }}
-                    type="submit"
-                    className="font-16 btn-block btn-orange col"
-                    // onClick={toggleCategory}
-                  >
-                    + Add URL
-                  </Button>
-                </Col>
+            </>
+          ) : (
+            <Col className="col-1">
+              <Col className=" d-flex justify-content-end mt-4">
+                <Button
+                  style={{ marginTop: "13px" }}
+                  type="submit"
+                  className="font-16 btn-block btn-orange col"
+                  // onClick={toggleCategory}
+                >
+                  + Add URL
+                </Button>
               </Col>
-            )
-          }
-          
+            </Col>
+          )}
         </Row>
       </Form>
       <Row>
@@ -435,29 +443,28 @@ const URL = ({ tourData, toggle }) => {
         ) : null}
       </Row>
       <Col
-              className="col-12 d-flex justify-content-end mt-5"
-              style={{ paddingRight: "30px" }}
-            >
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light me-3"
-                type="button"
-                onClick={() => toggle('3')}
-              >
-                <i className="uil-angle-double-left" />
-                Back
-              </Button>
-              <Button
-                
-                type="button"
-                className="font-16 btn-block btn-orange"
-                onClick={() => toggle('5')}
-              >
-                Continue
-                <i className="uil-angle-double-right mx-1 " />
-              </Button>
-            </Col>
+        className="col-12 d-flex justify-content-end mt-5"
+        style={{ paddingRight: "30px" }}
+      >
+        <Button
+          color="paradise"
+          outline
+          className="waves-effect waves-light me-3"
+          type="button"
+          onClick={() => toggle("3")}
+        >
+          <i className="uil-angle-double-left" />
+          Back
+        </Button>
+        <Button
+          type="button"
+          className="font-16 btn-block btn-orange"
+          onClick={() => toggle("5")}
+        >
+          Continue
+          <i className="uil-angle-double-right mx-1 " />
+        </Button>
+      </Col>
     </Row>
   );
 };

@@ -7,6 +7,7 @@ import {
   getPricesPricingAPI,
   putSchedule,
   getScheduleEditDataAPI,
+  triggerUpdate,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -144,7 +145,7 @@ const EditScheduleModal = ({
     setProductToEdit(dataEdit.price_id);
     setFromDateEdit(dataEdit.from_date);
     setToDateEdit(dataEdit.to_date);
-    setDayList(dataEdit.runs)
+    setDayList(dataEdit.runs);
   }, [dataEdit, editSchedule]);
 
   //initial Data
@@ -295,9 +296,10 @@ const EditScheduleModal = ({
         duration: values.duration ? values.duration : "",
         price_id: productSelected,
       };
-console.log(data)
-putSchedule(id, data)
+      
+      putSchedule(id, data)
         .then((resp) => {
+          triggerUpdate();
           if (resp.data.status === 201) {
             Swal.fire("Success!", "Schedule has been created", "success").then(
               () => {
@@ -1009,11 +1011,13 @@ putSchedule(id, data)
                     </div>
                   </Col>
                 ) : null}
-                
-                  <Col className="col-12 mt-3">
-                    <CheckBoxs onAddDay={onAddDay} scheduleEditID={scheduleEditID} />
-                  </Col>
-                
+
+                <Col className="col-12 mt-3">
+                  <CheckBoxs
+                    onAddDay={onAddDay}
+                    scheduleEditID={scheduleEditID}
+                  />
+                </Col>
 
                 <Col className="col-9 mt-3">
                   <Row className="">

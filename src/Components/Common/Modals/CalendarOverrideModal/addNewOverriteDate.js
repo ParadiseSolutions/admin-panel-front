@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import OverriteDateImg from "../../../../Components/Assets/images/overriteDates.png";
-import { postOverriteDate } from "../../../../Utils/API/Tours";
+import { postOverriteDate, triggerUpdate } from "../../../../Utils/API/Tours";
 import CheckBoxs from "./Components/checkboxs";
 import {
   Row,
@@ -21,14 +21,14 @@ const AddNewOverriteDate = ({
   newOverriteDate,
   setNewOverriteDate,
   onClickAddLocation,
-  refresh
+  refresh,
 }) => {
   //initial data
   const { id } = useParams();
   const [typeSelected, setTypeSelected] = useState(null);
-  const [repeatSelected, setRepeatSelected] = useState(null)
-  const [daySelected, setDaySelected] = useState(null)
-  const [statusSelected, setStatusSelected] = useState(null)
+  const [repeatSelected, setRepeatSelected] = useState(null);
+  const [daySelected, setDaySelected] = useState(null);
+  const [statusSelected, setStatusSelected] = useState(null);
   // console.log(typeSelected);
 
   //checkbox list
@@ -54,25 +54,38 @@ const AddNewOverriteDate = ({
       // name: Yup.string().required("Name is required"),
     }),
 
-    onSubmit: (values, {resetForm}) => {
-
+    onSubmit: (values, { resetForm }) => {
       let data = {
         type_id: typeSelected,
         repeat_id: repeatSelected,
         action: statusSelected,
-        on: daySelected ? daySelected.toString() : daysList.length > 0 ? daysList.toString() : '',
-        from: values.range_from_date ? values.range_from_date : values.weekdays_from_date ? values.weekdays_from_date : values.fixed_date ? values.fixed_date : null,
-        to: values.range_to_date ? values.range_to_date : values.weekdays_to_date ? values.weekdays_to_date : null,
+        on: daySelected
+          ? daySelected.toString()
+          : daysList.length > 0
+          ? daysList.toString()
+          : "",
+        from: values.range_from_date
+          ? values.range_from_date
+          : values.weekdays_from_date
+          ? values.weekdays_from_date
+          : values.fixed_date
+          ? values.fixed_date
+          : null,
+        to: values.range_to_date
+          ? values.range_to_date
+          : values.weekdays_to_date
+          ? values.weekdays_to_date
+          : null,
         recurrency: repeatSelected,
       };
       postOverriteDate(id, data)
         .then((resp) => {
           if (resp.data.status === 201) {
+            triggerUpdate()
             Swal.fire("Success!", "Date has been created", "success").then(
               () => {
-                setNewOverriteDate(false)
-                refresh()
-                
+                setNewOverriteDate(false);
+                refresh();
               }
             );
           }
@@ -89,7 +102,7 @@ const AddNewOverriteDate = ({
             String(errorMessages[0])
           );
         });
-        resetForm({})
+      resetForm({});
     },
   });
   return (
@@ -174,14 +187,14 @@ const AddNewOverriteDate = ({
                       <Input
                         type="select"
                         name=""
-                          onChange={(e) => {
-                            setRepeatSelected(e.target.value);
-                          }}
+                        onChange={(e) => {
+                          setRepeatSelected(e.target.value);
+                        }}
                         onBlur={validationType.handleBlur}
                       >
                         <option>Select....</option>
-                        <option value={'1'}>One Time Event</option>
-                        <option value={'2'}>Yearly</option>
+                        <option value={"1"}>One Time Event</option>
+                        <option value={"2"}>Yearly</option>
                       </Input>
                     </div>
                   </Col>
@@ -201,11 +214,9 @@ const AddNewOverriteDate = ({
                         <option>Select....</option>
                         <option value={"Available"}>Available</option>
                         <option value={"Unavailable"}>Unavailable</option>
-                       
                       </Input>
                     </div>
                   </Col>
-                  
                 </Row>
 
                 {typeSelected === "1" ? (
@@ -284,9 +295,9 @@ const AddNewOverriteDate = ({
                         <Input
                           type="select"
                           name=""
-                            onChange={(e) => {
-                              setDaySelected(e.target.value);
-                            }}
+                          onChange={(e) => {
+                            setDaySelected(e.target.value);
+                          }}
                           onBlur={validationType.handleBlur}
                         >
                           <option value={0}>Sunday</option>
@@ -296,9 +307,6 @@ const AddNewOverriteDate = ({
                           <option value={4}>Thursday</option>
                           <option value={5}>Friday</option>
                           <option value={6}>Saturday</option>
-                          
-                          
-                        
                         </Input>
                       </div>
                     </Col>
@@ -415,7 +423,6 @@ const AddNewOverriteDate = ({
                   <Col className="col-12 mt-2 d-flex justify-content-end">
                     <Button
                       type="submit"
-                      
                       className="waves-effect waves-light btn btn-orange"
                     >
                       <i className="mdi mdi-plus me-1" />

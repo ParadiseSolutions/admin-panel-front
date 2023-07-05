@@ -108,7 +108,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
             });
-  
+
             Swal.fire(
               "Error!",
               // {error.response.},
@@ -120,11 +120,11 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   };
 
   const [editProductID, setEditProductID] = useState(null);
-  const [copyProduct, setCopyProduct] = useState(false)
+  const [copyProduct, setCopyProduct] = useState(false);
 
   const columnsProducts = useMemo(() => [
     {
-      Header: 'Product Name',
+      Header: "Product Name",
       accessor: "label",
       disableFilters: true,
       filterable: false,
@@ -200,12 +200,12 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 const prodData = cellProps.row.original;
                 // console.log("data del producto", prodData);
                 setCopyProduct(false);
-                setEditProductID(null)
+                setEditProductID(null);
 
                 switch (tourData.type_id) {
                   case 2:
                     // setAddNewProduct(!addNewProduct);
-                    setAddNewPrivateTour(!addNewPrivateTour)
+                    setAddNewPrivateTour(!addNewPrivateTour);
                     setEditProductID(prodData.id);
                     break;
                   case 3:
@@ -232,7 +232,11 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 }
               }}
             >
-              <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{cursor:"pointer"}} />
+              <i
+                className="mdi mdi-pencil font-size-18"
+                id="edittooltip"
+                style={{ cursor: "pointer" }}
+              />
               <UncontrolledTooltip placement="top" target="edittooltip">
                 Edit
               </UncontrolledTooltip>
@@ -242,13 +246,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               onClick={() => {
                 const prodData = cellProps.row.original;
                 // console.log("data del producto", prodData);
-                setEditProductID(null)
+                setEditProductID(null);
                 setCopyProduct(true);
 
                 switch (tourData.type_id) {
                   case 2:
                     // setAddNewProduct(!addNewProduct);
-                    setAddNewPrivateTour(!addNewPrivateTour)
+                    setAddNewPrivateTour(!addNewPrivateTour);
                     setEditProductID(prodData.id);
                     break;
                   case 3:
@@ -275,7 +279,11 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 }
               }}
             >
-              <i className="mdi mdi-content-copy font-size-18" id="copytooltip"  style={{cursor:"pointer"}}/>
+              <i
+                className="mdi mdi-content-copy font-size-18"
+                id="copytooltip"
+                style={{ cursor: "pointer" }}
+              />
               <UncontrolledTooltip placement="top" target="copytooltip">
                 Copy
               </UncontrolledTooltip>
@@ -288,7 +296,11 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 onDelete(depData);
               }}
             >
-              <i className="mdi mdi-delete font-size-18" id="deletetooltip"  style={{cursor:"pointer"}}/>
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                style={{ cursor: "pointer" }}
+              />
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete
               </UncontrolledTooltip>
@@ -302,7 +314,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const [addNewProduct, setAddNewProduct] = useState(false);
   const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);
   const [addNewFishing, setAddNewFishing] = useState(false);
-  
+
   const [addNewPrivateCharter, setAddNewPrivateCharter] = useState(false);
   const [addNewPrivateTour, setAddNewPrivateTour] = useState(false);
   const [addNewTransportation, setAddNewTransportation] = useState(false);
@@ -314,12 +326,12 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const [newPrivateTour, setNewPrivateTour] = useState(false);
   const [newTransportation, setNewTransportation] = useState(false);
   const onClickNewProduct = () => {
-    setEditProductID(null)
-    setCopyProduct(false)
+    setEditProductID(null);
+    setCopyProduct(false);
     switch (tourData.type_id) {
       case 2:
         // setNewProduct(!addNewProduct);
-        setAddNewPrivateTour(!addNewPrivateTour)
+        setAddNewPrivateTour(!addNewPrivateTour);
         break;
       case 3:
         setAddNewAirportTransfer(!addNewAirportTransfer);
@@ -351,15 +363,12 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     <TabPane tabId="1" className="">
       <Row>
         <Col className="col-4">
-        
-        <h1 className="text-paradise">Products</h1>
+          <h1 className="text-paradise">Products</h1>
         </Col>
         <Col>
-        
-        <div className="text-sm-end">
+          <div className="text-sm-end">
             <Button
               type="button"
-              
               className="waves-effect waves-light mb-3 btn btn-orange"
               onClick={onClickNewProduct}
             >
@@ -382,24 +391,21 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       </Row>
 
       <Row>
-        <Col
-          className="col-12 d-flex justify-content-end mt-5"          
-        >
+        <Col className="col-12 d-flex justify-content-end mt-5">
           <Button
             color="paradise"
             outline
             className="waves-effect waves-light me-3"
             type="button"
-             onClick={() => toggle('4')}
+            onClick={() => toggle("4")}
           >
             <i className="uil-angle-double-left" />
             Back
           </Button>
           <Button
-            
             type="submit"
             className="font-16 btn-block btn-orange"
-             onClick={() => toggle('6')}
+            onClick={() => toggle("6")}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />

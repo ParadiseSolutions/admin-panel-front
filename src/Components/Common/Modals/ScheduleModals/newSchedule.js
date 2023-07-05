@@ -5,7 +5,8 @@ import Swal from "sweetalert2";
 import {
   getScheduleTypesAPI,
   getPricesPricingAPI,
-  postSchedule
+  postSchedule,
+  triggerUpdate,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -23,7 +24,12 @@ import { map } from "lodash";
 import Switch from "react-switch";
 import { useParams } from "react-router-dom";
 
-const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh }) => {
+const AddNewScheduleModal = ({
+  newSchedule,
+  setNewSchedule,
+  tourData,
+  refresh,
+}) => {
   const { id } = useParams();
   //initial Data
   const [scheduleTypesData, setSchedulesTypesData] = useState([]);
@@ -45,7 +51,6 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
   // type onChange
   const [typeSelected, setTypeSelected] = useState(null);
   const onChangeType = (selectionType) => {
-   
     setTypeSelected(selectionType);
   };
 
@@ -113,31 +118,31 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
   //ids selected
   const [productSelected, setProductSelected] = useState(null);
   const [timeFrameSingleSchedule, setTimeFrameSingleSchedule] = useState("AM");
-  const [timeFrameMulti1, setTimeFrameMulti1] = useState('AM')
-  const [timeFrameMulti2, setTimeFrameMulti2] = useState('AM')
-  const [timeFrameMulti3, setTimeFrameMulti3] = useState('AM')
-  const [timeFrameMulti4, setTimeFrameMulti4] = useState('AM')
-  const [timeFrameMulti5, setTimeFrameMulti5] = useState('AM')
-  const [timeFrameMulti6, setTimeFrameMulti6] = useState('AM')
-  const [timeFrameIntervalFrom, setTimeFrameIntervalFrom] = useState('AM')
-  const [timeFrameIntervalTo, setTimeFrameIntervalTo] = useState('AM')
-  const [unitSelected, setUnitSelected] = useState('Hours')
+  const [timeFrameMulti1, setTimeFrameMulti1] = useState("AM");
+  const [timeFrameMulti2, setTimeFrameMulti2] = useState("AM");
+  const [timeFrameMulti3, setTimeFrameMulti3] = useState("AM");
+  const [timeFrameMulti4, setTimeFrameMulti4] = useState("AM");
+  const [timeFrameMulti5, setTimeFrameMulti5] = useState("AM");
+  const [timeFrameMulti6, setTimeFrameMulti6] = useState("AM");
+  const [timeFrameIntervalFrom, setTimeFrameIntervalFrom] = useState("AM");
+  const [timeFrameIntervalTo, setTimeFrameIntervalTo] = useState("AM");
+  const [unitSelected, setUnitSelected] = useState("Hours");
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      start_time_single: '',
-      from_intervals: '',
-      to_interval:'',
-      duration: '',
-      from: '',
-      to: '',
-      first_field_multi: '',
-      second_field_multi: '',
-      third_field_multi:'',
-      fourth_field_multi: '',
-      fifth_field_multi: '',
-      sixth_field_multi: ''
+      start_time_single: "",
+      from_intervals: "",
+      to_interval: "",
+      duration: "",
+      from: "",
+      to: "",
+      first_field_multi: "",
+      second_field_multi: "",
+      third_field_multi: "",
+      fourth_field_multi: "",
+      fifth_field_multi: "",
+      sixth_field_multi: "",
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
@@ -145,37 +150,40 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
     //   phone_number: Yup.string().required("Phone Number is required"),
     // }),
     onSubmit: (values, { resetForm }) => {
-      
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
       const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
       const startTimeIntervalsTo = `${values.to_interval} ${timeFrameIntervalTo}`;
       const daysListString = daysList.toString();
-      
-      let multiTimesList = []
-      if (values.first_field_multi !== '') {
-        multiTimesList.push(`${values.first_field_multi} ${timeFrameMulti1}`)
+
+      let multiTimesList = [];
+      if (values.first_field_multi !== "") {
+        multiTimesList.push(`${values.first_field_multi} ${timeFrameMulti1}`);
       }
-      if (values.second_field_multi !== '') {
-        multiTimesList.push(`${values.second_field_multi} ${timeFrameMulti2}`)
+      if (values.second_field_multi !== "") {
+        multiTimesList.push(`${values.second_field_multi} ${timeFrameMulti2}`);
       }
-      if (values.third_field_multi !== '') {
-        multiTimesList.push(`${values.third_field_multi} ${timeFrameMulti3}`)
+      if (values.third_field_multi !== "") {
+        multiTimesList.push(`${values.third_field_multi} ${timeFrameMulti3}`);
       }
-      if (values.fourth_field_multi !== '') {
-        multiTimesList.push(`${values.fourth_field_multi} ${timeFrameMulti4}`)
+      if (values.fourth_field_multi !== "") {
+        multiTimesList.push(`${values.fourth_field_multi} ${timeFrameMulti4}`);
       }
-      if (values.fifth_field_multi !== '') {
-        multiTimesList.push(`${values.fifth_field_multi} ${timeFrameMulti5}`)
+      if (values.fifth_field_multi !== "") {
+        multiTimesList.push(`${values.fifth_field_multi} ${timeFrameMulti5}`);
       }
-      if (values.sixth_field_multi !== '') {
-        multiTimesList.push(`${values.sixth_field_multi} ${timeFrameMulti6}`)
+      if (values.sixth_field_multi !== "") {
+        multiTimesList.push(`${values.sixth_field_multi} ${timeFrameMulti6}`);
       }
 
       let data = {
         type_id: typeSelected,
         detail: multiTimesList.toString(),
-        from: values.start_time_single ? startTimeSingle : values.from_intervals ? startTimeIntervalsFrom : '', // cambiarlo despues por una validacion
-        to: values.to_interval ? startTimeIntervalsTo : '',
+        from: values.start_time_single
+          ? startTimeSingle
+          : values.from_intervals
+          ? startTimeIntervalsFrom
+          : "", // cambiarlo despues por una validacion
+        to: values.to_interval ? startTimeIntervalsTo : "",
         runs: daysListString,
         temporary_schedule: activeDep === true ? 1 : 0,
         from_date: values.from_date,
@@ -185,29 +193,30 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
         price_id: productSelected,
       };
 
-      
-      postSchedule(id, data).then((resp) => {
-        if (resp.data.status === 201) {
-          Swal.fire("Success!", "Schedule has been created", "success").then(
-            () => {
-              setNewSchedule(false)
-              refresh()
-            }
-          );
-        }
-      })
-      .catch((error) => {
-        let errorMessages = [];
-        Object.entries(error.response.data.data).map((item) => {
-          return errorMessages.push(item[1]);
-        });
+      postSchedule(id, data)
+        .then((resp) => {
+          if (resp.data.status === 201) {
+            triggerUpdate();
+            Swal.fire("Success!", "Schedule has been created", "success").then(
+              () => {
+                setNewSchedule(false);
+                refresh();
+              }
+            );
+          }
+        })
+        .catch((error) => {
+          let errorMessages = [];
+          Object.entries(error.response.data.data).map((item) => {
+            return errorMessages.push(item[1]);
+          });
 
-        Swal.fire(
-          "Error!",
-          // {error.response.},
-          String(errorMessages[0])
-        );
-      });
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(errorMessages[0])
+          );
+        });
 
       resetForm({ values: "" });
     },
@@ -229,31 +238,31 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
         }}
         className="custom-validation"
       >
-      <div
-        className="modal-header"
-        style={{ backgroundColor: "#3DC7F4", border: "none" }}
-      >
-        <h1 className="modal-title mt-0 text-white">+ New Schedule Entry</h1>
-        <button
-          onClick={() => {
-            setNewSchedule(false);
-          }}
-          type="button"
-          className="close"
-          style={{ color: "white" }}
-          data-dismiss="modal"
-          aria-label="Close"
+        <div
+          className="modal-header"
+          style={{ backgroundColor: "#3DC7F4", border: "none" }}
         >
-          <span aria-hidden="true" className="text-white bg-white">
-            &times;
-          </span>
-        </button>
-      </div>
-      <div className="modal-body p-4">
+          <h1 className="modal-title mt-0 text-white">+ New Schedule Entry</h1>
+          <button
+            onClick={() => {
+              setNewSchedule(false);
+            }}
+            type="button"
+            className="close"
+            style={{ color: "white" }}
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true" className="text-white bg-white">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div className="modal-body p-4">
           <Row className="d-flex g-4">
             <Col className="col-4">
               <img
-              className="w-100"
+                className="w-100"
                 src={ScheduleImage}
                 alt="new-product"
                 // style={{ height: "590px", width: "260px" }}
@@ -308,217 +317,215 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                   </div>
                 </Col>
 
-                
-                    {typeSelected && typeSelected === "4" ? (
-                      <>
-                        <Col className="col">
-                          <Label className="form-label">Start Time</Label>
-                          <div className="input-group">
-                            <Input
-                              name="start_time_single"
-                              className="form-control"
-                              type="text"
-                              onChange={validationType.handleChange}
-                              onBlur={validationType.handleBlur}
-                              value={
-                                validationType.values.start_time_single || ""
-                              }
-                              invalid={
-                                validationType.touched.start_time_single &&
-                                validationType.errors.start_time_single
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validationType.touched.start_time_single &&
-                            validationType.errors.start_time_single ? (
-                              <FormFeedback type="invalid">
-                                {validationType.errors.start_time_single}
-                              </FormFeedback>
-                            ) : null}
-                            <Input
-                              type="select"
-                              name=""
-                              onChange={(e) => {
-                                setTimeFrameSingleSchedule(e.target.value);
-                              }}
-                              onBlur={validationType.handleBlur}
-                            >
-                              <option value={"AM"}>AM</option>
-                              <option value={"PM"}>PM</option>
-                            </Input>
-                          </div>
-                        </Col>
-                        <Col className="col">
-                          <Label className="form-label">Time Unit</Label>
-                          <div className="form-outline">
-                            <Input
-                              type="select"
-                              name="time_unit"
-                              onChange={(e) => {
-                                setUnitSelected(e.target.value);
-                              }}
-                              onBlur={validationType.handleBlur}
-                            >
-                              <option value='Hours'>Hours</option>
-                              <option value='Minutes'>Minutes</option>
-                            </Input>
-                          </div>
-                        </Col>
-                        <Col className="col">
-                          <Label className="form-label">Duration</Label>
-                          <div className="form-outline">
-                            <Input
-                              name="duration"
-                              className="form-control"
-                              type="text"
-                              onChange={validationType.handleChange}
-                              onBlur={validationType.handleBlur}
-                              value={validationType.values.duration || ""}
-                              invalid={
-                                validationType.touched.duration &&
-                                validationType.errors.duration
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validationType.touched.duration &&
-                            validationType.errors.duration ? (
-                              <FormFeedback type="invalid">
-                                {validationType.errors.duration}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                      </>
-                    ) : null}
-                    
-                    {typeSelected && typeSelected === "6" ? (
-                      <>
-                        <Col className="col">
-                          <Label className="form-label">Time Unit</Label>
-                          <div className="form-outline">
-                            <Input
-                              type="select"
-                              name=""
-                              onChange={(e) => {
-                                setUnitSelected(e.target.value);
-                              }}
-                              onBlur={validationType.handleBlur}
-                            >
-                              <option value='Hours'>Hours</option>
-                              <option value='Minutes'>Minutes</option>
-                            </Input>
-                          </div>
-                        </Col>
-                        <Col className="col">
-                          <Label className="form-label">Duration</Label>
-                          <div className="form-outline">
-                            <Input
-                              name="duration"
-                              className="form-control"
-                              type="text"
-                              onChange={validationType.handleChange}
-                              onBlur={validationType.handleBlur}
-                              value={validationType.values.duration || ""}
-                              invalid={
-                                validationType.touched.duration &&
-                                validationType.errors.duration
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validationType.touched.duration &&
-                            validationType.errors.duration ? (
-                              <FormFeedback type="invalid">
-                                {validationType.errors.duration}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                      </>
-                    ) : null}
-                  
+                {typeSelected && typeSelected === "4" ? (
+                  <>
+                    <Col className="col">
+                      <Label className="form-label">Start Time</Label>
+                      <div className="input-group">
+                        <Input
+                          name="start_time_single"
+                          className="form-control"
+                          type="text"
+                          onChange={validationType.handleChange}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.start_time_single || ""}
+                          invalid={
+                            validationType.touched.start_time_single &&
+                            validationType.errors.start_time_single
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.start_time_single &&
+                        validationType.errors.start_time_single ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.start_time_single}
+                          </FormFeedback>
+                        ) : null}
+                        <Input
+                          type="select"
+                          name=""
+                          onChange={(e) => {
+                            setTimeFrameSingleSchedule(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                        >
+                          <option value={"AM"}>AM</option>
+                          <option value={"PM"}>PM</option>
+                        </Input>
+                      </div>
+                    </Col>
+                    <Col className="col">
+                      <Label className="form-label">Time Unit</Label>
+                      <div className="form-outline">
+                        <Input
+                          type="select"
+                          name="time_unit"
+                          onChange={(e) => {
+                            setUnitSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                        >
+                          <option value="Hours">Hours</option>
+                          <option value="Minutes">Minutes</option>
+                        </Input>
+                      </div>
+                    </Col>
+                    <Col className="col">
+                      <Label className="form-label">Duration</Label>
+                      <div className="form-outline">
+                        <Input
+                          name="duration"
+                          className="form-control"
+                          type="text"
+                          onChange={validationType.handleChange}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.duration || ""}
+                          invalid={
+                            validationType.touched.duration &&
+                            validationType.errors.duration
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.duration &&
+                        validationType.errors.duration ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.duration}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </Col>
+                  </>
+                ) : null}
 
                 {typeSelected && typeSelected === "6" ? (
-                  <Col className="col-12 mt-4">                    
-                  <Row className="d-flex">
-                  <Label>Available Time</Label>
-                    <div className="col-4 d-flex">
-                    
-                      <div className="input-group">
-                        <div className="input-group-text">From</div>
+                  <>
+                    <Col className="col">
+                      <Label className="form-label">Time Unit</Label>
+                      <div className="form-outline">
                         <Input
-                          name="from_intervals"
+                          type="select"
+                          name=""
+                          onChange={(e) => {
+                            setUnitSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                        >
+                          <option value="Hours">Hours</option>
+                          <option value="Minutes">Minutes</option>
+                        </Input>
+                      </div>
+                    </Col>
+                    <Col className="col">
+                      <Label className="form-label">Duration</Label>
+                      <div className="form-outline">
+                        <Input
+                          name="duration"
                           className="form-control"
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
-                          value={validationType.values.from_intervals || ""}
+                          value={validationType.values.duration || ""}
                           invalid={
-                            validationType.touched.from_intervals &&
-                            validationType.errors.from_intervals
+                            validationType.touched.duration &&
+                            validationType.errors.duration
                               ? true
                               : false
                           }
                         />
-                        {validationType.touched.from_intervals &&
-                        validationType.errors.from_intervals ? (
+                        {validationType.touched.duration &&
+                        validationType.errors.duration ? (
                           <FormFeedback type="invalid">
-                            {validationType.errors.from_intervals}
+                            {validationType.errors.duration}
                           </FormFeedback>
                         ) : null}
-                        <Input
-                          type="select"
-                          name=""
-                          onChange={(e) => setTimeFrameIntervalFrom(e.target.value)}
-                          onBlur={validationType.handleBlur}
-                          // value={validationType.values.start_time || ""}
-                        >
-                          <option value={'AM'}>AM</option>
-                          <option value={'PM'}>PM</option>
-                        </Input>
                       </div>
-                    </div>
-                    <div className="col-4 d-flex">
-                      <div className="input-group">
-                        <div className="input-group-text">To</div>
-                        
-                        <Input
-                          name="to_interval"
-                          className="form-control"
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.to_interval || ""}
-                          invalid={
-                            validationType.touched.to_interval &&
-                            validationType.errors.to_interval
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.to_interval &&
-                        validationType.errors.to_interval ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.to_interval}
-                          </FormFeedback>
-                        ) : null}
-                        <Input
-                          type="select"
-                          name=""
-                          onChange={(e) => setTimeFrameIntervalTo(e.target.value)}
-                          onBlur={validationType.handleBlur}
-                          // value={validationType.values.start_time || ""}
-                        >
-                          <option value={'AM'}>AM</option>
-                          <option value={'PM'}>PM</option>
-                        </Input>
+                    </Col>
+                  </>
+                ) : null}
+
+                {typeSelected && typeSelected === "6" ? (
+                  <Col className="col-12 mt-4">
+                    <Row className="d-flex">
+                      <Label>Available Time</Label>
+                      <div className="col-4 d-flex">
+                        <div className="input-group">
+                          <div className="input-group-text">From</div>
+                          <Input
+                            name="from_intervals"
+                            className="form-control"
+                            type="text"
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={validationType.values.from_intervals || ""}
+                            invalid={
+                              validationType.touched.from_intervals &&
+                              validationType.errors.from_intervals
+                                ? true
+                                : false
+                            }
+                          />
+                          {validationType.touched.from_intervals &&
+                          validationType.errors.from_intervals ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.from_intervals}
+                            </FormFeedback>
+                          ) : null}
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) =>
+                              setTimeFrameIntervalFrom(e.target.value)
+                            }
+                            onBlur={validationType.handleBlur}
+                            // value={validationType.values.start_time || ""}
+                          >
+                            <option value={"AM"}>AM</option>
+                            <option value={"PM"}>PM</option>
+                          </Input>
+                        </div>
                       </div>
-                    </div>
-                  </Row>
+                      <div className="col-4 d-flex">
+                        <div className="input-group">
+                          <div className="input-group-text">To</div>
+
+                          <Input
+                            name="to_interval"
+                            className="form-control"
+                            type="text"
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={validationType.values.to_interval || ""}
+                            invalid={
+                              validationType.touched.to_interval &&
+                              validationType.errors.to_interval
+                                ? true
+                                : false
+                            }
+                          />
+                          {validationType.touched.to_interval &&
+                          validationType.errors.to_interval ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.to_interval}
+                            </FormFeedback>
+                          ) : null}
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) =>
+                              setTimeFrameIntervalTo(e.target.value)
+                            }
+                            onBlur={validationType.handleBlur}
+                            // value={validationType.values.start_time || ""}
+                          >
+                            <option value={"AM"}>AM</option>
+                            <option value={"PM"}>PM</option>
+                          </Input>
+                        </div>
+                      </div>
+                    </Row>
                   </Col>
-                  
                 ) : null}
 
                 {typeSelected && typeSelected === "3" ? (
@@ -534,7 +541,9 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.first_field_multi || ""}
+                              value={
+                                validationType.values.first_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.first_field_multi &&
                                 validationType.errors.first_field_multi
@@ -551,12 +560,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti1(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti1(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              <option value={"AM"}>AM</option>
+                              <option value={"PM"}>PM</option>
                             </Input>
                           </div>
                         </div>
@@ -569,7 +580,9 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.second_field_multi || ""}
+                              value={
+                                validationType.values.second_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.second_field_multi &&
                                 validationType.errors.second_field_multi
@@ -586,12 +599,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti2(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti2(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              <option value={"AM"}>AM</option>
+                              <option value={"PM"}>PM</option>
                             </Input>
                           </div>
                         </div>
@@ -604,7 +619,9 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.third_field_multi || ""}
+                              value={
+                                validationType.values.third_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.third_field_multi &&
                                 validationType.errors.third_field_multi
@@ -621,12 +638,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti3(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti3(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              <option value={"AM"}>AM</option>
+                              <option value={"PM"}>PM</option>
                             </Input>
                           </div>
                         </div>
@@ -641,7 +660,9 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.fourth_field_multi || ""}
+                              value={
+                                validationType.values.fourth_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.fourth_field_multi &&
                                 validationType.errors.fourth_field_multi
@@ -658,12 +679,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti4(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti4(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              <option value={"AM"}>AM</option>
+                              <option value={"PM"}>PM</option>
                             </Input>
                           </div>
                         </div>
@@ -676,7 +699,9 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.fifth_field_multi || ""}
+                              value={
+                                validationType.values.fifth_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.fifth_field_multi &&
                                 validationType.errors.fifth_field_multi
@@ -693,12 +718,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti5(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti5(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              <option value={"AM"}>AM</option>
+                              <option value={"PM"}>PM</option>
                             </Input>
                           </div>
                         </div>
@@ -711,7 +738,9 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                               type="text"
                               onChange={validationType.handleChange}
                               onBlur={validationType.handleBlur}
-                              value={validationType.values.sixth_field_multi || ""}
+                              value={
+                                validationType.values.sixth_field_multi || ""
+                              }
                               invalid={
                                 validationType.touched.sixth_field_multi &&
                                 validationType.errors.sixth_field_multi
@@ -728,12 +757,14 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                             <Input
                               type="select"
                               name=""
-                              onChange={(e) => setTimeFrameMulti6(e.target.value)}
+                              onChange={(e) =>
+                                setTimeFrameMulti6(e.target.value)
+                              }
                               onBlur={validationType.handleBlur}
                               // value={validationType.values.start_time || ""}
                             >
-                              <option value={'AM'}>AM</option>
-                              <option value={'PM'}>PM</option>
+                              <option value={"AM"}>AM</option>
+                              <option value={"PM"}>PM</option>
                             </Input>
                           </div>
                         </div>
@@ -835,10 +866,7 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
               </Row>
 
               <Row>
-                <Col
-                  className="col-12 d-flex justify-content-end mt-4"
-                  
-                >
+                <Col className="col-12 d-flex justify-content-end mt-4">
                   <Button
                     color="paradise"
                     outline
@@ -850,7 +878,6 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
                   </Button>
                   <Button
                     type="submit"
-                    
                     className="font-16 btn-block col-2 btn-orange"
                     // onClick={toggleCategory}
                   >
@@ -860,8 +887,8 @@ const AddNewScheduleModal = ({ newSchedule, setNewSchedule, tourData, refresh })
               </Row>
             </Col>
           </Row>
-      </div>
-        </Form>
+        </div>
+      </Form>
     </Modal>
   );
 };
