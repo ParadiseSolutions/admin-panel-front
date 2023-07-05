@@ -98,7 +98,7 @@ const NewRol = ({ history }) => {
           if (resp.data.status === 201) {
             Swal.fire(
               "Created!",
-              "The Rol has been created.",
+              "The Role has been created.",
               "success"
             ).then(() => {
               history.goBack();

@@ -115,7 +115,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ Edit User</h1>
+        <h1 className="modal-title mt-0 text-white">Edit User</h1>
         <button
           onClick={() => {
             setEditModal(false);
@@ -142,7 +142,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
               <Row>
                 <Col lg={5}>
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Name</Label>
+                    <Label className="form-label">First Name</Label>
                     <Input
                       name="first_name"
                       placeholder="Johann"
@@ -286,7 +286,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                 </Col>
                 <Col className="col-5 mx-4">
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Rol</Label>
+                    <Label className="form-label">Role</Label>
 
                     <Input
                       type="select"

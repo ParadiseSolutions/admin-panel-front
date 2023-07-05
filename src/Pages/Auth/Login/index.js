@@ -66,7 +66,7 @@ const Login = () => {
                 Nice to see you.
               </h2>
               <p className="fw-bold mb-xxl-4 mb-2 mx-5 text-center"  style={{ color: "#74788D", fontSize: "16px" }}>
-                Sign in to continue to your Adventure Station.
+                Sign in to continue to Adventure Station.
               </p>
               <div className="row justify-content-center">            
                 <div className="col-8 col-xxl-6 mt-3">
@@ -83,7 +83,7 @@ const Login = () => {
                         <Label className="form-label">Username</Label>
                         <Input
                           name="email"
-                          placeholder="Enter Valid Username"
+                          placeholder="Username"
                           type="email"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
@@ -179,7 +179,7 @@ const Login = () => {
                           Don't have an account?{" "}
                           <a
                             href="mailto:it@jstourandtravel.com?subject=User%20creation%20request%20Admin%20Panel&body=New%20Adventure%20Station%20account"
-                            style={{ fontSize: "14.4px", color:'#3DC7F4'}}
+                            style={{ fontSize: "14.4px", color:'rgb(46 167 207)'}}
                             className="link-info mx-1"
                           >
                             Contact your IT Team for support!
