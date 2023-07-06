@@ -9,9 +9,16 @@ export const triggerUpdate = () => {
   });
 };
 
-//general request
-export const statusUpdateTour = (id, body) => {
+  //general request
+  export const statusUpdateTour = (id, body) => {
     const url = `${API_URL}/tours/${id}/status`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+
+  export const statusUpdatePrice = (id, body) => {
+    const url = `${API_URL}/prices/${id}/status`;
     return axios.put (url, body, {
       headers: options,
     });

@@ -13,11 +13,12 @@ import {
   getAddonsPricingAPI,
   deletePriceAPI,
   deleteAddonAPI,
+  triggerUpdate,
 } from "../../../Utils/API/Tours";
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
 
-import { Name, Code, Members, Price } from "./PricingTables/DepartmentsCols";
+import { Name, Code, Members, Price } from "./PricingTables/PricingCols";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -64,6 +65,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           .then((resp) => {
             getPricesPricingAPI(id).then((resp) => {
               setPricesData(resp.data.data);
+              triggerUpdate()
             });
             Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })
@@ -88,6 +90,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           .then((resp) => {
             getAddonsPricingAPI(id).then((resp) => {
               setAddonsData(resp.data.data);
+              triggerUpdate()
             });
             Swal.fire("Deleted!", "The Addon has been deleted.", "success");
           })
