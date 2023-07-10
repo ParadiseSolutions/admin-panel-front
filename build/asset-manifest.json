@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.1b1f5804.css",
-    "main.js": "/static/js/main.3830641e.js",
+    "main.css": "/static/css/main.c6fdf287.css",
+    "main.js": "/static/js/main.f7afc00d.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -58,15 +58,16 @@
     "static/media/onevariant.jpg": "/static/media/onevariant.eaa9d8ada69b90562125.jpg",
     "static/media/paradise-logo-color.png": "/static/media/paradise-logo-color.7202d63b4dfed004a919.png",
     "static/media/logo-sm.png": "/static/media/logo-sm.021cb2acd539eec27872.png",
+    "static/media/Intersection4-5.svg": "/static/media/Intersection4-5.2f541ca5f6a6c20462ff1edc833ae752.svg",
     "index.html": "/index.html",
-    "static/media/Intersection2.svg": "/static/media/Intersection2.28622edf521de6fe8e32dec7bb8c3d24.svg",
+    "static/media/Intersection2.svg": "/static/media/Intersection2.9f8fdbff1f8cc8e8e585399d1070a56e.svg",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
-    "main.1b1f5804.css.map": "/static/css/main.1b1f5804.css.map",
-    "main.3830641e.js.map": "/static/js/main.3830641e.js.map",
+    "main.c6fdf287.css.map": "/static/css/main.c6fdf287.css.map",
+    "main.f7afc00d.js.map": "/static/js/main.f7afc00d.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1b1f5804.css",
-    "static/js/main.3830641e.js"
+    "static/css/main.c6fdf287.css",
+    "static/js/main.f7afc00d.js"
   ]
 }

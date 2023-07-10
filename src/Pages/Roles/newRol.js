@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import BoatImage from "../../Components/Assets/images/boat.png";
 import Inter1 from '../../Components/Assets/images/Intersection1.svg'
 import Inter2 from '../../Components/Assets/images/Intersection2.svg'
+import Inter3 from '../../Components/Assets/images/Intersection4-5.svg'
 import {
   Container,
   Row,
@@ -124,11 +125,7 @@ const NewRol = ({ history }) => {
     <>
       <div className="page-content pb-0 px-0">
         <Container fluid className="px-5">
-          <div className="d-flex justify-content-between align-items-baseline mb-4">
-            <h1 className="fw-bold text-paradise mb-2"  style={{fontSize:"3.5rem"}} >
-              + ADD NEW ROLE
-            </h1>
-          </div>
+          
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -137,6 +134,59 @@ const NewRol = ({ history }) => {
             }}
             className="custom-validation"
           >
+            <Row>
+              <Col md="12" className="d-flex justify-content-between align-items-baseline mb-4">
+              <div className="d-flex">
+                <h1
+                  className="fw-bold text-paradise mb-2"  style={{fontSize:"3.5rem"}}              
+                >
+                  <i className="mdi mdi-plus me-1" /> ADD NEW ROLE
+                </h1>
+              </div>
+              <div className="d-flex justify-content-end align-items-baseline">
+                <div className="text-sm-end mx-2">
+                {validation ? (
+                  <>
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light border-3 fw-bold"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    <i className="uil-angle-double-left" />
+                    Back
+                  </Button>
+                  </>
+                  ) : (
+                    <>
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light border-3 fw-bold"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    <i className="uil-angle-double-left" />
+                    Back
+                  </Button>
+                  </>
+                  )}
+                </div>
+                <div className="text-sm-end">
+                  <Button
+                    type="submit"                    
+                    className="waves-effect waves-light btn btn-orange border-3"
+                    // onClick={() => onClickNewContactProvider()}
+                  >
+                    
+                    Create Role
+                  </Button>
+                </div>
+              </div>
+                
+              </Col>
+            </Row>
             <Row className="g-5">
               
                   <Col lg={4} className="align-items-stretch">
@@ -176,30 +226,7 @@ const NewRol = ({ history }) => {
                           </div>
 
                         </Row>
-                        {validation ? (
-                          <>
-                            <Button
-                              color="primary"
-                              type="submit"
-                              className="waves-effect waves-light"
-                            >
-                              <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Role
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button
-                              color="secondary"
-                              type="button"
-                              className="btn btn-orange"
-                              // onClick={toggleCategory}
-                            >
-                              <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Role
-                            </Button>
-                          </>
-                        )}
+                        
                       </CardBody>
                     </Card>
                     <div style={{ border: "none" }}>
@@ -211,11 +238,11 @@ const NewRol = ({ history }) => {
                     </div>
                   </Col>
                   <Col lg={4} className="d-flex align-items-stretch">
-                  <Card className="border-0 w-100">
+                  <Card className="border-0 w-100 mb-0">
                     <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow" style={{backgroundImage:'url(' + Inter2 + ')',
-                    backgroundSize:'contain', 
+                    backgroundSize:'cover', 
                     backgroundRepeat:'no-repeat', 
-                    backgroundPosition:'right'}}>
+                    backgroundPosition:'left'}}>
                           <h5 className="text-white">+ Select Members</h5>
                     </CardHeader>
                     <CardBody className="overflow-auto">
@@ -253,8 +280,11 @@ const NewRol = ({ history }) => {
                     </Card>
                   </Col>
                   <Col lg={4} className="d-flex align-items-stretch">
-                  <Card className='px-2 pt-0'>
-                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                  <Card className='px-2 pt-0 mb-0 w-100'>
+                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow" style={{backgroundImage:'url(' + Inter3 + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'left'}}>
                           <h5 className="text-white">+ Select Actions</h5>
                         </Row>
                       <CardBody className="overflow-auto">

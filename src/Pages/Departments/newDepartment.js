@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { createDepartment } from "../../Utils/API/Departments";
 import BoatImage from "../../Components/Assets/images/boat.png";
 import Inter1 from "../../Components/Assets/images/Intersection1.svg";
+import Inter2 from '../../Components/Assets/images/Intersection2.svg'
+import Inter3 from '../../Components/Assets/images/Intersection4-5.svg'
 import {
   Container,
   Row,
@@ -178,7 +180,10 @@ const NewDepartment = ({ history }) => {
               <Row className="g-4 g-xxl-5">
                 <Col lg={4}>
                   <Card className="border-0 mb-4">
-                    <CardHeader className="bg-paradise">
+                    <CardHeader className="bg-paradise" style={{backgroundImage:'url(' + Inter1 + ')',
+                    backgroundSize:'contain', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'right'}}>
                     <h5 className="text-white m-1">
                           + General Information
                         </h5>
@@ -246,7 +251,10 @@ const NewDepartment = ({ history }) => {
                 </Col>
                 <Col lg={4} className="d-flex align-items-stretch">
                   <Card className="border-0 w-100 mb-0">
-                  <CardHeader className="bg-paradise">
+                  <CardHeader className="bg-paradise" style={{backgroundImage:'url(' + Inter2 + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'left'}}>
                     <h5 className="text-white m-1">
                       + Select Members
                     </h5>
@@ -288,9 +296,12 @@ const NewDepartment = ({ history }) => {
                 </Col>
                 <Col lg={4} className="d-flex align-items-stretch">
                   <Card className="w-100 mb-0">
-                  <CardHeader className="bg-paradise">
+                  <CardHeader className="bg-paradise" style={{backgroundImage:'url(' + Inter3 + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'left'}}>
                     <h5 className="text-white m-1">
-                      + Permissionss
+                      + Permissions
                     </h5>
                     </CardHeader>
                     

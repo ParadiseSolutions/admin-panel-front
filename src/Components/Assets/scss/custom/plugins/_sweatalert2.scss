@@ -11,21 +11,25 @@
 }
 
 .swal2-content{
-  font-size: 16px;
+  font-size: 18px !important; 
+  font-weight: 600 !important;
 }
 
 .swal2-icon{
+  border: 0 solid $hooray !important;
   &.swal2-question{
-    border-color: $info;
-    color: $info;
+    border-color: $hooray !important;
+    color: $hooray !important;
+    border: solid 8px !important;
   }
   &.swal2-success {
     [class^=swal2-success-line]{
-      background-color: $hooray;
+      background-color: $hooray !important;
     }
 
     .swal2-success-ring{
-      border-color: rgba($hooray, 0.3);
+      border-color: $hooray !important;
+      border: solid 8px $hooray !important;
     }
   }
   &.swal2-warning{
@@ -58,4 +62,21 @@
 
 .swal2-loader{
   border-color: $primary transparent $primary transparent;
+}
+.swal2-confirm{
+  min-width: 85px !important;
+  background-color: $hooray !important;
+}
+.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
+  top: 3.2em;
+  left: 1.2em;  
+}
+.swal2-icon.swal2-success [class^=swal2-success-line][class$=long] {
+  
+  right: 0.1em;
+  
+}
+.swal2-icon.swal2-success {
+  border-color: $hooray !important;
+  color: $hooray !important;
 }
