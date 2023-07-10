@@ -95,9 +95,9 @@ const TableContainer = ({
 
   return (
     <Fragment>
-      <Card>
+      <Card className="mb-3">
         <CardBody>
-      <Row className="mb-3">
+      <Row className="mb-0">
         {isGlobalFilter && (
           <GlobalFilter
             preGlobalFilteredRows={preGlobalFilteredRows}
@@ -380,7 +380,7 @@ const TableContainer = ({
         </div>
       )}
       {providersTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -420,7 +420,7 @@ const TableContainer = ({
         </div>
       )}
       {categoriesTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -460,7 +460,7 @@ const TableContainer = ({
         </div>
       )}
       {rolesTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" /*style={{minHeight:"605px"}}*/>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -500,7 +500,7 @@ const TableContainer = ({
       )}
 
       {locationsTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -542,7 +542,7 @@ const TableContainer = ({
      
 
       {websitesTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -583,7 +583,7 @@ const TableContainer = ({
       )}
 
       {tourTypesTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" /*style={{minHeight:"605px"}}*/>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -623,7 +623,7 @@ const TableContainer = ({
         </div>
       )}
       {usersTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"570px"}}>
           <Table hover {...getTableProps()} className="react_table mb-0">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -663,7 +663,7 @@ const TableContainer = ({
         </div>
       )}
       {cartsTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -703,7 +703,7 @@ const TableContainer = ({
         </div>
       )}
       {paymentsTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" /*style={{minHeight:"605px"}}*/>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -743,7 +743,7 @@ const TableContainer = ({
         </div>
       )}
       {contactsProvidersTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -783,7 +783,7 @@ const TableContainer = ({
         </div>
       )}
       {operatorsTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -823,7 +823,7 @@ const TableContainer = ({
         </div>
       )}
       {productsTour && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -863,7 +863,7 @@ const TableContainer = ({
         </div>
       )}
       {URLTourTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -903,7 +903,7 @@ const TableContainer = ({
         </div>
       )}
       {toursTable && (
-        <div className="table-responsive" style={{minHeight:"658px"}}>
+        <div className="table-responsive" style={{minHeight:"503px"}}>
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
@@ -1023,9 +1023,9 @@ function GlobalFilter({
   return (
     <React.Fragment>
       <Col sm={4}>
-        <div className="search-box me-2 mb-2 d-inline-block">
+        <div className="search-box me-2 mb-2 d-inline-block" style={{minWidth:"342px"}}>
           <div className="position-relative">
-            <label htmlFor="search-bar-0" className="search-label">
+            <label htmlFor="search-bar-0" className="search-label" style={{width:"100%"}}>
               <span id="search-bar-0-label" className="sr-only">
                 Search this table
               </span>

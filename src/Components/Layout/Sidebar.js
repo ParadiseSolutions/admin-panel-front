@@ -37,7 +37,7 @@ const Sidebar = () => {
 
       if (parent2) {
         parent2.classList.add("mm-show"); // ul tag
-
+        
         const parent3 = parent2.parentElement; // li tag
 
         if (parent3) {
@@ -132,7 +132,7 @@ const Sidebar = () => {
                   </Link>
                 </li>   
                 <li>
-                  <Link to="/#" className="has-arrow waves-effect">
+                  <Link to="/#" className="has-arrow waves-effect" >
                     <span>{"MANAGE"}</span>
                   </Link>
                   <ul className="sub-menu">

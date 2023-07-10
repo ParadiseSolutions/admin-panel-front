@@ -154,7 +154,7 @@ const TourTypes = () => {
   };
   return (
     <>
-      <div className="page-content pb-0">
+      <div className="page-content pb-0 px-3">
         <Container fluid>
           <div className=" mx-1">
             <h1 className="fw-bold cursor-pointer" style={{ color: "#3DC7F4", fontSize:"3.5rem" }}>

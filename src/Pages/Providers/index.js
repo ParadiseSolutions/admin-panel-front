@@ -185,7 +185,7 @@ const Providers = () => {
     setEditModal(!editModal);
   };
   return (
-    <div className="page-content pb-0">
+    <div className="page-content pb-0 px-3">
       <Container fluid>
         <div className=" mx-1">
           <h1

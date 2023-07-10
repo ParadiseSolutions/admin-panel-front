@@ -201,7 +201,7 @@ const NewTour = ({ history }) => {
     },
   });
   return (
-    <div className="page-content pb-0">
+    <div className="page-content pb-0 px-3">
       <Container fluid>
         <Row xl={12}>
             <div className="col-11">
