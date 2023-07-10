@@ -8,19 +8,10 @@ import {
   updateBookingSettings,
 } from "../../../../Utils/API/Tours/setingsTemplate";
 import { triggerUpdate } from "../../../../Utils/API/Tours";
-import {
-  Row,
-  Col,
-  Modal,
-  Form,
-  Label,
-  Input,
-  Button,
-} from "reactstrap";
+import { Row, Col, Modal, Form, Label, Input, Button } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-
 const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
   const [instructionArea, setInstructionArea] = useState(false);
   const [titleExample, setTitleExample] = useState("Example Title");
@@ -91,7 +82,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
               "Booking Form Information has been edited",
               "success"
             ).then(() => {
-              triggerUpdate()
+              triggerUpdate();
               setReserveModal(!reserveModal);
             });
           }
@@ -188,7 +179,11 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <img
                     src={OneVariantIMG}
                     alt="one-variant"
-                    style={{ width: "350px", margin: "10px", marginTop:'13px' }}
+                    style={{
+                      width: "350px",
+                      margin: "10px",
+                      marginTop: "13px",
+                    }}
                   />
                 </div>
               </Col>
@@ -308,11 +303,10 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       value={titleExample}
                       maxLength={50}
                     />
-                    
-                      <p style={{fontSize: '12px', fontWeight:'lighter'}}>
+
+                    <p style={{ fontSize: "12px", fontWeight: "lighter" }}>
                       * Title should be max 50 chars
-                      </p>
-                   
+                    </p>
                   </div>
                   <div className="form-outline mb-2 col-11">
                     <Label className="form-label">
@@ -329,75 +323,81 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       value={instructionDescriptionExample}
                       maxLength={210}
                     />
-                    <p style={{fontSize: '12px', fontWeight:'lighter'}}>
+                    <p style={{ fontSize: "12px", fontWeight: "lighter" }}>
                       * Description should be max 210 chars
-                      </p>
+                    </p>
                   </div>
                 </Col>
                 <Col>
                   <Row
                     style={{
                       height: "285px",
-                      backgroundColor: "#3CC6F31A",
+                      backgroundColor: "#FFEEE5",
                       marginTop: "28px",
                       marginRight: "5px",
                     }}
                     className="d-flex justify-content-center"
                   >
-                    <Col className="col-12 m-2" style={{ color: "#495057" }}>
-                      <p>
-                        Please use the small preview of your title and text
-                        shown below as a guide to make sure everything fits in
-                        with the rest of the reserve page settings. This is a
-                        small preview with the actual settings of a Reserve
-                        Page. You have a maximum of 50 characters for the Title
-                        Field and 210 characters for the Text Field.
-                      </p>
-                    </Col>
-                    <Col className="col-12 d-flex justify-content-center">
-                      <div className="form-outline mb-2">
-                        <Input
-                          name="Instruction_title"
-                          placeholder=""
+                    <Col className="col-2 m-2" style={{ color: "#495057" }}>
+                      <div
+                        className="d-flex justify-content-center"
+                        style={{ paddingTop: "30px" }}
+                      >
+                        <i
+                          class="fa fa-info"
                           style={{
-                            width: "425px",
-                            height: "39px",
-                            border: "1px solid #3CC6F380",
-                            borderRadius: "4px",
-                            textAlign: "center",
-                            color: "#707070",
-                            fontWeight: "bold",
-                            fontSize: "16px",
-                            fontFamily: "Arial, sans-serif",
-                            fontWeight: "700"
+                            fontSize: "20px",
+                            borderRadius: "29px",
+                            border: "2px solid #D54500",
+                            color: "#D54500",
+                            padding: "4px 4px 4px 8px",
+                            width: "30px",
+                            height: "30px",
+                            marginTop: "10px",
+                            justifyContent: "center",
                           }}
-                          type="text"
-                          value={titleExample}
-                          disabled
                         />
                       </div>
                     </Col>
-                    <Col className="col-12 d-flex justify-content-center">
+                    <Col
+                      className="col-12 d-flex justify-content-center"
+                      style={{ alignItems: "center" }}
+                    >
+                      <div className="align-items-end">
+                        <h1
+                          style={{
+                            textAlign: "center",
+                            color: "black",
+                            fontWeight: "bold",
+                            fontSize: "16px",
+                            fontFamily: "Arial, sans-serif",
+                            fontWeight: "700",
+                            alignSelf: "end",
+                          }}
+                        >
+                          {titleExample}
+                        </h1>
+                      </div>
+                    </Col>
+                    <Col
+                      className="col-12 d-flex justify-content-center"
+                      style={{ alignItems: "start" }}
+                    >
                       <div className="form-outline mb-2">
-                        <Input
+                        <p
                           name="instruction_description"
                           placeholder=""
                           style={{
-                            width: "470px",
-                            height: "90px",
-                            border: "1px solid #3CC6F380",
-                            borderRadius: "4px",
                             textAlign: "center",
                             fontFamily: "Arial, sans-serif",
                             fontSize: "13px",
                             fontWeight: "400",
                             lineHeight: "17px",
-                            padding: "16px 24px"
+                            padding: "16px 24px",
                           }}
-                          type="textarea"
-                          value={instructionDescriptionExample}
-                          disabled
-                        />
+                        >
+                          {instructionDescriptionExample}
+                        </p>
                       </div>
                     </Col>
                   </Row>

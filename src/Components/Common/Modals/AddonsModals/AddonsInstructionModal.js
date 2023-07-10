@@ -197,67 +197,67 @@ const AddonsInstructionModal = ({
                 <Row
                   style={{
                     height: "285px",
-                    backgroundColor: "#3CC6F31A",
-                    marginTop: "28px",
-                    marginRight: "5px",
+                      backgroundColor: "#FFEEE5",
+                      marginTop: "28px",
+                      marginRight: "5px",
                   }}
                   className="d-flex justify-content-center"
                 >
                   <Col className="col-12 m-2" style={{ color: "#495057" }}>
-                    <p>
-                      Please use the small preview of your title and text shown
-                      below as a guide to make sure everything fits in with the
-                      rest of the reserve page settings. This is a small preview
-                      with the actual settings of a Reserve Page. You have a
-                      maximum of 50 characters for the Title Field and 210
-                      characters for the Text Field.
-                    </p>
+                  <div
+                        className="d-flex justify-content-center"
+                        style={{ paddingTop: "30px" }}
+                      >
+                        <i
+                          class="fa fa-info"
+                          style={{
+                            fontSize: "20px",
+                            borderRadius: "29px",
+                            border: "2px solid #D54500",
+                            color: "#D54500",
+                            padding: "4px 4px 4px 8px",
+                            width: "30px",
+                            height: "30px",
+                            marginTop: "10px",
+                            justifyContent: "center",
+                          }}
+                        />
+                      </div>
                   </Col>
                   <Col className="col-12 d-flex justify-content-center">
-                    <div className="form-outline mb-2">
-                      <Input
-                        name="Instruction_title"
-                        placeholder=""
-                        style={{
-                          width: "425px",
-                          height: "39px",
-                          border: "1px solid #3CC6F380",
-                          borderRadius: "4px",
-                          textAlign: "center",
-                          color: "#707070",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                          fontFamily: "Arial, sans-serif",
-                          fontWeight: "700",
-                        }}
-                        type="text"
-                        value={titleExample}
-                        disabled
-                      />
-                    </div>
+                  <div className="align-items-end">
+                        <h1
+                          style={{
+                            textAlign: "center",
+                            color: "black",
+                            fontWeight: "bold",
+                            fontSize: "16px",
+                            fontFamily: "Arial, sans-serif",
+                            fontWeight: "700",
+                            alignSelf: "end",
+                          }}
+                        >
+                          {titleExample}
+                        </h1>
+                      </div>
                   </Col>
                   <Col className="col-12 d-flex justify-content-center">
-                    <div className="form-outline mb-2">
-                      <Input
-                        name="instruction_description"
-                        placeholder=""
-                        style={{
-                          width: "470px",
-                          height: "90px",
-                          border: "1px solid #3CC6F380",
-                          borderRadius: "4px",
-                          textAlign: "center",
-                          fontFamily: "Arial, sans-serif",
-                          fontSize: "13px",
-                          fontWeight: "400",
-                          lineHeight: "17px",
-                          padding: "16px 24px",
-                        }}
-                        type="textarea"
-                        value={instructionDescriptionExample}
-                        disabled
-                      />
-                    </div>
+                  <div className="form-outline mb-2">
+                        <p
+                          name="instruction_description"
+                          placeholder=""
+                          style={{
+                            textAlign: "center",
+                            fontFamily: "Arial, sans-serif",
+                            fontSize: "13px",
+                            fontWeight: "400",
+                            lineHeight: "17px",
+                            padding: "16px 24px",
+                          }}
+                        >
+                          {instructionDescriptionExample}
+                        </p>
+                      </div>
                   </Col>
                 </Row>
               </Col>
