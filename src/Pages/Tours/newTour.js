@@ -205,17 +205,17 @@ setCategoryId(id)
   return (
     <div className="page-content pb-0">
       <Container fluid>
-        <div className=" mx-1">
-          <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
-            CREATE NEW TOUR
+        <div className=" mx-4">
+          <h1 className="fw-bold" style={{ color: "#3DC7F4", fontSize: "3.5rem" }}>
+           + CREATE NEW TOUR
           </h1>
         </div>
       </Container>
-      <Row>
+      <Row className="px-4">
         <Col xl={12}>
           <Card>
             <div className="p-0 card-header">
-              <Nav tabs className="nav-justified border-orange">
+              <Nav tabs className="nav-justified border-orange border-3">
                 <NavItem>
                   <NavLink
                     style={{
@@ -715,7 +715,8 @@ setCategoryId(id)
                             <Button
                               color="paradise"
                               outline
-                              className="waves-effect waves-light col-2 mx-4"
+                              className="waves-effect waves-light me-2 fw-bold border-3 fs-5 rounded-3"
+                              style={{minWidth:"106px"}}
                               type="button"
                               onClick={() => history.goBack()}
                             >
@@ -725,7 +726,7 @@ setCategoryId(id)
                             <Button
                               
                               type="submit"
-                              className="font-16 btn-block col-2 btn-orange"
+                              className="font-16 btn-block btn-orange fs-5 rounded-3"
                               // onClick={toggleCategory}
                             >
                               Continue
@@ -742,7 +743,7 @@ setCategoryId(id)
           </Card>
         </Col>
       </Row>
-      <div className="content-footer pt-2 px-4 mt-4 mx-4">
+      <div className="content-footer pt-2 px-4 mx-4">
           <p>{new Date().getFullYear()} © JS Tour & Travel</p>
         </div>
     </div>

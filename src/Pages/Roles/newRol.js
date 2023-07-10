@@ -5,6 +5,7 @@ import { createRol } from "../../Utils/API/Roles";
 import { useSelector, useDispatch } from "react-redux";
 import BoatImage from "../../Components/Assets/images/boat.png";
 import Inter1 from '../../Components/Assets/images/Intersection1.svg'
+import Inter2 from '../../Components/Assets/images/Intersection2.svg'
 import {
   Container,
   Row,
@@ -121,10 +122,10 @@ const NewRol = ({ history }) => {
   });
   return (
     <>
-      <div className="page-content pb-0">
+      <div className="page-content pb-0 px-0">
         <Container fluid className="px-5">
-          <div className="">
-            <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
+          <div className="d-flex justify-content-between align-items-baseline mb-4">
+            <h1 className="fw-bold text-paradise mb-2"  style={{fontSize:"3.5rem"}} >
               + ADD NEW ROLE
             </h1>
           </div>
@@ -138,11 +139,14 @@ const NewRol = ({ history }) => {
           >
             <Row className="g-5">
               
-                  <Col lg={4}>
-                    <Card className="mb-5">
-                    <CardHeader className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3">                          
+                  <Col lg={4} className="align-items-stretch">
+                    <Card className="mb-4">
+                    <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow" style={{backgroundImage:'url(' + Inter1 + ')',
+                    backgroundSize:'contain', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'right'}}>                          
                           <h5 className="text-white">+ General Information</h5>
-                        <img src={Inter1} alt='inter1' style={{width: '100px', marginTop:'-15px', marginRight:'-20px'}} />
+                        
                     </CardHeader>
                     <CardBody className="d-grid p-5">
                     
@@ -188,7 +192,7 @@ const NewRol = ({ history }) => {
                             <Button
                               color="secondary"
                               type="button"
-                              className="bg-secondary"
+                              className="btn btn-orange"
                               // onClick={toggleCategory}
                             >
                               <i className=" mdi mdi-plus-circle-outline me-1" />
@@ -207,39 +211,45 @@ const NewRol = ({ history }) => {
                     </div>
                   </Col>
                   <Col lg={4} className="d-flex align-items-stretch">
-                  <Card style={{ maxHeight: "87vh" }} className="border-0">
-                    <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                  <Card className="border-0 w-100">
+                    <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow" style={{backgroundImage:'url(' + Inter2 + ')',
+                    backgroundSize:'contain', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'right'}}>
                           <h5 className="text-white">+ Select Members</h5>
                     </CardHeader>
-                      <CardBody className="overflow-auto">
-                        <Row className="justify-content-center mt-4">
-                          {dataUsers ? (
-                            <>
-                              {map(dataUsers, (user, index) => {
-                                return (
-                                  <div
-                                    key={index}
-                                    className="controls my-2 mx-5 px-5"
-                                  >
-                                    <div className="form-check px-5">
-                                      <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        value={user.id}
-                                        name={validationType.values.members}
-                                        onChange={(e) => onChangeMembers(e)}
-                                      />
-                                      <label className="form-check-label">
-                                        {`${user.first_name} ${user.last_name}`}
-                                      </label>
-                                    </div>
+                    <CardBody className="overflow-auto">
+                      <div className="justify-content-center">
+                        <div className="table-two-column mx-2 mx-xxl-4">
+                        {dataUsers ? (
+                          <>
+                            {map(dataUsers, (user, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="controls mb-2 mb-xxl-4"
+                                >
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      value={user.id}
+                                      name={validationType.values.members}
+                                      onChange={(e) => onChangeMembers(e)}
+                                    />
+                                    <label className="form-check-label cell-min-height">
+                                      {`${user.first_name} ${user.last_name}`}
+                                    </label>
                                   </div>
-                                );
-                              })}
-                            </>
-                          ) : null}
-                        </Row>
-                      </CardBody>
+                                </div>
+                              );
+                            })}
+                          </>
+                        ) : null}
+                        </div>
+                        
+                      </div>
+                    </CardBody>
                     </Card>
                   </Col>
                   <Col lg={4} className="d-flex align-items-stretch">

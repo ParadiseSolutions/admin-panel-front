@@ -245,6 +245,10 @@ input[type=number] {
 .mm-active.has-arrow.waves-effect, .sub-menu .mm-active>a {
   background-color: #f3f8fb !important;
 }
+.mm-active.has-arrow.waves-effect, .sub-menu .mm-active>a::after {
+  color: #fff !important;
+  background-color: #3dc7f4 !important;
+}
 .table-two-column{
   column-count: 2;
 }
@@ -256,4 +260,18 @@ input[type=number] {
   }
 .content-footer{
   border-top: 1px solid #74788D;
+}
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.75rem; 
+  vertical-align: middle;
+}
+.pagination{
+  margin-bottom: 0 !important;
+}
+#sidebar-menu ul li ul.sub-menu li a {
+  padding: 0.4rem 1.5rem 0.4rem 3rem;
+  
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  border-color: #F6851F;
 }
