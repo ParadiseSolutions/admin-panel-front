@@ -262,8 +262,7 @@ const AddNewTransportation = ({
         price_type &&
         price_option &&
         price_collect &&
-        transfer_type &&
-        direction
+        transfer_type
       ) {
         let data = {
           tour_id: tourData.id,
@@ -850,7 +849,9 @@ const AddNewTransportation = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? transferType.id ===
-                                  dataEdit.pricedetails[4].source_id
+                                dataEdit.pricedetails.filter(
+                                  (x) => x.pricing_option_id === 46
+                                )[0]?.source_id
                                 : false
                             }
                           >
@@ -863,7 +864,7 @@ const AddNewTransportation = ({
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Direction*</Label>
+                    <Label className="form-label">Direction</Label>
                     <Input
                       type="select"
                       name=""
