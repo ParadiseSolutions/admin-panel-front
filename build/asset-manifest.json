@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c6fdf287.css",
-    "main.js": "/static/js/main.f7afc00d.js",
+    "main.js": "/static/js/main.90c41340.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -49,6 +49,7 @@
     "static/media/boat.png": "/static/media/boat.296ebd4f10d768574b76.png",
     "static/media/chooseactivity.jpg": "/static/media/chooseactivity.12dab3ed435048695f7f.jpg",
     "static/media/threevariants.jpg": "/static/media/threevariants.f42139c07e073e293e5f.jpg",
+    "static/media/twovariantspreview.jpg": "/static/media/twovariantspreview.fac5590746e64d93f728.jpg",
     "static/media/fa-regular-400.woff": "/static/media/fa-regular-400.8b892b7904a39e37c53d.woff",
     "static/media/twovariants.jpg": "/static/media/twovariants.1fa238ff0aaec1ea4316.jpg",
     "static/media/logo-dark.png": "/static/media/logo-dark.2e223add1ac7fd0c30a3.png",
@@ -63,11 +64,11 @@
     "static/media/Intersection2.svg": "/static/media/Intersection2.9f8fdbff1f8cc8e8e585399d1070a56e.svg",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.c6fdf287.css.map": "/static/css/main.c6fdf287.css.map",
-    "main.f7afc00d.js.map": "/static/js/main.f7afc00d.js.map",
+    "main.90c41340.js.map": "/static/js/main.90c41340.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c6fdf287.css",
-    "static/js/main.f7afc00d.js"
+    "static/js/main.90c41340.js"
   ]
 }
