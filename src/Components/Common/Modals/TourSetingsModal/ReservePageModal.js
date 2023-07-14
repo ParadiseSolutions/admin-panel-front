@@ -205,7 +205,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                 </div>
                 <div className="col-1">
                   <img
-                    src={TwoVariantsIMG}
+                    src={TwoVariantsIMG2}
                     alt="one-variant"
                     style={{ width: "350px", margin: "10px" }}
                   />
@@ -383,7 +383,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                     </p>
                   </div>
                   <img
-                    src={TwoVariantsIMG2}
+                    src={templateType === 1 ? OneVariantIMG : templateType === 2 ? TwoVariantsIMG2 : templateType === 3 ? ThreeVariantsIMG : templateType === 4 ? ChoseActivityIMG : TwoVariantsIMG2}
                     alt="two-variant"
                     style={{ width: "472.5px", marginTop: "-1px", marginLeft: "-1px"}}
                   />

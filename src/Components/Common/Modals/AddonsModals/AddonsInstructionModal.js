@@ -159,7 +159,7 @@ const AddonsInstructionModal = ({
             </Row>
 
             <Row className="row-12">
-              <Col>
+              <div style={{ width: "calc(100% - 500px)" }}>
                 <div className="form-outline mb-2 col-11">
                   <Label className="form-label">Instruction Title</Label>
                   <Input
@@ -171,7 +171,13 @@ const AddonsInstructionModal = ({
                     maxLength={50}
                   />
 
-                  <p style={{ fontSize: "12px", fontWeight: "lighter" }}>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "lighter",
+                      textAlign: "right",
+                    }}
+                  >
                     * Title should be max 50 chars
                   </p>
                 </div>
@@ -181,86 +187,72 @@ const AddonsInstructionModal = ({
                     name="description"
                     placeholder=""
                     type="textarea"
-                    style={{ height: 200 }}
+                    style={{ height: 147 }}
                     onChange={(e) =>
                       setInstructionDescriptionExample(e.target.value)
                     }
                     value={instructionDescriptionExample}
                     maxLength={210}
                   />
-                  <p style={{ fontSize: "12px", fontWeight: "lighter" }}>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "lighter",
+                      textAlign: "right",
+                    }}
+                  >
                     * Description should be max 210 chars
                   </p>
                 </div>
-              </Col>
-              <Col>
-                <Row
+              </div>
+              <div style={{ width: "490px" }}>
+                <div className="form-outline mb-2 col-11">
+                  <Label className="form-label">Reserve Page Preview</Label>
+                </div>
+                <div
                   style={{
-                    height: "285px",
-                      backgroundColor: "#FFEEE5",
-                      marginTop: "28px",
-                      marginRight: "5px",
+                    backgroundColor: "#f0f0f0",
+                    margin: "4px 0",
+                    fontFamily: "Arial, sans-serif",
+                    fontSize: "13px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    color: "#373737",
+                    padding: "16px 24px",
+                    borderRadius: "4px",
                   }}
-                  className="d-flex justify-content-center"
                 >
-                  <Col className="col-12 m-2" style={{ color: "#495057" }}>
-                  <div
-                        className="d-flex justify-content-center"
-                        style={{ paddingTop: "30px" }}
-                      >
-                        <i
-                          class="fa fa-info"
-                          style={{
-                            fontSize: "20px",
-                            borderRadius: "29px",
-                            border: "2px solid #D54500",
-                            color: "#D54500",
-                            padding: "4px 4px 4px 8px",
-                            width: "30px",
-                            height: "30px",
-                            marginTop: "10px",
-                            justifyContent: "center",
-                          }}
-                        />
-                      </div>
-                  </Col>
-                  <Col className="col-12 d-flex justify-content-center">
-                  <div className="align-items-end">
-                        <h1
-                          style={{
-                            textAlign: "center",
-                            color: "black",
-                            fontWeight: "bold",
-                            fontSize: "16px",
-                            fontFamily: "Arial, sans-serif",
-                            fontWeight: "700",
-                            alignSelf: "end",
-                          }}
-                        >
-                          {titleExample}
-                        </h1>
-                      </div>
-                  </Col>
-                  <Col className="col-12 d-flex justify-content-center">
-                  <div className="form-outline mb-2">
-                        <p
-                          name="instruction_description"
-                          placeholder=""
-                          style={{
-                            textAlign: "center",
-                            fontFamily: "Arial, sans-serif",
-                            fontSize: "13px",
-                            fontWeight: "400",
-                            lineHeight: "17px",
-                            padding: "16px 24px",
-                          }}
-                        >
-                          {instructionDescriptionExample}
-                        </p>
-                      </div>
-                  </Col>
-                </Row>
-              </Col>
+                  <i
+                    class="fa fa-plus-circle"
+                    style={{ fontSize: "20px" }}
+                    aria-hidden="true"
+                  ></i>
+                  <br></br>
+                  {titleExample}
+                  <p
+                    name="instruction_description"
+                    placeholder=""
+                    style={{
+                      marginBottom: "0",
+                      fontFamily: "Arial",
+                      fontStyle: "normal",
+                      fontWeight: "400",
+                      fontSize: "13px",
+                      lineHeight: "17px",
+                      marginTop: "8px",
+                      textAlign: "center",
+                      color: "#000000",
+                    }}
+                  >
+                    {instructionDescriptionExample}
+                  </p>
+                </div>
+                {/* <img
+                    src={TwoVariantsIMG2}
+                    alt="two-variant"
+                    style={{ width: "472.5px", marginTop: "-1px", marginLeft: "-1px"}}
+                  /> */}
+              </div>
             </Row>
 
             <Row className="row-12 d-flex justify-content-end mt-3">
