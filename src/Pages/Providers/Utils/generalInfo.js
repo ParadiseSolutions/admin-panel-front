@@ -116,7 +116,14 @@ const GeneralInformation = () => {
           createProviderAPI(data)
             .then((resp) => {
               // console.log(resp);
-              history.push(`/providers/${resp.data.data.id}`);
+              Swal.fire(
+                "Created!",
+                "Operator has been created.",
+                "success"
+              ).then(() => {
+                history.push(`/providers/${resp.data.data.id}`);
+              });
+              
             })
             .catch((error) => {
               let errorMessages = [];

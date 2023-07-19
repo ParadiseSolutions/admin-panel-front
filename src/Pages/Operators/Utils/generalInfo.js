@@ -95,7 +95,14 @@ const GeneralInformation = () => {
       createOperatorAPI(data)
         .then((resp) => {
           // console.log(resp);
-          history.push(`/operators/${resp.data.data.id}`);
+          Swal.fire(
+            "Created!",
+            "Operator has been created.",
+            "success"
+          ).then(() => {
+            history.push(`/operators/${resp.data.data.id}`);
+          });
+         
         })
         .catch((error) => {
           if(error.response.data.data === null) {
