@@ -175,6 +175,9 @@ const EditScheduleModal = ({
   const onAddDay = (day) => {
     const selection = +day;
     const selectionFlag = daysList.includes(selection);
+    if (selection === 7) {
+      setDayList("7,1,5,2,6,3,0,4")
+    }
     if (!selectionFlag) {
       setDayList([...daysList, +day]);
     }
@@ -256,7 +259,7 @@ const EditScheduleModal = ({
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
       const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
       const startTimeIntervalsTo = `${values.to_interval} ${timeFrameIntervalTo}`;
-      const daysListString = daysList.toString();
+      const daysListString = daysList ? daysList.toString() : '';
 
       let multiTimesList = [];
       if (values.first_field_multi !== "") {
@@ -296,12 +299,13 @@ const EditScheduleModal = ({
         duration: values.duration ? values.duration : "",
         price_id: productSelected,
       };
+
       
       putSchedule(id, data)
         .then((resp) => {
           triggerUpdate();
-          if (resp.data.status === 201) {
-            Swal.fire("Success!", "Schedule has been created", "success").then(
+          if (resp.data.status === 200) {
+            Swal.fire("Success!", "Schedule has been Edited", "success").then(
               () => {
                 setEditSchedule(false);
                 refresh();

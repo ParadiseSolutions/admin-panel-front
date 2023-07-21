@@ -59,6 +59,9 @@ const AddNewScheduleModal = ({
   const onAddDay = (day) => {
     const selection = +day;
     const selectionFlag = daysList.includes(selection);
+    if (selection === 7) {
+      setDayList("7,1,5,2,6,3,0,4")
+    }
     if (!selectionFlag) {
       setDayList([...daysList, +day]);
     }
