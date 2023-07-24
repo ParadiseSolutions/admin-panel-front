@@ -273,7 +273,9 @@ const Schedules = ({ tourData, toggle }) => {
                                   ? "-"
                                   : `${schedule.duration} ${schedule.units}`}{" "}
                               </td>
-                              <td>{schedule.end_date}</td>
+                              <td>
+                                {schedule.runs === "7,1,5,2,6,3,0,4" ? 'Daily' : ''}
+                                </td>
                               <td>
                                 <div
                                   style={{ cursor: "pointer" }}
