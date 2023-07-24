@@ -146,6 +146,8 @@ const AddNewScheduleModal = ({
       fourth_field_multi: "",
       fifth_field_multi: "",
       sixth_field_multi: "",
+      from_date: "",
+      to_date: ""
     },
     // validationSchema: Yup.object().shape({
     //   first_name: Yup.string().required("First Name is required"),
