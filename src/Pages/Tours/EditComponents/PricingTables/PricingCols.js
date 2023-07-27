@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
-import { statusUpdate, statusUpdatePrice, triggerUpdate } from "../../../../Utils/API/Tours";
+import { statusUpdate, statusUpdatePrice,statusUpdateAddon, triggerUpdate } from "../../../../Utils/API/Tours";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { setRateFormat } from "../../../../Utils/CommonFunctions";
 // const OrderId = (cell) => {
@@ -78,14 +78,14 @@ const Active = (cell) => {
 
     if (cell.value === 1) {
       let data = { active: 0 };
-      statusUpdatePrice(id, data).then((resp) => {
+      statusUpdateAddon(id, data).then((resp) => {
         triggerUpdate()
         // console.log(resp);
       });
     }
     if (cell.value === 0) {
       let data = { active: 1 };
-      statusUpdatePrice(id, data)
+      statusUpdateAddon(id, data)
         .then((resp) => {
           triggerUpdate()
           // console.log(resp);

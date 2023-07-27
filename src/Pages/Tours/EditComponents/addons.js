@@ -18,7 +18,7 @@ import {
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
 
-import { Name, Code, Members, Price } from "./PricingTables/PricingCols";
+import { Name, Code, Members, Price, Active } from "./PricingTables/PricingCols";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -165,7 +165,15 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           return <Price {...cellProps} />;
         },
       },
-
+      {
+        Header: "Active",
+        accessor: "active",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Active {...cellProps} />;
+        },
+      },
       {
         Header: "Action",
         accessor: "action",

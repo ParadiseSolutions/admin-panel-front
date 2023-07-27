@@ -31,6 +31,12 @@ export const bulkUpdate = (id, body) => {
       headers: options,
     });
   };
+  export const statusUpdateAddon = (id, body) => {
+    const url = `${API_URL}/addons/${id}/status`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
 
   export const deleteTourAPI = (id) => {
     const url = `${API_URL}/tours/${id}`;
