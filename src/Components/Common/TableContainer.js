@@ -80,9 +80,9 @@ const TableContainer = ({
     useRowSelect
   );
 
-  // const generateSortingIndicator = (column) => {
-  //   return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
-  // };
+  const generateSortingIndicator = (column) => {
+    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+  };
 
   // const onChangeInSelect = (event) => {
   //   setPageSize(Number(event.target.value));
@@ -346,7 +346,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} className={`table-column-departments-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
@@ -386,7 +386,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} className={`table-column-providers-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
@@ -426,7 +426,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} className={`table-column-categories-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
@@ -506,7 +506,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} className={`table-column-locations-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
@@ -629,7 +629,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id} style={{width:"5%"}}>
+                    <th key={column.id} className={`table-column-users-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
@@ -669,7 +669,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} className={`table-column-shopping-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
@@ -709,7 +709,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} className={`table-column-payment-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
@@ -747,7 +747,7 @@ const TableContainer = ({
           <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
-                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()} >
                   {headerGroup.headers.map((column) => (
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
@@ -789,10 +789,15 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id}
+                    
+                    /*{...document.write(column.Header)}*/
+                    
+                    className={`table-column-operator-${column.Header}`}
+                    >
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        {generateSortingIndicator(column)}
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -909,7 +914,7 @@ const TableContainer = ({
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={column.id}>
+                    <th key={column.id} className={`table-column-tours-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
                         {/* {generateSortingIndicator(column)} */}
