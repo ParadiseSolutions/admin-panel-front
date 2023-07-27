@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import PricingTables from "./PricingTables/pricingTables";
+import BulkEditModal from "../../../Components/Common/Modals/BulkEditModal/BulkEditModal";
 import AddNewProductPricing from "../../../Components/Common/Modals/PricingModals/addNewProduct";
 import AddNewAirportTransfer from "../../../Components/Common/Modals/PricingModals/addNewAirportTransfer";
 import Fishing from "../../../Components/Common/Modals/PricingModals/fishing";
@@ -30,7 +31,7 @@ import {
   Members,
   Price,
   Rate,
-  Active
+  Active,
 } from "./PricingTables/PricingCols";
 
 import Swal from "sweetalert2";
@@ -78,7 +79,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           .then((resp) => {
             getPricesPricingAPI(id).then((resp) => {
               setPricesData(resp.data.data);
-              triggerUpdate()
+              triggerUpdate();
             });
             Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })
@@ -103,7 +104,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           .then((resp) => {
             getAddonsPricingAPI(id).then((resp) => {
               setAddonsData(resp.data.data);
-              triggerUpdate()
+              triggerUpdate();
             });
             Swal.fire("Deleted!", "The Addon has been deleted.", "success");
           })
@@ -338,6 +339,10 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const [newPrivateCharter, setNewPrivateCharter] = useState(false);
   const [newPrivateTour, setNewPrivateTour] = useState(false);
   const [newTransportation, setNewTransportation] = useState(false);
+
+  // bulk edit
+  const [bulkEditModal, setBulkEditModal] = useState(false);
+
   const onClickNewProduct = () => {
     setEditProductID(null);
     setCopyProduct(false);
@@ -380,6 +385,14 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         </Col>
         <Col>
           <div className="text-sm-end">
+            <Button
+              type="button"
+              className="waves-effect waves-light mb-3 btn btn-orange mx-2"
+              onClick={() => setBulkEditModal(true)}
+            >
+              <i className="mdi mdi-plus me-1" />
+              Bulk Edit
+            </Button>
             <Button
               type="button"
               className="waves-effect waves-light mb-3 btn btn-orange"
@@ -480,6 +493,14 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         tourData={tourData}
         refreshTable={refreshTable}
         editProductID={editProductID}
+      />
+      
+      <BulkEditModal
+        bulkEditModal={bulkEditModal}
+        setBulkEditModal={setBulkEditModal}
+        pricesData={pricesData}
+        refreshTable={refreshTable}
+        tourData={tourData}
       />
     </TabPane>
   );

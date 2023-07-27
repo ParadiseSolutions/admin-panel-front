@@ -65,7 +65,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           .then((resp) => {
             getPricesPricingAPI(id).then((resp) => {
               setPricesData(resp.data.data);
-              triggerUpdate()
+              triggerUpdate();
             });
             Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })
@@ -87,25 +87,22 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
     }).then((resp) => {
       if (resp.isConfirmed) {
         deleteAddonAPI(depData.id)
-          .then((resp) => {
-            getAddonsPricingAPI(id).then((resp) => {
-              setAddonsData(resp.data.data);
-              triggerUpdate()
-            });
-            Swal.fire("Deleted!", "The Addon has been deleted.", "success");
-          })
-          .catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          });
+        .then((response) => {
+          refreshTable()
+          console.log('si fue')
+        }).catch((error) => {
+          console.log('no fue')
+          let errorMessages = [];
+          // Object.entries(error.response.data.message).map((item) => {
+          //   errorMessages.push(item[1]);
+          // });
+  
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(error.response.data.message)
+          );
+        });
       }
     });
   };
@@ -190,7 +187,6 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
                 </UncontrolledTooltip>
               </div>
               <Link
-                to="#"
                 className="text-danger"
                 onClick={() => {
                   const depData = cellProps.row.original;

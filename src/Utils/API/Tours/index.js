@@ -9,6 +9,14 @@ export const triggerUpdate = () => {
   });
 };
 
+// bulk products update
+export const bulkUpdate = (id, body) => {
+  const url = `${API_URL}/prices/${id}/bulk-update`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
   //general request
   export const statusUpdateTour = (id, body) => {
     const url = `${API_URL}/tours/${id}/status`;
