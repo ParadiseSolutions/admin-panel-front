@@ -114,7 +114,7 @@ const BulkEditModal = ({
         >
           <h1 className="modal-title mt-0 text-white">
             {" "}
-            Add Ons Instructions Set Up
+            Edit Products
           </h1>
           <button
             onClick={() => {
