@@ -65,12 +65,12 @@ const URL = ({ tourData, toggle }) => {
   }, [urlTypeSelected]);
 
   useEffect(() => {
-    console.log("llamado");
+    
     getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
       setPathData(resp.data.data);
       setBasePath(resp.data.data.base_path)
       setComplementURL(resp.data.data.filename);
-      console.log(resp.data.data)
+     
     });
   }, [urlTypeSelected, locationSelected]);
 

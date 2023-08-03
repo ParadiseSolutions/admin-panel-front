@@ -127,19 +127,19 @@ const EditScheduleModal = ({
       detailData.forEach((element) => {
         newArr.push(element.split(" "));
       });
-      setEditTimeM1(newArr[0][0]);
-      setEditFrameM1(newArr[0][1]);
-      setEditTimeM2(newArr[1][0]);
-      setEditFrameM2(newArr[1][1]);
-      setEditTimeM3(newArr[2][0]);
-      setEditFrameM3(newArr[2][1]);
-      setEditTimeM4(newArr[3][0]);
-      setEditFrameM4(newArr[3][1]);
-      setEditTimeM5(newArr[4][0]);
-      setEditFrameM5(newArr[4][1]);
-      setEditTimeM6(newArr[5][0]);
-      setEditFrameM6(newArr[5][1]);
-      // console.log(newArr);
+      
+      setEditTimeM1( newArr[0] ? newArr[0][0] : 0);
+      setEditFrameM1(newArr[0] ?  newArr[0][1] : 0);
+      setEditTimeM2(newArr[1] ?  newArr[1][0] : 0);
+      setEditFrameM2(newArr[1] ?  newArr[1][1] : 0);
+      setEditTimeM3(newArr[2] ? newArr[2][0] : 0);
+      setEditFrameM3(newArr[2] ? newArr[2][1] : 0);
+      setEditTimeM4(newArr[3] ? newArr[3][0] : 0 );
+      setEditFrameM4(newArr[3] ? newArr[3][1] : 0);
+      setEditTimeM5(newArr[4] ? newArr[4][0] : 0);
+      setEditFrameM5(newArr[4] ? newArr[4][1] : 0);
+      setEditTimeM6(newArr[5] ? newArr[5][0] : 0);
+      setEditFrameM6(newArr[5] ? newArr[5][1] : 0);
     }
     setTypeToEdit(dataEdit.type_id);
     setProductToEdit(dataEdit.price_id);

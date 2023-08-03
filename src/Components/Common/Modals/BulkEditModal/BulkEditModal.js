@@ -10,7 +10,7 @@ const BulkEditModal = ({
   refreshTable,
   tourData,
 }) => {
-  console.log(pricesData);
+ 
   let preciosIniciales = [];
   pricesData?.forEach((element) => {
     preciosIniciales.push({
@@ -187,6 +187,9 @@ const BulkEditModal = ({
                                   {campo === "label" ? (
                                     <div>{values[index][campo]}</div>
                                   ) : null}
+                                  {campo === "sku" ? (
+                                    <div>{values[index][campo]}</div>
+                                  ) : null}
                                   {campo !== "sku" && campo !== "label" ? (
                                     <input
                                       type="text"
@@ -198,7 +201,7 @@ const BulkEditModal = ({
                                     />
                                   ) : (
                                     <>
-                                      {campo !== "label" && (
+                                      {campo !== "label" && campo !== 'sku' && (
                                         <input
                                           type="text"
                                           name={campo}
