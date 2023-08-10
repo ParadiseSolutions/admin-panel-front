@@ -1,3 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="113.205" height="61" viewBox="0 0 113.205 61">
-  <path id="Intersection_3" data-name="Intersection 3" d="M-6450.2-4641a205.756,205.756,0,0,1,40.636-61H-6337v61Z" transform="translate(6450.205 4702)" fill="#1a8eb4" opacity="0.53"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.7.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 546.03 61" style="enable-background:new 0 0 546.03 61;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0.53;fill:#1A8EB4;enable-background:new    ;}
+</style>
+<path id="Intersection_2" class="st0" d="M0,61V0h96.63C74.86,31.45,41.81,53.3,4.34,61H0z"/>
+<path id="Intersection_3" class="st0" d="M432.4,61c9.79-22.6,23.55-43.26,40.64-61h72.56v61H432.4z"/>
 </svg>

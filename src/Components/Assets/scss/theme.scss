@@ -228,11 +228,11 @@ input[type=number] {
 }
 #sidebar-menu ul li ul.sub-menu li a {
   padding: 0.4rem 1.5rem 0.4rem 1.85rem;
-  font-weight: 500;
+  font-weight: 400;
   color: #fff;
   margin: 0px 10px;
   background-color: transparent;
-  font-size: 14.4px;
+  font-size: 15px;
 }
 
 #sidebar-menu ul li a.has-arrow.waves-effect span {
@@ -244,4 +244,199 @@ input[type=number] {
 
 .mm-active.has-arrow.waves-effect, .sub-menu .mm-active>a {
   background-color: #f3f8fb !important;
+}
+.mm-active.has-arrow.waves-effect, .sub-menu .mm-active>a::after {
+  color: #fff !important;
+  background-color: #3dc7f4 !important;
+}
+.table-two-column{
+  column-count: 2;
+}
+
+  @media only screen and (max-width:1796px) {
+    .cell-min-height{
+      min-height: 44px;
+    }
+  }
+.content-footer{
+  border-top: 1px solid #74788D;
+}
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.75rem; 
+  vertical-align: middle;
+}
+.pagination{
+  margin-bottom: 0 !important;
+}
+#sidebar-menu ul li ul.sub-menu li a {
+  padding: 0.4rem 1.5rem 0.4rem 3rem;
+  
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  border-color: #F6851F;
+}
+
+/*Classes that modify the behaviour of the columns*/
+
+/* Categories columns*/
+.table-column-categories-Name{
+  width: 25% !important;
+}
+.table-column-categories-Code{
+    width: 10% !important;
+}
+.table-column-categories-Parent{
+    width: 40% !important;
+}
+.table-column-categories-Active{
+    width: 10% !important;
+}
+.table-column-categories-Action{
+    width: 20% !important;
+}
+/* Departments columns*/
+.table-column-departments-Name{
+  width: 25% !important;
+}
+.table-column-departments-Code{
+    width: 10% !important;
+}
+.table-column-departments-Members{
+    width: 10% !important;
+}
+.table-column-departments-Date{
+  width: 30% !important;
+}
+.table-column-departments-Active{
+    width: 10% !important;
+}
+.table-column-departments-Action{
+    width: 10% !important;
+}
+/* Locations columns*/
+.table-column-locations-Name{
+  width: 50% !important;
+}
+.table-column-locations-Active{
+    width: 10% !important;
+}
+.table-column-locations-Action{
+    width: 10% !important;
+}
+/* Operators columns*/
+.table-column-operator-Name{
+width: 20% !important;
+}
+.table-column-operator-Code{
+  width: 10% !important;
+}
+.table-column-operator-Phone{
+  width: 20% !important;
+}
+.table-column-operator-Email{
+    width: 30% !important;
+}
+.table-column-operator-Active{
+  width: 10% !important;
+}
+.table-column-operator-Action{
+  width: 20% !important;
+}
+/* Payment Types columns*/
+.table-column-payment-Name{
+  width: 30% !important;
+}
+.table-column-payment-Default{
+  width: 30% !important;
+}
+.table-column-payment-Active{
+  width: 10% !important;
+}
+.table-column-payment-Action{
+  width: 20% !important;
+}
+/* Providers columns*/
+.table-column-providers-Name{
+  width: 20% !important;
+}
+.table-column-providers-Code{
+  width: 10% !important;
+}
+.table-column-providers-Phone{
+  width: 20% !important;
+}
+.table-column-providers-Reservation{
+  width: 30% !important;
+}
+.table-column-providers-Active{
+  width: 10% !important;
+}
+.table-column-providers-Action{
+  width: 20% !important;
+}
+/* Shopping carts columns*/
+.table-column-shopping-Cart{
+  width: 15% !important;
+}
+.table-column-shopping-Server{
+  width: 10% !important;
+}
+.table-column-shopping-Website{
+  width: 20% !important;
+}
+.table-column-shopping-URL{
+  width: 30% !important;
+}
+.table-column-shopping-Active{
+  width: 10% !important;
+}
+.table-column-shopping-Action{
+  width: 20% !important;
+}
+/* Tours columns*/
+.table-column-tours-Name{
+  width: 25% !important;
+}
+.table-column-tours-Website{
+  width: 13% !important;
+}
+.table-column-tours-Provider{
+  width: 13% !important;
+}
+.table-column-tours-Category{
+  width: 13% !important;
+}
+.table-column-tours-Operator{
+  width: 20% !important;
+}
+.table-column-users-Active{
+  width: 10% !important;
+}
+.table-column-users-Action{
+  width: 20% !important;
+}
+/* Users columns*/
+.table-column-users-Name{
+  width: 15% !important;
+}
+.table-column-users-Email{
+  width: 15% !important;
+}
+.table-column-users-Job{
+  width: 13% !important;
+}
+.table-column-users-Category{
+  width: 13% !important;
+}
+.table-column-users-Department{
+  width: 13% !important;
+}
+.table-column-users-Role{
+  width: 20% !important;
+}
+.table-column-users-Active{
+  width: 10% !important;
+}
+.table-column-users-Action{
+  width: 20% !important;
 }

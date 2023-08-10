@@ -3,6 +3,7 @@ import {
   getAvailableFromAPI,
   putSettingsAPI,
   getAvailableAPI,
+  triggerUpdate
 } from "../../../Utils/API/Tours";
 import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
 import SettingsImageTwo from "../../../Components/Assets/images/settings2.png";
@@ -137,6 +138,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         .then((resp) => {
           // console.log(resp.data);
           if (resp.data.status === 200) {
+            triggerUpdate()
             Swal.fire("Edited!", "Settings has been created.", "success");
             toggle("3");
           }

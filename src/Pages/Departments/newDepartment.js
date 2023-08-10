@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { createDepartment } from "../../Utils/API/Departments";
 import BoatImage from "../../Components/Assets/images/boat.png";
 import Inter1 from "../../Components/Assets/images/Intersection1.svg";
+import Inter2 from '../../Components/Assets/images/Intersection2.svg'
+import Inter3 from '../../Components/Assets/images/Intersection4-5.svg'
 import {
   Container,
   Row,
@@ -126,7 +128,7 @@ const NewDepartment = ({ history }) => {
   });
   return (
     <>
-      <div className="page-content px-0">
+      <div className="page-content px-0 pb-0">
         <Container fluid className="px-5">
           <Form
             onSubmit={(e) => {
@@ -136,20 +138,22 @@ const NewDepartment = ({ history }) => {
             }}
             className="custom-validation"
           >
-            <div className="">
-              <h1
-                className="fw-bold text-paradise"                
-              >
-                <i className="mdi mdi-plus me-1" /> ADD NEW DEPARTMENT
-              </h1>
-            </div>
+            
             <Row>
-              <Col md="12" className="d-flex justify-content-end">
+              <Col md="12" className="d-flex justify-content-between align-items-baseline mb-4">
+              <div className="d-flex">
+                <h1
+                  className="fw-bold text-paradise mb-2"  style={{fontSize:"3.5rem"}}              
+                >
+                  <i className="mdi mdi-plus me-1" /> ADD DEPARTMENT
+                </h1>
+              </div>
+              <div className="d-flex justify-content-end align-items-baseline">
                 <div className="text-sm-end mx-2">
                   <Button
                     color="paradise"
                     outline
-                    className="waves-effect waves-light"
+                    className="waves-effect waves-light border-3 fw-bold"
                     type="button"
                     onClick={() => history.goBack()}
                   >
@@ -160,28 +164,33 @@ const NewDepartment = ({ history }) => {
                 <div className="text-sm-end">
                   <Button
                     type="submit"                    
-                    className="waves-effect waves-light mb-3 btn btn-orange"
+                    className="waves-effect waves-light btn btn-orange border-3"
                     // onClick={() => onClickNewContactProvider()}
                   >
                     
                     Create Department
                   </Button>
                 </div>
+              </div>
+                
               </Col>
             </Row>
             
             
-              <Row className="g-5">
+              <Row className="g-4 g-xxl-5">
                 <Col lg={4}>
-                  <Card className="border-0 mb-5">
-                    <CardHeader className="bg-paradise">
+                  <Card className="border-0 mb-4">
+                    <CardHeader className="bg-paradise" style={{backgroundImage:'url(' + Inter1 + ')',
+                    backgroundSize:'contain', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'right'}}>
                     <h5 className="text-white m-1">
                           + General Information
                         </h5>
                     </CardHeader>
                     <CardBody className="">
                       
-                      <Row className="justify-content-center mt-4">
+                      <Row className="justify-content-center">
                         <div className="form-outline mb-4 col-11">
                           <Label className="form-label">Name</Label>
                           <Input
@@ -232,7 +241,7 @@ const NewDepartment = ({ history }) => {
                       </Row>
                     </CardBody>
                   </Card>
-                  <Card className="border-0">
+                  <Card className="border-0 w-100 mb-0">
                     <img
                       src={BoatImage}
                       alt="boat"
@@ -241,24 +250,28 @@ const NewDepartment = ({ history }) => {
                   </Card>
                 </Col>
                 <Col lg={4} className="d-flex align-items-stretch">
-                  <Card style={{ maxHeight: "87vh" }} className="border-0">
-                  <CardHeader className="bg-paradise">
+                  <Card className="border-0 w-100 mb-0">
+                  <CardHeader className="bg-paradise" style={{backgroundImage:'url(' + Inter2 + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'left'}}>
                     <h5 className="text-white m-1">
                       + Select Members
                     </h5>
                     </CardHeader>
                     
                     <CardBody className="overflow-auto">
-                      <Row className="justify-content-center">
+                      <div className="justify-content-center">
+                        <div className="table-two-column mx-2 mx-xxl-4">
                         {dataUsers ? (
                           <>
                             {map(dataUsers, (user, index) => {
                               return (
                                 <div
                                   key={index}
-                                  className="controls my-2"
+                                  className="controls mb-2 mb-xxl-4"
                                 >
-                                  <div className="form-check px-5">
+                                  <div className="form-check">
                                     <input
                                       className="form-check-input"
                                       type="checkbox"
@@ -266,7 +279,7 @@ const NewDepartment = ({ history }) => {
                                       name={validationType.values.members}
                                       onChange={(e) => onChangeMembers(e)}
                                     />
-                                    <label className="form-check-label">
+                                    <label className="form-check-label cell-min-height">
                                       {`${user.first_name} ${user.last_name}`}
                                     </label>
                                   </div>
@@ -275,26 +288,31 @@ const NewDepartment = ({ history }) => {
                             })}
                           </>
                         ) : null}
-                      </Row>
+                        </div>
+                        
+                      </div>
                     </CardBody>
                   </Card>
                 </Col>
                 <Col lg={4} className="d-flex align-items-stretch">
-                  <Card className="">
-                  <CardHeader className="bg-paradise">
+                  <Card className="w-100 mb-0">
+                  <CardHeader className="bg-paradise" style={{backgroundImage:'url(' + Inter3 + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'left'}}>
                     <h5 className="text-white m-1">
-                      + Permissionss
+                      + Permissions
                     </h5>
                     </CardHeader>
                     
                     <CardBody className="overflow-auto">
-                      <Row className="d-flex justify-content-center">
-                        
-                          {dataModules ? (
+                      <div className="justify-content-center">
+                      <div className="table-two-column mx-2 mx-xxl-4">
+                      {dataModules ? (
                             <>
                               {map(dataModules, (module, index) => {
                                 return (
-                                  <div key={index} className=" my-2 col-5">
+                                  <div key={index} className="mb-2 mb-xxl-4">
                                     <div className="form-check">
                                       <input
                                         className="form-check-input"
@@ -306,7 +324,7 @@ const NewDepartment = ({ history }) => {
                                         onChange={(e) => onChangeModules(e)}
                                         onBlur={validationType.handleBlur}
                                       />
-                                      <label className="form-check-label">
+                                      <label className="form-check-label cell-min-height">
                                         {`${module.name}`}
                                       </label>
                                     </div>
@@ -315,8 +333,10 @@ const NewDepartment = ({ history }) => {
                               })}
                             </>
                           ) : null}
+                      </div>
+                          
                         
-                      </Row>
+                      </div>
                     </CardBody>
                   </Card>
                 </Col>
@@ -324,6 +344,9 @@ const NewDepartment = ({ history }) => {
               
           </Form>
         </Container>
+        <div className="content-footer pt-2 px-4 mt-4 mx-4">
+          <p>{new Date().getFullYear()} © JS Tour & Travel</p>
+        </div>
       </div>
     </>
   );

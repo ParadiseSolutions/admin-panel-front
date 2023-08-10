@@ -5,6 +5,8 @@ import { createRol } from "../../Utils/API/Roles";
 import { useSelector, useDispatch } from "react-redux";
 import BoatImage from "../../Components/Assets/images/boat.png";
 import Inter1 from '../../Components/Assets/images/Intersection1.svg'
+import Inter2 from '../../Components/Assets/images/Intersection2.svg'
+import Inter3 from '../../Components/Assets/images/Intersection4-5.svg'
 import {
   Container,
   Row,
@@ -98,7 +100,7 @@ const NewRol = ({ history }) => {
           if (resp.data.status === 201) {
             Swal.fire(
               "Created!",
-              "The Rol has been created.",
+              "The Role has been created.",
               "success"
             ).then(() => {
               history.goBack();
@@ -121,13 +123,9 @@ const NewRol = ({ history }) => {
   });
   return (
     <>
-      <div className="page-content">
+      <div className="page-content pb-0 px-0">
         <Container fluid className="px-5">
-          <div className="">
-            <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
-              + ADD NEW ROLE
-            </h1>
-          </div>
+          
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -136,13 +134,69 @@ const NewRol = ({ history }) => {
             }}
             className="custom-validation"
           >
+            <Row>
+              <Col md="12" className="d-flex justify-content-between align-items-baseline mb-4">
+              <div className="d-flex">
+                <h1
+                  className="fw-bold text-paradise mb-2"  style={{fontSize:"3.5rem"}}              
+                >
+                  <i className="mdi mdi-plus me-1" /> ADD NEW ROLE
+                </h1>
+              </div>
+              <div className="d-flex justify-content-end align-items-baseline">
+                <div className="text-sm-end mx-2">
+                {validation ? (
+                  <>
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light border-3 fw-bold"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    <i className="uil-angle-double-left" />
+                    Back
+                  </Button>
+                  </>
+                  ) : (
+                    <>
+                  <Button
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light border-3 fw-bold"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    <i className="uil-angle-double-left" />
+                    Back
+                  </Button>
+                  </>
+                  )}
+                </div>
+                <div className="text-sm-end">
+                  <Button
+                    type="submit"                    
+                    className="waves-effect waves-light btn btn-orange border-3"
+                    // onClick={() => onClickNewContactProvider()}
+                  >
+                    
+                    Create Role
+                  </Button>
+                </div>
+              </div>
+                
+              </Col>
+            </Row>
             <Row className="g-5">
               
-                  <Col lg={4}>
-                    <Card className="mb-5">
-                    <CardHeader className="d-flex flex-row justify-content-between bg-paradise pb-2 pt-3">                          
+                  <Col lg={4} className="align-items-stretch">
+                    <Card className="mb-4">
+                    <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow" style={{backgroundImage:'url(' + Inter1 + ')',
+                    backgroundSize:'contain', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'right'}}>                          
                           <h5 className="text-white">+ General Information</h5>
-                        <img src={Inter1} alt='inter1' style={{width: '100px', marginTop:'-15px', marginRight:'-20px'}} />
+                        
                     </CardHeader>
                     <CardBody className="d-grid p-5">
                     
@@ -172,30 +226,7 @@ const NewRol = ({ history }) => {
                           </div>
 
                         </Row>
-                        {validation ? (
-                          <>
-                            <Button
-                              color="primary"
-                              type="submit"
-                              className="waves-effect waves-light"
-                            >
-                              <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Role
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button
-                              color="secondary"
-                              type="button"
-                              className="bg-secondary"
-                              // onClick={toggleCategory}
-                            >
-                              <i className=" mdi mdi-plus-circle-outline me-1" />
-                              Create New Role
-                            </Button>
-                          </>
-                        )}
+                        
                       </CardBody>
                     </Card>
                     <div style={{ border: "none" }}>
@@ -207,44 +238,53 @@ const NewRol = ({ history }) => {
                     </div>
                   </Col>
                   <Col lg={4} className="d-flex align-items-stretch">
-                  <Card style={{ maxHeight: "87vh" }} className="border-0">
-                    <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                  <Card className="border-0 w-100 mb-0">
+                    <CardHeader className="justify-content-center bg-paradise pt-3 pb-2 shadow" style={{backgroundImage:'url(' + Inter2 + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'left'}}>
                           <h5 className="text-white">+ Select Members</h5>
                     </CardHeader>
-                      <CardBody className="overflow-auto">
-                        <Row className="justify-content-center mt-4">
-                          {dataUsers ? (
-                            <>
-                              {map(dataUsers, (user, index) => {
-                                return (
-                                  <div
-                                    key={index}
-                                    className="controls my-2 mx-5 px-5"
-                                  >
-                                    <div className="form-check px-5">
-                                      <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        value={user.id}
-                                        name={validationType.values.members}
-                                        onChange={(e) => onChangeMembers(e)}
-                                      />
-                                      <label className="form-check-label">
-                                        {`${user.first_name} ${user.last_name}`}
-                                      </label>
-                                    </div>
+                    <CardBody className="overflow-auto">
+                      <div className="justify-content-center">
+                        <div className="table-two-column mx-2 mx-xxl-4">
+                        {dataUsers ? (
+                          <>
+                            {map(dataUsers, (user, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="controls mb-2 mb-xxl-4"
+                                >
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      value={user.id}
+                                      name={validationType.values.members}
+                                      onChange={(e) => onChangeMembers(e)}
+                                    />
+                                    <label className="form-check-label cell-min-height">
+                                      {`${user.first_name} ${user.last_name}`}
+                                    </label>
                                   </div>
-                                );
-                              })}
-                            </>
-                          ) : null}
-                        </Row>
-                      </CardBody>
+                                </div>
+                              );
+                            })}
+                          </>
+                        ) : null}
+                        </div>
+                        
+                      </div>
+                    </CardBody>
                     </Card>
                   </Col>
                   <Col lg={4} className="d-flex align-items-stretch">
-                  <Card className='px-2 pt-0'>
-                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow">
+                  <Card className='px-2 pt-0 mb-0 w-100'>
+                    <Row className="justify-content-center bg-paradise pt-3 pb-2 shadow" style={{backgroundImage:'url(' + Inter3 + ')',
+                    backgroundSize:'cover', 
+                    backgroundRepeat:'no-repeat', 
+                    backgroundPosition:'left'}}>
                           <h5 className="text-white">+ Select Actions</h5>
                         </Row>
                       <CardBody className="overflow-auto">
@@ -283,6 +323,9 @@ const NewRol = ({ history }) => {
             </Row>
           </Form>
         </Container>
+        <div className="content-footer pt-2 px-4 mt-4 mx-4">
+          <p>2023 © JS Tour & Travel</p>
+        </div>
       </div>
     </>
   );

@@ -12,6 +12,7 @@ import {
   getSeasonalityAPI,
   deleteOverriteDate,
   deleteSchedule,
+  triggerUpdate,
 } from "../../../Utils/API/Tours";
 import AddNewScheduleModal from "../../../Components/Common/Modals/ScheduleModals/newSchedule";
 import EditScheduleModal from "../../../Components/Common/Modals/ScheduleModals/editSchedule";
@@ -108,8 +109,8 @@ const Schedules = ({ tourData, toggle }) => {
 
   useEffect(() => {
     if (seasonalityData.length > 0) {
-      setDataFromEdit(seasonalityData.from)
-      setDataToEdit(seasonalityData.to)
+      setDataFromEdit(seasonalityData.from);
+      setDataToEdit(seasonalityData.to);
     }
   }, [seasonalityData]);
   //delete season
@@ -119,6 +120,7 @@ const Schedules = ({ tourData, toggle }) => {
         // history.goBack();
       });
       getSeasonsListAPI(tourData.id).then((resp) => {
+        triggerUpdate();
         // setSeasonsData(resp.data.data);
       });
     });
@@ -131,6 +133,7 @@ const Schedules = ({ tourData, toggle }) => {
       Swal.fire("Deleted!", "Time has been deleted.", "success");
 
       getScheduleDatesOverrideAPI(TourID).then((resp) => {
+        triggerUpdate();
         setDatesOverrideData(resp.data.data);
       });
     });
@@ -169,43 +172,45 @@ const Schedules = ({ tourData, toggle }) => {
         .then((resp) => {
           // console.log(resp.data);
           if (resp.data.status === 200) {
-            Swal.fire("Created!", "Seasonality has been created.", "success").then(
-              () => {
-                refresh()
-                // history.goBack();
-                Swal.fire({
-                  title: 'Congratulation',
-                  text: "This tour has been created!",
-                  icon: 'success',
-                  showCancelButton: true,
-                  confirmButtonColor: '#F6851F',
-                  cancelButtonColor: '#d33',
-                  cancelButtonText: 'Save & Close!',
-                  confirmButtonText: 'Save & New'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    history.push('/tours/new')
-                  }else{
-                    history.push('/tours')
-                  }
-                })
-              }
-            );
+            triggerUpdate();
+            Swal.fire(
+              "Created!",
+              "Seasonality has been created.",
+              "success"
+            ).then(() => {
+              refresh();
+              // history.goBack();
+              Swal.fire({
+                title: "Congratulation",
+                text: "This tour has been created!",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#F6851F",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Save & Close!",
+                confirmButtonText: "Save & New",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  history.push("/tours/new");
+                } else {
+                  history.push("/tours");
+                }
+              });
+            });
           }
         })
         .catch((error) => {
           let errorMessages = [];
-					Object.entries(error.response.data.data).map((item) => {
-						errorMessages.push(item[1]);
-					});
+          Object.entries(error.response.data.data).map((item) => {
+            errorMessages.push(item[1]);
+          });
 
-					Swal.fire(
-						"Error!",
-						// {error.response.},
-						String(errorMessages[0])
-					);
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(errorMessages[0])
+          );
         });
-        
     },
   });
 
@@ -224,18 +229,18 @@ const Schedules = ({ tourData, toggle }) => {
             <Col className="col-8">
               <section className="d-flex justify-content-between mb-4">
                 <h2 className="text-paradise font-bold">Schedule</h2>
-                <Button                  
+                <Button
                   type="button"
                   className="font-16 btn-block btn-orange"
                   onClick={() => setNewSchedule(true)}
                 >
                   + New Schedule
                 </Button>
-              </section>                
+              </section>
               <section className="table-responsive border-top mb-5">
-                <Table className="table mb-0" >
-                  <thead >
-                    <tr >
+                <Table className="table mb-0">
+                  <thead>
+                    <tr>
                       <th className="border-0">Product</th>
                       <th className="border-0">Type</th>
                       <th className="border-0">Start Times</th>
@@ -268,7 +273,9 @@ const Schedules = ({ tourData, toggle }) => {
                                   ? "-"
                                   : `${schedule.duration} ${schedule.units}`}{" "}
                               </td>
-                              <td>{schedule.end_date}</td>
+                              <td>
+                                {schedule.runs === "7,1,5,2,6,3,0,4" ? 'Daily' : ''}
+                                </td>
                               <td>
                                 <div
                                   style={{ cursor: "pointer" }}
@@ -284,7 +291,7 @@ const Schedules = ({ tourData, toggle }) => {
                                     <i
                                       className="mdi mdi-pencil-outline font-size-18"
                                       id="edittooltip"
-                                      style={{cursor:"pointer"}}
+                                      style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
@@ -325,14 +332,14 @@ const Schedules = ({ tourData, toggle }) => {
                 <h2 className="text-paradise font-bold">
                   Override Calendar Dates
                 </h2>
-                <Button                  
+                <Button
                   type="button"
                   className="font-16 btn-block btn-orange"
                   onClick={() => setNewOverriteDate(!newOverriteDate)}
                 >
                   + New Entry
                 </Button>
-              </section>              
+              </section>
               <section className="table-responsive border-top mb-5">
                 <Table className="table mb-0">
                   <thead>
@@ -378,7 +385,7 @@ const Schedules = ({ tourData, toggle }) => {
                                     <i
                                       className="mdi mdi-pencil-outline font-size-18"
                                       id="edittooltip"
-                                      style={{cursor:"pointer"}}
+                                      style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
@@ -415,24 +422,37 @@ const Schedules = ({ tourData, toggle }) => {
                     ) : null}
                   </tbody>
                 </Table>
-              </section>                
-              
+              </section>
             </Col>
             <Col>
               <section className="mb-3">
                 <div
                   style={{
-                    backgroundColor: "rgba(0, 157, 255, 0.2)",                    
+                    backgroundColor: "rgba(0, 157, 255, 0.2)",
                   }}
                   className="p-3"
                 >
                   <p style={{ fontSize: "15px", color: "#495057" }}>
-                    <i class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center" style={{width:"32px",height:"32px"}}></i> In this tab you will manage calendar availability and tour schedule. <br /> 
+                    <i
+                      class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                      style={{ width: "32px", height: "32px" }}
+                    ></i>{" "}
+                    In this tab you will manage calendar availability and tour
+                    schedule. <br />
                   </p>
                   <ol>
-                    <li>Define a specific date range for a tour, in case the tour is seasonal</li>
-                    <li>Add multiple schedules. Assign a specific schedule to one product</li>
-                    <li>Override availability (temporarily disable bookings for certain dates)</li>
+                    <li>
+                      Define a specific date range for a tour, in case the tour
+                      is seasonal
+                    </li>
+                    <li>
+                      Add multiple schedules. Assign a specific schedule to one
+                      product
+                    </li>
+                    <li>
+                      Override availability (temporarily disable bookings for
+                      certain dates)
+                    </li>
                   </ol>
                 </div>
               </section>
@@ -535,9 +555,13 @@ const Schedules = ({ tourData, toggle }) => {
                 </Col>
               </Row>
               <section className="mt-4">
-                <img src={ScheduleDolphins} alt="dolphins" className="img-fluid"/>
+                <img
+                  src={ScheduleDolphins}
+                  alt="dolphins"
+                  className="img-fluid"
+                />
               </section>
-            </Col>            
+            </Col>
             <div className="col-12 d-flex justify-content-end mt-5">
               <Button
                 color="paradise"
@@ -558,7 +582,6 @@ const Schedules = ({ tourData, toggle }) => {
                 <i className="uil-angle-double-right mx-1 " />
               </Button>
             </div>
-            
           </Row>
         </TabPane>
       </Form>

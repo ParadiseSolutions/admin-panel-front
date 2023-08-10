@@ -251,9 +251,9 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                       
                       border: "none",
                     }}
-                    className="waves-effect waves-light mb-3 btn btn-orange"
+                    className="waves-effect waves-light mb-3 btn btn-orange px-4"
                   >
-                    Save Changes
+                    + Add Cart
                   </Button>
                 </Col>
               </Row>

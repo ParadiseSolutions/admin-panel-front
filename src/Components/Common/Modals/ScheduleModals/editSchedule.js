@@ -7,6 +7,7 @@ import {
   getPricesPricingAPI,
   putSchedule,
   getScheduleEditDataAPI,
+  triggerUpdate,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -126,25 +127,25 @@ const EditScheduleModal = ({
       detailData.forEach((element) => {
         newArr.push(element.split(" "));
       });
-      setEditTimeM1(newArr[0][0]);
-      setEditFrameM1(newArr[0][1]);
-      setEditTimeM2(newArr[1][0]);
-      setEditFrameM2(newArr[1][1]);
-      setEditTimeM3(newArr[2][0]);
-      setEditFrameM3(newArr[2][1]);
-      setEditTimeM4(newArr[3][0]);
-      setEditFrameM4(newArr[3][1]);
-      setEditTimeM5(newArr[4][0]);
-      setEditFrameM5(newArr[4][1]);
-      setEditTimeM6(newArr[5][0]);
-      setEditFrameM6(newArr[5][1]);
-      // console.log(newArr);
+      
+      setEditTimeM1( newArr[0] ? newArr[0][0] : 0);
+      setEditFrameM1(newArr[0] ?  newArr[0][1] : 0);
+      setEditTimeM2(newArr[1] ?  newArr[1][0] : 0);
+      setEditFrameM2(newArr[1] ?  newArr[1][1] : 0);
+      setEditTimeM3(newArr[2] ? newArr[2][0] : 0);
+      setEditFrameM3(newArr[2] ? newArr[2][1] : 0);
+      setEditTimeM4(newArr[3] ? newArr[3][0] : 0 );
+      setEditFrameM4(newArr[3] ? newArr[3][1] : 0);
+      setEditTimeM5(newArr[4] ? newArr[4][0] : 0);
+      setEditFrameM5(newArr[4] ? newArr[4][1] : 0);
+      setEditTimeM6(newArr[5] ? newArr[5][0] : 0);
+      setEditFrameM6(newArr[5] ? newArr[5][1] : 0);
     }
     setTypeToEdit(dataEdit.type_id);
     setProductToEdit(dataEdit.price_id);
     setFromDateEdit(dataEdit.from_date);
     setToDateEdit(dataEdit.to_date);
-    setDayList(dataEdit.runs)
+    setDayList(dataEdit.runs);
   }, [dataEdit, editSchedule]);
 
   //initial Data
@@ -174,6 +175,9 @@ const EditScheduleModal = ({
   const onAddDay = (day) => {
     const selection = +day;
     const selectionFlag = daysList.includes(selection);
+    if (selection === 7) {
+      setDayList("7,1,5,2,6,3,0,4")
+    }
     if (!selectionFlag) {
       setDayList([...daysList, +day]);
     }
@@ -255,7 +259,7 @@ const EditScheduleModal = ({
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
       const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
       const startTimeIntervalsTo = `${values.to_interval} ${timeFrameIntervalTo}`;
-      const daysListString = daysList.toString();
+      const daysListString = daysList ? daysList.toString() : '';
 
       let multiTimesList = [];
       if (values.first_field_multi !== "") {
@@ -295,11 +299,13 @@ const EditScheduleModal = ({
         duration: values.duration ? values.duration : "",
         price_id: productSelected,
       };
-console.log(data)
-putSchedule(id, data)
+
+      
+      putSchedule(id, data)
         .then((resp) => {
-          if (resp.data.status === 201) {
-            Swal.fire("Success!", "Schedule has been created", "success").then(
+          triggerUpdate();
+          if (resp.data.status === 200) {
+            Swal.fire("Success!", "Schedule has been Edited", "success").then(
               () => {
                 setEditSchedule(false);
                 refresh();
@@ -1009,11 +1015,13 @@ putSchedule(id, data)
                     </div>
                   </Col>
                 ) : null}
-                
-                  <Col className="col-12 mt-3">
-                    <CheckBoxs onAddDay={onAddDay} scheduleEditID={scheduleEditID} />
-                  </Col>
-                
+
+                <Col className="col-12 mt-3">
+                  <CheckBoxs
+                    onAddDay={onAddDay}
+                    scheduleEditID={scheduleEditID}
+                  />
+                </Col>
 
                 <Col className="col-9 mt-3">
                   <Row className="">

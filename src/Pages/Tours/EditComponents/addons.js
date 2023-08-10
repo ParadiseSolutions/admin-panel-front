@@ -13,11 +13,12 @@ import {
   getAddonsPricingAPI,
   deletePriceAPI,
   deleteAddonAPI,
+  triggerUpdate,
 } from "../../../Utils/API/Tours";
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
 
-import { Name, Code, Members, Price } from "./PricingTables/DepartmentsCols";
+import { Name, Code, Members, Price, Active } from "./PricingTables/PricingCols";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -64,6 +65,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           .then((resp) => {
             getPricesPricingAPI(id).then((resp) => {
               setPricesData(resp.data.data);
+              triggerUpdate();
             });
             Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })
@@ -85,24 +87,22 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
     }).then((resp) => {
       if (resp.isConfirmed) {
         deleteAddonAPI(depData.id)
-          .then((resp) => {
-            getAddonsPricingAPI(id).then((resp) => {
-              setAddonsData(resp.data.data);
-            });
-            Swal.fire("Deleted!", "The Addon has been deleted.", "success");
-          })
-          .catch((error) => {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          });
+        .then((response) => {
+          refreshTable()
+          console.log('si fue')
+        }).catch((error) => {
+          console.log('no fue')
+          let errorMessages = [];
+          // Object.entries(error.response.data.message).map((item) => {
+          //   errorMessages.push(item[1]);
+          // });
+  
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(error.response.data.message)
+          );
+        });
       }
     });
   };
@@ -165,7 +165,15 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           return <Price {...cellProps} />;
         },
       },
-
+      {
+        Header: "Active",
+        accessor: "active",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Active {...cellProps} />;
+        },
+      },
       {
         Header: "Action",
         accessor: "action",
@@ -187,7 +195,6 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
                 </UncontrolledTooltip>
               </div>
               <Link
-                to="#"
                 className="text-danger"
                 onClick={() => {
                   const depData = cellProps.row.original;

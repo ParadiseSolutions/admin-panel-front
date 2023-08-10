@@ -1,11 +1,38 @@
 import axios from "axios";
 import { API_URL, options } from "../index";
 
+//trigger update
+export const triggerUpdate = () => {
+  const url = `${API_URL}/tours/updatePivotTables`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 
+// bulk products update
+export const bulkUpdate = (id, body) => {
+  const url = `${API_URL}/prices/${id}/bulk-update`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
 
-//general request
-export const statusUpdateTour = (id, body) => {
+  //general request
+  export const statusUpdateTour = (id, body) => {
     const url = `${API_URL}/tours/${id}/status`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+
+  export const statusUpdatePrice = (id, body) => {
+    const url = `${API_URL}/prices/${id}/status`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+  export const statusUpdateAddon = (id, body) => {
+    const url = `${API_URL}/addons/${id}/status`;
     return axios.put (url, body, {
       headers: options,
     });

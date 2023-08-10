@@ -51,29 +51,29 @@ const onClickDay = (day) =>{
       <div className="row">
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={1} checked={monChecked} onChange={(e) => {
-            onClickDay(e.target.value)
             setMonChecked(!monChecked)
+            onClickDay(e.target.value)
             }} />
           <Label className="form-label">Monday</Label>
         </div>
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={2} checked={tueChecked} onChange={(e) => {
-            onClickDay(e.target.value)
             setTueChecked(!tueChecked)
+            onClickDay(e.target.value)
             }} />
           <Label className="form-label">Tuesday</Label>
         </div>
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={3} checked={wenChecked} onChange={(e) => {
-            onClickDay(e.target.value)
             setWenChecked(!wenChecked)
+            onClickDay(e.target.value)
             }} />
           <Label className="form-label">Wednesday</Label>
         </div>
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={4} checked={thuChecked} onChange={(e) => {
-            onClickDay(e.target.value)
             setThuChecked(!thuChecked)
+            onClickDay(e.target.value)
             }} />
           <Label className="form-label">Thursday</Label>
         </div>
@@ -100,6 +100,13 @@ const onClickDay = (day) =>{
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={7} checked={dailyChecked} onChange={(e) => {
             setDailyChecked(!dailyChecked)
+            setMonChecked(false)
+            setTueChecked(false)
+            setWenChecked(false)
+            setThuChecked(false)
+            setFriChecked(false)
+            setSatChecked(false)
+            setSunChecked(false)
             onClickDay(e.target.value)}} />
           <Label className="form-label">Daily</Label>
         </div>

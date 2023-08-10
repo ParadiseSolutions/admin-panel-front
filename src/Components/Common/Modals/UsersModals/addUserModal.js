@@ -160,7 +160,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
               <Row>
                 <Col lg={5}>
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Name</Label>
+                    <Label className="form-label">First Name</Label>
                     <Input
                       name="first_name"
                       placeholder="Johann"
@@ -348,7 +348,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                 </Col>
                 <Col className="col-5 mx-4">
                   <div className="form-outline mb-4">
-                    <Label className="form-label">Rol</Label>
+                    <Label className="form-label">Role</Label>
 
                     <Input
                       type="select"

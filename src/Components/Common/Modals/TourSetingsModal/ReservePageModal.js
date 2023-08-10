@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from "react";
 import OneVariantIMG from "../../../Assets/images/reservePages/onevariant.jpg";
 import TwoVariantsIMG from "../../../Assets/images/reservePages/twovariants.jpg";
+import TwoVariantsIMG2 from "../../../Assets/images/reservePages/twovariantspreview.jpg";
 import ThreeVariantsIMG from "../../../Assets/images/reservePages/threevariants.jpg";
 import ChoseActivityIMG from "../../../Assets/images/reservePages/chooseactivity.jpg";
 import {
   getTourAPI,
   updateBookingSettings,
 } from "../../../../Utils/API/Tours/setingsTemplate";
-import {
-  Row,
-  Col,
-  Modal,
-  Form,
-  Label,
-  Input,
-  Button,
-} from "reactstrap";
+import { triggerUpdate } from "../../../../Utils/API/Tours";
+import { Row, Col, Modal, Form, Label, Input, Button } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-
 const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
   const [instructionArea, setInstructionArea] = useState(false);
   const [titleExample, setTitleExample] = useState("Example Title");
@@ -90,6 +83,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
               "Booking Form Information has been edited",
               "success"
             ).then(() => {
+              triggerUpdate();
               setReserveModal(!reserveModal);
             });
           }
@@ -186,7 +180,11 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <img
                     src={OneVariantIMG}
                     alt="one-variant"
-                    style={{ width: "350px", margin: "10px", marginTop:'13px' }}
+                    style={{
+                      width: "350px",
+                      margin: "10px",
+                      marginTop: "13px",
+                    }}
                   />
                 </div>
               </Col>
@@ -207,7 +205,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                 </div>
                 <div className="col-1">
                   <img
-                    src={TwoVariantsIMG}
+                    src={TwoVariantsIMG2}
                     alt="one-variant"
                     style={{ width: "350px", margin: "10px" }}
                   />
@@ -295,7 +293,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
 
             {instructionArea ? (
               <Row className="row-12">
-                <Col>
+                <div style={{width: "calc(100% - 500px)"}}>
                   <div className="form-outline mb-2 col-11">
                     <Label className="form-label">Instruction Title</Label>
                     <Input
@@ -306,11 +304,10 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       value={titleExample}
                       maxLength={50}
                     />
-                    
-                      <p style={{fontSize: '12px', fontWeight:'lighter'}}>
+
+                    <p style={{ fontSize: "12px", fontWeight: "lighter", textAlign: "right" }}>
                       * Title should be max 50 chars
-                      </p>
-                   
+                    </p>
                   </div>
                   <div className="form-outline mb-2 col-11">
                     <Label className="form-label">
@@ -320,86 +317,77 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       name="description"
                       placeholder=""
                       type="textarea"
-                      style={{ height: 200 }}
+                      style={{ height: 147 }}
                       onChange={(e) =>
                         setInstructionDescriptionExample(e.target.value)
                       }
                       value={instructionDescriptionExample}
                       maxLength={210}
                     />
-                    <p style={{fontSize: '12px', fontWeight:'lighter'}}>
+                    <p style={{ fontSize: "12px", fontWeight: "lighter", textAlign: "right" }}>
                       * Description should be max 210 chars
-                      </p>
+                    </p>
                   </div>
-                </Col>
-                <Col>
-                  <Row
+                </div>
+                <div style={{width:"490px"}}>
+                  <div className="form-outline mb-2 col-11">
+                    <Label className="form-label">
+                      Reserve Page Preview
+                    </Label>
+                  </div>
+                  <div
                     style={{
-                      height: "285px",
-                      backgroundColor: "#3CC6F31A",
-                      marginTop: "28px",
-                      marginRight: "5px",
+                      background: "#FFEEE6",
+                      border: "1px solid #FFDECC",
+                      borderRadius: "4px",
+                      margin: "4px 0",
+                      fontFamily: "Arial, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      color: "#373737",
+                      padding: "16px 24px",
+                      borderRadius: "4px"
                     }}
-                    className="d-flex justify-content-center"
                   >
-                    <Col className="col-12 m-2" style={{ color: "#495057" }}>
-                      <p>
-                        Please use the small preview of your title and text
-                        shown below as a guide to make sure everything fits in
-                        with the rest of the reserve page settings. This is a
-                        small preview with the actual settings of a Reserve
-                        Page. You have a maximum of 50 characters for the Title
-                        Field and 210 characters for the Text Field.
-                      </p>
-                    </Col>
-                    <Col className="col-12 d-flex justify-content-center">
-                      <div className="form-outline mb-2">
-                        <Input
-                          name="Instruction_title"
-                          placeholder=""
-                          style={{
-                            width: "425px",
-                            height: "39px",
-                            border: "1px solid #3CC6F380",
-                            borderRadius: "4px",
-                            textAlign: "center",
-                            color: "#707070",
-                            fontWeight: "bold",
-                            fontSize: "16px",
-                            fontFamily: "Arial, sans-serif",
-                            fontWeight: "700"
-                          }}
-                          type="text"
-                          value={titleExample}
-                          disabled
-                        />
-                      </div>
-                    </Col>
-                    <Col className="col-12 d-flex justify-content-center">
-                      <div className="form-outline mb-2">
-                        <Input
-                          name="instruction_description"
-                          placeholder=""
-                          style={{
-                            width: "470px",
-                            height: "90px",
-                            border: "1px solid #3CC6F380",
-                            borderRadius: "4px",
-                            textAlign: "center",
-                            fontFamily: "Arial, sans-serif",
-                            fontSize: "13px",
-                            fontWeight: "400",
-                            lineHeight: "17px",
-                            padding: "16px 24px"
-                          }}
-                          type="textarea"
-                          value={instructionDescriptionExample}
-                          disabled
-                        />
-                      </div>
-                    </Col>
-                  </Row>
-                </Col>
+                    <i
+                      class="fa fa-info"
+                      style={{
+                        fontSize: "10px",
+                        borderRadius: "29px",
+                        border: "2px solid #D54500",
+                        color: "#D54500",
+                        padding: "1px 4px 3px 4px",
+                        width: "16px",
+                        height: "16px",
+                        marginBottom: "4px"
+                      }}
+                    /><br></br>
+                    {titleExample}
+                    <p
+                      name="instruction_description"
+                      placeholder=""
+                      style={{
+                        marginBottom: "0",
+                        fontFamily: "Arial",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        fontSize: "13px",
+                        lineHeight: "17px",
+                        marginTop: "8px",
+                        textAlign: "center",
+                        color: "#000000"
+                      }}
+                    >
+                      {instructionDescriptionExample}
+                    </p>
+                  </div>
+                  <img
+                    src={templateType === 1 ? OneVariantIMG : templateType === 2 ? TwoVariantsIMG2 : templateType === 3 ? ThreeVariantsIMG : templateType === 4 ? ChoseActivityIMG : TwoVariantsIMG2}
+                    alt="two-variant"
+                    style={{ width: "472.5px", marginTop: "-1px", marginLeft: "-1px"}}
+                  />
+                </div>
               </Row>
             ) : null}
             <Row className="row-12 d-flex justify-content-end mt-3">

@@ -8,6 +8,7 @@ import {
   deleteSeasonalityAPI,
   statusSeasonalityAPI,
   putSeasonalityAPI,
+  triggerUpdate
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -54,7 +55,7 @@ const HighSeasons = ({ tourData, toggle }) => {
   const [dateFromEdit, setDataFromEdit] = useState(null);
   const [dateToEdit, setDataToEdit] = useState(null);
   const [seasonToEdit, setSeasonToEdit] = useState(null);
-  const [isEdit, setIsEdit] = useState(false)
+  const [isEdit, setIsEdit] = useState(false);
   const [idEdit, setIDEdit] = useState(null);
   const onEditSeason = (data) => {
     // console.log(data);
@@ -164,11 +165,12 @@ const HighSeasons = ({ tourData, toggle }) => {
             if (resp.data.status === 200) {
               getSeasonsListAPI(tourData.id).then((resp) => {
                 setSeasonsData(resp.data.data);
+                triggerUpdate()
               });
               Swal.fire("Edited!", "Season has been edited.", "success").then(
                 () => {
                   // history.goBack();
-                  setIsEdit(false)
+                  setIsEdit(false);
                 }
               );
             }
@@ -178,7 +180,7 @@ const HighSeasons = ({ tourData, toggle }) => {
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
             });
-  
+
             Swal.fire(
               "Error!",
               // {error.response.},
@@ -237,30 +239,34 @@ const HighSeasons = ({ tourData, toggle }) => {
           <Col className="col-9">
             <Row>
               <Col className="col-12">
-              <div
-                style={{
-                  backgroundColor: "rgba(0, 157, 255, 0.2)",
-                  
-                }}
-                className="p-3"
-              >
-                <p style={{ fontSize: "16px", color: "#495057" }} className="m-0">                
-                <i class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center" style={{width:"32px",height:"32px"}}></i> In this tab you can add the dates for the different seasonal
-                  pricing. Select the name of the season, add the start and end
-                  date, and click on “add”. You can add multiple entries under
-                  the same season name. Once you create an entry, the record
-                  will show in the table below.
-                </p>
-              </div>
+                <div
+                  style={{
+                    backgroundColor: "rgba(0, 157, 255, 0.2)",
+                  }}
+                  className="p-3"
+                >
+                  <p
+                    style={{ fontSize: "16px", color: "#495057" }}
+                    className="m-0"
+                  >
+                    <i
+                      class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                      style={{ width: "32px", height: "32px" }}
+                    ></i>{" "}
+                    In this tab you can add the dates for the different seasonal
+                    pricing. Select the name of the season, add the start and
+                    end date, and click on “add”. You can add multiple entries
+                    under the same season name. Once you create an entry, the
+                    record will show in the table below.
+                  </p>
+                </div>
               </Col>
-              
             </Row>
             <Row className="col-12 d-flex mt-5">
               <Col className="col-4 d-flex justify-content-center border-end border-4 border-paradise">
                 <Row className="d-flex flex-column mx-4">
-                  
-                    <h1 className="text-paradise">New Date Entry</h1>
-                  
+                  <h1 className="text-paradise">New Date Entry</h1>
+
                   <Col className="">
                     <div className="form-outline my-2">
                       <Label className="form-label">Season Name</Label>
@@ -269,9 +275,10 @@ const HighSeasons = ({ tourData, toggle }) => {
                         name=""
                         onChange={(e) => {
                           setSeasonSelected(e.target.value);
-                          setSeasonToEdit(+e.target.value)
+                          setSeasonToEdit(+e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
+                        disabled={!activeDep}
                       >
                         <option>Select....</option>
                         {map(seasonNames, (season, index) => {
@@ -364,9 +371,9 @@ const HighSeasons = ({ tourData, toggle }) => {
                         outline
                         className="waves-effect waves-light col-12"
                         type="submit"
+                        disabled={!activeDep}
                       >
-                        {isEdit ? "+ Edit" : '+ Add'}
-                        
+                        {isEdit ? "+ Edit" : "+ Add"}
                       </Button>
                     </div>
                   </Col>
@@ -416,7 +423,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                                     <div
                                       onClick={() => {
                                         onEditSeason(season);
-                                        setIsEdit(true)
+                                        setIsEdit(true);
                                       }}
                                       className="text-success"
                                     >
@@ -470,16 +477,15 @@ const HighSeasons = ({ tourData, toggle }) => {
                 outline
                 className="waves-effect waves-light col-2 mx-4"
                 type="button"
-                onClick={() => toggle('2')}
+                onClick={() => toggle("2")}
               >
                 <i className="uil-angle-double-left" />
                 Back
               </Button>
               <Button
-                
                 type="button"
                 className="font-16 btn-block col-2 btn-orange"
-                onClick={() => toggle('4')}
+                onClick={() => toggle("4")}
               >
                 Continue
                 <i className="uil-angle-double-right mx-1 " />

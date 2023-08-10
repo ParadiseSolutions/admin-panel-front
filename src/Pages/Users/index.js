@@ -199,7 +199,7 @@ const Users = () => {
     setEditModal(!editModal);
   };
   return (
-    <div className="page-content">
+    <div className="page-content pb-0 px-3">
       <Container fluid>
         <div className=" mx-2">
           <h1
@@ -215,13 +215,12 @@ const Users = () => {
             {loadingData ? (
               <div className="d-flex justify-content-center mt-5">
                 <div
-                  className="spinner-border"
-                  style={{ color: "#3DC7F4" }}
+                  className="spinner-border text-orange"
                   role="status"
                 >
                   <span className="sr-only">Loading...</span>
                 </div>
-                <h2 className="mx-5" style={{ color: "#3DC7F4" }}>
+                <h2 className="mx-5 text-orange">
                   Loading...
                 </h2>
               </div>
@@ -259,6 +258,9 @@ const Users = () => {
           onClickEdit={onClickEdit}
         />
       </Container>
+      <div className="content-footer pt-2 px-4 mt-3 mx-4">
+          <p>{new Date().getFullYear()} © JS Tour & Travel</p>
+        </div>
     </div>
   );
 };

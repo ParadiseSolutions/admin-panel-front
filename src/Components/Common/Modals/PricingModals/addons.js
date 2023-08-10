@@ -5,6 +5,7 @@ import {
   getAddonAPI,
   postAddonsAPI,
   putAddonAPI,
+  triggerUpdate,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -21,7 +22,16 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
-import { setDecimalFormat, setRateFormat, calcNetRate, calcYouSave, calcEffRate, calcCommission, calcDeposit, calcNetPrice } from "../../../../Utils/CommonFunctions";
+import {
+  setDecimalFormat,
+  setRateFormat,
+  calcNetRate,
+  calcYouSave,
+  calcEffRate,
+  calcCommission,
+  calcDeposit,
+  calcNetPrice,
+} from "../../../../Utils/CommonFunctions";
 
 const Addons = ({
   newAddon,
@@ -61,9 +71,7 @@ const Addons = ({
   const [matchQuantitySelected, setMatchQuantitySelected] = useState(
     dataEdit ? dataEdit?.match_qty_id : ""
   );
-  const [balance, setBalance] = useState(
-    dataEdit?.active === 1 ? true : false
-  );
+  const [balance, setBalance] = useState(dataEdit?.active === 1 ? true : false);
   useEffect(() => {
     if (newAddon) {
       getPricingOptionsAPI(52).then((resp) => {
@@ -78,15 +86,12 @@ const Addons = ({
       getPricingOptionsAPI(55).then((resp) => {
         setPriceCollect(resp.data.data);
       });
-      
     }
-
   }, [newAddon]);
 
   useEffect(() => {
-    setBalance(dataEdit?.active === 1 ? true : false)
+    setBalance(dataEdit?.active === 1 ? true : false);
   }, [dataEdit]);
-
 
   // console.log(priceOptions);
   // console.log(priceTypeSelected);
@@ -125,15 +130,15 @@ const Addons = ({
       balance_due: dataEdit?.net_price ? dataEdit?.net_price : "",
     },
     validationSchema: Yup.object().shape({
-      min: Yup.number().positive().integer().nullable(),
-      max: Yup.number().positive().integer().nullable(),
-      rate: Yup.number().positive().nullable(),
-      our_price: Yup.number().positive().required("Field Required"),
+      min: Yup.number().integer().nullable(),
+      max: Yup.number().integer().nullable(),
+      rate: Yup.number().nullable(),
+      our_price: Yup.number().required("Field Required"),
       commission: Yup.number().required("Field Required"),
-      deposit: Yup.number().positive().required("Field Required"),
-      balance_due: Yup.number().positive().required("Field Required"),
+      deposit: Yup.number().required("Field Required"),
+      balance_due: Yup.number().required("Field Required"),
     }),
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: tourData.id,
         match_qty_id: matchQuantitySelected
@@ -155,7 +160,7 @@ const Addons = ({
         show_balance_due: balance,
         price: values.our_price,
         you_save: values.you_save,
-        net_rate: values.rate,
+        net_rate: ((values.rate !== "")?((values.rate > 1) ? values.rate / 100 : values.rate) : values.rate),
         commission: values.commission,
         deposit: values.deposit,
         net_price: values.balance_due,
@@ -164,57 +169,63 @@ const Addons = ({
       };
 
       if (dataEdit) {
-        putAddonAPI(editProductID, data).then((resp) => {
-          // console.log(resp);
-          setNewAddon(false);
-          refreshTable();
-          resetForm({values: ''})
-        }).catch((error) => {
-          if(error.response.data.data === null) {
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(error.response.data.message)
-            );
-          } else {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          }
-        });
+        putAddonAPI(editProductID, data)
+          .then((resp) => {
+            triggerUpdate();
+            // console.log(resp);
+            setNewAddon(false);
+            refreshTable();
+            resetForm({ values: "" });
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
       } else {
-        postAddonsAPI(data).then((resp) => {
-          // console.log(resp);
-          setNewAddon(false);
-          refreshTable();
-          resetForm({values: ''})
-        }).catch((error) => {
-          if(error.response.data.data === null) {
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(error.response.data.message)
-            );
-          } else {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          }
-        });
+        postAddonsAPI(data)
+          .then((resp) => {
+            // console.log(resp);
+            triggerUpdate();
+            setNewAddon(false);
+            refreshTable();
+            resetForm({ values: "" });
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
       }
       refreshTable();
     },
@@ -222,38 +233,74 @@ const Addons = ({
 
   const multipleRateCalcs = (value) => {
     const rate = setRateFormat(value);
-    const commission = calcCommission(validationType.values.our_price, rate, validationType.values.commission);
-    const balance_due = calcNetPrice(validationType.values.our_price, commission, validationType.values.balance_due)
+    const commission = calcCommission(
+      validationType.values.our_price,
+      rate,
+      validationType.values.commission
+    );
+    const balance_due = calcNetPrice(
+      validationType.values.our_price,
+      commission,
+      validationType.values.balance_due
+    );
 
-    validationType.setFieldValue('rate', rate)
+    validationType.setFieldValue("rate", rate);
     validationType.setFieldValue("commission", commission);
-    validationType.setFieldValue('balance_due', balance_due)
+    validationType.setFieldValue("balance_due", balance_due);
     return rate;
-  }
+  };
 
   const multipleOurPriceCalcs = (value) => {
     const our_price = setDecimalFormat(value);
     //const you_save = calcYouSave(our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)
-    const commission = calcCommission(our_price, validationType.values.rate, validationType.values.commission)
-    const balance_due = calcNetPrice(our_price, commission, validationType.values.balance_due)
-    const deposit = calcDeposit(our_price, priceCollectNameSelected, commission, validationType.values.deposit)
+    const commission = calcCommission(
+      our_price,
+      validationType.values.rate,
+      validationType.values.commission
+    );
+    const balance_due = calcNetPrice(
+      our_price,
+      commission,
+      validationType.values.balance_due
+    );
+    const deposit = calcDeposit(
+      our_price,
+      priceCollectNameSelected,
+      commission,
+      validationType.values.deposit
+    );
 
     //validationType.setFieldValue('you_save', you_save)
-    validationType.setFieldValue('deposit', deposit)
-    validationType.setFieldValue('commission', commission)
-    validationType.setFieldValue('balance_due', balance_due)
+    validationType.setFieldValue("deposit", deposit);
+    validationType.setFieldValue("commission", commission);
+    validationType.setFieldValue("balance_due", balance_due);
     return our_price;
-  }
+  };
 
   const multipleCommissionCalcs = (value) => {
-    const commission = setDecimalFormat(value)
+    const commission = setDecimalFormat(value);
 
-    validationType.setFieldValue('commission', commission)
-    validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, commission, validationType.values.deposit))
-    validationType.setFieldValue('balance_due', calcNetPrice(validationType.values.our_price, commission, validationType.values.balance_due))
+    validationType.setFieldValue("commission", commission);
+    validationType.setFieldValue(
+      "deposit",
+      calcDeposit(
+        validationType.values.our_price,
+        priceCollectNameSelected,
+        commission,
+        validationType.values.deposit
+      )
+    );
+    validationType.setFieldValue(
+      "balance_due",
+      calcNetPrice(
+        validationType.values.our_price,
+        commission,
+        validationType.values.balance_due
+      )
+    );
 
     return commission;
-  }
+  };
 
   return (
     <Modal
@@ -428,12 +475,26 @@ const Addons = ({
                         name="collect"
                         onChange={(e) => {
                           setPriceCollectSelected(e.target.value);
-                          setPriceCollectNameSelected(e.target.selectedOptions[0].label);
+                          setPriceCollectNameSelected(
+                            e.target.selectedOptions[0].label
+                          );
                         }}
                         onBlur={(e) => {
                           const value = e.target.value || "";
-                          validationType.setFieldValue('collect', value,
-                          validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, validationType.values.commission, validationType.values.deposit)),validationType.handleBlur)
+                          validationType.setFieldValue(
+                            "collect",
+                            value,
+                            validationType.setFieldValue(
+                              "deposit",
+                              calcDeposit(
+                                validationType.values.our_price,
+                                priceCollectNameSelected,
+                                validationType.values.commission,
+                                validationType.values.deposit
+                              )
+                            ),
+                            validationType.handleBlur
+                          );
                         }}
                       >
                         <option>Select....</option>
@@ -562,10 +623,16 @@ const Addons = ({
               </Row>
               <Row className="col-12 d-flex">
                 <Col className="col-2">
-                <div className="form-outline mb-2" id="our_price">
+                  <div className="form-outline mb-2" id="our_price">
                     <Label className="form-label">Our Price*</Label>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
                       <Input
                         name="our_price"
                         placeholder="0.00"
@@ -573,9 +640,12 @@ const Addons = ({
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
-                          validationType.setFieldValue('our_price', multipleOurPriceCalcs(value));
+                          validationType.setFieldValue(
+                            "our_price",
+                            multipleOurPriceCalcs(value)
+                          );
                         }}
                         value={validationType.values.our_price || ""}
                         invalid={
@@ -598,7 +668,7 @@ const Addons = ({
                   </div>
                 </Col>
                 <Col className="col-2">
-                <div className="form-outline mb-2" id="you_save">
+                  <div className="form-outline mb-2" id="you_save">
                     <Label className="form-label">You Save*</Label>
                     <div className="input-group">
                       <Input
@@ -608,9 +678,12 @@ const Addons = ({
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
-                          validationType.setFieldValue('you_save', setDecimalFormat(value));
+                          validationType.setFieldValue(
+                            "you_save",
+                            setDecimalFormat(value)
+                          );
                         }}
                         value={validationType.values.you_save || ""}
                         invalid={
@@ -626,15 +699,22 @@ const Addons = ({
                           {validationType.errors.you_save}
                         </FormFeedback>
                       ) : null}
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        %
+                      </span>
                     </div>
                     <UncontrolledTooltip placement="top" target="you_save">
-                      This is the amount they save by booking with us compared to the "other guys" from the compare at price.
+                      This is the amount they save by booking with us compared
+                      to the "other guys" from the compare at price.
                     </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                <div className="form-outline mb-2" id="rate">
+                  <div className="form-outline mb-2" id="rate">
                     <Label className="form-label">Rate %</Label>
                     <div className="input-group">
                       <Input
@@ -643,9 +723,12 @@ const Addons = ({
                         type="number"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
-                          validationType.setFieldValue('rate', multipleRateCalcs(value));
+                          validationType.setFieldValue(
+                            "rate",
+                            multipleRateCalcs(value)
+                          );
                         }}
                         value={validationType.values.rate || ""}
                         invalid={
@@ -661,18 +744,31 @@ const Addons = ({
                           {validationType.errors.rate}
                         </FormFeedback>
                       ) : null}
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        %
+                      </span>
                     </div>
                     <UncontrolledTooltip placement="top" target="rate">
-                      The commission rate for the tour that is specified in our service agreement.
+                      The commission rate for the tour that is specified in our
+                      service agreement.
                     </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="col-2">
-                <div className="form-outline mb-2" id="commission">
+                  <div className="form-outline mb-2" id="commission">
                     <Label className="form-label">Commission*</Label>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
                       <Input
                         name="commission"
                         placeholder="0.00"
@@ -680,9 +776,13 @@ const Addons = ({
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
-                          validationType.setFieldValue('commission', multipleCommissionCalcs(value), validationType.handleBlur);
+                          validationType.setFieldValue(
+                            "commission",
+                            multipleCommissionCalcs(value),
+                            validationType.handleBlur
+                          );
                         }}
                         value={validationType.values.commission || ""}
                         invalid={
@@ -699,16 +799,22 @@ const Addons = ({
                         </FormFeedback>
                       ) : null}
                       <UncontrolledTooltip placement="top" target="commission">
-                        The $$ amount that we earn from the sale. 
+                        The $$ amount that we earn from the sale.
                       </UncontrolledTooltip>
                     </div>
                   </div>
                 </Col>
                 <Col className="col-2">
-                <div className="form-outline mb-2" id="deposit">
+                  <div className="form-outline mb-2" id="deposit">
                     <Label className="form-label">Deposit*</Label>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
                       <Input
                         name="deposit"
                         placeholder="0.00"
@@ -716,9 +822,12 @@ const Addons = ({
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
-                          validationType.setFieldValue('deposit', setDecimalFormat(value));
+                          validationType.setFieldValue(
+                            "deposit",
+                            setDecimalFormat(value)
+                          );
                         }}
                         value={validationType.values.deposit || ""}
                         invalid={
@@ -744,7 +853,13 @@ const Addons = ({
                   <div className="form-outline mb-2" id="balance_due">
                     <Label className="form-label">Net Price*</Label>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
                       <Input
                         name="balance_due"
                         placeholder="0.00"
@@ -752,9 +867,13 @@ const Addons = ({
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
-                          validationType.setFieldValue('balance_due', setDecimalFormat(value),validationType.handleBlur);
+                          validationType.setFieldValue(
+                            "balance_due",
+                            setDecimalFormat(value),
+                            validationType.handleBlur
+                          );
                         }}
                         value={validationType.values.balance_due || ""}
                         invalid={
@@ -769,7 +888,7 @@ const Addons = ({
                         <FormFeedback type="invalid">
                           {validationType.errors.balance_due}
                         </FormFeedback>
-                      ) : null} 
+                      ) : null}
                     </div>
                     <UncontrolledTooltip placement="top" target="balance_due">
                       The amount due to the provider on the day of the tour.
