@@ -21,33 +21,30 @@ const AvailableCheckbox = ({ available, availableFromIDs,  setAvailableFromIDs }
     const selection = e.target.value;
     // const selectionFlag = availableFromIDs ? availableFromIDs.includes(selection) : [];
     // console.log('---------------',availableFromIDs)
-    let idsTemp = []
+    let idsTemp = availableFromIDs
     
-    
+    let isSelected = !checked
 
-    if ( availableFromIDs ) {
-      
-      availableFromIDs.forEach(id => {
-        if (id !== selection) {
-          idsTemp.push( ...availableFromIDs, selection)
-        }else{
+    if(availableFromIDs) {
+      if(availableFromIDs.filter((ele) => ele === selection).length > 0) {//check if exists
+        //if exists and is not selected anymore I need to remove it
+        if(!isSelected) {
           idsTemp = availableFromIDs.filter((ele) => ele !== selection)
         }
-
-      });
-
-      // console.log('ids a enviar', idsTemp)
-      
-      // setNewListID(idsTemp);
-      setAvailableFromIDs(idsTemp)
+      } else {
+        //if not exists and is selected anymore I need to remove it
+        if(isSelected) {
+          idsTemp.push(selection)
+        }
+      }
     }else{
-      // setNewListID([selection])
-      setAvailableFromIDs([selection])
+      if(isSelected)
+        idsTemp = [selection]
+      else 
+        idsTemp = []
     }
-    // if (selectionFlag) {
-    //   console.log('si esta', availableFromIDs)
-    //   setAvailableFromIDs(availableFromIDs.filter((ele) => ele !== selection));
-    // }
+
+    setAvailableFromIDs(idsTemp)
   };
   return (
     <div className="controls my-2">
