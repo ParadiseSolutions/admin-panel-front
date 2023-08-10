@@ -349,7 +349,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-departments-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -389,7 +389,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-providers-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -429,7 +429,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-categories-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -469,7 +469,7 @@ const TableContainer = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -509,7 +509,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-locations-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -551,7 +551,7 @@ const TableContainer = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -592,7 +592,7 @@ const TableContainer = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -632,7 +632,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-users-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -672,7 +672,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-shopping-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -712,7 +712,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-payment-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -752,7 +752,7 @@ const TableContainer = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -837,7 +837,7 @@ const TableContainer = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -877,7 +877,7 @@ const TableContainer = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
@@ -917,7 +917,7 @@ const TableContainer = ({
                     <th key={column.id} className={`table-column-tours-${column.Header}`}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
-                        {/* {generateSortingIndicator(column)} */}
+                        { generateSortingIndicator(column) }
                       </div>
                       {/* <Filter column={column} /> */}
                     </th>
