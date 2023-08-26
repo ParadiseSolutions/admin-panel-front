@@ -232,7 +232,7 @@ export const deletePriceAPI = (id) => {
 //pricing options select
 
 export const getPricingOptionsAPI = (id) => {
-  const url = `${API_URL}/pricingOptions/${id}/items`;
+  const url = `${API_URL}/pricingOptions/addons/${id}/items`;
   return axios.get (url, {
     headers: options,
   });

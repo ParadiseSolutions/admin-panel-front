@@ -321,6 +321,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         tourData={tourData}
         refreshTable={refreshTable}
         editProductID={editProductID}
+        id={id}
       />
       <AddonsInstructionModal
         instructionModal={instructionModal}

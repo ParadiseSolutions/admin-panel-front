@@ -21,6 +21,7 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
+import Switch from "react-switch";
 import Swal from "sweetalert2";
 import {
   setDecimalFormat,
@@ -33,12 +34,49 @@ import {
   calcNetPrice,
 } from "../../../../Utils/CommonFunctions";
 
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        // width: "200px",
+        paddingRight: 15,
+      }}
+    >
+      Addon
+    </div>
+  );
+};
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingLeft: 15,
+      }}
+    >
+      Upgrade
+    </div>
+  );
+};
+
 const Addons = ({
   newAddon,
   setNewAddon,
   refreshTable,
   editProductID,
   tourData,
+  id
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
@@ -49,53 +87,59 @@ const Addons = ({
       });
     }
   }, [editProductID]);
-
-  // console.log("addons", dataEdit);
-
   //combo box request
   const [priceMatchQuantityData, setPriceMatchQuantityData] = useState([]);
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
   const [priceCollect, setPriceCollect] = useState([]);
-
-  const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit ? dataEdit?.price_type_id : ""
-  );
-  const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit ? dataEdit?.price_option_id : ""
-  );
-  const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit ? dataEdit?.collect_id : ""
-  );
+  const [addonType, setAddonType] = useState([]);
+  const [displayOptionData, setDisplayOptionData] = useState([]);
+  const [addonLabelData, setAddonLabelData] = useState([]);
+  const [priceTypeSelected, setPriceTypeSelected] = useState("");
+  const [addonTypeSelected, setAddonTypeSelected] = useState("");
+  const [priceOptionSelected, setPriceOptionSelected] = useState("");
+  const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
-  const [matchQuantitySelected, setMatchQuantitySelected] = useState(
-    dataEdit ? dataEdit?.match_qty_id : ""
-  );
+  const [displayOptionSelected, setDisplayOptionSelected] = useState();
+  const [addonLabelSelected, setAddonLabelSelected] = useState("");
+  const [matchQuantitySelected, setMatchQuantitySelected] = useState();
   const [balance, setBalance] = useState(dataEdit?.active === 1 ? true : false);
+  const [isUpgrade, setIsUpgrade] = useState(dataEdit?.type === 1 ? true : false);
   useEffect(() => {
     if (newAddon) {
       getPricingOptionsAPI(52).then((resp) => {
         setPriceMatchQuantityData(resp.data.data);
       });
-      getPricingOptionsAPI(53).then((resp) => {
+      getPricingOptionsAPI(56).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
-      getPricingOptionsAPI(54).then((resp) => {
+      getPricingOptionsAPI(58).then((resp) => {
         setPriceOptions(resp.data.data);
       });
       getPricingOptionsAPI(55).then((resp) => {
         setPriceCollect(resp.data.data);
+      });
+      getPricingOptionsAPI(57).then((resp) => {
+        setAddonType(resp.data.data);
+      });
+      getPricingOptionsAPI(59).then((resp) => {
+        setDisplayOptionData(resp.data.data);
+      });
+      getPricingOptionsAPI(60).then((resp) => {
+        setAddonLabelData(resp.data.data);
       });
     }
   }, [newAddon]);
 
   useEffect(() => {
     setBalance(dataEdit?.active === 1 ? true : false);
+    setIsUpgrade(dataEdit?.type === 1 ? true : false)
+    setDisplayOptionSelected(dataEdit?.display_option)
   }, [dataEdit]);
 
   // console.log(priceOptions);
   // console.log(priceTypeSelected);
-
+console.log(dataEdit)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -140,7 +184,7 @@ const Addons = ({
     }),
     onSubmit: (values, { resetForm }) => {
       let data = {
-        tour_id: tourData.id,
+        tour_id: +id,
         match_qty_id: matchQuantitySelected
           ? matchQuantitySelected
           : dataEdit?.match_qty_id,
@@ -153,19 +197,27 @@ const Addons = ({
         collect_id: priceCollectSelected
           ? priceCollectSelected
           : dataEdit?.collect_id,
-        display_option: 1,
+        display_option: displayOptionSelected,
         // title: "Masseuse ($300)",
         // description: null,
         // option_label: null,
         show_balance_due: balance,
         price: values.our_price,
         you_save: values.you_save,
-        net_rate: ((values.rate !== "")?((values.rate > 1) ? values.rate / 100 : values.rate) : values.rate),
+        net_rate:
+          values.rate !== ""
+            ? values.rate > 1
+              ? values.rate / 100
+              : values.rate
+            : values.rate,
         commission: values.commission,
         deposit: values.deposit,
         net_price: values.balance_due,
         min_qty: values.min_qty,
         max_qty: values.max_qty,
+        add_on_type_id: addonTypeSelected,
+        instruction_label_id: addonLabelSelected === "" ? null : addonLabelSelected,
+        description: values.description
       };
 
       if (dataEdit) {
@@ -302,6 +354,10 @@ const Addons = ({
     return commission;
   };
 
+  const onChangeUpgrade = () => {
+    setIsUpgrade(!isUpgrade);
+  };
+
   return (
     <Modal
       centered
@@ -359,7 +415,7 @@ const Addons = ({
                     />
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-4">
                     <Label className="form-label">SKU</Label>
                     <Input
@@ -371,7 +427,7 @@ const Addons = ({
                     />
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-4">
                     <Label className="form-label">Match Quantity to</Label>
                     <Input
@@ -402,120 +458,349 @@ const Addons = ({
                     </Input>
                   </div>
                 </Col>
+                <Col className="col-2">
+                  <div className="m-2">
+                    <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      className="mt-4"
+                      width={90}
+                      // style={{width:"100px"}}
+                      onChange={() => onChangeUpgrade()}
+                      checked={isUpgrade}
+                    />
+                  </div>
+                </Col>
               </Row>
               <Row className="d-flex">
                 <Col className="col-9 d-flex justify-content-between">
-                  <Col className="col-2">
-                    <div className="form-outline">
-                      <Label className="form-label">Price Type</Label>
-                      <Input
-                        type="select"
-                        name="price_type"
-                        onChange={(e) => {
-                          setPriceTypeSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceTypeData, (type, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={type.id}
-                              selected={
-                                dataEdit
-                                  ? type.id === dataEdit.price_type_id
-                                  : false
+                  {isUpgrade === false ? (
+                    <>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Price Type</Label>
+                          <Input
+                            type="select"
+                            name="price_type"
+                            onChange={(e) => {
+                              setPriceTypeSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(priceTypeData, (type, index) => {
+                              if (
+                                type.add_on_type === 1 ||
+                                type.add_on_type === 3
+                              ) {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={type.id}
+                                    selected={
+                                      dataEdit
+                                        ? type.id === dataEdit.price_type_id
+                                        : false
+                                    }
+                                  >
+                                    {type.text}
+                                  </option>
+                                );
                               }
-                            >
-                              {type.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline">
-                      <Label className="form-label">Price Option</Label>
-                      <Input
-                        type="select"
-                        name="price_option"
-                        onChange={(e) => {
-                          setPriceOptionSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceOptions, (option, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={option.id}
-                              selected={
-                                dataEdit
-                                  ? option.id === dataEdit.price_option_id
-                                  : false
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Addon Type</Label>
+                          <Input
+                            type="select"
+                            name="addon_type"
+                            onChange={(e) => {
+                              setAddonTypeSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(addonType, (type, index) => {
+                              if (
+                                type.add_on_type === 1 ||
+                                type.add_on_type === 3
+                              ) {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={type.id}
+                                    selected={
+                                      dataEdit
+                                        ? type.id === dataEdit.add_on_type_id
+                                        : false
+                                    }
+                                  >
+                                    {type.text}
+                                  </option>
+                                );
                               }
-                            >
-                              {option.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline">
-                      <Label className="form-label">Collect</Label>
-                      <Input
-                        type="select"
-                        name="collect"
-                        onChange={(e) => {
-                          setPriceCollectSelected(e.target.value);
-                          setPriceCollectNameSelected(
-                            e.target.selectedOptions[0].label
-                          );
-                        }}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-                          validationType.setFieldValue(
-                            "collect",
-                            value,
-                            validationType.setFieldValue(
-                              "deposit",
-                              calcDeposit(
-                                validationType.values.our_price,
-                                priceCollectNameSelected,
-                                validationType.values.commission,
-                                validationType.values.deposit
-                              )
-                            ),
-                            validationType.handleBlur
-                          );
-                        }}
-                      >
-                        <option>Select....</option>
-                        {map(priceCollect, (collect, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={collect.id}
-                              selected={
-                                dataEdit
-                                  ? collect.id === dataEdit.collect_id
-                                  : false
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">
+                            Price Option (Label)
+                          </Label>
+                          <Input
+                            type="select"
+                            name="price_option"
+                            onChange={(e) => {
+                              setPriceOptionSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(priceOptions, (option, index) => {
+                              if (
+                                option.add_on_type === 1 ||
+                                option.add_on_type === 3
+                              ) {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={option.id}
+                                    selected={
+                                      dataEdit
+                                        ? option.id === dataEdit.price_option_id
+                                        : false
+                                    }
+                                  >
+                                    {option.text}
+                                  </option>
+                                );
                               }
-                            >
-                              {collect.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Collect</Label>
+                          <Input
+                            type="select"
+                            name="collect"
+                            onChange={(e) => {
+                              setPriceCollectSelected(e.target.value);
+                              setPriceCollectNameSelected(
+                                e.target.selectedOptions[0].label
+                              );
+                            }}
+                            onBlur={(e) => {
+                              const value = e.target.value || "";
+                              validationType.setFieldValue(
+                                "collect",
+                                value,
+                                validationType.setFieldValue(
+                                  "deposit",
+                                  calcDeposit(
+                                    validationType.values.our_price,
+                                    priceCollectNameSelected,
+                                    validationType.values.commission,
+                                    validationType.values.deposit
+                                  )
+                                ),
+                                validationType.handleBlur
+                              );
+                            }}
+                          >
+                            <option>Select....</option>
+                            {map(priceCollect, (collect, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={collect.id}
+                                  selected={
+                                    dataEdit
+                                      ? collect.id === dataEdit.collect_id
+                                      : false
+                                  }
+                                >
+                                  {collect.text}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                    </>
+                  ) : (
+                    <>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Price Type</Label>
+                          <Input
+                            type="select"
+                            name="price_type"
+                            onChange={(e) => {
+                              setPriceTypeSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(priceTypeData, (type, index) => {
+                              if (
+                                type.add_on_type === 2 ||
+                                type.add_on_type === 3
+                              ) {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={type.id}
+                                    selected={
+                                      dataEdit
+                                        ? type.id === dataEdit.price_type_id
+                                        : false
+                                    }
+                                  >
+                                    {type.text}
+                                  </option>
+                                );
+                              }
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Addon Type</Label>
+                          <Input
+                            type="select"
+                            name="addon_type"
+                            onChange={(e) => {
+                              setAddonTypeSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(addonType, (type, index) => {
+                              if (
+                                type.add_on_type === 2 ||
+                                type.add_on_type === 3
+                              ) {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={type.id}
+                                    selected={
+                                      dataEdit
+                                        ? type.id === dataEdit.add_on_type_id
+                                        : false
+                                    }
+                                  >
+                                    {type.text}
+                                  </option>
+                                );
+                              }
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">
+                            Price Option (Label)
+                          </Label>
+                          <Input
+                            type="select"
+                            name="price_option"
+                            onChange={(e) => {
+                              setPriceOptionSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(priceOptions, (option, index) => {
+                              if (
+                                option.add_on_type === 2 ||
+                                option.add_on_type === 3
+                              ) {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={option.id}
+                                    selected={
+                                      dataEdit
+                                        ? option.id === dataEdit.price_option_id
+                                        : false
+                                    }
+                                  >
+                                    {option.text}
+                                  </option>
+                                );
+                              }
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <Label className="form-label">Collect</Label>
+                          <Input
+                            type="select"
+                            name="collect"
+                            onChange={(e) => {
+                              setPriceCollectSelected(e.target.value);
+                              setPriceCollectNameSelected(
+                                e.target.selectedOptions[0].label
+                              );
+                            }}
+                            onBlur={(e) => {
+                              const value = e.target.value || "";
+                              validationType.setFieldValue(
+                                "collect",
+                                value,
+                                validationType.setFieldValue(
+                                  "deposit",
+                                  calcDeposit(
+                                    validationType.values.our_price,
+                                    priceCollectNameSelected,
+                                    validationType.values.commission,
+                                    validationType.values.deposit
+                                  )
+                                ),
+                                validationType.handleBlur
+                              );
+                            }}
+                          >
+                            <option>Select....</option>
+                            {map(priceCollect, (collect, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={collect.id}
+                                  selected={
+                                    dataEdit
+                                      ? collect.id === dataEdit.collect_id
+                                      : false
+                                  }
+                                >
+                                  {collect.text}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                    </>
+                  )}
+
                   <Col className="col-2">
                     <div
                       className="form-outline"
@@ -602,6 +887,134 @@ const Addons = ({
                       ) : null}
                     </div>
                   </Col>
+                </Col>
+              </Row>
+
+              <Row className="d-flex">
+                <Col className="col-10 d-flex justify-content-start">
+                  <Col className="col-4">
+                    <div className="form-outline">
+                      <Label className="form-label">Display Option</Label>
+                      <Input
+                        type="select"
+                        name="display_option"
+                        onChange={(e) => {
+                          setDisplayOptionSelected(+e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                        
+                      >
+                        <option>Select....</option>
+                        {map(displayOptionData, (type, index) => {
+                          return (
+                            <option 
+                            key={index} 
+                            value={type.id}
+                            selected={
+                              dataEdit
+                                ? type.id === dataEdit.display_option
+                                : false
+                            }
+                            >
+                              {type.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </Col>
+                  {console.log(displayOptionSelected)}
+
+                  {displayOptionSelected === 1 || 
+                  displayOptionSelected === 2 ? (
+                    <>
+                      <Col className="col-6 mx-4">
+                        <div className="form-outline">
+                          <Label className="form-label">
+                            Add-On Description
+                          </Label>
+                          <Input
+                            name="addon_description"
+                            placeholder=""
+                            type="text"
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={
+                              validationType.values.addon_description || ""
+                            }
+                            invalid={
+                              validationType.touched.addon_description &&
+                              validationType.errors.addon_description
+                                ? true
+                                : false
+                            }
+                          />
+                        </div>
+                      </Col>
+                    </>
+                  ) : displayOptionSelected === 3 ||
+                    displayOptionSelected === 4 ||
+                    displayOptionSelected === 5 ? (
+                    <>
+                      <Col className="col-3 mx-4">
+                        <div className="form-outline">
+                          <Label className="form-label">
+                            Instruction Label
+                          </Label>
+                          <Input
+                            type="select"
+                            name="addon_label"
+                            onChange={(e) => {
+                              setAddonLabelSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option>Select....</option>
+                            {map(addonLabelData, (type, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={type.id}
+                                  // selected={
+                                  //   dataEdit
+                                  //     ? type.id === dataEdit.price_type_id
+                                  //     : false
+                                  // }
+                                >
+                                  {type.text}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </Col>
+                      <Col className="col-6 mx-4">
+                        <div className="form-outline">
+                          <Label className="form-label">
+                            Add-On Description
+                          </Label>
+                          <Input
+                            name="addon_description"
+                            placeholder=""
+                            type="text"
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={
+                              validationType.values.addon_description || ""
+                            }
+                            invalid={
+                              validationType.touched.addon_description &&
+                              validationType.errors.addon_description
+                                ? true
+                                : false
+                            }
+                          />
+                        </div>
+                      </Col>
+                    </>
+                  ) : null}
                 </Col>
               </Row>
 
