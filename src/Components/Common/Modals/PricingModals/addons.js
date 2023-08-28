@@ -139,7 +139,8 @@ const Addons = ({
 
   // console.log(priceOptions);
   // console.log(priceTypeSelected);
-console.log(dataEdit)
+  console.log("addon ------------:",addonTypeSelected)
+// console.log(dataEdit)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -163,7 +164,7 @@ console.log(dataEdit)
         : dataEdit?.collect_id,
       display_option: 1,
       title: "",
-      description: null,
+      addon_description: dataEdit?.description ? dataEdit?.description : "",
       option_label: null,
       show_balance_due: balance,
       rate: dataEdit?.net_rate ? setRateFormat(dataEdit?.net_rate) : "",
@@ -215,10 +216,12 @@ console.log(dataEdit)
         net_price: values.balance_due,
         min_qty: values.min_qty,
         max_qty: values.max_qty,
-        add_on_type_id: addonTypeSelected,
+        add_on_type_id: displayOptionSelected,
         instruction_label_id: addonLabelSelected === "" ? null : addonLabelSelected,
-        description: values.description
+        description: values.addon_description
       };
+
+      // console.log(data)
 
       if (dataEdit) {
         putAddonAPI(editProductID, data)
@@ -520,7 +523,7 @@ console.log(dataEdit)
                             type="select"
                             name="addon_type"
                             onChange={(e) => {
-                              setAddonTypeSelected(e.target.value);
+                              setAddonTypeSelected(+e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
@@ -682,7 +685,7 @@ console.log(dataEdit)
                             type="select"
                             name="addon_type"
                             onChange={(e) => {
-                              setAddonTypeSelected(e.target.value);
+                              setAddonTypeSelected(+e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
@@ -924,7 +927,7 @@ console.log(dataEdit)
                       </Input>
                     </div>
                   </Col>
-                  {console.log(displayOptionSelected)}
+                  {/* {console.log(displayOptionSelected)} */}
 
                   {displayOptionSelected === 1 || 
                   displayOptionSelected === 2 ? (
@@ -977,11 +980,11 @@ console.log(dataEdit)
                                 <option
                                   key={index}
                                   value={type.id}
-                                  // selected={
-                                  //   dataEdit
-                                  //     ? type.id === dataEdit.price_type_id
-                                  //     : false
-                                  // }
+                                  selected={
+                                    dataEdit
+                                      ? type.id === dataEdit.instruction_label_id
+                                      : false
+                                  }
                                 >
                                   {type.text}
                                 </option>
