@@ -48,6 +48,10 @@ const PricingTables = ({
     useRowSelect
   );
 
+  const generateSortingIndicator = (column) => {
+    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+  };
+
   return (
     <Fragment>
 
@@ -77,6 +81,7 @@ const PricingTables = ({
                     <th key={column.id}>
                       <div {...column.getSortByToggleProps()}>
                         {column.render("Header")}
+                        { generateSortingIndicator(column) }
                       </div>
                     </th>
                   ))}

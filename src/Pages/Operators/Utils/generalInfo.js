@@ -629,10 +629,10 @@ const GeneralInformation = () => {
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2">
-                    <Label className="form-label">Country Code*</Label>
+                    <Label className="form-label">Country*</Label>
                     <Input
                       name="country"
-                      placeholder="MX"
+                      placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}

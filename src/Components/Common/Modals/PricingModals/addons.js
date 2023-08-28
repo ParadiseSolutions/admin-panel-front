@@ -85,6 +85,8 @@ const Addons = ({
       getAddonAPI(editProductID).then((resp) => {
         setDataEdit(resp.data.data[0]);
       });
+    } else {
+      setDataEdit(null);
     }
   }, [editProductID]);
   //combo box request
@@ -104,7 +106,7 @@ const Addons = ({
   const [addonLabelSelected, setAddonLabelSelected] = useState("");
   const [matchQuantitySelected, setMatchQuantitySelected] = useState();
   const [balance, setBalance] = useState(dataEdit?.active === 1 ? true : false);
-  const [isUpgrade, setIsUpgrade] = useState(dataEdit?.type === 1 ? true : false);
+  const [isUpgrade, setIsUpgrade] = useState(dataEdit?.type === 2 ? true : false);
   useEffect(() => {
     if (newAddon) {
       getPricingOptionsAPI(52).then((resp) => {
@@ -133,14 +135,14 @@ const Addons = ({
 
   useEffect(() => {
     setBalance(dataEdit?.active === 1 ? true : false);
-    setIsUpgrade(dataEdit?.type === 1 ? true : false)
+    setIsUpgrade(dataEdit?.type === 2 ? true : false)
     setDisplayOptionSelected(dataEdit?.display_option)
   }, [dataEdit]);
 
   // console.log(priceOptions);
   // console.log(priceTypeSelected);
-  console.log("addon ------------:",addonTypeSelected)
-// console.log(dataEdit)
+  console.log("addon ------------:", addonTypeSelected)
+  // console.log(dataEdit)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -192,6 +194,7 @@ const Addons = ({
         price_type_id: priceTypeSelected
           ? priceTypeSelected
           : dataEdit?.price_type_id,
+        add_on_type_id: displayOptionSelected,
         price_option_id: priceOptionSelected
           ? priceOptionSelected
           : dataEdit?.price_option_id,
@@ -199,9 +202,8 @@ const Addons = ({
           ? priceCollectSelected
           : dataEdit?.collect_id,
         display_option: displayOptionSelected,
-        // title: "Masseuse ($300)",
-        // description: null,
-        // option_label: null,
+        instruction_label_id: addonLabelSelected === "" ? null : addonLabelSelected,
+        description: values.addon_description,
         show_balance_due: balance,
         price: values.our_price,
         you_save: values.you_save,
@@ -216,9 +218,7 @@ const Addons = ({
         net_price: values.balance_due,
         min_qty: values.min_qty,
         max_qty: values.max_qty,
-        add_on_type_id: displayOptionSelected,
-        instruction_label_id: addonLabelSelected === "" ? null : addonLabelSelected,
-        description: values.addon_description
+        type: (isUpgrade) ? 2 : 1
       };
 
       // console.log(data)
@@ -374,7 +374,13 @@ const Addons = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ New Add-On</h1>
+        {
+          dataEdit?.id ? (
+            <h1 className="modal-title mt-0 text-white">Edit Add-On</h1>
+          ) : (
+            <h1 className="modal-title mt-0 text-white">+ New Add-On</h1>
+          )
+        }
         <button
           onClick={() => {
             setNewAddon(false);
@@ -440,7 +446,7 @@ const Addons = ({
                         setMatchQuantitySelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceMatchQuantityData, (quantity, index) => {
@@ -490,7 +496,7 @@ const Addons = ({
                               setPriceTypeSelected(e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(priceTypeData, (type, index) => {
@@ -526,7 +532,7 @@ const Addons = ({
                               setAddonTypeSelected(+e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(addonType, (type, index) => {
@@ -564,7 +570,7 @@ const Addons = ({
                               setPriceOptionSelected(e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(priceOptions, (option, index) => {
@@ -652,7 +658,7 @@ const Addons = ({
                               setPriceTypeSelected(e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(priceTypeData, (type, index) => {
@@ -688,7 +694,7 @@ const Addons = ({
                               setAddonTypeSelected(+e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(addonType, (type, index) => {
@@ -726,7 +732,7 @@ const Addons = ({
                               setPriceOptionSelected(e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(priceOptions, (option, index) => {
@@ -823,13 +829,13 @@ const Addons = ({
                             value={validationType.values.active || ""}
                             invalid={
                               validationType.touched.active &&
-                              validationType.errors.active
+                                validationType.errors.active
                                 ? true
                                 : false
                             }
                           />
                           {validationType.touched.active &&
-                          validationType.errors.active ? (
+                            validationType.errors.active ? (
                             <FormFeedback type="invalid">
                               {validationType.errors.active}
                             </FormFeedback>
@@ -852,13 +858,13 @@ const Addons = ({
                         value={validationType.values.min_qty || ""}
                         invalid={
                           validationType.touched.min_qty &&
-                          validationType.errors.min_qty
+                            validationType.errors.min_qty
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.min_qty &&
-                      validationType.errors.min_qty ? (
+                        validationType.errors.min_qty ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.min_qty}
                         </FormFeedback>
@@ -877,13 +883,13 @@ const Addons = ({
                         value={validationType.values.max_qty || ""}
                         invalid={
                           validationType.touched.max_qty &&
-                          validationType.errors.max_qty
+                            validationType.errors.max_qty
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.max_qty &&
-                      validationType.errors.max_qty ? (
+                        validationType.errors.max_qty ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.max_qty}
                         </FormFeedback>
@@ -905,20 +911,20 @@ const Addons = ({
                           setDisplayOptionSelected(+e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                        
+                      //   value={validationType.values.department || ""}
+
                       >
                         <option>Select....</option>
                         {map(displayOptionData, (type, index) => {
                           return (
-                            <option 
-                            key={index} 
-                            value={type.id}
-                            selected={
-                              dataEdit
-                                ? type.id === dataEdit.display_option
-                                : false
-                            }
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                dataEdit
+                                  ? type.id === dataEdit.display_option
+                                  : false
+                              }
                             >
                               {type.text}
                             </option>
@@ -929,8 +935,8 @@ const Addons = ({
                   </Col>
                   {/* {console.log(displayOptionSelected)} */}
 
-                  {displayOptionSelected === 1 || 
-                  displayOptionSelected === 2 ? (
+                  {displayOptionSelected === 1 ||
+                    displayOptionSelected === 2 ? (
                     <>
                       <Col className="col-6 mx-4">
                         <div className="form-outline">
@@ -948,7 +954,7 @@ const Addons = ({
                             }
                             invalid={
                               validationType.touched.addon_description &&
-                              validationType.errors.addon_description
+                                validationType.errors.addon_description
                                 ? true
                                 : false
                             }
@@ -972,7 +978,7 @@ const Addons = ({
                               setAddonLabelSelected(e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(addonLabelData, (type, index) => {
@@ -1009,7 +1015,7 @@ const Addons = ({
                             }
                             invalid={
                               validationType.touched.addon_description &&
-                              validationType.errors.addon_description
+                                validationType.errors.addon_description
                                 ? true
                                 : false
                             }
@@ -1066,13 +1072,13 @@ const Addons = ({
                         value={validationType.values.our_price || ""}
                         invalid={
                           validationType.touched.our_price &&
-                          validationType.errors.our_price
+                            validationType.errors.our_price
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.our_price &&
-                      validationType.errors.our_price ? (
+                        validationType.errors.our_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.our_price}
                         </FormFeedback>
@@ -1104,13 +1110,13 @@ const Addons = ({
                         value={validationType.values.you_save || ""}
                         invalid={
                           validationType.touched.you_save &&
-                          validationType.errors.you_save
+                            validationType.errors.you_save
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.you_save &&
-                      validationType.errors.you_save ? (
+                        validationType.errors.you_save ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.you_save}
                         </FormFeedback>
@@ -1149,13 +1155,13 @@ const Addons = ({
                         value={validationType.values.rate || ""}
                         invalid={
                           validationType.touched.rate &&
-                          validationType.errors.rate
+                            validationType.errors.rate
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.rate &&
-                      validationType.errors.rate ? (
+                        validationType.errors.rate ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.rate}
                         </FormFeedback>
@@ -1203,13 +1209,13 @@ const Addons = ({
                         value={validationType.values.commission || ""}
                         invalid={
                           validationType.touched.commission &&
-                          validationType.errors.commission
+                            validationType.errors.commission
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.commission &&
-                      validationType.errors.commission ? (
+                        validationType.errors.commission ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.commission}
                         </FormFeedback>
@@ -1248,13 +1254,13 @@ const Addons = ({
                         value={validationType.values.deposit || ""}
                         invalid={
                           validationType.touched.deposit &&
-                          validationType.errors.deposit
+                            validationType.errors.deposit
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.deposit &&
-                      validationType.errors.deposit ? (
+                        validationType.errors.deposit ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.deposit}
                         </FormFeedback>
@@ -1294,13 +1300,13 @@ const Addons = ({
                         value={validationType.values.balance_due || ""}
                         invalid={
                           validationType.touched.balance_due &&
-                          validationType.errors.balance_due
+                            validationType.errors.balance_due
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.balance_due &&
-                      validationType.errors.balance_due ? (
+                        validationType.errors.balance_due ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.balance_due}
                         </FormFeedback>
@@ -1332,7 +1338,7 @@ const Addons = ({
                 style={{ backgroundColor: "#F6851F" }}
                 type="submit"
                 className="font-16 btn-block col-2"
-                // onClick={toggleCategory}
+              // onClick={toggleCategory}
               >
                 Save
               </Button>

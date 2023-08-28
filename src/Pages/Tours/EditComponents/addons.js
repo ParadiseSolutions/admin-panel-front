@@ -233,6 +233,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
   };
 
   const onClickNewAddon = () => {
+    setEditProductID(null)
     setNewAddon(!newAddon);
   };
 
@@ -272,48 +273,6 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           </Button>
         </Col>
       </Row>
-      <AddNewProductPricing
-        addNewProduct={addNewProduct}
-        setAddNewProduct={setAddNewProduct}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-      />
-      <AddNewAirportTransfer
-        addNewAirportTransfer={addNewAirportTransfer}
-        setAddNewAirportTransfer={setAddNewAirportTransfer}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-      />
-      <Fishing
-        addNewFishing={addNewFishing}
-        setAddNewFishing={setAddNewFishing}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-      />
-      <AddNewPrivateCharter
-        newPrivateCharter={newPrivateCharter}
-        setNewPrivateCharter={setNewPrivateCharter}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-      />
-      <AddNewPrivateTour
-        newPrivateTour={newPrivateTour}
-        setNewPrivateTour={setNewPrivateTour}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-      />
-      <AddNewTransportation
-        newTransportation={newTransportation}
-        setNewTransportation={setNewTransportation}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-      />
 
       <Addons
         newAddon={newAddon}
