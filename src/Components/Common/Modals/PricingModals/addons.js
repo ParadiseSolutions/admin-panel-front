@@ -194,15 +194,17 @@ const Addons = ({
         price_type_id: priceTypeSelected
           ? priceTypeSelected
           : dataEdit?.price_type_id,
-        add_on_type_id: displayOptionSelected,
+        add_on_type_id: addonTypeSelected ? addonTypeSelected
+        : dataEdit?.add_on_type_id,
         price_option_id: priceOptionSelected
           ? priceOptionSelected
           : dataEdit?.price_option_id,
         collect_id: priceCollectSelected
           ? priceCollectSelected
           : dataEdit?.collect_id,
-        display_option: displayOptionSelected,
-        instruction_label_id: addonLabelSelected === "" ? null : addonLabelSelected,
+        display_option: displayOptionSelected ? displayOptionSelected
+        : dataEdit?.display_option,
+        instruction_label_id: addonLabelSelected === "" ? null : (addonLabelSelected ? addonLabelSelected :  dataEdit?.instruction_label_id),
         description: values.addon_description,
         show_balance_due: balance,
         price: values.our_price,
