@@ -4,6 +4,7 @@ import { deleteTourAPI } from "../../Utils/API/Tours";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
 import { CartName, CartID, Server, Active } from "./ToursCols";
+import ToursFilters from "../../Components/Common/Modals/ToursFilters/toursFilters";
 import {
   Container,
   Row,
@@ -32,6 +33,12 @@ const Tours = () => {
       setLoadingData(false);
     }
   }, [data]);
+
+// filters
+const [filters, setFilters] = useState(false)
+const onClickFilter = () =>{
+  setFilters(!filters)
+}
 
   //delete
 
@@ -207,6 +214,7 @@ const Tours = () => {
                     data={data}
                     isGlobalFilter={true}
                     toursTable={true}
+                    onClickFilter={onClickFilter}
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
@@ -214,6 +222,10 @@ const Tours = () => {
             )}
           </Col>
         </Row>
+        <ToursFilters
+        filters={filters}
+        setFilters={setFilters}
+        />
       </Container>
       <div className="content-footer pt-2 px-4 mt-4 mx-4">
           <p>2023 © JS Tour & Travel</p>
