@@ -77,7 +77,6 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
       provider_tour_name: tourSettings.provider_tour_name
         ? tourSettings.provider_tour_name
         : "",
-      available_seasons: tourSettings.available_seasons,
       provider_tour_url: tourSettings.provider_tour_url
         ? tourSettings.provider_tour_url
         : "",
@@ -297,6 +296,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                             available={available}
                             availableFromIDs={availableFromIDs}
                             setAvailableFromIDs={setAvailableFromIDs}
+                            availableFromData={availableFromData}
                           />
                         </div>
                       </Col>

@@ -37,7 +37,6 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
-import { CardHeader } from "@material-ui/core";
 import { cleanUpSpecialCharacters, capitalizeWords2, codeFormat } from "../../Utils/CommonFunctions";
 
 const NewTour = ({ history }) => {
@@ -89,16 +88,21 @@ const NewTour = ({ history }) => {
   const [operatorID, setOperatorID] = useState(null)
   const [locationID, setLocationID] = useState(null)
   const [mainCatID, setMainCatID] = useState(null)
-  const [secondCatID, setSecondCatID] = useState(null)
   const [categoryId, setCategoryId] = useState(null)
-
-    //sub categories request
+  
+  //sub categories request
   const [subCategoriesData, setSubCategoriesData] = useState(null)
+  const [secondCatID, setSecondCatID] = useState(null)
     useEffect(() => {
       //console.log(mainCatID)
       if(mainCatID) {
         getSubCategory(websiteID, categoryId).then((resp) =>{
           setSubCategoriesData(resp.data.data)
+          if (resp.data.data.length === 1) {
+            setSecondCatID(resp.data.data[0].id)
+          }else{
+            setSecondCatID(null)
+          }
         })
       }
     }, [mainCatID]);
@@ -122,17 +126,37 @@ const NewTour = ({ history }) => {
     });
     providerWebsite(id).then((resp) => {
       setProviderData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setProviderID(resp.data.data[0].id)
+      }else{
+        setProviderID(null)
+      }
     });
     operatorWebsite(id).then((resp) => {
       setOperatorData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setOperatorID(resp.data.data[0].id)
+      }else{
+        setOperatorID(null)
+      }
     });
     getLocationWebsitePI(id).then((resp) =>{
       setLocationData(resp.data.data)
+      if (resp.data.data.length === 1) {
+        setLocationID(resp.data.data[0].id)
+      }else{
+        setLocationID(null)
+      }
     })
     getCategoryWebsiteAPI(id).then((resp) => {
       setCategoryData(resp.data.data)
+      if (resp.data.data.length === 1) {
+        setMainCatID(resp.data.data[0].id)
+      }else{
+        setMainCatID(null)
+      }
     })
-setCategoryId(id)
+    //setCategoryId(id)
   };
 
   //console.log('location', locationData)
@@ -240,7 +264,7 @@ setCategoryId(id)
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "cursor" }}
                     className={classnames({
                       active: activeTab === "2",
                     })}
@@ -254,7 +278,7 @@ setCategoryId(id)
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
                       color: `${activeTab === "3" ? "white" : ""}`,
                       border:"none",
@@ -265,9 +289,6 @@ setCategoryId(id)
                     className={classnames({
                       active: activeTab === "3",
                     })}
-                    onClick={() => {
-                      toggle("3");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-user"></i>
@@ -292,9 +313,9 @@ setCategoryId(id)
                       className={classnames({
                         active: activeTab === "4",
                       })}
-                      onClick={() => {
+                      /*onClick={() => {
                         toggle("4");
-                      }}
+                      }}*/
                     >
                       <span className="d-block d-sm-none">
                         <i className="far fa-envelope"></i>
@@ -306,7 +327,7 @@ setCategoryId(id)
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
                       color: `${activeTab === "5" ? "white" : ""}`,
                       border:"none",
@@ -317,9 +338,6 @@ setCategoryId(id)
                     className={classnames({
                       active: activeTab === "5",
                     })}
-                    onClick={() => {
-                      toggle("5");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -330,7 +348,7 @@ setCategoryId(id)
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
                       border:"none",
@@ -341,9 +359,6 @@ setCategoryId(id)
                     className={classnames({
                       active: activeTab === "6",
                     })}
-                    onClick={() => {
-                      toggle("6");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -354,7 +369,7 @@ setCategoryId(id)
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
                       border:"none",
@@ -365,9 +380,6 @@ setCategoryId(id)
                     className={classnames({
                       active: activeTab === "7",
                     })}
-                    onClick={() => {
-                      toggle("7");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -512,6 +524,7 @@ setCategoryId(id)
                                       <option
                                         key={index}
                                         value={provider.provider_id}
+                                        selected={ index === 0 && providerData.length === 1 ? true : false }
                                       >
                                         {provider.provider_name}
                                       </option>
@@ -539,6 +552,7 @@ setCategoryId(id)
                                       <option
                                         key={index}
                                         value={operator.operator_id}
+                                        selected={ index === 0 && operatorData.length === 1 ? true : false }
                                       >
                                         {operator.operator_name}
                                       </option>
@@ -603,7 +617,11 @@ setCategoryId(id)
                                   <option>Select....</option>
                                   {map(locationData, (location, index) => {
                                     return (
-                                      <option key={index} value={location.id}>
+                                      <option
+                                        key={index}
+                                        value={location.id}
+                                        selected={ index === 0 && locationData.length === 1 ? true : false }
+                                      >
                                         {location.name}
                                       </option>
                                     );
@@ -637,6 +655,7 @@ setCategoryId(id)
                                       <option
                                         key={index}
                                         value={category.category_id}
+                                        selected={ index === 0 && categoryData.length === 1 ? true : false }
                                       >
                                         {category.category_name}
                                       </option>
@@ -667,6 +686,7 @@ setCategoryId(id)
                                     <option
                                       key={index}
                                       value={subCategory.category_id}
+                                      selected={ index === 0 && subCategoriesData.length === 1 ? true : false }
                                     >
                                       {subCategory.category_name}
                                     </option>

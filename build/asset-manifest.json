@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.2fbcaa82.css",
-    "main.js": "/static/js/main.50de85a0.js",
+    "main.js": "/static/js/main.1009f939.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
+    "static/media/filters.jpg": "/static/media/filters.e69de67ef39ed87d03bd.jpg",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.8.55": "/static/media/materialdesignicons-webfont.506bc8215df8660d8f04.ttf",
@@ -64,11 +65,11 @@
     "static/media/Intersection2.svg": "/static/media/Intersection2.9f8fdbff1f8cc8e8e585399d1070a56e.svg",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.2fbcaa82.css.map": "/static/css/main.2fbcaa82.css.map",
-    "main.50de85a0.js.map": "/static/js/main.50de85a0.js.map",
+    "main.1009f939.js.map": "/static/js/main.1009f939.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2fbcaa82.css",
-    "static/js/main.50de85a0.js"
+    "static/js/main.1009f939.js"
   ]
 }

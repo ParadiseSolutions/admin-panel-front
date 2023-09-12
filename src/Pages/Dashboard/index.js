@@ -12,7 +12,8 @@ import {
   operatorWebsite,
   createTourAPI, 
   getLocationWebsitePI,
-  getCategoryWebsiteAPI
+  getCategoryWebsiteAPI,
+  triggerUpdate
 } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -88,18 +89,23 @@ const NewTour = ({ history }) => {
   const [operatorID, setOperatorID] = useState(null)
   const [locationID, setLocationID] = useState(null)
   const [mainCatID, setMainCatID] = useState(null)
-  const [secondCatID, setSecondCatID] = useState(null)
   const [categoryId, setCategoryId] = useState(null)
-
-    //sub categories request
+  
+  //sub categories request
   const [subCategoriesData, setSubCategoriesData] = useState(null)
+  const [secondCatID, setSecondCatID] = useState(null)
     useEffect(() => {
       //console.log(mainCatID)
       if(mainCatID) {
         getSubCategory(websiteID, categoryId).then((resp) =>{
           setSubCategoriesData(resp.data.data)
+          if (resp.data.data.length === 1) {
+            setSecondCatID(resp.data.data[0].id)
+          }else{
+            setSecondCatID(null)
+          }
         })
-      }      
+      }
     }, [mainCatID]);
     
 
@@ -121,17 +127,37 @@ const NewTour = ({ history }) => {
     });
     providerWebsite(id).then((resp) => {
       setProviderData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setProviderID(resp.data.data[0].id)
+      }else{
+        setProviderID(null)
+      }
     });
     operatorWebsite(id).then((resp) => {
       setOperatorData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setOperatorID(resp.data.data[0].id)
+      }else{
+        setOperatorID(null)
+      }
     });
     getLocationWebsitePI(id).then((resp) =>{
       setLocationData(resp.data.data)
+      if (resp.data.data.length === 1) {
+        setLocationID(resp.data.data[0].id)
+      }else{
+        setLocationID(null)
+      }
     })
     getCategoryWebsiteAPI(id).then((resp) => {
       setCategoryData(resp.data.data)
+      if (resp.data.data.length === 1) {
+        setMainCatID(resp.data.data[0].id)
+      }else{
+        setMainCatID(null)
+      }
     })
-    setCategoryId(id)
+    //setCategoryId(id)
   };
 
   //console.log('location', locationData)
@@ -174,6 +200,7 @@ const NewTour = ({ history }) => {
               "Tour has been created.",
               "success"
             ).then(() => {
+              triggerUpdate()
               history.push(`/tours/${resp.data.data.id}`);
             });
           }
@@ -201,24 +228,24 @@ const NewTour = ({ history }) => {
     },
   });
   return (
-    <div className="page-content pb-0 px-3">
+    <div className="page-content pb-0">
       <Container fluid>
-        <Row xl={12}>
-            <div className="col-11">
-            <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
-                CREATE NEW TOUR
-            </h1>
-            </div>
-            <div className="col-1" style={{paddingTop:"12px"}}>
+      <Row xl={12}>
+        <div className="col-11">
+          <h1 className="fw-bold" style={{ color: "#3DC7F4", fontSize: "3.5rem" }}>
+           + CREATE NEW TOUR
+          </h1>
+        </div>
+        <div className="col-1" style={{paddingTop:"12px"}}>
                 <Link to="/tours" className=" waves-effect">{"Edit Tours"}</Link>
             </div>
         </Row>
       </Container>
-      <Row>
+      <Row className="px-4">
         <Col xl={12}>
           <Card>
             <div className="p-0 card-header">
-              <Nav tabs className="nav-justified border-orange">
+              <Nav tabs className="nav-justified border-orange border-3">
                 <NavItem>
                   <NavLink
                     style={{
@@ -243,7 +270,7 @@ const NewTour = ({ history }) => {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "cursor" }}
                     className={classnames({
                       active: activeTab === "2",
                     })}
@@ -257,7 +284,7 @@ const NewTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
                       color: `${activeTab === "3" ? "white" : ""}`,
                       border:"none",
@@ -268,9 +295,6 @@ const NewTour = ({ history }) => {
                     className={classnames({
                       active: activeTab === "3",
                     })}
-                    onClick={() => {
-                      toggle("3");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-user"></i>
@@ -295,9 +319,9 @@ const NewTour = ({ history }) => {
                       className={classnames({
                         active: activeTab === "4",
                       })}
-                      onClick={() => {
+                      /*onClick={() => {
                         toggle("4");
-                      }}
+                      }}*/
                     >
                       <span className="d-block d-sm-none">
                         <i className="far fa-envelope"></i>
@@ -309,7 +333,7 @@ const NewTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
                       color: `${activeTab === "5" ? "white" : ""}`,
                       border:"none",
@@ -320,9 +344,6 @@ const NewTour = ({ history }) => {
                     className={classnames({
                       active: activeTab === "5",
                     })}
-                    onClick={() => {
-                      toggle("5");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -333,7 +354,7 @@ const NewTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
                       border:"none",
@@ -344,9 +365,6 @@ const NewTour = ({ history }) => {
                     className={classnames({
                       active: activeTab === "6",
                     })}
-                    onClick={() => {
-                      toggle("6");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -357,7 +375,7 @@ const NewTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: "cursor",
                       backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
                       border:"none",
@@ -368,9 +386,6 @@ const NewTour = ({ history }) => {
                     className={classnames({
                       active: activeTab === "7",
                     })}
-                    onClick={() => {
-                      toggle("7");
-                    }}
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -515,6 +530,7 @@ const NewTour = ({ history }) => {
                                       <option
                                         key={index}
                                         value={provider.provider_id}
+                                        selected={ index === 0 && providerData.length === 1 ? true : false }
                                       >
                                         {provider.provider_name}
                                       </option>
@@ -542,6 +558,7 @@ const NewTour = ({ history }) => {
                                       <option
                                         key={index}
                                         value={operator.operator_id}
+                                        selected={ index === 0 && operatorData.length === 1 ? true : false }
                                       >
                                         {operator.operator_name}
                                       </option>
@@ -606,7 +623,11 @@ const NewTour = ({ history }) => {
                                   <option>Select....</option>
                                   {map(locationData, (location, index) => {
                                     return (
-                                      <option key={index} value={location.id}>
+                                      <option
+                                        key={index}
+                                        value={location.id}
+                                        selected={ index === 0 && locationData.length === 1 ? true : false }
+                                      >
                                         {location.name}
                                       </option>
                                     );
@@ -640,6 +661,7 @@ const NewTour = ({ history }) => {
                                       <option
                                         key={index}
                                         value={category.category_id}
+                                        selected={ index === 0 && categoryData.length === 1 ? true : false }
                                       >
                                         {category.category_name}
                                       </option>
@@ -648,7 +670,7 @@ const NewTour = ({ history }) => {
                                 </Input>
                               </div>
                             </Col>
-                                {subCategoriesData && subCategoriesData.length > 0 ? 
+                                {subCategoriesData && subCategoriesData.length > 0 ?
                             <Col className="col-4">
                               <div className="form-outline my-2">
                                 <Label className="form-label">
@@ -670,6 +692,7 @@ const NewTour = ({ history }) => {
                                     <option
                                       key={index}
                                       value={subCategory.category_id}
+                                      selected={ index === 0 && subCategoriesData.length === 1 ? true : false }
                                     >
                                       {subCategory.category_name}
                                     </option>
@@ -692,7 +715,7 @@ const NewTour = ({ history }) => {
                                   max="2"
                                   onChange={validationType.handleChange}
                                   onBlur={(e)=>{
-                                    const value = e.target.value || "";                                    
+                                    const value = e.target.value || "";
                                     validationType.setFieldValue('code', codeFormat(cleanUpSpecialCharacters(value)));
                                   }}
                                   value={validationType.values.code || ""}
@@ -718,7 +741,8 @@ const NewTour = ({ history }) => {
                             <Button
                               color="paradise"
                               outline
-                              className="waves-effect waves-light col-2 mx-4"
+                              className="waves-effect waves-light me-2 fw-bold border-3 fs-5 rounded-3"
+                              style={{minWidth:"106px"}}
                               type="button"
                               onClick={() => history.goBack()}
                             >
@@ -728,7 +752,7 @@ const NewTour = ({ history }) => {
                             <Button
                               
                               type="submit"
-                              className="font-16 btn-block col-2 btn-orange"
+                              className="font-16 btn-block btn-orange fs-5 rounded-3"
                               // onClick={toggleCategory}
                             >
                               Continue
@@ -745,7 +769,7 @@ const NewTour = ({ history }) => {
           </Card>
         </Col>
       </Row>
-      <div className="content-footer pt-2 px-4 mt-4 mx-4">
+      <div className="content-footer pt-2 px-4 mx-4">
           <p>{new Date().getFullYear()} © JS Tour & Travel</p>
         </div>
     </div>

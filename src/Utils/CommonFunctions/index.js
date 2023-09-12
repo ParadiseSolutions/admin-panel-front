@@ -36,7 +36,7 @@ export const capitalizeWords2 = (currentValue) => {
         currentValue = currentValue.trim().replaceAll('  ', ' ')
         return currentValue.replace(/\w*[-\S]/g, function (txt) {
             if(txt.length > 2) {
-                return txt.charAt(0).toUpperCase() + txt.slice(1);
+                return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
             } else {
                 return txt;
             }
@@ -47,7 +47,7 @@ export const capitalizeWords2 = (currentValue) => {
 export const capitalizeFirstWord = (currentValue) => {    
     if(currentValue) {        
         currentValue = currentValue.trim().replaceAll('  ', ' ')
-        return currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+        return currentValue.charAt(0).toUpperCase() + currentValue.slice(1).toLowerCase();
     }
 }
 
