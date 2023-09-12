@@ -35,17 +35,17 @@ import {
 const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
   //initial Data
   const [websiteData, setWebsiteData] = useState([]);
-  const [websiteSelected, setWebsiteSelected] = useState([]);
+  const [websiteSelected, setWebsiteSelected] = useState(null);
   const [providerData, setProviderData] = useState([]);
-  const [providerSelected, setProviderSelected] = useState([]);
+  const [providerSelected, setProviderSelected] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
-  const [categorySelected, setCategorySelected] = useState([]);
+  const [categorySelected, setCategorySelected] = useState(null);
   const [operatorData, setOperatorData] = useState([]);
-  const [operatorSelected, setOperatorSelected] = useState([]);
+  const [operatorSelected, setOperatorSelected] = useState(null);
   const [locationData, setLocationData] = useState([]);
-  const [locationSelected, setLocationSelected] = useState([]);
+  const [locationSelected, setLocationSelected] = useState(null);
   const [tourData, setTourData] = useState([]);
-  const [tourSelected, setTourSelected] = useState([]);
+  const [tourSelected, setTourSelected] = useState(null);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -160,12 +160,12 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
   //submit advance search
   const submitAdvanceFilters = () => {
     let data = {
-      website_id: websiteSelected.length > 0 ? websiteSelected : null,
-      provider_id: providerSelected.length > 0 ? providerSelected : null,
-      category_id: categorySelected.length > 0 ? categorySelected : null,
-      operator_id: operatorSelected.length > 0 ? operatorSelected : null,
-      location_id: locationSelected.length > 0 ? locationSelected : null,
-      tour_id: tourSelected.length > 0 ? tourSelected : null,
+      website_id: websiteSelected ? websiteSelected : null,
+      provider_id: providerSelected ? providerSelected : null,
+      category_id: categorySelected ? categorySelected : null,
+      operator_id: operatorSelected ? operatorSelected : null,
+      location_id: locationSelected ? locationSelected : null,
+      tour_id: tourSelected ? tourSelected : null,
     };
 
     onSubmitFilters(data);
@@ -262,7 +262,8 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
               <img
                 src={FiltersImage}
                 alt="new-product"
-                style={{ width: "400px", height: "450px" }}
+                //style={{ width: "400px", height: "450px" }}
+                class="img-fluid w-100"
               />
             </Col>
             <Col className="col-7">
@@ -358,7 +359,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       <option value={null}>Select....</option>
                       {map(providerData, (provider, index) => {
                         return (
-                          <option key={index} value={provider.provider_id}>
+                          <option key={index} value={provider.provider_id ? provider.provider_id : provider.id}>
                             {provider.name}
                           </option>
                         );
@@ -383,7 +384,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       <option value={null}>Select....</option>
                       {map(categoryData, (category, index) => {
                         return (
-                          <option key={index} value={category.category_id}>
+                          <option key={index} value={category.category_id ? category.category_id : category.id}>
                             {category.name}
                           </option>
                         );
@@ -396,6 +397,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       type="select"
                       name="operator"
                       onChange={(e) => {
+                        debugger
                         setOperatorSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
@@ -404,7 +406,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       <option value={null}>Select....</option>
                       {map(operatorData, (operator, index) => {
                         return (
-                          <option key={index} value={operator.operator_id}>
+                          <option key={index} value={operator.operator_id ? operator.operator_id : operator.id}>
                             {operator.name}
                           </option>
                         );
