@@ -1,16 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { toursData } from "../../Utils/Redux/Actions/ToursActions";
-import { deleteTourAPI } from "../../Utils/API/Tours";
+import {
+  deleteTourAPI,
+  getToursFiltered,
+  getTourNameFiltered,
+} from "../../Utils/API/Tours";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
 import { CartName, CartID, Server, Active } from "./ToursCols";
 import ToursFilters from "../../Components/Common/Modals/ToursFilters/toursFilters";
-import {
-  Container,
-  Row,
-  Col,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -27,6 +26,12 @@ const Tours = () => {
 
   //get info
   const data = useSelector((state) => state.tours.tours.data);
+  const [toursDataInfo, setToursDataInfo] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setToursDataInfo(data);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (data) {
@@ -34,12 +39,45 @@ const Tours = () => {
     }
   }, [data]);
 
-// filters
-const [filters, setFilters] = useState(false)
-const onClickFilter = () =>{
-  setFilters(!filters)
-}
+  // filters
+  const [filters, setFilters] = useState(false);
+  const onClickFilter = () => {
+    setFilters(!filters);
+  };
+  const onClickRemoveFilter = () => {
+    setLoadingData(true);
+    if (data) {
+      setLoadingData(false);
+      setToursDataInfo(data);
+    }
+  };
+  const onSubmitFilters = (filters) => {
+  
 
+    if (filters.search) {
+      setLoadingData(true);
+      getTourNameFiltered(filters)
+        .then((resp) => {
+          setLoadingData(false);
+          setToursDataInfo(resp.data.data);
+        })
+        .catch((error) => {
+          setLoadingData(false);
+          setToursDataInfo([]);
+        });
+    } else {
+      setLoadingData(true);
+      getToursFiltered(filters)
+        .then((resp) => {
+          setLoadingData(false);
+          setToursDataInfo(resp.data.data);
+        })
+        .catch((error) => {
+          setLoadingData(false);
+          setToursDataInfo([]);
+        });
+    }
+  };
   //delete
 
   const onDelete = (tour) => {
@@ -190,7 +228,7 @@ const onClickFilter = () =>{
         <div className=" mx-1">
           <h1
             className="fw-bold cursor-pointer"
-            style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
+            style={{ color: "#3DC7F4", fontSize: "3.5rem" }}
           >
             TOURS
           </h1>
@@ -198,23 +236,22 @@ const onClickFilter = () =>{
         <Row>
           <Col xs="12">
             {loadingData ? (
-              
-                <div className="d-flex justify-content-center mt-5">
-                  <div className="spinner-border text-orange"  role="status">
-                    <span className="sr-only">Loading...</span>
-                  </div>
-                  <h2 className='mx-5 text-orange'>Loading...</h2>
+              <div className="d-flex justify-content-center mt-5">
+                <div className="spinner-border text-orange" role="status">
+                  <span className="sr-only">Loading...</span>
                 </div>
-              
+                <h2 className="mx-5 text-orange">Loading...</h2>
+              </div>
             ) : (
               <>
                 {data ? (
                   <TableContainer
                     columns={columns}
-                    data={data}
+                    data={toursDataInfo}
                     isGlobalFilter={true}
                     toursTable={true}
                     onClickFilter={onClickFilter}
+                    onClickRemoveFilter={onClickRemoveFilter}
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
@@ -223,13 +260,14 @@ const onClickFilter = () =>{
           </Col>
         </Row>
         <ToursFilters
-        filters={filters}
-        setFilters={setFilters}
+          filters={filters}
+          setFilters={setFilters}
+          onSubmitFilters={onSubmitFilters}
         />
       </Container>
       <div className="content-footer pt-2 px-4 mt-4 mx-4">
-          <p>2023 © JS Tour & Travel</p>
-        </div>
+        <p>2023 © JS Tour & Travel</p>
+      </div>
     </div>
   );
 };

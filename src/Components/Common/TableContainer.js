@@ -53,7 +53,8 @@ const TableContainer = ({
   onClickNewProvider,
   onClickNewContactProvider,
   onClickAddLocation,
-  onClickFilter
+  onClickFilter,
+  onClickRemoveFilter
 }) => {
   const {
     getTableProps,
@@ -299,6 +300,13 @@ const TableContainer = ({
             {toursTable && (
               <Col sm="8">
                 <div className="text-sm-end">
+                  <Button
+                    type="button"
+                    className="waves-effect waves-light mb-3 btn btn-orange mx-2"
+                    onClick={() => onClickRemoveFilter()}
+                  >
+                    <i className="mdi mdi-filter-remove me-1" />
+                  </Button>
                   <Button
                     type="button"
                     className="waves-effect waves-light mb-3 btn btn-orange mx-2"
