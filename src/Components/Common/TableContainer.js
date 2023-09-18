@@ -54,7 +54,8 @@ const TableContainer = ({
   onClickNewContactProvider,
   onClickAddLocation,
   onClickFilter,
-  onClickRemoveFilter
+  onClickRemoveFilter,
+  setBulkModal
 }) => {
   const {
     getTableProps,
@@ -300,6 +301,13 @@ const TableContainer = ({
             {toursTable && (
               <Col sm="8">
                 <div className="text-sm-end">
+                  <Button
+                    type="button"
+                    className="waves-effect waves-light mb-3 btn btn-orange mx-2"
+                    onClick={() => setBulkModal(true)}
+                  >
+                    <i className="uil uil-download-alt me-1" />
+                  </Button>
                   <Button
                     type="button"
                     className="waves-effect waves-light mb-3 btn btn-orange mx-2"

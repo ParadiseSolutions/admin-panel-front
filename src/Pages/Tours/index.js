@@ -5,6 +5,7 @@ import {
   getToursFiltered,
   getTourNameFiltered,
 } from "../../Utils/API/Tours";
+import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../Components/Common/TableContainer";
 import { CartName, CartID, Server, Active } from "./ToursCols";
@@ -41,6 +42,7 @@ const Tours = () => {
 
   // filters
   const [filters, setFilters] = useState(false);
+  const [isFiltered, setIsFiltered] = useState(false)
   const onClickFilter = () => {
     setFilters(!filters);
   };
@@ -49,11 +51,12 @@ const Tours = () => {
     if (data) {
       setLoadingData(false);
       setToursDataInfo(data);
+      setIsFiltered(false)
     }
   };
   const onSubmitFilters = (filters) => {
   
-
+    setIsFiltered(true)
     if (filters.search) {
       setLoadingData(true);
       getTourNameFiltered(filters)
@@ -78,6 +81,11 @@ const Tours = () => {
         });
     }
   };
+  
+  // bulk edit
+  const [bulkModal, setBulkModal] = useState(false)
+
+
   //delete
 
   const onDelete = (tour) => {
@@ -252,6 +260,7 @@ const Tours = () => {
                     toursTable={true}
                     onClickFilter={onClickFilter}
                     onClickRemoveFilter={onClickRemoveFilter}
+                    setBulkModal={setBulkModal}
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
@@ -263,6 +272,12 @@ const Tours = () => {
           filters={filters}
           setFilters={setFilters}
           onSubmitFilters={onSubmitFilters}
+        />
+        <BulkEditTour 
+        setBulkModal={setBulkModal}
+        bulkModal={bulkModal}
+        isFiltered={isFiltered}
+        toursDataInfo={toursDataInfo}
         />
       </Container>
       <div className="content-footer pt-2 px-4 mt-4 mx-4">

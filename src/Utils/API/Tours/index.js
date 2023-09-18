@@ -17,6 +17,20 @@ export const bulkUpdate = (id, body) => {
   });
 };
 
+//bulk tours prices
+export const bulkToursGet = (body) => {
+  const url = `${API_URL}/filters/prices/bulk-get`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const bulkToursPut = (body) => {
+  const url = `${API_URL}/filters/prices/bulk-update`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
   //general request
   export const statusUpdateTour = (id, body) => {
     const url = `${API_URL}/tours/${id}/status`;
