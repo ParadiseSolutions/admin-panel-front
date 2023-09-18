@@ -306,7 +306,7 @@ const TableContainer = ({
                     className="waves-effect waves-light mb-3 btn btn-orange mx-2"
                     onClick={() => setBulkModal(true)}
                   >
-                    <i className="uil uil-download-alt me-1" />
+                    <i className="mdi mdi-lead-pencil me-1" />
                   </Button>
                   <Button
                     type="button"
