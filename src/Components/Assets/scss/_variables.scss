@@ -128,6 +128,7 @@ $green:   #34c38f;
 $teal:    #050505;
 $cyan:    #50a5f1;
 $paradise: #3DC7F4;
+$paradiseOrange: #F6851F;
 $hooray:  #00A1D5;
 // scss-docs-end color-variables
 
@@ -147,6 +148,7 @@ $colors: (
     "gray":       $gray-600,
     "gray-dark":  $gray-800,
     "paradise":   $paradise,
+    "paradiseOrange":   $paradiseOrange,
     "hooray":     $hooray,
   );
 // scss-docs-end colors-map
@@ -162,6 +164,7 @@ $light:         $gray-200;
 $dark:          $gray-800;
 $purple:        $purple;
 $paradise:      $paradise;
+$paradiseOrange:      $paradiseOrange;
 $hooray:        $hooray;
 // scss-docs-end theme-color-variables
 
@@ -178,6 +181,7 @@ $theme-colors: (
     "dark":       $dark,
     "purple":       $purple,
     "paradise":   $paradise,
+    "paradiseOrange":   $paradiseOrange,
     "hooray":     $hooray,
 );
 

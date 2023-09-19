@@ -301,26 +301,33 @@ const TableContainer = ({
             {toursTable && (
               <Col sm="8">
                 <div className="text-sm-end">
+                 
                   <Button
                     type="button"
-                    className="waves-effect waves-light mb-3 btn btn-orange mx-2"
-                    onClick={() => setBulkModal(true)}
-                  >
-                    <i className="uil uil-download-alt me-1" />
-                  </Button>
-                  <Button
-                    type="button"
-                    className="waves-effect waves-light mb-3 btn btn-orange mx-2"
+                    color="paradiseOrange"
+                    outline
+                    className="waves-effect waves-light mb-3 mx-1"
                     onClick={() => onClickRemoveFilter()}
                   >
-                    <i className="mdi mdi-filter-remove me-1" />
+                    <i className="mdi mdi-filter-remove-outline " />
                   </Button>
                   <Button
                     type="button"
-                    className="waves-effect waves-light mb-3 btn btn-orange mx-2"
+                    color="paradiseOrange"
+                    outline
+                    className="waves-effect waves-light mb-3 ml-1"
                     onClick={() => onClickFilter()}
                   >
-                    <i className="mdi mdi-filter me-1" />
+                    <i className="mdi mdi-filter-outline" />
+                  </Button>
+                  <Button
+                    type="button"
+                    color="paradiseOrange"
+                    outline
+                    className="waves-effect waves-light mb-3 mx-1"
+                    onClick={() => setBulkModal(true)}
+                  >
+                    <i className="uil uil-edit-alt " />
                   </Button>
 
                   <Link to={"/tours/new"}>
@@ -986,6 +993,7 @@ const TableContainer = ({
             <div className="table-responsive" style={{ minHeight: "503px" }}>
               <Table hover {...getTableProps()} className="react_table">
                 <thead className="table-nowrap">
+                  
                   {headerGroups.map((headerGroup) => (
                     <tr
                       key={headerGroup.id}
@@ -1123,7 +1131,7 @@ function GlobalFilter({
           className="search-box me-2 mb-2 d-inline-block"
           style={{ minWidth: "342px" }}
         >
-          <div className="position-relative">
+          <div className="position-relative col-10">
             <label
               htmlFor="search-bar-0"
               className="search-label"
