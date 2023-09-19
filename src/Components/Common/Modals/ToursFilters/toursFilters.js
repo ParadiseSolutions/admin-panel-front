@@ -267,7 +267,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
               />
             </Col>
             <Col className="col-7">
-              <Col lg={10} className="d-flex">
+              <Col lg={12} className="d-flex">
                 <div className="form-outline mb-4 col-10">
                   <h4 className="form-label font-weight-bold">
                     Tour Name or URL
@@ -301,12 +301,12 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   type="submit"
                   // onClick={() => setFilters(false)}
                 >
-                  <i className="bx bx-search-alt-2"></i>
+                  <i className="bx bx-search-alt-2 "></i>
                 </Button>
               </Col>
               <Col
                 className="col-12 p-1 my-2"
-                style={{ backgroundColor: "#FFFBC8" }}
+                style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
                   className="p-2"
@@ -321,9 +321,9 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                 </p>
               </Col>
 
-              <Col lg={10}>
-                <div className="col-12 d-flex justify-content-between">
-                  <div className="form-outline col-5 mt-3">
+              <Col lg={11}>
+                <div className="col-12 d-flex ">
+                  <div className="form-outline col-6 mt-3">
                     <h4 className="form-label  font-weight-bold">Website</h4>
                     <Input
                       type="select"
@@ -345,7 +345,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       })}
                     </Input>
                   </div>
-                  <div className="form-outline col-5 mt-3">
+                  <div className="form-outline col-6 mt-3 mx-4">
                     <h4 className="form-label  font-weight-bold">Provider</h4>
                     <Input
                       type="select"
@@ -368,9 +368,9 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   </div>
                 </div>
               </Col>
-              <Col lg={10}>
-                <div className="col-12 d-flex justify-content-between">
-                  <div className="form-outline col-5 mt-3">
+              <Col lg={11}>
+                <div className="col-12 d-flex ">
+                  <div className="form-outline col-6 mt-3">
                     <h4 className="form-label font-weight-bold">Category</h4>
                     <Input
                       type="select"
@@ -391,7 +391,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       })}
                     </Input>
                   </div>
-                  <div className="form-outline col-5 mt-3">
+                  <div className="form-outline col-6 mx-4 mt-3">
                     <h4 className="form-label font-weight-bold">Operator</h4>
                     <Input
                       type="select"
@@ -415,9 +415,9 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   </div>
                 </div>
               </Col>
-              <Col lg={10}>
-                <div className="col-12 d-flex justify-content-between">
-                  <div className="form-outline col-5 mt-3">
+              <Col lg={11}>
+                <div className="col-12 d-flex ">
+                  <div className="form-outline col-6 mt-3">
                     <h4 className="form-label font-weight-bold">Location</h4>
                     <Input
                       type="select"
@@ -438,7 +438,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       })}
                     </Input>
                   </div>
-                  <div className="form-outline col-5 mt-3">
+                  <div className="form-outline col-6 mx-4 mt-3">
                     <h4 className="form-label font-weight-bold">Tour</h4>
                     <Input
                       type="select"
