@@ -301,7 +301,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   type="submit"
                   // onClick={() => setFilters(false)}
                 >
-                  <i className="bx bx-search-alt-2 "></i>
+                  <i className="bx bx-search-alt-2 " style={{fontSize:'30px'}}></i>
                 </Button>
               </Col>
               <Col
@@ -468,7 +468,8 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                 <Button
                   color="paradise"
                   outline
-                  className="waves-effect waves-light"
+                  className="waves-effect waves-light mx-2 "
+                  style={{ height: "40px", marginTop: "33px" }}
                   type="button"
                   onClick={() => {
                     setWebsiteData([]);
@@ -479,16 +480,17 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                     setTourData([]);
                   }}
                 >
-                  <i className="ul uil-redo size"></i>
+                  <i className="bx bx-revision"style={{fontSize:'25px'}}></i>
                 </Button>
                 <Button
                   color="paradise"
                   outline
-                  className="waves-effect waves-light mx-4"
+                  className="waves-effect waves-light  "
+                  style={{ height: "40px", marginTop: "33px" }}
                   type="button"
                   onClick={() => submitAdvanceFilters()}
                 >
-                  <i className="bx bx-search-alt-2 size"></i>
+                  <i className="bx bx-search-alt-2" style={{fontSize:'25px'}}></i>
                 </Button>
                 {/* <Button
                   type="submit"
