@@ -78,6 +78,93 @@ const Active = (cell) => {
 
     if (cell.value === 1) {
       let data = { active: 0 };
+      statusUpdatePrice(id, data).then((resp) => {
+        triggerUpdate()
+        // console.log(resp);
+      });
+    }
+    if (cell.value === 0) {
+      let data = { active: 1 };
+      statusUpdatePrice(id, data)
+        .then((resp) => {
+          triggerUpdate()
+          // console.log(resp);
+        })
+        .catch((error) => {
+          // console.log(error);
+          setTimeout(() => {
+            <Toast>
+              <ToastHeader
+                icon={<Spinner type="grow" size="sm" color="danger" />}
+              >
+                Oops...
+              </ToastHeader>
+              <ToastBody>Something goes wrong try again later!!!</ToastBody>
+            </Toast>;
+          }, 5000);
+        });
+    }
+  };
+  return (
+    <Switch
+      uncheckedIcon={<Offsymbol />}
+      checkedIcon={<OnSymbol />}
+      onColor="#3DC7F4"
+      onChange={() => onChangeActive()}
+      checked={activeDep}
+    />
+  );
+};
+
+const ActiveAddon = (cell) => {
+  const id = cell.row.original.id;
+  const Offsymbol = () => {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          fontSize: 12,
+          color: "#fff",
+          paddingRight: 2,
+        }}
+      >
+        {" "}
+        No
+      </div>
+    );
+  };
+
+  const OnSymbol = () => {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          fontSize: 12,
+          color: "#fff",
+          paddingRight: 2,
+        }}
+      >
+        {" "}
+        Yes
+      </div>
+    );
+  };
+
+  const [activeDep, setActiveDep] = useState(
+    cell.value && cell.value === 1 ? true : false
+  );
+
+  const onChangeActiveAddon = () => {
+    setActiveDep(!activeDep);
+
+    if (cell.value === 1) {
+      let data = { active: 0 };
       statusUpdateAddon(id, data).then((resp) => {
         triggerUpdate()
         // console.log(resp);
@@ -110,7 +197,7 @@ const Active = (cell) => {
       uncheckedIcon={<Offsymbol />}
       checkedIcon={<OnSymbol />}
       onColor="#3DC7F4"
-      onChange={() => onChangeActive()}
+      onChange={() => onChangeActiveAddon()}
       checked={activeDep}
     />
   );
@@ -127,4 +214,4 @@ const Active = (cell) => {
 //     )
 // };
 
-export { Name, Code, Date, Members, Price, Active, Rate };
+export { Name, Code, Date, Members, Price, Active, Rate, ActiveAddon };
