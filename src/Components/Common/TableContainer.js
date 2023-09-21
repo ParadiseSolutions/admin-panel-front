@@ -306,6 +306,15 @@ const TableContainer = ({
                     type="button"
                     color="paradiseOrange"
                     outline
+                    className="waves-effect waves-light mb-3 "
+                    onClick={() => onClickRemoveFilter()}
+                  >
+                    <i className="bx bx-download" />
+                  </Button>
+                  <Button
+                    type="button"
+                    color="paradiseOrange"
+                    outline
                     className="waves-effect waves-light mb-3 mx-1"
                     onClick={() => onClickRemoveFilter()}
                   >
