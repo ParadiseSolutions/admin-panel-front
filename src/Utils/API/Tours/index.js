@@ -17,6 +17,20 @@ export const bulkUpdate = (id, body) => {
   });
 };
 
+//bulk tours prices
+export const bulkToursGet = (body) => {
+  const url = `${API_URL}/filters/prices/bulk-get`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const bulkToursPut = (body) => {
+  const url = `${API_URL}/filters/prices/bulk-update`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
   //general request
   export const statusUpdateTour = (id, body) => {
     const url = `${API_URL}/tours/${id}/status`;
@@ -47,6 +61,18 @@ export const bulkUpdate = (id, body) => {
   export const getTourAPI = (id) => {
     const url = `${API_URL}/tours/${id}`;
     return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getToursFiltered = (body) => {
+    const url = `${API_URL}/filters/tours/params`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+  export const getTourNameFiltered = (body) => {
+    const url = `${API_URL}/filters/tours/name-link`;
+    return axios.post (url, body, {
       headers: options,
     });
   };
@@ -112,6 +138,12 @@ export const bulkUpdate = (id, body) => {
 
   export const providerWebsite = (id) => {
     const url = `${API_URL}/websites/${id}/providers`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const toursWebsite = (id) => {
+    const url = `${API_URL}/websites/${id}/tours`;
     return axios.get (url, {
       headers: options,
     });
