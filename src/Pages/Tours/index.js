@@ -7,8 +7,8 @@ import {
 } from "../../Utils/API/Tours";
 import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../Components/Common/TableContainer";
-import { CartName, CartID, Server, Active } from "./ToursCols";
+import TableContainer from "./Table/Table";
+import { CartName, CartID, Server, Active } from "./Table/ToursCols";
 import ToursFilters from "../../Components/Common/Modals/ToursFilters/toursFilters";
 import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";

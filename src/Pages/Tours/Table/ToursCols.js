@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
-import { statusUpdateTour } from "../../Utils/API/Tours";
+import { statusUpdateTour } from "../../../Utils/API/Tours";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { toursData } from "../../Utils/Redux/Actions/ToursActions";
+import { toursData } from "../../../Utils/Redux/Actions/ToursActions";
 // const OrderId = (cell) => {
 //     return (
 //         <Link to="#" className="text-body fw-bold">{cell.value ? cell.value : ''}</Link>
