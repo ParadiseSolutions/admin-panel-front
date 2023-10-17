@@ -26,7 +26,7 @@ import { useParams } from "react-router-dom";
 const EditTour = ({ history }) => {
   const { id } = useParams();
   //tabs
-  const [activeTab, setactiveTab] = useState("2");
+  const [activeTab, setactiveTab] = useState("1");
   function toggle(tab) {
     if (activeTab !== tab) {
       setactiveTab(tab);

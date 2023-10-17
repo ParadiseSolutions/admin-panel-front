@@ -5,6 +5,7 @@ import {
   getToursFiltered,
   getTourNameFiltered,
 } from "../../Utils/API/Tours";
+import { createStorageSync, getStorageSync } from "../../Utils/API";
 import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "./Table/Table";
@@ -30,37 +31,42 @@ const Tours = () => {
   const [toursDataInfo, setToursDataInfo] = useState([]);
   useEffect(() => {
     if (data) {
-      setToursDataInfo(data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (data) {
-      setLoadingData(false);
+      let tourInfo = JSON.parse(getStorageSync("Tour-data"));
+      console.log(tourInfo);
+      if (tourInfo) {
+        setToursDataInfo(tourInfo);
+        setLoadingData(false);
+        setIsFiltered(true)
+      } else {
+        setToursDataInfo(data);
+        setLoadingData(false);
+      }
+      
     }
   }, [data]);
 
   // filters
   const [filters, setFilters] = useState(false);
-  const [isFiltered, setIsFiltered] = useState(false)
+  const [isFiltered, setIsFiltered] = useState(false);
   const onClickFilter = () => {
     setFilters(!filters);
   };
   const onClickRemoveFilter = () => {
     setLoadingData(true);
     if (data) {
+      localStorage.removeItem("Tour-data")
       setLoadingData(false);
       setToursDataInfo(data);
-      setIsFiltered(false)
+      setIsFiltered(false);
     }
   };
   const onSubmitFilters = (filters) => {
-  
-    setIsFiltered(true)
+    setIsFiltered(true);
     if (filters.search) {
       setLoadingData(true);
       getTourNameFiltered(filters)
         .then((resp) => {
+          createStorageSync("Tour-data", JSON.stringify(resp.data.data))
           setLoadingData(false);
           setToursDataInfo(resp.data.data);
         })
@@ -72,6 +78,7 @@ const Tours = () => {
       setLoadingData(true);
       getToursFiltered(filters)
         .then((resp) => {
+          createStorageSync("Tour-data", JSON.stringify(resp.data.data))
           setLoadingData(false);
           setToursDataInfo(resp.data.data);
         })
@@ -81,10 +88,9 @@ const Tours = () => {
         });
     }
   };
-  
-  // bulk edit
-  const [bulkModal, setBulkModal] = useState(false)
 
+  // bulk edit
+  const [bulkModal, setBulkModal] = useState(false);
 
   //delete
 
@@ -130,6 +136,15 @@ const Tours = () => {
   };
   const columns = useMemo(
     () => [
+      {
+        Header: "ID",
+        accessor: "id",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <CartName {...cellProps} />;
+        },
+      },
       {
         Header: "Name",
         accessor: "name",
@@ -205,7 +220,6 @@ const Tours = () => {
                 </Link>
               </div>
               <Link
-                to="#"
                 className="text-danger"
                 onClick={() => {
                   const tourData = cellProps.row.original;
@@ -261,6 +275,7 @@ const Tours = () => {
                     onClickFilter={onClickFilter}
                     onClickRemoveFilter={onClickRemoveFilter}
                     setBulkModal={setBulkModal}
+                    isFiltered={isFiltered}
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
@@ -273,11 +288,11 @@ const Tours = () => {
           setFilters={setFilters}
           onSubmitFilters={onSubmitFilters}
         />
-        <BulkEditTour 
-        setBulkModal={setBulkModal}
-        bulkModal={bulkModal}
-        isFiltered={isFiltered}
-        toursDataInfo={toursDataInfo}
+        <BulkEditTour
+          setBulkModal={setBulkModal}
+          bulkModal={bulkModal}
+          isFiltered={isFiltered}
+          toursDataInfo={toursDataInfo}
         />
       </Container>
       <div className="content-footer pt-2 px-4 mt-4 mx-4">
