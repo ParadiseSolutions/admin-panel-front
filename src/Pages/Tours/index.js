@@ -32,7 +32,7 @@ const Tours = () => {
   useEffect(() => {
     if (data) {
       let tourInfo = JSON.parse(getStorageSync("Tour-data"));
-      console.log(tourInfo);
+     
       if (tourInfo) {
         setToursDataInfo(tourInfo);
         setLoadingData(false);
@@ -134,6 +134,24 @@ const Tours = () => {
       }
     });
   };
+
+  const copyTour = (tour) =>{
+    console.log('tour =>', tour )
+    Swal.fire({
+      title: "Copy Tour?",
+      icon: "question",
+      text: `Do you want copy ${tour.name}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        console.log('nos vamos a la b')
+      }
+    })
+  }
+
   const columns = useMemo(
     () => [
       {
@@ -219,7 +237,7 @@ const Tours = () => {
                   </UncontrolledTooltip>
                 </Link>
               </div>
-              <Link
+              <div
                 className="text-danger"
                 onClick={() => {
                   const tourData = cellProps.row.original;
@@ -235,7 +253,24 @@ const Tours = () => {
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
-              </Link>
+              </div>
+              <div
+                className="text-warning"
+                onClick={() => {
+                  const tourData = cellProps.row.original;
+                  // setconfirm_alert(true);
+                  copyTour(tourData);
+                }}
+              >
+              <i
+                className="mdi mdi-content-copy font-size-18"
+                id="copytooltip"
+                style={{ cursor: "pointer" }}
+              />
+              <UncontrolledTooltip placement="top" target="copytooltip">
+                Copy
+              </UncontrolledTooltip>
+              </div>
             </div>
           );
         },

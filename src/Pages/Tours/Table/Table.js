@@ -191,7 +191,6 @@ const TableContainer = ({
     );
   }
 
-  console.log(isFiltered);
   return (
     <Fragment>
       <Card className="mb-3">
@@ -208,33 +207,6 @@ const TableContainer = ({
             {toursTable && (
               <Col sm="8">
                 <div className="text-sm-end">
-                  {/*   <Button
-                    type="button"
-                    color="paradiseOrange"
-                    outline
-                    className="waves-effect waves-light mb-3 "
-                    onClick={() => onClickRemoveFilter()}
-                  >
-                    <i className="bx bx-download" />
-                  </Button> */}
-                  {/*  <Button
-                    type="button"
-                    color="paradiseOrange"
-                    outline
-                    className="waves-effect waves-light mb-3 mx-1"
-                    onClick={() => onClickRemoveFilter()}
-                  >
-                    <i className="mdi mdi-filter-remove-outline " />
-                  </Button>
-                  <Button
-                    type="button"
-                    color="paradiseOrange"
-                    outline
-                    className="waves-effect waves-light mb-3 ml-1"
-                    onClick={() => onClickFilter()}
-                  >
-                    <i className="mdi mdi-filter-outline" />
-                  </Button> */}
                   <div className="d-flex flex-row-reverse">
                     <Link to={"/tours/new"}>
                       <Button
