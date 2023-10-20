@@ -143,7 +143,7 @@ const Tours = () => {
       text: `Do you want copy ${tour.name}`,
       showCancelButton: true,
       confirmButtonText: "Yes",
-      confirmButtonColor: "#F38430",
+      confirmButtonColor: "#F6851F",
       cancelButtonText: "Cancel",
     }).then((resp) => {
       if (resp.isConfirmed) {

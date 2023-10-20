@@ -53,6 +53,7 @@ const TableContainer = ({
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
+    
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -109,27 +110,19 @@ const TableContainer = ({
                   Search this table
                 </span>
                 <input
-                  onChange={(e) => {
-                    setValue(e.target.value);
-                    onChange(e.target.value);
-                  }}
-                  id="search-bar-0"
-                  type="text"
-                  className="form-control"
-                  placeholder={`${count} records...`}
-                  value={value || ""}
-                />
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  onChange(e.target.value);
+                }}
+                id="search-bar-0"
+                type="text"
+                className="form-control"
+                placeholder={`${count} records...`}
+                value={value || ""}
+              />
               </label>
               <i className="bx bx-search search-icon"></i>
-             {/*  <button
-                type="button"
-                className="btn bg-transparent"
-                style={{ marginLeft: "-40px", zIndex: "100" }}
-                onClick={() => } 
-
-              >
-                <i class="fa fa-times"></i>
-              </button> */}
+              
             </div>
 
             {isFiltered ? (

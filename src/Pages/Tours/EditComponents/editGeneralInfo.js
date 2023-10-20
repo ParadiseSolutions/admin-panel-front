@@ -34,6 +34,7 @@ import {
   capitalizeWords2,
 } from "../../../Utils/CommonFunctions";
 import { getSubCategory } from "../../../Utils/API/Categories";
+import { categoriesData } from "../../../Utils/Redux/Actions/CategoriesActions";
 
 const EditGeneralInformation = ({ tourData, toggle }) => {
   const history = useHistory();
@@ -60,6 +61,15 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     locationRequest();
   }, [dispatch]);
   const dataLocations = useSelector((state) => state.locations.locations.data);
+
+    //categories request
+    useEffect(() => {
+      const categoryRequest = () => dispatch(categoriesData());
+      categoryRequest();
+    }, [dispatch]);
+    const dataCategories = useSelector(
+      (state) => state.categories.categories.data
+    );
 
   //combo boxs
   const [tourTypeID, setTourTypeID] = useState(tourData.type_id);
@@ -93,16 +103,32 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   const [providerData, setProviderData] = useState(null);
   const [operatorData, setOperatorData] = useState(null);
   const [locationData, setLocationData] = useState(null);
-  const [categoryData, setCategoryData] = useState(null); /*  */
+  const [categoryData, setCategoryData] = useState(null);
+
   const onChangeWebsite = (id) => {
     shoppingCartWebsite(id).then((resp) => {
       setShoppingCartData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setShoppingCartID(resp.data.data[0].id);
+      } else {
+        setShoppingCartID(null);
+      }
     });
     providerWebsite(id).then((resp) => {
       setProviderData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setProviderID(resp.data.data[0].id);
+      } else {
+        setProviderID(null);
+      }
     });
     operatorWebsite(id).then((resp) => {
       setOperatorData(resp.data.data);
+      if (resp.data.data.length === 1) {
+        setOperatorID(resp.data.data[0].id);
+      } else {
+        setOperatorID(null);
+      }
     });
     getLocationWebsitePI(id).then((resp) => {
       setLocationData(resp.data.data);
@@ -120,8 +146,9 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         setMainCatID(null);
       }
     });
+    //setCategoryId(id)
   };
-
+console.log('categoria----', subCategoriesData)
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -258,7 +285,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                    disabled
+                    /* disabled */
                     onChange={(e) => {
                       onChangeWebsite(e.target.value);
                       setWebsiteID(e.target.value);
@@ -289,7 +316,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Input
                     type="select"
                     name="department"
-                    disabled
+                    /* disabled */
                     onChange={(e) => {
                       setShoppingCartID(e.target.value);
                     }}
@@ -321,7 +348,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                    disabled
+                    /* disabled */
                     onChange={(e) => {
                       setProviderID(e.target.value);
                     }}
@@ -353,7 +380,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                    disabled
+                    /* disabled */
                     onChange={(e) => {
                       setOperatorID(e.target.value);
                     }}
@@ -429,7 +456,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                    disabled
+                    /* disabled */
                     onChange={(e) => {
                       setLocationID(e.target.value);
                     }}
@@ -460,8 +487,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Main Category</Label>
                   <Input
                     type="select"
-                    name=""
-                    disabled
+                    name="main-category"
+                    /* disabled */
                     onChange={(e) => {
                       setMainCatID(e.target.value);
                       setCategoryId(e.target.value);
@@ -495,7 +522,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                    disabled={providerData ? false : true}
+                    /* disabled={providerData ? false : true} */
                     onChange={(e) => {
                       setSecondCatID(e.target.value);
                     }}

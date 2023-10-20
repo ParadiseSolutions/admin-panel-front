@@ -29,8 +29,6 @@ const BulkEditTour = ({
         setDataFiltered(resp.data.data)
       }).catch((err) =>{console.log(err)})
       
-    } else {
-      console.log("negatorio no filtrado");
     }
   }, [bulkModal]);
 
