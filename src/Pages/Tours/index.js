@@ -5,10 +5,11 @@ import {
   getToursFiltered,
   getTourNameFiltered,
 } from "../../Utils/API/Tours";
+import { createStorageSync, getStorageSync } from "../../Utils/API";
 import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../Components/Common/TableContainer";
-import { CartName, CartID, Server, Active } from "./ToursCols";
+import TableContainer from "./Table/Table";
+import { CartName, CartID, Server, Active } from "./Table/ToursCols";
 import ToursFilters from "../../Components/Common/Modals/ToursFilters/toursFilters";
 import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -30,37 +31,42 @@ const Tours = () => {
   const [toursDataInfo, setToursDataInfo] = useState([]);
   useEffect(() => {
     if (data) {
-      setToursDataInfo(data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (data) {
-      setLoadingData(false);
+      let tourInfo = JSON.parse(getStorageSync("Tour-data"));
+     
+      if (tourInfo) {
+        setToursDataInfo(tourInfo);
+        setLoadingData(false);
+        setIsFiltered(true)
+      } else {
+        setToursDataInfo(data);
+        setLoadingData(false);
+      }
+      
     }
   }, [data]);
 
   // filters
   const [filters, setFilters] = useState(false);
-  const [isFiltered, setIsFiltered] = useState(false)
+  const [isFiltered, setIsFiltered] = useState(false);
   const onClickFilter = () => {
     setFilters(!filters);
   };
   const onClickRemoveFilter = () => {
     setLoadingData(true);
     if (data) {
+      localStorage.removeItem("Tour-data")
       setLoadingData(false);
       setToursDataInfo(data);
-      setIsFiltered(false)
+      setIsFiltered(false);
     }
   };
   const onSubmitFilters = (filters) => {
-  
-    setIsFiltered(true)
+    setIsFiltered(true);
     if (filters.search) {
       setLoadingData(true);
       getTourNameFiltered(filters)
         .then((resp) => {
+          createStorageSync("Tour-data", JSON.stringify(resp.data.data))
           setLoadingData(false);
           setToursDataInfo(resp.data.data);
         })
@@ -72,6 +78,7 @@ const Tours = () => {
       setLoadingData(true);
       getToursFiltered(filters)
         .then((resp) => {
+          createStorageSync("Tour-data", JSON.stringify(resp.data.data))
           setLoadingData(false);
           setToursDataInfo(resp.data.data);
         })
@@ -81,10 +88,9 @@ const Tours = () => {
         });
     }
   };
-  
-  // bulk edit
-  const [bulkModal, setBulkModal] = useState(false)
 
+  // bulk edit
+  const [bulkModal, setBulkModal] = useState(false);
 
   //delete
 
@@ -128,8 +134,35 @@ const Tours = () => {
       }
     });
   };
+
+  const copyTour = (tour) =>{
+    console.log('tour =>', tour )
+    Swal.fire({
+      title: "Copy Tour?",
+      icon: "question",
+      text: `Do you want copy ${tour.name}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F6851F",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        console.log('nos vamos a la b')
+      }
+    })
+  }
+
   const columns = useMemo(
     () => [
+      {
+        Header: "ID",
+        accessor: "id",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <CartName {...cellProps} />;
+        },
+      },
       {
         Header: "Name",
         accessor: "name",
@@ -204,8 +237,7 @@ const Tours = () => {
                   </UncontrolledTooltip>
                 </Link>
               </div>
-              <Link
-                to="#"
+              <div
                 className="text-danger"
                 onClick={() => {
                   const tourData = cellProps.row.original;
@@ -221,7 +253,24 @@ const Tours = () => {
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
-              </Link>
+              </div>
+              <div
+                className="text-warning"
+                onClick={() => {
+                  const tourData = cellProps.row.original;
+                  // setconfirm_alert(true);
+                  copyTour(tourData);
+                }}
+              >
+              <i
+                className="mdi mdi-content-copy font-size-18"
+                id="copytooltip"
+                style={{ cursor: "pointer" }}
+              />
+              <UncontrolledTooltip placement="top" target="copytooltip">
+                Copy
+              </UncontrolledTooltip>
+              </div>
             </div>
           );
         },
@@ -261,6 +310,7 @@ const Tours = () => {
                     onClickFilter={onClickFilter}
                     onClickRemoveFilter={onClickRemoveFilter}
                     setBulkModal={setBulkModal}
+                    isFiltered={isFiltered}
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
@@ -273,11 +323,11 @@ const Tours = () => {
           setFilters={setFilters}
           onSubmitFilters={onSubmitFilters}
         />
-        <BulkEditTour 
-        setBulkModal={setBulkModal}
-        bulkModal={bulkModal}
-        isFiltered={isFiltered}
-        toursDataInfo={toursDataInfo}
+        <BulkEditTour
+          setBulkModal={setBulkModal}
+          bulkModal={bulkModal}
+          isFiltered={isFiltered}
+          toursDataInfo={toursDataInfo}
         />
       </Container>
       <div className="content-footer pt-2 px-4 mt-4 mx-4">

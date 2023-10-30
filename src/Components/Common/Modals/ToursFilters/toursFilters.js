@@ -397,7 +397,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       type="select"
                       name="operator"
                       onChange={(e) => {
-                        debugger
+                        
                         setOperatorSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
