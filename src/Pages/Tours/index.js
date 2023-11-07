@@ -311,6 +311,7 @@ const Tours = () => {
                     onClickRemoveFilter={onClickRemoveFilter}
                     setBulkModal={setBulkModal}
                     isFiltered={isFiltered}
+                    onSubmitFilters={onSubmitFilters}
                     // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
