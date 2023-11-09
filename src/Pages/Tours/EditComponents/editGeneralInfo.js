@@ -41,11 +41,15 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   const history = useHistory();
   //get initial data tour types
   const dispatch = useDispatch();
+  const [editMode, setEditMode] = useState(
+    tourData.edit_mode === 1 ? false : true
+  );
   console.log("info del tour", tourData);
   //tour types request
   useEffect(() => {
     const tourTypesRequest = () => dispatch(tourTypesData());
     tourTypesRequest();
+   
   }, [dispatch]);
   const dataTourType = useSelector((state) => state.tourTypes.tourTypes.data);
 
@@ -73,9 +77,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   );
 
   //combo boxs
-  const [editMode, setEditMode] = useState(
-    tourData.edit_mode === 1 ? false : true
-  );
+
   const [tourTypeID, setTourTypeID] = useState(tourData.type_id);
   const [websiteID, setWebsiteID] = useState(tourData.website_id);
   const [shoppingCartID, setShoppingCartID] = useState(tourData.cart_id);
@@ -262,7 +264,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       }
     },
   });
-
+console.log('edit mode', editMode)
   return (
     <Form
       onSubmit={(e) => {
