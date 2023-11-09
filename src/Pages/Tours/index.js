@@ -148,7 +148,8 @@ const Tours = () => {
     }).then((resp) => {
       if (resp.isConfirmed) {
         copyTourAPI(tour.id).then((resp) =>{
-          console.log('copy',resp)
+          console.log('copy',resp.data)
+          window.location.href = `/tours/${resp.data.data.tour_id}`;
         })
       }
     })

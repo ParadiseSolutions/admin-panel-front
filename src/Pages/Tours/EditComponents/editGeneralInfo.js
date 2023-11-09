@@ -74,16 +74,16 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
 
   //combo boxs
   const [editMode, setEditMode] = useState(
-    tourData.edit_mode === 0 ? true : false
+    tourData.edit_mode === 1 ? false : true
   );
   const [tourTypeID, setTourTypeID] = useState(tourData.type_id);
   const [websiteID, setWebsiteID] = useState(tourData.website_id);
-  const [shoppingCartID, setShoppingCartID] = useState(null);
-  const [providerID, setProviderID] = useState(null);
-  const [operatorID, setOperatorID] = useState(null);
-  const [locationID, setLocationID] = useState(null);
+  const [shoppingCartID, setShoppingCartID] = useState(tourData.cart_id);
+  const [providerID, setProviderID] = useState(tourData.provider_id);
+  const [operatorID, setOperatorID] = useState(tourData.operator_id);
+  const [locationID, setLocationID] = useState(tourData.location_id);
   const [mainCatID, setMainCatID] = useState(null);
-  const [categoryId, setCategoryId] = useState(null);
+  const [categoryId, setCategoryId] = useState(tourData.category_id);
   const [secondCatID, setSecondCatID] = useState(null);
 
   const [subCategoriesData, setSubCategoriesData] = useState(null);
@@ -102,7 +102,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       });
     }
   }, [mainCatID]);
-  console.log(editMode);
+  console.log(categoryId);
   //request based on website id
   const [shoppingCartData, setShoppingCartData] = useState(null);
   const [providerData, setProviderData] = useState(null);
@@ -169,19 +169,19 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         .required("Max 2 chars"),
     }),
     onSubmit: (values) => {
-      if (editMode) {
+      if (!editMode) {
         let data = {
-          cart_id: shoppingCartID,
-          website_id: websiteID,
+          cart_id: shoppingCartID ? shoppingCartID : tourData.cart_id,
+          website_id: websiteID ? websiteID : tourData.website_id,
           type_id: tourData.type_id,
-          category_id: categoryId,
-          location_id: locationID,
-          provider_id: providerID,
-          operator_id: operatorID,
+          category_id: categoryId ? categoryId : tourData.category_id,
+          location_id: locationID ? locationID : tourData.location_id,
+          provider_id: providerID ? providerID : tourData.provider_id,
+          operator_id: operatorID ? operatorID : tourData.operator_id,
           name: values.tour_name,
           // operator_tour_name: null,
           // sku: "CDSH-PRXH-",
-          // code: "PR",
+          code: values.code,
           edit_mode: 0,
         };
         putCopyTourAPI(tourData.id, data)
@@ -191,7 +191,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               triggerUpdate();
               Swal.fire(
                 "Edited!",
-                "Tour Name has been edited.",
+                "Tour has been edited.",
                 "success"
               ).then(() => {
                 onChangeWebsite();
@@ -381,7 +381,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.cart_name}</option>
+                    {editMode ? <option>{tourData.cart_name}</option> : null}
+                    
                     {map(shoppingCartData, (shoppingCart, index) => {
                       return (
                         <option
@@ -413,7 +414,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.provider_name}</option>
+                    { editMode ? <option>{tourData.provider_name}</option> : null }
+                    
                     {map(providerData, (provider, index) => {
                       return (
                         <option
@@ -445,7 +447,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.operator_name}</option>
+                    {editMode ? <option>{tourData.operator_name}</option> : null}
+                    
                     {map(operatorData, (operator, index) => {
                       return (
                         <option
@@ -521,7 +524,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.location_name}</option>
+                    {editMode ? <option>{tourData.location_name}</option> : null }
+                    
                     {map(locationData, (location, index) => {
                       return (
                         <option
@@ -554,7 +558,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.category_name}</option>
+                    {editMode ? <option>{tourData.category_name}</option> : null}
+                    
                     {map(categoryData, (category, index) => {
                       return (
                         <option
@@ -613,7 +618,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     name="code"
                     placeholder=""
                     type="text"
-                    disabled
+                    disabled={editMode}
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
                     value={validationType.values.code || ""}

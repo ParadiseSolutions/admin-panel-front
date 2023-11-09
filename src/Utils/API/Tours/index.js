@@ -60,7 +60,7 @@ export const bulkToursPut = (body) => {
   };
   export const copyTourAPI = (id) => {
     const url = `${API_URL}/tours/duplicate/${id}`;
-    return axios.post (url, {
+    return axios.post (url, null, {
       headers: options,
     });
   };
