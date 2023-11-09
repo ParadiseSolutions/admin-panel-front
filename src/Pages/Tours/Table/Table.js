@@ -215,21 +215,25 @@ const TableContainer = ({
                       {validationType.errors.search}
                     </FormFeedback> */}
               </div>
-              
-                <i
-                  className="bx bx-search-alt-2 "
-                  style={{ fontSize: "35px", color: "#3DC7F4", margin:'5px' }}
-                  onClick={() => onSubmitFilters({ search: value })}
-                ></i>
-             
+
+              <i
+                className="bx bx-search-alt-2 "
+                id="search"
+                style={{ fontSize: "35px", color: "#3DC7F4", margin: "5px" }}
+                onClick={() => onSubmitFilters({ search: value })}
+              ></i>
+              <UncontrolledTooltip placement="top" target="search">
+                Search.
+              </UncontrolledTooltip>
               <div
                 className="search-box  d-flex"
-                style={{ minWidth: "342px", marginTop:'-5px' }}
+                style={{ minWidth: "342px", marginTop: "-5px" }}
               >
                 {isFiltered ? (
-                  
+                  <>
                     <i
                       className="mdi mdi-filter-remove-outline"
+                      id="remove"
                       outline
                       style={{
                         fontSize: "35px",
@@ -239,11 +243,15 @@ const TableContainer = ({
                       /* className="waves-effect waves-light mb-3 ml-1" */
                       onClick={() => onClickRemoveFilter()}
                     />
-                  
+                    <UncontrolledTooltip placement="top" target="remove">
+                      Remove Filters.
+                    </UncontrolledTooltip>
+                  </>
                 ) : (
                   <div>
                     <i
                       className="mdi mdi-filter-outline"
+                      id="filter"
                       outline
                       style={{
                         fontSize: "35px",
@@ -253,22 +261,30 @@ const TableContainer = ({
                       /* className="waves-effect waves-light mb-3 ml-1" */
                       onClick={() => onClickFilter()}
                     />
+                    <UncontrolledTooltip placement="top" target="filter">
+                      Filters.
+                    </UncontrolledTooltip>
                   </div>
                 )}
 
-                <div style={{ marginTop: "9px" }}>
-                  <i
-                    className="bx bx-download"
-                    outline
-                    style={{
-                      fontSize: "35px",
-                      marginLeft: "10px",
-                      color: "#CED4DA",
-                      cursor: "pointer",
-                    }}
-                    /* className="waves-effect waves-light mb-3 ml-1" */
-                    onClick={() => onClickRemoveFilter()}
-                  />
+                <div id="export" style={{ marginTop: "9px", cursor:'pointer' }}>
+                  <>
+                    <i
+                      className="bx bx-download"
+                      outline
+                      style={{
+                        fontSize: "35px",
+                        marginLeft: "10px",
+                        color: "#CED4DA",
+                        cursor: "pointer",
+                      }}
+                      /* className="waves-effect waves-light mb-3 ml-1" */
+                      onClick={() => onClickRemoveFilter()}
+                    />
+                    <UncontrolledTooltip placement="top" target="export">
+                      Export Data.
+                    </UncontrolledTooltip>
+                  </>
                 </div>
               </div>
             </Col>

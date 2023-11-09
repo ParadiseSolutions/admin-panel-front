@@ -155,6 +155,12 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     });
     //setCategoryId(id)
   };
+
+  useEffect(() => {
+    if (dataWebsite) {
+      onChangeWebsite(tourData.website_id)
+    }
+  }, [dataWebsite]);
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
