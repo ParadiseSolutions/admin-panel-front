@@ -4,6 +4,7 @@ import {
   deleteTourAPI,
   getToursFiltered,
   getTourNameFiltered,
+  copyTourAPI,
 } from "../../Utils/API/Tours";
 import { createStorageSync, getStorageSync } from "../../Utils/API";
 import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
@@ -136,7 +137,6 @@ const Tours = () => {
   };
 
   const copyTour = (tour) =>{
-    console.log('tour =>', tour )
     Swal.fire({
       title: "Copy Tour?",
       icon: "question",
@@ -147,7 +147,9 @@ const Tours = () => {
       cancelButtonText: "Cancel",
     }).then((resp) => {
       if (resp.isConfirmed) {
-        console.log('nos vamos a la b')
+        copyTourAPI(tour.id).then((resp) =>{
+          console.log('copy',resp)
+        })
       }
     })
   }
