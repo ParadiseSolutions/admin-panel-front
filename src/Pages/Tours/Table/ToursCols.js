@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
-import { statusUpdateTour } from "../../../Utils/API/Tours";
+import { statusUpdateTour, triggerUpdate } from "../../../Utils/API/Tours";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { toursData } from "../../../Utils/Redux/Actions/ToursActions";
+import { createStorageSync, getStorageSync } from "../../../Utils/API";
+import Tours from "..";
 // const OrderId = (cell) => {
 //     return (
 //         <Link to="#" className="text-body fw-bold">{cell.value ? cell.value : ''}</Link>
@@ -69,16 +71,28 @@ const Active = (cell) => {
     cell.value && cell.value === 1 ? true : false
   );
 
+  const updateLocalStorageStatus = (newInfo, cell) => {
+    debugger
+    let tourInfo = JSON.parse(getStorageSync("Tour-data"));
+    if(tourInfo && newInfo?.id) {
+      console.log(tourInfo)
+      console.log(cell.row.index)
+      //let updated = tourInfo.filter(x => x.id === cell.row.original.id)
+      tourInfo[cell.row.index] = newInfo
+      createStorageSync("Tour-data", JSON.stringify(tourInfo))
+    }
+  }
+
   const dispatch = useDispatch();
   const onChangeActive = () => {
     setActiveDep(!activeDep);
-
+    debugger
     if (cell.value === 1) {
       let data = { active: 0 };
       statusUpdateTour(id, data).then((resp) => {
         // console.log(resp);
-        const toursRequest = () => dispatch(toursData());
-          toursRequest();
+          triggerUpdate();
+          updateLocalStorageStatus(resp.data.data, cell)
       });
     }
     if (cell.value === 0) {
@@ -86,8 +100,8 @@ const Active = (cell) => {
       statusUpdateTour(id, data)
         .then((resp) => {
           // console.log(resp);
-          const toursRequest = () => dispatch(toursData());
-          toursRequest();
+          triggerUpdate();
+          updateLocalStorageStatus(resp.data.data, cell)
         })
         .catch((error) => {
           // console.log(error);

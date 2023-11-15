@@ -5,6 +5,7 @@ import {
   getToursFiltered,
   getTourNameFiltered,
   copyTourAPI,
+  triggerUpdate,
 } from "../../Utils/API/Tours";
 import { createStorageSync, getStorageSync } from "../../Utils/API";
 import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
@@ -20,6 +21,7 @@ const Tours = () => {
   const dispatch = useDispatch();
   //loading
   const [loadingData, setLoadingData] = useState(true);
+  const [restart, setRestart] = useState(false);
 
   //cart request
   useEffect(() => {
@@ -33,7 +35,7 @@ const Tours = () => {
   useEffect(() => {
     if (data) {
       let tourInfo = JSON.parse(getStorageSync("Tour-data"));
-     
+
       if (tourInfo) {
         setToursDataInfo(tourInfo);
         setLoadingData(false);
@@ -42,7 +44,7 @@ const Tours = () => {
         setToursDataInfo(data);
         setLoadingData(false);
       }
-      
+
     }
   }, [data]);
 
@@ -56,8 +58,9 @@ const Tours = () => {
     setLoadingData(true);
     if (data) {
       localStorage.removeItem("Tour-data")
-      setLoadingData(false);
-      setToursDataInfo(data);
+      const toursRequest = () => dispatch(toursData());
+      toursRequest();
+      //setToursDataInfo(data);
       setIsFiltered(false);
     }
   };
@@ -65,27 +68,32 @@ const Tours = () => {
     setIsFiltered(true);
     if (filters.search) {
       setLoadingData(true);
+      setRestart(true)
       getTourNameFiltered(filters)
         .then((resp) => {
           createStorageSync("Tour-data", JSON.stringify(resp.data.data))
-          setLoadingData(false);
           setToursDataInfo(resp.data.data);
+          setRestart(false)
+          setLoadingData(false);
         })
         .catch((error) => {
-          setLoadingData(false);
+          setRestart(false)
           setToursDataInfo([]);
+          setLoadingData(false);
         });
     } else {
       setLoadingData(true);
       getToursFiltered(filters)
         .then((resp) => {
           createStorageSync("Tour-data", JSON.stringify(resp.data.data))
-          setLoadingData(false);
           setToursDataInfo(resp.data.data);
+          setRestart(false)
+          setLoadingData(false);
         })
         .catch((error) => {
-          setLoadingData(false);
+          setRestart(false)
           setToursDataInfo([]);
+          setLoadingData(false);
         });
     }
   };
@@ -111,6 +119,7 @@ const Tours = () => {
             const toursRequest = () => dispatch(toursData());
             toursRequest();
             Swal.fire("Deleted!", "The Tour has been deleted.", "success");
+            triggerUpdate();
           })
           .catch((error) => {
             let errorMessages = [];
@@ -136,7 +145,7 @@ const Tours = () => {
     });
   };
 
-  const copyTour = (tour) =>{
+  const copyTour = (tour) => {
     Swal.fire({
       title: "Copy Tour?",
       icon: "question",
@@ -147,8 +156,8 @@ const Tours = () => {
       cancelButtonText: "Cancel",
     }).then((resp) => {
       if (resp.isConfirmed) {
-        copyTourAPI(tour.id).then((resp) =>{
-          console.log('copy',resp.data)
+        copyTourAPI(tour.id).then((resp) => {
+          console.log('copy', resp.data)
           window.location.href = `/tours/${resp.data.data.tour_id}`;
         })
       }
@@ -265,14 +274,14 @@ const Tours = () => {
                   copyTour(tourData);
                 }}
               >
-              <i
-                className="mdi mdi-content-copy font-size-18"
-                id="copytooltip"
-                style={{ cursor: "pointer" }}
-              />
-              <UncontrolledTooltip placement="top" target="copytooltip">
-                Copy
-              </UncontrolledTooltip>
+                <i
+                  className="mdi mdi-content-copy font-size-18"
+                  id="copytooltip"
+                  style={{ cursor: "pointer" }}
+                />
+                <UncontrolledTooltip placement="top" target="copytooltip">
+                  Copy
+                </UncontrolledTooltip>
               </div>
             </div>
           );
@@ -304,7 +313,7 @@ const Tours = () => {
               </div>
             ) : (
               <>
-                {data ? (
+                {data && !restart ? (
                   <TableContainer
                     columns={columns}
                     data={toursDataInfo}
@@ -315,7 +324,7 @@ const Tours = () => {
                     setBulkModal={setBulkModal}
                     isFiltered={isFiltered}
                     onSubmitFilters={onSubmitFilters}
-                    // handleOrderClicks={handleOrderClicks}
+                  // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
               </>
@@ -340,5 +349,7 @@ const Tours = () => {
     </div>
   );
 };
+
+
 
 export default Tours;
