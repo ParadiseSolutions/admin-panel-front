@@ -261,7 +261,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
             onClick={() => toggle("5")}
           >
             <i className="uil-angle-double-left" />
-            Back
+            Previous
           </Button>
           <Button
             type="submit"

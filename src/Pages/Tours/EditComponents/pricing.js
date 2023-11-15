@@ -426,7 +426,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             onClick={() => toggle("4")}
           >
             <i className="uil-angle-double-left" />
-            Back
+            Previous
           </Button>
           <Button
             type="submit"

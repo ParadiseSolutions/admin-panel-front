@@ -571,7 +571,7 @@ const Schedules = ({ tourData, toggle }) => {
                 onClick={() => toggle("6")}
               >
                 <i className="uil-angle-double-left" />
-                Back
+                Previous
               </Button>
               <Button
                 type="submit"

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import {
   useTable,
@@ -35,6 +35,7 @@ const TableContainer = ({
   onClickRemoveFilter,
   setBulkModal,
   isFiltered,
+  onSubmitFilters,
 }) => {
   const {
     getTableProps,
@@ -53,7 +54,7 @@ const TableContainer = ({
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
-    
+
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -73,6 +74,8 @@ const TableContainer = ({
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
   };
+
+  const [value, setValue] = useState("");
 
   // const onChangeInSelect = (event) => {
   //   setPageSize(Number(event.target.value));
@@ -110,32 +113,29 @@ const TableContainer = ({
                   Search this table
                 </span>
                 <input
-                onChange={(e) => {
-                  setValue(e.target.value);
-                  onChange(e.target.value);
-                }}
-                id="search-bar-0"
-                type="text"
-                className="form-control"
-                placeholder={`${count} records...`}
-                value={value || ""}
-              />
+                  onChange={(e) => {
+                    setValue(e.target.value);
+                    onChange(e.target.value);
+                  }}
+                  id="search-bar-0"
+                  type="text"
+                  className="form-control"
+                  placeholder={`${count} records...`}
+                  value={value || ""}
+                />
               </label>
               <i className="bx bx-search search-icon"></i>
-              
             </div>
 
             {isFiltered ? (
-              <div 
-              style={{ marginTop: "5px" }}
-              >
+              <div style={{ marginTop: "5px" }}>
                 <i
                   className="mdi mdi-filter-remove-outline"
                   outline
                   style={{
                     fontSize: "26px",
                     marginLeft: "10px",
-                    
+
                     color: "#3DC7F4",
                     cursor: "pointer",
                   }}
@@ -144,9 +144,7 @@ const TableContainer = ({
                 />
               </div>
             ) : (
-              <div 
-              style={{ marginTop: "5px" }}
-              >
+              <div style={{ marginTop: "5px" }}>
                 <i
                   className="mdi mdi-filter-outline"
                   outline
@@ -162,9 +160,7 @@ const TableContainer = ({
               </div>
             )}
 
-            <div 
-            style={{ marginTop: "9px" }}
-            >
+            <div style={{ marginTop: "9px" }}>
               <i
                 className="bx bx-download"
                 outline
@@ -189,14 +185,109 @@ const TableContainer = ({
       <Card className="mb-3">
         <CardBody>
           <Row className="mb-0">
-            {isGlobalFilter && (
+            {/* {isGlobalFilter && (
               <GlobalFilter
                 preGlobalFilteredRows={preGlobalFilteredRows}
                 globalFilter={state.globalFilter}
                 setGlobalFilter={setGlobalFilter}
               />
-            )}
+            )} */}
+            <Col lg={4} className="d-flex">
+              <div className="form-outline mb-4 col-10">
+                <Input
+                  name="search"
+                  placeholder="Cancun Discount"
+                  type="text"
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  // onBlur={validationType.handleBlur}
+                  // value={validationType.values.search || ""}
+                  // invalid={
+                  //   validationType.touched.search &&
+                  //   validationType.errors.search
+                  //     ? true
+                  //     : false
+                  // }
+                />
+                {/* {validationType.touched.search &&
+                  validationType.errors.search ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.search}
+                    </FormFeedback> */}
+              </div>
 
+              <i
+                className="bx bx-search-alt-2 "
+                id="search"
+                style={{ fontSize: "35px", color: "#3DC7F4", margin: "5px" }}
+                onClick={() => onSubmitFilters({ search: value })}
+              ></i>
+              <UncontrolledTooltip placement="top" target="search">
+                Search.
+              </UncontrolledTooltip>
+              <div
+                className="search-box  d-flex"
+                style={{ minWidth: "342px", marginTop: "-5px" }}
+              >
+                {isFiltered ? (
+                  <>
+                    <i
+                      className="mdi mdi-filter-remove-outline"
+                      id="remove"
+                      outline
+                      style={{
+                        fontSize: "35px",
+                        color: "#3DC7F4",
+                        cursor: "pointer",
+                      }}
+                      /* className="waves-effect waves-light mb-3 ml-1" */
+                      onClick={() => onClickRemoveFilter()}
+                    />
+                    <UncontrolledTooltip placement="top" target="remove">
+                      Remove Filters.
+                    </UncontrolledTooltip>
+                  </>
+                ) : (
+                  <div>
+                    <i
+                      className="mdi mdi-filter-outline"
+                      id="filter"
+                      outline
+                      style={{
+                        fontSize: "35px",
+                        color: "#CED4DA",
+                        cursor: "pointer",
+                      }}
+                      /* className="waves-effect waves-light mb-3 ml-1" */
+                      onClick={() => onClickFilter()}
+                    />
+                    <UncontrolledTooltip placement="top" target="filter">
+                      Filters.
+                    </UncontrolledTooltip>
+                  </div>
+                )}
+
+                <div id="export" style={{ marginTop: "9px", cursor:'pointer' }}>
+                  <>
+                    <i
+                      className="bx bx-download"
+                      outline
+                      style={{
+                        fontSize: "35px",
+                        marginLeft: "10px",
+                        color: "#CED4DA",
+                        cursor: "pointer",
+                      }}
+                      /* className="waves-effect waves-light mb-3 ml-1" */
+                      onClick={() => onClickRemoveFilter()}
+                    />
+                    <UncontrolledTooltip placement="top" target="export">
+                      Export Data.
+                    </UncontrolledTooltip>
+                  </>
+                </div>
+              </div>
+            </Col>
             {toursTable && (
               <Col sm="8">
                 <div className="text-sm-end">
@@ -227,12 +318,11 @@ const TableContainer = ({
                           isFiltered ? setBulkModal(true) : setBulkModal(false)
                         }
                       />
-                      {!isFiltered ? 
-                      <UncontrolledTooltip placement="top" target="bulkedit">
-                      Use filters to Bulk Edit.
-                      </UncontrolledTooltip>
-                      
-                      : null}
+                      {!isFiltered ? (
+                        <UncontrolledTooltip placement="top" target="bulkedit">
+                          Use filters to Bulk Edit.
+                        </UncontrolledTooltip>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -241,7 +331,7 @@ const TableContainer = ({
           </Row>
           {toursTable && (
             <div className="table-responsive" style={{ minHeight: "503px" }}>
-              <Table hover {...getTableProps()} className="react_table" >
+              <Table hover {...getTableProps()} className="react_table">
                 <thead className="table-nowrap">
                   {headerGroups.map((headerGroup) => (
                     <tr

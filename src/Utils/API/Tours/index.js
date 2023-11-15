@@ -58,6 +58,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const copyTourAPI = (id) => {
+    const url = `${API_URL}/tours/duplicate/${id}`;
+    return axios.post (url, null, {
+      headers: options,
+    });
+  };
   export const getTourAPI = (id) => {
     const url = `${API_URL}/tours/${id}`;
     return axios.get (url, {
@@ -79,6 +85,12 @@ export const bulkToursPut = (body) => {
   export const createTourAPI = (body) => {
     const url = `${API_URL}/tours`;
     return axios.post (url, body, {
+      headers: options,
+    });
+  };
+  export const putCopyTourAPI = (id, body) => {
+    const url = `${API_URL}/tours/${id}`;
+    return axios.put (url, body, {
       headers: options,
     });
   };

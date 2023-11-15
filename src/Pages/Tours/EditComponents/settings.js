@@ -504,7 +504,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               onClick={() => toggle("1")}
             >
               <i className="uil-angle-double-left" />
-              Back
+              Previous
             </Button>
             <Button
               type="submit"

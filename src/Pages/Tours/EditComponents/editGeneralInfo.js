@@ -14,6 +14,7 @@ import {
   triggerUpdate,
   getLocationWebsitePI,
   getCategoryWebsiteAPI,
+  putCopyTourAPI,
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -40,11 +41,15 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   const history = useHistory();
   //get initial data tour types
   const dispatch = useDispatch();
-
+  const [editMode, setEditMode] = useState(
+    tourData.edit_mode === 1 ? false : true
+  );
+  console.log("info del tour", tourData);
   //tour types request
   useEffect(() => {
     const tourTypesRequest = () => dispatch(tourTypesData());
     tourTypesRequest();
+   
   }, [dispatch]);
   const dataTourType = useSelector((state) => state.tourTypes.tourTypes.data);
 
@@ -62,30 +67,32 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   }, [dispatch]);
   const dataLocations = useSelector((state) => state.locations.locations.data);
 
-    //categories request
-    useEffect(() => {
-      const categoryRequest = () => dispatch(categoriesData());
-      categoryRequest();
-    }, [dispatch]);
-    const dataCategories = useSelector(
-      (state) => state.categories.categories.data
-    );
+  //categories request
+  useEffect(() => {
+    const categoryRequest = () => dispatch(categoriesData());
+    categoryRequest();
+  }, [dispatch]);
+  const dataCategories = useSelector(
+    (state) => state.categories.categories.data
+  );
 
   //combo boxs
+
   const [tourTypeID, setTourTypeID] = useState(tourData.type_id);
   const [websiteID, setWebsiteID] = useState(tourData.website_id);
-  const [shoppingCartID, setShoppingCartID] = useState(null);
-  const [providerID, setProviderID] = useState(null);
-  const [operatorID, setOperatorID] = useState(null);
-  const [locationID, setLocationID] = useState(null);
+  const [shoppingCartID, setShoppingCartID] = useState(tourData.cart_id);
+  const [providerID, setProviderID] = useState(tourData.provider_id);
+  const [operatorID, setOperatorID] = useState(tourData.operator_id);
+  const [locationID, setLocationID] = useState(tourData.location_id);
   const [mainCatID, setMainCatID] = useState(null);
-  const [categoryId, setCategoryId] = useState(null);
+  const [categoryId, setCategoryId] = useState(tourData.category_id);
   const [secondCatID, setSecondCatID] = useState(null);
 
   const [subCategoriesData, setSubCategoriesData] = useState(null);
 
   useEffect(() => {
     //console.log(mainCatID)
+
     if (mainCatID) {
       getSubCategory(websiteID, categoryId).then((resp) => {
         setSubCategoriesData(resp.data.data);
@@ -97,7 +104,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       });
     }
   }, [mainCatID]);
-
+  console.log(categoryId);
   //request based on website id
   const [shoppingCartData, setShoppingCartData] = useState(null);
   const [providerData, setProviderData] = useState(null);
@@ -148,7 +155,12 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     });
     //setCategoryId(id)
   };
-console.log('categoria----', subCategoriesData)
+
+  useEffect(() => {
+    if (dataWebsite) {
+      onChangeWebsite(tourData.website_id)
+    }
+  }, [dataWebsite]);
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -165,46 +177,100 @@ console.log('categoria----', subCategoriesData)
         .required("Max 2 chars"),
     }),
     onSubmit: (values) => {
-      let data = {
-        name: values.tour_name,
-      };
-      //console.log(data);
-      putTourNameEditAPI(tourData.id, data)
-        .then((resp) => {
-          //console.log(resp.data);
-          if (resp.data.status === 200) {
-            triggerUpdate();
-            Swal.fire("Edited!", "Tour Name has been edited.", "success").then(
-              () => {
+      if (!editMode) {
+        let data = {
+          cart_id: shoppingCartID ? shoppingCartID : tourData.cart_id,
+          website_id: websiteID ? websiteID : tourData.website_id,
+          type_id: tourData.type_id,
+          category_id: categoryId ? categoryId : tourData.category_id,
+          location_id: locationID ? locationID : tourData.location_id,
+          provider_id: providerID ? providerID : tourData.provider_id,
+          operator_id: operatorID ? operatorID : tourData.operator_id,
+          name: values.tour_name,
+          // operator_tour_name: null,
+          // sku: "CDSH-PRXH-",
+          code: values.code,
+          edit_mode: 0,
+        };
+        putCopyTourAPI(tourData.id, data)
+          .then((resp) => {
+            //console.log(resp.data);
+            if (resp.data.status === 200) {
+              triggerUpdate();
+              Swal.fire(
+                "Edited!",
+                "Tour has been edited.",
+                "success"
+              ).then(() => {
                 onChangeWebsite();
                 toggle("2");
-              }
-            );
-          }
-        })
-        .catch((error) => {
-          if (error.response.data.data === null) {
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(error.response.data.message)
-            );
-          } else {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
+              });
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
 
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          }
-        });
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      } else {
+        let data = {
+          name: values.tour_name,
+        };
+        //console.log(data);
+        putTourNameEditAPI(tourData.id, data)
+          .then((resp) => {
+            //console.log(resp.data);
+            if (resp.data.status === 200) {
+              triggerUpdate();
+              Swal.fire(
+                "Edited!",
+                "Tour Name has been edited.",
+                "success"
+              ).then(() => {
+                onChangeWebsite();
+                toggle("2");
+              });
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
     },
   });
-
+console.log('edit mode', editMode)
   return (
     <Form
       onSubmit={(e) => {
@@ -285,7 +351,7 @@ console.log('categoria----', subCategoriesData)
                   <Input
                     type="select"
                     name=""
-                    /* disabled */
+                    disabled={editMode}
                     onChange={(e) => {
                       onChangeWebsite(e.target.value);
                       setWebsiteID(e.target.value);
@@ -316,14 +382,15 @@ console.log('categoria----', subCategoriesData)
                   <Input
                     type="select"
                     name="department"
-                    /* disabled */
+                    disabled={editMode}
                     onChange={(e) => {
                       setShoppingCartID(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.cart_name}</option>
+                    {editMode ? <option>{tourData.cart_name}</option> : null}
+                    
                     {map(shoppingCartData, (shoppingCart, index) => {
                       return (
                         <option
@@ -348,14 +415,15 @@ console.log('categoria----', subCategoriesData)
                   <Input
                     type="select"
                     name=""
-                    /* disabled */
+                    disabled={editMode}
                     onChange={(e) => {
                       setProviderID(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.provider_name}</option>
+                    { editMode ? <option>{tourData.provider_name}</option> : null }
+                    
                     {map(providerData, (provider, index) => {
                       return (
                         <option
@@ -380,14 +448,15 @@ console.log('categoria----', subCategoriesData)
                   <Input
                     type="select"
                     name=""
-                    /* disabled */
+                    disabled={editMode}
                     onChange={(e) => {
                       setOperatorID(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.operator_name}</option>
+                    {editMode ? <option>{tourData.operator_name}</option> : null}
+                    
                     {map(operatorData, (operator, index) => {
                       return (
                         <option
@@ -456,14 +525,15 @@ console.log('categoria----', subCategoriesData)
                   <Input
                     type="select"
                     name=""
-                    /* disabled */
+                    disabled={editMode}
                     onChange={(e) => {
                       setLocationID(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.location_name}</option>
+                    {editMode ? <option>{tourData.location_name}</option> : null }
+                    
                     {map(locationData, (location, index) => {
                       return (
                         <option
@@ -488,7 +558,7 @@ console.log('categoria----', subCategoriesData)
                   <Input
                     type="select"
                     name="main-category"
-                    /* disabled */
+                    disabled={editMode}
                     onChange={(e) => {
                       setMainCatID(e.target.value);
                       setCategoryId(e.target.value);
@@ -496,7 +566,8 @@ console.log('categoria----', subCategoriesData)
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>{tourData.category_name}</option>
+                    {editMode ? <option>{tourData.category_name}</option> : null}
+                    
                     {map(categoryData, (category, index) => {
                       return (
                         <option
@@ -522,7 +593,7 @@ console.log('categoria----', subCategoriesData)
                   <Input
                     type="select"
                     name=""
-                    /* disabled={providerData ? false : true} */
+                    disabled={providerData ? false : true}
                     onChange={(e) => {
                       setSecondCatID(e.target.value);
                     }}
@@ -555,7 +626,7 @@ console.log('categoria----', subCategoriesData)
                     name="code"
                     placeholder=""
                     type="text"
-                    disabled
+                    disabled={editMode}
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
                     value={validationType.values.code || ""}
