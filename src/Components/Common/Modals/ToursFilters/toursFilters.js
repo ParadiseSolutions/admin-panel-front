@@ -35,17 +35,17 @@ import {
 const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
   //initial Data
   const [websiteData, setWebsiteData] = useState([]);
-  const [websiteSelected, setWebsiteSelected] = useState([]);
+  const [websiteSelected, setWebsiteSelected] = useState(null);
   const [providerData, setProviderData] = useState([]);
-  const [providerSelected, setProviderSelected] = useState([]);
+  const [providerSelected, setProviderSelected] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
-  const [categorySelected, setCategorySelected] = useState([]);
+  const [categorySelected, setCategorySelected] = useState(null);
   const [operatorData, setOperatorData] = useState([]);
-  const [operatorSelected, setOperatorSelected] = useState([]);
+  const [operatorSelected, setOperatorSelected] = useState(null);
   const [locationData, setLocationData] = useState([]);
-  const [locationSelected, setLocationSelected] = useState([]);
+  const [locationSelected, setLocationSelected] = useState(null);
   const [tourData, setTourData] = useState([]);
-  const [tourSelected, setTourSelected] = useState([]);
+  const [tourSelected, setTourSelected] = useState(null);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -160,12 +160,12 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
   //submit advance search
   const submitAdvanceFilters = () => {
     let data = {
-      website_id: websiteSelected.length > 0 ? websiteSelected : null,
-      provider_id: providerSelected.length > 0 ? providerSelected : null,
-      category_id: categorySelected.length > 0 ? categorySelected : null,
-      operator_id: operatorSelected.length > 0 ? operatorSelected : null,
-      location_id: locationSelected.length > 0 ? locationSelected : null,
-      tour_id: tourSelected.length > 0 ? tourSelected : null,
+      website_id: websiteSelected ? websiteSelected : null,
+      provider_id: providerSelected ? providerSelected : null,
+      category_id: categorySelected ? categorySelected : null,
+      operator_id: operatorSelected ? operatorSelected : null,
+      location_id: locationSelected ? locationSelected : null,
+      tour_id: tourSelected ? tourSelected : null,
     };
 
     onSubmitFilters(data);
@@ -262,11 +262,12 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
               <img
                 src={FiltersImage}
                 alt="new-product"
-                style={{ width: "400px", height: "450px" }}
+                //style={{ width: "400px", height: "450px" }}
+                class="img-fluid w-100"
               />
             </Col>
             <Col className="col-7">
-              <Col lg={10} className="d-flex">
+              <Col lg={12} className="d-flex">
                 <div className="form-outline mb-4 col-10">
                   <h4 className="form-label font-weight-bold">
                     Tour Name or URL
@@ -300,12 +301,12 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   type="submit"
                   // onClick={() => setFilters(false)}
                 >
-                  <i className="bx bx-search-alt-2"></i>
+                  <i className="bx bx-search-alt-2 " style={{fontSize:'30px'}}></i>
                 </Button>
               </Col>
               <Col
                 className="col-12 p-1 my-2"
-                style={{ backgroundColor: "#FFFBC8" }}
+                style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
                   className="p-2"
@@ -320,9 +321,9 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                 </p>
               </Col>
 
-              <Col lg={10}>
-                <div className="col-12 d-flex justify-content-between">
-                  <div className="form-outline col-5 mt-3">
+              <Col lg={11}>
+                <div className="col-12 d-flex ">
+                  <div className="form-outline col-6 mt-3">
                     <h4 className="form-label  font-weight-bold">Website</h4>
                     <Input
                       type="select"
@@ -344,7 +345,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       })}
                     </Input>
                   </div>
-                  <div className="form-outline col-5 mt-3">
+                  <div className="form-outline col-6 mt-3 mx-4">
                     <h4 className="form-label  font-weight-bold">Provider</h4>
                     <Input
                       type="select"
@@ -358,7 +359,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       <option value={null}>Select....</option>
                       {map(providerData, (provider, index) => {
                         return (
-                          <option key={index} value={provider.provider_id}>
+                          <option key={index} value={provider.provider_id ? provider.provider_id : provider.id}>
                             {provider.name}
                           </option>
                         );
@@ -367,9 +368,9 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   </div>
                 </div>
               </Col>
-              <Col lg={10}>
-                <div className="col-12 d-flex justify-content-between">
-                  <div className="form-outline col-5 mt-3">
+              <Col lg={11}>
+                <div className="col-12 d-flex ">
+                  <div className="form-outline col-6 mt-3">
                     <h4 className="form-label font-weight-bold">Category</h4>
                     <Input
                       type="select"
@@ -383,19 +384,20 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       <option value={null}>Select....</option>
                       {map(categoryData, (category, index) => {
                         return (
-                          <option key={index} value={category.category_id}>
+                          <option key={index} value={category.category_id ? category.category_id : category.id}>
                             {category.name}
                           </option>
                         );
                       })}
                     </Input>
                   </div>
-                  <div className="form-outline col-5 mt-3">
+                  <div className="form-outline col-6 mx-4 mt-3">
                     <h4 className="form-label font-weight-bold">Operator</h4>
                     <Input
                       type="select"
                       name="operator"
                       onChange={(e) => {
+                        
                         setOperatorSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
@@ -404,7 +406,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       <option value={null}>Select....</option>
                       {map(operatorData, (operator, index) => {
                         return (
-                          <option key={index} value={operator.operator_id}>
+                          <option key={index} value={operator.operator_id ? operator.operator_id : operator.id}>
                             {operator.name}
                           </option>
                         );
@@ -413,9 +415,9 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   </div>
                 </div>
               </Col>
-              <Col lg={10}>
-                <div className="col-12 d-flex justify-content-between">
-                  <div className="form-outline col-5 mt-3">
+              <Col lg={11}>
+                <div className="col-12 d-flex ">
+                  <div className="form-outline col-6 mt-3">
                     <h4 className="form-label font-weight-bold">Location</h4>
                     <Input
                       type="select"
@@ -436,7 +438,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       })}
                     </Input>
                   </div>
-                  <div className="form-outline col-5 mt-3">
+                  <div className="form-outline col-6 mx-4 mt-3">
                     <h4 className="form-label font-weight-bold">Tour</h4>
                     <Input
                       type="select"
@@ -466,7 +468,8 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                 <Button
                   color="paradise"
                   outline
-                  className="waves-effect waves-light"
+                  className="waves-effect waves-light mx-2 "
+                  style={{ height: "40px", marginTop: "33px" }}
                   type="button"
                   onClick={() => {
                     setWebsiteData([]);
@@ -477,16 +480,17 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                     setTourData([]);
                   }}
                 >
-                  <i className="ul uil-redo size"></i>
+                  <i className="bx bx-revision"style={{fontSize:'25px'}}></i>
                 </Button>
                 <Button
                   color="paradise"
                   outline
-                  className="waves-effect waves-light mx-4"
+                  className="waves-effect waves-light  "
+                  style={{ height: "40px", marginTop: "33px" }}
                   type="button"
                   onClick={() => submitAdvanceFilters()}
                 >
-                  <i className="bx bx-search-alt-2 size"></i>
+                  <i className="bx bx-search-alt-2" style={{fontSize:'25px'}}></i>
                 </Button>
                 {/* <Button
                   type="submit"

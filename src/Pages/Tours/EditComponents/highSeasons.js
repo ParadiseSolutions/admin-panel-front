@@ -468,29 +468,28 @@ const HighSeasons = ({ tourData, toggle }) => {
                 </div>
               </Col>
             </Row>
-            <Row
-              className="col-12 d-flex justify-content-end mt-5"
-              style={{ paddingRight: "30px" }}
+            <Row>
+          <div className="col-12 d-flex justify-content-end mt-5">
+            <Button
+              color="paradise"
+              outline
+              className="waves-effect waves-light me-2"
+              type="button"
+              onClick={() => toggle("4")}
             >
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light col-2 mx-4"
-                type="button"
-                onClick={() => toggle("2")}
-              >
-                <i className="uil-angle-double-left" />
-                Back
-              </Button>
-              <Button
-                type="button"
-                className="font-16 btn-block col-2 btn-orange"
-                onClick={() => toggle("4")}
-              >
-                Continue
-                <i className="uil-angle-double-right mx-1 " />
-              </Button>
-            </Row>
+              <i className="uil-angle-double-left" />
+              Previous
+            </Button>
+            <Button
+              type="submit"
+              className="font-16 btn-orange"
+              // onClick={toggleCategory}
+            >
+              Continue
+              <i className="uil-angle-double-right mx-1 " />
+            </Button>
+          </div>
+        </Row>
           </Col>
         </Row>
       </TabPane>

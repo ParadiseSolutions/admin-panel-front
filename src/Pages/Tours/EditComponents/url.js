@@ -455,7 +455,7 @@ const URL = ({ tourData, toggle }) => {
           onClick={() => toggle("3")}
         >
           <i className="uil-angle-double-left" />
-          Back
+          Previous
         </Button>
         <Button
           type="button"

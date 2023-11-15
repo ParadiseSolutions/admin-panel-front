@@ -19,14 +19,15 @@ import {
   Container,
   TabPane,
   CardHeader,
+  Button,
 } from "reactstrap";
 import classnames from "classnames";
 import { useParams } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 const EditTour = ({ history }) => {
   const { id } = useParams();
   //tabs
-  const [activeTab, setactiveTab] = useState("2");
+  const [activeTab, setactiveTab] = useState("1");
   function toggle(tab) {
     if (activeTab !== tab) {
       setactiveTab(tab);
@@ -52,12 +53,25 @@ const EditTour = ({ history }) => {
 
   return (
     <div className="page-content pb-0">
-      <Container fluid>
+      <Container fluid className="d-flex justify-content-between">
         <div className=" mx-1">
           <h1 className="fw-bold" style={{ color: "#3DC7F4" }}>
             {tourData ? tourData.name : ""}
           </h1>
         </div>
+        <Link to={"/tours"} className="col-7 d-flex justify-content-end">
+          <Button
+            color="paradiseGray"
+            outline
+            className="waves-effect waves-light col-2 mx-4"
+            style={{height:'45px'}}
+            type="button"
+            
+          >
+            <i className="uil-angle-double-left" />
+            Back to Results
+          </Button>
+        </Link>
       </Container>
       <Row>
         <Col xl={12}>
@@ -70,9 +84,9 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "1" ? "#F6851F" : ""}`,
                       color: `${activeTab === "1" ? "white" : ""}`,
-                      border:"none",
+                      border: "none",
                       flexWrap: "wrap",
-                      display:"grid",
+                      display: "grid",
                       alignContent: "center",
                     }}
                     className={classnames({
@@ -96,9 +110,9 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "2" ? "#F6851F" : ""}`,
                       color: `${activeTab === "2" ? "white" : ""}`,
-                      border:"none",
+                      border: "none",
                       flexWrap: "wrap",
-                      display:"grid",
+                      display: "grid",
                       alignContent: "center",
                     }}
                     className={classnames({
@@ -120,9 +134,9 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
                       color: `${activeTab === "3" ? "white" : ""}`,
-                      border:"none",
+                      border: "none",
                       flexWrap: "wrap",
-                      display:"grid",
+                      display: "grid",
                       alignContent: "center",
                     }}
                     className={classnames({
@@ -135,36 +149,36 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-user"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ High Season Dates</span>
+                    <span className="d-none d-sm-block">
+                      + High Season Dates
+                    </span>
                   </NavLink>
                 </NavItem>
 
-                  <NavItem className="d-flex">
-                    <NavLink
-                      style={{
-                        cursor: "pointer",
-                        backgroundColor: `${
-                          activeTab === "4" ? "#F6851F" : ""
-                        }`,
-                        color: `${activeTab === "4" ? "white" : ""}`,
-                        border:"none",
-                        flexWrap: "wrap",
-                        display:"grid",
-                        alignContent: "center",
-                      }}
-                      className={classnames({
-                        active: activeTab === "4",
-                      })}
-                      onClick={() => {
-                        toggle("4");
-                      }}
-                    >
-                      <span className="d-block d-sm-none">
-                        <i className="far fa-envelope"></i>
-                      </span>
-                      <span className="d-none d-sm-block">+ URLs</span>
-                    </NavLink>
-                  </NavItem>
+                <NavItem className="d-flex">
+                  <NavLink
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: `${activeTab === "4" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "4" ? "white" : ""}`,
+                      border: "none",
+                      flexWrap: "wrap",
+                      display: "grid",
+                      alignContent: "center",
+                    }}
+                    className={classnames({
+                      active: activeTab === "4",
+                    })}
+                    onClick={() => {
+                      toggle("4");
+                    }}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-envelope"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ URLs</span>
+                  </NavLink>
+                </NavItem>
 
                 <NavItem className="d-flex">
                   <NavLink
@@ -172,9 +186,9 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
                       color: `${activeTab === "5" ? "white" : ""}`,
-                      border:"none",
+                      border: "none",
                       flexWrap: "wrap",
-                      display:"grid",
+                      display: "grid",
                       alignContent: "center",
                     }}
                     className={classnames({
@@ -196,9 +210,9 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
-                      border:"none",
+                      border: "none",
                       flexWrap: "wrap",
-                      display:"grid",
+                      display: "grid",
                       alignContent: "center",
                     }}
                     className={classnames({
@@ -220,10 +234,10 @@ const EditTour = ({ history }) => {
                       cursor: "pointer",
                       backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
-                      border:"none",
+                      border: "none",
                       flexWrap: "wrap",
-                      display:"grid",
-                      alignContent: "center",                      
+                      display: "grid",
+                      alignContent: "center",
                     }}
                     className={classnames({
                       active: activeTab === "7",
@@ -244,28 +258,41 @@ const EditTour = ({ history }) => {
               <TabContent activeTab={activeTab} className="p-4 text-muted">
                 <TabPane tabId="1">
                   {tourData ? (
-                    <EditGeneralInformation tourData={tourData} toggle={toggle} />
+                    <EditGeneralInformation
+                      tourData={tourData}
+                      toggle={toggle}
+                    />
                   ) : null}
                 </TabPane>
                 <TabPane tabId="2">
-                {tourSettings ? (
-                    <Settings tourSettings={tourSettings} id={id} toggle={toggle} />
+                  {tourSettings ? (
+                    <Settings
+                      tourSettings={tourSettings}
+                      id={id}
+                      toggle={toggle}
+                    />
                   ) : null}
                 </TabPane>
                 <TabPane tabId="3">
-                  <HighSeasons tourData={tourData} toggle={toggle}/>
+                  <HighSeasons tourData={tourData} toggle={toggle} />
                 </TabPane>
                 <TabPane tabId="4">
-                  {tourData ? <URL tourData={tourData} toggle={toggle} /> : null}
+                  {tourData ? (
+                    <URL tourData={tourData} toggle={toggle} />
+                  ) : null}
                 </TabPane>
                 <TabPane tabId="5">
                   <Pricing id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
                 <TabPane tabId="6">
-                  <AddonsComponent id={id} tourData={tourData} toggle={toggle} />
+                  <AddonsComponent
+                    id={id}
+                    tourData={tourData}
+                    toggle={toggle}
+                  />
                 </TabPane>
                 <TabPane tabId="7">
-                  <Schedules id={id} tourData={tourData} toggle={toggle}/>
+                  <Schedules id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
               </TabContent>
             </CardBody>
@@ -273,8 +300,8 @@ const EditTour = ({ history }) => {
         </Col>
       </Row>
       <div className="content-footer pt-2 px-4 mt-4 mx-4">
-          <p>2023 © JS Tour & Travel</p>
-        </div>
+        <p>2023 © JS Tour & Travel</p>
+      </div>
     </div>
   );
 };

@@ -18,7 +18,7 @@ import {
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
 
-import { Name, Code, Members, Price, Active } from "./PricingTables/PricingCols";
+import { Name, Code, Members, Price, Active, ActiveAddon } from "./PricingTables/PricingCols";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -171,7 +171,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Active {...cellProps} />;
+          return <ActiveAddon {...cellProps} />;
         },
       },
       {
@@ -261,7 +261,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
             onClick={() => toggle("5")}
           >
             <i className="uil-angle-double-left" />
-            Back
+            Previous
           </Button>
           <Button
             type="submit"
