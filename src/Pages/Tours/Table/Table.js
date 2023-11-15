@@ -192,11 +192,11 @@ const TableContainer = ({
                 setGlobalFilter={setGlobalFilter}
               />
             )} */}
-            <Col lg={4} className="d-flex">
-              <div className="form-outline mb-4 col-10">
+            <Col lg={7} className="d-flex">
+              <div className="form-outline mb-4 col-4">
                 <Input
                   name="search"
-                  placeholder="Cancun Discount"
+                  placeholder="Search"
                   type="text"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
@@ -217,9 +217,9 @@ const TableContainer = ({
               </div>
 
               <i
-                className="bx bx-search-alt-2 "
+                className="bx bx-search-alt-2 ico-hover-orange"
                 id="search"
-                style={{ fontSize: "35px", color: "#3DC7F4", margin: "5px" }}
+                style={{ fontSize: "35px", color: "#3DC7F4", margin: "5px", cursor: "pointer" }}
                 onClick={() => onSubmitFilters({ search: value })}
               ></i>
               <UncontrolledTooltip placement="top" target="search">
@@ -232,7 +232,7 @@ const TableContainer = ({
                 {isFiltered ? (
                   <>
                     <i
-                      className="mdi mdi-filter-remove-outline"
+                      className="mdi mdi-filter-remove-outline ico-hover-orange"
                       id="remove"
                       outline
                       style={{
@@ -250,7 +250,7 @@ const TableContainer = ({
                 ) : (
                   <div>
                     <i
-                      className="mdi mdi-filter-outline"
+                      className="mdi mdi-filter-outline ico-hover-orange"
                       id="filter"
                       outline
                       style={{
@@ -270,7 +270,7 @@ const TableContainer = ({
                 <div id="export" style={{ marginTop: "9px", cursor:'pointer' }}>
                   <>
                     <i
-                      className="bx bx-download"
+                      className="bx bx-download ico-hover-orange"
                       outline
                       style={{
                         fontSize: "35px",
@@ -289,7 +289,7 @@ const TableContainer = ({
               </div>
             </Col>
             {toursTable && (
-              <Col sm="8">
+              <Col lg={5}>
                 <div className="text-sm-end">
                   <div className="d-flex flex-row-reverse">
                     <Link to={"/tours/new"}>
@@ -304,7 +304,7 @@ const TableContainer = ({
                     </Link>
                     <div style={{ marginTop: "5px" }}>
                       <i
-                        className="uil uil-edit-alt "
+                        className="uil uil-edit-alt ico-hover-orange"
                         id="bulkedit"
                         outline
                         style={{
