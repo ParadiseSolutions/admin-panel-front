@@ -77,9 +77,10 @@ const GeneralInformation = () => {
     onSubmit: (values) => {
       // console.log(values);
 
-      if (selectionID.length === 0 ) {
+      if (selectionID.length === 0 || selectionID.length === undefined ) {
         setServiceAreaError(true)
       }else{
+        setServiceAreaError(false)
         let data = {
           name: values.name ? values.name : "",
           legal_name: values.legal_name ? values.legal_name : "",

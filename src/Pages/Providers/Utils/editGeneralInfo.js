@@ -137,7 +137,7 @@ const EditGeneralInformation = ({ data }) => {
       country: Yup.string().required("Country code is required"),
     }),
     onSubmit: (values) => {
-      if (selectionID.length === 0) {
+      if (selectionID.length === 0 || selectionID.length === undefined ) {
         setServiceAreaError(true)
       } else {
         setServiceAreaError(false)
