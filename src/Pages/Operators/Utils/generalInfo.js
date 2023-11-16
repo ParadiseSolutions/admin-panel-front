@@ -32,11 +32,19 @@ const GeneralInformation = () => {
     serviceAreaRequest();
   }, [dispatch]);
   const data = useSelector((state) => state.serviceArea.serviceArea.data);
-  const [selectionID, setSelectionID] = useState([]);
+  const [selectionID, setSelectionID] = useState({});
+  const [serviceAreaError, setServiceAreaError] = useState(false)
   function handleMulti(selected) {
     // console.log(selected)
     setSelectionID(selected);
   }
+  useEffect(() => {
+    if (selectionID.length === 0 ) {
+      setServiceAreaError(true)
+    }else{
+      setServiceAreaError(false)
+    }
+  }, [selectionID]);
   
   const [col1, setcol1] = useState(true);
   const [col2, setcol2] = useState(false);
@@ -53,7 +61,11 @@ const GeneralInformation = () => {
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-    initialValues: {},
+    initialValues: {
+      name:'',
+      code:'',
+      country:''
+    },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
       code: Yup.string()
@@ -65,65 +77,67 @@ const GeneralInformation = () => {
     onSubmit: (values) => {
       // console.log(values);
 
-      let data = {
-        name: values.name ? values.name : "",
-        legal_name: values.legal_name ? values.legal_name : "",
-        code: values.code ? values.code : "",
-        address1: values.address1 ? values.address1 : "",
-        address2: values.address2 ? values.address2 : "",
-        city: values.city ? values.city : "",
-        state: values.state ? values.state : "",
-        zip: values.zip ? values.zip : "",
-        country: values.country ? values.country : "",
-        website_url: values.website_url ? values.website_url : "",
-
-        description: values.description ? values.description : "",
-
-        phone1: values.phone1 ? values.phone1 : "",
-        phone2: values.phone2 ? values.phone2 : "",
-        phone3: values.phone3 ? values.phone3 : "",
-        whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
-        whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
-        whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
-        email1: values.email1 ? values.email1 : "",
-        email2: values.email2 ? values.email2 : "",
-        email3: values.email3 ? values.email3 : "",
-        service_area_ids: selectionID,
-      };
-
-      
-      createOperatorAPI(data)
-        .then((resp) => {
-          // console.log(resp);
-          Swal.fire(
-            "Created!",
-            "Operator has been created.",
-            "success"
-          ).then(() => {
-            history.push(`/operators/${resp.data.data.id}`);
-          });
-         
-        })
-        .catch((error) => {
-          if(error.response.data.data === null) {
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(error.response.data.message)
-            );
-          } else {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
+      if (selectionID.length === 0 ) {
+        setServiceAreaError(true)
+      }else{
+        let data = {
+          name: values.name ? values.name : "",
+          legal_name: values.legal_name ? values.legal_name : "",
+          code: values.code ? values.code : "",
+          address1: values.address1 ? values.address1 : "",
+          address2: values.address2 ? values.address2 : "",
+          city: values.city ? values.city : "",
+          state: values.state ? values.state : "",
+          zip: values.zip ? values.zip : "",
+          country: values.country ? values.country : "",
+          website_url: values.website_url ? values.website_url : "",
   
+          description: values.description ? values.description : "",
+  
+          phone1: values.phone1 ? values.phone1 : "",
+          phone2: values.phone2 ? values.phone2 : "",
+          phone3: values.phone3 ? values.phone3 : "",
+          whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
+          whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
+          whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
+          email1: values.email1 ? values.email1 : "",
+          email2: values.email2 ? values.email2 : "",
+          email3: values.email3 ? values.email3 : "",
+          service_area_ids: selectionID,
+        };
+        createOperatorAPI(data)
+          .then((resp) => {
+            // console.log(resp);
             Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          }
-        });
+              "Created!",
+              "Operator has been created.",
+              "success"
+            ).then(() => {
+              history.push(`/operators/${resp.data.data.id}`);
+            });
+           
+          })
+          .catch((error) => {
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
     },
   });
 
@@ -700,6 +714,7 @@ const GeneralInformation = () => {
                           );
                         })}
                       </Select>
+                      {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  }
                     </div>
                   ) : null}
                 </Col>
