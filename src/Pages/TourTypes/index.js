@@ -119,7 +119,7 @@ const TourTypes = () => {
                 Edit
               </UncontrolledTooltip>
             </div>
-            <Link
+            {/* <Link
               to="#"
               className="text-danger"
               onClick={() => {
@@ -136,7 +136,7 @@ const TourTypes = () => {
               <UncontrolledTooltip placement="top" target="deletetooltip">
                 Delete
               </UncontrolledTooltip>
-            </Link>
+            </Link> */}
           </div>
         );
       },
