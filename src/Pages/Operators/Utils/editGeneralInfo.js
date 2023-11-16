@@ -136,7 +136,7 @@ const EditGeneralInformation = ({ data }) => {
     }),
     onSubmit: (values) => {
       // console.log(values);
-      if (selectionID.length === 0) {
+      if (selectionID.length === 0 || selectionID.length === undefined ) {
         setServiceAreaError(true)
       } else {
         setServiceAreaError(false)
