@@ -36,6 +36,7 @@ import {
 } from "../../../Utils/CommonFunctions";
 import { getSubCategory } from "../../../Utils/API/Categories";
 import { categoriesData } from "../../../Utils/Redux/Actions/CategoriesActions";
+import { createStorageSync, getStorageSync } from "../../../Utils/API";
 
 const EditGeneralInformation = ({ tourData, toggle }) => {
   const history = useHistory();
@@ -203,6 +204,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                 "success"
               ).then(() => {
                 onChangeWebsite();
+                updateLocalStorageStatus(resp.data.data)
                 toggle("2");
               });
             }
@@ -243,6 +245,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                 "success"
               ).then(() => {
                 onChangeWebsite();
+                updateLocalStorageStatus(resp.data.data)
                 toggle("2");
               });
             }
@@ -270,6 +273,18 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       }
     },
   });
+
+  const updateLocalStorageStatus = (newInfo) => {
+    debugger
+    let tourInfo = JSON.parse(getStorageSync("Tour-data"));
+    if(tourInfo && newInfo?.id) {
+      let indexToUpdate = tourInfo.findIndex(x => x.id === newInfo?.id)
+      if(indexToUpdate >= 0) {
+        tourInfo[indexToUpdate] = newInfo
+      }
+      createStorageSync("Tour-data", JSON.stringify(tourInfo))
+    }
+  }
 console.log('edit mode', editMode)
   return (
     <Form
@@ -389,7 +404,7 @@ console.log('edit mode', editMode)
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    {editMode ? <option>{tourData.cart_name}</option> : null}
+                    {/* {editMode ? <option>{tourData.cart_name}</option> : null} */}
                     
                     {map(shoppingCartData, (shoppingCart, index) => {
                       return (
@@ -397,9 +412,7 @@ console.log('edit mode', editMode)
                           key={index}
                           value={shoppingCart.id}
                           selected={
-                            index === 0 && shoppingCartData.length === 1
-                              ? true
-                              : false
+                            tourData.cart_id === shoppingCart.id ? true : false
                           }
                         >
                           {shoppingCart.name}
@@ -422,7 +435,7 @@ console.log('edit mode', editMode)
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    { editMode ? <option>{tourData.provider_name}</option> : null }
+                    {/* { editMode ? <option>{tourData.provider_name}</option> : null } */}
                     
                     {map(providerData, (provider, index) => {
                       return (
@@ -430,9 +443,7 @@ console.log('edit mode', editMode)
                           key={index}
                           value={provider.provider_id}
                           selected={
-                            index === 0 && providerData.length === 1
-                              ? true
-                              : false
+                            tourData.provider_id === provider.provider_id ? true : false
                           }
                         >
                           {provider.provider_name}
@@ -455,7 +466,7 @@ console.log('edit mode', editMode)
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    {editMode ? <option>{tourData.operator_name}</option> : null}
+                    {/* {editMode ? <option>{tourData.operator_name}</option> : null} */}
                     
                     {map(operatorData, (operator, index) => {
                       return (
@@ -463,9 +474,7 @@ console.log('edit mode', editMode)
                           key={index}
                           value={operator.operator_id}
                           selected={
-                            index === 0 && operatorData.length === 1
-                              ? true
-                              : false
+                            tourData.operator_id === operator.operator_id ? true : false
                           }
                         >
                           {operator.operator_name}
@@ -532,7 +541,7 @@ console.log('edit mode', editMode)
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    {editMode ? <option>{tourData.location_name}</option> : null }
+                    {/* {editMode ? <option>{tourData.location_name}</option> : null } */}
                     
                     {map(locationData, (location, index) => {
                       return (
@@ -540,9 +549,7 @@ console.log('edit mode', editMode)
                           key={index}
                           value={location.id}
                           selected={
-                            index === 0 && locationData.length === 1
-                              ? true
-                              : false
+                            tourData.location_id === location.location_id ? true : false
                           }
                         >
                           {location.name}
@@ -566,7 +573,7 @@ console.log('edit mode', editMode)
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    {editMode ? <option>{tourData.category_name}</option> : null}
+                    {/* {editMode ? <option>{tourData.category_name}</option> : null} */}
                     
                     {map(categoryData, (category, index) => {
                       return (
@@ -575,7 +582,7 @@ console.log('edit mode', editMode)
                           value={category.category_id}
                           selected={
                             /* index === 0 && categoryData.length === 1 */
-                            tourData.category_id === category.category_id
+                            tourData.category_info.main_category_id === category.category_id
                               ? true
                               : false
                           }
@@ -607,7 +614,7 @@ console.log('edit mode', editMode)
                           key={index}
                           value={subCategory.category_id}
                           selected={
-                            index === 0 && subCategoriesData.length === 1
+                            tourData.category_info.sub_category_id === subCategory.category_id
                               ? true
                               : false
                           }

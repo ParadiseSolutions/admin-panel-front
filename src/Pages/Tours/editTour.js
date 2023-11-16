@@ -63,7 +63,7 @@ const EditTour = ({ history }) => {
           <Button
             color="paradiseGray"
             outline
-            className="waves-effect waves-light col-2 mx-4"
+            className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
             style={{height:'45px'}}
             type="button"
             
@@ -81,7 +81,7 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
                       backgroundColor: `${activeTab === "1" ? "#F6851F" : ""}`,
                       color: `${activeTab === "1" ? "white" : ""}`,
                       border: "none",
@@ -93,7 +93,9 @@ const EditTour = ({ history }) => {
                       active: activeTab === "1",
                     })}
                     onClick={() => {
-                      toggle("1");
+                      if(tourData?.edit_mode === 0) {
+                        toggle("1");
+                      }
                     }}
                   >
                     <span className="d-block d-sm-none">
@@ -107,7 +109,7 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
                       backgroundColor: `${activeTab === "2" ? "#F6851F" : ""}`,
                       color: `${activeTab === "2" ? "white" : ""}`,
                       border: "none",
@@ -119,7 +121,9 @@ const EditTour = ({ history }) => {
                       active: activeTab === "2",
                     })}
                     onClick={() => {
-                      toggle("2");
+                      if(tourData?.edit_mode === 0) {
+                        toggle("2");
+                      }
                     }}
                   >
                     <span className="d-block d-sm-none">
@@ -131,7 +135,7 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
                       backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
                       color: `${activeTab === "3" ? "white" : ""}`,
                       border: "none",
@@ -143,7 +147,9 @@ const EditTour = ({ history }) => {
                       active: activeTab === "3",
                     })}
                     onClick={() => {
-                      toggle("3");
+                      if(tourData?.edit_mode === 0) {
+                        toggle("3");
+                      }
                     }}
                   >
                     <span className="d-block d-sm-none">
@@ -158,7 +164,7 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
                       backgroundColor: `${activeTab === "4" ? "#F6851F" : ""}`,
                       color: `${activeTab === "4" ? "white" : ""}`,
                       border: "none",
@@ -170,7 +176,9 @@ const EditTour = ({ history }) => {
                       active: activeTab === "4",
                     })}
                     onClick={() => {
-                      toggle("4");
+                      if(tourData?.edit_mode === 0) {
+                        toggle("4");
+                      }
                     }}
                   >
                     <span className="d-block d-sm-none">
@@ -183,7 +191,7 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
                       backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
                       color: `${activeTab === "5" ? "white" : ""}`,
                       border: "none",
@@ -195,7 +203,9 @@ const EditTour = ({ history }) => {
                       active: activeTab === "5",
                     })}
                     onClick={() => {
-                      toggle("5");
+                      if(tourData?.edit_mode === 0) {
+                        toggle("5");
+                      }
                     }}
                   >
                     <span className="d-block d-sm-none">
@@ -207,7 +217,7 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
                       backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
                       border: "none",
@@ -219,7 +229,9 @@ const EditTour = ({ history }) => {
                       active: activeTab === "6",
                     })}
                     onClick={() => {
-                      toggle("6");
+                      if(tourData?.edit_mode === 0) {
+                        toggle("6");
+                      }
                     }}
                   >
                     <span className="d-block d-sm-none">
@@ -231,7 +243,7 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: "pointer",
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
                       backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
                       border: "none",
@@ -243,7 +255,9 @@ const EditTour = ({ history }) => {
                       active: activeTab === "7",
                     })}
                     onClick={() => {
-                      toggle("7");
+                      if(tourData?.edit_mode === 0) {
+                        toggle("7");
+                      }
                     }}
                   >
                     <span className="d-block d-sm-none">

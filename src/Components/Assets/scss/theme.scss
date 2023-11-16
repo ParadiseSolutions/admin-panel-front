@@ -440,3 +440,15 @@ width: 20% !important;
 .table-column-users-Action{
   width: 20% !important;
 }
+.ico-hover-orange:hover {
+  color: #f6851f !important;
+}
+.blue-filled-hover:hover {
+  background-color: var(--bs-paradise);
+  border-color: var(--bs-paradise);
+}
+.blue-outlined-hover:hover {
+  border-color: var(--bs-paradise);
+  background-color: unset;
+  color: var(--bs-paradise);
+}
