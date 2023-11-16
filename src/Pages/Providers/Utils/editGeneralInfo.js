@@ -31,6 +31,11 @@ const EditGeneralInformation = ({ data }) => {
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
   const [notification, setNotification] = useState(initialData && initialData.notification_email);
+  const [col1, setcol1] = useState(true);
+  const [initialOptionsArea, setInitialOptionsArea] = useState([]);
+  const [selectionID, setSelectionID] = useState({});
+  const [serviceAreaError, setServiceAreaError] = useState(false)
+
   useEffect(() => {
     setInitialData(data);
   }, [data]);
@@ -56,7 +61,6 @@ const EditGeneralInformation = ({ data }) => {
 
   // console.log(initialData);
   // console.log(notification);
-  const [col1, setcol1] = useState(true);
 
   function togglecol1() {
     setcol1(!col1);
@@ -71,7 +75,6 @@ const EditGeneralInformation = ({ data }) => {
   const dataAreas = useSelector((state) => state.serviceArea.serviceArea.data);
 
   //  console.log('areas',dataAreas)
-  const [initialOptionsArea, setInitialOptionsArea] = useState([]);
   useEffect(() => {
     if (initialData && dataAreas) {
       let optionsArea = [];
@@ -85,12 +88,15 @@ const EditGeneralInformation = ({ data }) => {
     }
   }, [dataAreas, initialData]);
 
- 
+  useEffect(() => {
+    if (selectionID.length === 0) {
+      setServiceAreaError(true)
+    } else {
+      setServiceAreaError(false)
+    }
+  }, [selectionID]);
 
-  const [selectionID, setSelectionID] = useState([]);
   function handleMulti(selected) {
- 
-
     setSelectionID(selected);
   }
 
@@ -131,69 +137,74 @@ const EditGeneralInformation = ({ data }) => {
       country: Yup.string().required("Country code is required"),
     }),
     onSubmit: (values) => {
-      let data = {
-        name: values.name ? values.name : "",
-        legal_name: values.legal_name ? values.legal_name : "",
-        code: values.code ? values.code : "",
-        address1: values.address1 ? values.address1 : "",
-        address2: values.address2 ? values.address2 : "",
-        city: values.city ? values.city : "",
-        state: values.state ? values.state : "",
-        zip: values.zip ? values.zip : "",
-        country: values.country ? values.country : "",
-        website_url: values.website_url ? values.website_url : "",
-        reservation_email: values.reservation_email
-          ? values.reservation_email
-          : "",
-        cc_email: values.cc_email ? values.cc_email : "",
-        notification_email: notification === true ? 1 : 0,
-        description: values.description ? values.description : "",
-        phone1: values.phone1 ? values.phone1 : "",
-        phone2: values.phone2 ? values.phone2 : "",
-        phone3: values.phone3 ? values.phone3 : "",
-        whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
-        whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
-        whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
-        email1: values.email1 ? values.email1 : "",
-        email2: values.email2 ? values.email2 : "",
-        email3: values.email3 ? values.email3 : "",
-        service_area_ids:
-          selectionID.length > 0 ? selectionID : initialData.service_areas_ids,
-      };
+      if (selectionID.length === 0) {
+        setServiceAreaError(true)
+      } else {
+        setServiceAreaError(false)
+        let data = {
+          name: values.name ? values.name : "",
+          legal_name: values.legal_name ? values.legal_name : "",
+          code: values.code ? values.code : "",
+          address1: values.address1 ? values.address1 : "",
+          address2: values.address2 ? values.address2 : "",
+          city: values.city ? values.city : "",
+          state: values.state ? values.state : "",
+          zip: values.zip ? values.zip : "",
+          country: values.country ? values.country : "",
+          website_url: values.website_url ? values.website_url : "",
+          reservation_email: values.reservation_email
+            ? values.reservation_email
+            : "",
+          cc_email: values.cc_email ? values.cc_email : "",
+          notification_email: notification === true ? 1 : 0,
+          description: values.description ? values.description : "",
+          phone1: values.phone1 ? values.phone1 : "",
+          phone2: values.phone2 ? values.phone2 : "",
+          phone3: values.phone3 ? values.phone3 : "",
+          whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
+          whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
+          whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
+          email1: values.email1 ? values.email1 : "",
+          email2: values.email2 ? values.email2 : "",
+          email3: values.email3 ? values.email3 : "",
+          service_area_ids:
+            selectionID.length > 0 ? selectionID : initialData.service_areas_ids,
+        };
 
-      // console.log(data);
+        // console.log(data);
 
-      updateProviderAPI(initialData.id, data)
-        .then((resp) => {
-          // console.log(resp.data);
-          if (resp.data.status === 200) {
-            Swal.fire(
-              "Edited!",
-              "General Information has been edited.",
-              "success"
-            ).then(() => {});
-          }
-        })
-        .catch((error) => {
-          if(error.response.data.data === null) {
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(error.response.data.message)
-            );
-          } else {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          }
-        });
+        updateProviderAPI(initialData.id, data)
+          .then((resp) => {
+            // console.log(resp.data);
+            if (resp.data.status === 200) {
+              Swal.fire(
+                "Edited!",
+                "General Information has been edited.",
+                "success"
+              ).then(() => { });
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
     },
   });
 
@@ -239,13 +250,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.name || ""}
                       invalid={
                         validationType.touched.name &&
-                        validationType.errors.name
+                          validationType.errors.name
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.name &&
-                    validationType.errors.name ? (
+                      validationType.errors.name ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.name}
                       </FormFeedback>
@@ -264,13 +275,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.legal_name || ""}
                       invalid={
                         validationType.touched.legal_name &&
-                        validationType.errors.legal_name
+                          validationType.errors.legal_name
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.legal_name &&
-                    validationType.errors.legal_name ? (
+                      validationType.errors.legal_name ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.legal_name}
                       </FormFeedback>
@@ -290,13 +301,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.code || ""}
                       invalid={
                         validationType.touched.code &&
-                        validationType.errors.code
+                          validationType.errors.code
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.code &&
-                    validationType.errors.code ? (
+                      validationType.errors.code ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.code}
                       </FormFeedback>
@@ -317,13 +328,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.address1 || ""}
                       invalid={
                         validationType.touched.address1 &&
-                        validationType.errors.address1
+                          validationType.errors.address1
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.address1 &&
-                    validationType.errors.address1 ? (
+                      validationType.errors.address1 ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.address1}
                       </FormFeedback>
@@ -342,13 +353,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.address2 || ""}
                       invalid={
                         validationType.touched.address2 &&
-                        validationType.errors.address2
+                          validationType.errors.address2
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.address2 &&
-                    validationType.errors.address2 ? (
+                      validationType.errors.address2 ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.address2}
                       </FormFeedback>
@@ -370,13 +381,13 @@ const EditGeneralInformation = ({ data }) => {
                         value={validationType.values.notification_email || ""}
                         invalid={
                           validationType.touched.notification_email &&
-                          validationType.errors.notification_email
+                            validationType.errors.notification_email
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.notification_email &&
-                      validationType.errors.notification_email ? (
+                        validationType.errors.notification_email ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.notification_email}
                         </FormFeedback>
@@ -399,13 +410,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.phone1 || ""}
                       invalid={
                         validationType.touched.phone1 &&
-                        validationType.errors.phone1
+                          validationType.errors.phone1
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.phone1 &&
-                    validationType.errors.phone1 ? (
+                      validationType.errors.phone1 ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.phone1}
                       </FormFeedback>
@@ -425,13 +436,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.whatsapp1 || ""}
                       invalid={
                         validationType.touched.whatsapp1 &&
-                        validationType.errors.whatsapp1
+                          validationType.errors.whatsapp1
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.whatsapp1 &&
-                    validationType.errors.whatsapp1 ? (
+                      validationType.errors.whatsapp1 ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.whatsapp1}
                       </FormFeedback>
@@ -451,13 +462,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.email1 || ""}
                       invalid={
                         validationType.touched.email1 &&
-                        validationType.errors.email1
+                          validationType.errors.email1
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.email1 &&
-                    validationType.errors.email1 ? (
+                      validationType.errors.email1 ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.email1}
                       </FormFeedback>
@@ -492,13 +503,13 @@ const EditGeneralInformation = ({ data }) => {
                         value={validationType.values.phone2 || ""}
                         invalid={
                           validationType.touched.phone2 &&
-                          validationType.errors.phone2
+                            validationType.errors.phone2
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.phone2 &&
-                      validationType.errors.phone2 ? (
+                        validationType.errors.phone2 ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.phone2}
                         </FormFeedback>
@@ -518,13 +529,13 @@ const EditGeneralInformation = ({ data }) => {
                         value={validationType.values.whatsapp2 || ""}
                         invalid={
                           validationType.touched.whatsapp2 &&
-                          validationType.errors.whatsapp2
+                            validationType.errors.whatsapp2
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.whatsapp2 &&
-                      validationType.errors.whatsapp2 ? (
+                        validationType.errors.whatsapp2 ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.whatsapp2}
                         </FormFeedback>
@@ -544,13 +555,13 @@ const EditGeneralInformation = ({ data }) => {
                         value={validationType.values.email2 || ""}
                         invalid={
                           validationType.touched.email2 &&
-                          validationType.errors.email2
+                            validationType.errors.email2
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.email2 &&
-                      validationType.errors.email2 ? (
+                        validationType.errors.email2 ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.email2}
                         </FormFeedback>
@@ -585,13 +596,13 @@ const EditGeneralInformation = ({ data }) => {
                         value={validationType.values.phone3 || ""}
                         invalid={
                           validationType.touched.phone3 &&
-                          validationType.errors.phone3
+                            validationType.errors.phone3
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.phone3 &&
-                      validationType.errors.phone3 ? (
+                        validationType.errors.phone3 ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.phone3}
                         </FormFeedback>
@@ -611,13 +622,13 @@ const EditGeneralInformation = ({ data }) => {
                         value={validationType.values.whatsapp3 || ""}
                         invalid={
                           validationType.touched.whatsapp3 &&
-                          validationType.errors.whatsapp3
+                            validationType.errors.whatsapp3
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.whatsapp3 &&
-                      validationType.errors.whatsapp3 ? (
+                        validationType.errors.whatsapp3 ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.whatsapp3}
                         </FormFeedback>
@@ -637,13 +648,13 @@ const EditGeneralInformation = ({ data }) => {
                         value={validationType.values.email3 || ""}
                         invalid={
                           validationType.touched.email3 &&
-                          validationType.errors.email3
+                            validationType.errors.email3
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.email3 &&
-                      validationType.errors.email3 ? (
+                        validationType.errors.email3 ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.email3}
                         </FormFeedback>
@@ -666,13 +677,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.city || ""}
                       invalid={
                         validationType.touched.city &&
-                        validationType.errors.city
+                          validationType.errors.city
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.city &&
-                    validationType.errors.city ? (
+                      validationType.errors.city ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.city}
                       </FormFeedback>
@@ -691,13 +702,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.state || ""}
                       invalid={
                         validationType.touched.state &&
-                        validationType.errors.state
+                          validationType.errors.state
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.state &&
-                    validationType.errors.state ? (
+                      validationType.errors.state ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.state}
                       </FormFeedback>
@@ -739,13 +750,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.country || ""}
                       invalid={
                         validationType.touched.country &&
-                        validationType.errors.country
+                          validationType.errors.country
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.country &&
-                    validationType.errors.country ? (
+                      validationType.errors.country ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.country}
                       </FormFeedback>
@@ -766,13 +777,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.reservation_email || ""}
                       invalid={
                         validationType.touched.reservation_email &&
-                        validationType.errors.reservation_email
+                          validationType.errors.reservation_email
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.reservation_email &&
-                    validationType.errors.reservation_email ? (
+                      validationType.errors.reservation_email ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.reservation_email}
                       </FormFeedback>
@@ -791,13 +802,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.cc_email || ""}
                       invalid={
                         validationType.touched.cc_email &&
-                        validationType.errors.cc_email
+                          validationType.errors.cc_email
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.cc_email &&
-                    validationType.errors.cc_email ? (
+                      validationType.errors.cc_email ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.cc_email}
                       </FormFeedback>
@@ -816,13 +827,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.website_url || ""}
                       invalid={
                         validationType.touched.website_url &&
-                        validationType.errors.website_url
+                          validationType.errors.website_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.website_url &&
-                    validationType.errors.website_url ? (
+                      validationType.errors.website_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.website_url}
                       </FormFeedback>
@@ -850,6 +861,7 @@ const EditGeneralInformation = ({ data }) => {
                           );
                         })}
                       </Select>
+                      {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  }
                     </div>
                   ) : null}
                   {dataAreas && initialOptionsArea.length === 0 ? (
@@ -871,6 +883,7 @@ const EditGeneralInformation = ({ data }) => {
                           );
                         })}
                       </Select>
+                      {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  }
                     </div>
                   ) : null}
                 </Col>
@@ -890,13 +903,13 @@ const EditGeneralInformation = ({ data }) => {
                       value={validationType.values.description || ""}
                       invalid={
                         validationType.touched.description &&
-                        validationType.errors.description
+                          validationType.errors.description
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.description &&
-                    validationType.errors.description ? (
+                      validationType.errors.description ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.description}
                       </FormFeedback>
