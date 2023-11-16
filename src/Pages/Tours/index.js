@@ -103,6 +103,19 @@ const Tours = () => {
 
   //delete
 
+  const removeLocalStorageStatus = (tourId) => {
+    debugger
+    setLoadingData(true)
+    let tourInfo = JSON.parse(getStorageSync("Tour-data"));
+    if(tourInfo && tourId) {
+      let updated = tourInfo.filter(x => x.id !== tourId)
+      createStorageSync("Tour-data", JSON.stringify(updated))
+      setRestart(true)
+    }
+    setRestart(false)
+    setLoadingData(false)
+  } 
+
   const onDelete = (tour) => {
     Swal.fire({
       title: "Delete Tour?",
@@ -116,10 +129,9 @@ const Tours = () => {
       if (resp.isConfirmed) {
         deleteTourAPI(tour.id)
           .then((resp) => {
-            const toursRequest = () => dispatch(toursData());
-            toursRequest();
             Swal.fire("Deleted!", "The Tour has been deleted.", "success");
             triggerUpdate();
+            removeLocalStorageStatus(tour.id)
           })
           .catch((error) => {
             let errorMessages = [];
