@@ -31,6 +31,9 @@ const EditGeneralInformation = ({ data }) => {
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
   const [notification, setNotification] = useState();
+  const [selectionID, setSelectionID] = useState({});
+  const [serviceAreaError, setServiceAreaError] = useState(false)
+
   useEffect(() => {
     setInitialData(data);
   }, [data]);
@@ -84,12 +87,15 @@ const EditGeneralInformation = ({ data }) => {
       }
     }, [dataAreas, initialData]);
   
-   
+    useEffect(() => {
+      if (selectionID.length === 0) {
+        setServiceAreaError(true)
+      } else {
+        setServiceAreaError(false)
+      }
+    }, [selectionID]);
   
-    const [selectionID, setSelectionID] = useState([]);
     function handleMulti(selected) {
-      
-  
       setSelectionID(selected);
     }
 
@@ -130,64 +136,69 @@ const EditGeneralInformation = ({ data }) => {
     }),
     onSubmit: (values) => {
       // console.log(values);
-      let data = {
-        name: values.name ? values.name : "",
-        legal_name: values.legal_name ? values.legal_name : "",
-        code: values.code ? values.code : "",
-        address1: values.address1 ? values.address1 : "",
-        address2: values.address2 ? values.address2 : "",
-        city: values.city ? values.city : "",
-        state: values.state ? values.state : "",
-        zip: values.zip ? values.zip : "",
-        country: values.country ? values.country : "",
-        website_url: values.website_url ? values.website_url : "",
+      if (selectionID.length === 0) {
+        setServiceAreaError(true)
+      } else {
+        setServiceAreaError(false)
+        let data = {
+          name: values.name ? values.name : "",
+          legal_name: values.legal_name ? values.legal_name : "",
+          code: values.code ? values.code : "",
+          address1: values.address1 ? values.address1 : "",
+          address2: values.address2 ? values.address2 : "",
+          city: values.city ? values.city : "",
+          state: values.state ? values.state : "",
+          zip: values.zip ? values.zip : "",
+          country: values.country ? values.country : "",
+          website_url: values.website_url ? values.website_url : "",
 
-        description: values.description ? values.description : "",
-        phone1: values.phone1 ? values.phone1 : "",
-        phone2: values.phone2 ? values.phone2 : "",
-        phone3: values.phone3 ? values.phone3 : "",
-        whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
-        whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
-        whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
-        email1: values.email1 ? values.email1 : "",
-        email2: values.email2 ? values.email2 : "",
-        email3: values.email3 ? values.email3 : "",
-        service_area_ids:
-          selectionID.length > 0 ? selectionID : initialData.service_areas_ids,
-      
-      };
+          description: values.description ? values.description : "",
+          phone1: values.phone1 ? values.phone1 : "",
+          phone2: values.phone2 ? values.phone2 : "",
+          phone3: values.phone3 ? values.phone3 : "",
+          whatsapp1: values.whatsapp1 ? values.whatsapp1 : "",
+          whatsapp2: values.whatsapp2 ? values.whatsapp2 : "",
+          whatsapp3: values.whatsapp3 ? values.whatsapp3 : "",
+          email1: values.email1 ? values.email1 : "",
+          email2: values.email2 ? values.email2 : "",
+          email3: values.email3 ? values.email3 : "",
+          service_area_ids:
+            selectionID.length > 0 ? selectionID : initialData.service_areas_ids,
+        
+        };
 
-      updateOperator(initialData.id, data)
-        .then((resp) => {
-          // console.log(resp.data);
-          if (resp.data.status === 200) {
-            Swal.fire(
-              "Edited!",
-              "General Information has been edited.",
-              "success"
-            ).then(() => {});
-          }
-        })
-        .catch((error) => {
-          if(error.response.data.data === null) {
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(error.response.data.message)
-            );
-          } else {
-            let errorMessages = [];
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-            });
-  
-            Swal.fire(
-              "Error!",
-              // {error.response.},
-              String(errorMessages[0])
-            );
-          }
-        });
+        updateOperator(initialData.id, data)
+          .then((resp) => {
+            // console.log(resp.data);
+            if (resp.data.status === 200) {
+              Swal.fire(
+                "Edited!",
+                "General Information has been edited.",
+                "success"
+              ).then(() => {});
+            }
+          })
+          .catch((error) => {
+            if(error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+              });
+    
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
     },
   });
 
@@ -765,6 +776,7 @@ const EditGeneralInformation = ({ data }) => {
                           );
                         })}
                       </Select>
+                      {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  }
                     </div>
                   ) : null}
                   {dataAreas && initialOptionsArea.length === 0 ? (
@@ -786,6 +798,7 @@ const EditGeneralInformation = ({ data }) => {
                           );
                         })}
                       </Select>
+                      {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  }
                     </div>
                   ) : null}
                 </Col>
