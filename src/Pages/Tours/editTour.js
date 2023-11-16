@@ -37,9 +37,18 @@ const EditTour = ({ history }) => {
   //get tour data
   const [tourData, setTourData] = useState();
   useEffect(() => {
+    let paramString = window.location.search
+     const parameter = new URLSearchParams(paramString)
+    let tab = parameter.get('t')
+    if(tab) {
+      toggle(tab)
+    }
     getTourAPI(id).then((resp) => {
       setTourData(resp.data.data);
     });
+    if(tourData?.edit_mode === 0) {
+      toggle("1");
+    }
   }, [id]);
   //get tour settings
   const [tourSettings, setTourSettings] = useState();

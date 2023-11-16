@@ -205,7 +205,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               ).then(() => {
                 onChangeWebsite();
                 updateLocalStorageStatus(resp.data.data)
-                toggle("2");
+                window.location.href = window.location.href + "?t=2"
               });
             }
           })
