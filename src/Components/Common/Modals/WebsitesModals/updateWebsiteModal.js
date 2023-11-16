@@ -88,9 +88,9 @@ const EditWebsiteModal = ({
       cpanel_account: Yup.string().required("cPanel Account Name is required"),
       root_folder: Yup.string().required("Root Folder Name is required"),
       user_folder: Yup.string().required("User Folder Name is required"),
-      accent_color: Yup.string().required("Accent Color is required"),
-      primary_color: Yup.string().required("Primary Color is required"),
-      secondary_color: Yup.string().required("Secondary Color is required"),
+      // accent_color: Yup.string().required("Accent Color is required"),
+      // primary_color: Yup.string().required("Primary Color is required"),
+      // secondary_color: Yup.string().required("Secondary Color is required"),
     }),
     onSubmit: (values) => {
       let dataBackend = {
