@@ -16,6 +16,8 @@ import ToursFilters from "../../Components/Common/Modals/ToursFilters/toursFilte
 import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
+import Switch from "react-switch";
 
 const Tours = () => {
   const dispatch = useDispatch();
@@ -37,11 +39,19 @@ const Tours = () => {
       let tourInfo = JSON.parse(getStorageSync("Tour-data"));
 
       if (tourInfo) {
+        if(switch1) {
+          tourInfo = tourInfo.filter(x => x.active === 1)
+        }
         setToursDataInfo(tourInfo);
         setLoadingData(false);
         setIsFiltered(true)
       } else {
-        setToursDataInfo(data);
+        if(switch1) {
+          tourInfo = data.filter(x => x.active === 1)
+        } else {
+          tourInfo = data
+        }
+        setToursDataInfo(tourInfo);
         setLoadingData(false);
       }
 
@@ -101,10 +111,55 @@ const Tours = () => {
   // bulk edit
   const [bulkModal, setBulkModal] = useState(false);
 
+  // active table
+  const [switch1, setswitch1] = useState(false);
+const activeTourToogle = (filter) =>{
+  setLoadingData(true)
+  let tourInfo = toursDataInfo
+ console.log(tourInfo)
+  if (!filter) {
+    console.log('activo')
+    let updated = tourInfo.filter(x => x.active === 1)
+    console.log('filtrados', updated)
+
+    // createStorageSync("Tour-data", JSON.stringify(updated))
+      setRestart(true)
+      setToursDataInfo(updated);
+      setswitch1(true)
+      // setLoadingData(true);
+  }
+  if(filter) {
+    if (data) {
+      let tourInfoOriginal = JSON.parse(getStorageSync("Tour-data"));
+
+      if (tourInfoOriginal) {
+        tourInfo = tourInfoOriginal;
+      } else {
+        tourInfo = data;
+      }
+
+    }
+    console.log('inactivo')
+    let updated = tourInfo
+    console.log('filtrados', updated)
+      // createStorageSync("Tour-data", JSON.stringify(updated))
+      setRestart(true)
+      setToursDataInfo(updated);
+      // setLoadingData(false);
+      setswitch1(false)
+  }
+  setTimeout(() => {
+    setRestart(false)
+    setLoadingData(false)
+  }, 500);
+  
+}
+
+
   //delete
 
   const removeLocalStorageStatus = (tourId) => {
-    debugger
+   
     setLoadingData(true)
     let tourInfo = JSON.parse(getStorageSync("Tour-data"));
     if(tourInfo && tourId) {
@@ -336,6 +391,9 @@ const Tours = () => {
                     setBulkModal={setBulkModal}
                     isFiltered={isFiltered}
                     onSubmitFilters={onSubmitFilters}
+                    activeTourToogle={activeTourToogle}
+                    switch1={switch1}
+                    setswitch1={setswitch1}
                   // handleOrderClicks={handleOrderClicks}
                   />
                 ) : null}
