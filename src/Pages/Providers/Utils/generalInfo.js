@@ -37,6 +37,13 @@ const GeneralInformation = () => {
 
   const [selectionID, setSelectionID] = useState({});
   const [serviceAreaError, setServiceAreaError] = useState(false)
+
+  const [col1, setcol1] = useState(true);
+  const [col2, setcol2] = useState(false);
+  const [col3, setcol3] = useState(false);
+  const [addMore1, setAddMore1] = useState(false);
+  const [addMore2, setAddMore2] = useState(false);
+  
   function handleMulti(selected) {
     
     setSelectionID(selected);
@@ -50,12 +57,6 @@ useEffect(() => {
   }
 }, [selectionID]);
 
-
-  const [col1, setcol1] = useState(true);
-  const [col2, setcol2] = useState(false);
-  const [col3, setcol3] = useState(false);
-  const [addMore1, setAddMore1] = useState(false);
-  const [addMore2, setAddMore2] = useState(false);
 
   function togglecol1() {
     setcol1(!col1);
@@ -83,7 +84,7 @@ useEffect(() => {
     
     onSubmit: (values) => {
       // console.log(values);
-      if (selectionID.length === 0 ) {
+      if (selectionID.length === 0 || selectionID.length === undefined) {
         setServiceAreaError(true)
       }else{
         setServiceAreaError(false)

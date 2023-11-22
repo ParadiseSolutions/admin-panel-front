@@ -39,6 +39,7 @@ const PricingTables = ({
       columns,
       data,
       initialState: { pageIndex: 0, pageSize: 10 },
+      autoResetPage: false,
     },
     useGlobalFilter,
     useFilters,
