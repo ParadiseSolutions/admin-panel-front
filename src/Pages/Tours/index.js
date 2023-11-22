@@ -21,6 +21,7 @@ import Switch from "react-switch";
 
 const Tours = () => {
   const dispatch = useDispatch();
+  const [switch1, setswitch1] = useState(false);
   //loading
   const [loadingData, setLoadingData] = useState(true);
   const [restart, setRestart] = useState(false);
@@ -37,16 +38,25 @@ const Tours = () => {
   useEffect(() => {
     if (data) {
       let tourInfo = JSON.parse(getStorageSync("Tour-data"));
+      let swicth2 = getStorageSync("switch1");
+
+      if(swicth2) {
+        if(swicth2 === "true") {
+          setswitch1(true)
+        } else {
+          setswitch1(false)
+        }
+      }
 
       if (tourInfo) {
-        if(switch1) {
+        if(switch1 || swicth2 === "true") {
           tourInfo = tourInfo.filter(x => x.active === 1)
         }
         setToursDataInfo(tourInfo);
         setLoadingData(false);
         setIsFiltered(true)
       } else {
-        if(switch1) {
+        if(switch1 || swicth2 === "true") {
           tourInfo = data.filter(x => x.active === 1)
         } else {
           tourInfo = data
@@ -82,7 +92,11 @@ const Tours = () => {
       getTourNameFiltered(filters)
         .then((resp) => {
           createStorageSync("Tour-data", JSON.stringify(resp.data.data))
-          setToursDataInfo(resp.data.data);
+          let tourInfo = resp.data.data
+          if(switch1) {
+            tourInfo = tourInfo.filter(x => x.active === 1)
+          }
+          setToursDataInfo(tourInfo);
           setRestart(false)
           setLoadingData(false);
         })
@@ -96,7 +110,11 @@ const Tours = () => {
       getToursFiltered(filters)
         .then((resp) => {
           createStorageSync("Tour-data", JSON.stringify(resp.data.data))
-          setToursDataInfo(resp.data.data);
+          let tourInfo = resp.data.data
+          if(switch1) {
+            tourInfo = tourInfo.filter(x => x.active === 1)
+          }
+          setToursDataInfo(tourInfo);
           setRestart(false)
           setLoadingData(false);
         })
@@ -112,11 +130,11 @@ const Tours = () => {
   const [bulkModal, setBulkModal] = useState(false);
 
   // active table
-  const [switch1, setswitch1] = useState(false);
 const activeTourToogle = (filter) =>{
   setLoadingData(true)
   let tourInfo = toursDataInfo
- console.log(tourInfo)
+  createStorageSync("switch1", !filter)
+  console.log(tourInfo)
   if (!filter) {
     console.log('activo')
     let updated = tourInfo.filter(x => x.active === 1)
