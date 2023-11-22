@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
+import { Active } from "./ToursCols";
 import {
   useTable,
   useGlobalFilter,
@@ -25,6 +26,47 @@ import {
 } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
+import Switch from "react-switch";
+
+//switch
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 14,
+        color: "#fff",
+        // width: "200px",
+        paddingRight: 15,
+      }}
+    >
+      {" "}
+     All
+    </div>
+  );
+};
+
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 14,
+        color: "#fff",
+        paddingLeft: 15,
+      }}
+    >
+      {" "}
+      Active
+    </div>
+  );
+};
 
 const TableContainer = ({
   columns,
@@ -36,6 +78,9 @@ const TableContainer = ({
   setBulkModal,
   isFiltered,
   onSubmitFilters,
+  activeTourToogle,
+  switch1,
+  setswitch1
 }) => {
   const {
     getTableProps,
@@ -62,6 +107,7 @@ const TableContainer = ({
       data,
       defaultColumn: { Filter: DefaultColumnFilter },
       initialState: { pageIndex: 0, pageSize: 10 },
+      autoResetPage: false,
     },
     useGlobalFilter,
     useFilters,
@@ -76,7 +122,7 @@ const TableContainer = ({
   };
 
   const [value, setValue] = useState("");
-
+  
   // const onChangeInSelect = (event) => {
   //   setPageSize(Number(event.target.value));
   // };
@@ -219,7 +265,12 @@ const TableContainer = ({
               <i
                 className="bx bx-search-alt-2 ico-hover-orange"
                 id="search"
-                style={{ fontSize: "35px", color: "#3DC7F4", margin: "5px", cursor: "pointer" }}
+                style={{
+                  fontSize: "35px",
+                  color: "#3DC7F4",
+                  margin: "5px",
+                  cursor: "pointer",
+                }}
                 onClick={() => onSubmitFilters({ search: value })}
               ></i>
               <UncontrolledTooltip placement="top" target="search">
@@ -267,7 +318,10 @@ const TableContainer = ({
                   </div>
                 )}
 
-                <div id="export" style={{ marginTop: "9px", cursor:'pointer' }}>
+                <div
+                  id="export"
+                  style={{ marginTop: "9px", cursor: "pointer" }}
+                >
                   <>
                     <i
                       className="bx bx-download ico-hover-orange"
@@ -283,6 +337,27 @@ const TableContainer = ({
                     />
                     <UncontrolledTooltip placement="top" target="export">
                       Export Data.
+                    </UncontrolledTooltip>
+                  </>
+                </div>
+                <div
+                  id="active_tour"
+                  style={{ marginTop: "12px", marginLeft:'10px',  cursor: "pointer" }}
+                >
+                  <>
+                    <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#626ed4"
+                      width={90}
+                      onChange={() => {
+                        setswitch1(!switch1);
+                        activeTourToogle(switch1)
+                      }}
+                      checked={switch1}
+                    />
+                    <UncontrolledTooltip placement="top" target="active_tour">
+                      Change to Active or All tours.
                     </UncontrolledTooltip>
                   </>
                 </div>
