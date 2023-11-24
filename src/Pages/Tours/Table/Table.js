@@ -38,9 +38,11 @@ const Offsymbol = () => {
         alignItems: "center",
         height: "100%",
         fontSize: 14,
-        color: "#fff",
+        color: "#ced4da",
         // width: "200px",
-        paddingRight: 15,
+        paddingRight: 13,
+        marginTop: "-2px",
+        fontWeight: 600
       }}
     >
       {" "}
@@ -58,8 +60,10 @@ const OnSymbol = () => {
         alignItems: "center",
         height: "100%",
         fontSize: 14,
-        color: "#fff",
+        color: "#3dc7f4",
         paddingLeft: 15,
+        marginTop: "-2px",
+        fontWeight: 600
       }}
     >
       {" "}
@@ -350,6 +354,7 @@ const TableContainer = ({
                       checkedIcon={<OnSymbol />}
                       onColor="#3DC7F4"
                       width={90}
+                      className={switch1 ? "blue-switch-outlined" : "gray-switch-outlined"}
                       onChange={() => {
                         setswitch1(!switch1);
                         activeTourToogle(switch1)
