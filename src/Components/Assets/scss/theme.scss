@@ -452,3 +452,32 @@ width: 20% !important;
   background-color: unset;
   color: var(--bs-paradise);
 }
+.blue-switch-outlined .react-switch-bg {
+  background: #fff !important;
+  border: 2px #3dc7f4 solid !important;
+  color: #3dc7f4;
+}
+
+.blue-switch-outlined .react-switch-handle {
+  background: #3dc7f4 !important;
+  border: 2px #fff solid !important;
+  height: 24px !important;
+  width: 24px !important;
+  top: 2px !important;
+  left: 1px;
+}
+
+.gray-switch-outlined .react-switch-bg {
+  background: #fff !important;
+  border: 2px #ced4da solid !important;
+  color: #ced4da;
+}
+
+.gray-switch-outlined .react-switch-handle {
+  background: #ced4da !important;
+  border: 2px #fff solid !important;
+  height: 24px !important;
+  width: 24px !important;
+  top: 2px !important;
+  left: 1px;
+}
