@@ -348,7 +348,7 @@ const TableContainer = ({
                     <Switch
                       uncheckedIcon={<Offsymbol />}
                       checkedIcon={<OnSymbol />}
-                      onColor="#626ed4"
+                      onColor="#3DC7F4"
                       width={90}
                       onChange={() => {
                         setswitch1(!switch1);
