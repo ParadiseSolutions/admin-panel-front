@@ -29,7 +29,6 @@ import {
   Table,
   UncontrolledTooltip,
 } from "reactstrap";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
@@ -58,7 +57,6 @@ const Schedules = ({ tourData, toggle }) => {
     });
     getSeasonalityAPI(TourID).then((resp) => {
       // console.log(resp);
-
       setSeasonalityData(resp.data.data);
     });
   }, [TourID]);
@@ -69,12 +67,6 @@ const Schedules = ({ tourData, toggle }) => {
       setSeasonNames(resp.data.data);
     });
   }, [tourData]);
-
-  useEffect(() => {
-    if (seasonalityData.length > 0) {
-      setSeasonSelected(seasonalityData[0].repeat_id);
-    }
-  }, [seasonalityData]);
 
   // console.log("seasonality data", seasonalityData);
   //refresh tables
@@ -109,8 +101,8 @@ const Schedules = ({ tourData, toggle }) => {
 
   useEffect(() => {
     if (seasonalityData.length > 0) {
-      setDataFromEdit(seasonalityData.from);
-      setDataToEdit(seasonalityData.to);
+      setDataFromEdit(seasonalityData[0].from);
+      setDataToEdit(seasonalityData[0].to);
     }
   }, [seasonalityData]);
   //delete season
@@ -148,6 +140,7 @@ const Schedules = ({ tourData, toggle }) => {
     initialValues: {
       from: dateFromEdit ? dateFromEdit : "",
       to: dateToEdit ? dateToEdit : "",
+      repeat_id: seasonalityData[0]?.repeat_id ? seasonalityData[0]?.repeat_id : null
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -158,16 +151,16 @@ const Schedules = ({ tourData, toggle }) => {
     // }),
     onSubmit: (values) => {
       let data = {
-        repeat_id: seasonSelected,
-        start_date: seasonSelected === 7 ? null : values.from,
-        end_date: seasonSelected === 7 ? null : values.to,
+        repeat_id: values.repeat_id,
+        from: values.repeat_id === 7 ? null : values.from,
+        to: values.repeat_id === 7 ? null : values.to,
         id: seasonalityData[0]?.id,
         type_id: 5,
         action: "Available",
         on: null,
         recurrency: 1,
       };
-      //console.log(data);
+      console.log(data);
       putSeasonalAPI(tourData.id, data)
         .then((resp) => {
           // console.log(resp.data);
@@ -180,22 +173,22 @@ const Schedules = ({ tourData, toggle }) => {
             ).then(() => {
               refresh();
               // history.goBack();
-              Swal.fire({
-                title: "Congratulation",
-                text: "This tour has been created!",
-                icon: "success",
-                showCancelButton: true,
-                confirmButtonColor: "#F6851F",
-                cancelButtonColor: "#d33",
-                cancelButtonText: "Save & Close!",
-                confirmButtonText: "Save & New",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  history.push("/tours/new");
-                } else {
-                  history.push("/tours");
-                }
-              });
+              // Swal.fire({
+              //   title: "Congratulation",
+              //   text: "This tour has been created!",
+              //   icon: "success",
+              //   showCancelButton: true,
+              //   confirmButtonColor: "#F6851F",
+              //   cancelButtonColor: "#d33",
+              //   cancelButtonText: "Save & Close!",
+              //   confirmButtonText: "Save & New",
+              // }).then((result) => {
+              //   if (result.isConfirmed) {
+              //     history.push("/tours/new");
+              //   } else {
+              //     history.push("/tours");
+              //   }
+              // });
             });
           }
         })
@@ -274,7 +267,7 @@ const Schedules = ({ tourData, toggle }) => {
                                   : `${schedule.duration} ${schedule.units}`}{" "}
                               </td>
                               <td>
-                                {schedule.runs === "7,1,5,2,6,3,0,4" ? 'Daily' : ''}
+                                {schedule.runs === "7,1,5,2,6,3,0,4" || schedule.runs === "1,5,2,6,3,0,4" || schedule.runs === "1,2,3,4,5,6,0" ? 'Daily' : schedule.runs.replace("1"," Monday").replace("2"," Tuesday").replace("3"," Wednesday").replace("4"," Thursday").replace("5"," Friday").replace("6"," Saturday").replace("0"," Sunday").replace("7","Daily")}
                                 </td>
                               <td>
                                 <div
@@ -468,7 +461,7 @@ const Schedules = ({ tourData, toggle }) => {
                   <div className="form-outline">
                     <Input
                       type="select"
-                      name=""
+                      name="repeat_id"
                       onChange={(e) => {
                         setSeasonSelected(e.target.value);
                       }}

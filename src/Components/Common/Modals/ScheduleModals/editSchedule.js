@@ -19,7 +19,6 @@ import {
   FormFeedback,
   Button,
 } from "reactstrap";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Switch from "react-switch";
@@ -145,7 +144,7 @@ const EditScheduleModal = ({
     setProductToEdit(dataEdit.price_id);
     setFromDateEdit(dataEdit.from_date);
     setToDateEdit(dataEdit.to_date);
-    setDayList(dataEdit.runs);
+    setDayList(dataEdit.runs?.split(","));
   }, [dataEdit, editSchedule]);
 
   //initial Data
@@ -173,17 +172,19 @@ const EditScheduleModal = ({
   // checkbox list
 
   const onAddDay = (day) => {
-    const selection = +day;
+    debugger
+    const selection = day;
     const selectionFlag = daysList.includes(selection);
-    if (selection === 7) {
-      setDayList("7,1,5,2,6,3,0,4")
-    }
-    if (!selectionFlag) {
-      setDayList([...daysList, +day]);
-    }
-    if (selectionFlag) {
-      setDayList(daysList.filter((ele) => ele !== selection));
-    }
+    if (selection === "7") {
+      setDayList(["1","2","3","4","5","6","0"])
+    } else {
+      if (!selectionFlag) {
+        setDayList([...daysList, day]);
+      }
+      if (selectionFlag) {
+        setDayList(daysList.filter((ele) => ele !== selection));
+      }
+    }    
   };
 
   //switch seasonality
@@ -259,6 +260,7 @@ const EditScheduleModal = ({
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
       const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
       const startTimeIntervalsTo = `${values.to_interval} ${timeFrameIntervalTo}`;
+      debugger
       const daysListString = daysList ? daysList.toString() : '';
 
       let multiTimesList = [];

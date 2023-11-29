@@ -73,7 +73,7 @@ const EditTour = ({ history }) => {
             color="paradiseGray"
             outline
             className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
-            style={{height:'45px'}}
+            style={{height:'45px', minWidth: '140px'}}
             type="button"
             
           >
