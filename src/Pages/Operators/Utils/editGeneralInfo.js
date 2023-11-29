@@ -15,7 +15,7 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-
+import Switch from "react-switch";
 import { useDispatch, useSelector } from "react-redux";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
 // import Select from "react-select";
@@ -24,27 +24,61 @@ import { Select } from 'antd';
 import { map } from "lodash";
 
 const { Option } = Select;
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        // width: "200px",
+        paddingRight: 2,
+      }}
+    >
+      {" "}
+     No
+    </div>
+  );
+};
 
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingLeft: 2,
+      }}
+    >
+      {" "}
+      Yes
+    </div>
+  );
+};
 const EditGeneralInformation = ({ data }) => {
   //initial info
   const [initialData, setInitialData] = useState();
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
-  const [notification, setNotification] = useState();
   const [selectionID, setSelectionID] = useState({});
   const [serviceAreaError, setServiceAreaError] = useState(false)
-
+  const [switchProvider, setSwitchProvider] = useState(false)
   useEffect(() => {
     setInitialData(data);
   }, [data]);
 
   useEffect(() => {
-    if (initialData && initialData.notification_email === 1) {
-      setNotification(true);
-    }
-
-    if (initialData && initialData.notification_email === 0) {
-      setNotification(false);
+    if (initialData && initialData.is_provider === 1) {
+      setSwitchProvider(true);
+    }else{
+      setSwitchProvider(false)
     }
   }, [initialData]);
 
@@ -113,7 +147,7 @@ const EditGeneralInformation = ({ data }) => {
       zip: initialData ? initialData.zip : "",
       country: initialData ? initialData.country : "",
       website_url: initialData ? initialData.website_url : "",
-
+      is_provider: switchProvider === true ? 1 : 0,
       description: initialData ? initialData.description : "",
       phone1: initialData ? initialData.phone1 : "",
       phone2: initialData ? initialData.phone2 : "",
@@ -151,7 +185,7 @@ const EditGeneralInformation = ({ data }) => {
           zip: values.zip ? values.zip : "",
           country: values.country ? values.country : "",
           website_url: values.website_url ? values.website_url : "",
-
+          is_provider: switchProvider === true ? 1 : 0,
           description: values.description ? values.description : "",
           phone1: values.phone1 ? values.phone1 : "",
           phone2: values.phone2 ? values.phone2 : "",
@@ -358,6 +392,22 @@ const EditGeneralInformation = ({ data }) => {
                         {validationType.errors.address2}
                       </FormFeedback>
                     ) : null}
+                  </div>
+                </Col>
+                <Col className="col-1">
+                    <Label className="form-label mt-2">Provider</Label>
+                  <div className="">
+                  <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={70}
+                      onChange={() => {
+                        setSwitchProvider(!switchProvider);
+                      }}
+                      checked={switchProvider}
+                    />
+                   
                   </div>
                 </Col>
               </Row>
