@@ -124,13 +124,16 @@ const EditGeneralInformation = ({ data }) => {
   useEffect(() => {
     if (initialData && dataAreas) {
       let optionsArea = [];
+      let optionsAreaShort = [];
 
       dataAreas.forEach((element) => {
         if (initialData.service_areas_ids.includes(element.id)) {
           optionsArea.push({ label: element.name, value: element.id });
+          optionsAreaShort.push(element.id)
         }
       });
       setInitialOptionsArea(optionsArea);
+      setSelectionID(optionsAreaShort);
     }
   }, [dataAreas, initialData]);
 
@@ -452,7 +455,7 @@ const EditGeneralInformation = ({ data }) => {
                     </div>
                   </Col>
                   <Col className="col-1">
-                    <Label className="form-label mt-2">Provider</Label>
+                    <Label className="form-label mt-2">Operator</Label>
                   <div className="">
                   <Switch
                       uncheckedIcon={<Offsymbol />}

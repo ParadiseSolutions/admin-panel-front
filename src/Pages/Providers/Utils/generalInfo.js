@@ -387,7 +387,7 @@ useEffect(() => {
                   </div>
                 </Col>
                 <Col className="col-1">
-                    <Label className="form-label mt-2">Provider</Label>
+                    <Label className="form-label mt-2">Operator</Label>
                   <div className="">
                   <Switch
                       uncheckedIcon={<Offsymbol />}
