@@ -44,16 +44,16 @@ const EditProductPricing = ({
   const [priceCollect, setPriceCollect] = useState([]);
   const [priceSeason, setPriceSeason] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0]?.source_id : ""
   );
   const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1]?.source_id : ""
   );
   const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2]?.source_id : ""
   );
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
   useEffect(() => {
     if (newProduct) {
@@ -278,7 +278,7 @@ const EditProductPricing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? type.id ===
-                                    dataEdit.pricedetails[0].source_id
+                                    dataEdit.pricedetails[0]?.source_id
                                   : false
                               }
                             >
@@ -310,7 +310,7 @@ const EditProductPricing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? option.id ===
-                                    dataEdit.pricedetails[1].source_id
+                                    dataEdit.pricedetails[1]?.source_id
                                   : false
                               }
                             >
@@ -342,7 +342,7 @@ const EditProductPricing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? collect.id ===
-                                    dataEdit.pricedetails[2].source_id
+                                    dataEdit.pricedetails[2]?.source_id
                                   : false
                               }
                             >
@@ -378,7 +378,7 @@ const EditProductPricing = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >

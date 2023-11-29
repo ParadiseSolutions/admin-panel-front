@@ -50,16 +50,16 @@ const EditAirportTransfer = ({
   const [priceVehicle, setPriceVehicle] = useState([]);
   const [priceZone, setPriceZone] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0]?.source_id : ""
   );
   const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1]?.source_id : ""
   );
   const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2]?.source_id : ""
   );
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState();
   const [priceDirectionSelected, setPriceDirectionSelected] = useState();
@@ -339,7 +339,7 @@ const EditAirportTransfer = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? type.id ===
-                                    dataEdit.pricedetails[0].source_id
+                                    dataEdit.pricedetails[0]?.source_id
                                   : false
                               }
                             >
@@ -371,7 +371,7 @@ const EditAirportTransfer = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? option.id ===
-                                    dataEdit.pricedetails[1].source_id
+                                    dataEdit.pricedetails[1]?.source_id
                                   : false
                               }
                             >
@@ -403,7 +403,7 @@ const EditAirportTransfer = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? collect.id ===
-                                    dataEdit.pricedetails[2].source_id
+                                    dataEdit.pricedetails[2]?.source_id
                                   : false
                               }
                             >
@@ -439,7 +439,7 @@ const EditAirportTransfer = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >
@@ -553,7 +553,7 @@ const EditAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? transferType.id ===
-                                  dataEdit.pricedetails[4].source_id
+                                  dataEdit.pricedetails[4]?.source_id
                                 : false
                             }
                           >
@@ -585,7 +585,7 @@ const EditAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? direction.id ===
-                                  dataEdit.pricedetails[5].source_id
+                                  dataEdit.pricedetails[5]?.source_id
                                 : false
                             }
                           >
@@ -617,7 +617,7 @@ const EditAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? vehicle.id ===
-                                  dataEdit.pricedetails[7].source_id
+                                  dataEdit.pricedetails[7]?.source_id
                                 : false
                             }
                           >
@@ -647,7 +647,7 @@ const EditAirportTransfer = ({
                           <option key={index} value={zone.id}  selected={
                             dataEdit && dataEdit.pricedetails
                               ? zone.id ===
-                                dataEdit.pricedetails[6].source_id
+                                dataEdit.pricedetails[6]?.source_id
                               : false
                           }>
                             {zone.text}
