@@ -75,8 +75,8 @@ const Active = (cell) => {
     debugger
     let tourInfo = JSON.parse(getStorageSync("Tour-data"));
     if(tourInfo && newInfo?.id) {
-      console.log(tourInfo)
-      console.log(cell.row.index)
+      // console.log(tourInfo)
+      // console.log(cell.row.index)
       //let updated = tourInfo.filter(x => x.id === cell.row.original.id)
       tourInfo[cell.row.index] = newInfo
       createStorageSync("Tour-data", JSON.stringify(tourInfo))

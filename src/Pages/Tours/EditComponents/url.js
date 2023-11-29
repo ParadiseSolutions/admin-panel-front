@@ -75,7 +75,7 @@ const URL = ({ tourData, toggle }) => {
   }, [urlTypeSelected, locationSelected]);
 
   const onEditURL = (url) => {
-    console.log(url);
+    // console.log(url);
     setUrlTypeSelected(url.path_type_id);
     getURLAvailableFromAPI(tourData.id, url.path_type_id).then((resp) => {
       setLocationData(resp.data.data);

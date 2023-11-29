@@ -100,11 +100,19 @@ const Schedules = ({ tourData, toggle }) => {
   // };
 
   useEffect(() => {
+    if (seasonSelected === "7") {
+      setDataFromEdit(null);
+      setDataToEdit(null);
+    }
+  }, [seasonSelected]);
+
+  useEffect(() => {
     if (seasonalityData.length > 0) {
       setDataFromEdit(seasonalityData[0].from);
       setDataToEdit(seasonalityData[0].to);
     }
   }, [seasonalityData]);
+
   //delete season
   const onDeleteSeason = (data) => {
     deleteSchedule(tourData.id, data.id).then((resp) => {
@@ -151,16 +159,16 @@ const Schedules = ({ tourData, toggle }) => {
     // }),
     onSubmit: (values) => {
       let data = {
-        repeat_id: values.repeat_id,
-        from: values.repeat_id === 7 ? null : values.from,
-        to: values.repeat_id === 7 ? null : values.to,
+        repeat_id: seasonSelected,
+        from: seasonSelected === 7 ? null : values.from,
+        to: seasonSelected === 7 ? null : values.to,
         id: seasonalityData[0]?.id,
         type_id: 5,
         action: "Available",
         on: null,
         recurrency: 1,
       };
-      console.log(data);
+      // console.log(data);
       putSeasonalAPI(tourData.id, data)
         .then((resp) => {
           // console.log(resp.data);
@@ -173,36 +181,44 @@ const Schedules = ({ tourData, toggle }) => {
             ).then(() => {
               refresh();
               // history.goBack();
-              // Swal.fire({
-              //   title: "Congratulation",
-              //   text: "This tour has been created!",
-              //   icon: "success",
-              //   showCancelButton: true,
-              //   confirmButtonColor: "#F6851F",
-              //   cancelButtonColor: "#d33",
-              //   cancelButtonText: "Save & Close!",
-              //   confirmButtonText: "Save & New",
-              // }).then((result) => {
-              //   if (result.isConfirmed) {
-              //     history.push("/tours/new");
-              //   } else {
-              //     history.push("/tours");
-              //   }
-              // });
+              Swal.fire({
+                title: "Congratulation",
+                text: "This tour has been created!",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#F6851F",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Save & Close!",
+                confirmButtonText: "Save & New",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  history.push("/tours/new");
+                } else {
+                  history.push("/tours");
+                }
+              });
             });
           }
         })
         .catch((error) => {
           let errorMessages = [];
-          Object.entries(error.response.data.data).map((item) => {
-            errorMessages.push(item[1]);
-          });
+          if (error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
 
-          Swal.fire(
-            "Error!",
-            // {error.response.},
-            String(errorMessages[0])
-          );
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
         });
     },
   });

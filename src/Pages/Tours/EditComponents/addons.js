@@ -89,19 +89,26 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         deleteAddonAPI(depData.id)
         .then((response) => {
           refreshTable()
-          console.log('si fue')
+          // console.log('si fue')
         }).catch((error) => {
-          console.log('no fue')
           let errorMessages = [];
-          // Object.entries(error.response.data.message).map((item) => {
-          //   errorMessages.push(item[1]);
-          // });
-  
-          Swal.fire(
-            "Error!",
-            // {error.response.},
-            String(error.response.data.message)
-          );
+          if (error.response.data.data === null) {
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(error.response.data.message)
+            );
+          } else {
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+            });
+
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          }
         });
       }
     });
