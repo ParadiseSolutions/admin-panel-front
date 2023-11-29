@@ -46,16 +46,16 @@ const EditPrivateCharter = ({
   const [priceDuration, setPriceDuration] = useState([]);
   const [priceLocation, setPriceLocation] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0]?.source_id : ""
   );
   const [priceOptionSelected, setPriceOptionSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1]?.source_id : ""
   );
   const [priceCollectSelected, setPriceCollectSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[2]?.source_id : ""
   );
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
-    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3].source_id : ""
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState();
   const [priceDurationSelected, setPriceDurationSelected] = useState();
@@ -311,7 +311,7 @@ const EditPrivateCharter = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? type.id ===
-                                    dataEdit.pricedetails[0].source_id
+                                    dataEdit.pricedetails[0]?.source_id
                                   : false
                               }
                             >
@@ -343,7 +343,7 @@ const EditPrivateCharter = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? option.id ===
-                                    dataEdit.pricedetails[1].source_id
+                                    dataEdit.pricedetails[1]?.source_id
                                   : false
                               }
                             >
@@ -375,7 +375,7 @@ const EditPrivateCharter = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? collect.id ===
-                                    dataEdit.pricedetails[2].source_id
+                                    dataEdit.pricedetails[2]?.source_id
                                   : false
                               }
                             >
@@ -411,7 +411,7 @@ const EditPrivateCharter = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                      dataEdit.pricedetails[3].source_id
+                                      dataEdit.pricedetails[3]?.source_id
                                     : false
                                 }
                               >
@@ -525,7 +525,7 @@ const EditPrivateCharter = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? charterType.id ===
-                                  dataEdit.pricedetails[4].source_id
+                                  dataEdit.pricedetails[4]?.source_id
                                 : false
                             }
                           >
@@ -557,7 +557,7 @@ const EditPrivateCharter = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? duration.id ===
-                                  dataEdit.pricedetails[5].source_id
+                                  dataEdit.pricedetails[5]?.source_id
                                 : false
                             }
                           >
@@ -636,7 +636,7 @@ const EditPrivateCharter = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? location.id ===
-                                  dataEdit.pricedetails[6].source_id
+                                  dataEdit.pricedetails[6]?.source_id
                                 : false
                             }
                           >
