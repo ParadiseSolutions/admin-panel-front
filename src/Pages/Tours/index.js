@@ -134,11 +134,11 @@ const activeTourToogle = (filter) =>{
   setLoadingData(true)
   let tourInfo = toursDataInfo
   createStorageSync("switch1", !filter)
-  console.log(tourInfo)
+  // console.log(tourInfo)
   if (!filter) {
-    console.log('activo')
+    // console.log('activo')
     let updated = tourInfo.filter(x => x.active === 1)
-    console.log('filtrados', updated)
+    // console.log('filtrados', updated)
 
     // createStorageSync("Tour-data", JSON.stringify(updated))
       setRestart(true)
@@ -157,9 +157,9 @@ const activeTourToogle = (filter) =>{
       }
 
     }
-    console.log('inactivo')
+    // console.log('inactivo')
     let updated = tourInfo
-    console.log('filtrados', updated)
+    // console.log('filtrados', updated)
       // createStorageSync("Tour-data", JSON.stringify(updated))
       setRestart(true)
       setToursDataInfo(updated);
@@ -242,7 +242,7 @@ const activeTourToogle = (filter) =>{
     }).then((resp) => {
       if (resp.isConfirmed) {
         copyTourAPI(tour.id).then((resp) => {
-          console.log('copy', resp.data)
+          // console.log('copy', resp.data)
           window.location.href = `/tours/${resp.data.data.tour_id}`;
         })
       }

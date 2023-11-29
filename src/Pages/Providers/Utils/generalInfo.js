@@ -21,8 +21,46 @@ import Swal from "sweetalert2";
 import "antd/dist/antd.css";
 import { Select } from "antd";
 import { map } from "lodash";
-
+import Switch from "react-switch";
 const { Option } = Select;
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        // width: "200px",
+        paddingRight: 2,
+      }}
+    >
+      {" "}
+     No
+    </div>
+  );
+};
+
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingLeft: 2,
+      }}
+    >
+      {" "}
+      Yes
+    </div>
+  );
+};
 
 const GeneralInformation = () => {
   let history = useHistory();
@@ -43,6 +81,9 @@ const GeneralInformation = () => {
   const [col3, setcol3] = useState(false);
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
+
+  const [switchNotify, setSwitchNotify] = useState(false)
+  const [switchOperator, setSwitchOperator] = useState(false)
   
   function handleMulti(selected) {
     
@@ -88,16 +129,8 @@ useEffect(() => {
         setServiceAreaError(true)
       }else{
         setServiceAreaError(false)
-        Swal.fire({
-          title: "Operator Request",
-          icon: "question",
-          text: `Create this provider as Operator to?`,
-          showCancelButton: true,
-          confirmButtonText: "Yes",
-          confirmButtonColor: "#F38430",
-          cancelButtonText: "No",
-        }).then((resp) => {
-          if (resp.isConfirmed) {
+       
+          
             let data = {
               name: values.name ? values.name : "",
               legal_name: values.legal_name ? values.legal_name : "",
@@ -113,12 +146,9 @@ useEffect(() => {
                 ? values.reservation_email
                 : "",
               cc_email: values.cc_email ? values.cc_email : "",
-              notification_email:
-                values.notification_email && values.notification_email === true
-                  ? 1
-                  : 0,
+              notification_email: switchNotify === true ? 1 : 0,
               description: values.description ? values.description : "",
-              is_operator: 1,
+              is_operator: switchOperator === true ? 1 : 0,
               phone1: values.phone1 ? values.phone1 : '',
               phone2: values.phone2 ? values.phone2 : '',
               phone3: values.phone3 ? values.phone3 : '',
@@ -156,67 +186,8 @@ useEffect(() => {
                 );
                 
               });
-          } else {
-            let data = {
-              name: values.name ? values.name : "",
-              legal_name: values.legal_name ? values.legal_name : "",
-              code: values.code ? values.code : "",
-              address1: values.address1 ? values.address1 : "",
-              address2: values.address2 ? values.address2 : "",
-              city: values.city ? values.city : "",
-              state: values.state ? values.state : "",
-              zip: values.zip ? values.zip : "",
-              country: values.country ? values.country : "",
-              website_url: values.website_url ? values.website_url : "",
-              reservation_email: values.reservation_email
-                ? values.reservation_email
-                : "",
-              cc_email: values.cc_email ? values.cc_email : "",
-              notification_email: 
-              values.notification_email && values.notification_email === true
-                ? 1
-                : 0,
-              description: values.description ? values.description : "",
-              is_operator: 0,
-              phone1: values.phone1 ? values.phone1 : '',
-              phone2: values.phone2 ? values.phone2 : '',
-              phone3: values.phone3 ? values.phone3 : '',
-              whatsapp1: values.whatsapp1 ? values.whatsapp1 : '',
-              whatsapp2: values.whatsapp2 ? values.whatsapp2 : '',
-              whatsapp3: values.whatsapp3 ? values.whatsapp3 : '',
-              email1: values.email1 ? values.email1 : '',
-              email2: values.email2 ? values.email2 : '',
-              email3: values.email3 ? values.email3 : '',
-              service_area_ids: selectionID
-            };
-            
-            createProviderAPI(data)
-              .then((resp) => {
-                // console.log(resp);
-                history.push(`/providers/${resp.data.data.id}`);
-              })
-              .catch((error) => {
-                if(error.response.data.data === null) {
-                  Swal.fire(
-                    "Error!",
-                    // {error.response.},
-                    String(error.response.data.message)
-                  );
-                } else {
-                  let errorMessages = [];
-                  Object.entries(error.response.data.data).map((item) => {
-                    errorMessages.push(item[1]);
-                  });
+          
         
-                  Swal.fire(
-                    "Error!",
-                    // {error.response.},
-                    String(errorMessages[0])
-                  );
-                }
-              });
-          }
-        });
       }
       
     },
@@ -379,10 +350,20 @@ useEffect(() => {
                     ) : null}
                   </div>
                 </Col>
-                <Col className="col-2">
-                  <div className="form-check form-switch form-switch-md mt-4">
-                    <Label className="form-label">Notification Email</Label>
-                    <Input
+                <Col className="col-1">
+                    <Label className="form-label mt-2">Notify</Label>
+                  <div className="">
+                  <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={70}
+                      onChange={() => {
+                        setSwitchNotify(!switchNotify);
+                      }}
+                      checked={switchNotify}
+                    />
+                    {/* <Input
                       name="notification_email"
                       placeholder=""
                       type="checkbox"
@@ -402,7 +383,23 @@ useEffect(() => {
                       <FormFeedback type="invalid">
                         {validationType.errors.notification_email}
                       </FormFeedback>
-                    ) : null}
+                    ) : null} */}
+                  </div>
+                </Col>
+                <Col className="col-1">
+                    <Label className="form-label mt-2">Provider</Label>
+                  <div className="">
+                  <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={70}
+                      onChange={() => {
+                        setSwitchOperator(!switchOperator);
+                      }}
+                      checked={switchOperator}
+                    />
+                   
                   </div>
                 </Col>
               </Row>

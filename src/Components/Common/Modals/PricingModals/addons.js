@@ -965,8 +965,7 @@ const Addons = ({
                       </Col>
                     </>
                   ) : displayOptionSelected === 3 ||
-                    displayOptionSelected === 4 ||
-                    displayOptionSelected === 5 ? (
+                    displayOptionSelected === 4 ? (
                     <>
                       <Col className="col-3 mx-4">
                         <div className="form-outline">

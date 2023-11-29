@@ -57,16 +57,17 @@ const AddNewScheduleModal = ({
   // checkbox list
   const [daysList, setDayList] = useState([]);
   const onAddDay = (day) => {
-    const selection = +day;
+    const selection = day;
     const selectionFlag = daysList.includes(selection);
-    if (selection === 7) {
-      setDayList("7,1,5,2,6,3,0,4")
-    }
-    if (!selectionFlag) {
-      setDayList([...daysList, +day]);
-    }
-    if (selectionFlag) {
-      setDayList(daysList.filter((ele) => ele !== selection));
+    if (selection === "7") {
+      setDayList(["1","2","3","4","5","6","0"])
+    } else {
+      if (!selectionFlag) {
+        setDayList([...daysList, day]);
+      }
+      if (selectionFlag) {
+        setDayList(daysList.filter((ele) => ele !== selection));
+      }
     }
   };
 

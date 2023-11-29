@@ -13,6 +13,7 @@ import {
 import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import Switch from "react-switch";
 // import Select from "react-select";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,10 +22,52 @@ import "antd/dist/antd.css";
 import { Select } from "antd";
 import { map } from "lodash";
 import Swal from "sweetalert2";
+
+
 const { Option } = Select;
+
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        // width: "200px",
+        paddingRight: 2,
+      }}
+    >
+      {" "}
+     No
+    </div>
+  );
+};
+
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingLeft: 2,
+      }}
+    >
+      {" "}
+      Yes
+    </div>
+  );
+};
+
 const GeneralInformation = () => {
   let history = useHistory();
-
+ 
   //service area options
   const dispatch = useDispatch();
   useEffect(() => {
@@ -51,7 +94,7 @@ const GeneralInformation = () => {
   const [col3, setcol3] = useState(false);
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
-
+  const [switchProvider, setSwitchProvider] = useState(false)
   function togglecol1() {
     setcol1(!col1);
     setcol2(false);
@@ -92,7 +135,7 @@ const GeneralInformation = () => {
           zip: values.zip ? values.zip : "",
           country: values.country ? values.country : "",
           website_url: values.website_url ? values.website_url : "",
-  
+          is_provider: switchProvider === true ? 1 : 0,
           description: values.description ? values.description : "",
   
           phone1: values.phone1 ? values.phone1 : "",
@@ -297,6 +340,22 @@ const GeneralInformation = () => {
                         {validationType.errors.address2}
                       </FormFeedback>
                     ) : null}
+                  </div>
+                </Col>
+                <Col className="col-1">
+                    <Label className="form-label mt-2">Provider</Label>
+                  <div className="">
+                  <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={70}
+                      onChange={() => {
+                        setSwitchProvider(!switchProvider);
+                      }}
+                      checked={switchProvider}
+                    />
+                   
                   </div>
                 </Col>
               </Row>

@@ -131,7 +131,7 @@ const Sidebar = () => {
                     <span>{"Dashboard"}</span>
                   </Link>
                 </li>   
-                <li>
+                <li class="mm-active">
                   <Link to="/#" className="has-arrow waves-effect" >
                     <span>{"MANAGE"}</span>
                   </Link>

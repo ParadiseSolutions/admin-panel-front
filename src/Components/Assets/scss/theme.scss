@@ -205,6 +205,7 @@ input::-webkit-inner-spin-button {
 
 /* Firefox */
 input[type=number] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
@@ -480,4 +481,14 @@ width: 20% !important;
   width: 24px !important;
   top: 2px !important;
   left: 1px;
+}
+
+.custom-width-150 {
+  width: 150px;
+}
+.custom-width-250 {
+  width: 250px;
+}
+.custom-width-300 {
+  width: 300px;
 }

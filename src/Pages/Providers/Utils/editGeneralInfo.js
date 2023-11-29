@@ -22,15 +22,54 @@ import { useDispatch, useSelector } from "react-redux";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
 import { Select } from "antd";
 import { map } from "lodash";
-
+import Switch from "react-switch";
 const { Option } = Select;
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        // width: "200px",
+        paddingRight: 2,
+      }}
+    >
+      {" "}
+     No
+    </div>
+  );
+};
+
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingLeft: 2,
+      }}
+    >
+      {" "}
+      Yes
+    </div>
+  );
+};
 
 const EditGeneralInformation = ({ data }) => {
   //initial info
   const [initialData, setInitialData] = useState();
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
-  const [notification, setNotification] = useState(initialData && initialData.notification_email);
+  const [switchNotify, setSwitchNotify] = useState(initialData && initialData.notification_email);
+  const [switchOperator, setSwitchOperator] = useState(initialData && initialData.is_operator);
   const [col1, setcol1] = useState(true);
   const [initialOptionsArea, setInitialOptionsArea] = useState([]);
   const [selectionID, setSelectionID] = useState({});
@@ -42,12 +81,19 @@ const EditGeneralInformation = ({ data }) => {
 
   useEffect(() => {
     if (initialData && initialData.notification_email === 1) {
-      setNotification(true);
+      setSwitchNotify(true);
+    }else{
+      setSwitchNotify(false)
+    }
+    if (initialData && initialData.is_operator === 1) {
+      setSwitchOperator(true);
+    }else{
+      setSwitchOperator(false)
     }
 
-    if (initialData && initialData.notification_email === 0) {
-      setNotification(false);
-    }
+    // if (initialData && initialData.notification_email === 0) {
+    //   setSwitchNotify(false);
+    // }
   }, [initialData]);
 
   useEffect(() => {
@@ -156,7 +202,8 @@ const EditGeneralInformation = ({ data }) => {
             ? values.reservation_email
             : "",
           cc_email: values.cc_email ? values.cc_email : "",
-          notification_email: notification === true ? 1 : 0,
+          notification_email: switchNotify === true ? 1 : 0,
+          is_operator: switchOperator === true ? 1 : 0,
           description: values.description ? values.description : "",
           phone1: values.phone1 ? values.phone1 : "",
           phone2: values.phone2 ? values.phone2 : "",
@@ -366,11 +413,21 @@ const EditGeneralInformation = ({ data }) => {
                     ) : null}
                   </div>
                 </Col>
-                {notification === undefined ? null : (
-                  <Col className="col-2">
-                    <div className="form-check form-switch form-switch-md mt-4">
-                      <Label className="form-label">Notification Email</Label>
-                      <Input
+                
+                  <Col className="col-1">
+                  <Label className="form-label mt-2">Notify</Label>
+                    <div className="">
+                    <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={70}
+                      onChange={() => {
+                        setSwitchNotify(!switchNotify);
+                      }}
+                      checked={switchNotify}
+                    />
+                      {/* <Input
                         name="notification_email"
                         placeholder=""
                         type="checkbox"
@@ -391,10 +448,26 @@ const EditGeneralInformation = ({ data }) => {
                         <FormFeedback type="invalid">
                           {validationType.errors.notification_email}
                         </FormFeedback>
-                      ) : null}
+                      ) : null} */}
                     </div>
                   </Col>
-                )}
+                  <Col className="col-1">
+                    <Label className="form-label mt-2">Provider</Label>
+                  <div className="">
+                  <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={70}
+                      onChange={() => {
+                        setSwitchOperator(!switchOperator);
+                      }}
+                      checked={switchOperator}
+                    />
+                   
+                  </div>
+                </Col>
+                
               </Row>
 
               <Row>
