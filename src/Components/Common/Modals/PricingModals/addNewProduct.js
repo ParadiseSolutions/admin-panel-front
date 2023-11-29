@@ -144,21 +144,21 @@ const AddNewProductPricing = ({
       let price_type =
         priceTypeSelected === "" || priceTypeSelected === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails[0].source_id
+            ? dataEdit.pricedetails[0]?.source_id
             : null
           : priceTypeSelected;
 
       let price_option =
         priceOptionSelected === "" || priceOptionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails[1].source_id
+            ? dataEdit.pricedetails[1]?.source_id
             : null
           : priceOptionSelected;
 
       let price_collect =
         priceCollectSelected === "" || priceCollectSelected === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails[2].source_id
+            ? dataEdit.pricedetails[2]?.source_id
             : null
           : priceCollectSelected;
 
@@ -483,7 +483,7 @@ const AddNewProductPricing = ({
                             value={type.id}
                             selected={
                               dataEdit && dataEdit.pricedetails
-                                ? type.id === dataEdit.pricedetails[0].source_id
+                                ? type.id === dataEdit.pricedetails[0]?.source_id
                                 : false
                             }
                           >
@@ -515,7 +515,7 @@ const AddNewProductPricing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? option.id ===
-                                  dataEdit.pricedetails[1].source_id
+                                  dataEdit.pricedetails[1]?.source_id
                                 : false
                             }
                           >
@@ -566,7 +566,7 @@ const AddNewProductPricing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? collect.id ===
-                                  dataEdit.pricedetails[2].source_id
+                                  dataEdit.pricedetails[2]?.source_id
                                 : false
                             }
                           >
