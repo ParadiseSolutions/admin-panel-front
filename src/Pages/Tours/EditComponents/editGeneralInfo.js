@@ -45,7 +45,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   const [editMode, setEditMode] = useState(
     tourData.edit_mode === 1 ? false : true
   );
-  console.log("info del tour", tourData);
+  // console.log("info del tour", tourData);
   //tour types request
   useEffect(() => {
     const tourTypesRequest = () => dispatch(tourTypesData());
@@ -105,7 +105,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       });
     }
   }, [mainCatID]);
-  console.log(categoryId);
+  // console.log(categoryId);
   //request based on website id
   const [shoppingCartData, setShoppingCartData] = useState(null);
   const [providerData, setProviderData] = useState(null);
@@ -285,7 +285,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       createStorageSync("Tour-data", JSON.stringify(tourInfo))
     }
   }
-console.log('edit mode', editMode)
+// console.log('edit mode', editMode)
   return (
     <Form
       onSubmit={(e) => {

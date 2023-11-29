@@ -33,7 +33,7 @@ useEffect(() => {
     setFriChecked(initialRun.includes(5) ? true : false)
     setSatChecked(initialRun.includes(6) ? true : false)
     setSunChecked(initialRun.includes(0) ? true : false)
-    setDailyChecked(initialRun.includes(8) ? true : false)
+    setDailyChecked(initialRun.includes(7) ? true : false)
   }
 }, [initialRun]);
 
@@ -100,13 +100,13 @@ const onClickDay = (day) =>{
         <div className="col d-flex">
           <Input type="checkbox" className="mx-2" value={7} checked={dailyChecked} onChange={(e) => {
             setDailyChecked(!dailyChecked)
-            setMonChecked(false)
-            setTueChecked(false)
-            setWenChecked(false)
-            setThuChecked(false)
-            setFriChecked(false)
-            setSatChecked(false)
-            setSunChecked(false)
+            setMonChecked(dailyChecked)
+            setTueChecked(dailyChecked)
+            setWenChecked(dailyChecked)
+            setThuChecked(dailyChecked)
+            setFriChecked(dailyChecked)
+            setSatChecked(dailyChecked)
+            setSunChecked(dailyChecked)
             onClickDay(e.target.value)}} />
           <Label className="form-label">Daily</Label>
         </div>
