@@ -89,6 +89,16 @@ const Operators = () => {
         },
       },
       {
+        Header: "Serving",
+        accessor: "current_service_area_name",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          const providersData = cellProps.row.original;
+          return <div className="custom-width-250">{providersData.current_service_area_name}</div>;
+        },
+      },
+      {
         Header: "Phone",
         accessor: "phone1",
         disableFilters: true,
@@ -104,6 +114,17 @@ const Operators = () => {
         filterable: false,
         Cell: (cellProps) => {
           return <Email {...cellProps} />;
+        },
+      },
+
+      {
+        Header: "Website",
+        accessor: "websites",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {          
+          const providersData = cellProps.row.original;
+          return <div className="custom-width-250">{providersData.websites}</div>;
         },
       },
 
