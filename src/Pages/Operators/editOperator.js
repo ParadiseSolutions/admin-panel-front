@@ -3,6 +3,7 @@ import { getProviderAPI, getContactsProviderAPI, getSocialProviderAPI } from "..
 import EditGeneralInformation from "./Utils/editGeneralInfo";
 import Contacts from "./Utils/contacts";
 import SocialMedia from "./Utils/socialMedia";
+import AutomatedConfirmation from "./Utils/automatedConfirmation";
 import { Container } from "reactstrap";
 import { useParams } from 'react-router-dom'
 const EditOperator = () => {
@@ -38,6 +39,7 @@ const EditOperator = () => {
          <div xl={8}>
           <EditGeneralInformation data={data} />
           <Contacts contacts={contacts}/>
+          <AutomatedConfirmation socialData={socialData} id={id} />
           <SocialMedia socialData={socialData} id={id} />
          </div>
           </Container>

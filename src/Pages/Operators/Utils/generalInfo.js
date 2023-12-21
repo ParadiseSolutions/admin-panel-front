@@ -845,6 +845,26 @@ const GeneralInformation = () => {
         </Collapse>
       </div>
       <div className="accordion-item">
+        <h2 className="accordion-header" id="headingTwo">
+          <button
+            className={classnames("accordion-button", "fw-medium", {
+              collapsed: !col2,
+            })}
+            type="button"
+            style={{
+              cursor: "pointer",
+              backgroundColor: "#F6851F",
+              color: "white",
+            }}
+          >
+            Automated Confirmations
+          </button>
+        </h2>
+        <Collapse id="collapseTwo" className="accordion-collapse" isOpen={col2}>
+          <div className="accordion-body"></div>
+        </Collapse>
+      </div>
+      <div className="accordion-item">
         <h2 className="accordion-header" id="headingThree">
           <button
             className={classnames("accordion-button", "fw-medium", {
