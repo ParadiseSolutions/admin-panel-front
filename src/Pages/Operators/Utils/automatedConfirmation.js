@@ -4,6 +4,7 @@ import {
   updateProviderAPI,
   updateSocialProviderAPI,
 } from "../../../Utils/API/Providers";
+import AddExtraFeeModal from "../../../Components/Common/Modals/OperatorsModals/addExtraFeeModal";
 import {
   Collapse,
   Form,
@@ -24,28 +25,42 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { Select } from "antd";
+import { getExtraFeeTable } from "../../../Utils/API/Operators";
+import { map } from "lodash";
 
 const AutomatedConfirmation = ({ socialData, id }) => {
   // const {id} = useHistory()
   // console.log(id)
   //initial info
   const [initialData, setInitialData] = useState({});
+  const [extraFeeInitialData, setExtraFeeInitialData] = useState({});
+  const [extraFeeEditData, setExtraFeeEditData] = useState([]);
   const [addMore, setAddMore] = useState(false);
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
   const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
-  useEffect(() => {
-    setInitialData(socialData);
-  }, [socialData]);
+  const [extraFeeModal, setExtraFeeModal] = useState(false);
 
+  useEffect(() => {
+   getExtraFeeTable(id).then((resp) =>{
+    setExtraFeeInitialData(resp.data.data)
+   }).catch((err) => console.log(err))
+  }, [id]);
+
+  const refreshTable = () =>{
+    getExtraFeeTable(id).then((resp) =>{
+      setExtraFeeInitialData(resp.data.data)
+     }).catch((err) => console.log(err))
+  }
   // console.log('social media',initialData)
   const [col1, setcol1] = useState(false);
 
   function togglecol1() {
     setcol1(!col1);
   }
+console.log(extraFeeInitialData)
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -171,180 +186,69 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       </Tooltip>
                     </div>
 
-                    <label className="text-paradise">+ Add Extra Fee</label>
+                    <label
+                      className="text-paradise"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setExtraFeeModal(!extraFeeModal)}
+                    >
+                      + Add Extra Fee
+                    </label>
                   </div>
                   <div className="table-responsive" style={{ height: "127px" }}>
                     <Card>
                       <Table className="table mb-0">
                         <tbody>
-                          <tr className="">
-                            <th className="col-11">1. Dock Fee</th>
-                            <td className="col-1">
-                              <div className="d-flex gap-3">
-                                <div className="text-paradise">
-                                  <div className="text-success">
-                                    <i
-                                      className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                      id="edittooltip"
-                                      style={{ cursor: "pointer" }}
-                                    />
-                                    <UncontrolledTooltip
-                                      placement="top"
-                                      target="edittooltip"
-                                    >
-                                      Edit
-                                    </UncontrolledTooltip>
-                                  </div>
-                                </div>
-                                <div
-                                  className="text-danger"
-                                  onClick={() => {
-                                    // const tourData = cellProps.row.original;
-                                    // // setconfirm_alert(true);
-                                    // onDelete(tourData);
-                                  }}
-                                >
-                                  <i
-                                    className="mdi mdi-delete-outline font-size-17"
-                                    id="deletetooltip"
-                                    style={{ cursor: "pointer" }}
-                                  />
-                                  <UncontrolledTooltip
-                                    placement="top"
-                                    target="deletetooltip"
-                                  >
-                                    Delete
-                                  </UncontrolledTooltip>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>2. Marina Entrance Fee</th>
-                            <td>
-                              <div className="d-flex gap-3">
-                                <div className="text-paradise">
-                                  <div className="text-success">
-                                    <i
-                                      className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                      id="edittooltip"
-                                      style={{ cursor: "pointer" }}
-                                    />
-                                    <UncontrolledTooltip
-                                      placement="top"
-                                      target="edittooltip"
-                                    >
-                                      Edit
-                                    </UncontrolledTooltip>
-                                  </div>
-                                </div>
-                                <div
-                                  className="text-danger"
-                                  onClick={() => {
-                                    // const tourData = cellProps.row.original;
-                                    // // setconfirm_alert(true);
-                                    // onDelete(tourData);
-                                  }}
-                                >
-                                  <i
-                                    className="mdi mdi-delete-outline font-size-17"
-                                    id="deletetooltip"
-                                    style={{ cursor: "pointer" }}
-                                  />
-                                  <UncontrolledTooltip
-                                    placement="top"
-                                    target="deletetooltip"
-                                  >
-                                    Delete
-                                  </UncontrolledTooltip>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>3. Insurance</th>
-                            <td>
-                              <div className="d-flex gap-3">
-                                <div className="text-paradise">
-                                  <div className="text-success">
-                                    <i
-                                      className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                      id="edittooltip"
-                                      style={{ cursor: "pointer" }}
-                                    />
-                                    <UncontrolledTooltip
-                                      placement="top"
-                                      target="edittooltip"
-                                    >
-                                      Edit
-                                    </UncontrolledTooltip>
-                                  </div>
-                                </div>
-                                <div
-                                  className="text-danger"
-                                  onClick={() => {
-                                    // const tourData = cellProps.row.original;
-                                    // // setconfirm_alert(true);
-                                    // onDelete(tourData);
-                                  }}
-                                >
-                                  <i
-                                    className="mdi mdi-delete-outline font-size-17"
-                                    id="deletetooltip"
-                                    style={{ cursor: "pointer" }}
-                                  />
-                                  <UncontrolledTooltip
-                                    placement="top"
-                                    target="deletetooltip"
-                                  >
-                                    Delete
-                                  </UncontrolledTooltip>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>3. Insurance</th>
-                            <td>
-                              <div className="d-flex gap-3">
-                                <div className="text-paradise">
-                                  <div className="text-success">
-                                    <i
-                                      className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                      id="edittooltip"
-                                      style={{ cursor: "pointer" }}
-                                    />
-                                    <UncontrolledTooltip
-                                      placement="top"
-                                      target="edittooltip"
-                                    >
-                                      Edit
-                                    </UncontrolledTooltip>
-                                  </div>
-                                </div>
-                                <div
-                                  className="text-danger"
-                                  onClick={() => {
-                                    // const tourData = cellProps.row.original;
-                                    // // setconfirm_alert(true);
-                                    // onDelete(tourData);
-                                  }}
-                                >
-                                  <i
-                                    className="mdi mdi-delete-outline font-size-17"
-                                    id="deletetooltip"
-                                    style={{ cursor: "pointer" }}
-                                  />
-                                  <UncontrolledTooltip
-                                    placement="top"
-                                    target="deletetooltip"
-                                  >
-                                    Delete
-                                  </UncontrolledTooltip>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
+                          {map(extraFeeInitialData, (fee, index) =>{
+                            return(
+                            <tr>
+                             <th className="col-11">{`${index + 1}. ${fee.fee_type}.....`}</th>
+                             <td className="col-1">
+                               <div className="d-flex gap-3">
+                                 <div className="text-paradise">
+                                   <div className="text-success"
+                                   onClick={() =>{
+                                    setExtraFeeModal(true)
+                                    setExtraFeeEditData(fee)
+                                   }}
+                                   >
+                                    
+                                     <i
+                                       className="mdi mdi-pencil-outline font-size-17 text-paradise"
+                                       id="edittooltip"
+                                       style={{ cursor: "pointer" }}
+                                     />
+                                     <UncontrolledTooltip
+                                       placement="top"
+                                       target="edittooltip"
+                                     >
+                                       Edit
+                                     </UncontrolledTooltip>
+                                   </div>
+                                 </div>
+                                 <div
+                                   className="text-danger"
+                                   onClick={() => {
+                                     // const tourData = cellProps.row.original;
+                                     // // setconfirm_alert(true);
+                                     // onDelete(tourData);
+                                   }}
+                                 >
+                                   <i
+                                     className="mdi mdi-delete-outline font-size-17"
+                                     id="deletetooltip"
+                                     style={{ cursor: "pointer" }}
+                                   />
+                                   <UncontrolledTooltip
+                                     placement="top"
+                                     target="deletetooltip"
+                                   >
+                                     Delete
+                                   </UncontrolledTooltip>
+                                 </div>
+                               </div>
+                             </td>
+                             </tr>)
+                          })}
                         </tbody>
                       </Table>
                     </Card>
@@ -594,6 +498,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           </div>
         </Collapse>
       </div>
+      <AddExtraFeeModal
+        extraFeeModal = {extraFeeModal}
+        setExtraFeeModal = {setExtraFeeModal}
+        extraFeeEditData={extraFeeEditData}
+        id={id}
+        refreshTable={refreshTable}
+      />
     </div>
   );
 };
