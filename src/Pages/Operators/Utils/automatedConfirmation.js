@@ -201,7 +201,7 @@ console.log(extraFeeInitialData)
                           {map(extraFeeInitialData, (fee, index) =>{
                             return(
                             <tr>
-                             <th className="col-11">{`${index + 1}. ${fee.fee_type}.....`}</th>
+                             <th className="col-11">{`${index + 1}. ${fee.fee_type}`}</th>
                              <td className="col-1">
                                <div className="d-flex gap-3">
                                  <div className="text-paradise">
