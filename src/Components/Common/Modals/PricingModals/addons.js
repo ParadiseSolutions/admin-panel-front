@@ -270,7 +270,7 @@ useEffect(() => {
         max_qty: values.max_qty,
         type: isUpgrade ? 2 : 1,
         custom_text : customMessage === true ? 1 : 0 ,
-        option_label: addonTypeNameSelected ? `We want to ${
+        option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${
           addonTypeNameSelected !== ""
             ? addonTypeNameSelected
             : "[Add-On Type]"
