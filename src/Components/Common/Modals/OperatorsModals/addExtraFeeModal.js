@@ -33,7 +33,6 @@ const AddExtraFeeModal = ({
   id,
   extraFeeModal,
   setExtraFeeModal,
-  onClickAddNewWebsite,
   extraFeeEditData,
   refreshTable
 }) => {
@@ -80,6 +79,7 @@ const AddExtraFeeModal = ({
   }, [dataEdit]);
 
   console.log(dataEdit);
+  console.log(dataEdit.length);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -106,7 +106,7 @@ const AddExtraFeeModal = ({
         optional: optionalCheck === true ? 1 : 0,
       };
       console.log(data);
-      if (dataEdit.length > 0) {
+      if (dataEdit.length === 0) {
         postExtraFee(data)
         .then((resp) => {
           // console.log(resp.data);
@@ -114,6 +114,7 @@ const AddExtraFeeModal = ({
             Swal.fire("Success!", "Fee Added.", "success").then(() => {
               setExtraFeeModal(false);
               //history.goBack()
+              setDataEdit([])
               refreshTable()
             });
           }
@@ -138,6 +139,7 @@ const AddExtraFeeModal = ({
             Swal.fire("Success!", "Fee Edited.", "success").then(() => {
               setExtraFeeModal(false);
               //history.goBack()
+              setDataEdit([])
               refreshTable()
             });
           }
@@ -168,7 +170,8 @@ const AddExtraFeeModal = ({
         size="xl"
         isOpen={extraFeeModal}
         toggle={() => {
-          onClickAddNewWebsite();
+          setExtraFeeModal(false);
+          setDataEdit([])
         }}
       >
         <div
@@ -176,13 +179,14 @@ const AddExtraFeeModal = ({
           style={{ backgroundColor: "#3DC7F4", border: "none" }}
         >
           <h1 className="modal-title mt-0 text-white">
-            {dataEdit?.length > 0
+            {dataEdit.length === 0
               ? "+ Add Fee to Voucher Template"
               : "Edit Existing Additional Fee"}
           </h1>
           <button
             onClick={() => {
               setExtraFeeModal(false);
+              setDataEdit([])
             }}
             type="button"
             className="close"
