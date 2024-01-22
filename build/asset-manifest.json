@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.58a5a46a.css",
-    "main.js": "/static/js/main.da1f6f86.js",
+    "main.js": "/static/js/main.5146e12d.js",
     "static/js/787.b5629dd8.chunk.js": "/static/js/787.b5629dd8.chunk.js",
     "static/media/filters.jpg": "/static/media/filters.d764aae9f45ddb567bb5.jpg",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
@@ -24,6 +24,7 @@
     "static/media/schedulesDolphins.png": "/static/media/schedulesDolphins.ad5dd21efab6bc2b6efc.png",
     "static/media/materialdesignicons-webfont.woff2?v=5.8.55": "/static/media/materialdesignicons-webfont.6147fc3741c622c5de2c.woff2",
     "static/media/newProductPricing.png": "/static/media/newProductPricing.aba6929a0ff1935e5f6b.png",
+    "static/media/new-fee.jpg": "/static/media/new-fee.281a121651a34e35e360.jpg",
     "static/media/boxicons.eot": "/static/media/boxicons.6829ebb16362074c0c30.eot",
     "static/media/boxicons.woff": "/static/media/boxicons.dcaf6a260cca4a061aff.woff",
     "static/media/boxicons.ttf": "/static/media/boxicons.e2ffa5b9254ec286b380.ttf",
@@ -65,11 +66,11 @@
     "static/media/Intersection2.svg": "/static/media/Intersection2.9f8fdbff1f8cc8e8e585399d1070a56e.svg",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.58a5a46a.css.map": "/static/css/main.58a5a46a.css.map",
-    "main.da1f6f86.js.map": "/static/js/main.da1f6f86.js.map",
+    "main.5146e12d.js.map": "/static/js/main.5146e12d.js.map",
     "787.b5629dd8.chunk.js.map": "/static/js/787.b5629dd8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.58a5a46a.css",
-    "static/js/main.da1f6f86.js"
+    "static/js/main.5146e12d.js"
   ]
 }
