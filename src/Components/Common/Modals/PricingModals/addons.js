@@ -80,15 +80,16 @@ const Addons = ({
 }) => {
   //edit data
   const [dataEdit, setDataEdit] = useState();
+  let editID = editProductID
   useEffect(() => {
-    if (editProductID !== null) {
-      getAddonAPI(editProductID).then((resp) => {
+    if (editID !== null) {
+      getAddonAPI(editID).then((resp) => {
         setDataEdit(resp.data.data[0]);
       });
     } else {
       setDataEdit(null);
     }
-  }, [editProductID]);
+  }, [editID]);
   //combo box request
   const [priceMatchQuantityData, setPriceMatchQuantityData] = useState([]);
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -216,11 +217,7 @@ useEffect(() => {
       commission: dataEdit?.commission ? dataEdit?.commission : "",
       deposit: dataEdit?.deposit ? dataEdit?.deposit : "",
       balance_due: dataEdit?.net_price ? dataEdit?.net_price : "",
-      custom_message: `We want to ${
-        addonTypeNameSelected !== "" ? addonTypeNameSelected : "[Add-On Type]"
-      } for $ ${"[Price]"} ${
-        priceTypeNameSelected !== "" ? priceTypeNameSelected : "[Price Type]"
-      }, paid in cash on the day of the tour.`,
+      custom_message: dataEdit?.option_label ? dataEdit.option_label : '',
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -253,9 +250,7 @@ useEffect(() => {
           ? displayOptionSelected
           : dataEdit?.display_option,
         instruction_label_id:
-          addonLabelSelected === ""
-            ? null
-            : addonLabelSelected
+          addonLabelSelected 
             ? addonLabelSelected
             : dataEdit?.instruction_label_id,
         description: values.addon_description,
@@ -274,7 +269,8 @@ useEffect(() => {
         min_qty: values.min_qty,
         max_qty: values.max_qty,
         type: isUpgrade ? 2 : 1,
-        option_label: ourPriceValuex ? `We want to ${
+        custom_text : customMessage === true ? 1 : 0 ,
+        option_label: addonTypeNameSelected ? `We want to ${
           addonTypeNameSelected !== ""
             ? addonTypeNameSelected
             : "[Add-On Type]"
@@ -297,6 +293,8 @@ useEffect(() => {
             setNewAddon(false);
             refreshTable();
             resetForm({ values: "" });
+            // setDataEdit()
+            editID = 0
           })
           .catch((error) => {
             if (error.response.data.data === null) {
@@ -326,6 +324,8 @@ useEffect(() => {
             setNewAddon(false);
             refreshTable();
             resetForm({ values: "" });
+            // setDataEdit()
+            editID = 0
           })
           .catch((error) => {
             if (error.response.data.data === null) {
@@ -436,6 +436,7 @@ useEffect(() => {
       isOpen={newAddon}
       toggle={() => {
         // onClickAddNew();
+        editID = 0
       }}
     >
       <div
@@ -450,6 +451,8 @@ useEffect(() => {
         <button
           onClick={() => {
             setNewAddon(false);
+            // setDataEdit()
+            editID = 0
           }}
           type="button"
           className="close"

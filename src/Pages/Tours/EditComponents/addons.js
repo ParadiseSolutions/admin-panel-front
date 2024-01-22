@@ -36,6 +36,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
   }, [id]);
 
   const refreshTable = () => {
+    console.log('asdasdasda')
     getAddonsPricingAPI(id).then((resp) => {
       setAddonsData(resp.data.data);
     });
