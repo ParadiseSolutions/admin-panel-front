@@ -211,37 +211,25 @@ const AddonsInstructionModal = ({
                 </div>
                 <div
                   style={{
-                    backgroundColor: "#f0f0f0",
-                    margin: "4px 0",
+                    border: "1px solid #FFF1BD",
+                    background: "#FFFAE7",
                     fontFamily: "Arial, sans-serif",
-                    fontSize: "13px",
-                    fontWeight: "bold",
+                    fontSize: "15px",
+                    fontStyle: "normal",
+                    fontWeight:"700",
                     textAlign: "center",
                     color: "#373737",
-                    padding: "16px 24px",
-                    borderRadius: "4px",
+                    padding: "16px 24px"
                   }}
                 >
-                  <i
-                    class="fa fa-plus-circle"
-                    style={{ fontSize: "20px" }}
-                    aria-hidden="true"
-                  ></i>
-                  <br></br>
                   {titleExample}
                   <p
                     name="instruction_description"
                     placeholder=""
                     style={{
+                      fontsize: "12px",
                       marginBottom: "0",
-                      fontFamily: "Arial",
-                      fontStyle: "normal",
-                      fontWeight: "400",
-                      fontSize: "13px",
-                      lineHeight: "17px",
-                      marginTop: "8px",
-                      textAlign: "center",
-                      color: "#000000",
+                      fontWeight: "lighter"
                     }}
                   >
                     {instructionDescriptionExample}
