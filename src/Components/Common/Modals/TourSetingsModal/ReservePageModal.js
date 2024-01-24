@@ -161,7 +161,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
               </Col>
             </Row>
             <Row className="">
-              <Col className="col-3">
+              <Col className="col-4">
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -173,7 +173,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                     checked={templateType === 1 ? true : false}
                   />
                   <label className="form-check-label" htmlFor="type1">
-                    One Variant
+                    One Price Option
                   </label>
                 </div>
                 <div className="col-1">
@@ -188,7 +188,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   />
                 </div>
               </Col>
-              <Col className="col-3">
+              <Col className="col-4">
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -200,18 +200,18 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                     checked={templateType === 2 ? true : false}
                   />
                   <label className="form-check-label" htmlFor="type2">
-                    Two Variants
+                    Two Price Options
                   </label>
                 </div>
                 <div className="col-1">
                   <img
                     src={TwoVariantsIMG}
-                    alt="one-variant"
+                    alt="two-variant"
                     style={{ width: "350px", margin: "10px" }}
                   />
                 </div>
               </Col>
-              <Col className="col-3">
+              <Col className="col-4">
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -223,18 +223,20 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                     checked={templateType === 3 ? true : false}
                   />
                   <label className="form-check-label" htmlFor="type3">
-                    Three Variants
+                    Three Price Options
                   </label>
                 </div>
                 <div className="col-1">
                   <img
                     src={ThreeVariantsIMG}
-                    alt="one-variant"
+                    alt="three-variant"
                     style={{ width: "350px", margin: "10px" }}
                   />
                 </div>
               </Col>
-              <Col className="col-3">
+            </Row>
+            <Row className="">
+              <Col className="col-4">
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -252,7 +254,30 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                 <div className="col-1">
                   <img
                     src={ChoseActivityIMG}
-                    alt="one-variant"
+                    alt="choose-activity"
+                    style={{ width: "350px", margin: "10px" }}
+                  />
+                </div>
+              </Col>
+              <Col className="col-4">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="type5"
+                    id="type5"
+                    onChange={(e) => setTemplateType(+e.target.value)}
+                    value={8}
+                    checked={templateType === 8 ? true : false}
+                  />
+                  <label className="form-check-label" htmlFor="type8">
+                    Qty to Message Field
+                  </label>
+                </div>
+                <div className="col-1">
+                  <img
+                    src={ChoseActivityIMG}
+                    alt="qty-message"
                     style={{ width: "350px", margin: "10px" }}
                   />
                 </div>
@@ -337,53 +362,38 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   </div>
                   <div
                     style={{
-                      background: "#FFEEE6",
-                      border: "1px solid #FFDECC",
-                      borderRadius: "4px",
-                      margin: "4px 0",
-                      fontFamily: "Arial, sans-serif",
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                      color: "#373737",
+                      display: "flex",
                       padding: "16px 24px",
-                      borderRadius: "4px"
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "8px",
+                      alignSelf: "stretch",
+                      border: "1px solid #FFF1BD",
+                      background: "#FFFAE7"
                     }}
                   >
-                    <i
-                      class="fa fa-info"
-                      style={{
-                        fontSize: "10px",
-                        borderRadius: "29px",
-                        border: "2px solid #D54500",
-                        color: "#D54500",
-                        padding: "1px 4px 3px 4px",
-                        width: "16px",
-                        height: "16px",
-                        marginBottom: "4px"
-                      }}
-                    /><br></br>
                     {titleExample}
                     <p
                       name="instruction_description"
                       placeholder=""
                       style={{
-                        marginBottom: "0",
+                        color: "#000",
+                        textAlign: "center",
+                        fontFeatureSettings: "'clig' off, 'liga' off",
                         fontFamily: "Arial",
+                        fontSize: "12px",
                         fontStyle: "normal",
                         fontWeight: "400",
-                        fontSize: "13px",
                         lineHeight: "17px",
-                        marginTop: "8px",
-                        textAlign: "center",
-                        color: "#000000"
+                        margin: "0px"
                       }}
                     >
                       {instructionDescriptionExample}
                     </p>
                   </div>
                   <img
-                    src={templateType === 1 ? OneVariantIMG : templateType === 2 ? TwoVariantsIMG : templateType === 3 ? ThreeVariantsIMG : templateType === 4 ? ChoseActivityIMG : TwoVariantsIMG2}
+                    src={templateType === 1 ? OneVariantIMG : templateType === 2 ? TwoVariantsIMG : templateType === 3 ? ThreeVariantsIMG : templateType === 4 || templateType === 8 ? ChoseActivityIMG : TwoVariantsIMG2}
                     alt="two-variant"
                     style={{ width: "472.5px", marginTop: "-1px", marginLeft: "-1px"}}
                   />

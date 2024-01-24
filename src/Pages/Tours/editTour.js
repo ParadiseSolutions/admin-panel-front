@@ -24,6 +24,7 @@ import {
 import classnames from "classnames";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import AutomatedConfirmationTab from "./EditComponents/automated";
 const EditTour = ({ history }) => {
   const { id } = useParams();
   //tabs
@@ -275,6 +276,32 @@ const EditTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Schedule</span>
                   </NavLink>
                 </NavItem>
+                <NavItem className="d-flex">
+                  <NavLink
+                    style={{
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      backgroundColor: `${activeTab === "8" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "8" ? "white" : ""}`,
+                      border: "none",
+                      flexWrap: "wrap",
+                      display: "grid",
+                      alignContent: "center",
+                    }}
+                    className={classnames({
+                      active: activeTab === "8",
+                    })}
+                    onClick={() => {
+                      if(tourData?.edit_mode === 0) {
+                        toggle("8");
+                      }
+                    }}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-envelope"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ Automated</span>
+                  </NavLink>
+                </NavItem>
               </Nav>
             </CardHeader>
             <CardBody className="p-0">
@@ -316,6 +343,9 @@ const EditTour = ({ history }) => {
                 </TabPane>
                 <TabPane tabId="7">
                   <Schedules id={id} tourData={tourData} toggle={toggle} />
+                </TabPane>
+                <TabPane tabId="8">
+                  <AutomatedConfirmationTab id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
               </TabContent>
             </CardBody>

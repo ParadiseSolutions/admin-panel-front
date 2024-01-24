@@ -30,3 +30,35 @@ export const deleteOperatorAPI = (id) => {
       headers: options,
     });
   };
+
+  export const getExtraFeeTable = (id) => {
+    const url = `${API_URL}/vouchers/list/operators/${id}`;
+    return axios.get(url, {headers:options})
+  };
+  export const getExtraFee = () => {
+    const url = `${API_URL}/vouchers/feeTypes`;
+    return axios.get(url, {headers:options})
+  };
+  export const getCurrency = () => {
+    const url = `${API_URL}/vouchers/currencies`;
+    return axios.get(url, {headers:options})
+  };
+  export const getPriceType = () => {
+    const url = `${API_URL}/vouchers/priceTypes`;
+    return axios.get(url, {headers:options})
+  };
+
+  export const postExtraFee = (body) => {
+    const url = `${API_URL}/vouchers/addExtraFee`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+  export const putExtraFee = (id, body) => {
+    const url = `${API_URL}/vouchers/updateExtraFee/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
+
+
