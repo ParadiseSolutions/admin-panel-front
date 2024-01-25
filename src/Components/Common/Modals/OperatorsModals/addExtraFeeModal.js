@@ -13,7 +13,8 @@ import {
   Button,
   UncontrolledTooltip,
 } from "reactstrap";
-import newFeeImg from "../../../Assets/images/new-fee.jpg";
+import newFeeImg from "../../../Assets/images/addfee.jpg";
+import editFeeImg from "../../../Assets/images/editfee.jpg";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
@@ -213,7 +214,7 @@ const AddExtraFeeModal = ({
               <Col className="col-12 mx-5">
                 <Row>
                   <img
-                    src={newFeeImg}
+                    src={dataEdit.length === 0 ? newFeeImg : editFeeImg}
                     alt="banner"
                     style={{ height: "158px", width: "1048px" }}
                   />
