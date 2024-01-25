@@ -25,16 +25,31 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { Select } from "antd";
-import { getExtraFeeTable } from "../../../Utils/API/Operators";
+import {
+  deleteExtraFee,
+  getBringList,
+  getExtraFeeTable,
+  getVoucherInfo,
+  putVoucherInformation
+} from "../../../Utils/API/Operators";
 import { map } from "lodash";
+import { Option } from "antd/lib/mentions";
 
 const AutomatedConfirmation = ({ socialData, id }) => {
   // const {id} = useHistory()
   // console.log(id)
   //initial info
-  const [initialData, setInitialData] = useState({});
+  // const [initialData, setInitialData] = useState({});
   const [extraFeeInitialData, setExtraFeeInitialData] = useState({});
+  const [bringListInitialData, setBringListInitialData] = useState([]);
+  const [initialOptionsArea, setInitialOptionsArea] = useState([]);
+  const [selectionID, setSelectionID] = useState({});
+  const [voucherInitialData, setVoucherInitialData] = useState();
   const [extraFeeEditData, setExtraFeeEditData] = useState([]);
+  const [restrictionList, setRestrictionList] = useState([]);
+  const [rest1, setRest1] = useState();
+  const [rest2, setRest2] = useState();
+  const [rest3, setRest3] = useState();
   const [addMore, setAddMore] = useState(false);
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
@@ -44,59 +59,133 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   const [extraFeeModal, setExtraFeeModal] = useState(false);
 
   useEffect(() => {
-   getExtraFeeTable(id).then((resp) =>{
-    setExtraFeeInitialData(resp.data.data)
-   }).catch((err) => console.log(err))
+    getExtraFeeTable(id)
+      .then((resp) => {
+        setExtraFeeInitialData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+
+    getBringList()
+      .then((resp) => {
+        setBringListInitialData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+
+    getVoucherInfo(id)
+      .then((resp) => {
+        setVoucherInitialData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
   }, [id]);
 
-  const refreshTable = () =>{
-    getExtraFeeTable(id).then((resp) =>{
-      setExtraFeeInitialData(resp.data.data)
-     }).catch((err) => console.log(err))
-  }
-  // console.log('social media',initialData)
+  const refreshTable = () => {
+    getExtraFeeTable(id)
+      .then((resp) => {
+        setExtraFeeInitialData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const [col1, setcol1] = useState(false);
 
   function togglecol1() {
     setcol1(!col1);
   }
-console.log(extraFeeInitialData)
+  // console.log("lista de brings", bringListInitialData);
+  console.log("data inicial", voucherInitialData);
+  // console.log("opciones que deberian de ir en el select", initialOptionsArea);
+  //----- bring list
+  function handleMulti(selected) {
+    setSelectionID(selected);
+    console.log(selectionID);
+  }
+  useEffect(() => {
+    if (voucherInitialData) {
+      let optionsArea = [];
+      let optionsAreaShort = [];
+
+      bringListInitialData?.forEach((element) => {
+        if (voucherInitialData?.brings.includes(element.id.toString())) {
+          optionsArea.push({ label: element.name, value: +element.id });
+          optionsAreaShort.push(+element.id);
+        }
+      });
+      // console.log('option area', optionsArea)
+      setInitialOptionsArea(optionsArea);
+      setSelectionID(optionsAreaShort);
+      setRestrictionList(voucherInitialData.restrictions);
+    }
+  }, [voucherInitialData, bringListInitialData]);
+
+  console.log(selectionID);
+
+  useEffect(() => {
+    if (restrictionList.length > 0) {
+      setRest1(restrictionList[0]?.restriction_1);
+      setRest2(restrictionList[1]?.restriction_2);
+      setRest3(restrictionList[2]?.restriction_3);
+      // setRest1(restrictionList[3]?.restriction_4)
+    }
+  }, [restrictionList]);
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      facebook: initialData && initialData[0]?.url ? initialData[0].url : "",
-      instagram: initialData && initialData[1]?.url ? initialData[1].url : "",
-      youtube: initialData && initialData[2]?.url ? initialData[2].url : "",
-      twitter: initialData && initialData[3]?.url ? initialData[3].url : "",
-      trip_advisor:
-        initialData && initialData[4]?.url ? initialData[4].url : "",
-      yelp: initialData && initialData[5]?.url ? initialData[5].url : "",
-      others: initialData && initialData[6]?.url ? initialData[6].url : "",
+      aditional_information: voucherInitialData?.additional_information
+        ? voucherInitialData.additional_information
+        : "",
+      meeting_location: voucherInitialData?.meeting_location
+        ? voucherInitialData.meeting_location
+        : "",
+      // youtube: initialData && initialData[2]?.url ? initialData[2].url : "",
+      // twitter: initialData && initialData[3]?.url ? initialData[3].url : "",
+      // trip_advisor:
+      //   initialData && initialData[4]?.url ? initialData[4].url : "",
+      // yelp: initialData && initialData[5]?.url ? initialData[5].url : "",
+      // others: initialData && initialData[6]?.url ? initialData[6].url : "",
     },
     validationSchema: Yup.object().shape({
       // name: Yup.string().required("Name is required"),
     }),
     onSubmit: (values) => {
+      let restArr = [];
+      if (rest1) {
+        restArr.push({
+          restriction_1: rest1,
+          restriction_read_only_1: restrictionList[0]?.restriction_read_only_1 ? restrictionList[0]?.restriction_read_only_1 : 0,
+        })
+      }
+      if (rest2) {
+        restArr.push({
+          restriction_2: rest2,
+          restriction_read_only_2: restrictionList[1]?.restriction_read_only_2 ? restrictionList[1]?.restriction_read_only_2 : 0,
+        })
+      }
+      if (rest3) {
+        restArr.push({
+          restriction_3: rest3,
+          restriction_read_only_3: restrictionList[2]?.restriction_read_only_3 ? restrictionList[2]?.restriction_read_only_3 : 0,
+        })
+      }
+
       let data = {
-        facebook: values.facebook ? values.facebook : "",
-        instagram: values.instagram ? values.instagram : "",
-        youtube: values.youtube ? values.youtube : "",
-        twitter: values.twitter ? values.instagram : "",
-        trip_advisor: values.trip_advisor ? values.trip_advisor : "",
-        yelp: values.yelp ? values.yelp : "",
-        others: values.others ? values.others : "",
-        foreign_key: id,
+        additional_information: values.aditional_information,
+        additional_information_read_only: voucherInitialData.additional_information_read_only,
+        brings: selectionID,
+        brings_read_only: voucherInitialData.brings_read_only,
+        restrictions: restArr,
+        meeting_location: values.meeting_location,
+        meeting_location_read_only: voucherInitialData.meeting_location_read_only,
       };
-      //  console.log(data)
-      updateSocialProviderAPI(initialData.id, data)
+      console.log("data a enviar", data);
+      putVoucherInformation(voucherInitialData.operator_id, data)
         .then((resp) => {
           // console.log(resp.data);
-          if (resp.data.status === 200) {
+          if (resp.data.status === 201) {
             Swal.fire(
               "Edited!",
-              "Social Media Information has been edited.",
+              "Automated Confirmation Information has been edited.",
               "success"
             ).then(() => {});
           }
@@ -115,6 +204,29 @@ console.log(extraFeeInitialData)
         });
     },
   });
+
+  const onDelete = (feeID) => {
+    console.log(feeID);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteExtraFee(feeID).then((resp) => {
+          console.log(resp.data.data);
+          if (resp.data.status === 200) {
+            refreshTable();
+            Swal.fire("deleted!", "Extra fee has been edited.", "success");
+          }
+        });
+      }
+    });
+  };
 
   return (
     <div className="accordion" id="accordionExample">
@@ -198,56 +310,59 @@ console.log(extraFeeInitialData)
                     <Card>
                       <Table className="table mb-0">
                         <tbody>
-                          {map(extraFeeInitialData, (fee, index) =>{
-                            return(
-                            <tr>
-                             <th className="col-11">{`${index + 1}. ${fee.fee_type}`}</th>
-                             <td className="col-1">
-                               <div className="d-flex gap-3">
-                                 <div className="text-paradise">
-                                   <div className="text-success"
-                                   onClick={() =>{
-                                    setExtraFeeModal(true)
-                                    setExtraFeeEditData(fee)
-                                   }}
-                                   >
-                                    
-                                     <i
-                                       className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                       id="edittooltip"
-                                       style={{ cursor: "pointer" }}
-                                     />
-                                     <UncontrolledTooltip
-                                       placement="top"
-                                       target="edittooltip"
-                                     >
-                                       Edit
-                                     </UncontrolledTooltip>
-                                   </div>
-                                 </div>
-                                 <div
-                                   className="text-danger"
-                                   onClick={() => {
-                                     // const tourData = cellProps.row.original;
-                                     // // setconfirm_alert(true);
-                                     // onDelete(tourData);
-                                   }}
-                                 >
-                                   <i
-                                     className="mdi mdi-delete-outline font-size-17"
-                                     id="deletetooltip"
-                                     style={{ cursor: "pointer" }}
-                                   />
-                                   <UncontrolledTooltip
-                                     placement="top"
-                                     target="deletetooltip"
-                                   >
-                                     Delete
-                                   </UncontrolledTooltip>
-                                 </div>
-                               </div>
-                             </td>
-                             </tr>)
+                          {map(extraFeeInitialData, (fee, index) => {
+                            return (
+                              <tr>
+                                <th className="col-11">{`${index + 1}. ${
+                                  fee.fee_type
+                                }`}</th>
+                                <td className="col-1">
+                                  <div className="d-flex gap-3">
+                                    <div className="text-paradise">
+                                      <div
+                                        className="text-success"
+                                        onClick={() => {
+                                          setExtraFeeModal(true);
+                                          setExtraFeeEditData(fee);
+                                        }}
+                                      >
+                                        <i
+                                          className="mdi mdi-pencil-outline font-size-17 text-paradise"
+                                          id="edittooltip"
+                                          style={{ cursor: "pointer" }}
+                                        />
+                                        <UncontrolledTooltip
+                                          placement="top"
+                                          target="edittooltip"
+                                        >
+                                          Edit
+                                        </UncontrolledTooltip>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="text-danger"
+                                      onClick={() => {
+                                        // const tourData = cellProps.row.original;
+                                        // // setconfirm_alert(true);
+                                        onDelete(fee.fee_id);
+                                      }}
+                                    >
+                                      <i
+                                        className="mdi mdi-delete-outline font-size-17"
+                                        id="deletetooltip"
+                                        style={{ cursor: "pointer" }}
+                                      />
+                                      <UncontrolledTooltip
+                                        placement="top"
+                                        target="deletetooltip"
+                                      >
+                                        Delete
+                                      </UncontrolledTooltip>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
                           })}
                         </tbody>
                       </Table>
@@ -272,67 +387,112 @@ console.log(extraFeeInitialData)
                     voucher that isn't already specified in other fields.
                   </Tooltip>
                   <Input
-                    name="textarea"
+                    name="aditional_information"
                     placeholder=""
                     type="textarea"
                     rows="5"
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
-                    value={validationType.values.textarea || ""}
+                    value={validationType.values.aditional_information || ""}
                     invalid={
-                      validationType.touched.textarea &&
-                      validationType.errors.textarea
+                      validationType.touched.aditional_information &&
+                      validationType.errors.aditional_information
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.textarea &&
-                  validationType.errors.textarea ? (
+                  {validationType.touched.aditional_information &&
+                  validationType.errors.aditional_information ? (
                     <FormFeedback type="invalid">
-                      {validationType.errors.textarea}
+                      {validationType.errors.aditional_information}
                     </FormFeedback>
                   ) : null}
                 </Col>
               </Row>
               <Row>
-                <Col className="col-6 mt-3">
-                  <label>Bring </label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="bring"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop3}
-                    target="bring"
-                    toggle={() => {
-                      setttop3(!ttop3);
-                    }}
-                  >
-                    Add the items the client will need to bring on the day of
-                    the tour. This will be shown on the voucher and on the
-                    website. The items will be shown in the order they are
-                    selected.
-                  </Tooltip>
-                  <Select
-                    mode="multiple"
-                    allowClear
-                    rows="5"
-                    style={{ width: "100%", paddingTop: "5px" }}
-                    placeholder="Please select"
-                    // defaultValue={initialOptionsArea}
-                    // onChange={handleMulti}
-                  >
-                    {/* {map(dataAreas, (item, index) => {
-                          return (
-                            <Option key={index} value={item.id}>
-                              {item.name}
-                            </Option>
-                          );
-                        })} */}
-                  </Select>
-                  {/* {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  } */}
-                </Col>
+                {voucherInitialData?.brings && initialOptionsArea.length > 0 ? (
+                  <Col className="col-6 mt-3">
+                    <label>Bring </label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="bring"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop3}
+                      target="bring"
+                      toggle={() => {
+                        setttop3(!ttop3);
+                      }}
+                    >
+                      Add the items the client will need to bring on the day of
+                      the tour. This will be shown on the voucher and on the
+                      website. The items will be shown in the order they are
+                      selected.
+                    </Tooltip>
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      rows="5"
+                      style={{ width: "100%", paddingTop: "5px" }}
+                      placeholder="Please select"
+                      defaultValue={initialOptionsArea}
+                      onChange={handleMulti}
+                    >
+                      {map(bringListInitialData, (item, index) => {
+                        return (
+                          <Option key={index} value={item.id}>
+                            {item.name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                    {/* {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  } */}
+                  </Col>
+                ) : null}
+                {voucherInitialData?.brings && initialOptionsArea.length === 0 ? (
+                  <Col className="col-6 mt-3">
+                    <label>Bring </label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="bring"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop3}
+                      target="bring"
+                      toggle={() => {
+                        setttop3(!ttop3);
+                      }}
+                    >
+                      Add the items the client will need to bring on the day of
+                      the tour. This will be shown on the voucher and on the
+                      website. The items will be shown in the order they are
+                      selected.
+                    </Tooltip>
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      rows="5"
+                      style={{ width: "100%", paddingTop: "5px" }}
+                      placeholder="Please select"
+                      defaultValue={initialOptionsArea}
+                      onChange={handleMulti}
+                    >
+                      {map(bringListInitialData, (item, index) => {
+                        return (
+                          <Option key={index} value={item.id}>
+                            {item.name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                    {/* {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  } */}
+                  </Col>
+                ) : null}
+
+                      {restrictionList ? 
+                      
                 <Col className="col-6 my-3">
                   <label>Restrictions</label>
                   <i
@@ -355,87 +515,52 @@ console.log(extraFeeInitialData)
                   </Tooltip>
                   <div className="col-10">
                     <Input
-                      name="name"
+                      name="rest_one"
                       placeholder="Add Restriction #1"
                       type="text"
                       className="my-1"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.name || ""}
-                      invalid={
-                        validationType.touched.name &&
-                        validationType.errors.name
-                          ? true
-                          : false
-                      }
+                      onChange={(e) => setRest1(e.target.value)}
+                      value={rest1}
                     />
-                    {validationType.touched.name &&
-                    validationType.errors.name ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.name}
-                      </FormFeedback>
-                    ) : null}
                   </div>
                   <div className="col-12 d-flex">
                     <Input
-                      name="name"
+                      name="rest_two"
                       placeholder="Add Restriction #2"
                       className="my-1"
                       type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.name || ""}
-                      invalid={
-                        validationType.touched.name &&
-                        validationType.errors.name
-                          ? true
-                          : false
-                      }
+                      onChange={(e) => setRest2(e.target.value)}
+                      value={rest2}
                     />
-                    {validationType.touched.name &&
-                    validationType.errors.name ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.name}
-                      </FormFeedback>
-                    ) : null}
 
                     <div className="col-2">
                       <p
-                        style={{ marginLeft: "15px", marginTop: "1px" }}
+                        style={{
+                          marginLeft: "15px",
+                          marginTop: "10px",
+                          cursor: "pointer",
+                        }}
                         className="text-paradise"
                         onClick={() => setAddMore(!addMore)}
                       >
-                        {" "}
-                        + Add More
+                        {addMore ? null && restrictionList.length > 0 : "+ Add"}
                       </p>
                     </div>
                   </div>
-                  {addMore ? (
+                  {addMore || restrictionList.length > 2 ? (
                     <div className="col-10 d-flex">
                       <Input
-                        name="name"
+                        name="rest_three"
                         placeholder="Add Restriction #3"
                         className="my-1"
                         type="text"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.name || ""}
-                        invalid={
-                          validationType.touched.name &&
-                          validationType.errors.name
-                            ? true
-                            : false
-                        }
+                        onChange={(e) => setRest3(e.target.value)}
+                        value={rest3}
                       />
-                      {validationType.touched.name &&
-                      validationType.errors.name ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.name}
-                        </FormFeedback>
-                      ) : null}
                     </div>
                   ) : null}
                 </Col>
+                      : null}
               </Row>
               <Row>
                 <Col className="col-6 my-3">
@@ -459,23 +584,23 @@ console.log(extraFeeInitialData)
                   </Tooltip>
                   <div className="">
                     <Input
-                      name="name"
+                      name="meeting_location"
                       placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.name || ""}
+                      value={validationType.values.meeting_location || ""}
                       invalid={
-                        validationType.touched.name &&
-                        validationType.errors.name
+                        validationType.touched.meeting_location &&
+                        validationType.errors.meeting_location
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.name &&
-                    validationType.errors.name ? (
+                    {validationType.touched.meeting_location &&
+                    validationType.errors.meeting_location ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.name}
+                        {validationType.errors.meeting_location}
                       </FormFeedback>
                     ) : null}
                   </div>
@@ -499,8 +624,8 @@ console.log(extraFeeInitialData)
         </Collapse>
       </div>
       <AddExtraFeeModal
-        extraFeeModal = {extraFeeModal}
-        setExtraFeeModal = {setExtraFeeModal}
+        extraFeeModal={extraFeeModal}
+        setExtraFeeModal={setExtraFeeModal}
         extraFeeEditData={extraFeeEditData}
         id={id}
         refreshTable={refreshTable}
