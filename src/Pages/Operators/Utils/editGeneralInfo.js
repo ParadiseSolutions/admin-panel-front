@@ -108,6 +108,7 @@ const EditGeneralInformation = ({ data }) => {
     const dataAreas = useSelector((state) => state.serviceArea.serviceArea.data);
   
     const [initialOptionsArea, setInitialOptionsArea] = useState([]);
+
     useEffect(() => {
       if (initialData && dataAreas) {
         let optionsArea = [];
