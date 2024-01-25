@@ -60,5 +60,24 @@ export const deleteOperatorAPI = (id) => {
       headers: options,
     });
   };
-
+  export const deleteExtraFee = (id) => {
+    const url = `${API_URL}/vouchers/deleteExtraFee/operators/${id}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
+  export const getBringList = () => {
+    const url = `${API_URL}/vouchers/brings`;
+    return axios.get(url, {headers:options})
+  };
+  export const getVoucherInfo = (id) => {
+    const url = `${API_URL}/vouchers/fields/operators/${id}`;
+    return axios.get(url, {headers:options})
+  };
+  export const putVoucherInformation = (id, body) => {
+    const url = `${API_URL}/vouchers/fields/operators/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
 
