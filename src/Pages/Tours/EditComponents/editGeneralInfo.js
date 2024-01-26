@@ -311,7 +311,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                 <div className="p-3" style={{ backgroundColor: "#d9f0ff" }}>
                   <p className="mb-0 lh-2" style={{ fontSize: "16px" }}>
                     <i
-                      class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                      className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
                       style={{ width: "32px", height: "32px" }}
                     ></i>{" "}
                     To create a new tour please fill out the following
@@ -348,7 +348,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     {map(dataTourType, (tourType, index) => {
                       return (
                         <option
-                          key={index}
+                          key={tourType.id}
                           value={tourType.id}
                           selected={
                             tourData.type_id === tourType.id ? true : false
@@ -534,7 +534,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Location</Label>
                   <Input
                     type="select"
-                    name=""
+                    name="location"
                     disabled={editMode}
                     onChange={(e) => {
                       setLocationID(e.target.value);
@@ -542,15 +542,14 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    {/* {editMode ? <option>{tourData.location_name}</option> : null } */}
-                    
+                    <option>Select....</option>
                     {map(locationData, (location, index) => {
                       return (
                         <option
                           key={index}
                           value={location.id}
                           selected={
-                            tourData.location_id === location.location_id ? true : false
+                            tourData.location_id === location.id ? true : false
                           }
                         >
                           {location.name}
