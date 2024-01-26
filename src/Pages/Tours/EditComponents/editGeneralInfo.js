@@ -95,7 +95,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     //console.log(mainCatID)
 
     if (mainCatID) {
-      getSubCategory(websiteID, categoryId).then((resp) => {
+      getSubCategory(websiteID, mainCatID).then((resp) => {
         setSubCategoriesData(resp.data.data);
         if (resp.data.data.length === 1) {
           setSecondCatID(resp.data.data[0].id);
@@ -146,12 +146,13 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         setLocationID(null);
       }
     });
+    console.log(tourData)
     getCategoryWebsiteAPI(id).then((resp) => {
       setCategoryData(resp.data.data);
       if (resp.data.data.length === 1) {
         setMainCatID(resp.data.data[0].id);
       } else {
-        setMainCatID(null);
+        setMainCatID(tourData.category_info.main_category_id);
       }
     });
     //setCategoryId(id)
@@ -599,8 +600,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Sub-Category</Label>
                   <Input
                     type="select"
-                    name=""
-                    disabled={providerData ? false : true}
+                    name="sub-category"
+                    disabled={providerData ? editMode : true}
                     onChange={(e) => {
                       setSecondCatID(e.target.value);
                     }}
