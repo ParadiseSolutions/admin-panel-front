@@ -33,6 +33,7 @@ import {
   calcDeposit,
   calcNetPrice,
 } from "../../../../Utils/CommonFunctions";
+import { getCurrency } from "../../../../Utils/API/Operators";
 
 const AddNewAirportTransfer = ({
   addNewAirportTransfer,
@@ -69,7 +70,7 @@ const AddNewAirportTransfer = ({
     }
   }, [id, addNewAirportTransfer]);
 
-  // console.log("data editar", dataEdit);
+  console.log("data editar", dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -89,7 +90,9 @@ const AddNewAirportTransfer = ({
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
-
+  const [currency , setCurrency] = useState([])
+  const [currencySelected , setCurrencySelected] = useState('')
+  
   useEffect(() => {
     if (addNewAirportTransfer) {
       getPricingOptionsAPI(10).then((resp) => {
@@ -116,6 +119,9 @@ const AddNewAirportTransfer = ({
       getPricingZoneOptionsAPI(50, tourData.provider_id).then((resp) => {
         setPriceZone(resp.data.data);
       });
+      getCurrency().then((resp) =>{
+        setCurrency(resp.data.data)
+      })
     }
   }, [addNewAirportTransfer]);
 
@@ -157,6 +163,7 @@ const AddNewAirportTransfer = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
+      voucher_balance: dataEdit ? dataEdit.voucher_balance : "",
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -287,6 +294,8 @@ const AddNewAirportTransfer = ({
           net_price: values.balance_due,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
+          voucher_balance: values.voucher_balance,
+          currencySelected: values.voucher_balance,
           price_details: [
             {
               pricing_option_id: 10,
@@ -1240,35 +1249,108 @@ const AddNewAirportTransfer = ({
                     </UncontrolledTooltip>
                   </div>
                 </Col>
-                <Col className="col-4">
-                  <div className="form-outline mb-2" id="compare_at_url">
-                    <Label className="form-label">"Compare At" URL</Label>
-                    <Input
-                      name="compare_at_url"
-                      placeholder="https://provider.com/mitour.html"
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.compare_at_url || ""}
-                      invalid={
-                        validationType.touched.compare_at_url &&
-                        validationType.errors.compare_at_url
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.compare_at_url &&
-                    validationType.errors.compare_at_url ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.compare_at_url}
-                      </FormFeedback>
-                    ) : null}
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="commission">
+                    <Label className="form-label">Commission*</Label>
+                    <div className="input-group">
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
+                      <Input
+                        name="commission"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e) => {
+                          const value = e.target.value || "";
+                          validationType.setFieldValue(
+                            "commission",
+                            multipleCommissionCalcs(value),
+                            validationType.handleBlur
+                          );
+                        }}
+                        value={validationType.values.commission || ""}
+                        invalid={
+                          validationType.touched.commission &&
+                          validationType.errors.commission
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.commission &&
+                      validationType.errors.commission ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.commission}
+                        </FormFeedback>
+                      ) : null}
+                      <UncontrolledTooltip placement="top" target="commission">
+                        The $$ amount that we earn from the sale.
+                      </UncontrolledTooltip>
+                    </div>
                   </div>
-                  <UncontrolledTooltip placement="top" target="compare_at_url">
-                    The URL of the web page where the "compare at" price can be
-                    verified.
-                  </UncontrolledTooltip>
                 </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="balance_due">
+                    <Label className="form-label">Balance Due*</Label>
+                    <div className="input-group">
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
+                      <Input
+                        name="balance_due"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e) => {
+                          const value = e.target.value || "";
+                          validationType.setFieldValue(
+                            "balance_due",
+                            setDecimalFormat(value),
+                            validationType.setFieldValue(
+                              "eff_rate",
+                              calcEffRate(
+                                validationType.values.balance_due,
+                                validationType.values.our_price,
+                                validationType.values.eff_rate
+                              )
+                            ),
+                            validationType.handleBlur
+                          );
+                        }}
+                        value={validationType.values.balance_due || ""}
+                        invalid={
+                          validationType.touched.balance_due &&
+                          validationType.errors.balance_due
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.balance_due &&
+                      validationType.errors.balance_due ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.balance_due}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <UncontrolledTooltip placement="top" target="balance_due">
+                      The amount due to the provider on the day of the tour.
+                    </UncontrolledTooltip>
+                  </div>
+                </Col>
+
+               
               </Row>
               <Col
                 className="col-12 p-1 my-2"
@@ -1287,7 +1369,7 @@ const AddNewAirportTransfer = ({
                 </p>
               </Col>
               <Row className="d-flex">
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="ship_price">
                     <Label className="form-label">Ship Price</Label>
                     <div className="input-group">
@@ -1345,7 +1427,7 @@ const AddNewAirportTransfer = ({
                     </UncontrolledTooltip>
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="compare_at">
                     <Label className="form-label">Compare At*</Label>
                     <div className="input-group">
@@ -1402,7 +1484,7 @@ const AddNewAirportTransfer = ({
                     </UncontrolledTooltip>
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="our_price">
                     <Label className="form-label">Our Price*</Label>
                     <div className="input-group">
@@ -1447,7 +1529,7 @@ const AddNewAirportTransfer = ({
                     </UncontrolledTooltip>
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="you_save">
                     <Label className="form-label">You Save*</Label>
                     <div className="input-group">
@@ -1493,9 +1575,93 @@ const AddNewAirportTransfer = ({
                     </UncontrolledTooltip>
                   </div>
                 </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <Label className="form-label">Vchr. Currency</Label>
+                    <div className="input-group">
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setCurrencySelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(currency, (curr, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={curr.currency_id}
+                            selected={
+                              dataEdit && dataEdit.voucher_currency
+                                ? curr.currency_id === dataEdit.voucher_currency
+                                : false
+                            }
+                          >
+                            {curr.currency}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                      
+                    </div>
+                    <UncontrolledTooltip placement="top" target="voucher_currency">
+                      This is the amount they save by booking with us compared
+                      to the "other guys" from the compare at price.
+                    </UncontrolledTooltip>
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_balance">
+                    <Label className="form-label">Voucher Balance</Label>
+                    <div className="input-group">
+                      <Input
+                        name="voucher_balance"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e) => {
+                          const value = e.target.value || "";
+                          validationType.setFieldValue(
+                            "voucher_balance",
+                            setDecimalFormat(value)
+                          );
+                        }}
+                        value={validationType.values.voucher_balance || ""}
+                        invalid={
+                          validationType.touched.voucher_balance &&
+                          validationType.errors.voucher_balance
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.voucher_balance &&
+                      validationType.errors.voucher_balance ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.voucher_balance}
+                        </FormFeedback>
+                      ) : null}
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
+                    </div>
+                    <UncontrolledTooltip placement="top" target="you_save">
+                      This is the amount they save by booking with us compared
+                      to the "other guys" from the compare at price.
+                    </UncontrolledTooltip>
+                  </div>
+                </Col>
               </Row>
               <Row className="d-flex">
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="eff_rate">
                     <Label className="form-label">Eff. Rate*</Label>
                     <div className="input-group">
@@ -1541,7 +1707,7 @@ const AddNewAirportTransfer = ({
                     </UncontrolledTooltip>
                   </div>
                 </Col>
-                <Col className="col-3">
+                {/* <Col className="col-3">
                   <div className="form-outline mb-2" id="commission">
                     <Label className="form-label">Commission*</Label>
                     <div className="input-group">
@@ -1586,8 +1752,8 @@ const AddNewAirportTransfer = ({
                       </UncontrolledTooltip>
                     </div>
                   </div>
-                </Col>
-                <Col className="col-3">
+                </Col> */}
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="deposit">
                     <Label className="form-label">Deposit*</Label>
                     <div className="input-group">
@@ -1632,7 +1798,7 @@ const AddNewAirportTransfer = ({
                     </UncontrolledTooltip>
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="balance_due">
                     <Label className="form-label">Balance Due*</Label>
                     <div className="input-group">
@@ -1685,6 +1851,35 @@ const AddNewAirportTransfer = ({
                       The amount due to the provider on the day of the tour.
                     </UncontrolledTooltip>
                   </div>
+                </Col>
+                 <Col className="col-6">
+                  <div className="form-outline mb-2" id="compare_at_url">
+                    <Label className="form-label">"Compare At" URL</Label>
+                    <Input
+                      name="compare_at_url"
+                      placeholder="https://provider.com/mitour.html"
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.compare_at_url || ""}
+                      invalid={
+                        validationType.touched.compare_at_url &&
+                        validationType.errors.compare_at_url
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.compare_at_url &&
+                    validationType.errors.compare_at_url ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.compare_at_url}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                  <UncontrolledTooltip placement="top" target="compare_at_url">
+                    The URL of the web page where the "compare at" price can be
+                    verified.
+                  </UncontrolledTooltip>
                 </Col>
               </Row>
               <Row>

@@ -628,6 +628,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         setExtraFeeModal={setExtraFeeModal}
         extraFeeEditData={extraFeeEditData}
         id={id}
+        section={'operators'}
         refreshTable={refreshTable}
       />
     </div>

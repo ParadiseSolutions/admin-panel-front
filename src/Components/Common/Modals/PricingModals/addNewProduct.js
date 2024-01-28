@@ -64,7 +64,7 @@ const AddNewProductPricing = ({
       setDataEdit(null);
     }
   }, [id, addNewProduct]);
-
+console.log(dataEdit)
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
