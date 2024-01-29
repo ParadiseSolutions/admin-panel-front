@@ -210,17 +210,16 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               "Edited!",
               "Automated Confirmation Information has been edited.",
               "success"
-            ).then(() => {});
+            ).then(() => { });
           }
         })
         .catch((error) => {
           // console.log(error.response);
           Swal.fire(
             "Error!",
-            `${
-              error.response.data.data.name
-                ? error.response.data.data.name
-                : error.response.data.data.code
+            `${error.response.data.data.name
+              ? error.response.data.data.name
+              : error.response.data.data.code
             }`,
             "error"
           );
@@ -301,6 +300,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     setSpecialInstructionCheck(!specialInstrucionCheck)
                   }
                   value={specialInstrucionCheck}
+                  checked={specialInstrucionCheck}
                 />
                 <label className="mx-2">Add Special Instructions box</label>
               </div>
@@ -322,7 +322,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                         setttop6(!ttop6);
                       }}
                     >
-                     Help us Create Your Itinerary!
+                      Help us Create Your Itinerary!
                     </Tooltip>
                     <div className="col-8 d-flex">
                       <Input
@@ -352,7 +352,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                         setttop7(!ttop7);
                       }}
                     >
-                     Tell us how you would like your day to look like, what you would like to do or see, or any special requests.
+                      Tell us how you would like your day to look like, what you would like to do or see, or any special requests.
                     </Tooltip>
                     <div className="col-10">
                       <Input
@@ -445,33 +445,38 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     <tbody>
                       {map(extraFeeInitialData, (fee, index) => {
                         return (
-                          <tr>
-                            <th className="col-11">{`${index + 1}. ${
-                              fee.fee_type
-                            }`}</th>
+                          <tr
+                          style={{
+                            backgroundColor: fee.read_only === 1 ? "#f5f6f8" : "#ffffff",
+                          }}>
+                            <th className="col-11">{`${index + 1}. ${fee.fee_type
+                              }`}</th>
                             <td className="col-1">
                               <div className="d-flex gap-3">
                                 <div className="text-paradise">
-                                  <div
-                                    className="text-success"
-                                    onClick={() => {
-                                      setExtraFeeModal(true);
-                                      setExtraFeeEditData(fee);
-                                    }}
-                                  >
-                                    <i
-                                      className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                      id="edittooltip"
-                                      style={{ cursor: "pointer" }}
-                                    />
-                                    <UncontrolledTooltip
-                                      placement="top"
-                                      target="edittooltip"
+                                  {fee.read_only === 0 ?
+                                    <div
+                                      className="text-success"
+                                      onClick={() => {
+                                        setExtraFeeModal(true);
+                                        setExtraFeeEditData(fee);
+                                      }}
                                     >
-                                      Edit
-                                    </UncontrolledTooltip>
-                                  </div>
+                                      <i
+                                        className="mdi mdi-pencil-outline font-size-17 text-paradise"
+                                        id="edittooltip"
+                                        style={{ cursor: "pointer" }}
+                                      />
+                                      <UncontrolledTooltip
+                                        placement="top"
+                                        target="edittooltip"
+                                      >
+                                        Edit
+                                      </UncontrolledTooltip>
+                                    </div>
+                                    : (null)}
                                 </div>
+                                {fee.read_only === 0 ?
                                 <div
                                   className="text-danger"
                                   onClick={() => {
@@ -492,6 +497,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                                     Delete
                                   </UncontrolledTooltip>
                                 </div>
+                                : (null) }
                               </div>
                             </td>
                           </tr>
@@ -530,13 +536,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 value={validationType.values.aditional_information || ""}
                 invalid={
                   validationType.touched.aditional_information &&
-                  validationType.errors.aditional_information
+                    validationType.errors.aditional_information
                     ? true
                     : false
                 }
               />
               {validationType.touched.aditional_information &&
-              validationType.errors.aditional_information ? (
+                validationType.errors.aditional_information ? (
                 <FormFeedback type="invalid">
                   {validationType.errors.aditional_information}
                 </FormFeedback>
@@ -726,14 +732,14 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   value={validationType.values.meeting_location || ""}
                   invalid={
                     validationType.touched.meeting_location &&
-                    validationType.errors.meeting_location
+                      validationType.errors.meeting_location
                       ? true
                       : false
                   }
                   disabled={voucherInitialData?.meeting_location_read_only === 1 ? true : false}
                 />
                 {validationType.touched.meeting_location &&
-                validationType.errors.meeting_location ? (
+                  validationType.errors.meeting_location ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.meeting_location}
                   </FormFeedback>
