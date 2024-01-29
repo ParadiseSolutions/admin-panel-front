@@ -3,7 +3,8 @@ import {
   getAvailableFromAPI,
   putSettingsAPI,
   getAvailableAPI,
-  triggerUpdate
+  triggerUpdate,
+  getVouchersTemplatesAPI
 } from "../../../Utils/API/Tours";
 import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
 import SettingsImageTwo from "../../../Components/Assets/images/settings2.png";
@@ -27,17 +28,22 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 
 const Settings = ({ history, tourSettings, id, toggle }) => {
-  // console.log("settings", tourSettings);
+  console.log("settings", tourSettings);
 
   //seasons request
   const [availableData, setAvailableData] = useState([]);
   const [availableFromData, setAvailableFormData] = useState([]);
+  const [templatesData, setTemplatesData] = useState([])
+  const [templateSelected, setTemplateSelected] = useState('')
   useEffect(() => {
     getAvailableFromAPI().then((resp) => {
       setAvailableData(resp.data.data);
     });
     getAvailableAPI().then((resp) => {
       setAvailableFormData(resp.data.data);
+    });
+    getVouchersTemplatesAPI().then((resp) => {
+      setTemplatesData(resp.data.data);
     });
   }, []);
   useEffect(() => {
@@ -128,7 +134,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           : "",
         teenagers_range_to: values.teenagers_range_to
           ? values.teenagers_range_to
-          : ""
+          : "",
+        voucher_template_id: templateSelected
       };
 
       //  console.log('data a enviar', data)
@@ -265,13 +272,40 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               ) : null}
             </div>
           </Col>
-          <Col className="mb-2 col-2" style={{paddingTop:'37px'}}>
-            <Button type="button"
-              className="font-16 btn-orange"
-              
-              onClick={() => {setReserveModal(true)}}
-              > + Set Up Reserve Page Template 
-            </Button>
+          <Col className="mb-2 col-2" style={{paddingTop:'7px'}}>
+          <div className="form-outline mb-2" id="voucher_currency">
+                    <Label className="form-label">Voucher Template</Label>
+                    <div className="input-group">
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setTemplateSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(templatesData, (template, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={template.voucher_template_id}
+                            selected={
+                              tourSettings && tourSettings.voucher_template_id
+                                ? template.voucher_template_id=== tourSettings.voucher_template_id
+                                : false
+                            }
+                          >
+                            {template.voucher_template}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                      
+                    </div>
+                    
+                  </div>
           </Col>
         </Row>
 
