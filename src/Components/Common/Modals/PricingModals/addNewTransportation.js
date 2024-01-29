@@ -34,6 +34,7 @@ import {
   calcDeposit,
   calcNetPrice,
 } from "../../../../Utils/CommonFunctions";
+import { getCurrency } from "../../../../Utils/API/Operators";
 
 const AddNewTransportation = ({
   addNewTransportation,
@@ -90,6 +91,9 @@ const AddNewTransportation = ({
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
+  const [currency , setCurrency] = useState([])
+  const [currencySelected , setCurrencySelected] = useState('')
+
   useEffect(() => {
     if (addNewTransportation) {
       getPricingOptionsAPI(20).then((resp) => {
@@ -116,12 +120,16 @@ const AddNewTransportation = ({
       getPricingZoneOptionsAPI(51, tourData.provider_id).then((resp) => {
         setPriceZone(resp.data.data);
       });
+      getCurrency().then((resp) =>{
+        setCurrency(resp.data.data)
+      })
     }
   }, [addNewTransportation]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
   const [balanceDueCheckbox, setBalanceDueCheckbox] = useState(null);
+
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
@@ -174,6 +182,7 @@ const AddNewTransportation = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
+      voucher_balance: dataEdit ? dataEdit.voucher_balance : "",
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -304,6 +313,8 @@ const AddNewTransportation = ({
           net_price: values.balance_due,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
+          voucher_balance: values.voucher_balance,
+          currencySelected: currencySelected,
           price_details: [
             {
               pricing_option_id: 20,
@@ -1435,7 +1446,7 @@ const AddNewTransportation = ({
                 </p>
               </Col>
               <Row className="d-flex">
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="ship_price">
                   <div className="d-flex justify-content-between">
                       <Label className="form-label">Ship Price</Label>
@@ -1512,7 +1523,7 @@ const AddNewTransportation = ({
                     
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="compare_at">
                   <div className="d-flex justify-content-between">
                       <Label className="form-label">Compare At*</Label>
@@ -1589,7 +1600,7 @@ const AddNewTransportation = ({
                   
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="our_price">
                   <div className="d-flex justify-content-between">
                       <Label className="form-label">Our Price*</Label>
@@ -1650,7 +1661,7 @@ const AddNewTransportation = ({
                    
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="you_save">
                   <div className="d-flex justify-content-between">
                       <Label className="form-label">You Save*</Label>
@@ -1713,6 +1724,84 @@ const AddNewTransportation = ({
                       </span>
                     </div>
                    
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <Label className="form-label">Vchr. Currency</Label>
+                    <div className="input-group">
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setCurrencySelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(currency, (curr, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={curr.currency_id}
+                            selected={
+                              dataEdit && dataEdit.voucher_currency
+                                ? curr.currency_id === dataEdit.voucher_currency
+                                : false
+                            }
+                          >
+                            {curr.currency}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                      
+                    </div>
+                    
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_balance">
+                    <Label className="form-label">Voucher Balance</Label>
+                    <div className="input-group">
+                      <Input
+                        name="voucher_balance"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e) => {
+                          const value = e.target.value || "";
+                          validationType.setFieldValue(
+                            "voucher_balance",
+                            setDecimalFormat(value)
+                          );
+                        }}
+                        value={validationType.values.voucher_balance || ""}
+                        invalid={
+                          validationType.touched.voucher_balance &&
+                          validationType.errors.voucher_balance
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.voucher_balance &&
+                      validationType.errors.voucher_balance ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.voucher_balance}
+                        </FormFeedback>
+                      ) : null}
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
+                    </div>
+                    
                   </div>
                 </Col>
               </Row>

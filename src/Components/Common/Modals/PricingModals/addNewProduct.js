@@ -33,6 +33,7 @@ import {
   calcDeposit,
   calcNetPrice,
 } from "../../../../Utils/CommonFunctions";
+import { getCurrency } from "../../../../Utils/API/Operators";
 
 const AddNewProductPricing = ({
   addNewProduct,
@@ -75,6 +76,8 @@ console.log(dataEdit)
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
+  const [currency , setCurrency] = useState([])
+  const [currencySelected , setCurrencySelected] = useState('')
   useEffect(() => {
     if (addNewProduct) {
       getPricingOptionsAPI(1).then((resp) => {
@@ -89,6 +92,9 @@ console.log(dataEdit)
       getPricingOptionsAPI(28).then((resp) => {
         setPriceSeason(resp.data.data);
       });
+      getCurrency().then((resp) =>{
+        setCurrency(resp.data.data)
+      })
     }
   }, [addNewProduct]);
 
@@ -143,6 +149,7 @@ console.log(dataEdit)
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
+      voucher_balance: dataEdit ? dataEdit.voucher_balance : "",
     },
     validationSchema: Yup.object().shape({
       public_price: Yup.number().required("Field Required"),
@@ -211,6 +218,8 @@ console.log(dataEdit)
           net_price: values.balance_due,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
+          voucher_balance: values.voucher_balance,
+          currencySelected: currencySelected,
           price_details: [
             {
               pricing_option_id: 1,
@@ -1116,7 +1125,7 @@ console.log(dataEdit)
                 </p>
               </Col>
               <Row className="d-flex">
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="ship_price">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">Ship Price</Label>
@@ -1193,7 +1202,7 @@ console.log(dataEdit)
                     
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="compare_at">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">Compare At*</Label>
@@ -1270,7 +1279,7 @@ console.log(dataEdit)
                     
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="our_price">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">Our Price*</Label>
@@ -1331,7 +1340,7 @@ console.log(dataEdit)
                     
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="you_save">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">You Save*</Label>
@@ -1391,6 +1400,84 @@ console.log(dataEdit)
                         style={{ fontSize: "0.85em" }}
                       >
                         %
+                      </span>
+                    </div>
+                    
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <Label className="form-label">Vchr. Currency</Label>
+                    <div className="input-group">
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setCurrencySelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(currency, (curr, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={curr.currency_id}
+                            selected={
+                              dataEdit && dataEdit.voucher_currency
+                                ? curr.currency_id === dataEdit.voucher_currency
+                                : false
+                            }
+                          >
+                            {curr.currency}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                      
+                    </div>
+                    
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_balance">
+                    <Label className="form-label">Voucher Balance</Label>
+                    <div className="input-group">
+                      <Input
+                        name="voucher_balance"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e) => {
+                          const value = e.target.value || "";
+                          validationType.setFieldValue(
+                            "voucher_balance",
+                            setDecimalFormat(value)
+                          );
+                        }}
+                        value={validationType.values.voucher_balance || ""}
+                        invalid={
+                          validationType.touched.voucher_balance &&
+                          validationType.errors.voucher_balance
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.voucher_balance &&
+                      validationType.errors.voucher_balance ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.voucher_balance}
+                        </FormFeedback>
+                      ) : null}
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
                       </span>
                     </div>
                     
