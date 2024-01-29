@@ -40,6 +40,7 @@ import {
   getVoucherInfoTours,
   putVoucherInformationTours,
 } from "../../../Utils/API/Tours/TemplatesAPI";
+import ReservePageModal from "../../../Components/Common/Modals/TourSetingsModal/ReservePageModal";
 
 const AutomatedConfirmation = ({ tourData, id }) => {
   const tourID = tourData?.id;
@@ -50,6 +51,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [voucherInitialData, setVoucherInitialData] = useState();
   const [extraFeeEditData, setExtraFeeEditData] = useState([]);
   const [restrictionList, setRestrictionList] = useState([]);
+  const [reserveModal, setReserveModal] = useState(false);
   const [rest1, setRest1] = useState();
   const [rest2, setRest2] = useState();
   const [rest3, setRest3] = useState();
@@ -59,6 +61,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [ttop3, setttop3] = useState(false);
   const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
+  const [ttop6, setttop6] = useState(false);
+  const [ttop7, setttop7] = useState(false);
   const [extraFeeModal, setExtraFeeModal] = useState(false);
   const [specialInstrucionCheck, setSpecialInstructionCheck] = useState(false);
 
@@ -112,10 +116,10 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       setSelectionID(optionsAreaShort);
       setRestrictionList(voucherInitialData.restrictions);
       setSpecialInstructionCheck(
-        voucherInitialData.special_instruction_enable === 1 ? true : false
+        tourData.special_instruction_enable === 1 ? true : false
       );
     }
-  }, [voucherInitialData, bringListInitialData]);
+  }, [voucherInitialData, bringListInitialData, tourData]);
 
   // console.log(selectionID);
 
@@ -138,12 +142,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       meeting_location: voucherInitialData?.meeting_location
         ? voucherInitialData.meeting_location
         : "",
-      special_instruction_title: voucherInitialData?.special_instruction_title
-        ? voucherInitialData?.special_instruction_title
+      special_instruction_title: tourData?.special_instruction_title
+        ? tourData?.special_instruction_title
         : "",
       special_instruction_description:
-        voucherInitialData?.special_instruction_description
-          ? voucherInitialData?.special_instruction_description
+        tourData?.special_instruction_description
+          ? tourData?.special_instruction_description
           : "",
       // youtube: initialData && initialData[2]?.url ? initialData[2].url : "",
       // twitter: initialData && initialData[3]?.url ? initialData[3].url : "",
@@ -195,7 +199,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
 
         special_instruction_title: values.special_instruction_title,
         special_instruction_description: values.special_instruction_description,
-        special_instruction_enable : specialInstrucionCheck === true ? 1 : 0
+        special_instruction_enable: specialInstrucionCheck === true ? 1 : 0,
       };
       // console.log("data a enviar", data);
       putVoucherInformationTours(voucherInitialData.tour_id, data)
@@ -276,84 +280,95 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               </p>
             </Col>
           </Row>
-          <Row className="d-flex flex-column">
-            <Col className="col-12 my-3">
-              <label>Special Instructions Box - Title</label>
-              <i
-                className="uil-question-circle font-size-15 mx-2"
-                id="special_instruction_title"
-              />
-              <Tooltip
-                placement="right"
-                isOpen={ttop4}
-                target="special_instruction_title"
-                toggle={() => {
-                  setttop4(!ttop4);
-                }}
-              >
-                If the tour has any restrictions specify them one line at a
-                time. They will be shown on the voucher and on the website in
-                the order displayed.
-                <br />
-                To add additional restrictions, click on "+ Add".
-              </Tooltip>
-              <div className="col-8 d-flex">
-                <Input
-                  name="special_instruction_title"
-                  placeholder=""
-                  type="text"
-                  className="my-1"
-                  onChange={validationType.handleChange}
-                  value={validationType.values.special_instruction_title || ""}
+          <Row className="d-flex ">
+            <Col className="col-2">
+              <Col className="mb-2 " style={{ paddingTop: "23px" }}>
+                <Button
+                  type="button"
+                  className="font-16 btn-orange"
+                  onClick={() => {
+                    setReserveModal(true);
+                  }}
+                >
+                  {" "}
+                  + Set Up Reserve Page Template
+                </Button>
+              </Col>
+              <div className="col-12 mt-4">
+                <input
+                  type="checkbox"
+                  onChange={() =>
+                    setSpecialInstructionCheck(!specialInstrucionCheck)
+                  }
+                  value={specialInstrucionCheck}
                 />
-                <div className="col-6 mx-4">
-                  <input
-                    type="checkbox"
-                    onChange={() =>
-                      setSpecialInstructionCheck(!specialInstrucionCheck)
-                    }
-                    value={specialInstrucionCheck}
-                  />
-                  <label className="mx-2">Add Special Instructions Box</label>
-                </div>
+                <label className="mx-2">Add Special Instructions box</label>
               </div>
             </Col>
-            <Col className="col-6 my-3">
+            <Col className="col-8 my-3 d-flex flex-column">
               {specialInstrucionCheck ? (
-                <div>
-                  <label>Special Instructions Box - Description</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="special_instruction_description"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop4}
-                    target="special_instruction_description"
-                    toggle={() => {
-                      setttop4(!ttop4);
-                    }}
-                  >
-                    If the tour has any restrictions specify them one line at a
-                    time. They will be shown on the voucher and on the website
-                    in the order displayed.
-                    <br />
-                    To add additional restrictions, click on "+ Add".
-                  </Tooltip>
-                  <div className="col-10">
-                    <Input
-                      name="special_instruction_description"
-                      placeholder=""
-                      type="text"
-                      className="my-1"
-                      onChange={validationType.handleChange}
-                      value={
-                        validationType.values.special_instruction_description ||
-                        ""
-                      }
+                <>
+                  <div>
+                    <label>Special Instructions Box - Title</label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="special_instruction_title"
                     />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop6}
+                      target="special_instruction_title"
+                      toggle={() => {
+                        setttop6(!ttop6);
+                      }}
+                    >
+                     Help us Create Your Itinerary!
+                    </Tooltip>
+                    <div className="col-8 d-flex">
+                      <Input
+                        name="special_instruction_title"
+                        placeholder=""
+                        type="text"
+                        className="my-1"
+                        onChange={validationType.handleChange}
+                        value={
+                          validationType.values.special_instruction_title || ""
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
+
+                  <div>
+                    <label>Special Instructions Box - Description</label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="special_instruction_description"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop7}
+                      target="special_instruction_description"
+                      toggle={() => {
+                        setttop7(!ttop7);
+                      }}
+                    >
+                     Tell us how you would like your day to look like, what you would like to do or see, or any special requests.
+                    </Tooltip>
+                    <div className="col-10">
+                      <Input
+                        name="special_instruction_description"
+                        placeholder=""
+                        type="text"
+                        className="my-1"
+                        onChange={validationType.handleChange}
+                        value={
+                          validationType.values
+                            .special_instruction_description || ""
+                        }
+                      />
+                    </div>
+                  </div>
+                </>
               ) : null}
             </Col>
           </Row>
@@ -509,6 +524,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 placeholder=""
                 type="textarea"
                 rows="5"
+                disabled={voucherInitialData?.additional_information_read_only === 1 ? true : false}
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
                 value={validationType.values.aditional_information || ""}
@@ -555,6 +571,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Please select"
                   defaultValue={initialOptionsArea}
                   onChange={handleMulti}
+                  disabled={voucherInitialData?.brings_read_only === 1 ? true : false}
                 >
                   {map(bringListInitialData, (item, index) => {
                     return (
@@ -636,6 +653,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     className="my-1"
                     onChange={(e) => setRest1(e.target.value)}
                     value={rest1}
+                    disabled={voucherInitialData?.restrictions[0]?.restriction_read_only_1 === 1 ? true : false}
                   />
                 </div>
                 <div className="col-12 d-flex">
@@ -646,6 +664,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     type="text"
                     onChange={(e) => setRest2(e.target.value)}
                     value={rest2}
+                    disabled={voucherInitialData?.restrictions[1]?.restriction_read_only_2 === 1 ? true : false}
                   />
 
                   <div className="col-2">
@@ -671,6 +690,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       type="text"
                       onChange={(e) => setRest3(e.target.value)}
                       value={rest3}
+                      disabled={voucherInitialData?.restrictions[2]?.restriction_read_only_3 === 1 ? true : false}
                     />
                   </div>
                 ) : null}
@@ -710,6 +730,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       ? true
                       : false
                   }
+                  disabled={voucherInitialData?.meeting_location_read_only === 1 ? true : false}
                 />
                 {validationType.touched.meeting_location &&
                 validationType.errors.meeting_location ? (
@@ -742,6 +763,11 @@ const AutomatedConfirmation = ({ tourData, id }) => {
         id={tourID}
         section={"tours"}
         refreshTable={refreshTable}
+      />
+      <ReservePageModal
+        reserveModal={reserveModal}
+        setReserveModal={setReserveModal}
+        id={id}
       />
     </div>
   );

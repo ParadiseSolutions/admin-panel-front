@@ -140,6 +140,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const getVouchersTemplatesAPI = () => {
+    const url = `${API_URL}/vouchers/templates`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 
   export const shoppingCartWebsite = (id) => {
     const url = `${API_URL}/websites/${id}/carts`;
