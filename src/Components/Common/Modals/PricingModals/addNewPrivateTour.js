@@ -10,6 +10,7 @@ import {
   FormFeedback,
   Button,
   UncontrolledTooltip,
+  Tooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -32,6 +33,7 @@ import {
   calcDeposit,
   calcNetPrice,
 } from "../../../../Utils/CommonFunctions";
+import { getCurrency } from "../../../../Utils/API/Operators";
 
 const AddNewPrivateTour = ({
   addNewPrivateTour,
@@ -83,6 +85,8 @@ const AddNewPrivateTour = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
+  const [currency , setCurrency] = useState([])
+  const [currencySelected , setCurrencySelected] = useState('')
   useEffect(() => {
     if (addNewPrivateTour) {
       getPricingOptionsAPI(6).then((resp) => {
@@ -97,12 +101,33 @@ const AddNewPrivateTour = ({
       getPricingOptionsAPI(29).then((resp) => {
         setPriceSeason(resp.data.data);
       });
+      getCurrency().then((resp) =>{
+        setCurrency(resp.data.data)
+      })
     }
   }, [addNewPrivateTour]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
   const [balanceDueCheckbox, setBalanceDueCheckbox] = useState(null);
+  
+  const [ttop1, setttop1] = useState(false);
+  const [ttop2, setttop2] = useState(false);
+  const [ttop3, setttop3] = useState(false);
+  const [ttop4, setttop4] = useState(false);
+  const [ttop5, setttop5] = useState(false);
+  const [ttop6, setttop6] = useState(false);
+  const [ttop7, setttop7] = useState(false);
+  const [ttop8, setttop8] = useState(false);
+  const [ttop9, setttop9] = useState(false);
+  const [ttop10, setttop10] = useState(false);
+  const [ttop11, setttop11] = useState(false);
+  const [ttop12, setttop12] = useState(false);
+  const [ttop13, setttop13] = useState(false);
+  const [ttop14, setttop14] = useState(false);
+  const [ttop15, setttop15] = useState(false);
+  const [ttop16, setttop16] = useState(false);
+  const [ttop17, setttop17] = useState(false);
 
   useEffect(() => {
     setActiveCheckbox(dataEdit?.active === 1 ? true : false);
@@ -136,6 +161,7 @@ const AddNewPrivateTour = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
+      voucher_balance: dataEdit ? dataEdit.voucher_balance : "",
     },
     validationSchema: Yup.object().shape({
       public_price: Yup.number().required("Field Required"),
@@ -204,6 +230,8 @@ const AddNewPrivateTour = ({
           net_price: values.balance_due,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
+          voucher_balance: values.voucher_balance,
+          currencySelected: currencySelected,
           price_details: [
             {
               pricing_option_id: 6,
@@ -481,7 +509,27 @@ const AddNewPrivateTour = ({
               <Row className="d-flex mb-4">
                 <Col className="col">
                   <div className="form-outline">
-                    <Label className="form-label">Price Type*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Price Type*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="priceType"
+                        />
+                        <Tooltip 
+                          placement="right"
+                          isOpen={ttop1}
+                          target="priceType"
+                          toggle={() => {
+                            setttop1(!ttop1);
+                          }}
+                        >
+                          Select how the product will be priced. Example: "Per
+                          Item" could be Per ATV, or Per Boat. "Per Person"
+                          could be Per Adult, or Per Child.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <Input
                       type="select"
                       name="price_type"
@@ -512,7 +560,30 @@ const AddNewPrivateTour = ({
                 </Col>
                 <Col className="col">
                   <div className="form-outline">
-                    <Label className="form-label">Price Option*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Price Option*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="priceOptions"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop2}
+                          target="priceOptions"
+                          toggle={() => {
+                            setttop2(!ttop2);
+                          }}
+                        >
+                          This option will display in the product name in
+                          parenthesis, it will also show on the booking form as
+                          the label for the Quantity drop-down or as an option
+                          in the Choose Activity drop-down, depending on the
+                          reserve page template chosen. The option chosen here
+                          will automatically assign the last digit of the SKU.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <Input
                       type="select"
                       name="price_options"
@@ -544,7 +615,31 @@ const AddNewPrivateTour = ({
                 </Col>
                 <Col className="col">
                   <div className="form-outline">
-                    <Label className="form-label">Collect*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Collect*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="collect"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop3}
+                          target="collect"
+                          toggle={() => {
+                            setttop3(!ttop3);
+                          }}
+                        >
+                          Select the amount of deposit that will be collected at
+                          the time of booking. Commission = The deposit is equal
+                          to the amount of commission we earn for the tour.
+                          Afilliate = The payment is made directly through the
+                          provider's website, such as the case of dTraveller or
+                          Viator. Deposit = Manually type the amount of deposit
+                          we will collect in the "Deposit" field below.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <Input
                       type="select"
                       name="collect"
@@ -709,7 +804,26 @@ const AddNewPrivateTour = ({
               <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="public_price">
-                    <Label className="form-label">Public Price*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Public Price*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="publicPrice"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop5}
+                          target="publicPrice"
+                          toggle={() => {
+                            setttop5(!ttop5);
+                          }}
+                        >
+                          The price refers to in our service agreement as the
+                          "Public Price" or "Regular Price".
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -755,15 +869,31 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="public_price">
-                      After discounting the tour, what our effective commission
-                      rate is (what we have left after the discount)
-                    </UncontrolledTooltip>
+                  
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="provider_price">
-                    <Label className="form-label">Provider Price</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Provider Price</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="providerPrice"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop6}
+                          target="providerPrice"
+                          toggle={() => {
+                            setttop6(!ttop6);
+                          }}
+                        >
+                          The price the provider sells the tour for on their own
+                          website.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -801,18 +931,32 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip
-                      placement="top"
-                      target="provider_price"
-                    >
-                      The price the provider sells the tour for on their own
-                      website.
-                    </UncontrolledTooltip>
+                   
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="rate">
-                    <Label className="form-label">Rate %</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Rate %</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 "
+                          id="rate"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop7}
+                          target="rate"
+                          toggle={() => {
+                            setttop7(!ttop7);
+                          }}
+                        >
+                          The commission rate for the tour that is specified in
+                          our service agreement. If only a Net Price is
+                          specified then leave blank.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <Input
                         name="rate"
@@ -849,15 +993,33 @@ const AddNewPrivateTour = ({
                         %
                       </span>
                     </div>
-                    <UncontrolledTooltip placement="top" target="rate">
-                      The commission rate for the tour that is specified in our
-                      service agreement.
-                    </UncontrolledTooltip>
+                    
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="net_rate">
-                    <Label className="form-label">Net Rate</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Net Rate</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="netRate"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop8}
+                          target="netRate"
+                          toggle={() => {
+                            setttop8(!ttop8);
+                          }}
+                        >
+                          The Net Price specified in our service agreement for
+                          the tour. If only a commission rate is specified in
+                          the agreement then this will automatically calculate
+                          and no entry is required.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -895,10 +1057,7 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="net_rate">
-                      The net rate specified in our service agreement for the
-                      tour.
-                    </UncontrolledTooltip>
+                    
                   </div>
                 </Col>
                 <Col className="col-4">
@@ -948,9 +1107,33 @@ const AddNewPrivateTour = ({
                 </p>
               </Col>
               <Row className="d-flex">
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="ship_price">
-                    <Label className="form-label">Ship Price</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Ship Price</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="shipPrice"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop10}
+                          target="shipPrice"
+                          toggle={() => {
+                            setttop10(!ttop10);
+                          }}
+                        >
+                          The price that the most expensive cruise ship will
+                          sell this tour at. This price should not be confused
+                          with the "From" price shown on cruise ship websites.
+                          It is always higher. Compare all cruise websites. If
+                          the tour is not available for cruise ship passengers
+                          or the ship price won't shown on the website (as with
+                          Cancun Discounts) then leave this blank.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -998,17 +1181,36 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="ship_price">
-                      The price that the most expensive cruise ship will sell
-                      this tour at. This price should not be confused with the
-                      "From" price shown on cruise ship websites. It is always
-                      higher. Compare all cruise websites.
-                    </UncontrolledTooltip>
+                  
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="compare_at">
-                    <Label className="form-label">Compare At*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Compare At*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="compareAt"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop11}
+                          target="compareAt"
+                          toggle={() => {
+                            setttop11(!ttop11);
+                          }}
+                        >
+                          The price that shows as the "reg price" on our
+                          websites. This should generally be the most expensive
+                          price for a comparable tour you can commonly find on
+                          the web. Typically avoid outliers where one website is
+                          far above from the rest. We want the customers to be
+                          able to see that they're saving money compared to
+                          other options.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -1056,16 +1258,30 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="compare_at">
-                      The price that shows as the "reg price" on our websites.
-                      This should be the most expensive price for a comparable
-                      tour you can find on the web.
-                    </UncontrolledTooltip>
+                   
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="our_price">
-                    <Label className="form-label">Our Price*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Our Price*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="ourPrice"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop12}
+                          target="ourPrice"
+                          toggle={() => {
+                            setttop12(!ttop12);
+                          }}
+                        >
+                          The price we will sell the tour for.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -1103,14 +1319,34 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="our_price">
-                      The price we will sell the tour for.
-                    </UncontrolledTooltip>
+                    
                   </div>
                 </Col>
-                <Col className="col-3">
+                <Col className="col-2">
                   <div className="form-outline mb-2" id="you_save">
-                    <Label className="form-label">You Save*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">You Save*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="youSave"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop13}
+                          target="youSave"
+                          toggle={() => {
+                            setttop13(!ttop13);
+                          }}
+                        >
+                          This is the amount they save by booking with us
+                          compared to the "other guys" from the "Compare At"
+                          price or "Ship Price" whichever is higher. This will
+                          be shown on the website as "You Save!" or "You Save
+                          15%" depending on the site.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <Input
                         name="you_save"
@@ -1148,17 +1384,113 @@ const AddNewPrivateTour = ({
                         %
                       </span>
                     </div>
-                    <UncontrolledTooltip placement="top" target="you_save">
-                      This is the amount they save by booking with us compared
-                      to the "other guys" from the compare at price.
-                    </UncontrolledTooltip>
+                    
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <Label className="form-label">Vchr. Currency</Label>
+                    <div className="input-group">
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setCurrencySelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(currency, (curr, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={curr.currency_id}
+                            selected={
+                              dataEdit && dataEdit.voucher_currency
+                                ? curr.currency_id === dataEdit.voucher_currency
+                                : false
+                            }
+                          >
+                            {curr.currency}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                      
+                    </div>
+                    
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <div className="form-outline mb-2" id="voucher_balance">
+                    <Label className="form-label">Voucher Balance</Label>
+                    <div className="input-group">
+                      <Input
+                        name="voucher_balance"
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="any"
+                        onChange={validationType.handleChange}
+                        onBlur={(e) => {
+                          const value = e.target.value || "";
+                          validationType.setFieldValue(
+                            "voucher_balance",
+                            setDecimalFormat(value)
+                          );
+                        }}
+                        value={validationType.values.voucher_balance || ""}
+                        invalid={
+                          validationType.touched.voucher_balance &&
+                          validationType.errors.voucher_balance
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.voucher_balance &&
+                      validationType.errors.voucher_balance ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.voucher_balance}
+                        </FormFeedback>
+                      ) : null}
+                      <span
+                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        id="basic-addon1"
+                        style={{ fontSize: "0.85em" }}
+                      >
+                        $
+                      </span>
+                    </div>
+                    
                   </div>
                 </Col>
               </Row>
               <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="eff_rate">
-                    <Label className="form-label">Eff. Rate*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Eff. Rate*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="effRate"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop14}
+                          target="effRate"
+                          toggle={() => {
+                            setttop14(!ttop14);
+                          }}
+                        >
+                          After discounting the tour, what our effective
+                          commission rate is (what we have left after the
+                          discount). This is calculated based on (Commission /
+                          Our Price = Eff. Rate).
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <Input
                         name="eff_rate"
@@ -1196,15 +1528,30 @@ const AddNewPrivateTour = ({
                         %
                       </span>
                     </div>
-                    <UncontrolledTooltip placement="top" target="eff_rate">
-                      The price the provider refers to in our service agreement
-                      as the "Public Price" or "Regular Price".
-                    </UncontrolledTooltip>
+                    
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="commission">
-                    <Label className="form-label">Commission*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Commission*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="commission"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop15}
+                          target="commission"
+                          toggle={() => {
+                            setttop15(!ttop15);
+                          }}
+                        >
+                          The $$ amount that we earn from the sale.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -1242,15 +1589,33 @@ const AddNewPrivateTour = ({
                           {validationType.errors.commission}
                         </FormFeedback>
                       ) : null}
-                      <UncontrolledTooltip placement="top" target="commission">
-                        The $$ amount that we earn from the sale.
-                      </UncontrolledTooltip>
+                     
                     </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="deposit">
-                    <Label className="form-label">Deposit*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Deposit*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="deposit"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop16}
+                          target="deposit"
+                          toggle={() => {
+                            setttop16(!ttop16);
+                          }}
+                        >
+                          The amount we collect at the time of booking. This is
+                          calculated based on the option chosen in "Collect"
+                          above.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -1295,7 +1660,25 @@ const AddNewPrivateTour = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="balance_due">
-                    <Label className="form-label">Balance Due*</Label>
+                  <div className="d-flex justify-content-between">
+                      <Label className="form-label">Balance Due*</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="balanceDue"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop17}
+                          target="balanceDue"
+                          toggle={() => {
+                            setttop17(!ttop17);
+                          }}
+                        >
+                          The amount due to the provider on the day of the tour.
+                        </Tooltip>
+                      </div>
+                    </div>
                     <div className="input-group">
                       <span
                         class="input-group-text form-label fw-bold bg-paradise text-white border-0"
@@ -1342,9 +1725,7 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="balance_due">
-                      The amount due to the provider on the day of the tour.
-                    </UncontrolledTooltip>
+                   
                   </div>
                 </Col>
               </Row>

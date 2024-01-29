@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { serviceAreaData } from "../../../../Utils/Redux/Actions/ServiceAreaActions";
-import { useSelector, useDispatch } from "react-redux";
-import { createWebsite } from "../../../../Utils/API/Websites";
 import {
   Row,
   Col,
@@ -35,9 +32,9 @@ const AddExtraFeeModal = ({
   extraFeeModal,
   setExtraFeeModal,
   extraFeeEditData,
-  refreshTable
+  refreshTable,
+  section
 }) => {
-  const [selectionID, setSelectionID] = useState([]);
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
   const [currencyData, setCurrencyData] = useState([]);
@@ -98,7 +95,7 @@ const AddExtraFeeModal = ({
     // }),
     onSubmit: (values) => {
       let data = {
-        section: "operators",
+        section: section,
         id: id,
         fee_type_id: extraFeeSelected,
         amount: values.amount,
