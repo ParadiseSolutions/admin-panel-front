@@ -1201,7 +1201,7 @@ useEffect(() => {
                       <Input
                         name="our_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1244,7 +1244,7 @@ useEffect(() => {
                       <Input
                         name="you_save"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1291,7 +1291,7 @@ useEffect(() => {
                       <Input
                         name="rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e) => {
@@ -1343,7 +1343,7 @@ useEffect(() => {
                       <Input
                         name="commission"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1389,7 +1389,7 @@ useEffect(() => {
                       <Input
                         name="deposit"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1434,7 +1434,7 @@ useEffect(() => {
                       <Input
                         name="balance_due"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}

@@ -62,12 +62,16 @@ const AddonsTables = ({
     <Fragment>
       <Row>
       {addonsTable && (
-        <Col sm="12">
+        <>
+        <Col sm="4">
+          <h1 className="text-paradise">Add-Ons</h1>
+        </Col>  
+        <Col sm="8">
           <div className="text-sm-end">
             <Button
               type="button"
               style={{ backgroundColor: "#F6851F", border: "none" }}
-              className="waves-effect waves-light mb-3 btn btn-success mt-3"
+              className="waves-effect waves-light mb-3 btn btn-success mt-3 mx-5"
               onClick={() => {
               //console.log('tabla')
                 onClickInstructions()
@@ -79,7 +83,7 @@ const AddonsTables = ({
             <Button
               type="button"
               style={{ backgroundColor: "#F6851F", border: "none" }}
-              className="waves-effect waves-light mb-3 btn btn-success mt-3 mx-5"
+              className="waves-effect waves-light mb-3 btn btn-success mt-3"
               onClick={onClickNewAddon}
             >
               <i className="mdi mdi-plus me-1" />
@@ -87,11 +91,12 @@ const AddonsTables = ({
             </Button>
           </div>
         </Col>
+        </>
       )}
 
       {addonsTable && (
         <div className="table-responsive">
-          <Table bordered hover {...getTableProps()} className="react_table">
+          <Table hover {...getTableProps()} className="react_table">
             <thead className="table-nowrap">
               {headerGroups.map((headerGroup) => (
                 <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>

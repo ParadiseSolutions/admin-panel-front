@@ -210,7 +210,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               </p>
             </div>
           </Col>
-          <Col className="col-1 mb-4">
+          <Col className="col-1 mb-3">
             <div className="form-outline mt-2">
               <Label className="form-label">Tour ID</Label>
               <Input
@@ -219,6 +219,18 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 type="text"
                 disabled
                 value={validationType.values.tour_id || ""}
+              />
+            </div>
+          </Col>
+          <Col className="col-1 mb-3">
+            <div className="form-outline mt-2">
+              <Label className="form-label">Tour Hash</Label>
+              <Input
+                name="tour_hash"
+                placeholder=""
+                type="text"
+                disabled
+                value={tourSettings?.hash || ""}
               />
             </div>
           </Col>
@@ -247,7 +259,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               ) : null}
             </div>
           </Col>
-          <Col className="col-5">
+          <Col className="col-4">
             <div className="form-outline mt-2">
               <Label className="form-label">Provider Tour URL</Label>
               <Input

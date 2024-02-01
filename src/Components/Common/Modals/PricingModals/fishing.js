@@ -958,7 +958,7 @@ const Fishing = ({
                       <Input
                         name="public_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1012,7 +1012,7 @@ const Fishing = ({
                       <Input
                         name="provider_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1068,7 +1068,7 @@ const Fishing = ({
                       <Input
                         name="rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e)=>{
@@ -1123,7 +1123,7 @@ const Fishing = ({
                       <Input
                         name="net_rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1227,7 +1227,7 @@ const Fishing = ({
                       <Input
                         name="ship_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1286,7 +1286,7 @@ const Fishing = ({
                         <Input
                         name="compare_at"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1338,7 +1338,7 @@ const Fishing = ({
                       <Input
                         name="our_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1392,7 +1392,7 @@ const Fishing = ({
                       <Input
                         name="you_save"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1461,7 +1461,7 @@ const Fishing = ({
                       <Input
                         name="voucher_balance"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1527,7 +1527,7 @@ const Fishing = ({
                       <Input
                         name="eff_rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1580,7 +1580,7 @@ const Fishing = ({
                       <Input
                         name="commission"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1634,7 +1634,7 @@ const Fishing = ({
                       <Input
                         name="deposit"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1685,7 +1685,7 @@ const Fishing = ({
                       <Input
                         name="balance_due"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}

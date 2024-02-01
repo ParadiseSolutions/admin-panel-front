@@ -155,6 +155,15 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   const columnsProducts = useMemo(() => [
     {
+      Header: "Prod ID",
+      accessor: "id",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
       Header: "Product Name",
       accessor: "label",
       disableFilters: false,
