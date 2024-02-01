@@ -1175,7 +1175,7 @@ const AddNewTransportation = ({
                       <Input
                         name="public_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1244,7 +1244,7 @@ const AddNewTransportation = ({
                       <Input
                         name="provider_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1300,7 +1300,7 @@ const AddNewTransportation = ({
                       <Input
                         name="rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e) => {
@@ -1370,7 +1370,7 @@ const AddNewTransportation = ({
                       <Input
                         name="net_rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1484,7 +1484,7 @@ const AddNewTransportation = ({
                       <Input
                         name="ship_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1561,7 +1561,7 @@ const AddNewTransportation = ({
                       <Input
                         name="compare_at"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1632,7 +1632,7 @@ const AddNewTransportation = ({
                       <Input
                         name="our_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1690,7 +1690,7 @@ const AddNewTransportation = ({
                       <Input
                         name="you_save"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1768,7 +1768,7 @@ const AddNewTransportation = ({
                       <Input
                         name="voucher_balance"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1834,7 +1834,7 @@ const AddNewTransportation = ({
                       <Input
                         name="eff_rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1902,7 +1902,7 @@ const AddNewTransportation = ({
                       <Input
                         name="commission"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1966,7 +1966,7 @@ const AddNewTransportation = ({
                       <Input
                         name="deposit"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -2026,7 +2026,7 @@ const AddNewTransportation = ({
                       <Input
                         name="balance_due"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}

@@ -836,7 +836,7 @@ console.log(dataEdit)
                       <Input
                         name="public_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -906,7 +906,7 @@ console.log(dataEdit)
                       <Input
                         name="provider_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -962,7 +962,7 @@ console.log(dataEdit)
                       <Input
                         name="rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         step="any"
                         onChange={validationType.handleChange}
                         onBlur={(e) => {
@@ -1032,7 +1032,7 @@ console.log(dataEdit)
                       <Input
                         name="net_rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1163,7 +1163,7 @@ console.log(dataEdit)
                       <Input
                         name="ship_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1240,7 +1240,7 @@ console.log(dataEdit)
                       <Input
                         name="compare_at"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1311,7 +1311,7 @@ console.log(dataEdit)
                       <Input
                         name="our_price"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1369,7 +1369,7 @@ console.log(dataEdit)
                       <Input
                         name="you_save"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1447,7 +1447,7 @@ console.log(dataEdit)
                       <Input
                         name="voucher_balance"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1513,7 +1513,7 @@ console.log(dataEdit)
                       <Input
                         name="eff_rate"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1581,7 +1581,7 @@ console.log(dataEdit)
                       <Input
                         name="commission"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1645,7 +1645,7 @@ console.log(dataEdit)
                       <Input
                         name="deposit"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1706,7 +1706,7 @@ console.log(dataEdit)
                       <Input
                         name="balance_due"
                         placeholder="0.00"
-                        type="number"
+                        type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
