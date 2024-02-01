@@ -18,7 +18,7 @@ import {
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
 
-import { Name, Code, Members, Price, Active, ActiveAddon } from "./PricingTables/PricingCols";
+import { Name, Code, Members, Price, Active, ActiveAddon, Rate } from "./PricingTables/PricingCols";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -120,7 +120,16 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
   const columnsAddons = useMemo(
     () => [
       {
-        Header: <h2 className="text-paradise font-weight-bold">Add-Ons</h2>,
+        Header: "ID",
+        accessor: "id",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
+      },
+      {
+        Header: "Add-On Name",
         accessor: "name",
         disableFilters: true,
         filterable: false,
@@ -138,6 +147,15 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         },
       },
       {
+        Header: "Deposit",
+        accessor: "deposit",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Price {...cellProps} />;
+        },
+      },
+      {
         Header: "Our Price",
         accessor: "price",
         disableFilters: true,
@@ -152,7 +170,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Members {...cellProps} />;
+          return <Rate {...cellProps} />;
         },
       },
       {
