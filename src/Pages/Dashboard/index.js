@@ -71,14 +71,12 @@ const NewTour = ({ history }) => {
     const locationRequest = () => dispatch(locationsData());
     locationRequest();
   }, [dispatch]);
-  const dataLocations = useSelector((state) => state.locations.locations.data);
   
   //categories request
   useEffect(() => {
     const categoryRequest = () => dispatch(categoriesData());
     categoryRequest();
   }, [dispatch]);
-  const dataCategories = useSelector((state) => state.categories.categories.data);
   
 
   //combo boxs
@@ -415,7 +413,7 @@ const NewTour = ({ history }) => {
                         <Col className="col-12">
                           <div className="p-3" style={{backgroundColor: "#d9f0ff"}}>
                             <p className="mb-0 lh-2" style={{fontSize:"16px"}}>
-                            <i class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center" style={{width:"32px",height:"32px"}}></i> To create a new tour please fill out the following
+                            <i className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center" style={{width:"32px",height:"32px"}}></i> To create a new tour please fill out the following
                               information. Once you've completed this first screen, you can through the tabs and complete the information. Once you're
                               done with a section, press "Continue" to save your changes.
                               navigate

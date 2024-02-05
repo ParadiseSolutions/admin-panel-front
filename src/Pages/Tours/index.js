@@ -7,7 +7,7 @@ import {
   copyTourAPI,
   triggerUpdate,
 } from "../../Utils/API/Tours";
-import { createStorageSync, getStorageSync } from "../../Utils/API";
+import { createSessionSync, getCookie, getSessionSync, removeCookie, setCookie } from "../../Utils/API";
 import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "./Table/Table";
@@ -16,8 +16,7 @@ import ToursFilters from "../../Components/Common/Modals/ToursFilters/toursFilte
 import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
-import Switch from "react-switch";
+import { useCookies } from "react-cookie";
 
 const Tours = () => {
   const dispatch = useDispatch();
@@ -25,6 +24,7 @@ const Tours = () => {
   //loading
   const [loadingData, setLoadingData] = useState(true);
   const [restart, setRestart] = useState(false);
+  const cookieLife = 24 * 60 * 60
 
   //cart request
   useEffect(() => {
@@ -37,11 +37,11 @@ const Tours = () => {
   const [toursDataInfo, setToursDataInfo] = useState([]);
   useEffect(() => {
     if (data) {
-      let tourInfo = JSON.parse(getStorageSync("Tour-data"));
-      let swicth2 = getStorageSync("switch1");
+      let tourInfo = getCookie("tour_data", true);
+      let swicth2 = getCookie("switch1");
 
-      if(swicth2) {
-        if(swicth2 === "true") {
+      if (swicth2) {
+        if (swicth2 === "true") {
           setswitch1(true)
         } else {
           setswitch1(false)
@@ -49,14 +49,14 @@ const Tours = () => {
       }
 
       if (tourInfo) {
-        if(switch1 || swicth2 === "true") {
+        if (switch1 || swicth2 === "true") {
           tourInfo = tourInfo.filter(x => x.active === 1)
         }
         setToursDataInfo(tourInfo);
         setLoadingData(false);
         setIsFiltered(true)
       } else {
-        if(switch1 || swicth2 === "true") {
+        if (switch1 || swicth2 === "true") {
           tourInfo = data.filter(x => x.active === 1)
         } else {
           tourInfo = data
@@ -66,6 +66,7 @@ const Tours = () => {
       }
 
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   // filters
@@ -77,7 +78,7 @@ const Tours = () => {
   const onClickRemoveFilter = () => {
     setLoadingData(true);
     if (data) {
-      localStorage.removeItem("Tour-data")
+      removeCookie("tour_data")
       const toursRequest = () => dispatch(toursData());
       toursRequest();
       //setToursDataInfo(data);
@@ -91,37 +92,45 @@ const Tours = () => {
       setRestart(true)
       getTourNameFiltered(filters)
         .then((resp) => {
-          createStorageSync("Tour-data", JSON.stringify(resp.data.data))
+          setCookie("tour_data", JSON.stringify(resp.data.data), cookieLife)
           let tourInfo = resp.data.data
-          if(switch1) {
+          if (switch1) {
             tourInfo = tourInfo.filter(x => x.active === 1)
           }
-          setToursDataInfo(tourInfo);
-          setRestart(false)
-          setLoadingData(false);
+          setTimeout(() => {
+            setToursDataInfo(tourInfo);
+            setRestart(false)
+            setLoadingData(false);
+          }, 500);
         })
         .catch((error) => {
-          setRestart(false)
-          setToursDataInfo([]);
-          setLoadingData(false);
+          setTimeout(() => {
+            setRestart(false)
+            setToursDataInfo([]);
+            setLoadingData(false);
+          }, 500);          
         });
     } else {
       setLoadingData(true);
       getToursFiltered(filters)
         .then((resp) => {
-          createStorageSync("Tour-data", JSON.stringify(resp.data.data))
+          setCookie("tour_data", JSON.stringify(resp.data.data), cookieLife)
           let tourInfo = resp.data.data
-          if(switch1) {
+          if (switch1) {
             tourInfo = tourInfo.filter(x => x.active === 1)
           }
-          setToursDataInfo(tourInfo);
-          setRestart(false)
-          setLoadingData(false);
+          setTimeout(() => {
+            setToursDataInfo(tourInfo);
+            setRestart(false)
+            setLoadingData(false);
+          }, 500);
         })
         .catch((error) => {
-          setRestart(false)
-          setToursDataInfo([]);
-          setLoadingData(false);
+          setTimeout(() => {
+            setRestart(false)
+            setToursDataInfo([]);
+            setLoadingData(false);
+          }, 500);
         });
     }
   };
@@ -130,64 +139,56 @@ const Tours = () => {
   const [bulkModal, setBulkModal] = useState(false);
 
   // active table
-const activeTourToogle = (filter) =>{
-  setLoadingData(true)
-  let tourInfo = toursDataInfo
-  createStorageSync("switch1", !filter)
-  // console.log(tourInfo)
-  if (!filter) {
-    // console.log('activo')
-    let updated = tourInfo.filter(x => x.active === 1)
-    // console.log('filtrados', updated)
-
-    // createStorageSync("Tour-data", JSON.stringify(updated))
+  const activeTourToogle = (filter) => {
+    setLoadingData(true)
+    let tourInfo = toursDataInfo
+    setCookie("switch1", !filter, cookieLife)
+    if (!filter) {
+      let updated = tourInfo.filter(x => x.active === 1)
       setRestart(true)
       setToursDataInfo(updated);
       setswitch1(true)
-      // setLoadingData(true);
-  }
-  if(filter) {
-    if (data) {
-      let tourInfoOriginal = JSON.parse(getStorageSync("Tour-data"));
-
-      if (tourInfoOriginal) {
-        tourInfo = tourInfoOriginal;
-      } else {
-        tourInfo = data;
-      }
-
     }
-    // console.log('inactivo')
-    let updated = tourInfo
-    // console.log('filtrados', updated)
-      // createStorageSync("Tour-data", JSON.stringify(updated))
+    if (filter) {
+      if (data) {
+        let tourInfoOriginal = getCookie("tour_data", true);
+
+        if (tourInfoOriginal) {
+          tourInfo = tourInfoOriginal;
+        } else {
+          tourInfo = data;
+        }
+
+      }
+      let updated = tourInfo
       setRestart(true)
       setToursDataInfo(updated);
       // setLoadingData(false);
       setswitch1(false)
+    }
+    setTimeout(() => {
+      setRestart(false)
+      setLoadingData(false)
+    }, 500);
+
   }
-  setTimeout(() => {
-    setRestart(false)
-    setLoadingData(false)
-  }, 500);
-  
-}
 
 
   //delete
 
-  const removeLocalStorageStatus = (tourId) => {
-   
+  const removeTourCookieStatus = (tourId) => {
     setLoadingData(true)
-    let tourInfo = JSON.parse(getStorageSync("Tour-data"));
-    if(tourInfo && tourId) {
+    let tourInfo = getCookie("tour_data", true);
+    if (tourInfo && tourId) {
       let updated = tourInfo.filter(x => x.id !== tourId)
-      createStorageSync("Tour-data", JSON.stringify(updated))
+      setCookie("tour_data", JSON.stringify(updated), cookieLife)
       setRestart(true)
     }
-    setRestart(false)
-    setLoadingData(false)
-  } 
+    setTimeout(() => {
+      setRestart(false)
+      setLoadingData(false)
+    }, 500);    
+  }
 
   const onDelete = (tour) => {
     Swal.fire({
@@ -204,7 +205,7 @@ const activeTourToogle = (filter) =>{
           .then((resp) => {
             Swal.fire("Deleted!", "The Tour has been deleted.", "success");
             triggerUpdate();
-            removeLocalStorageStatus(tour.id)
+            removeTourCookieStatus(tour.id)
           })
           .catch((error) => {
             let errorMessages = [];
@@ -217,6 +218,7 @@ const activeTourToogle = (filter) =>{
             } else {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -306,6 +308,15 @@ const activeTourToogle = (filter) =>{
         },
       },
       {
+        Header: "Location",
+        accessor: "location_name",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Server {...cellProps} />;
+        },
+      },
+      {
         Header: "Active",
         accessor: "active",
         disableFilters: true,
@@ -373,6 +384,7 @@ const activeTourToogle = (filter) =>{
         },
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

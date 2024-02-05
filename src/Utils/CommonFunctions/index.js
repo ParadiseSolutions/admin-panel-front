@@ -36,7 +36,8 @@ export const capitalizeWords2 = (currentValue) => {
         currentValue = currentValue.trim().replaceAll('  ', ' ')
         return currentValue.replace(/\w*[-\S]/g, function (txt) {
             if(txt.length > 2) {
-                return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
+                let text = txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
+                return text.replace("Atv", "ATV").replace("Atx", "ATX");
             } else {
                 return txt;
             }
