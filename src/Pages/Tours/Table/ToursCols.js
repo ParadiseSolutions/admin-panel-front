@@ -75,7 +75,6 @@ const Active = (cell) => {
     let tourInfo = getCookie("tour_data", true);
     if (tourInfo && newInfo?.id) {
       tourInfo[cell.row.index] = newInfo
-      console.log(newInfo.active)
       setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60)
     }
   }
