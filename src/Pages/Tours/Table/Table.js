@@ -46,7 +46,7 @@ const Offsymbol = () => {
       }}
     >
       {" "}
-     All
+      All
     </div>
   );
 };
@@ -126,7 +126,7 @@ const TableContainer = ({
   };
 
   const [value, setValue] = useState("");
-  
+
   // const onChangeInSelect = (event) => {
   //   setPageSize(Number(event.target.value));
   // };
@@ -250,14 +250,14 @@ const TableContainer = ({
                   type="text"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
-                  // onBlur={validationType.handleBlur}
-                  // value={validationType.values.search || ""}
-                  // invalid={
-                  //   validationType.touched.search &&
-                  //   validationType.errors.search
-                  //     ? true
-                  //     : false
-                  // }
+                // onBlur={validationType.handleBlur}
+                // value={validationType.values.search || ""}
+                // invalid={
+                //   validationType.touched.search &&
+                //   validationType.errors.search
+                //     ? true
+                //     : false
+                // }
                 />
                 {/* {validationType.touched.search &&
                   validationType.errors.search ? (
@@ -278,7 +278,7 @@ const TableContainer = ({
                 onClick={() => onSubmitFilters({ search: value })}
               ></i>
               <UncontrolledTooltip placement="top" target="search">
-                Search.
+                Submit
               </UncontrolledTooltip>
               <div
                 className="search-box  d-flex"
@@ -299,7 +299,7 @@ const TableContainer = ({
                       onClick={() => onClickRemoveFilter()}
                     />
                     <UncontrolledTooltip placement="top" target="remove">
-                      Remove Filters.
+                      Clear Filters
                     </UncontrolledTooltip>
                   </>
                 ) : (
@@ -317,7 +317,7 @@ const TableContainer = ({
                       onClick={() => onClickFilter()}
                     />
                     <UncontrolledTooltip placement="top" target="filter">
-                      Filters.
+                      Filters
                     </UncontrolledTooltip>
                   </div>
                 )}
@@ -340,13 +340,13 @@ const TableContainer = ({
                       onClick={() => onClickRemoveFilter()}
                     />
                     <UncontrolledTooltip placement="top" target="export">
-                      Export Data.
+                      Export Data
                     </UncontrolledTooltip>
                   </>
                 </div>
                 <div
                   id="active_tour"
-                  style={{ marginTop: "12px", marginLeft:'10px',  cursor: "pointer" }}
+                  style={{ marginTop: "12px", marginLeft: '10px', cursor: "pointer" }}
                 >
                   <>
                     <Switch
@@ -361,9 +361,15 @@ const TableContainer = ({
                       }}
                       checked={switch1}
                     />
-                    <UncontrolledTooltip placement="top" target="active_tour">
-                      Change to Active or All tours.
-                    </UncontrolledTooltip>
+                    {switch1 ?
+                      <UncontrolledTooltip placement="top" target="active_tour">
+                        Show All Tours
+                      </UncontrolledTooltip> :
+                      <UncontrolledTooltip placement="top" target="active_tour">
+                        Show Active
+                      </UncontrolledTooltip>
+                    }
+
                   </>
                 </div>
               </div>
@@ -376,7 +382,7 @@ const TableContainer = ({
                       <Button
                         type="button"
                         className="waves-effect waves-light mb-3 btn btn-orange"
-                        // onClick={() => onClickNewContactProvider()}
+                      // onClick={() => onClickNewContactProvider()}
                       >
                         <i className="mdi mdi-plus me-1" />
                         Add New Tour
@@ -398,11 +404,13 @@ const TableContainer = ({
                           isFiltered ? setBulkModal(true) : setBulkModal(false)
                         }
                       />
-                      {!isFiltered ? (
+                      {isFiltered ? (
                         <UncontrolledTooltip placement="top" target="bulkedit">
-                          Use filters to Bulk Edit.
+                          Bulk Edit
                         </UncontrolledTooltip>
-                      ) : null}
+                      ) : <UncontrolledTooltip placement="top" target="bulkedit">
+                        Use filters to Bulk Edit
+                      </UncontrolledTooltip>}
                     </div>
                   </div>
                 </div>
@@ -488,9 +496,10 @@ const TableContainer = ({
               {pageOptions.map((item, index) => {
                 return (
                   <PaginationItem
+                    key={index}
                     hidden={
                       pageOptions.length < 4 ||
-                      (index >= pageIndex - 2 && index <= pageIndex + 2)
+                        (index >= pageIndex - 2 && index <= pageIndex + 2)
                         ? false
                         : true
                     }
