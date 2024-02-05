@@ -13,9 +13,22 @@ import SimpleBar from "simplebar-react";
 import MetisMenu from "metismenujs";
 
 const Sidebar = () => {
+  const USERS = 1;
+  const DEPARTMENTS = 2;
+  const ROLES = 3;
+  const WEBSITES = 4;
+  const TOUR_TYPES = 5;
+  const CATEGORIES = 6;
+  const LOCATIONS = 7;
+  const OPERATORS = 8;
+  const SHOPPING_CARTS = 12;
+  const PAYMENT_TYPES = 13;
+  const PROVIDERS = 14;
+  const TOURS = 15;
 
-  
-  
+  let userInfo = localStorage.getItem("token");
+  userInfo = JSON.parse(userInfo)
+
   function tToggle() {
     var body = document.body;
     body.classList.toggle("vertical-collpsed");
@@ -37,7 +50,7 @@ const Sidebar = () => {
 
       if (parent2) {
         parent2.classList.add("mm-show"); // ul tag
-        
+
         const parent3 = parent2.parentElement; // li tag
 
         if (parent3) {
@@ -63,7 +76,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     // const pathName = props.location.pathname
-    const pathName = window.location.pathname 
+    const pathName = window.location.pathname
     new MetisMenu("#side-menu");
     let matchingMenuItem = null;
     const ul = document.getElementById("side-menu");
@@ -104,7 +117,7 @@ const Sidebar = () => {
               <img src={logoSm} alt="" height="42" />
             </span>
             <span className="logo-lg">
-              <img src={paradiseLogo} alt="" height="70" style={{marginLeft: '50px', marginTop: '5px'}} />
+              <img src={paradiseLogo} alt="" height="70" style={{ marginLeft: '50px', marginTop: '5px' }} />
             </span>
           </Link>
         </div>
@@ -121,8 +134,8 @@ const Sidebar = () => {
           <SimpleBar style={{ maxHeight: "100%" }} ref={ref}>
             <div id="sidebar-menu">
               <ul className="metismenu list-unstyled" id="side-menu">
-                <li className="menu-title" style={{borderBottom:"solid 1px white", margin:"0 10px 15px 10px", width:"auto"}}>{"Menu"} </li>
-                <li style={{borderBottom:"solid 1px white", margin:"0 10px 15px 10px", width:"auto", paddingBottom: "5px"}}>
+                <li className="menu-title" style={{ borderBottom: "solid 1px white", margin: "0 10px 15px 10px", width: "auto" }}>{"Menu"} </li>
+                <li style={{ borderBottom: "solid 1px white", margin: "0 10px 15px 10px", width: "auto", paddingBottom: "5px" }}>
                   <Link to="/dashboard" className="waves-effect">
                     <i className="uil-home-alt"></i>
                     {/* <span className="badge rounded-pill bg-primary float-end">
@@ -130,87 +143,122 @@ const Sidebar = () => {
                     </span> */}
                     <span>{"Dashboard"}</span>
                   </Link>
-                </li>   
-                <li class="mm-active">
+                </li>
+                <li className="mm-active">
                   <Link to="/#" className="has-arrow waves-effect" >
                     <span>{"MANAGE"}</span>
                   </Link>
                   <ul className="sub-menu">
-                  <li>
-                    <Link to="/categories" className=" waves-effect">
-                      <i className="uil uil-apps"></i>                    
-                      <span>{"Categories"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/departments" className=" waves-effect">
-                      <i className="uil uil-bag"></i>                    
-                      <span>{"Departments"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/locations" className=" waves-effect">
-                      <i className="uil uil-location-point"></i>                    
-                      <span>{"Locations"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/operators" className=" waves-effect">
-                      <i className="uil uil-users-alt"></i>                    
-                      <span>{"Operators"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/payment-types" className=" waves-effect">
-                      <i className="uil-receipt"></i>                    
-                      <span>{"Payment Types"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/providers" className=" waves-effect">
-                      <i className="uil-bus-school"></i>                    
-                      <span>{"Providers"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/roles" className=" waves-effect">
-                      <i className="bx bx-check-shield"></i>                    
-                      <span>{"Roles"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/shopping-carts" className=" waves-effect">
-                      <i className="uil-shopping-cart-alt"></i>                    
-                      <span>{"Shopping Carts"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/tours" className=" waves-effect">
-                      <i className="uil-image"></i>                    
-                      <span>{"Tours"}</span>
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link to="/tour-types" className=" waves-effect">
-                      <i className="uil uil-list-ul"></i>                    
-                      <span>{"Tour Types"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/users" className="waves-effect">
-                      <i className="uil-user"></i>
-                      <span>{"Users"}</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/websites" className=" waves-effect">
-                      <i className="uil uil-globe"></i>                    
-                      <span>{"Websites"}</span>
-                    </Link>
-                  </li>
+                    {
+                      userInfo.modules.filter(x => x.module_id === CATEGORIES).length > 0 ?
+                        <li>
+                          <Link to="/categories" className=" waves-effect">
+                            <i className="uil uil-apps"></i>
+                            <span>{"Categories"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === DEPARTMENTS).length > 0 ?
+                        <li>
+                          <Link to="/departments" className=" waves-effect">
+                            <i className="uil uil-bag"></i>
+                            <span>{"Departments"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === LOCATIONS).length > 0 ?
+                        <li>
+                          <Link to="/locations" className=" waves-effect">
+                            <i className="uil uil-location-point"></i>
+                            <span>{"Locations"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === OPERATORS).length > 0 ?
+                        <li>
+                          <Link to="/operators" className=" waves-effect">
+                            <i className="uil uil-users-alt"></i>
+                            <span>{"Operators"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === PAYMENT_TYPES).length > 0 ?
+                        <li>
+                          <Link to="/payment-types" className=" waves-effect">
+                            <i className="uil-receipt"></i>
+                            <span>{"Payment Types"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === PROVIDERS).length > 0 ?
+                        <li>
+                          <Link to="/providers" className=" waves-effect">
+                            <i className="uil-bus-school"></i>
+                            <span>{"Providers"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === ROLES).length > 0 ?
+                        <li>
+                          <Link to="/roles" className=" waves-effect">
+                            <i className="bx bx-check-shield"></i>
+                            <span>{"Roles"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === SHOPPING_CARTS).length > 0 ?
+                        <li>
+                          <Link to="/shopping-carts" className=" waves-effect">
+                            <i className="uil-shopping-cart-alt"></i>
+                            <span>{"Shopping Carts"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === TOURS).length > 0 ?
+                        <li>
+                          <Link to="/tours" className=" waves-effect">
+                            <i className="uil-image"></i>
+                            <span>{"Tours"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === TOUR_TYPES).length > 0 ?
+                        <li>
+                          <Link to="/tour-types" className=" waves-effect">
+                            <i className="uil uil-list-ul"></i>
+                            <span>{"Tour Types"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === USERS).length > 0 ?
+                        <li>
+                          <Link to="/users" className="waves-effect">
+                            <i className="uil-user"></i>
+                            <span>{"Users"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
+                    {
+                      userInfo.modules.filter(x => x.module_id === WEBSITES).length > 0 ?
+                        <li>
+                          <Link to="/websites" className=" waves-effect">
+                            <i className="uil uil-globe"></i>
+                            <span>{"Websites"}</span>
+                          </Link>
+                        </li> : (null)
+                    }
                   </ul>
-                </li>             
+                </li>
               </ul>
             </div>
           </SimpleBar>

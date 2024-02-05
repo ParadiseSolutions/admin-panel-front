@@ -15,14 +15,13 @@ import {
   Row,
   Col,
   Button,
-  Input,
   Card,
   CardBody,
   Pagination,
   PaginationItem,
   PaginationLink,
 } from "reactstrap";
-import { Filter, DefaultColumnFilter } from "./filters";
+import { DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 const TableContainer = ({
   columns,
@@ -70,11 +69,10 @@ const TableContainer = ({
     gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable(
     {
       columns,
@@ -92,15 +90,6 @@ const TableContainer = ({
 
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
-  };
-
-  // const onChangeInSelect = (event) => {
-  //   setPageSize(Number(event.target.value));
-  // };
-
-  const onChangeInInput = (event) => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0;
-    gotoPage(page);
   };
 
   return (
@@ -156,7 +145,7 @@ const TableContainer = ({
                     className="waves-effect waves-light mb-3 btn btn-orange"
                     onClick={() => onClickAddLocation()}
                   >
-                    <i class="mdi mdi-plus me-1"></i>
+                    <i className="mdi mdi-plus me-1"></i>
                     Add New Location
                   </Button>
                 </div>
@@ -185,7 +174,7 @@ const TableContainer = ({
                       className="waves-effect waves-light mb-3 btn btn-orange"
                       onClick={handleUserClicks}
                     >
-                      <i class="mdi mdi-plus me-1"></i>
+                      <i className="mdi mdi-plus me-1"></i>
                       Add New Role
                     </Button>
                   </Link>
@@ -469,9 +458,9 @@ const TableContainer = ({
                       key={headerGroup.id}
                       {...headerGroup.getHeaderGroupProps()}
                     >
-                      {headerGroup.headers.map((column) => (
+                      {headerGroup.headers.map((column, index) => (
                         <th
-                          key={column.id}
+                          key={index}
                           className={`table-column-categories-${column.Header}`}
                         >
                           <div {...column.getSortByToggleProps()}>
@@ -1025,14 +1014,14 @@ const TableContainer = ({
                 </thead>
 
                 <tbody {...getTableBodyProps()}>
-                  {page.map((row) => {
+                  {page.map((row, index) => {
                     prepareRow(row);
                     return (
-                      <Fragment key={row.getRowProps().key}>
+                      <Fragment key={index}>
                         <tr>
-                          {row.cells.map((cell) => {
+                          {row.cells.map((cell, index) => {
                             return (
-                              <td key={cell.id} {...cell.getCellProps()}>
+                              <td key={index} {...cell.getCellProps()}>
                                 {cell.render("Cell")}
                               </td>
                             );
@@ -1077,7 +1066,7 @@ const TableContainer = ({
               ) : null}
               {pageOptions.map((item, index) => {
                 return (
-                  <PaginationItem
+                  <PaginationItem key={index}
                     hidden={
                       pageOptions.length < 4 ||
                       (index >= pageIndex - 2 && index <= pageIndex + 2)

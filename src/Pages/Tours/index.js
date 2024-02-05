@@ -306,6 +306,15 @@ const activeTourToogle = (filter) =>{
         },
       },
       {
+        Header: "Location",
+        accessor: "location_name",
+        disableFilters: true,
+        filterable: false,
+        Cell: (cellProps) => {
+          return <Server {...cellProps} />;
+        },
+      },
+      {
         Header: "Active",
         accessor: "active",
         disableFilters: true,
