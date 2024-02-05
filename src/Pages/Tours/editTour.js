@@ -39,15 +39,15 @@ const EditTour = ({ history }) => {
   const [tourData, setTourData] = useState();
   useEffect(() => {
     let paramString = window.location.search
-     const parameter = new URLSearchParams(paramString)
+    const parameter = new URLSearchParams(paramString)
     let tab = parameter.get('t')
-    if(tab) {
+    if (tab) {
       toggle(tab)
     }
     getTourAPI(id).then((resp) => {
       setTourData(resp.data.data);
     });
-    if(tourData?.edit_mode === 0) {
+    if (tourData?.edit_mode === 0) {
       toggle("1");
     }
   }, [id]);
@@ -69,19 +69,21 @@ const EditTour = ({ history }) => {
             {tourData ? tourData.name : ""}
           </h1>
         </div>
-        <Link to={"/tours"} className="col-7 d-flex justify-content-end">
-          <Button
-            color="paradiseGray"
-            outline
-            className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
-            style={{height:'45px', minWidth: '140px'}}
-            type="button"
-            
-          >
-            <i className="uil-angle-double-left" />
-            Back to Results
-          </Button>
-        </Link>
+        <div className="col-7 d-flex justify-content-end">
+          <Link to={"/tours"}>
+            <Button
+              color="paradiseGray"
+              outline
+              className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
+              style={{ height: '45px', minWidth: 'fit-content' }}
+              type="button"
+
+            >
+              <i className="uil-angle-double-left" />
+              Back to Results
+            </Button>
+          </Link>
+        </div>
       </Container>
       <Row>
         <Col xl={12}>
@@ -103,7 +105,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "1",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("1");
                       }
                     }}
@@ -131,7 +133,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "2",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("2");
                       }
                     }}
@@ -157,7 +159,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "3",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("3");
                       }
                     }}
@@ -186,7 +188,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "4",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("4");
                       }
                     }}
@@ -213,7 +215,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "5",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("5");
                       }
                     }}
@@ -239,7 +241,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "6",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("6");
                       }
                     }}
@@ -265,7 +267,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "7",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("7");
                       }
                     }}
@@ -291,7 +293,7 @@ const EditTour = ({ history }) => {
                       active: activeTab === "8",
                     })}
                     onClick={() => {
-                      if(tourData?.edit_mode === 0) {
+                      if (tourData?.edit_mode === 0) {
                         toggle("8");
                       }
                     }}

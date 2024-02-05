@@ -36,7 +36,7 @@ import {
 } from "../../../Utils/CommonFunctions";
 import { getSubCategory } from "../../../Utils/API/Categories";
 import { categoriesData } from "../../../Utils/Redux/Actions/CategoriesActions";
-import { createStorageSync, getStorageSync } from "../../../Utils/API";
+import { createStorageSync, getCookie, getStorageSync, setCookie } from "../../../Utils/API";
 
 const EditGeneralInformation = ({ tourData, toggle }) => {
   const history = useHistory();
@@ -247,7 +247,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               ).then(() => {
                 onChangeWebsite();
                 updateLocalStorageStatus(resp.data.data)
-                toggle("2");
+                window.location.href = window.location.href + "?t=2"
               });
             }
           })
@@ -276,14 +276,13 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   });
 
   const updateLocalStorageStatus = (newInfo) => {
-    debugger
-    let tourInfo = JSON.parse(getStorageSync("Tour-data"));
+    let tourInfo = getCookie("tour_data", true);
     if(tourInfo && newInfo?.id) {
       let indexToUpdate = tourInfo.findIndex(x => x.id === newInfo?.id)
       if(indexToUpdate >= 0) {
         tourInfo[indexToUpdate] = newInfo
       }
-      createStorageSync("Tour-data", JSON.stringify(tourInfo))
+      setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60)
     }
   }
 // console.log('edit mode', editMode)

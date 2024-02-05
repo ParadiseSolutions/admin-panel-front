@@ -187,7 +187,7 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 											
 												{map(catData, (category, index) => {
 													return (
-														<option
+														<option key={index}
 															selected={
 																 categoryData && categoryData.parent_id === category.id ? true : false
 															} 

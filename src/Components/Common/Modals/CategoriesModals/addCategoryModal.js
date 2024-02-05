@@ -204,7 +204,7 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
                         <option value>Select One...</option>
                         {map(catData, (category, index) => {
                           return (
-                            <option value={category.id}>{category.name}</option>
+                            <option key={index} value={category.id}>{category.name}</option>
                           );
                         })}
                       </Input>
