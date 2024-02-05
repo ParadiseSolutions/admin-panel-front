@@ -178,11 +178,12 @@ const Tours = () => {
 
   const removeTourCookieStatus = (tourId) => {
     setLoadingData(true)
+    setRestart(true)
     let tourInfo = getCookie("tour_data", true);
     if (tourInfo && tourId) {
       let updated = tourInfo.filter(x => x.id !== tourId)
       setCookie("tour_data", JSON.stringify(updated), cookieLife)
-      setRestart(true)
+      setToursDataInfo(updated);
     }
     setTimeout(() => {
       setRestart(false)
