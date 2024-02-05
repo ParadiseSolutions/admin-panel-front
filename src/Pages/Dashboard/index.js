@@ -71,14 +71,12 @@ const NewTour = ({ history }) => {
     const locationRequest = () => dispatch(locationsData());
     locationRequest();
   }, [dispatch]);
-  const dataLocations = useSelector((state) => state.locations.locations.data);
   
   //categories request
   useEffect(() => {
     const categoryRequest = () => dispatch(categoriesData());
     categoryRequest();
   }, [dispatch]);
-  const dataCategories = useSelector((state) => state.categories.categories.data);
   
 
   //combo boxs

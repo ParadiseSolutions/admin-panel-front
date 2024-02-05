@@ -1,10 +1,8 @@
 import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
-import { Active } from "./ToursCols";
 import {
   useTable,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
   useFilters,
   useExpanded,
@@ -24,7 +22,7 @@ import {
   PaginationLink,
   UncontrolledTooltip,
 } from "reactstrap";
-import { Filter, DefaultColumnFilter } from "./filters";
+import { DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
 import Switch from "react-switch";
 
@@ -75,7 +73,6 @@ const OnSymbol = () => {
 const TableContainer = ({
   columns,
   data,
-  isGlobalFilter,
   toursTable,
   onClickFilter,
   onClickRemoveFilter,
@@ -99,12 +96,8 @@ const TableContainer = ({
     gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
 
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable(
     {
       columns,
@@ -127,121 +120,11 @@ const TableContainer = ({
 
   const [value, setValue] = useState("");
 
-  // const onChangeInSelect = (event) => {
-  //   setPageSize(Number(event.target.value));
-  // };
-
-  const onChangeInInput = (event) => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0;
-    gotoPage(page);
-  };
-  function GlobalFilter({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-  }) {
-    const count = preGlobalFilteredRows.length;
-    const [value, setValue] = React.useState(globalFilter);
-    const onChange = useAsyncDebounce((value) => {
-      setGlobalFilter(value || undefined);
-    }, 200);
-
-    return (
-      <React.Fragment>
-        <Col sm={4}>
-          <div
-            className="search-box me-2 mb-2 d-flex"
-            style={{ minWidth: "342px" }}
-          >
-            <div className="position-relative col-10">
-              <label
-                htmlFor="search-bar-0"
-                className="search-label"
-                style={{ width: "100%" }}
-              >
-                <span id="search-bar-0-label" className="sr-only">
-                  Search this table
-                </span>
-                <input
-                  onChange={(e) => {
-                    setValue(e.target.value);
-                    onChange(e.target.value);
-                  }}
-                  id="search-bar-0"
-                  type="text"
-                  className="form-control"
-                  placeholder={`${count} records...`}
-                  value={value || ""}
-                />
-              </label>
-              <i className="bx bx-search search-icon"></i>
-            </div>
-
-            {isFiltered ? (
-              <div style={{ marginTop: "5px" }}>
-                <i
-                  className="mdi mdi-filter-remove-outline"
-                  outline
-                  style={{
-                    fontSize: "26px",
-                    marginLeft: "10px",
-
-                    color: "#3DC7F4",
-                    cursor: "pointer",
-                  }}
-                  /* className="waves-effect waves-light mb-3 ml-1" */
-                  onClick={() => onClickRemoveFilter()}
-                />
-              </div>
-            ) : (
-              <div style={{ marginTop: "5px" }}>
-                <i
-                  className="mdi mdi-filter-outline"
-                  outline
-                  style={{
-                    fontSize: "26px",
-                    marginLeft: "10px",
-                    color: "#CED4DA",
-                    cursor: "pointer",
-                  }}
-                  /* className="waves-effect waves-light mb-3 ml-1" */
-                  onClick={() => onClickFilter()}
-                />
-              </div>
-            )}
-
-            <div style={{ marginTop: "9px" }}>
-              <i
-                className="bx bx-download"
-                outline
-                style={{
-                  fontSize: "30px",
-                  marginLeft: "10px",
-                  color: "#CED4DA",
-                  cursor: "pointer",
-                }}
-                /* className="waves-effect waves-light mb-3 ml-1" */
-                onClick={() => onClickRemoveFilter()}
-              />
-            </div>
-          </div>
-        </Col>
-      </React.Fragment>
-    );
-  }
-
   return (
     <Fragment>
       <Card className="mb-3">
         <CardBody>
           <Row className="mb-0">
-            {/* {isGlobalFilter && (
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={state.globalFilter}
-                setGlobalFilter={setGlobalFilter}
-              />
-            )} */}
             <Col lg={7} className="d-flex">
               <div className="form-outline mb-4 col-4">
                 <Input
@@ -250,20 +133,7 @@ const TableContainer = ({
                   type="text"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
-                // onBlur={validationType.handleBlur}
-                // value={validationType.values.search || ""}
-                // invalid={
-                //   validationType.touched.search &&
-                //   validationType.errors.search
-                //     ? true
-                //     : false
-                // }
                 />
-                {/* {validationType.touched.search &&
-                  validationType.errors.search ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.search}
-                    </FormFeedback> */}
               </div>
 
               <i

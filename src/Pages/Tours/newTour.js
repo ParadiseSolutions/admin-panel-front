@@ -42,6 +42,7 @@ import {
   capitalizeWords2,
   codeFormat,
 } from "../../Utils/CommonFunctions";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 const NewTour = ({ history }) => {
   //tabs
@@ -229,14 +230,28 @@ const NewTour = ({ history }) => {
   });
   return (
     <div className="page-content pb-0">
-      <Container fluid>
-        <div className=" mx-4">
+      <Container fluid className="d-flex justify-content-between">
+        <div className=" mx-1">
           <h1
-            className="fw-bold"
-            style={{ color: "#3DC7F4", fontSize: "3.5rem" }}
+            className="fw-bold" style={{ color: "#3DC7F4", fontSize: "3.5rem" }}
           >
             + CREATE NEW TOUR
           </h1>
+        </div>
+        <div className="col-7 d-flex justify-content-end">
+          <Link to={"/tours"}>
+            <Button
+              color="paradiseGray"
+              outline
+              className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
+              style={{ height: '45px', minWidth: '140px' }}
+              type="button"
+
+            >
+              <i className="uil-angle-double-left" />
+              Edit Tours
+            </Button>
+          </Link>
         </div>
       </Container>
       <Row className="px-4">
@@ -389,6 +404,27 @@ const NewTour = ({ history }) => {
                       <i className="far fa-envelope"></i>
                     </span>
                     <span className="d-none d-sm-block">+ Schedule</span>
+                  </NavLink>
+                </NavItem>
+                <NavItem className="d-flex">
+                  <NavLink
+                    style={{
+                      cursor: `cursor`,
+                      backgroundColor: `${activeTab === "8" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "8" ? "white" : ""}`,
+                      border: "none",
+                      flexWrap: "wrap",
+                      display: "grid",
+                      alignContent: "center",
+                    }}
+                    className={classnames({
+                      active: activeTab === "8",
+                    })}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-envelope"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ Templates</span>
                   </NavLink>
                 </NavItem>
               </Nav>

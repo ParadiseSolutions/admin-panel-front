@@ -4,7 +4,7 @@ import { statusUpdateTour, triggerUpdate } from "../../../Utils/API/Tours";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { toursData } from "../../../Utils/Redux/Actions/ToursActions";
-import { createStorageSync, getStorageSync } from "../../../Utils/API";
+import { createStorageSync, getCookie, getStorageSync, setCookie } from "../../../Utils/API";
 import Tours from "..";
 // const OrderId = (cell) => {
 //     return (
@@ -25,7 +25,7 @@ const Website = (cell) => {
   return cell.value ? cell.value : "";
 };
 const TestLink = (cell) => {
-  return cell.value ?  cell.value : "";
+  return cell.value ? cell.value : "";
 };
 const Active = (cell) => {
   const id = cell.row.original.id;
@@ -72,30 +72,23 @@ const Active = (cell) => {
   );
 
   const updateLocalStorageStatus = (newInfo, cell) => {
-    debugger
-    let tourInfo = JSON.parse(getStorageSync("Tour-data"));
-    if(tourInfo && newInfo?.id) {
-      // console.log(tourInfo)
-      // console.log(cell.row.index)
-      //let updated = tourInfo.filter(x => x.id === cell.row.original.id)
+    let tourInfo = getCookie("tour_data", true);
+    if (tourInfo && newInfo?.id) {
       tourInfo[cell.row.index] = newInfo
-      createStorageSync("Tour-data", JSON.stringify(tourInfo))
+      console.log(newInfo.active)
+      setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60)
     }
   }
 
-  const dispatch = useDispatch();
   const onChangeActive = () => {
     setActiveDep(!activeDep);
-    debugger
-    if (cell.value === 1) {
+    if (activeDep) {
       let data = { active: 0 };
       statusUpdateTour(id, data).then((resp) => {
-        // console.log(resp);
-          triggerUpdate();
-          updateLocalStorageStatus(resp.data.data, cell)
+        triggerUpdate();
+        updateLocalStorageStatus(resp.data.data, cell)
       });
-    }
-    if (cell.value === 0) {
+    } else {
       let data = { active: 1 };
       statusUpdateTour(id, data)
         .then((resp) => {
@@ -128,16 +121,5 @@ const Active = (cell) => {
     />
   );
 };
-
-// const Active = (cell) => {
-//     return (
-//         <Badge
-//           className={"badge badge-pill bg-pill font-size-12 bg-soft-" +
-//           (cell.value === 1 ? "success" : "danger")}
-//         >
-//           {cell.value === 1 ? 'Active' : 'Inactive'}
-//         </Badge>
-//     )
-// };
 
 export { CartName, CartID, Server, Website, TestLink, Active };
