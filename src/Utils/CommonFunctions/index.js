@@ -25,6 +25,7 @@ export const cleanUpSpecialCharacters = (currentValue) => {
             let matches = currentValue.match(regex)
             matches.map((value, index) => {
                 currentValue = currentValue.replaceAll(value, '');
+                return true
             });
         }
         return currentValue
@@ -72,6 +73,7 @@ export const nameFormat = (currentValue) => {
             let matches = currentValue.match(regex)
             matches.map((value, index) => {
                 currentValue = currentValue.replaceAll(value, '');
+                return true
             });
         }
         return capitalizeWords2(currentValue)

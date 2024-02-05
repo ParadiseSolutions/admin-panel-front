@@ -76,14 +76,14 @@ const Active = (cell) => {
   const onChangeActive = () => {
     setActiveDep(!activeDep);
 
-    if (cell.value === 1) {
+    if (activeDep) {
       let data = { active: 0 };
       statusUpdatePrice(id, data).then((resp) => {
         triggerUpdate()
         // console.log(resp);
       });
     }
-    if (cell.value === 0) {
+    if (activeDep) {
       let data = { active: 1 };
       statusUpdatePrice(id, data)
         .then((resp) => {
@@ -156,21 +156,21 @@ const ActiveAddon = (cell) => {
     );
   };
 
-  const [activeDep, setActiveDep] = useState(
+  const [activeDepAddon, setActiveDepAddon] = useState(
     cell.value && cell.value === 1 ? true : false
   );
 
   const onChangeActiveAddon = () => {
-    setActiveDep(!activeDep);
+    setActiveDepAddon(!activeDepAddon);
 
-    if (cell.value === 1) {
+    if (activeDepAddon) {
       let data = { active: 0 };
       statusUpdateAddon(id, data).then((resp) => {
         triggerUpdate()
         // console.log(resp);
       });
     }
-    if (cell.value === 0) {
+    if (activeDepAddon) {
       let data = { active: 1 };
       statusUpdateAddon(id, data)
         .then((resp) => {
@@ -198,7 +198,7 @@ const ActiveAddon = (cell) => {
       checkedIcon={<OnSymbol />}
       onColor="#3DC7F4"
       onChange={() => onChangeActiveAddon()}
-      checked={activeDep}
+      checked={activeDepAddon}
     />
   );
 };
