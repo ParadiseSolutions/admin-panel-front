@@ -162,7 +162,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         return <Active {...cellProps} />;
       },
     },
-
     {
       Header: "Action",
       accessor: "action",

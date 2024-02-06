@@ -827,7 +827,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -897,7 +897,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -987,7 +987,7 @@ const AddNewProductPricing = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1023,7 +1023,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1154,7 +1154,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1231,7 +1231,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1302,7 +1302,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1395,7 +1395,7 @@ const AddNewProductPricing = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1473,7 +1473,7 @@ const AddNewProductPricing = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1539,7 +1539,7 @@ const AddNewProductPricing = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1572,7 +1572,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1636,7 +1636,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1697,7 +1697,7 @@ const AddNewProductPricing = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >

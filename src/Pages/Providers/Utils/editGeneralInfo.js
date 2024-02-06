@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  getProviderAPI,
   updateProviderAPI,
 } from "../../../Utils/API/Providers";
 import {
@@ -17,7 +16,6 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
 import { Select } from "antd";
@@ -245,6 +243,7 @@ const EditGeneralInformation = ({ data }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
