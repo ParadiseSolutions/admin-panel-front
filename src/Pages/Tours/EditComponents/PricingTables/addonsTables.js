@@ -1,9 +1,7 @@
 import React, { Fragment } from "react";
-import PropTypes from "prop-types";
 import {
   useTable,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
   useFilters,
   useExpanded,
@@ -11,7 +9,6 @@ import {
   useRowSelect,
 } from "react-table";
 import { Table, Row, Col, Button, Input } from "reactstrap";
-import { Link } from "react-router-dom";
 
 const AddonsTables = ({
   columns,
@@ -35,11 +32,7 @@ const AddonsTables = ({
     gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable(
     {
       columns,

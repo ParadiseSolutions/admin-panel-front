@@ -24,7 +24,7 @@ import Swal from "sweetalert2";
 const Providers = () => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [userId, setUserId] = useState({});
+  const [userId] = useState({});
   const [loadingData, setLoadingData] = useState(true);
   //data request
   const dispatch = useDispatch();
@@ -69,6 +69,7 @@ const Providers = () => {
             } else {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -193,9 +194,8 @@ const Providers = () => {
           );
         },
       },
-    ],
-    []
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],[]);
 
   //modal new
 

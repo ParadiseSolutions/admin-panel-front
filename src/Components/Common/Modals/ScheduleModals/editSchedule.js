@@ -70,6 +70,7 @@ const EditScheduleModal = ({
         setDataEdit(response.data.data);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduleEditID]);
 
   //asignacion de data

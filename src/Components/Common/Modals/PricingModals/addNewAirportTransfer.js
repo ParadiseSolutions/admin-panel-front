@@ -1062,7 +1062,7 @@ const AddNewAirportTransfer = ({
                     <Label className="form-label">Passangers</Label>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1091,7 +1091,7 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text fw-bold bg-paradise text-white border-0 ms-1"
+                        className="input-group-text fw-bold bg-paradise text-white border-0 ms-1"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1163,7 +1163,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1227,7 +1227,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1307,7 +1307,7 @@ const AddNewAirportTransfer = ({
                       />
                       
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1343,7 +1343,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1399,7 +1399,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1461,7 +1461,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1557,7 +1557,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1634,7 +1634,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1705,7 +1705,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1798,7 +1798,7 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1876,7 +1876,7 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1942,7 +1942,7 @@ const AddNewAirportTransfer = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1957,7 +1957,7 @@ const AddNewAirportTransfer = ({
                     <Label className="form-label">Commission*</Label>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -2023,7 +2023,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -2084,7 +2084,7 @@ const AddNewAirportTransfer = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >

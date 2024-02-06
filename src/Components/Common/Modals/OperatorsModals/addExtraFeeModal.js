@@ -8,14 +8,11 @@ import {
   Input,
   FormFeedback,
   Button,
-  UncontrolledTooltip,
 } from "reactstrap";
 import newFeeImg from "../../../Assets/images/addfee.jpg";
 import editFeeImg from "../../../Assets/images/editfee.jpg";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { Select } from "antd";
 import { map } from "lodash";
 import {
   getCurrency,
@@ -24,8 +21,6 @@ import {
   postExtraFee,
   putExtraFee
 } from "../../../../Utils/API/Operators";
-
-const { Option } = Select;
 
 const AddExtraFeeModal = ({
   id,
@@ -72,7 +67,7 @@ const AddExtraFeeModal = ({
       setExtraFeeSelected(dataEdit.fee_type_id)
       setCurrencySelected(dataEdit.currency)
       setPriceTypeSelected(dataEdit.price_type)
-      setOptionalCheck(dataEdit.optional == 1 ? true : false)
+      setOptionalCheck(dataEdit.optional === 1 ? true : false)
     }
   }, [dataEdit]);
 
@@ -255,7 +250,7 @@ const AddExtraFeeModal = ({
                       <Label className="form-label">Amount</Label>
                       <div className="input-group">
                         <span
-                          class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                           id="basic-addon1"
                           style={{ fontSize: "0.85em" }}
                         >

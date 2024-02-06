@@ -26,9 +26,6 @@ import Swal from "sweetalert2";
 import {
   setDecimalFormat,
   setRateFormat,
-  calcNetRate,
-  calcYouSave,
-  calcEffRate,
   calcCommission,
   calcDeposit,
   calcNetPrice,
@@ -108,7 +105,6 @@ const Addons = ({
   const [displayOptionSelected, setDisplayOptionSelected] = useState();
   const [addonLabelSelected, setAddonLabelSelected] = useState("");
   const [matchQuantitySelected, setMatchQuantitySelected] = useState();
-  const [ourPriceValuex, setOurPriceValuex] = useState();
   const [balance, setBalance] = useState(dataEdit?.active === 1 ? true : false);
   const [customMessage, setCustomMessage] = useState(false);
   const [isCustomMessage, setIsCustomMessage] = useState(false);
@@ -174,19 +170,10 @@ useEffect(() => {
     if (values.type === "addon_type") {
       setAddonTypeNameSelected(values.label);
     }
-    if (values.type === "ourPrice") {
-      setOurPriceValuex(values.label);
-    }
-
-    // console.log(ourPriceValuex)
   };
 
-  // console.log(priceOptions);
-  // console.log("addon ------------:", addonTypeSelected)
-  // console.log(dataEdit)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
-
     enableReinitialize: true,
     initialValues: {
       product_name: dataEdit ? dataEdit.name : "",
@@ -307,6 +294,7 @@ useEffect(() => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -338,6 +326,7 @@ useEffect(() => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -1192,7 +1181,7 @@ useEffect(() => {
                     <Label className="form-label">Our Price*</Label>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1271,7 +1260,7 @@ useEffect(() => {
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1316,7 +1305,7 @@ useEffect(() => {
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1334,7 +1323,7 @@ useEffect(() => {
                     <Label className="form-label">Commission*</Label>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1380,7 +1369,7 @@ useEffect(() => {
                     <Label className="form-label">Deposit*</Label>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1425,7 +1414,7 @@ useEffect(() => {
                     <Label className="form-label">Net Price*</Label>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
