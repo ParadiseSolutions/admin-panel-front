@@ -94,9 +94,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       .catch((err) => console.log(err));
   };
 
-  // console.log("data inicial", tourData);
-  console.log("lista de adfe", voucherInitialData);
-  //----- bring list
   function handleMulti(selected) {
     setSelectionID(selected);
   }

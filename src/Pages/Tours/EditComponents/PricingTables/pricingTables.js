@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import PropTypes from "prop-types";
 import {
   useTable,
   useGlobalFilter,
@@ -9,7 +8,7 @@ import {
   usePagination,
   useRowSelect,
 } from "react-table";
-import { Table, Row, Col, Button, Input,
+import { Table, Row, Col,
   Pagination,
   PaginationItem,
   PaginationLink } from "reactstrap";
@@ -18,7 +17,6 @@ const PricingTables = ({
   columns,
   data,
   productsTable,
-  onClickNewProduct,
 }) => {
   const {
     getTableProps,
@@ -33,7 +31,7 @@ const PricingTables = ({
     gotoPage,
     nextPage,
     previousPage,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable(
     {
       columns,
@@ -54,24 +52,7 @@ const PricingTables = ({
   };
 
   return (
-    <Fragment>
-
-      {/* {productsTable && (
-        <Col sm="12" className="">
-          <div className="text-sm-end">
-            <Button
-              type="button"
-              
-              className="waves-effect waves-light mb-3 btn btn-orange"
-              onClick={onClickNewProduct}
-            >
-              <i className="mdi mdi-plus me-1" />
-              Add New Product
-            </Button>
-          </div>
-        </Col>
-      )} */}
-    
+    <Fragment>    
       {productsTable && (
         <div className="table-responsive">
           <Table hover {...getTableProps()} className="react_table">
@@ -140,6 +121,7 @@ const PricingTables = ({
                 pageOptions.map((item, index) => {
                   return (
                     <PaginationItem
+                    key={index}
                     hidden={pageOptions.length < 4 || (index >= pageIndex - 2 && index <= pageIndex + 2) ? false : true}
                     className={index === pageIndex ? "active" : ""}>
                       <PaginationLink

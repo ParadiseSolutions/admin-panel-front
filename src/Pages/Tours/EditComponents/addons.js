@@ -1,42 +1,24 @@
 import React, { useEffect, useState, useMemo } from "react";
-import PricingTables from "./PricingTables/pricingTables";
 import AddonsTables from "./PricingTables/addonsTables";
-import AddNewProductPricing from "../../../Components/Common/Modals/PricingModals/addNewProduct";
-import AddNewAirportTransfer from "../../../Components/Common/Modals/PricingModals/addNewAirportTransfer";
-import Fishing from "../../../Components/Common/Modals/PricingModals/fishing";
-import AddNewPrivateCharter from "../../../Components/Common/Modals/PricingModals/addNewPrivateCharter";
-import AddNewPrivateTour from "../../../Components/Common/Modals/PricingModals/addNewPrivateTour";
-import AddNewTransportation from "../../../Components/Common/Modals/PricingModals/addNewTransportation";
 import Addons from "../../../Components/Common/Modals/PricingModals/addons";
 import {
-  getPricesPricingAPI,
   getAddonsPricingAPI,
-  deletePriceAPI,
   deleteAddonAPI,
-  triggerUpdate,
 } from "../../../Utils/API/Tours";
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
-
-import { Name, Code, Members, Price, Active, ActiveAddon, Rate } from "./PricingTables/PricingCols";
-
+import { Name, Code, Price, Active, ActiveAddon, Rate } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-const AddonsComponent = ({ history, id, tourData, toggle }) => {
-  //prices request
-  const [pricesData, setPricesData] = useState([]);
+const AddonsComponent = ({ id, tourData, toggle }) => {
   useEffect(() => {
-    getPricesPricingAPI(id).then((resp) => {
-      setPricesData(resp.data.data);
-    });
     getAddonsPricingAPI(id).then((resp) => {
       setAddonsData(resp.data.data);
     });
   }, [id]);
 
   const refreshTable = () => {
-    console.log('asdasdasda')
     getAddonsPricingAPI(id).then((resp) => {
       setAddonsData(resp.data.data);
     });
@@ -51,31 +33,6 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
   }, [id]);
 
   //table actions
-  const onDelete = (depData) => {
-    Swal.fire({
-      title: "Delete Price?",
-      icon: "question",
-      text: `Do you want delete ${depData.label}`,
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      confirmButtonColor: "#F38430",
-      cancelButtonText: "Cancel",
-    }).then((resp) => {
-      if (resp.isConfirmed) {
-        deletePriceAPI(depData.id)
-          .then((resp) => {
-            getPricesPricingAPI(id).then((resp) => {
-              setPricesData(resp.data.data);
-              triggerUpdate();
-            });
-            Swal.fire("Deleted!", "The Price has been deleted.", "success");
-          })
-          .catch((error) => {
-            // console.log(error);
-          });
-      }
-    });
-  };
   const onDeleteAddon = (depData) => {
     Swal.fire({
       title: "Delete Addon?",
@@ -90,23 +47,21 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
         deleteAddonAPI(depData.id)
         .then((response) => {
           refreshTable()
-          // console.log('si fue')
         }).catch((error) => {
           let errorMessages = [];
           if (error.response.data.data === null) {
             Swal.fire(
               "Error!",
-              // {error.response.},
               String(error.response.data.message)
             );
           } else {
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
+              return true;
             });
 
             Swal.fire(
               "Error!",
-              // {error.response.},
               String(errorMessages[0])
             );
           }
@@ -208,7 +163,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
           const depData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <div
+              <a
                 onClick={() => {
                   setNewAddon(true);
                   setEditProductID(depData.id);
@@ -219,8 +174,8 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
-              </div>
-              <Link
+              </a>
+              <a
                 className="text-danger"
                 onClick={() => {
                   const depData = cellProps.row.original;
@@ -232,7 +187,7 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
-              </Link>
+              </a>
             </div>
           );
         },
@@ -240,14 +195,6 @@ const AddonsComponent = ({ history, id, tourData, toggle }) => {
     ],
     []
   );
-
-  //add new product
-  const [addNewProduct, setAddNewProduct] = useState(false);
-  const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);
-  const [addNewFishing, setAddNewFishing] = useState(false);
-  const [newPrivateCharter, setNewPrivateCharter] = useState(false);
-  const [newPrivateTour, setNewPrivateTour] = useState(false);
-  const [newTransportation, setNewTransportation] = useState(false);
 
   //add new addon
   const [newAddon, setNewAddon] = useState(false);

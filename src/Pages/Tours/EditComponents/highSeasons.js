@@ -250,7 +250,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                     className="m-0"
                   >
                     <i
-                      class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                      className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
                       style={{ width: "32px", height: "32px" }}
                     ></i>{" "}
                     In this tab you can add the dates for the different seasonal

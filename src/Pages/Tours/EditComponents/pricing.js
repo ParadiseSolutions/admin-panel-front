@@ -7,47 +7,22 @@ import Fishing from "../../../Components/Common/Modals/PricingModals/fishing";
 import AddNewPrivateCharter from "../../../Components/Common/Modals/PricingModals/addNewPrivateCharter";
 import AddNewPrivateTour from "../../../Components/Common/Modals/PricingModals/addNewPrivateTour";
 import AddNewTransportation from "../../../Components/Common/Modals/PricingModals/addNewTransportation";
-import Addons from "../../../Components/Common/Modals/PricingModals/addons";
-//import EditProductPricing from "../../../Components/Common/Modals/PricingModals/EditModals/editNewProduct";
-//import EditAirportTransfer from "../../../Components/Common/Modals/PricingModals/EditModals/editNewAirportTransfer";
-//import EditFishing from "../../../Components/Common/Modals/PricingModals/EditModals/editfishing";
-//import EditPrivateCharter from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateCharter";
-//import EditPrivateTour from "../../../Components/Common/Modals/PricingModals/EditModals/editNewPrivateTour";
-//import EditTransportation from "../../../Components/Common/Modals/PricingModals/EditModals/editNewTransportation";
-//import EditAddons from "../../../Components/Common/Modals/PricingModals/EditModals/editAddons";
 import {
   getPricesPricingAPI,
-  getAddonsPricingAPI,
   deletePriceAPI,
-  deleteAddonAPI,
   triggerUpdate,
 } from "../../../Utils/API/Tours";
-
 import { TabPane, Row, Col, Button, UncontrolledTooltip } from "reactstrap";
-
-import {
-  Name,
-  Code,
-  Members,
-  Price,
-  Rate,
-  Active,
-} from "./PricingTables/PricingCols";
-
+import { Name, Code, Price, Rate, Active } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 
 const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
-  const [addonsData, setAddonsData] = useState([]);
-  
+
   useEffect(() => {
     getPricesPricingAPI(id).then((resp) => {
       setPricesData(resp.data.data);
-    });
-    getAddonsPricingAPI(id).then((resp) => {
-      setAddonsData(resp.data.data);
     });
   }, [id]);
 
@@ -56,13 +31,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       setPricesData(resp.data.data);
     });
   };
-
-  //
-  useEffect(() => {
-    getAddonsPricingAPI(id).then((resp) => {
-      setAddonsData(resp.data.data);
-    });
-  }, [id]);
 
   //table actions
   const onDelete = (depData) => {
@@ -96,49 +64,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
               });
-  
-              Swal.fire(
-                "Error!",
-                // {error.response.},
-                String(errorMessages[0])
-              );
-            }
-          });
-      }
-    });
-  };
-  const onDeleteAddon = (depData) => {
-    Swal.fire({
-      title: "Delete Addon?",
-      icon: "question",
-      text: `Do you want delete ${depData.label}`,
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      confirmButtonColor: "#F38430",
-      cancelButtonText: "Cancel",
-    }).then((resp) => {
-      if (resp.isConfirmed) {
-        deleteAddonAPI(depData.id)
-          .then((resp) => {
-            getAddonsPricingAPI(id).then((resp) => {
-              setAddonsData(resp.data.data);
-              triggerUpdate();
-            });
-            Swal.fire("Deleted!", "The Addon has been deleted.", "success");
-          })
-          .catch((error) => {
-            if (error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                // {error.response.},
-                String(error.response.data.message)
-              );
-            } else {
-              let errorMessages = [];
-              Object.entries(error.response.data.data).map((item) => {
-                errorMessages.push(item[1]);
-              });
-  
+
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -251,7 +177,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 setCopyProduct(false);
                 setEditProductID(null);
 
-                switch (tourData.type_id) {
+                switch (tourData?.type_id) {
                   case 2:
                     // setAddNewProduct(!addNewProduct);
                     setAddNewPrivateTour(!addNewPrivateTour);
@@ -298,7 +224,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                 setEditProductID(null);
                 setCopyProduct(true);
 
-                switch (tourData.type_id) {
+                switch (tourData?.type_id) {
                   case 2:
                     // setAddNewProduct(!addNewProduct);
                     setAddNewPrivateTour(!addNewPrivateTour);
@@ -309,7 +235,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     setEditProductID(prodData.id);
                     break;
                   case 4:
-                    setAddNewTransportation(!newTransportation);
+                    setAddNewTransportation(!addNewTransportation);
                     setEditProductID(prodData.id);
                     break;
                   case 5:
@@ -368,20 +294,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const [addNewPrivateTour, setAddNewPrivateTour] = useState(false);
   const [addNewTransportation, setAddNewTransportation] = useState(false);
 
-  const [newProduct, setNewProduct] = useState(false);
-  const [newAirportTransfer, setNewAirportTransfer] = useState(false);
-  const [newFishing, setNewFishing] = useState(false);
-  const [newPrivateCharter, setNewPrivateCharter] = useState(false);
-  const [newPrivateTour, setNewPrivateTour] = useState(false);
-  const [newTransportation, setNewTransportation] = useState(false);
-
   // bulk edit
   const [bulkEditModal, setBulkEditModal] = useState(false);
 
   const onClickNewProduct = () => {
     setEditProductID(null);
     setCopyProduct(false);
-    switch (tourData.type_id) {
+    switch (tourData?.type_id) {
       case 2:
         // setNewProduct(!addNewProduct);
         setAddNewPrivateTour(!addNewPrivateTour);
@@ -403,13 +322,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         setAddNewProduct(!addNewProduct);
         break;
     }
-  };
-
-  //add new addon
-  const [newAddon, setNewAddon] = useState(false);
-
-  const onClickNewAddon = () => {
-    setNewAddon(!newAddon);
   };
 
   return (
@@ -473,63 +385,67 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           </Button>
         </Col>
       </Row>
-      <AddNewProductPricing
-        addNewProduct={addNewProduct}
-        setAddNewProduct={setAddNewProduct}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      />
-      <AddNewAirportTransfer
-        addNewAirportTransfer={addNewAirportTransfer}
-        setAddNewAirportTransfer={setAddNewAirportTransfer}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      />
-      <Fishing
-        addNewFishing={addNewFishing}
-        setAddNewFishing={setAddNewFishing}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      />
-      <AddNewPrivateCharter
-        addNewPrivateCharter={addNewPrivateCharter}
-        setAddNewPrivateCharter={setAddNewPrivateCharter}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      />
-      <AddNewPrivateTour
-        addNewPrivateTour={addNewPrivateTour}
-        setAddNewPrivateTour={setAddNewPrivateTour}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      />
-      <AddNewTransportation
+      {tourData?.type_id === 1 ?
+        <AddNewProductPricing
+          addNewProduct={addNewProduct}
+          setAddNewProduct={setAddNewProduct}
+          editProductID={editProductID}
+          tourData={tourData}
+          refreshTable={refreshTable}
+          copyProduct={copyProduct}
+        /> : (null)
+      }
+      {tourData?.type_id === 2 ?
+        <AddNewPrivateTour
+          addNewPrivateTour={addNewPrivateTour}
+          setAddNewPrivateTour={setAddNewPrivateTour}
+          editProductID={editProductID}
+          tourData={tourData}
+          refreshTable={refreshTable}
+          copyProduct={copyProduct}
+        /> : (null)
+      }
+      {tourData?.type_id === 3 ?
+        <AddNewAirportTransfer
+          addNewAirportTransfer={addNewAirportTransfer}
+          setAddNewAirportTransfer={setAddNewAirportTransfer}
+          editProductID={editProductID}
+          tourData={tourData}
+          refreshTable={refreshTable}
+          copyProduct={copyProduct}
+        /> : (null)
+      }
+      {tourData?.type_id === 4 ?
+        <AddNewTransportation
         addNewTransportation={addNewTransportation}
         setAddNewTransportation={setAddNewTransportation}
         editProductID={editProductID}
         tourData={tourData}
         refreshTable={refreshTable}
         copyProduct={copyProduct}
-      />
-
-      <Addons
-        newAddon={newAddon}
-        setNewAddon={setNewAddon}
+      /> : (null)
+    }
+      {tourData?.type_id === 5 ?
+        <Fishing
+        addNewFishing={addNewFishing}
+        setAddNewFishing={setAddNewFishing}
+        editProductID={editProductID}
         tourData={tourData}
         refreshTable={refreshTable}
+        copyProduct={copyProduct}
+      /> : (null)
+    }
+     {tourData?.type_id === 6 ?
+         <AddNewPrivateCharter
+        addNewPrivateCharter={addNewPrivateCharter}
+        setAddNewPrivateCharter={setAddNewPrivateCharter}
         editProductID={editProductID}
-      />
-      
+        tourData={tourData}
+        refreshTable={refreshTable}
+        copyProduct={copyProduct}
+      /> : (null)
+    }
+
       <BulkEditModal
         bulkEditModal={bulkEditModal}
         setBulkEditModal={setBulkEditModal}

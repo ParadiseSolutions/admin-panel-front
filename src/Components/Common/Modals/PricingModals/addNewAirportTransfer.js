@@ -59,6 +59,7 @@ const AddNewAirportTransfer = ({
     setPriceZoneSelected("");
     setPriceVehicleSelected("");
     if (id) {
+      console.log("IDDDDDDDDDDDD " + id)
       getPriceAPI(id).then((resp) => {
         // console.log(
         //   "data que viene al editar-------------------",

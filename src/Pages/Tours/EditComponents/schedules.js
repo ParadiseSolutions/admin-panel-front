@@ -58,6 +58,7 @@ const Schedules = ({ tourData, toggle }) => {
     getSeasonalityAPI(TourID).then((resp) => {
       // console.log(resp);
       setSeasonalityData(resp.data.data);
+      setSeasonSelected(resp.data.data[0]?.repeat_id)
     });
   }, [TourID]);
   const [seasonNames, setSeasonNames] = useState([]);
@@ -79,6 +80,7 @@ const Schedules = ({ tourData, toggle }) => {
     });
     getSeasonalityAPI(TourID).then((resp) => {
       setSeasonalityData(resp.data.data);
+      setSeasonSelected(resp.data.data[0]?.repeat_id)
     });
   };
 
@@ -211,6 +213,7 @@ const Schedules = ({ tourData, toggle }) => {
           } else {
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
+              return true;
             });
 
             Swal.fire(
@@ -438,12 +441,12 @@ const Schedules = ({ tourData, toggle }) => {
                 <div
                   style={{
                     backgroundColor: "rgba(0, 157, 255, 0.2)",
-                  }}
+                  }} 
                   className="p-3"
                 >
                   <p style={{ fontSize: "15px", color: "#495057" }}>
                     <i
-                      class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                      className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
                       style={{ width: "32px", height: "32px" }}
                     ></i>{" "}
                     In this tab you will manage calendar availability and tour
@@ -487,6 +490,7 @@ const Schedules = ({ tourData, toggle }) => {
                       {seasonalityValues.map((option, index) => {
                         return (
                           <option
+                            key={index}
                             value={option.id}
                             selected={
                               seasonalityData[0]?.repeat_id === option.id

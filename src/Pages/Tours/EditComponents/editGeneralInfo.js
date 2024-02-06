@@ -45,10 +45,9 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   const [editMode, setEditMode] = useState(
     tourData.edit_mode === 1 ? false : true
   );
-  // console.log("info del tour", tourData);
-  //tour types request
   useEffect(() => {
     const tourTypesRequest = () => dispatch(tourTypesData());
+    console.log(1)
     tourTypesRequest();
    
   }, [dispatch]);
@@ -92,8 +91,6 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   const [subCategoriesData, setSubCategoriesData] = useState(null);
 
   useEffect(() => {
-    //console.log(mainCatID)
-
     if (mainCatID) {
       getSubCategory(websiteID, mainCatID).then((resp) => {
         setSubCategoriesData(resp.data.data);
@@ -105,7 +102,6 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       });
     }
   }, [mainCatID]);
-  // console.log(categoryId);
   //request based on website id
   const [shoppingCartData, setShoppingCartData] = useState(null);
   const [providerData, setProviderData] = useState(null);
@@ -146,7 +142,6 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         setLocationID(null);
       }
     });
-    console.log(tourData)
     getCategoryWebsiteAPI(id).then((resp) => {
       setCategoryData(resp.data.data);
       if (resp.data.data.length === 1) {
@@ -196,7 +191,6 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         };
         putCopyTourAPI(tourData.id, data)
           .then((resp) => {
-            //console.log(resp.data);
             if (resp.data.status === 200) {
               triggerUpdate();
               Swal.fire(
@@ -234,10 +228,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         let data = {
           name: values.tour_name,
         };
-        //console.log(data);
         putTourNameEditAPI(tourData.id, data)
           .then((resp) => {
-            //console.log(resp.data);
             if (resp.data.status === 200) {
               triggerUpdate();
               Swal.fire(
@@ -285,7 +277,6 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60)
     }
   }
-// console.log('edit mode', editMode)
   return (
     <Form
       onSubmit={(e) => {
