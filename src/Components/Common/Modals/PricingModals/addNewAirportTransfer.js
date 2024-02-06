@@ -59,12 +59,7 @@ const AddNewAirportTransfer = ({
     setPriceZoneSelected("");
     setPriceVehicleSelected("");
     if (id) {
-      console.log("IDDDDDDDDDDDD " + id)
       getPriceAPI(id).then((resp) => {
-        // console.log(
-        //   "data que viene al editar-------------------",
-        //   resp.data.data
-        // );
         setDataEdit(resp.data.data[0]);
       });
     } else {
@@ -72,7 +67,6 @@ const AddNewAirportTransfer = ({
     }
   }, [id, addNewAirportTransfer]);
 
-  console.log("data editar", dataEdit);
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -98,12 +92,10 @@ const AddNewAirportTransfer = ({
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
-  const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
   const [ttop6, setttop6] = useState(false);
   const [ttop7, setttop7] = useState(false);
   const [ttop8, setttop8] = useState(false);
-  const [ttop9, setttop9] = useState(false);
   const [ttop10, setttop10] = useState(false);
   const [ttop11, setttop11] = useState(false);
   const [ttop12, setttop12] = useState(false);
@@ -143,6 +135,7 @@ const AddNewAirportTransfer = ({
         setCurrency(resp.data.data)
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addNewAirportTransfer]);
 
   //checkbox
@@ -396,6 +389,7 @@ const AddNewAirportTransfer = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -425,6 +419,7 @@ const AddNewAirportTransfer = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(

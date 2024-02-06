@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import newTourGi from "../../../Components/Assets/images/newTourGI.jpg";
 import { tourTypesData } from "../../../Utils/Redux/Actions/TourTypesActions";
 import { websitesData } from "../../../Utils/Redux/Actions/WebsitesActions";
@@ -36,18 +35,16 @@ import {
 } from "../../../Utils/CommonFunctions";
 import { getSubCategory } from "../../../Utils/API/Categories";
 import { categoriesData } from "../../../Utils/Redux/Actions/CategoriesActions";
-import { createStorageSync, getCookie, getStorageSync, setCookie } from "../../../Utils/API";
+import { getCookie, setCookie, switchTourTab } from "../../../Utils/API";
 
 const EditGeneralInformation = ({ tourData, toggle }) => {
-  const history = useHistory();
   //get initial data tour types
   const dispatch = useDispatch();
-  const [editMode, setEditMode] = useState(
+  const [editMode] = useState(
     tourData.edit_mode === 1 ? false : true
   );
   useEffect(() => {
     const tourTypesRequest = () => dispatch(tourTypesData());
-    console.log(1)
     tourTypesRequest();
    
   }, [dispatch]);
@@ -65,20 +62,15 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     const locationRequest = () => dispatch(locationsData());
     locationRequest();
   }, [dispatch]);
-  const dataLocations = useSelector((state) => state.locations.locations.data);
 
   //categories request
   useEffect(() => {
     const categoryRequest = () => dispatch(categoriesData());
     categoryRequest();
   }, [dispatch]);
-  const dataCategories = useSelector(
-    (state) => state.categories.categories.data
-  );
 
   //combo boxs
 
-  const [tourTypeID, setTourTypeID] = useState(tourData.type_id);
   const [websiteID, setWebsiteID] = useState(tourData.website_id);
   const [shoppingCartID, setShoppingCartID] = useState(tourData.cart_id);
   const [providerID, setProviderID] = useState(tourData.provider_id);
@@ -95,12 +87,13 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       getSubCategory(websiteID, mainCatID).then((resp) => {
         setSubCategoriesData(resp.data.data);
         if (resp.data.data.length === 1) {
-          setSecondCatID(resp.data.data[0].id);
+          setSecondCatID(resp.data.data[0].category_id);
         } else {
           setSecondCatID(null);
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainCatID]);
   //request based on website id
   const [shoppingCartData, setShoppingCartData] = useState(null);
@@ -157,6 +150,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     if (dataWebsite) {
       onChangeWebsite(tourData.website_id)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataWebsite]);
   //form creation
   const validationType = useFormik({
@@ -179,7 +173,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
           cart_id: shoppingCartID ? shoppingCartID : tourData.cart_id,
           website_id: websiteID ? websiteID : tourData.website_id,
           type_id: tourData.type_id,
-          category_id: categoryId ? categoryId : tourData.category_id,
+          category_id: secondCatID ? secondCatID : (categoryId ? categoryId : tourData.category_id),
           location_id: locationID ? locationID : tourData.location_id,
           provider_id: providerID ? providerID : tourData.provider_id,
           operator_id: operatorID ? operatorID : tourData.operator_id,
@@ -200,7 +194,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               ).then(() => {
                 onChangeWebsite();
                 updateLocalStorageStatus(resp.data.data)
-                window.location.href = window.location.href + "?t=2"
+                window.location.href = switchTourTab(2)
               });
             }
           })
@@ -215,6 +209,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -239,7 +234,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               ).then(() => {
                 onChangeWebsite();
                 updateLocalStorageStatus(resp.data.data)
-                window.location.href = window.location.href + "?t=2"
+                window.location.href = switchTourTab(2)
               });
             }
           })
@@ -254,6 +249,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -326,11 +322,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Tour Type</Label>
                   <Input
                     type="select"
-                    name=""
+                    name="tour_type"
                     disabled
-                    onChange={(e) => {
-                      setTourTypeID(e.target.value);
-                    }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -356,7 +349,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Website</Label>
                   <Input
                     type="select"
-                    name=""
+                    name="website"
                     disabled={editMode}
                     onChange={(e) => {
                       onChangeWebsite(e.target.value);
@@ -387,7 +380,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Shopping Cart</Label>
                   <Input
                     type="select"
-                    name="department"
+                    name="shopping_cart"
                     disabled={editMode}
                     onChange={(e) => {
                       setShoppingCartID(e.target.value);
@@ -418,7 +411,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Provider</Label>
                   <Input
                     type="select"
-                    name=""
+                    name="provider"
                     disabled={editMode}
                     onChange={(e) => {
                       setProviderID(e.target.value);
@@ -449,7 +442,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   <Label className="form-label">Operator</Label>
                   <Input
                     type="select"
-                    name=""
+                    name="operator"
                     disabled={editMode}
                     onChange={(e) => {
                       setOperatorID(e.target.value);

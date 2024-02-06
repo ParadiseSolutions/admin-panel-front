@@ -7,9 +7,8 @@ import {
 } from "../../../Utils/API/Tours";
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
-import { Name, Code, Price, Active, ActiveAddon, Rate } from "./PricingTables/PricingCols";
+import { Name, Code, Price, ActiveAddon, Rate } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 
 const AddonsComponent = ({ id, tourData, toggle }) => {
   useEffect(() => {
@@ -163,19 +162,19 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
           const depData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <a
+              <div
                 onClick={() => {
                   setNewAddon(true);
                   setEditProductID(depData.id);
                 }}
                 className="text-success"
               >
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+                <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{ cursor: "pointer" }} />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
-              </a>
-              <a
+              </div>
+              <div
                 className="text-danger"
                 onClick={() => {
                   const depData = cellProps.row.original;
@@ -183,18 +182,17 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
                   onDeleteAddon(depData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i className="mdi mdi-delete font-size-18" id="deletetooltip" style={{ cursor: "pointer" }} />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
-              </a>
+              </div>
             </div>
           );
         },
       },
-    ],
-    []
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],[]);
 
   //add new addon
   const [newAddon, setNewAddon] = useState(false);

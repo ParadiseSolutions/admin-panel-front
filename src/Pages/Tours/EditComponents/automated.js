@@ -1,16 +1,9 @@
 import { useEffect, useState } from "react";
-import {
-  getProviderAPI,
-  updateProviderAPI,
-  updateSocialProviderAPI,
-} from "../../../Utils/API/Providers";
 import AddExtraFeeModal from "../../../Components/Common/Modals/OperatorsModals/addExtraFeeModal";
 import {
-  Collapse,
   Form,
   Row,
   Input,
-  Label,
   Col,
   FormFeedback,
   Button,
@@ -19,18 +12,12 @@ import {
   UncontrolledTooltip,
   Tooltip,
 } from "reactstrap";
-import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from "react-router-dom";
 import { Select } from "antd";
 import {
-  deleteExtraFee,
   getBringList,
-  getExtraFeeTable,
-  getVoucherInfo,
-  putVoucherInformation,
 } from "../../../Utils/API/Operators";
 import { map } from "lodash";
 import { Option } from "antd/lib/mentions";
@@ -67,23 +54,25 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [specialInstrucionCheck, setSpecialInstructionCheck] = useState(false);
 
   useEffect(() => {
-    getAdditionalFeeTable(tourID)
-      .then((resp) => {
-        setExtraFeeInitialData(resp.data.data);
-      })
-      .catch((err) => console.log(err));
-
-    getBringList()
-      .then((resp) => {
-        setBringListInitialData(resp.data.data);
-      })
-      .catch((err) => console.log(err));
-
-    getVoucherInfoTours(tourID)
-      .then((resp) => {
-        setVoucherInitialData(resp.data.data);
-      })
-      .catch((err) => console.log(err));
+    if(tourID) {
+      getAdditionalFeeTable(tourID)
+        .then((resp) => {
+          setExtraFeeInitialData(resp.data.data);
+        })
+        .catch((err) => console.log(err));
+  
+      getBringList()
+        .then((resp) => {
+          setBringListInitialData(resp.data.data);
+        })
+        .catch((err) => console.log(err));
+  
+      getVoucherInfoTours(tourID)
+        .then((resp) => {
+          setVoucherInitialData(resp.data.data);
+        })
+        .catch((err) => console.log(err));
+    }
   }, [tourID]);
 
   const refreshTable = () => {
@@ -443,6 +432,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       {map(extraFeeInitialData, (fee, index) => {
                         return (
                           <tr
+                          key={index}
                           style={{
                             backgroundColor: fee.read_only === 1 ? "#f5f6f8" : "#ffffff",
                           }}>

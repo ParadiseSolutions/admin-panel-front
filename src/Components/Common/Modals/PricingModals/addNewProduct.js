@@ -16,7 +16,6 @@ import {
   Input,
   FormFeedback,
   Button,
-  UncontrolledTooltip,
   Tooltip,
 } from "reactstrap";
 import * as Yup from "yup";
@@ -270,6 +269,7 @@ const AddNewProductPricing = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -298,6 +298,7 @@ const AddNewProductPricing = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(

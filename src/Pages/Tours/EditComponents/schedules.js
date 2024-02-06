@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import ScheduleDolphins from "../../../Components/Assets/images/schedulesDolphins.png";
 import {
-  getSeasonsNameAPI,
   putSeasonalAPI,
   getSeasonsListAPI,
-  deleteSeasonalityAPI,
-  statusSeasonalityAPI,
   getScheduleTimeAPI,
   getScheduleDatesOverrideAPI,
   getSeasonalityAPI,
@@ -61,15 +58,8 @@ const Schedules = ({ tourData, toggle }) => {
       setSeasonSelected(resp.data.data[0]?.repeat_id)
     });
   }, [TourID]);
-  const [seasonNames, setSeasonNames] = useState([]);
   const [seasonSelected, setSeasonSelected] = useState("");
-  useEffect(() => {
-    getSeasonsNameAPI().then((resp) => {
-      setSeasonNames(resp.data.data);
-    });
-  }, [tourData]);
 
-  // console.log("seasonality data", seasonalityData);
   //refresh tables
   const refresh = () => {
     getScheduleTimeAPI(TourID).then((resp) => {

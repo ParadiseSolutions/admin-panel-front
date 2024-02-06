@@ -7,7 +7,7 @@ import {
   copyTourAPI,
   triggerUpdate,
 } from "../../Utils/API/Tours";
-import { createSessionSync, getCookie, getSessionSync, removeCookie, setCookie } from "../../Utils/API";
+import { getCookie, removeCookie, setCookie } from "../../Utils/API";
 import BulkEditTour from "../../Components/Common/Modals/BulkEditTours/BulkEditTours";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "./Table/Table";
@@ -16,7 +16,6 @@ import ToursFilters from "../../Components/Common/Modals/ToursFilters/toursFilte
 import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useCookies } from "react-cookie";
 
 const Tours = () => {
   const dispatch = useDispatch();

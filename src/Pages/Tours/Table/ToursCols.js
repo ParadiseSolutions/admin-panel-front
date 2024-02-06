@@ -2,15 +2,8 @@ import React, { useState } from "react";
 import Switch from "react-switch";
 import { statusUpdateTour, triggerUpdate } from "../../../Utils/API/Tours";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { toursData } from "../../../Utils/Redux/Actions/ToursActions";
-import { createStorageSync, getCookie, getStorageSync, setCookie } from "../../../Utils/API";
-import Tours from "..";
-// const OrderId = (cell) => {
-//     return (
-//         <Link to="#" className="text-body fw-bold">{cell.value ? cell.value : ''}</Link>
-//     );
-// };
+import { getCookie, setCookie } from "../../../Utils/API";
+
 const CartName = (cell) => {
   return cell.value ? cell.value : "";
 };

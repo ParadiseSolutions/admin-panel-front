@@ -24,7 +24,8 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 
 	useEffect(() => {
 		setCatData(data);
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	},[]);
 
 	useEffect(() => {
 		if(editModal === false) {
@@ -86,6 +87,7 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 					let errorMessages = [];
 					Object.entries(error.response.data.data).map((item) => {
 					  errorMessages.push(item[1]);
+					  return true
 					});
 		  
 					Swal.fire(

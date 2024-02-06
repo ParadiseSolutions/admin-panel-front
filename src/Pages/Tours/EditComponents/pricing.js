@@ -63,6 +63,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -284,7 +285,8 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         );
       },
     },
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  ],[]);
   //add new product
   const [addNewProduct, setAddNewProduct] = useState(false);
   const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);

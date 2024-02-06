@@ -65,3 +65,7 @@ export const setCookie = (cname, cvalue, seconds = 24 * 60 * 60 * 1000) => {
 export const removeCookie = (cname) => {
   document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;domain=" + window.location.hostname;
 }
+
+export const switchTourTab = (tab) => {
+  return window.location.protocol + "//" + window.location.host + window.location.pathname + "?t=" + tab
+}
