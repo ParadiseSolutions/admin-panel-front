@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { triggerUpdate, bulkUpdate, bulkToursGet, bulkToursPut } from "../../../../Utils/API/Tours";
+import { triggerUpdate, bulkToursGet, bulkToursPut } from "../../../../Utils/API/Tours";
 import { Row, Modal, Button, Table } from "reactstrap";
 import Swal from "sweetalert2";
 
@@ -8,9 +8,7 @@ const BulkEditTour = ({
   setBulkModal,
   isFiltered,
   toursDataInfo,
-  pricesData,
   refreshTable,
-  tourData,
 }) => {
 
   const [dataFiltered, setDataFiltered] = useState([])
@@ -30,6 +28,7 @@ const BulkEditTour = ({
       }).catch((err) =>{console.log(err)})
       
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bulkModal]);
 
   let preciosIniciales = [];
@@ -49,32 +48,12 @@ const BulkEditTour = ({
     });
   });
 
-
-  // const initialData = () => {
-  //   let preciosIniciales = [];
-  //   dataFiltered.forEach((element) => {
-  //     preciosIniciales.push({
-  //       id: element.id,
-  //       label: element.label,
-  //       sku: element.sku,
-  //       public: element.public,
-  //       rate: element.rate,
-  //       // net_rate: element.net_rate,
-  //       price: element.price,
-  //       you_save: element.you_save,
-  //       commission: element.commission,
-  //       deposit: element.deposit,
-  //       net_price: element.net_price,
-  //     });
-  //   });
-  //   return preciosIniciales;
-  // };
-
   const [values, setValues] = useState(preciosIniciales);
   useEffect(() => {
     if (preciosIniciales.length > 0) {
       setValues(preciosIniciales);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataFiltered]);
 
   const handleChange = (index, e) => {
@@ -107,6 +86,7 @@ const BulkEditTour = ({
         let errorMessages = [];
         Object.entries(error.response.data.data).map((item) => {
           errorMessages.push(item[1]);
+          return true
         });
 
         Swal.fire(

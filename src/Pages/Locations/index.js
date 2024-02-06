@@ -61,6 +61,7 @@ const Locations = () => {
             } else {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -142,7 +143,8 @@ const Locations = () => {
         );
       },
     },
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  ],[]);
 
   //modal new
   const [editModal, setEditModal] = useState(false);

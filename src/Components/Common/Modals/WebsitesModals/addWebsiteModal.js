@@ -29,8 +29,6 @@ const AddWebsiteModal = ({ addModal, setAddModal, onClickAddNewWebsite }) => {
   }, [dispatch]);
   const data = useSelector((state) => state.serviceArea.serviceArea.data);
 
-
-  const [selectedMulti, setselectedMulti] = useState(null);
   const [selectionID, setSelectionID] = useState([]);
   function handleMulti(selected) {
    

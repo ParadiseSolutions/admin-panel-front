@@ -50,6 +50,7 @@ const EdditOverriteDate = ({
       setdayFixSelected(editOverriteDateData?.from);
       setStatusSelected(editOverriteDate?.action);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editOverriteDateData]);
 
   //checkbox list
@@ -122,6 +123,7 @@ const EdditOverriteDate = ({
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
+            return true
           });
 
           Swal.fire(

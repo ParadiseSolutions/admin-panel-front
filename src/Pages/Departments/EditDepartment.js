@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { editDepartment, getDepartment } from "../../Utils/API/Departments";
 import { useParams } from "react-router-dom";
 import BoatImage from "../../Components/Assets/images/boat.png";
-import Inter1 from "../../Components/Assets/images/Intersection1.svg";
 import {
   Container,
   Row,
@@ -75,31 +74,6 @@ const EditDepartment = ({ history }) => {
   const dataUsers = useSelector((state) => state.users.users.data);
   const dataModules = useSelector((state) => state.modules.modules.data);
 
-  const [modulesAdded, setModulesAdded] = useState([]);
-  // const onChangeMembers = (e) => {
-  //   console.log("ejecutado");
-  //   const selection = e.target.value;
-  //   const selectionFlag = membersIds.includes(selection);
-
-  //   if (!selectionFlag) {
-  //     setMembersIds([...membersIds, e.target.value]);
-  //   }
-  //   if (selectionFlag) {
-  //     setMembersIds(membersIds.filter((ele) => ele !== selection));
-  //   }
-  // };
-
-  const onChangeModules = (e) => {
-    const selection = e.target.value;
-    const selectionFlag = modulesAdded.includes(selection);
-    if (!selectionFlag) {
-      setModulesAdded([...modulesAdded, e.target.value]);
-    }
-    if (selectionFlag) {
-      setModulesAdded(modulesAdded.filter((ele) => ele !== selection));
-    }
-  };
-
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -142,6 +116,7 @@ const EditDepartment = ({ history }) => {
           let errorMessages = [];
 					Object.entries(error.response.data.data).map((item) => {
 						errorMessages.push(item[1]);
+            return true
 					});
 
 					Swal.fire(

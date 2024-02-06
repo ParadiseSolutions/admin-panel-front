@@ -3,7 +3,7 @@ import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { departmentsData } from "../../Utils/Redux/Actions/DepartmentsActions";
 import { Container } from "reactstrap";
-import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
+import { Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Code, Date, Members, Active } from "./DepartmentsCols";
@@ -142,9 +142,8 @@ const Departments = () => {
           );
         },
       },
-    ],
-    []
-  );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],[]);
   return (
     <>
       <div className="page-content pb-0 px-3">

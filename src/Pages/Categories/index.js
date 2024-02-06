@@ -59,6 +59,7 @@ const Categories = () => {
             } else {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -115,7 +116,6 @@ const Categories = () => {
       accessor: "action",
       disableFilters: true,
       Cell: (cellProps) => {
-        const categoriesData = cellProps.row.original;
         return (
           <div className="d-flex gap-3">
             <div
@@ -157,7 +157,8 @@ const Categories = () => {
         );
       },
     },
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  ],[]);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const onClickAddCategory = () => {

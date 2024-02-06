@@ -46,14 +46,7 @@ const NewDepartment = ({ history }) => {
 
   const [membersAdded, setMembersAdded] = useState([]);
   const [modulesAdded, setModulesAdded] = useState([]);
-  const [validation, setValidation] = useState(false);
 
-  useEffect(() => {
-    if (membersAdded.length > 0 && modulesAdded.length > 0) {
-      setValidation(true);
-      return;
-    }
-  }, [membersAdded, modulesAdded]);
   const onChangeMembers = (e) => {
     const selection = e.target.value;
     const selectionFlag = membersAdded.includes(selection);
@@ -116,6 +109,7 @@ const NewDepartment = ({ history }) => {
           let errorMessages = [];
 					Object.entries(error.response.data.data).map((item) => {
 						errorMessages.push(item[1]);
+            return true
 					});
 
 					Swal.fire(
