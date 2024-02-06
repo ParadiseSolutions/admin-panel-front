@@ -60,17 +60,12 @@ const AddNewTransportation = ({
     setPriceVehicleSelected("");
     if (id) {
       getPriceAPI(id).then((resp) => {
-        // console.log(
-        //   "data que viene al editar-------------------",
-        //   resp.data.data
-        // );
         setDataEdit(resp.data.data[0]);
       });
     } else {
       setDataEdit(null);
     }
   }, [id, addNewTransportation]);
-  // console.log(copyProduct)
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -86,8 +81,7 @@ const AddNewTransportation = ({
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
-  const [priceTransferTypeSelected, setPriceTransferTypeSelected] =
-    useState("");
+  const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState("");
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
@@ -124,6 +118,7 @@ const AddNewTransportation = ({
         setCurrency(resp.data.data)
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addNewTransportation]);
 
   //checkbox
@@ -133,12 +128,10 @@ const AddNewTransportation = ({
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
-  const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
   const [ttop6, setttop6] = useState(false);
   const [ttop7, setttop7] = useState(false);
   const [ttop8, setttop8] = useState(false);
-  const [ttop9, setttop9] = useState(false);
   const [ttop10, setttop10] = useState(false);
   const [ttop11, setttop11] = useState(false);
   const [ttop12, setttop12] = useState(false);
@@ -394,6 +387,7 @@ const AddNewTransportation = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -422,6 +416,7 @@ const AddNewTransportation = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -1065,7 +1060,7 @@ const AddNewTransportation = ({
                     <Label className="form-label">Passangers</Label>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1094,7 +1089,7 @@ const AddNewTransportation = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text fw-bold bg-paradise text-white border-0 ms-1"
+                        className="input-group-text fw-bold bg-paradise text-white border-0 ms-1"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1166,7 +1161,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1235,7 +1230,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1325,7 +1320,7 @@ const AddNewTransportation = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1361,7 +1356,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1475,7 +1470,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1552,7 +1547,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1623,7 +1618,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1716,7 +1711,7 @@ const AddNewTransportation = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1794,7 +1789,7 @@ const AddNewTransportation = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1860,7 +1855,7 @@ const AddNewTransportation = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1893,7 +1888,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1957,7 +1952,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -2017,7 +2012,7 @@ const AddNewTransportation = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >

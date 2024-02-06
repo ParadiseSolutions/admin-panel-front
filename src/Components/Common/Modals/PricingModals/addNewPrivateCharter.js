@@ -25,7 +25,6 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 import {
   setDecimalFormat,
-  cleanUpSpecialCharacters,
   setRateFormat,
   calcNetRate,
   calcYouSave,
@@ -92,12 +91,10 @@ const AddNewPrivateCharter = ({
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
-  const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
   const [ttop6, setttop6] = useState(false);
   const [ttop7, setttop7] = useState(false);
   const [ttop8, setttop8] = useState(false);
-  const [ttop9, setttop9] = useState(false);
   const [ttop10, setttop10] = useState(false);
   const [ttop11, setttop11] = useState(false);
   const [ttop12, setttop12] = useState(false);
@@ -361,6 +358,7 @@ const AddNewPrivateCharter = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -389,6 +387,7 @@ const AddNewPrivateCharter = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -1085,7 +1084,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1155,7 +1154,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1245,7 +1244,7 @@ const AddNewPrivateCharter = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1281,7 +1280,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1395,7 +1394,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1472,7 +1471,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1543,7 +1542,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1638,7 +1637,7 @@ const AddNewPrivateCharter = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1716,7 +1715,7 @@ const AddNewPrivateCharter = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1782,7 +1781,7 @@ const AddNewPrivateCharter = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1814,7 +1813,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1878,7 +1877,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1938,7 +1937,7 @@ const AddNewPrivateCharter = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   getTourAPI,
-  updateBookingSettings,
 } from "../../../../Utils/API/Tours/setingsTemplate";
 import { triggerUpdate } from "../../../../Utils/API/Tours";
 import { updateAddonsInstructions } from "../../../../Utils/API/Tours/AddonsInstructions";
@@ -13,12 +12,10 @@ import {
   Label,
   Input,
   Button,
-  FormFeedback,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { map } from "lodash";
 
 const AddonsInstructionModal = ({
   instructionModal,
@@ -39,6 +36,7 @@ const AddonsInstructionModal = ({
         let errorMessages = [];
         Object.entries(error.response.data.data).map((item) => {
           errorMessages.push(item[1]);
+          return true
         });
 
         Swal.fire(
@@ -47,6 +45,7 @@ const AddonsInstructionModal = ({
           String(errorMessages[0])
         );
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // console.log(initialData);
@@ -88,6 +87,7 @@ const AddonsInstructionModal = ({
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
+            return true
           });
 
           Swal.fire(

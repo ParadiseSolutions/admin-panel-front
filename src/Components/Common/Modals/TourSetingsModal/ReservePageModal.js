@@ -30,6 +30,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
         let errorMessages = [];
         Object.entries(error.response.data.data).map((item) => {
           errorMessages.push(item[1]);
+          return true
         });
 
         Swal.fire(
@@ -38,6 +39,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
           String(errorMessages[0])
         );
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // console.log(initialData);
@@ -56,17 +58,6 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       title: "",
     },
     validationSchema: Yup.object().shape({
-      // description: Yup.string().min(1).max(10).required(),
-      // title: Yup.string().min(1).max(10).required()
-      // description: Yup.string()
-      //   .required("Description should be max 210 chars")
-      //   .min(1)
-      //   .max(210, "Description should be max 210 chars"),
-      // title: Yup.string()
-      // .min(1)
-      // .max(50, "Title should be max 50 chars")
-      // .required("Title should be max 50 chars")
-      // code: Yup.string().required("Code is required"),
     }),
 
     onSubmit: (values) => {
@@ -92,6 +83,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
+            return true
           });
 
           Swal.fire(

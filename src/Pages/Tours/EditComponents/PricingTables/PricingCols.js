@@ -82,8 +82,7 @@ const Active = (cell) => {
         triggerUpdate()
         // console.log(resp);
       });
-    }
-    if (activeDep) {
+    } else {
       let data = { active: 1 };
       statusUpdatePrice(id, data)
         .then((resp) => {
@@ -169,8 +168,7 @@ const ActiveAddon = (cell) => {
         triggerUpdate()
         // console.log(resp);
       });
-    }
-    if (activeDepAddon) {
+    } else {
       let data = { active: 1 };
       statusUpdateAddon(id, data)
         .then((resp) => {
@@ -202,16 +200,5 @@ const ActiveAddon = (cell) => {
     />
   );
 };
-
-// const Active = (cell) => {
-//     return (
-//         <Badge
-//           className={"badge badge-pill bg-pill font-size-12 bg-soft-" +
-//           (cell.value === 1 ? "success" : "danger")}
-//         >
-//           {cell.value === 1 ? 'Active' : 'Inactive'}
-//         </Badge>
-//     )
-// };
 
 export { Name, Code, Date, Members, Price, Active, Rate, ActiveAddon };

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Button,
   Col,
@@ -33,9 +32,6 @@ const URL = ({ tourData, toggle }) => {
   const [urlTypeSelected, setUrlTypeSelected] = useState(null);
   const [locationData, setLocationData] = useState();
   const [locationSelected, setLocationSelected] = useState(0);
-  const [pathData, setPathData] = useState();
-  /*const [editTypeURL, setEditTypeURL] = useState(null);
-  const [editLocationURL, setEditLocationURL] = useState(null);*/
   const [basePath, setBasePath] = useState(null);
   const [complementURL, setComplementURL] = useState(null);
   const [editURLID, setEditURLID] = useState(null);
@@ -62,16 +58,17 @@ const URL = ({ tourData, toggle }) => {
         setLocationSelected(null);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlTypeSelected]);
 
   useEffect(() => {
     
     getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
-      setPathData(resp.data.data);
       setBasePath(resp.data.data.base_path)
       setComplementURL(resp.data.data.filename);
      
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlTypeSelected, locationSelected]);
 
   const onEditURL = (url) => {
@@ -90,7 +87,6 @@ const URL = ({ tourData, toggle }) => {
   const cancelEditing = () => {
     setUrlTypeSelected(null);
     setLocationSelected(null);
-    setPathData(null);
     setComplementURL(null);
     setEditURLID(null);
   };
@@ -182,9 +178,8 @@ const URL = ({ tourData, toggle }) => {
           );
         },
       },
-    ],
-    []
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],[]);
 
   //form creation
   const validationType = useFormik({
@@ -232,6 +227,7 @@ const URL = ({ tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(
@@ -264,6 +260,7 @@ const URL = ({ tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
 
               Swal.fire(

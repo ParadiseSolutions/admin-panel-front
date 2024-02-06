@@ -49,18 +49,12 @@ const Fishing = ({
     setPriceLocationSelected("")
     if (id) {
       getPriceAPI(id).then((resp) => {
-        // console.log(
-        //   "data que viene al editar-------------------",
-        //   resp.data.data
-        // );
         setDataEdit(resp.data.data[0]);
       });
     } else {
       setDataEdit(null)
     }
   }, [id, addNewFishing]);
-
-  // console.log('fishing',dataEdit);
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -85,12 +79,10 @@ const Fishing = ({
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
-  const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
   const [ttop6, setttop6] = useState(false);
   const [ttop7, setttop7] = useState(false);
   const [ttop8, setttop8] = useState(false);
-  const [ttop9, setttop9] = useState(false);
   const [ttop10, setttop10] = useState(false);
   const [ttop11, setttop11] = useState(false);
   const [ttop12, setttop12] = useState(false);
@@ -303,6 +295,7 @@ const Fishing = ({
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
     
               Swal.fire(
@@ -330,6 +323,7 @@ const Fishing = ({
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
     
               Swal.fire(
@@ -954,7 +948,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="public_price"
                         placeholder="0.00"
@@ -1008,7 +1002,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="provider_price"
                         placeholder="0.00"
@@ -1089,7 +1083,7 @@ const Fishing = ({
                           {validationType.errors.rate}
                         </FormFeedback>
                       ) : null}
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
                     </div>
                    
                   </div>
@@ -1119,7 +1113,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="net_rate"
                         placeholder="0.00"
@@ -1223,7 +1217,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="ship_price"
                         placeholder="0.00"
@@ -1282,7 +1276,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                         <Input
                         name="compare_at"
                         placeholder="0.00"
@@ -1334,7 +1328,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="our_price"
                         placeholder="0.00"
@@ -1414,7 +1408,7 @@ const Fishing = ({
                           {validationType.errors.you_save}
                         </FormFeedback>
                       ) : null}
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
                     </div>
                    
                   </div>
@@ -1487,7 +1481,7 @@ const Fishing = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1549,7 +1543,7 @@ const Fishing = ({
                           {validationType.errors.eff_rate}
                         </FormFeedback>
                       ) : null}
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
                     </div>
                     
                   </div>
@@ -1576,7 +1570,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="commission"
                         placeholder="0.00"
@@ -1630,7 +1624,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="deposit"
                         placeholder="0.00"
@@ -1681,7 +1675,7 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span class="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
                       <Input
                         name="balance_due"
                         placeholder="0.00"

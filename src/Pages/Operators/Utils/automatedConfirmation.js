@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-  getProviderAPI,
-  updateProviderAPI,
-  updateSocialProviderAPI,
-} from "../../../Utils/API/Providers";
 import AddExtraFeeModal from "../../../Components/Common/Modals/OperatorsModals/addExtraFeeModal";
 import {
   Collapse,
   Form,
   Row,
   Input,
-  Label,
   Col,
   FormFeedback,
   Button,
@@ -23,7 +17,6 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from "react-router-dom";
 import { Select } from "antd";
 import {
   deleteExtraFee,

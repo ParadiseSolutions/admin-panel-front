@@ -114,12 +114,10 @@ const AddNewPrivateTour = ({
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
-  const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
   const [ttop6, setttop6] = useState(false);
   const [ttop7, setttop7] = useState(false);
   const [ttop8, setttop8] = useState(false);
-  const [ttop9, setttop9] = useState(false);
   const [ttop10, setttop10] = useState(false);
   const [ttop11, setttop11] = useState(false);
   const [ttop12, setttop12] = useState(false);
@@ -283,6 +281,7 @@ const AddNewPrivateTour = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -311,6 +310,7 @@ const AddNewPrivateTour = ({
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -826,7 +826,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -896,7 +896,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -986,7 +986,7 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1022,7 +1022,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1136,7 +1136,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1213,7 +1213,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1284,7 +1284,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1377,7 +1377,7 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1455,7 +1455,7 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1521,7 +1521,7 @@ const AddNewPrivateTour = ({
                         </FormFeedback>
                       ) : null}
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1554,7 +1554,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1618,7 +1618,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
@@ -1681,7 +1681,7 @@ const AddNewPrivateTour = ({
                     </div>
                     <div className="input-group">
                       <span
-                        class="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
                         style={{ fontSize: "0.85em" }}
                       >
