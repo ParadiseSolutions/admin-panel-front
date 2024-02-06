@@ -30,7 +30,8 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
 
   useEffect(() => {
     setCatData(data);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   //select
   const [parent, setParent] = useState([]);
@@ -80,6 +81,7 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
             let errorMessages = [];
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
+              return true
             });
   
             Swal.fire(

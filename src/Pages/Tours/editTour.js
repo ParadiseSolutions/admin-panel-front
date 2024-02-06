@@ -50,6 +50,7 @@ const EditTour = ({ history }) => {
     if (tourData?.edit_mode === 0) {
       toggle("1");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   //get tour settings
   const [tourSettings, setTourSettings] = useState();

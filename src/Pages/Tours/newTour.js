@@ -75,16 +75,12 @@ const NewTour = ({ history }) => {
     const locationRequest = () => dispatch(locationsData());
     locationRequest();
   }, [dispatch]);
-  const dataLocations = useSelector((state) => state.locations.locations.data);
 
   //categories request
   useEffect(() => {
     const categoryRequest = () => dispatch(categoriesData());
     categoryRequest();
   }, [dispatch]);
-  const dataCategories = useSelector(
-    (state) => state.categories.categories.data
-  );
 
   //combo boxs
   const [tourTypeID, setTourTypeID] = useState(null);
@@ -105,12 +101,13 @@ const NewTour = ({ history }) => {
       getSubCategory(websiteID, categoryId).then((resp) => {
         setSubCategoriesData(resp.data.data);
         if (resp.data.data.length === 1) {
-          setSecondCatID(resp.data.data[0].id);
+          setSecondCatID(resp.data.data[0].category_id);
         } else {
           setSecondCatID(null);
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainCatID]);
 
   //request based on website id
@@ -186,14 +183,13 @@ const NewTour = ({ history }) => {
         cart_id: shoppingCartID,
         website_id: websiteID,
         type_id: tourTypeID,
-        category_id: mainCatID,
+        category_id: secondCatID ? secondCatID : mainCatID,
         location_id: locationID,
         provider_id: providerID,
         operator_id: operatorID,
         name: values.tour_name,
         code: values.code,
       };
-      //console.log(data);
       createTourAPI(data)
         .then((resp) => {
           // console.log(resp.data);
@@ -217,6 +213,7 @@ const NewTour = ({ history }) => {
             let errorMessages = [];
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
+              return true
             });
 
             Swal.fire(
@@ -225,7 +222,7 @@ const NewTour = ({ history }) => {
               String(errorMessages[0])
             );
           }
-        });
+      });
     },
   });
   return (
@@ -332,9 +329,9 @@ const NewTour = ({ history }) => {
                     className={classnames({
                       active: activeTab === "4",
                     })}
-                    /*onClick={() => {
-                        toggle("4");
-                      }}*/
+                  /*onClick={() => {
+                      toggle("4");
+                    }}*/
                   >
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
@@ -489,12 +486,12 @@ const NewTour = ({ history }) => {
                               <Label className="form-label">Tour Type</Label>
                               <Input
                                 type="select"
-                                name=""
+                                name="tour_type"
                                 onChange={(e) => {
                                   setTourTypeID(e.target.value);
                                 }}
                                 onBlur={validationType.handleBlur}
-                                //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                               >
                                 <option>Select....</option>
                                 {map(dataTourType, (tourType, index) => {
@@ -512,13 +509,13 @@ const NewTour = ({ history }) => {
                               <Label className="form-label">Website</Label>
                               <Input
                                 type="select"
-                                name=""
+                                name="website"
                                 onChange={(e) => {
                                   onChangeWebsite(e.target.value);
                                   setWebsiteID(e.target.value);
                                 }}
                                 onBlur={validationType.handleBlur}
-                                //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                               >
                                 <option>Select....</option>
                                 {map(dataWebsite, (website, index) => {
@@ -538,13 +535,13 @@ const NewTour = ({ history }) => {
                               </Label>
                               <Input
                                 type="select"
-                                name="department"
+                                name="shopping_cart"
                                 disabled={shoppingCartData ? false : true}
                                 onChange={(e) => {
                                   setShoppingCartID(e.target.value);
                                 }}
                                 onBlur={validationType.handleBlur}
-                                //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                               >
                                 <option>Select....</option>
                                 {map(
@@ -556,7 +553,7 @@ const NewTour = ({ history }) => {
                                         value={shoppingCart.id}
                                         selected={
                                           index === 0 &&
-                                          shoppingCartData.length === 1
+                                            shoppingCartData.length === 1
                                             ? true
                                             : false
                                         }
@@ -574,13 +571,13 @@ const NewTour = ({ history }) => {
                               <Label className="form-label">Provider</Label>
                               <Input
                                 type="select"
-                                name=""
+                                name="provider"
                                 disabled={providerData ? false : true}
                                 onChange={(e) => {
                                   setProviderID(e.target.value);
                                 }}
                                 onBlur={validationType.handleBlur}
-                                //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                               >
                                 <option>Select....</option>
                                 {map(providerData, (provider, index) => {
@@ -606,13 +603,13 @@ const NewTour = ({ history }) => {
                               <Label className="form-label">Operator</Label>
                               <Input
                                 type="select"
-                                name=""
+                                name="operator"
                                 disabled={operatorData ? false : true}
                                 onChange={(e) => {
                                   setOperatorID(e.target.value);
                                 }}
                                 onBlur={validationType.handleBlur}
-                                //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                               >
                                 <option>Select....</option>
                                 {map(operatorData, (operator, index) => {
@@ -667,13 +664,13 @@ const NewTour = ({ history }) => {
                                 value={validationType.values.tour_name || ""}
                                 invalid={
                                   validationType.touched.tour_name &&
-                                  validationType.errors.tour_name
+                                    validationType.errors.tour_name
                                     ? true
                                     : false
                                 }
                               />
                               {validationType.touched.tour_name &&
-                              validationType.errors.tour_name ? (
+                                validationType.errors.tour_name ? (
                                 <FormFeedback type="invalid">
                                   {validationType.errors.tour_name}
                                 </FormFeedback>
@@ -686,13 +683,13 @@ const NewTour = ({ history }) => {
                               <Label className="form-label">Location</Label>
                               <Input
                                 type="select"
-                                name=""
+                                name="location"
                                 onChange={(e) => {
                                   setLocationID(e.target.value);
                                 }}
                                 disabled={locationData ? false : true}
                                 onBlur={validationType.handleBlur}
-                                //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                               >
                                 <option>Select....</option>
                                 {map(locationData, (location, index) => {
@@ -722,14 +719,14 @@ const NewTour = ({ history }) => {
                               </Label>
                               <Input
                                 type="select"
-                                name=""
+                                name="main_category"
                                 disabled={categoryData ? false : true}
                                 onChange={(e) => {
                                   setMainCatID(e.target.value);
                                   setCategoryId(e.target.value);
                                 }}
                                 onBlur={validationType.handleBlur}
-                                //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                               >
                                 <option>Select....</option>
                                 {map(categoryData, (category, index) => {
@@ -758,13 +755,13 @@ const NewTour = ({ history }) => {
                                 </Label>
                                 <Input
                                   type="select"
-                                  name=""
+                                  name="sub_category"
                                   disabled={subCategoriesData ? false : true}
                                   onChange={(e) => {
                                     setSecondCatID(e.target.value);
                                   }}
                                   onBlur={validationType.handleBlur}
-                                  //   value={validationType.values.department || ""}
+                                //   value={validationType.values.department || ""}
                                 >
                                   <option>Select....</option>
                                   {map(
@@ -776,7 +773,7 @@ const NewTour = ({ history }) => {
                                           value={subCategory.category_id}
                                           selected={
                                             index === 0 &&
-                                            subCategoriesData.length === 1
+                                              subCategoriesData.length === 1
                                               ? true
                                               : false
                                           }
@@ -810,13 +807,13 @@ const NewTour = ({ history }) => {
                                 value={validationType.values.code || ""}
                                 invalid={
                                   validationType.touched.code &&
-                                  validationType.errors.code
+                                    validationType.errors.code
                                     ? true
                                     : false
                                 }
                               />
                               {validationType.touched.code &&
-                              validationType.errors.code ? (
+                                validationType.errors.code ? (
                                 <FormFeedback type="invalid">
                                   {validationType.errors.code}
                                 </FormFeedback>
@@ -840,7 +837,7 @@ const NewTour = ({ history }) => {
                             <Button
                               type="submit"
                               className="font-16 btn-block btn-orange fs-5 rounded-3"
-                              // onClick={toggleCategory}
+                            // onClick={toggleCategory}
                             >
                               Continue
                               <i className="uil-angle-double-right mx-1 " />

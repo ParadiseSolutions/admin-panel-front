@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
-import { statusUpdate, statusUpdatePrice,statusUpdateAddon, triggerUpdate } from "../../../../Utils/API/Tours";
+import { statusUpdatePrice,statusUpdateAddon, triggerUpdate } from "../../../../Utils/API/Tours";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { setRateFormat } from "../../../../Utils/CommonFunctions";
 // const OrderId = (cell) => {
