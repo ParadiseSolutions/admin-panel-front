@@ -18,7 +18,7 @@ import Switch from "react-switch";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import { Select } from "antd";
 import { map } from "lodash";
 import Swal from "sweetalert2";
@@ -172,6 +172,7 @@ const GeneralInformation = () => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
     
               Swal.fire(

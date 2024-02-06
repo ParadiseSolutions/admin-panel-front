@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 import Swal from "sweetalert2";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import { Select } from "antd";
 import { map } from "lodash";
 import Switch from "react-switch";
@@ -177,6 +177,7 @@ useEffect(() => {
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
       
                 Swal.fire(

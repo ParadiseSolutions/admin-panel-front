@@ -19,7 +19,7 @@ import Switch from "react-switch";
 import { useDispatch, useSelector } from "react-redux";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
 // import Select from "react-select";
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 import { Select } from 'antd';
 import { map } from "lodash";
 
@@ -227,6 +227,7 @@ const EditGeneralInformation = ({ data }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
+                return true
               });
     
               Swal.fire(
