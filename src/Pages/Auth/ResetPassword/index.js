@@ -19,8 +19,7 @@ const ResetPassword = () => {
   const [custom_div1, setcustom_div1] = useState(false);
    const validationType = useFormik({
      // enableReinitialize : use this flag when initial values needs to be changed
-     enableReinitialize: true,
- 
+     enableReinitialize: true, 
      initialValues: {
       password: '',
       password1: '',

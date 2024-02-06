@@ -1,5 +1,4 @@
 
-import { useSelector, useDispatch } from "react-redux";
 import { createWebsite } from "../../Utils/API/Websites";
 import {
   Container,
@@ -16,19 +15,9 @@ import {
 // Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { map } from "lodash";
 import Swal from "sweetalert2";
 
 const NewWebsite = () => {
- 
-
-
-  //get info
-  const dataUsers = useSelector((state) => state.users.users.data);
-  const dataModules = useSelector((state) => state.modules.modules.data);
-
-  
-
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -80,6 +69,7 @@ const NewWebsite = () => {
            let errorMessages = []
             Object.entries(error.response.data.data).map(item => {
               errorMessages.push(item[1])
+              return true
             })
             
             

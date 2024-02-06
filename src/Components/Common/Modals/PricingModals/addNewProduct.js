@@ -16,7 +16,6 @@ import {
   Input,
   FormFeedback,
   Button,
-  UncontrolledTooltip,
   Tooltip,
 } from "reactstrap";
 import * as Yup from "yup";
@@ -65,7 +64,6 @@ const AddNewProductPricing = ({
       setDataEdit(null);
     }
   }, [id, addNewProduct]);
-console.log(dataEdit)
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -271,6 +269,7 @@ console.log(dataEdit)
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(
@@ -299,6 +298,7 @@ console.log(dataEdit)
                 let errorMessages = [];
                 Object.entries(error.response.data.data).map((item) => {
                   errorMessages.push(item[1]);
+                  return true
                 });
 
                 Swal.fire(

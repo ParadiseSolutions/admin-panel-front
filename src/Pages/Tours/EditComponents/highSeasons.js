@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import HighSeasonImg from "../../../Components/Assets/images/highSeason.png";
 import {
   getSeasonsNameAPI,
@@ -22,17 +21,12 @@ import {
   Table,
   UncontrolledTooltip,
 } from "reactstrap";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { map } from "lodash";
 import Swal from "sweetalert2";
 import Switch from "react-switch";
 
 const HighSeasons = ({ tourData, toggle }) => {
-  const history = useHistory();
-
-  // console.log("tour data", tourData);
-
   //get initial Data
   const [seasonsData, setSeasonsData] = useState([]);
   const [seasonNames, setSeasonNames] = useState([]);
@@ -179,6 +173,7 @@ const HighSeasons = ({ tourData, toggle }) => {
             let errorMessages = [];
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
+              return true
             });
 
             Swal.fire(
@@ -250,7 +245,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                     className="m-0"
                   >
                     <i
-                      class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                      className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
                       style={{ width: "32px", height: "32px" }}
                     ></i>{" "}
                     In this tab you can add the dates for the different seasonal

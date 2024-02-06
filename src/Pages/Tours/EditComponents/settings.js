@@ -28,8 +28,6 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 
 const Settings = ({ history, tourSettings, id, toggle }) => {
-  console.log("settings", tourSettings);
-
   //seasons request
   const [availableData, setAvailableData] = useState([]);
   const [availableFromData, setAvailableFormData] = useState([]);
