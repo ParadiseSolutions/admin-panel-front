@@ -105,6 +105,7 @@ const EditRol = ({ history }) => {
           let errorMessages = [];
 					Object.entries(error.response.data.data).map((item) => {
 						errorMessages.push(item[1]);
+            return true
 					});
 
 					Swal.fire(

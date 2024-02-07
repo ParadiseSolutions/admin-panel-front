@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-
+import React from "react";
 import { createLocation } from "../../../../Utils/API/Locations";
-
 import {
   Row,
   Col,
@@ -46,6 +44,7 @@ const AddLocationModal = ({ addModal, setAddModal, onClickAddLocation }) => {
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
+            return true
           });
 
           Swal.fire(

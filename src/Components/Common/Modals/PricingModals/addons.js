@@ -1189,7 +1189,7 @@ useEffect(() => {
                       </span>
                       <Input
                         name="our_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1232,7 +1232,7 @@ useEffect(() => {
                     <div className="input-group">
                       <Input
                         name="you_save"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1279,7 +1279,7 @@ useEffect(() => {
                     <div className="input-group">
                       <Input
                         name="rate"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1331,7 +1331,7 @@ useEffect(() => {
                       </span>
                       <Input
                         name="commission"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1377,7 +1377,7 @@ useEffect(() => {
                       </span>
                       <Input
                         name="deposit"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1422,7 +1422,7 @@ useEffect(() => {
                       </span>
                       <Input
                         name="balance_due"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"

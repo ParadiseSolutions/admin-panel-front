@@ -265,7 +265,6 @@ const URL = ({ tourData, toggle }) => {
 
               Swal.fire(
                 "Error!",
-                // {error.response.},
                 String(errorMessages[0])
               );
             }

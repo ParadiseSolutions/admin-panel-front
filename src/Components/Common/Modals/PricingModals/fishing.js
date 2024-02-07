@@ -73,8 +73,8 @@ const Fishing = ({
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
   const [priceLocationSelected, setPriceLocationSelected] = useState("");
-  const [currency , setCurrency] = useState([])
-  const [currencySelected , setCurrencySelected] = useState('')
+  const [currency, setCurrency] = useState([])
+  const [currencySelected, setCurrencySelected] = useState('')
 
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
@@ -91,6 +91,8 @@ const Fishing = ({
   const [ttop15, setttop15] = useState(false);
   const [ttop16, setttop16] = useState(false);
   const [ttop17, setttop17] = useState(false);
+  const [ttop18, setttop18] = useState(false);
+  const [ttop19, setttop19] = useState(false);
 
   useEffect(() => {
     if (addNewFishing) {
@@ -115,7 +117,7 @@ const Fishing = ({
       getPricingOptionsAPI(37).then((resp) => {
         setPriceLocation(resp.data.data);
       });
-      getCurrency().then((resp) =>{
+      getCurrency().then((resp) => {
         setCurrency(resp.data.data)
       })
     }
@@ -176,40 +178,40 @@ const Fishing = ({
       balance_due: Yup.number().required("Field Required"),
     }),
     onSubmit: (values, { resetForm }) => {
-      let price_type = (priceTypeSelected === '' || priceTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
+      let price_type = (priceTypeSelected === '' || priceTypeSelected === undefined) ? (dataEdit && dataEdit.pricedetails
         ? dataEdit.pricedetails.filter(x => x.pricing_option_id === 33)[0]?.source_id
-        : null):priceTypeSelected
-        
-      let price_option = (priceOptionSelected === '' || priceOptionSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        : null) : priceTypeSelected
+
+      let price_option = (priceOptionSelected === '' || priceOptionSelected === undefined) ? (dataEdit && dataEdit.pricedetails
         ? dataEdit.pricedetails.filter(x => x.pricing_option_id === 34)[0]?.source_id
-        : null):priceOptionSelected
-        
-      let price_collect = (priceCollectSelected === '' || priceCollectSelected === undefined)?(dataEdit && dataEdit.pricedetails
+        : null) : priceOptionSelected
+
+      let price_collect = (priceCollectSelected === '' || priceCollectSelected === undefined) ? (dataEdit && dataEdit.pricedetails
         ? dataEdit.pricedetails.filter(x => x.pricing_option_id === 36)[0]?.source_id
-        : null):priceCollectSelected
-            
-      let price_season = (priceSeasonSelected === '' || priceSeasonSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id === undefined?null:dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id)
-        : null):priceSeasonSelected
+        : null) : priceCollectSelected
 
-      let charter_type = (priceCharterTypeSelected === '' || priceCharterTypeSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id === undefined?null:dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id)
-        : null):priceCharterTypeSelected
+      let price_season = (priceSeasonSelected === '' || priceSeasonSelected === undefined) ? (dataEdit && dataEdit.pricedetails
+        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id)
+        : null) : priceSeasonSelected
 
-      let price_duration = (priceDurationSelected === '' || priceDurationSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id === undefined?null:dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id)
-        : null):priceDurationSelected
+      let charter_type = (priceCharterTypeSelected === '' || priceCharterTypeSelected === undefined) ? (dataEdit && dataEdit.pricedetails
+        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id)
+        : null) : priceCharterTypeSelected
 
-      let price_location = (priceLocationSelected === '' || priceLocationSelected === undefined)?(dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id === undefined?null:dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id)
-        : null):priceLocationSelected
+      let price_duration = (priceDurationSelected === '' || priceDurationSelected === undefined) ? (dataEdit && dataEdit.pricedetails
+        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id)
+        : null) : priceDurationSelected
 
-      if(price_type && price_option && price_collect) {
+      let price_location = (priceLocationSelected === '' || priceLocationSelected === undefined) ? (dataEdit && dataEdit.pricedetails
+        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id)
+        : null) : priceLocationSelected
+
+      if (price_type && price_option && price_collect) {
         let data = {
           tour_id: tourData.id,
           public: values.public_price,
           provider_price: values.provider_price,
-          rate: ((values.rate !== "")?((values.rate > 1) ? values.rate / 100 : values.rate) : values.rate),
+          rate: ((values.rate !== "") ? ((values.rate > 1) ? values.rate / 100 : values.rate) : values.rate),
           net_rate: values.net_rate,
           compare_at_url: values.compare_at_url,
           ship_price: values.ship_price,
@@ -263,8 +265,8 @@ const Fishing = ({
             {
               pricing_option_id: 35,
               source_id: price_duration,
-              min: (values.min === "")?null:values.min,
-              max: (values.max === "")?null:values.max,
+              min: (values.min === "") ? null : values.min,
+              max: (values.max === "") ? null : values.max,
               label: null,
             },
             {
@@ -285,7 +287,7 @@ const Fishing = ({
             refreshTable();
             resetForm({ values: "" });
           }).catch((error) => {
-            if(error.response.data.data === null) {
+            if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -297,7 +299,7 @@ const Fishing = ({
                 errorMessages.push(item[1]);
                 return true
               });
-    
+
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -305,7 +307,7 @@ const Fishing = ({
               );
             }
           });
-        } else if(copyProduct || dataEdit === undefined || dataEdit === null) {
+        } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data).then((resp) => {
             triggerUpdate()
             // console.log(resp);
@@ -313,7 +315,7 @@ const Fishing = ({
             refreshTable();
             resetForm({ values: "" });
           }).catch((error) => {
-            if(error.response.data.data === null) {
+            if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -325,7 +327,7 @@ const Fishing = ({
                 errorMessages.push(item[1]);
                 return true
               });
-    
+
               Swal.fire(
                 "Error!",
                 // {error.response.},
@@ -395,21 +397,21 @@ const Fishing = ({
       >
         {
           copyProduct ?
-          (
-            <h1 className="modal-title mt-0 text-white">+ Copy Product - Fishing</h1>
-          ) : null
+            (
+              <h1 className="modal-title mt-0 text-white">+ Copy Product - Fishing</h1>
+            ) : null
         }
         {
           copyProduct === false && dataEdit ?
-          (
-            <h1 className="modal-title mt-0 text-white">+ Edit Product - Fishing</h1>
-          ) : null
+            (
+              <h1 className="modal-title mt-0 text-white">+ Edit Product - Fishing</h1>
+            ) : null
         }
         {
           copyProduct === false && !dataEdit ?
-          (
-            <h1 className="modal-title mt-0 text-white">+ New Product - Fishing</h1>
-          ) : null
+            (
+              <h1 className="modal-title mt-0 text-white">+ New Product - Fishing</h1>
+            ) : null
         }
         <button
           onClick={() => {
@@ -472,12 +474,12 @@ const Fishing = ({
                       </div>
                     </Col>
                   </Row>
-                ):null
-              }     
-              <Row>                
+                ) : null
+              }
+              <Row>
                 <Col className="col">
-                    <div className="form-outline">
-                       <div className="d-flex justify-content-between">
+                  <div className="form-outline">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Price Type*</Label>
                       <div>
                         <i
@@ -498,37 +500,37 @@ const Fishing = ({
                         </Tooltip>
                       </div>
                     </div>
-                      <Input
-                        type="select"
-                        name="price_type"
-                        onChange={(e) => {
-                          setPriceTypeSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
+                    <Input
+                      type="select"
+                      name="price_type"
+                      onChange={(e) => {
+                        setPriceTypeSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                    //   value={validationType.values.department || ""}
+                    >
                       <option value={null}>Select....</option>
-                        {map(priceTypeData, (type, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={type.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? type.id ===
-                                    dataEdit.pricedetails.filter(x => x.pricing_option_id === 33)[0]?.source_id
-                                  : false
-                              }
-                            >
-                              {type.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
+                      {map(priceTypeData, (type, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={type.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? type.id ===
+                                dataEdit.pricedetails.filter(x => x.pricing_option_id === 33)[0]?.source_id
+                                : false
+                            }
+                          >
+                            {type.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
                 <Col className="col">
-                    <div className="form-outline">
+                  <div className="form-outline">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">Price Option*</Label>
                       <div>
@@ -553,37 +555,37 @@ const Fishing = ({
                         </Tooltip>
                       </div>
                     </div>
-                      <Input
-                        type="select"
-                        name="price_options"
-                        onChange={(e) => {
-                          setPriceOptionSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceOptions, (option, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={option.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? option.id ===
-                                    dataEdit.pricedetails.filter(x => x.pricing_option_id === 34)[0]?.source_id
-                                  : false
-                              }
-                            >
-                              {option.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
+                    <Input
+                      type="select"
+                      name="price_options"
+                      onChange={(e) => {
+                        setPriceOptionSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                    //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceOptions, (option, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={option.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? option.id ===
+                                dataEdit.pricedetails.filter(x => x.pricing_option_id === 34)[0]?.source_id
+                                : false
+                            }
+                          >
+                            {option.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
                 <Col className="col">
-                    <div className="form-outline">
+                  <div className="form-outline">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">Collect*</Label>
                       <div>
@@ -609,46 +611,46 @@ const Fishing = ({
                         </Tooltip>
                       </div>
                     </div>
-                      <Input
-                        type="select"
-                        name="collect"
-                        onChange={(e) => {
-                          setPriceCollectSelected(e.target.value);
-                          setPriceCollectNameSelected(e.target.selectedOptions[0].label);
-                        }}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-                          validationType.setFieldValue('collect', value,
-                          validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, validationType.values.commission, validationType.values.deposit)),validationType.handleBlur)
-                        }}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option>Select....</option>
-                        {map(priceCollect, (collect, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={collect.id}
-                              selected={
-                                dataEdit && dataEdit.pricedetails
-                                  ? collect.id ===
-                                    dataEdit.pricedetails.filter(x => x.pricing_option_id === 36)[0]?.source_id
-                                  : false
-                              }
-                            >
-                              {collect.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  {tourData?.seasonality === 1 ? (
-                <Col className="col">
-                  
+                    <Input
+                      type="select"
+                      name="collect"
+                      onChange={(e) => {
+                        setPriceCollectSelected(e.target.value);
+                        setPriceCollectNameSelected(e.target.selectedOptions[0].label);
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value || "";
+                        validationType.setFieldValue('collect', value,
+                          validationType.setFieldValue('deposit', calcDeposit(validationType.values.our_price, priceCollectNameSelected, validationType.values.commission, validationType.values.deposit)), validationType.handleBlur)
+                      }}
+                    //   value={validationType.values.department || ""}
+                    >
+                      <option>Select....</option>
+                      {map(priceCollect, (collect, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={collect.id}
+                            selected={
+                              dataEdit && dataEdit.pricedetails
+                                ? collect.id ===
+                                dataEdit.pricedetails.filter(x => x.pricing_option_id === 36)[0]?.source_id
+                                : false
+                            }
+                          >
+                            {collect.text}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                {tourData?.seasonality === 1 ? (
+                  <Col className="col">
+
                     <div
                       className="form-outline"
-                      
+
                     >
                       <Label className="form-label">Season*</Label>
                       <Input
@@ -658,7 +660,7 @@ const Fishing = ({
                           setPriceSeasonSelected(e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                       >
                         <option>Select....</option>
                         {map(priceSeason, (season, index) => {
@@ -669,7 +671,7 @@ const Fishing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? season.id ===
-                                    dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id
+                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id
                                   : false
                               }
                             >
@@ -678,14 +680,30 @@ const Fishing = ({
                           );
                         })}
                       </Input>
-                    </div>                  
-                </Col>
+                    </div>
+                  </Col>
                 ) : null}
 
                 <Col className="col-3 d-flex">
                   {activeCheckbox !== null ? (
-                    <div className="d-flex flex-column align-items-center w-50">
-                      <Label className="form-label mt-2">Active</Label>
+                    <div className="d-flex flex-column align-items-center mx-1">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Active</Label>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="active-t"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop18}
+                          target="active-t"
+                          toggle={() => {
+                            setttop18(!ttop18);
+                          }}
+                        >
+                          Select if the tour is active for booking or not.
+                        </Tooltip>
+                      </div>
                       <div className="form-check form-switch form-switch-md">
                         <Input
                           name="active"
@@ -698,13 +716,13 @@ const Fishing = ({
                           value={validationType.values.active || ""}
                           invalid={
                             validationType.touched.active &&
-                            validationType.errors.active
+                              validationType.errors.active
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.active &&
-                        validationType.errors.active ? (
+                          validationType.errors.active ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.active}
                           </FormFeedback>
@@ -714,8 +732,24 @@ const Fishing = ({
                   ) : null}
 
                   {balanceDueCheckbox !== null ? (
-                    <div className="d-flex flex-column align-items-center w-50">
-                      <Label className="form-label mt-2">Balance Notify</Label>
+                    <div className="d-flex flex-column align-items-center">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Balance Due</Label>
+                        <i
+                          className="uil-question-circle font-size-15 mx-1"
+                          id="active-t"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop19}
+                          target="active-t"
+                          toggle={() => {
+                            setttop19(!ttop19);
+                          }}
+                        >
+                          Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
+                        </Tooltip>
+                      </div>
                       <div className="form-check form-switch form-switch-md">
                         <Input
                           name="balance_checkbox"
@@ -728,13 +762,13 @@ const Fishing = ({
                           value={validationType.values.balance_checkbox || ""}
                           invalid={
                             validationType.touched.balance_checkbox &&
-                            validationType.errors.balance_checkbox
+                              validationType.errors.balance_checkbox
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.balance_checkbox &&
-                        validationType.errors.balance_checkbox ? (
+                          validationType.errors.balance_checkbox ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.balance_checkbox}
                           </FormFeedback>
@@ -771,7 +805,7 @@ const Fishing = ({
                         setPriceCharterTypeSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceCharterType, (charterType, index) => {
@@ -782,7 +816,7 @@ const Fishing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? charterType.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id
+                                dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id
                                 : false
                             }
                           >
@@ -803,7 +837,7 @@ const Fishing = ({
                         setPriceDurationSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceDuration, (duration, index) => {
@@ -814,7 +848,7 @@ const Fishing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? duration.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id
+                                dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id
                                 : false
                             }
                           >
@@ -830,7 +864,7 @@ const Fishing = ({
                     <Label className="form-label">Min. Pax.</Label>
                     <Input
                       name="min"
-                      placeholder="0"
+                      placeholder=""
                       className="me-1"
                       type="number"
                       min="0"
@@ -856,7 +890,7 @@ const Fishing = ({
                     <Label className="form-label">Max. Pax.</Label>
                     <Input
                       name="max"
-                      placeholder="0"
+                      placeholder=""
                       type="number"
                       min="0"
                       onChange={validationType.handleChange}
@@ -885,7 +919,7 @@ const Fishing = ({
                         setPriceLocationSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceLocation, (location, index) => {
@@ -896,7 +930,7 @@ const Fishing = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? location.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id
+                                dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id
                                 : false
                             }
                           >
@@ -927,7 +961,7 @@ const Fishing = ({
               <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="public_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Public Price*</Label>
                       <div>
                         <i
@@ -948,40 +982,40 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="public_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('public_price', setDecimalFormat(value),
-                          validationType.setFieldValue("net_rate", calcNetRate(validationType.values.public_price, validationType.values.rate, validationType.values.net_rate)));
+                            validationType.setFieldValue("net_rate", calcNetRate(validationType.values.public_price, validationType.values.rate, validationType.values.net_rate)));
                         }}
                         value={validationType.values.public_price || ""}
                         invalid={
                           validationType.touched.public_price &&
-                          validationType.errors.public_price
+                            validationType.errors.public_price
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.public_price &&
-                      validationType.errors.public_price ? (
+                        validationType.errors.public_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.public_price}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="provider_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Provider Price</Label>
                       <div>
                         <i
@@ -1002,33 +1036,33 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="provider_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('provider_price', setDecimalFormat(value));
                         }}
                         value={validationType.values.provider_price || ""}
                         invalid={
                           validationType.touched.provider_price &&
-                          validationType.errors.provider_price
+                            validationType.errors.provider_price
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.provider_price &&
-                      validationType.errors.provider_price ? (
+                        validationType.errors.provider_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.provider_price}
                         </FormFeedback>
                       ) : null}
-                    </div>                    
+                    </div>
                     <UncontrolledTooltip placement="top" target="provider_price">
                       The price the provider sells the tour for on their own website.
                     </UncontrolledTooltip>
@@ -1036,7 +1070,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="rate">
-                  
+
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">Rate %</Label>
                       <div>
@@ -1061,37 +1095,37 @@ const Fishing = ({
                     <div className="input-group">
                       <Input
                         name="rate"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('rate', multipleRateCalcs(value));
                         }}
                         value={validationType.values.rate || ""}
                         invalid={
                           validationType.touched.rate &&
-                          validationType.errors.rate
+                            validationType.errors.rate
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.rate &&
-                      validationType.errors.rate ? (
+                        validationType.errors.rate ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.rate}
                         </FormFeedback>
                       ) : null}
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>%</span>
                     </div>
-                   
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="net_rate">
-                  <div className="d-flex justify-content-between">
-                      <Label className="form-label">Net Rate</Label>
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Net Price</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1113,34 +1147,34 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="net_rate"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('net_rate', setDecimalFormat(value));
                         }}
                         value={validationType.values.net_rate || ""}
                         invalid={
                           validationType.touched.net_rate &&
-                          validationType.errors.net_rate
+                            validationType.errors.net_rate
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.net_rate &&
-                      validationType.errors.net_rate ? (
+                        validationType.errors.net_rate ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.net_rate}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-4">
@@ -1148,27 +1182,27 @@ const Fishing = ({
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
-                      placeholder="https://provider.com/mitour.html"
+                      placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.compare_at_url || ""}
                       invalid={
                         validationType.touched.compare_at_url &&
-                        validationType.errors.compare_at_url
+                          validationType.errors.compare_at_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.compare_at_url &&
-                    validationType.errors.compare_at_url ? (
+                      validationType.errors.compare_at_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.compare_at_url}
                       </FormFeedback>
                     ) : null}
-                  </div>                  
+                  </div>
                   <UncontrolledTooltip placement="top" target="compare_at_url">
-                    The URL of the web page where the "compare at" price can be verified. 
+                    The URL of the web page where the "compare at" price can be verified.
                   </UncontrolledTooltip>
                 </Col>
               </Row>
@@ -1191,7 +1225,7 @@ const Fishing = ({
               <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="ship_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Ship Price</Label>
                       <div>
                         <i
@@ -1217,40 +1251,40 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="ship_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('ship_price', setDecimalFormat(value),
-                          validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)),validationType.handleBlur);
+                            validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)), validationType.handleBlur);
                         }}
                         value={validationType.values.ship_price || ""}
                         invalid={
                           validationType.touched.ship_price &&
-                          validationType.errors.ship_price
+                            validationType.errors.ship_price
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.ship_price &&
-                      validationType.errors.ship_price ? (
+                        validationType.errors.ship_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.ship_price}
                         </FormFeedback>
                       ) : null}
                     </div>
-                   
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="compare_at">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Compare At*</Label>
                       <div>
                         <i
@@ -1276,29 +1310,29 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
-                        <Input
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
+                      <Input
                         name="compare_at"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('compare_at', setDecimalFormat(value),
-                          validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)),validationType.handleBlur);
+                            validationType.setFieldValue('you_save', calcYouSave(validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)), validationType.handleBlur);
                         }}
                         value={validationType.values.compare_at || ""}
                         invalid={
                           validationType.touched.compare_at &&
-                          validationType.errors.compare_at
+                            validationType.errors.compare_at
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.compare_at &&
-                      validationType.errors.compare_at ? (
+                        validationType.errors.compare_at ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.compare_at}
                         </FormFeedback>
@@ -1308,7 +1342,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="our_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Our Price*</Label>
                       <div>
                         <i
@@ -1328,28 +1362,28 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="our_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('our_price', multipleOurPriceCalcs(value));
                         }}
                         value={validationType.values.our_price || ""}
                         invalid={
                           validationType.touched.our_price &&
-                          validationType.errors.our_price
+                            validationType.errors.our_price
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.our_price &&
-                      validationType.errors.our_price ? (
+                        validationType.errors.our_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.our_price}
                         </FormFeedback>
@@ -1359,7 +1393,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="you_save">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">You Save*</Label>
                       <div>
                         <i
@@ -1385,67 +1419,67 @@ const Fishing = ({
                     <div className="input-group">
                       <Input
                         name="you_save"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('you_save', setDecimalFormat(value));
                         }}
                         value={validationType.values.you_save || ""}
                         invalid={
                           validationType.touched.you_save &&
-                          validationType.errors.you_save
+                            validationType.errors.you_save
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.you_save &&
-                      validationType.errors.you_save ? (
+                        validationType.errors.you_save ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.you_save}
                         </FormFeedback>
                       ) : null}
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>%</span>
                     </div>
-                   
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="voucher_currency">
                     <Label className="form-label">Vchr. Currency</Label>
                     <div className="input-group">
-                    <Input
-                      type="select"
-                      name=""
-                      onChange={(e) => {
-                        setCurrencySelected(e.target.value);
-                      }}
-                      onBlur={validationType.handleBlur}
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setCurrencySelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
-                    >
-                      <option>Select....</option>
-                      {map(currency, (curr, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={curr.currency_id}
-                            selected={
-                              dataEdit && dataEdit.voucher_currency
-                                ? curr.currency_id === dataEdit.voucher_currency
-                                : false
-                            }
-                          >
-                            {curr.currency}
-                          </option>
-                        );
-                      })}
-                    </Input>
-                      
+                      >
+                        <option>Select....</option>
+                        {map(currency, (curr, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={curr.currency_id}
+                              selected={
+                                dataEdit && dataEdit.voucher_currency
+                                  ? curr.currency_id === dataEdit.voucher_currency
+                                  : false
+                              }
+                            >
+                              {curr.currency}
+                            </option>
+                          );
+                        })}
+                      </Input>
+
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
@@ -1454,7 +1488,7 @@ const Fishing = ({
                     <div className="input-group">
                       <Input
                         name="voucher_balance"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1469,13 +1503,13 @@ const Fishing = ({
                         value={validationType.values.voucher_balance || ""}
                         invalid={
                           validationType.touched.voucher_balance &&
-                          validationType.errors.voucher_balance
+                            validationType.errors.voucher_balance
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.voucher_balance &&
-                      validationType.errors.voucher_balance ? (
+                        validationType.errors.voucher_balance ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.voucher_balance}
                         </FormFeedback>
@@ -1488,14 +1522,14 @@ const Fishing = ({
                         $
                       </span>
                     </div>
-                    
+
                   </div>
                 </Col>
               </Row>
               <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="eff_rate">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Eff. Rate*</Label>
                       <div>
                         <i
@@ -1520,37 +1554,37 @@ const Fishing = ({
                     <div className="input-group">
                       <Input
                         name="eff_rate"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('eff_rate', setDecimalFormat(value));
                         }}
                         value={validationType.values.eff_rate || ""}
                         invalid={
                           validationType.touched.eff_rate &&
-                          validationType.errors.eff_rate
+                            validationType.errors.eff_rate
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.eff_rate &&
-                      validationType.errors.eff_rate ? (
+                        validationType.errors.eff_rate ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.eff_rate}
                         </FormFeedback>
                       ) : null}
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>%</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>%</span>
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="commission">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Commission*</Label>
                       <div>
                         <i
@@ -1570,39 +1604,39 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="commission"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('commission', multipleCommissionCalcs(value), validationType.handleBlur);
                         }}
                         value={validationType.values.commission || ""}
                         invalid={
                           validationType.touched.commission &&
-                          validationType.errors.commission
+                            validationType.errors.commission
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.commission &&
-                      validationType.errors.commission ? (
+                        validationType.errors.commission ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.commission}
                         </FormFeedback>
                       ) : null}
-                     
+
                     </div>
                   </div>
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="deposit">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Deposit*</Label>
                       <div>
                         <i
@@ -1624,28 +1658,28 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="deposit"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('deposit', setDecimalFormat(value));
                         }}
                         value={validationType.values.deposit || ""}
                         invalid={
                           validationType.touched.deposit &&
-                          validationType.errors.deposit
+                            validationType.errors.deposit
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.deposit &&
-                      validationType.errors.deposit ? (
+                        validationType.errors.deposit ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.deposit}
                         </FormFeedback>
@@ -1655,7 +1689,7 @@ const Fishing = ({
                 </Col>
                 <Col className="col-3">
                   <div className="form-outline mb-2" id="balance_due">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Balance Due*</Label>
                       <div>
                         <i
@@ -1675,35 +1709,35 @@ const Fishing = ({
                       </div>
                     </div>
                     <div className="input-group">
-                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{fontSize:"0.85em"}}>$</span>
+                      <span className="input-group-text form-label fw-bold bg-paradise text-white border-0" id="basic-addon1" style={{ fontSize: "0.85em" }}>$</span>
                       <Input
                         name="balance_due"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value || "";
                           validationType.setFieldValue('balance_due', setDecimalFormat(value),
-                          validationType.setFieldValue('eff_rate', calcEffRate(validationType.values.balance_due, validationType.values.our_price, validationType.values.eff_rate)),validationType.handleBlur);
+                            validationType.setFieldValue('eff_rate', calcEffRate(validationType.values.balance_due, validationType.values.our_price, validationType.values.eff_rate)), validationType.handleBlur);
                         }}
                         value={validationType.values.balance_due || ""}
                         invalid={
                           validationType.touched.balance_due &&
-                          validationType.errors.balance_due
+                            validationType.errors.balance_due
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.balance_due &&
-                      validationType.errors.balance_due ? (
+                        validationType.errors.balance_due ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.balance_due}
                         </FormFeedback>
-                      ) : null} 
+                      ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
               </Row>
@@ -1725,7 +1759,7 @@ const Fishing = ({
                     style={{ backgroundColor: "#F6851F" }}
                     type="submit"
                     className="font-16 btn-block col-2"
-                    // onClick={toggleCategory}
+                  // onClick={toggleCategory}
                   >
                     Save
                   </Button>

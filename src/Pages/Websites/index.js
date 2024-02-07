@@ -2,17 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Container } from "reactstrap";
 import { websitesData } from "../../Utils/Redux/Actions/WebsitesActions";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Card, CardBody, UncontrolledTooltip } from "reactstrap";
+import { Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import TableContainer from "../../Components/Common/TableContainer";
 import {
   Name,
   Code,
-  Date,
-  Domain,
   URL,
-  Root,
-  Folder,
   Active,
 } from "./WebsitesCols";
 import Swal from "sweetalert2";
@@ -38,9 +34,6 @@ const Websites = () => {
       setLoadingData(false);
     }
   }, [data]);
-  const onEdit = () => {
-    // console.log("on edit");
-  };
   const onDelete = (siteData) => {
     Swal.fire({
       title: "Delete Website?",
@@ -110,7 +103,6 @@ const Websites = () => {
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
-          const siteData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
               <div
@@ -151,9 +143,8 @@ const Websites = () => {
           );
         },
       },
-    ],
-    []
-  );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],[]);
   //modal new
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);

@@ -21,7 +21,7 @@ const Domain = (cell) => {
 };
 
 const URL = (cell) => {
-  return cell.value ?  <a href={`${cell.value}`} target="_blank">{cell.value}</a> : "";
+  return cell.value ?  <a href={`${cell.value}`} target="_blank" rel="noreferrer">{cell.value}</a> : "";
 };
 
 const Root = (cell) => {

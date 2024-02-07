@@ -86,8 +86,8 @@ const AddNewAirportTransfer = ({
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
-  const [currency , setCurrency] = useState([])
-  const [currencySelected , setCurrencySelected] = useState('')
+  const [currency, setCurrency] = useState([])
+  const [currencySelected, setCurrencySelected] = useState('')
 
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
@@ -104,7 +104,9 @@ const AddNewAirportTransfer = ({
   const [ttop15, setttop15] = useState(false);
   const [ttop16, setttop16] = useState(false);
   const [ttop17, setttop17] = useState(false);
-  
+  const [ttop18, setttop18] = useState(false);
+  const [ttop19, setttop19] = useState(false);
+
   useEffect(() => {
     if (addNewAirportTransfer) {
       getPricingOptionsAPI(10).then((resp) => {
@@ -131,7 +133,7 @@ const AddNewAirportTransfer = ({
       getPricingZoneOptionsAPI(50, tourData.provider_id).then((resp) => {
         setPriceZone(resp.data.data);
       });
-      getCurrency().then((resp) =>{
+      getCurrency().then((resp) => {
         setCurrency(resp.data.data)
       })
     }
@@ -198,7 +200,7 @@ const AddNewAirportTransfer = ({
         priceTypeSelected === "" || priceTypeSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 10)[0]
-                ?.source_id
+              ?.source_id
             : null
           : priceTypeSelected;
 
@@ -206,7 +208,7 @@ const AddNewAirportTransfer = ({
         priceOptionSelected === "" || priceOptionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 11)[0]
-                ?.source_id
+              ?.source_id
             : null
           : priceOptionSelected;
 
@@ -214,7 +216,7 @@ const AddNewAirportTransfer = ({
         priceCollectSelected === "" || priceCollectSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 14)[0]
-                ?.source_id
+              ?.source_id
             : null
           : priceCollectSelected;
 
@@ -222,24 +224,24 @@ const AddNewAirportTransfer = ({
         priceSeasonSelected === "" || priceSeasonSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 30)[0]
-                ?.source_id === undefined
+              ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 30
-                )[0]?.source_id
+                (x) => x.pricing_option_id === 30
+              )[0]?.source_id
             : null
           : priceSeasonSelected;
 
       let transfer_type =
         priceTransferTypeSelected === "" ||
-        priceTransferTypeSelected === undefined
+          priceTransferTypeSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 12)[0]
-                ?.source_id === undefined
+              ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 12
-                )[0]?.source_id
+                (x) => x.pricing_option_id === 12
+              )[0]?.source_id
             : null
           : priceTransferTypeSelected;
 
@@ -247,11 +249,11 @@ const AddNewAirportTransfer = ({
         priceDirectionSelected === "" || priceDirectionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 13)[0]
-                ?.source_id === undefined
+              ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 13
-                )[0]?.source_id
+                (x) => x.pricing_option_id === 13
+              )[0]?.source_id
             : null
           : priceDirectionSelected;
 
@@ -259,11 +261,11 @@ const AddNewAirportTransfer = ({
         priceVehicleSelected === "" || priceVehicleSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 17)[0]
-                ?.source_id === undefined
+              ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 17
-                )[0]?.source_id
+                (x) => x.pricing_option_id === 17
+              )[0]?.source_id
             : null
           : priceVehicleSelected;
 
@@ -271,11 +273,11 @@ const AddNewAirportTransfer = ({
         priceZoneSelected === "" || priceZoneSelected === undefined
           ? dataEdit && dataEdit.pricedetails
             ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 50)[0]
-                ?.source_id === undefined
+              ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 50
-                )[0]?.source_id
+                (x) => x.pricing_option_id === 50
+              )[0]?.source_id
             : null
           : priceZoneSelected;
 
@@ -618,8 +620,8 @@ const AddNewAirportTransfer = ({
                 <Col className="col">
                   <div className="form-outline">
                     <div className="d-flex justify-content-between">
-                    <Label className="form-label">Price Type*</Label>
-                    <div>
+                      <Label className="form-label">Price Type*</Label>
+                      <div>
                         <i
                           className="uil-question-circle font-size-15 mx-2"
                           id="priceType"
@@ -647,7 +649,7 @@ const AddNewAirportTransfer = ({
                         setPriceTypeSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(priceTypeData, (type, index) => {
@@ -658,9 +660,9 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? type.id ===
-                                  dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 10
-                                  )[0]?.source_id
+                                dataEdit.pricedetails.filter(
+                                  (x) => x.pricing_option_id === 10
+                                )[0]?.source_id
                                 : false
                             }
                           >
@@ -673,7 +675,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col">
                   <div className="form-outline">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Price Option*</Label>
                       <div>
                         <i
@@ -704,7 +706,7 @@ const AddNewAirportTransfer = ({
                         setPriceOptionSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceOptions, (option, index) => {
@@ -715,9 +717,9 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? option.id ===
-                                  dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 11
-                                  )[0]?.source_id
+                                dataEdit.pricedetails.filter(
+                                  (x) => x.pricing_option_id === 11
+                                )[0]?.source_id
                                 : false
                             }
                           >
@@ -730,7 +732,7 @@ const AddNewAirportTransfer = ({
                 </Col>
                 <Col className="col">
                   <div className="form-outline">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Collect*</Label>
                       <div>
                         <i
@@ -781,7 +783,7 @@ const AddNewAirportTransfer = ({
                           validationType.handleBlur
                         );
                       }}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceCollect, (collect, index) => {
@@ -792,9 +794,9 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? collect.id ===
-                                  dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 14
-                                  )[0]?.source_id
+                                dataEdit.pricedetails.filter(
+                                  (x) => x.pricing_option_id === 14
+                                )[0]?.source_id
                                 : false
                             }
                           >
@@ -816,7 +818,7 @@ const AddNewAirportTransfer = ({
                           setPriceSeasonSelected(e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                       >
                         <option>Select....</option>
                         {map(priceSeason, (season, index) => {
@@ -827,9 +829,9 @@ const AddNewAirportTransfer = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? season.id ===
-                                    dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 30
-                                    )[0]?.source_id
+                                  dataEdit.pricedetails.filter(
+                                    (x) => x.pricing_option_id === 30
+                                  )[0]?.source_id
                                   : false
                               }
                             >
@@ -844,8 +846,24 @@ const AddNewAirportTransfer = ({
 
                 <Col className="col-3 d-flex">
                   {activeCheckbox !== null ? (
-                    <div className="d-flex flex-column align-items-center w-50">
-                      <Label className="form-label mt-2">Active</Label>
+                    <div className="d-flex flex-column align-items-center mx-1">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Active</Label>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="active-t"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop18}
+                          target="active-t"
+                          toggle={() => {
+                            setttop18(!ttop18);
+                          }}
+                        >
+                          Select if the tour is active for booking or not.
+                        </Tooltip>
+                      </div>
                       <div className="form-check form-switch form-switch-md">
                         <Input
                           name="active"
@@ -858,13 +876,13 @@ const AddNewAirportTransfer = ({
                           value={validationType.values.active || ""}
                           invalid={
                             validationType.touched.active &&
-                            validationType.errors.active
+                              validationType.errors.active
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.active &&
-                        validationType.errors.active ? (
+                          validationType.errors.active ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.active}
                           </FormFeedback>
@@ -874,8 +892,24 @@ const AddNewAirportTransfer = ({
                   ) : null}
 
                   {balanceDueCheckbox !== null ? (
-                    <div className="d-flex flex-column align-items-center w-50">
-                      <Label className="form-label mt-2">Balance Notify</Label>
+                    <div className="d-flex flex-column align-items-center">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Balance Due</Label>
+                        <i
+                          className="uil-question-circle font-size-15 mx-1"
+                          id="active-t"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ttop19}
+                          target="active-t"
+                          toggle={() => {
+                            setttop19(!ttop19);
+                          }}
+                        >
+                          Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
+                        </Tooltip>
+                      </div>
                       <div className="form-check form-switch form-switch-md">
                         <Input
                           name="balance_checkbox"
@@ -888,13 +922,13 @@ const AddNewAirportTransfer = ({
                           value={validationType.values.balance_checkbox || ""}
                           invalid={
                             validationType.touched.balance_checkbox &&
-                            validationType.errors.balance_checkbox
+                              validationType.errors.balance_checkbox
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.balance_checkbox &&
-                        validationType.errors.balance_checkbox ? (
+                          validationType.errors.balance_checkbox ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.balance_checkbox}
                           </FormFeedback>
@@ -931,7 +965,7 @@ const AddNewAirportTransfer = ({
                         setPriceTransferTypeSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceTransferType, (transferType, index) => {
@@ -965,7 +999,7 @@ const AddNewAirportTransfer = ({
                         setPriceDirectionSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceDirection, (direction, index) => {
@@ -976,9 +1010,9 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? direction.id ===
-                                  dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 13
-                                  )[0]?.source_id
+                                dataEdit.pricedetails.filter(
+                                  (x) => x.pricing_option_id === 13
+                                )[0]?.source_id
                                 : false
                             }
                           >
@@ -999,7 +1033,7 @@ const AddNewAirportTransfer = ({
                         setPriceVehicleSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceVehicle, (vehicle, index) => {
@@ -1010,9 +1044,9 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? vehicle.id ===
-                                  dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 17
-                                  )[0]?.source_id
+                                dataEdit.pricedetails.filter(
+                                  (x) => x.pricing_option_id === 17
+                                )[0]?.source_id
                                 : false
                             }
                           >
@@ -1033,7 +1067,7 @@ const AddNewAirportTransfer = ({
                         setPriceZoneSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option>Select....</option>
                       {map(priceZone, (zone, index) => {
@@ -1044,9 +1078,9 @@ const AddNewAirportTransfer = ({
                             selected={
                               dataEdit && dataEdit.pricedetails
                                 ? zone.id ===
-                                  dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 50
-                                  )[0]?.source_id
+                                dataEdit.pricedetails.filter(
+                                  (x) => x.pricing_option_id === 50
+                                )[0]?.source_id
                                 : false
                             }
                           >
@@ -1070,7 +1104,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="min"
-                        placeholder="0"
+                        placeholder=""
                         className="me-1"
                         type="number"
                         min="0"
@@ -1079,13 +1113,13 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.min || ""}
                         invalid={
                           validationType.touched.min &&
-                          validationType.errors.min
+                            validationType.errors.min
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.min &&
-                      validationType.errors.min ? (
+                        validationType.errors.min ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.min}
                         </FormFeedback>
@@ -1099,7 +1133,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="max"
-                        placeholder="0"
+                        placeholder=""
                         type="number"
                         min="0"
                         onChange={validationType.handleChange}
@@ -1107,13 +1141,13 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.max || ""}
                         invalid={
                           validationType.touched.max &&
-                          validationType.errors.max
+                            validationType.errors.max
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.max &&
-                      validationType.errors.max ? (
+                        validationType.errors.max ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.max}
                         </FormFeedback>
@@ -1141,7 +1175,7 @@ const AddNewAirportTransfer = ({
               <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="public_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Public Price*</Label>
                       <div>
                         <i
@@ -1171,7 +1205,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="public_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1194,18 +1228,18 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.public_price || ""}
                         invalid={
                           validationType.touched.public_price &&
-                          validationType.errors.public_price
+                            validationType.errors.public_price
                             ? true
                             : false
                         }
                       />
-                      
+
                     </div>
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="provider_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Provider Price</Label>
                       <div>
                         <i
@@ -1235,7 +1269,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="provider_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1250,19 +1284,19 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.provider_price || ""}
                         invalid={
                           validationType.touched.provider_price &&
-                          validationType.errors.provider_price
+                            validationType.errors.provider_price
                             ? true
                             : false
                         }
                       />
-                      
+
                     </div>
-                   
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="rate">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Rate %</Label>
                       <div>
                         <i
@@ -1286,7 +1320,7 @@ const AddNewAirportTransfer = ({
                     <div className="input-group">
                       <Input
                         name="rate"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         step="any"
                         onChange={validationType.handleChange}
@@ -1300,12 +1334,12 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.rate || ""}
                         invalid={
                           validationType.touched.rate &&
-                          validationType.errors.rate
+                            validationType.errors.rate
                             ? true
                             : false
                         }
                       />
-                      
+
                       <span
                         className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                         id="basic-addon1"
@@ -1314,13 +1348,13 @@ const AddNewAirportTransfer = ({
                         %
                       </span>
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="net_rate">
-                  <div className="d-flex justify-content-between">
-                      <Label className="form-label">Net Rate</Label>
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Net Price</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1351,7 +1385,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="net_rate"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1366,19 +1400,19 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.net_rate || ""}
                         invalid={
                           validationType.touched.net_rate &&
-                          validationType.errors.net_rate
+                            validationType.errors.net_rate
                             ? true
                             : false
                         }
                       />
-                   
+
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="commission">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Commission*</Label>
                       <div>
                         <i
@@ -1407,7 +1441,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="commission"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1423,24 +1457,24 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.commission || ""}
                         invalid={
                           validationType.touched.commission &&
-                          validationType.errors.commission
+                            validationType.errors.commission
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.commission &&
-                      validationType.errors.commission ? (
+                        validationType.errors.commission ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.commission}
                         </FormFeedback>
                       ) : null}
-                     
+
                     </div>
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="balance_due">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Balance Due*</Label>
                       <div>
                         <i
@@ -1469,7 +1503,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="balance_due"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1493,23 +1527,23 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.balance_due || ""}
                         invalid={
                           validationType.touched.balance_due &&
-                          validationType.errors.balance_due
+                            validationType.errors.balance_due
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.balance_due &&
-                      validationType.errors.balance_due ? (
+                        validationType.errors.balance_due ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.balance_due}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
 
-               
+
               </Row>
               <Col
                 className="col-12 p-1 my-2"
@@ -1530,7 +1564,7 @@ const AddNewAirportTransfer = ({
               <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="ship_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Ship Price</Label>
                       <div>
                         <i
@@ -1565,7 +1599,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="ship_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1590,24 +1624,24 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.ship_price || ""}
                         invalid={
                           validationType.touched.ship_price &&
-                          validationType.errors.ship_price
+                            validationType.errors.ship_price
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.ship_price &&
-                      validationType.errors.ship_price ? (
+                        validationType.errors.ship_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.ship_price}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="compare_at">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Compare At*</Label>
                       <div>
                         <i
@@ -1642,7 +1676,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="compare_at"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1667,24 +1701,24 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.compare_at || ""}
                         invalid={
                           validationType.touched.compare_at &&
-                          validationType.errors.compare_at
+                            validationType.errors.compare_at
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.compare_at &&
-                      validationType.errors.compare_at ? (
+                        validationType.errors.compare_at ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.compare_at}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="our_price">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Our Price*</Label>
                       <div>
                         <i
@@ -1713,7 +1747,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="our_price"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1728,24 +1762,24 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.our_price || ""}
                         invalid={
                           validationType.touched.our_price &&
-                          validationType.errors.our_price
+                            validationType.errors.our_price
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.our_price &&
-                      validationType.errors.our_price ? (
+                        validationType.errors.our_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.our_price}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="you_save">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">You Save*</Label>
                       <div>
                         <i
@@ -1771,7 +1805,7 @@ const AddNewAirportTransfer = ({
                     <div className="input-group">
                       <Input
                         name="you_save"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1786,13 +1820,13 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.you_save || ""}
                         invalid={
                           validationType.touched.you_save &&
-                          validationType.errors.you_save
+                            validationType.errors.you_save
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.you_save &&
-                      validationType.errors.you_save ? (
+                        validationType.errors.you_save ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.you_save}
                         </FormFeedback>
@@ -1805,42 +1839,42 @@ const AddNewAirportTransfer = ({
                         %
                       </span>
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="voucher_currency">
                     <Label className="form-label">Vchr. Currency</Label>
                     <div className="input-group">
-                    <Input
-                      type="select"
-                      name=""
-                      onChange={(e) => {
-                        setCurrencySelected(e.target.value);
-                      }}
-                      onBlur={validationType.handleBlur}
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setCurrencySelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
-                    >
-                      <option>Select....</option>
-                      {map(currency, (curr, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={curr.currency_id}
-                            selected={
-                              dataEdit && dataEdit.voucher_currency
-                                ? curr.currency_id === dataEdit.voucher_currency
-                                : false
-                            }
-                          >
-                            {curr.currency}
-                          </option>
-                        );
-                      })}
-                    </Input>
-                      
+                      >
+                        <option>Select....</option>
+                        {map(currency, (curr, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={curr.currency_id}
+                              selected={
+                                dataEdit && dataEdit.voucher_currency
+                                  ? curr.currency_id === dataEdit.voucher_currency
+                                  : false
+                              }
+                            >
+                              {curr.currency}
+                            </option>
+                          );
+                        })}
+                      </Input>
+
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
@@ -1849,7 +1883,7 @@ const AddNewAirportTransfer = ({
                     <div className="input-group">
                       <Input
                         name="voucher_balance"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1864,13 +1898,13 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.voucher_balance || ""}
                         invalid={
                           validationType.touched.voucher_balance &&
-                          validationType.errors.voucher_balance
+                            validationType.errors.voucher_balance
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.voucher_balance &&
-                      validationType.errors.voucher_balance ? (
+                        validationType.errors.voucher_balance ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.voucher_balance}
                         </FormFeedback>
@@ -1883,14 +1917,14 @@ const AddNewAirportTransfer = ({
                         $
                       </span>
                     </div>
-                    
+
                   </div>
                 </Col>
               </Row>
               <Row className="d-flex">
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="eff_rate">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Eff. Rate*</Label>
                       <div>
                         <i
@@ -1915,7 +1949,7 @@ const AddNewAirportTransfer = ({
                     <div className="input-group">
                       <Input
                         name="eff_rate"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -1930,13 +1964,13 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.eff_rate || ""}
                         invalid={
                           validationType.touched.eff_rate &&
-                          validationType.errors.eff_rate
+                            validationType.errors.eff_rate
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.eff_rate &&
-                      validationType.errors.eff_rate ? (
+                        validationType.errors.eff_rate ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.eff_rate}
                         </FormFeedback>
@@ -1949,7 +1983,7 @@ const AddNewAirportTransfer = ({
                         %
                       </span>
                     </div>
-                    
+
                   </div>
                 </Col>
                 {/* <Col className="col-3">
@@ -1965,7 +1999,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="commission"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -2000,7 +2034,7 @@ const AddNewAirportTransfer = ({
                 </Col> */}
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="deposit">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Deposit*</Label>
                       <div>
                         <i
@@ -2031,7 +2065,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="deposit"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -2046,24 +2080,24 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.deposit || ""}
                         invalid={
                           validationType.touched.deposit &&
-                          validationType.errors.deposit
+                            validationType.errors.deposit
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.deposit &&
-                      validationType.errors.deposit ? (
+                        validationType.errors.deposit ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.deposit}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
                 <Col className="col-2">
                   <div className="form-outline mb-2" id="balance_due">
-                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Label className="form-label">Balance Due*</Label>
                       <div>
                         <i
@@ -2092,7 +2126,7 @@ const AddNewAirportTransfer = ({
                       </span>
                       <Input
                         name="balance_due"
-                        placeholder="0.00"
+                        placeholder=""
                         type="text"
                         min="0"
                         step="any"
@@ -2116,40 +2150,40 @@ const AddNewAirportTransfer = ({
                         value={validationType.values.balance_due || ""}
                         invalid={
                           validationType.touched.balance_due &&
-                          validationType.errors.balance_due
+                            validationType.errors.balance_due
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.balance_due &&
-                      validationType.errors.balance_due ? (
+                        validationType.errors.balance_due ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.balance_due}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    
+
                   </div>
                 </Col>
-                 <Col className="col-6">
+                <Col className="col-6">
                   <div className="form-outline mb-2" id="compare_at_url">
                     <Label className="form-label">"Compare At" URL</Label>
                     <Input
                       name="compare_at_url"
-                      placeholder="https://provider.com/mitour.html"
+                      placeholder=""
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.compare_at_url || ""}
                       invalid={
                         validationType.touched.compare_at_url &&
-                        validationType.errors.compare_at_url
+                          validationType.errors.compare_at_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.compare_at_url &&
-                    validationType.errors.compare_at_url ? (
+                      validationType.errors.compare_at_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.compare_at_url}
                       </FormFeedback>
@@ -2175,7 +2209,7 @@ const AddNewAirportTransfer = ({
                   <Button
                     type="submit"
                     className="font-16 btn-block col-2 btn-orange"
-                    // onClick={toggleCategory}
+                  // onClick={toggleCategory}
                   >
                     Save
                   </Button>

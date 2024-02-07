@@ -13,6 +13,7 @@ const AvailableCheckbox = ({ available, availableFromIDs,  setAvailableFromIDs }
     if ( availableFromIDs && availableFromIDs.length > 0) {
       setChecked(availableFromIDs.includes(available.id.toString()) ? true : false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked]);
 
   const onChangeMembers = (e) => {

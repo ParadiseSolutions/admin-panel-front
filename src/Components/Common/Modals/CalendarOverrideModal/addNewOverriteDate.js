@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import OverriteDateImg from "../../../../Components/Assets/images/overriteDates.png";
 import { postOverriteDate, triggerUpdate } from "../../../../Utils/API/Tours";
 import CheckBoxs from "./Components/checkboxs";
@@ -94,6 +94,7 @@ const AddNewOverriteDate = ({
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
+            return true
           });
 
           Swal.fire(

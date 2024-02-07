@@ -284,8 +284,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         );
       },
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  ],[]);
+  ]);
   //add new product
   const [addNewProduct, setAddNewProduct] = useState(false);
   const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);

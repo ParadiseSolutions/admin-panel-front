@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProviderAPI, updateProviderAPI, updateSocialProviderAPI } from "../../../Utils/API/Providers";
+import { updateSocialProviderAPI } from "../../../Utils/API/Providers";
 import {
   Collapse,
   Form,
@@ -14,7 +14,6 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from 'react-router-dom'
 
 const SocialMedia = ({socialData, id}) => {
 
