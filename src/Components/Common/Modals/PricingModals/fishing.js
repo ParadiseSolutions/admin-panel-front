@@ -710,7 +710,7 @@ const Fishing = ({
                           placeholder=""
                           type="checkbox"
                           checked={activeCheckbox}
-                          className="form-check-input start-0"
+                          className={activeCheckbox ? "form-check-input start-0 blue-switch-filled-mini" : "form-check-input start-0"}
                           onChange={() => onChangeActiveToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.active || ""}
@@ -756,7 +756,7 @@ const Fishing = ({
                           placeholder=""
                           type="checkbox"
                           checked={balanceDueCheckbox}
-                          className="form-check-input start-0"
+                          className={balanceDueCheckbox ? "form-check-input start-0 blue-switch-filled-mini" : "form-check-input start-0"}
                           onChange={() => onChangeBalanceDueToggle()}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.balance_checkbox || ""}

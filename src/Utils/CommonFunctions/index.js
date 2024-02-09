@@ -1,10 +1,25 @@
+import { round } from "lodash";
+
 export const setDecimalFormat = (currentValue) => {
     if(currentValue !== null && !isNaN(currentValue) && currentValue !== "") {
         currentValue = parseFloat(currentValue).toFixed(2)
     } else {
-        currentValue = "0.00";
+        currentValue = "";
     }
-    return isNaN(currentValue) ? "0.00" : currentValue
+    return isNaN(currentValue) ? "" : currentValue
+}
+
+export const setDecimalFormatVBalance = (currentValue, currencySelected) => {
+    if(currentValue !== null && !isNaN(currentValue) && currentValue !== "") {
+        if(currencySelected === "MXN $" || currencySelected === "MXN") {
+            currentValue = parseFloat(currentValue).toFixed(0)
+        } else {
+            currentValue = parseFloat(currentValue).toFixed(2)
+        }
+    } else {
+        currentValue = "";
+    }
+    return isNaN(currentValue) ? "" : currentValue
 }
 
 export const setRateFormat = (currentValue) => {
@@ -14,7 +29,18 @@ export const setRateFormat = (currentValue) => {
     if(currentValue <= 1) {
         currentValue *= 100;
     }
-    return parseFloat(currentValue).toFixed(2)
+    return round(currentValue, 1).toFixed(1)
+}
+
+export const setEffRateFormat = (currentValue) => {
+    if(isNaN(currentValue)) {
+        currentValue = 0;
+    } 
+    if(currentValue <= 1) {
+        currentValue *= 100;
+    }
+    console.log(currentValue)
+    return roundNearest5(currentValue).toFixed(0)
 }
 
 export const cleanUpSpecialCharacters = (currentValue) => {
@@ -87,9 +113,10 @@ export const calcNetRate = (public_price, rate, current_net_rate) => {
         }
         if(public_price != null && !isNaN(public_price) && public_price !== "") {
             current_net_rate = public_price * rate;
+            current_net_rate = round(current_net_rate,2).toFixed(2)
         }
     }
-    return parseFloat(current_net_rate).toFixed(2);
+    return current_net_rate;
 }
 
 export const calcYouSave = (our_price, ship_price, compare_at, current_you_save) => {
@@ -142,6 +169,9 @@ export const calcDeposit = (our_price, collect, commission, current_deposit) => 
             case "30% Deposit":
                 current_deposit = our_price * 0.3;
             break;
+            case "25% Deposit":
+                current_deposit = our_price * 0.25;
+            break;
             case "20% Deposit":
                 current_deposit = our_price * 0.2;
             break;
@@ -163,3 +193,7 @@ export const calcNetPrice = (our_price, commission, current_net_price) => {
     }
     return parseFloat(current_net_price).toFixed(2);
 }
+
+const roundNearest5 = (num) => {
+    return Math.round(num / 5) * 5;
+  }
