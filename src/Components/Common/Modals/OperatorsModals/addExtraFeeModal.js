@@ -21,6 +21,7 @@ import {
   postExtraFee,
   putExtraFee
 } from "../../../../Utils/API/Operators";
+import { setDecimalFormat } from "../../../../Utils/CommonFunctions";
 
 const AddExtraFeeModal = ({
   id,
@@ -266,8 +267,14 @@ const AddExtraFeeModal = ({
                           onBlur={(e) => {
                             const value = e.target.value || "";
                             //  setOurPriceValue(value)
-
-                            validationType.setFieldValue("amount", value);
+                            // setDecimalFormat(value)
+                            validationType.setFieldValue(
+                              "amount",
+                              setDecimalFormat(value),
+                              validationType.setFieldValue("amount", value),
+                              validationType.handleBlur
+                            );
+                            // validationType.setFieldValue("amount", value);
                           }}
                           value={validationType.values.amount || ""}
                           invalid={
