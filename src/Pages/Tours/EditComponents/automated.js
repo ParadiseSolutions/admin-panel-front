@@ -42,6 +42,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [rest1, setRest1] = useState();
   const [rest2, setRest2] = useState();
   const [rest3, setRest3] = useState();
+  const [rest4, setRest4] = useState();
   const [addMore, setAddMore] = useState(false);
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
@@ -114,6 +115,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       setRest1(restrictionList[0]?.restriction_1);
       setRest2(restrictionList[1]?.restriction_2);
       setRest3(restrictionList[2]?.restriction_3);
+      setRest4(restrictionList[3]?.restriction_4);
       // setRest1(restrictionList[3]?.restriction_4)
     }
   }, [restrictionList]);
@@ -168,6 +170,14 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           restriction_3: rest3,
           restriction_read_only_3: restrictionList[2]?.restriction_read_only_3
             ? restrictionList[2]?.restriction_read_only_3
+            : 0,
+        });
+      }
+      if (rest4) {
+        restArr.push({
+          restriction_4: rest4,
+          restriction_read_only_4: restrictionList[3]?.restriction_read_only_4
+            ? restrictionList[3]?.restriction_read_only_4
             : 0,
         });
       }
@@ -675,6 +685,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   </div>
                 </div>
                 {addMore || restrictionList.length > 2 ? (
+                  <>
                   <div className="col-10 d-flex">
                     <Input
                       name="rest_three"
@@ -686,6 +697,19 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       disabled={voucherInitialData?.restrictions[2]?.restriction_read_only_3 === 1 ? true : false}
                     />
                   </div>
+                  <div className="col-10 d-flex">
+                    <Input
+                      name="rest_four"
+                      placeholder="Add Restriction #4"
+                      className="my-1"
+                      type="text"
+                      onChange={(e) => setRest4(e.target.value)}
+                      value={rest4}
+                      disabled={voucherInitialData?.restrictions[3]?.restriction_read_only_4 === 1 ? true : false}
+                    />
+                  </div>
+                  
+                  </>
                 ) : null}
               </Col>
             ) : null}
