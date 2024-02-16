@@ -28,7 +28,7 @@ import {
   calcNetRate,
   calcDeposit,
   setDecimalFormatVBalance,
-  setEffRateFormat,
+  setYouSaveFormat,
 } from "../../../../Utils/CommonFunctions";
 import { getCurrency } from "../../../../Utils/API/Operators";
 
@@ -66,6 +66,7 @@ const AddNewProductPricing = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
   const [currency, setCurrency] = useState([])
   const [currencySelected, setCurrencySelected] = useState('')
+
   useEffect(() => {
     if (addNewProduct) {
       setLoadingData(true)
@@ -90,6 +91,7 @@ const AddNewProductPricing = ({
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
   const [balanceDueCheckbox, setBalanceDueCheckbox] = useState(null);
+
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
@@ -166,6 +168,7 @@ const AddNewProductPricing = ({
       }      
     }
   }, [dataEdit, priceCollect]);
+
   const onChangeActiveToggle = () => {
     setActiveCheckbox(!activeCheckbox);
   };
@@ -189,9 +192,8 @@ const AddNewProductPricing = ({
       ship_price: dataEdit ? dataEdit.ship_price : "",
       compare_at: dataEdit ? dataEdit.compare_at : "",
       our_price: dataEdit ? dataEdit.price : "",
-      you_save: dataEdit ? setRateFormat(dataEdit.you_save) : "",
+      you_save: dataEdit ? setYouSaveFormat(dataEdit.you_save) : "",
       eff_rate: dataEdit ? setRateFormat(dataEdit.eff_rate) : "",
-      commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
       voucher_balance: dataEdit ? (dataEdit.voucher_balance ? setDecimalFormatVBalance(dataEdit.voucher_balance, dataEdit.voucher_currency) : setDecimalFormatVBalance(dataEdit.price - dataEdit.deposit)) : ""
@@ -199,13 +201,12 @@ const AddNewProductPricing = ({
     validationSchema: Yup.object().shape({
       public_price: Yup.number().required("Field Required"),
       provider_price: Yup.number().nullable(),
-      rate: Yup.number().nullable(),
+      rate: Yup.string().nullable(),
       net_rate: Yup.number().nullable(),
-      ship_price: Yup.number().nullable(),
-      compare_at: Yup.number().nullable(),
+      ship_price: Yup.string().nullable(),
+      compare_at: Yup.string().nullable(),
       compare_at_url: Yup.string().url("URL invalid format").trim().nullable(),
       our_price: Yup.number().required("Field Required"),
-      commission: Yup.number().required("Field Required"),
       deposit: Yup.number().required("Field Required"),
       balance_due: Yup.number(),
     }),
@@ -311,7 +312,6 @@ const AddNewProductPricing = ({
               if (error.response.data.data === null) {
                 Swal.fire(
                   "Error!",
-                  // {error.response.},
                   String(error.response.data.message)
                 );
               } else {
@@ -323,7 +323,6 @@ const AddNewProductPricing = ({
 
                 Swal.fire(
                   "Error!",
-                  // {error.response.},
                   String(errorMessages[0])
                 );
               }
@@ -426,23 +425,20 @@ const AddNewProductPricing = ({
   }, [validationType.values.our_price, priceCollectNameSelected])
 
   useEffect(() => {
-    if (validationType.values.our_price !== "" && validationType.values.ship_price !== "" && validationType.values.ship_price !== "0.00") {
-      validationType.setFieldValue("you_save", setEffRateFormat((validationType.values.our_price / validationType.values.ship_price)))
-    } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== "0.00") {
-      validationType.setFieldValue("you_save", setEffRateFormat((validationType.values.our_price / validationType.values.compare_at)))
+    if(recalc) {
+      if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
+        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
+      } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
+        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
+      }
     }
   }, [validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at])
 
   return (
-    <>
-
       <Modal
         centered
         size="xl"
         isOpen={addNewProduct}
-        toggle={() => {
-          // onClickAddNew();
-        }}
       >
         <div
           className="modal-header"
@@ -642,12 +638,12 @@ const AddNewProductPricing = ({
                           <div>
                             <i
                               className="uil-question-circle font-size-15 mx-2"
-                              id="collect"
+                              id="collect_t"
                             />
                             <Tooltip
                               placement="right"
                               isOpen={ttop3}
-                              target="collect"
+                              target="collect_t"
                               toggle={() => {
                                 setttop3(!ttop3);
                               }}
@@ -721,7 +717,6 @@ const AddNewProductPricing = ({
                               setPriceSeasonSelected(e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                          //   value={validationType.values.department || ""}
                           >
                             <option>Select....</option>
                             {map(priceSeason, (season, index) => {
@@ -798,12 +793,12 @@ const AddNewProductPricing = ({
                             <Label className="form-label">Balance Due</Label>
                             <i
                               className="uil-question-circle font-size-15 mx-1"
-                              id="active-t"
+                              id="balance-t"
                             />
                             <Tooltip
                               placement="right"
                               isOpen={ttop19}
-                              target="active-t"
+                              target="balance-t"
                               toggle={() => {
                                 setttop19(!ttop19);
                               }}
@@ -1192,13 +1187,13 @@ const AddNewProductPricing = ({
                                 : false
                             }
                           />
+                        </div>
                           {validationType.touched.balance_due &&
                             validationType.errors.balance_due ? (
                             <FormFeedback type="invalid">
                               {validationType.errors.balance_due}
                             </FormFeedback>
                           ) : null}
-                        </div>
 
                       </div>
                     </Col>
@@ -1314,9 +1309,16 @@ const AddNewProductPricing = ({
                             placeholder=""
                             readOnly
                             type="text"
+                            onChange={validationType.handleChange}
                             value={ourCommission}
                           />
                         </div>
+                          {validationType.touched.commission &&
+                            validationType.errors.commission ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.commission}
+                            </FormFeedback>
+                          ) : null}
                       </div>
                     </Col>
                     <Col className="col-2">
@@ -1365,12 +1367,6 @@ const AddNewProductPricing = ({
                                 : false
                             }
                           />
-                          {validationType.touched.eff_rate &&
-                            validationType.errors.eff_rate ? (
-                            <FormFeedback type="invalid">
-                              {validationType.errors.eff_rate}
-                            </FormFeedback>
-                          ) : null}
                           <span
                             className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                             id="basic-addon1"
@@ -1379,6 +1375,12 @@ const AddNewProductPricing = ({
                             %
                           </span>
                         </div>
+                          {validationType.touched.eff_rate &&
+                            validationType.errors.eff_rate ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.eff_rate}
+                            </FormFeedback>
+                          ) : null}
 
                       </div>
                     </Col>
@@ -1602,6 +1604,7 @@ const AddNewProductPricing = ({
                             step="any"
                             onChange={validationType.handleChange}
                             onBlur={(e) => {
+                              setRecalc(true)
                               const value = e.target.value || "";
                               validationType.setFieldValue(
                                 "ship_price",
@@ -1667,6 +1670,7 @@ const AddNewProductPricing = ({
                             type="text"
                             onChange={validationType.handleChange}
                             onBlur={(e) => {
+                              setRecalc(true)
                               const value = e.target.value || "";
                               validationType.setFieldValue(
                                 "compare_at",
@@ -1726,7 +1730,7 @@ const AddNewProductPricing = ({
                               const value = e.target.value || "";
                               validationType.setFieldValue(
                                 "you_save",
-                                setEffRateFormat(value)
+                                setYouSaveFormat(value)
                               );
                             }}
                             value={validationType.values.you_save || ""}
@@ -1828,7 +1832,6 @@ const AddNewProductPricing = ({
           )}
         </div>
       </Modal>
-    </>
   );
 };
 

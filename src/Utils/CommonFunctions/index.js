@@ -23,24 +23,23 @@ export const setDecimalFormatVBalance = (currentValue, currencySelected) => {
 }
 
 export const setRateFormat = (currentValue) => {
-    if(isNaN(currentValue)) {
-        currentValue = 0;
-    } 
-    if(currentValue <= 1) {
+    if(isNaN(currentValue) || currentValue == "") {
+        currentValue = "";
+    } else if(currentValue <= 1) {
         currentValue *= 100;
+        currentValue = round(currentValue, 1).toFixed(1)
     }
-    return round(currentValue, 1).toFixed(1)
+    return currentValue
 }
 
-export const setEffRateFormat = (currentValue) => {
-    if(isNaN(currentValue)) {
-        currentValue = 0;
-    } 
-    if(currentValue <= 1) {
+export const setYouSaveFormat = (currentValue) => {
+    if(isNaN(currentValue) || currentValue == "") {
+        currentValue = "";
+    } else if(currentValue <= 1) {
         currentValue *= 100;
+        currentValue = roundNearest5(currentValue).toFixed(0)
     }
-    console.log(currentValue)
-    return roundNearest5(currentValue).toFixed(0)
+    return currentValue
 }
 
 export const cleanUpSpecialCharacters = (currentValue) => {
