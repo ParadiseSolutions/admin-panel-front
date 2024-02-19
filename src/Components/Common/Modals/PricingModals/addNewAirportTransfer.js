@@ -148,7 +148,7 @@ const AddNewAirportTransfer = ({
       } else {
         setRecalc(false)
       }
-      setCurrencySelected(dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD $")
+      setCurrencySelected(dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD")
       setPriceCollectSelected(dataEdit.pricedetails.filter((x) => x.pricing_option_id === 14)[0]
         ?.source_id)
       let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.pricedetails.filter((x) => x.pricing_option_id === 14)[0]
@@ -203,8 +203,8 @@ const AddNewAirportTransfer = ({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
+      min: dataEdit ? dataEdit?.pricedetails?.filter((x) => x.pricing_option_id === 17)[0]?.min : "",
+      max: dataEdit ? dataEdit?.pricedetails?.filter((x) => x.pricing_option_id === 17)[0]?.max : "",
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
       active: dataEdit?.active ? 1 : 0,
@@ -238,7 +238,6 @@ const AddNewAirportTransfer = ({
       balance_due: Yup.number(),
     }),
     onSubmit: (values, { resetForm }) => {
-      debugger
       let price_type =
         priceTypeSelected === "" || priceTypeSelected === undefined
           ? dataEdit && dataEdit.pricedetails
@@ -324,12 +323,7 @@ const AddNewAirportTransfer = ({
             : null
           : priceZoneSelected;
 
-      if (
-        price_type &&
-        price_option &&
-        price_collect &&
-        transfer_type
-      ) {
+      if (price_type && price_option && price_collect && transfer_type) {
         let data = {
           tour_id: tourData.id,
           public: values.public_price,
@@ -539,7 +533,7 @@ const AddNewAirportTransfer = ({
   }, [validationType.values.our_price, priceCollectNameSelected])
 
   useEffect(() => {
-    if(recalc) {
+    if (recalc) {
       if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
         validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
       } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
@@ -735,7 +729,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
                             <option
@@ -789,13 +783,14 @@ const AddNewAirportTransfer = ({
                         type="select"
                         name="collect"
                         onChange={(e) => {
+                          setRecalc(true)
                           setPriceCollectSelected(e.target.value);
                           setPriceCollectNameSelected(
                             e.target.selectedOptions[0].label
                           );
                         }}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
                             <option
@@ -845,7 +840,7 @@ const AddNewAirportTransfer = ({
                           }}
                           onBlur={validationType.handleBlur}
                         >
-                          <option>Select....</option>
+                          <option value="">Select....</option>
                           {map(priceSeason, (season, index) => {
                             return (
                               <option
@@ -993,7 +988,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceTransferType, (transferType, index) => {
                           return (
                             <option
@@ -1027,7 +1022,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceDirection, (direction, index) => {
                           return (
                             <option
@@ -1061,7 +1056,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceVehicle, (vehicle, index) => {
                           return (
                             <option
@@ -1095,7 +1090,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceZone, (zone, index) => {
                           return (
                             <option
@@ -1435,10 +1430,10 @@ const AddNewAirportTransfer = ({
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop15}
+                            isOpen={ttop20}
                             target="commission_p"
                             toggle={() => {
-                              setttop15(!ttop15);
+                              setttop20(!ttop20);
                             }}
                           >
                             The agreed commission based on the service agreement before any discounts are applied. This is automatically calculated based on the Net Price so no entry is required.
@@ -1770,119 +1765,119 @@ const AddNewAirportTransfer = ({
 
                     </div>
                   </Col>
-                    <Col className="col-2">
-                      <div className="form-outline mb-2" id="voucher_currency">
-                        <div className="d-flex justify-content-between">
-                          <Label className="form-label">Vchr. Currency</Label>
-                          <div>
-                            <i
-                              className="uil-question-circle font-size-15"
-                              id="v_currency"
-                            />
-                            <Tooltip
-                              placement="right"
-                              isOpen={ttop21}
-                              target="v_currency"
-                              toggle={() => {
-                                setttop21(!ttop21);
-                              }}
-                            >
-                              Choose the currency that the Balance Due on the confirmation voucher will be shown in (USD or MXN Pesos).
-                            </Tooltip>
-                          </div>
-                        </div>
-                        <div className="input-group">
-                          <Input
-                            type="select"
-                            name=""
-                            onChange={(e) => {
-                              setCurrencySelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                          //   value={validationType.values.department || ""}
-                          >
-                            <option>Select....</option>
-                            {map(currency, (curr, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={curr.currency_id}
-                                  selected={
-                                    dataEdit && dataEdit.voucher_currency
-                                      ? curr.currency_id === dataEdit.voucher_currency
-                                      : (curr.currency_id === "USD $" || curr.currency_id === "USD")
-                                  }
-                                >
-                                  {curr.currency}
-                                </option>
-                              );
-                            })}
-                          </Input>
-
-                        </div>
-
-                      </div>
-                    </Col>
-                    <Col className="col-2">
-                      <div className="form-outline mb-2" id="voucher_balance">
-                        <div className="d-flex justify-content-between">
-                          <Label style={{ "fontSize": "13px" }} className="form-label">Voucher Balance</Label>
-                          <div>
-                            <i
-                              className="uil-question-circle font-size-15"
-                              id="v_balance"
-                            />
-                            <Tooltip
-                              placement="right"
-                              isOpen={ttop22}
-                              target="v_balance"
-                              toggle={() => {
-                                setttop22(!ttop22);
-                              }}
-                            >
-                              The Balance Due shown on the confirmation voucher sent to the client, in either USD or MXN Pesos, depending on the currency selected. If USD is chosen then this is automatically calculated based on  (Our Price - Deposit = Voucher Balance). If MXN is chosen then manually enter the amount in pesos that the customer will pay at check-in on the day of the tour.
-                            </Tooltip>
-                          </div>
-                        </div>
-                        <div className="input-group">
-                          <Input
-                            name="voucher_balance"
-                            placeholder=""
-                            type="text"
-                            readOnly={currencySelected !== "MXN $" && currencySelected !== "MXN"}
-                            onChange={validationType.handleChange}
-                            onBlur={(e) => {
-                              const value = e.target.value || "";
-                              validationType.setFieldValue(
-                                "voucher_balance",
-                                setDecimalFormatVBalance(value, currencySelected)
-                              );
-                            }}
-                            value={validationType.values.voucher_balance || ""}
-                            invalid={
-                              validationType.touched.voucher_balance &&
-                                validationType.errors.voucher_balance
-                                ? true
-                                : false
-                            }
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="voucher_currency">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Vchr. Currency</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="v_currency"
                           />
-                          {validationType.touched.voucher_balance &&
-                            validationType.errors.voucher_balance ? (
-                            <FormFeedback type="invalid">
-                              {validationType.errors.voucher_balance}
-                            </FormFeedback>
-                          ) : null}
-                          <span
-                            className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                            id="basic-addon1"
-                            style={{ fontSize: "0.85em" }}
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop21}
+                            target="v_currency"
+                            toggle={() => {
+                              setttop21(!ttop21);
+                            }}
                           >
-                            $
-                          </span>
+                            Choose the currency that the Balance Due on the confirmation voucher will be shown in (USD or MXN Pesos).
+                          </Tooltip>
                         </div>
+                      </div>
+                      <div className="input-group">
+                        <Input
+                          type="select"
+                          name=""
+                          onChange={(e) => {
+                            setCurrencySelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                        >
+                          <option value="">Select....</option>
+                          {map(currency, (curr, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={curr.currency_id}
+                                selected={
+                                  dataEdit && dataEdit.voucher_currency
+                                    ? curr.currency_id === dataEdit.voucher_currency
+                                    : (curr.currency_id === "USD" || curr.currency_id === "USD")
+                                }
+                              >
+                                {curr.currency}
+                              </option>
+                            );
+                          })}
+                        </Input>
 
                       </div>
-                    </Col>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="voucher_balance">
+                      <div className="d-flex justify-content-between">
+                        <Label style={{ "fontSize": "13px" }} className="form-label">Voucher Balance</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="v_balance"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop22}
+                            target="v_balance"
+                            toggle={() => {
+                              setttop22(!ttop22);
+                            }}
+                          >
+                            The Balance Due shown on the confirmation voucher sent to the client, in either USD or MXN Pesos, depending on the currency selected. If USD is chosen then this is automatically calculated based on  (Our Price - Deposit = Voucher Balance). If MXN is chosen then manually enter the amount in pesos that the customer will pay at check-in on the day of the tour.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <Input
+                          name="voucher_balance"
+                          placeholder=""
+                          type="text"
+                          readOnly={currencySelected !== "MXN $" && currencySelected !== "MXN"}
+                          onChange={validationType.handleChange}
+                          onBlur={(e) => {
+                            const value = e.target.value || "";
+                            validationType.setFieldValue(
+                              "voucher_balance",
+                              setDecimalFormatVBalance(value, currencySelected)
+                            );
+                          }}
+                          value={validationType.values.voucher_balance || ""}
+                          invalid={
+                            validationType.touched.voucher_balance &&
+                              validationType.errors.voucher_balance
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.voucher_balance &&
+                          validationType.errors.voucher_balance ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.voucher_balance}
+                          </FormFeedback>
+                        ) : null}
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          $
+                        </span>
+                      </div>
+
+                    </div>
+                  </Col>
                 </Row>
                 <Row className="d-flex">
                   <Col className="col-2">

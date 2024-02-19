@@ -493,7 +493,7 @@ const NewTour = ({ history }) => {
                                 onBlur={validationType.handleBlur}
                               //   value={validationType.values.department || ""}
                               >
-                                <option>Select....</option>
+                                <option value="">Select....</option>
                                 {map(dataTourType, (tourType, index) => {
                                   return (
                                     <option key={index} value={tourType.id}>
@@ -517,7 +517,7 @@ const NewTour = ({ history }) => {
                                 onBlur={validationType.handleBlur}
                               //   value={validationType.values.department || ""}
                               >
-                                <option>Select....</option>
+                                <option value="">Select....</option>
                                 {map(dataWebsite, (website, index) => {
                                   return (
                                     <option key={index} value={website.id}>
@@ -543,7 +543,7 @@ const NewTour = ({ history }) => {
                                 onBlur={validationType.handleBlur}
                               //   value={validationType.values.department || ""}
                               >
-                                <option>Select....</option>
+                                <option value="">Select....</option>
                                 {map(
                                   shoppingCartData,
                                   (shoppingCart, index) => {
@@ -579,7 +579,7 @@ const NewTour = ({ history }) => {
                                 onBlur={validationType.handleBlur}
                               //   value={validationType.values.department || ""}
                               >
-                                <option>Select....</option>
+                                <option value="">Select....</option>
                                 {map(providerData, (provider, index) => {
                                   return (
                                     <option
@@ -611,7 +611,7 @@ const NewTour = ({ history }) => {
                                 onBlur={validationType.handleBlur}
                               //   value={validationType.values.department || ""}
                               >
-                                <option>Select....</option>
+                                <option value="">Select....</option>
                                 {map(operatorData, (operator, index) => {
                                   return (
                                     <option
@@ -691,7 +691,7 @@ const NewTour = ({ history }) => {
                                 onBlur={validationType.handleBlur}
                               //   value={validationType.values.department || ""}
                               >
-                                <option>Select....</option>
+                                <option value="">Select....</option>
                                 {map(locationData, (location, index) => {
                                   return (
                                     <option
@@ -728,7 +728,7 @@ const NewTour = ({ history }) => {
                                 onBlur={validationType.handleBlur}
                               //   value={validationType.values.department || ""}
                               >
-                                <option>Select....</option>
+                                <option value="">Select....</option>
                                 {map(categoryData, (category, index) => {
                                   return (
                                     <option
@@ -763,7 +763,7 @@ const NewTour = ({ history }) => {
                                   onBlur={validationType.handleBlur}
                                 //   value={validationType.values.department || ""}
                                 >
-                                  <option>Select....</option>
+                                  <option value="">Select....</option>
                                   {map(
                                     subCategoriesData,
                                     (subCategory, index) => {

@@ -127,7 +127,7 @@ const AddNewProductPricing = ({
       } else {
         setRecalc(false)
       }
-      setCurrencySelected(dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD $")
+      setCurrencySelected(dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD")
       setPriceCollectSelected(dataEdit.pricedetails[2]?.source_id)
       let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.pricedetails[2]?.source_id)
       if (priceCollectSe.length > 0) {
@@ -611,7 +611,7 @@ const AddNewProductPricing = ({
                           onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                         >
-                          <option>Select....</option>
+                          <option value="">Select....</option>
                           {map(priceOptions, (option, index) => {
                             return (
                               <option
@@ -670,7 +670,7 @@ const AddNewProductPricing = ({
                             );
                           }}
                         >
-                          <option>Select....</option>
+                          <option value="">Select....</option>
                           {map(priceCollect, (collect, index) => {
                             return (
                               <option
@@ -718,7 +718,7 @@ const AddNewProductPricing = ({
                             }}
                             onBlur={validationType.handleBlur}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(priceSeason, (season, index) => {
                               return (
                                 <option
@@ -1477,7 +1477,7 @@ const AddNewProductPricing = ({
                             onBlur={validationType.handleBlur}
                           //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(currency, (curr, index) => {
                               return (
                                 <option
@@ -1486,7 +1486,7 @@ const AddNewProductPricing = ({
                                   selected={
                                     dataEdit && dataEdit.voucher_currency
                                       ? curr.currency_id === dataEdit.voucher_currency
-                                      : (curr.currency_id === "USD $" || curr.currency_id === "USD")
+                                      : (curr.currency_id === "USD" || curr.currency_id === "USD")
                                   }
                                 >
                                   {curr.currency}
