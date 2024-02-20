@@ -888,7 +888,7 @@ const Fishing = ({
                       <Label className="form-label">Charter Type</Label>
                       <Input
                         type="select"
-                        name=""
+                        name="charterType"
                         onChange={(e) => {
                           setPriceCharterTypeSelected(e.target.value);
                         }}
@@ -920,7 +920,7 @@ const Fishing = ({
                       <Label className="form-label">Duration</Label>
                       <Input
                         type="select"
-                        name=""
+                        name="duration"
                         onChange={(e) => {
                           setPriceDurationSelected(e.target.value);
                         }}
@@ -1002,7 +1002,7 @@ const Fishing = ({
                       <Label className="form-label">Meeting Location</Label>
                       <Input
                         type="select"
-                        name=""
+                        name="meetingLocation"
                         onChange={(e) => {
                           setPriceLocationSelected(e.target.value);
                         }}

@@ -23,21 +23,25 @@ export const setDecimalFormatVBalance = (currentValue, currencySelected) => {
 }
 
 export const setRateFormat = (currentValue) => {
-    if(isNaN(currentValue) || currentValue == "") {
+    if(isNaN(currentValue) || currentValue === "") {
         currentValue = "";
     } else if(currentValue <= 1) {
         currentValue *= 100;
         currentValue = round(currentValue, 1).toFixed(1)
+    } else if(currentValue > 1) {
+        currentValue = round(+currentValue, 1).toFixed(1)
     }
     return currentValue
 }
 
 export const setYouSaveFormat = (currentValue) => {
-    if(isNaN(currentValue) || currentValue == "") {
+    if(isNaN(currentValue) || currentValue === "") {
         currentValue = "";
     } else if(currentValue <= 1) {
         currentValue *= 100;
         currentValue = roundNearest5(currentValue).toFixed(0)
+    } else {
+        currentValue = roundNearest5(+currentValue).toFixed(0)
     }
     return currentValue
 }
@@ -175,6 +179,9 @@ export const calcDeposit = (our_price, collect, commission, current_deposit) => 
                 current_deposit = our_price * 0.2;
             break;
             case "Commission":
+            case "Affiliate":
+            case "Cash Only":
+            case "Deposit":
                 current_deposit = commission;
             break;
             default:

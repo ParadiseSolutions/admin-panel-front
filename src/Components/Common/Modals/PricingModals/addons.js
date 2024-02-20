@@ -16,7 +16,7 @@ import {
   Input,
   FormFeedback,
   Button,
-  UncontrolledTooltip,
+  Tooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -26,9 +26,8 @@ import Swal from "sweetalert2";
 import {
   setDecimalFormat,
   setRateFormat,
-  calcCommission,
   calcDeposit,
-  calcNetPrice,
+  setYouSaveFormat,
 } from "../../../../Utils/CommonFunctions";
 
 const Offsymbol = () => {
@@ -76,17 +75,19 @@ const Addons = ({
   id,
 }) => {
   //edit data
-  const [dataEdit, setDataEdit] = useState();
   let editID = editProductID
+  const [dataEdit, setDataEdit] = useState();
+  const [loadingData, setLoadingData] = useState(true);
   useEffect(() => {
-    if (editID !== null) {
+    if (editID !== null && newAddon) {
       getAddonAPI(editID).then((resp) => {
         setDataEdit(resp.data.data[0]);
       });
     } else {
       setDataEdit(null);
     }
-  }, [editID]);
+  }, [editID, newAddon]);
+
   //combo box request
   const [priceMatchQuantityData, setPriceMatchQuantityData] = useState([]);
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -104,31 +105,15 @@ const Addons = ({
   const [priceTypeNameSelected, setPriceTypeNameSelected] = useState("");
   const [displayOptionSelected, setDisplayOptionSelected] = useState();
   const [addonLabelSelected, setAddonLabelSelected] = useState("");
-  const [matchQuantitySelected, setMatchQuantitySelected] = useState();
+  const [matchQuantitySelected, setMatchQuantitySelected] = useState("");
   const [balance, setBalance] = useState(dataEdit?.active === 1 ? true : false);
   const [customMessage, setCustomMessage] = useState(false);
   const [isCustomMessage, setIsCustomMessage] = useState(false);
-  const [isUpgrade, setIsUpgrade] = useState(
-    dataEdit?.type === 2 ? true : false
-  );
-useEffect(() => {
-  if (dataEdit?.collect_id === 25 && dataEdit.display_option === 10) {
-    setIsCustomMessage(true)
-    setAddonTypeNameSelected(dataEdit?.add_on_type)
-    setPriceTypeNameSelected(dataEdit?.price_type)
-  }else{
-    setIsCustomMessage(false)
-  }
-
-  if (priceCollectSelected === "25" &&
-  displayOptionSelected === 10) {
-    setIsCustomMessage(true)
-  }
-}, [dataEdit, priceCollectSelected, displayOptionSelected]);
-
+  const [isUpgrade, setIsUpgrade] = useState(dataEdit?.type === 2 ? true : false);
 
   useEffect(() => {
     if (newAddon) {
+      setLoadingData(true)
       getPricingOptionsAPI(52).then((resp) => {
         setPriceMatchQuantityData(resp.data.data);
       });
@@ -153,17 +138,98 @@ useEffect(() => {
     }
   }, [newAddon]);
 
+  const [ttop1, setttop1] = useState(false);
+  const [ttop2, setttop2] = useState(false);
+  const [ttop3, setttop3] = useState(false);
+  const [ttop4, setttop4] = useState(false);
+  const [ttop5, setttop5] = useState(false);
+  const [ttop6, setttop6] = useState(false);
+  const [ttop7, setttop7] = useState(false);
+  const [ttop8, setttop8] = useState(false);
+  const [ttop9, setttop9] = useState(false);
+  const [ttop10, setttop10] = useState(false);
+  const [ttop11, setttop11] = useState(false);
+  const [ttop12, setttop12] = useState(false);
+  const [ttop13, setttop13] = useState(false);
+  const [ttop14, setttop14] = useState(false);
+  const [ttop15, setttop15] = useState(false);
+  const [ttop16, setttop16] = useState(false);
+  const [ttop17, setttop17] = useState(false);
+  const [ttop18, setttop18] = useState(false);
+  const [ttop19, setttop19] = useState(false);
+  const [ttop20, setttop20] = useState(false);
+  const [ttop21, setttop21] = useState(false);
+  const [ttop22, setttop22] = useState(false);
+
+  const [recalc, setRecalc] = useState(false)
+  let changing = false
+
   useEffect(() => {
-    setBalance(dataEdit?.active === 1 ? true : false);
-    setIsUpgrade(dataEdit?.type === 2 ? true : false);
-    setDisplayOptionSelected(dataEdit?.display_option);
-    setCustomMessage(dataEdit?.custom_text === 0 ? false : true)
-  }, [dataEdit]);
+    if (dataEdit && newAddon && priceCollect) {
+      setRecalc(false)
+      setPriceCollectSelected(dataEdit.collect_id)
+      let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.collect_id)
+      if (priceCollectSe.length > 0) {
+        setPriceCollectNameSelected(priceCollectSe[0].text)
+      }
+      if (dataEdit?.collect_id === 25 && dataEdit.display_option === 10) {
+        setIsCustomMessage(true)
+        setAddonTypeNameSelected(dataEdit?.add_on_type)
+        setPriceTypeNameSelected(dataEdit?.price_type)
+      } else {
+        setIsCustomMessage(false)
+      }
+
+      setBalance(dataEdit?.active === 1 ? true : false);
+      setIsUpgrade(dataEdit?.type === 2 ? true : false);
+      setDisplayOptionSelected(dataEdit?.display_option);
+      setCustomMessage(dataEdit?.custom_text === 0 ? false : true)
+
+      if (!changing) {
+        changing = true
+        setTimeout(() => {
+          setLoadingData(false)
+          changing = false
+        }, 1000);
+      }
+    } else {
+      setRecalc(true)
+      setPriceTypeSelected("")
+      setAddonTypeSelected("")
+      setPriceOptionSelected("")
+      setPriceCollectSelected("")
+      setPriceCollectNameSelected("")
+      setAddonTypeNameSelected("")
+      setPriceTypeNameSelected("")
+      setAddonLabelSelected("")
+      setDisplayOptionSelected("")
+      setMatchQuantitySelected("")
+      setBalance(false)
+      setCustomMessage(false)
+      setIsCustomMessage(false)
+      setIsUpgrade(false)
+      if (validationType) {
+        validationType.resetForm()
+      }
+      if (!changing) {
+        changing = true
+        setTimeout(() => {
+          setLoadingData(false)
+          changing = false
+        }, 1000);
+      }
+    }
+  }, [dataEdit, priceCollect]);
+
+  useEffect(() => {
+    if (priceCollectSelected === "25" &&
+      displayOptionSelected === 10) {
+      setIsCustomMessage(true)
+    }
+  }, [priceCollectSelected, displayOptionSelected]);
 
   //custom text assign
   const customTextAssing = (values) => {
-    console.log(values);
-
     if (values.type === "price_type") {
       setPriceTypeNameSelected(values.label);
     }
@@ -172,43 +238,30 @@ useEffect(() => {
     }
   };
 
+  const onChangeUpgrade = () => {
+    setIsUpgrade(!isUpgrade);
+  };
+
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
       product_name: dataEdit ? dataEdit.name : "",
       sku: dataEdit ? dataEdit.sku : "",
-      min_qty: dataEdit?.min_qty ? dataEdit?.min_qty : "",
-      max_qty: dataEdit?.max_qty ? dataEdit?.max_qty : "",
-      // tour_id: 37,
-      match_qty_id: matchQuantitySelected
-        ? matchQuantitySelected
-        : dataEdit?.match_qty_id,
-      price_type_id: priceTypeSelected
-        ? priceTypeSelected
-        : dataEdit?.price_type_id,
-      price_option_id: priceOptionSelected
-        ? priceOptionSelected
-        : dataEdit?.price_option_id,
-      collect_id: priceCollectSelected
-        ? priceCollectSelected
-        : dataEdit?.collect_id,
-      display_option: 1,
-      title: "",
-      addon_description: dataEdit?.description ? dataEdit?.description : "",
-      option_label: null,
-      show_balance_due: balance,
-      rate: dataEdit?.net_rate ? setRateFormat(dataEdit?.net_rate) : "",
-      our_price: dataEdit?.price ? dataEdit?.price : "",
-      you_save: dataEdit?.you_save ? dataEdit?.you_save : "",
-      commission: dataEdit?.commission ? dataEdit?.commission : "",
-      deposit: dataEdit?.deposit ? dataEdit?.deposit : "",
-      balance_due: dataEdit?.net_price ? dataEdit?.net_price : "",
-      custom_message: dataEdit?.option_label ? dataEdit.option_label : '',
+      min_qty: dataEdit ? dataEdit.min_qty : "",
+      max_qty: dataEdit ? dataEdit.max_qty : "",
+      addon_description: dataEdit ? dataEdit.description : "",
+      rate: dataEdit ? setRateFormat(dataEdit.net_rate) : "",
+      our_price: dataEdit ? dataEdit.price : "",
+      you_save: dataEdit ? setYouSaveFormat(dataEdit.you_save) : "",
+      commission: dataEdit ? dataEdit.commission : "",
+      deposit: dataEdit ? dataEdit.deposit : "",
+      balance_due: dataEdit ? dataEdit.net_price : "",
+      custom_message: dataEdit ? dataEdit.option_label : ""
     },
     validationSchema: Yup.object().shape({
-      min: Yup.number().integer().nullable(),
-      max: Yup.number().integer().nullable(),
+      min_qty: Yup.number().integer().nullable(),
+      max_qty: Yup.number().integer().nullable(),
       rate: Yup.number().nullable(),
       our_price: Yup.number().required("Field Required"),
       commission: Yup.number().required("Field Required"),
@@ -218,28 +271,13 @@ useEffect(() => {
     onSubmit: (values, { resetForm }) => {
       let data = {
         tour_id: +id,
-        match_qty_id: matchQuantitySelected
-          ? matchQuantitySelected
-          : dataEdit?.match_qty_id,
-        price_type_id: priceTypeSelected
-          ? priceTypeSelected
-          : dataEdit?.price_type_id,
-        add_on_type_id: addonTypeSelected
-          ? addonTypeSelected
-          : dataEdit?.add_on_type_id,
-        price_option_id: priceOptionSelected
-          ? priceOptionSelected
-          : dataEdit?.price_option_id,
-        collect_id: priceCollectSelected
-          ? priceCollectSelected
-          : dataEdit?.collect_id,
-        display_option: displayOptionSelected
-          ? displayOptionSelected
-          : dataEdit?.display_option,
-        instruction_label_id:
-          addonLabelSelected 
-            ? addonLabelSelected
-            : dataEdit?.instruction_label_id,
+        match_qty_id: matchQuantitySelected ? matchQuantitySelected : (dataEdit ? dataEdit.match_qty_id : null),
+        price_type_id: priceTypeSelected ? priceTypeSelected : (dataEdit ? dataEdit.price_type_id : null),
+        add_on_type_id: addonTypeSelected ? addonTypeSelected : (dataEdit ? dataEdit.add_on_type_id : null),
+        price_option_id: priceOptionSelected ? priceOptionSelected : (dataEdit ? dataEdit.price_option_id : null),
+        collect_id: priceCollectSelected ? priceCollectSelected : (dataEdit ? dataEdit.collect_id : null),
+        display_option: displayOptionSelected ? displayOptionSelected : (dataEdit ? dataEdit.display_option : null),
+        instruction_label_id: addonLabelSelected ? addonLabelSelected : (dataEdit ? dataEdit.instruction_label_id : null),
         description: values.addon_description,
         show_balance_due: balance,
         price: values.our_price,
@@ -253,41 +291,37 @@ useEffect(() => {
         commission: values.commission,
         deposit: values.deposit,
         net_price: values.balance_due,
-        min_qty: values.min_qty,
-        max_qty: values.max_qty,
         type: isUpgrade ? 2 : 1,
-        custom_text : customMessage === true ? 1 : 0 ,
-        option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${
-          addonTypeNameSelected !== ""
-            ? addonTypeNameSelected
-            : "[Add-On Type]"
-        } for $ ${
-          validationType.values.our_price !== ""
+        custom_text: customMessage === true ? 1 : 0,
+        option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${addonTypeNameSelected !== ""
+          ? addonTypeNameSelected
+          : "[Add-On Type]"
+          } for $ ${validationType.values.our_price !== ""
             ? validationType.values.our_price
             : "[Price]"
-        } ${
-          priceTypeNameSelected !== ""
+          } ${priceTypeNameSelected !== ""
             ? priceTypeNameSelected
             : "[Price Type]"
-        }, paid in cash on the day of the tour.` : values.custom_message
+          }, paid in cash on the day of the tour.` : values.custom_message,
+        min_qty: values.min_qty,
+        max_qty: values.max_qty
       };
 
+      document.getElementById("save-button").disabled = true;
       if (dataEdit) {
         putAddonAPI(editProductID, data)
           .then((resp) => {
             triggerUpdate();
-            // console.log(resp);
+            editID = null
             setNewAddon(false);
             refreshTable();
             resetForm({ values: "" });
-            // setDataEdit()
-            editID = 0
+            document.getElementById("save-button").disabled = false;
           })
           .catch((error) => {
             if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
-                // {error.response.},
                 String(error.response.data.message)
               );
             } else {
@@ -299,27 +333,25 @@ useEffect(() => {
 
               Swal.fire(
                 "Error!",
-                // {error.response.},
                 String(errorMessages[0])
               );
             }
+            document.getElementById("save-button").disabled = false;
           });
       } else {
         postAddonsAPI(data)
           .then((resp) => {
-            // console.log(resp);
             triggerUpdate();
+            editID = null
             setNewAddon(false);
             refreshTable();
             resetForm({ values: "" });
-            // setDataEdit()
-            editID = 0
+            document.getElementById("save-button").disabled = false;
           })
           .catch((error) => {
             if (error.response.data.data === null) {
               Swal.fire(
                 "Error!",
-                // {error.response.},
                 String(error.response.data.message)
               );
             } else {
@@ -331,92 +363,35 @@ useEffect(() => {
 
               Swal.fire(
                 "Error!",
-                // {error.response.},
                 String(errorMessages[0])
               );
             }
+            document.getElementById("save-button").disabled = false;
           });
       }
       refreshTable();
     },
   });
 
-  const multipleRateCalcs = (value) => {
-    const rate = setRateFormat(value);
-    const commission = calcCommission(
-      validationType.values.our_price,
-      rate,
-      validationType.values.commission
-    );
-    const balance_due = calcNetPrice(
-      validationType.values.our_price,
-      commission,
-      validationType.values.balance_due
-    );
+  useEffect(() => {
+    if (validationType.values.our_price !== "" && validationType.values.our_price !== 0 && validationType.values.commission !== "" && validationType.values.commission !== 0) {
+      validationType.setFieldValue("balance_due", (validationType.values.our_price - validationType.values.commission).toFixed(2))
+    }
+  }, [validationType.values.our_price, validationType.values.commission])
 
-    validationType.setFieldValue("rate", rate);
-    validationType.setFieldValue("commission", commission);
-    validationType.setFieldValue("balance_due", balance_due);
-    return rate;
-  };
-
-  const multipleOurPriceCalcs = (value) => {
-    const our_price = setDecimalFormat(value);
-
-    //const you_save = calcYouSave(our_price, validationType.values.ship_price, validationType.values.compare_at, validationType.values.you_save)
-    const commission = calcCommission(
-      our_price,
-      validationType.values.rate,
-      validationType.values.commission
-    );
-    const balance_due = calcNetPrice(
-      our_price,
-      commission,
-      validationType.values.balance_due
-    );
-    const deposit = calcDeposit(
-      our_price,
-      priceCollectNameSelected,
-      commission,
-      validationType.values.deposit
-    );
-
-    //validationType.setFieldValue('you_save', you_save)
-    validationType.setFieldValue("deposit", deposit);
-    validationType.setFieldValue("commission", commission);
-    validationType.setFieldValue("balance_due", balance_due);
-
-    return our_price;
-  };
-
-  const multipleCommissionCalcs = (value) => {
-    const commission = setDecimalFormat(value);
-
-    validationType.setFieldValue("commission", commission);
-    validationType.setFieldValue(
-      "deposit",
-      calcDeposit(
-        validationType.values.our_price,
-        priceCollectNameSelected,
-        commission,
-        validationType.values.deposit
+  useEffect(() => {
+    if (validationType.values.our_price !== "" && priceCollectNameSelected !== "") {
+      validationType.setFieldValue(
+        "deposit",
+        calcDeposit(
+          validationType.values.our_price,
+          priceCollectNameSelected,
+          validationType.values.commission,
+          validationType.values.deposit
+        )
       )
-    );
-    validationType.setFieldValue(
-      "balance_due",
-      calcNetPrice(
-        validationType.values.our_price,
-        commission,
-        validationType.values.balance_due
-      )
-    );
-
-    return commission;
-  };
-
-  const onChangeUpgrade = () => {
-    setIsUpgrade(!isUpgrade);
-  };
+    }
+  }, [validationType.values.our_price, priceCollectNameSelected])
 
   return (
     <Modal
@@ -455,436 +430,485 @@ useEffect(() => {
         </button>
       </div>
       <div className="modal-body">
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            validationType.handleSubmit();
-            return false;
-          }}
-          className="custom-validation"
-        >
-          <Row xl={12} className="d-flex">
-            <Col className="col-12">
-              <img src={AddonsImage} alt="addons" className="img-fluid" />
-            </Col>
+        {loadingData ? (
+          <div className="d-flex justify-content-center">
+            <div className="spinner-border text-orange" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+            <h2 className="mx-5 text-orange">Loading...</h2>
+          </div>
+        ) : (
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              validationType.handleSubmit();
+              return false;
+            }}
+            className="custom-validation"
+          >
+            <Row xl={12} className="d-flex">
+              <Col className="col-12">
+                <img src={AddonsImage} alt="addons" className="img-fluid" />
+              </Col>
 
-            <Col className="col-12 mt-4">
-              <Row className="col-12 d-flex">
-                <Col className="col-6">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">Product Name</Label>
-                    <Input
-                      name="product_name"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.product_name || ""}
-                    />
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">SKU</Label>
-                    <Input
-                      name="sku"
-                      placeholder=""
-                      type="text"
-                      disabled
-                      value={validationType.values.sku || ""}
-                    />
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-4">
-                    <Label className="form-label">Match Quantity to</Label>
-                    <Input
-                      type="select"
-                      name="match_qty_id"
-                      onChange={(e) => {
-                        setMatchQuantitySelected(e.target.value);
-                      }}
-                      onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
-                    >
-                      <option value="">Select....</option>
-                      {map(priceMatchQuantityData, (quantity, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={quantity.id}
-                            selected={
-                              dataEdit
-                                ? quantity.id === dataEdit.match_qty_id
-                                : false
-                            }
-                          >
-                            {quantity.text}
-                          </option>
-                        );
-                      })}
-                    </Input>
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="m-2">
-                    <Switch
-                      uncheckedIcon={<Offsymbol />}
-                      checkedIcon={<OnSymbol />}
-                      onColor="#3DC7F4"
-                      className="mt-4"
-                      width={90}
-                      // style={{width:"100px"}}
-                      onChange={() => onChangeUpgrade()}
-                      checked={isUpgrade}
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Row className="d-flex">
-                <Col className="col-9 d-flex justify-content-between">
-                  {isUpgrade === false ? (
-                    <>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Price Type</Label>
-                          <Input
-                            type="select"
-                            name="price_type"
-                            onChange={(e) => {
-                              setPriceTypeSelected(e.target.value);
-                              customTextAssing({
-                                type: "price_type",
-                                label: e.target.selectedOptions[0].label,
-                              });
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(priceTypeData, (type, index) => {
-                              if (
-                                type.add_on_type === 1 ||
-                                type.add_on_type === 3
-                              ) {
-                                return (
-                                  <option
-                                    key={index}
-                                    value={type.id}
-                                    selected={
-                                      dataEdit
-                                        ? type.id === dataEdit.price_type_id
-                                        : false
-                                    }
-                                  >
-                                    {type.text}
-                                  </option>
-                                );
-                              }
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Addon Type</Label>
-                          <Input
-                            type="select"
-                            name="addon_type"
-                            onChange={(e) => {
-                              setAddonTypeSelected(+e.target.value);
-                              customTextAssing({
-                                type: "addon_type",
-                                label: e.target.selectedOptions[0].label,
-                              });
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(addonType, (type, index) => {
-                              if (
-                                type.add_on_type === 1 ||
-                                type.add_on_type === 3
-                              ) {
-                                return (
-                                  <option
-                                    key={index}
-                                    value={type.id}
-                                    selected={
-                                      dataEdit
-                                        ? type.id === dataEdit.add_on_type_id
-                                        : false
-                                    }
-                                  >
-                                    {type.text}
-                                  </option>
-                                );
-                              }
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">
-                            Price Option (Label)
-                          </Label>
-                          <Input
-                            type="select"
-                            name="price_option"
-                            onChange={(e) => {
-                              setPriceOptionSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(priceOptions, (option, index) => {
-                              if (
-                                option.add_on_type === 1 ||
-                                option.add_on_type === 3
-                              ) {
-                                return (
-                                  <option
-                                    key={index}
-                                    value={option.id}
-                                    selected={
-                                      dataEdit
-                                        ? option.id === dataEdit.price_option_id
-                                        : false
-                                    }
-                                  >
-                                    {option.text}
-                                  </option>
-                                );
-                              }
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Collect</Label>
-                          <Input
-                            type="select"
-                            name="collect"
-                            onChange={(e) => {
-                              setPriceCollectSelected(e.target.value);
-                              setPriceCollectNameSelected(
-                                e.target.selectedOptions[0].label
-                              );
-                            }}
-                            onBlur={(e) => {
-                              const value = e.target.value || "";
-                              validationType.setFieldValue(
-                                "collect",
-                                value,
-                                validationType.setFieldValue(
-                                  "deposit",
-                                  calcDeposit(
-                                    validationType.values.our_price,
-                                    priceCollectNameSelected,
-                                    validationType.values.commission,
-                                    validationType.values.deposit
-                                  )
-                                ),
-                                validationType.handleBlur
-                              );
-                            }}
-                          >
-                            <option value="">Select....</option>
-                            {map(priceCollect, (collect, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={collect.id}
-                                  selected={
-                                    dataEdit
-                                      ? collect.id === dataEdit.collect_id
-                                      : false
-                                  }
-                                >
-                                  {collect.text}
-                                </option>
-                              );
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                    </>
-                  ) : (
-                    <>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Price Type</Label>
-                          <Input
-                            type="select"
-                            name="price_type"
-                            onChange={(e) => {
-                              setPriceTypeSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(priceTypeData, (type, index) => {
-                              if (
-                                type.add_on_type === 2 ||
-                                type.add_on_type === 3
-                              ) {
-                                return (
-                                  <option
-                                    key={index}
-                                    value={type.id}
-                                    selected={
-                                      dataEdit
-                                        ? type.id === dataEdit.price_type_id
-                                        : false
-                                    }
-                                  >
-                                    {type.text}
-                                  </option>
-                                );
-                              }
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Addon Type</Label>
-                          <Input
-                            type="select"
-                            name="addon_type"
-                            onChange={(e) => {
-                              setAddonTypeSelected(+e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(addonType, (type, index) => {
-                              if (
-                                type.add_on_type === 2 ||
-                                type.add_on_type === 3
-                              ) {
-                                return (
-                                  <option
-                                    key={index}
-                                    value={type.id}
-                                    selected={
-                                      dataEdit
-                                        ? type.id === dataEdit.add_on_type_id
-                                        : false
-                                    }
-                                  >
-                                    {type.text}
-                                  </option>
-                                );
-                              }
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">
-                            Price Option (Label)
-                          </Label>
-                          <Input
-                            type="select"
-                            name="price_option"
-                            onChange={(e) => {
-                              setPriceOptionSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(priceOptions, (option, index) => {
-                              if (
-                                option.add_on_type === 2 ||
-                                option.add_on_type === 3
-                              ) {
-                                return (
-                                  <option
-                                    key={index}
-                                    value={option.id}
-                                    selected={
-                                      dataEdit
-                                        ? option.id === dataEdit.price_option_id
-                                        : false
-                                    }
-                                  >
-                                    {option.text}
-                                  </option>
-                                );
-                              }
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-2">
-                        <div className="form-outline">
-                          <Label className="form-label">Collect</Label>
-                          <Input
-                            type="select"
-                            name="collect"
-                            onChange={(e) => {
-                              setPriceCollectSelected(e.target.value);
-
-                              setPriceCollectNameSelected(
-                                e.target.selectedOptions[0].label
-                              );
-                            }}
-                            onBlur={(e) => {
-                              const value = e.target.value || "";
-                              validationType.setFieldValue(
-                                "collect",
-                                value,
-                                validationType.setFieldValue(
-                                  "deposit",
-                                  calcDeposit(
-                                    validationType.values.our_price,
-                                    priceCollectNameSelected,
-                                    validationType.values.commission,
-                                    validationType.values.deposit
-                                  )
-                                ),
-                                validationType.handleBlur
-                              );
-                            }}
-                          >
-                            <option value="">Select....</option>
-                            {map(priceCollect, (collect, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={collect.id}
-                                  selected={
-                                    dataEdit
-                                      ? collect.id === dataEdit.collect_id
-                                      : false
-                                  }
-                                >
-                                  {collect.text}
-                                </option>
-                              );
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                    </>
-                  )}
-
+              <Col className="col-12 mt-4">
+                <Row className="col-12 d-flex">
+                  <Col className="col-6">
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Product Name</Label>
+                      <Input
+                        name="product_name"
+                        placeholder=""
+                        type="text"
+                        disabled
+                        value={validationType.values.product_name || ""}
+                      />
+                    </div>
+                  </Col>
                   <Col className="col-2">
-                    <div
-                      className="form-outline"
-                      style={{ marginRight: "20px", marginLeft: "-20px" }}
-                    >
-                      <Label className="form-label">Balance Due</Label>
-                      <Col className="col-4">
-                        <div className="form-check form-switch form-switch-md mx-2">
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">SKU</Label>
+                      <Input
+                        name="sku"
+                        placeholder=""
+                        type="text"
+                        disabled
+                        value={validationType.values.sku || ""}
+                      />
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-4">
+                      <Label className="form-label">Match Quantity to</Label>
+                      <Input
+                        type="select"
+                        name="match_qty_id"
+                        onChange={(e) => {
+                          setMatchQuantitySelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                      >
+                        <option value="">Select....</option>
+                        {map(priceMatchQuantityData, (quantity, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={quantity.id}
+                              selected={
+                                dataEdit
+                                  ? quantity.id === dataEdit.match_qty_id
+                                  : false
+                              }
+                            >
+                              {quantity.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="m-2">
+                      <Switch
+                        uncheckedIcon={<Offsymbol />}
+                        checkedIcon={<OnSymbol />}
+                        onColor="#3DC7F4"
+                        className="mt-4"
+                        width={90}
+                        // style={{width:"100px"}}
+                        onChange={() => onChangeUpgrade()}
+                        checked={isUpgrade}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="d-flex mb-4">
+                  <Col className="col-9 d-flex justify-content-between">
+                    {isUpgrade === false ? (
+                      <>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">Price Type*</Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15 mx-2"
+                                  id="priceType"
+                                />
+                                <Tooltip
+                                  placement="right"
+                                  isOpen={ttop1}
+                                  target="priceType"
+                                  toggle={() => {
+                                    setttop1(!ttop1);
+                                  }}
+                                >
+                                  Select how the product will be priced. Example: "Per
+                                  Item" could be Per ATV, or Per Boat. "Per Person"
+                                  could be Per Adult, or Per Child.
+                                </Tooltip>
+                              </div>
+                            </div>
+                            <Input
+                              type="select"
+                              name="price_type"
+                              onChange={(e) => {
+                                setPriceTypeSelected(e.target.value);
+                                customTextAssing({
+                                  type: "price_type",
+                                  label: e.target.selectedOptions[0].label,
+                                });
+                              }}
+                              onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                            >
+                              <option value="">Select....</option>
+                              {map(priceTypeData, (type, index) => {
+                                if (
+                                  type.add_on_type === 1 ||
+                                  type.add_on_type === 3
+                                ) {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={type.id}
+                                      selected={
+                                        dataEdit
+                                          ? type.id === dataEdit.price_type_id
+                                          : false
+                                      }
+                                    >
+                                      {type.text}
+                                    </option>
+                                  );
+                                }
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <Label className="form-label">Addon Type</Label>
+                            <Input
+                              type="select"
+                              name="addon_type"
+                              onChange={(e) => {
+                                setAddonTypeSelected(+e.target.value);
+                                customTextAssing({
+                                  type: "addon_type",
+                                  label: e.target.selectedOptions[0].label,
+                                });
+                              }}
+                              onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                            >
+                              <option value="">Select....</option>
+                              {map(addonType, (type, index) => {
+                                if (
+                                  type.add_on_type === 1 ||
+                                  type.add_on_type === 3
+                                ) {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={type.id}
+                                      selected={
+                                        dataEdit
+                                          ? type.id === dataEdit.add_on_type_id
+                                          : false
+                                      }
+                                    >
+                                      {type.text}
+                                    </option>
+                                  );
+                                }
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <Label className="form-label">
+                              Price Option (Label)
+                            </Label>
+                            <Input
+                              type="select"
+                              name="price_option"
+                              onChange={(e) => {
+                                setPriceOptionSelected(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                            >
+                              <option value="">Select....</option>
+                              {map(priceOptions, (option, index) => {
+                                if (
+                                  option.add_on_type === 1 ||
+                                  option.add_on_type === 3
+                                ) {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={option.id}
+                                      selected={
+                                        dataEdit
+                                          ? option.id === dataEdit.price_option_id
+                                          : false
+                                      }
+                                    >
+                                      {option.text}
+                                    </option>
+                                  );
+                                }
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">Collect*</Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15 mx-2"
+                                  id="collect_t"
+                                />
+                                <Tooltip
+                                  placement="right"
+                                  isOpen={ttop3}
+                                  target="collect_t"
+                                  toggle={() => {
+                                    setttop3(!ttop3);
+                                  }}
+                                >
+                                  Select the amount of deposit that will be collected at
+                                  the time of booking. Commission = The deposit is equal
+                                  to the amount of commission we earn for the tour.
+                                  Afilliate = The payment is made directly through the
+                                  provider's website, such as the case of dTraveller or
+                                  Viator. Deposit = Manually type the amount of deposit
+                                  we will collect in the "Deposit" field below.
+                                </Tooltip>
+                              </div>
+                            </div>
+                            <Input
+                              type="select"
+                              name="collect"
+                              onChange={(e) => {
+                                setPriceCollectSelected(e.target.value);
+                                setPriceCollectNameSelected(
+                                  e.target.selectedOptions[0].label
+                                );
+                              }}
+                            >
+                              <option value="">Select....</option>
+                              {map(priceCollect, (collect, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={collect.id}
+                                    selected={
+                                      dataEdit
+                                        ? collect.id === dataEdit.collect_id
+                                        : false
+                                    }
+                                  >
+                                    {collect.text}
+                                  </option>
+                                );
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                      </>
+                    ) : (
+                      <>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">Price Type*</Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15 mx-2"
+                                  id="priceType"
+                                />
+                                <Tooltip
+                                  placement="right"
+                                  isOpen={ttop1}
+                                  target="priceType"
+                                  toggle={() => {
+                                    setttop1(!ttop1);
+                                  }}
+                                >
+                                  Select how the product will be priced. Example: "Per
+                                  Item" could be Per ATV, or Per Boat. "Per Person"
+                                  could be Per Adult, or Per Child.
+                                </Tooltip>
+                              </div>
+                            </div>
+                            <Input
+                              type="select"
+                              name="price_type"
+                              onChange={(e) => {
+                                setPriceTypeSelected(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                            >
+                              <option value="">Select....</option>
+                              {map(priceTypeData, (type, index) => {
+                                if (
+                                  type.add_on_type === 2 ||
+                                  type.add_on_type === 3
+                                ) {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={type.id}
+                                      selected={
+                                        dataEdit
+                                          ? type.id === dataEdit.price_type_id
+                                          : false
+                                      }
+                                    >
+                                      {type.text}
+                                    </option>
+                                  );
+                                }
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <Label className="form-label">Addon Type*</Label>
+                            <Input
+                              type="select"
+                              name="addon_type"
+                              onChange={(e) => {
+                                setAddonTypeSelected(+e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                            >
+                              <option value="">Select....</option>
+                              {map(addonType, (type, index) => {
+                                if (
+                                  type.add_on_type === 2 ||
+                                  type.add_on_type === 3
+                                ) {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={type.id}
+                                      selected={
+                                        dataEdit
+                                          ? type.id === dataEdit.add_on_type_id
+                                          : false
+                                      }
+                                    >
+                                      {type.text}
+                                    </option>
+                                  );
+                                }
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <Label className="form-label">
+                              Price Option (Label)
+                            </Label>
+                            <Input
+                              type="select"
+                              name="price_option"
+                              onChange={(e) => {
+                                setPriceOptionSelected(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                            >
+                              <option value="">Select....</option>
+                              {map(priceOptions, (option, index) => {
+                                if (
+                                  option.add_on_type === 2 ||
+                                  option.add_on_type === 3
+                                ) {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={option.id}
+                                      selected={
+                                        dataEdit
+                                          ? option.id === dataEdit.price_option_id
+                                          : false
+                                      }
+                                    >
+                                      {option.text}
+                                    </option>
+                                  );
+                                }
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                        <Col className="col-2">
+                          <div className="form-outline">
+                            <Label className="form-label">Collect*</Label>
+                            <Input
+                              type="select"
+                              name="collect"
+                              onChange={(e) => {
+                                setPriceCollectSelected(e.target.value);
+                                setPriceCollectNameSelected(
+                                  e.target.selectedOptions[0].label
+                                );
+                              }}
+                            >
+                              <option value="">Select....</option>
+                              {map(priceCollect, (collect, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={collect.id}
+                                    selected={
+                                      dataEdit
+                                        ? collect.id === dataEdit.collect_id
+                                        : false
+                                    }
+                                  >
+                                    {collect.text}
+                                  </option>
+                                );
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                      </>
+                    )}
+
+                    <Col className="col-2">
+                      <div className="d-flex flex-column align-items-center">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Balance Due</Label>
+                          <i
+                            className="uil-question-circle font-size-15 mx-1"
+                            id="balance-t"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop19}
+                            target="balance-t"
+                            toggle={() => {
+                              setttop19(!ttop19);
+                            }}
+                          >
+                            Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
+                          </Tooltip>
+                        </div>
+                        <div className="form-check form-switch form-switch-md">
                           <Input
                             name="active"
                             placeholder=""
@@ -896,593 +920,669 @@ useEffect(() => {
                             value={validationType.values.active || ""}
                             invalid={
                               validationType.touched.active &&
-                              validationType.errors.active
+                                validationType.errors.active
                                 ? true
                                 : false
                             }
                           />
                           {validationType.touched.active &&
-                          validationType.errors.active ? (
+                            validationType.errors.active ? (
                             <FormFeedback type="invalid">
                               {validationType.errors.active}
                             </FormFeedback>
                           ) : null}
                         </div>
+                      </div>
+                    </Col>
+                  </Col>
+                  {displayOptionSelected === 1 || displayOptionSelected === 5 || displayOptionSelected === 4 ?
+                    <Col className="col-3 d-flex justify-content-between">
+                      <Col className="col-4">
+                        <Label className="form-label ">Min. Qty.*</Label>
+                        <div className="form-outline">
+                          <Input
+                            name="min_qty"
+                            placeholder=""
+                            type="text"
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={validationType.values.min_qty || ""}
+                            invalid={
+                              validationType.touched.min_qty &&
+                                validationType.errors.min_qty
+                                ? true
+                                : false
+                            }
+                          />
+                          {validationType.touched.min_qty &&
+                            validationType.errors.min_qty ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.min_qty}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
                       </Col>
-                    </div>
-                  </Col>
-                </Col>
-                <Col className="col-3 d-flex justify-content-between">
-                  <Col className="col-4">
-                    <Label className="form-label ">Min. Qty.</Label>
-                    <div className="form-outline mb-4">
-                      <Input
-                        name="min_qty"
-                        placeholder=""
-                        type="text"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.min_qty || ""}
-                        invalid={
-                          validationType.touched.min_qty &&
-                          validationType.errors.min_qty
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.min_qty &&
-                      validationType.errors.min_qty ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.min_qty}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-4 mx-4">
-                    <Label className="form-label">Max. Qty.</Label>
-                    <div className="form-outline mb-4">
-                      <Input
-                        name="max_qty"
-                        placeholder=""
-                        type="text"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.max_qty || ""}
-                        invalid={
-                          validationType.touched.max_qty &&
-                          validationType.errors.max_qty
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.max_qty &&
-                      validationType.errors.max_qty ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.max_qty}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                </Col>
-              </Row>
+                      <Col className="col-4 mx-4">
+                        <Label className="form-label">Max. Qty.*</Label>
+                        <div className="form-outline">
+                          <Input
+                            name="max_qty"
+                            placeholder=""
+                            type="text"
+                            onChange={validationType.handleChange}
+                            onBlur={validationType.handleBlur}
+                            value={validationType.values.max_qty || ""}
+                            invalid={
+                              validationType.touched.max_qty &&
+                                validationType.errors.max_qty
+                                ? true
+                                : false
+                            }
+                          />
+                          {validationType.touched.max_qty &&
+                            validationType.errors.max_qty ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.max_qty}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+                      </Col>
+                    </Col> : null
+                  }
+                </Row>
 
-              <Row className="d-flex">
-                <Col className="col-10 d-flex justify-content-start">
-                  <Col className="col-4">
-                    <div className="form-outline">
-                      <Label className="form-label">Display Option</Label>
-                      <Input
-                        type="select"
-                        name="display_option"
-                        onChange={(e) => {
-                          setDisplayOptionSelected(+e.target.value);
-                          console.log(+e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                        //   value={validationType.values.department || ""}
-
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option value="">Select....</option>
-                        {map(displayOptionData, (type, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={type.id}
-                              selected={
-                                dataEdit
-                                  ? type.id === dataEdit.display_option
+                <Row className="d-flex">
+                  <Col className="col-10 d-flex justify-content-start">
+                    <Col className="col-4">
+                      <div className="form-outline">
+                        <Label className="form-label">Display Option*</Label>
+                        <Input
+                          type="select"
+                          name="display_option"
+                          onChange={(e) => {
+                            setDisplayOptionSelected(+e.target.value);
+                            console.log(+e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                        >
+                          <option value="">Select....</option>
+                          {map(displayOptionData.filter(x => x.id !== 2), (type, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={type.id}
+                                selected={
+                                  dataEdit
+                                    ? type.id === dataEdit.display_option
+                                    : false
+                                }
+                              >
+                                {type.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    </Col>
+                    {displayOptionSelected === 1 ||
+                      displayOptionSelected === 2 ||
+                      displayOptionSelected === 5 ? (
+                      <>
+                        <Col className="col-6 mx-4">
+                          <div className="form-outline">
+                            <Label className="form-label">
+                              Add-On Description
+                            </Label>
+                            <Input
+                              name="addon_description"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={
+                                validationType.values.addon_description || ""
+                              }
+                              invalid={
+                                validationType.touched.addon_description &&
+                                  validationType.errors.addon_description
+                                  ? true
                                   : false
                               }
-                            >
-                              {type.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  {/* {console.log(displayOptionSelected)} */}
-
-                  {displayOptionSelected === 1 ||
-                  displayOptionSelected === 2 ? (
-                    <>
-                      <Col className="col-6 mx-4">
-                        <div className="form-outline">
-                          <Label className="form-label">
-                            Add-On Description
-                          </Label>
-                          <Input
-                            name="addon_description"
-                            placeholder=""
-                            type="text"
-                            onChange={validationType.handleChange}
-                            onBlur={validationType.handleBlur}
-                            value={
-                              validationType.values.addon_description || ""
-                            }
-                            invalid={
-                              validationType.touched.addon_description &&
-                              validationType.errors.addon_description
-                                ? true
-                                : false
-                            }
-                          />
-                        </div>
-                      </Col>
-                    </>
-                  ) : displayOptionSelected === 3 ||
-                    displayOptionSelected === 4 ||
-                    displayOptionSelected === 10 ? (
-                    <>
-                      <Col className="col-3 mx-4">
-                        <div className="form-outline">
-                          <Label className="form-label">
-                            Instruction Label
-                          </Label>
-                          <Input
-                            type="select"
-                            name="addon_label"
-                            onChange={(e) => {
-                              setAddonLabelSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
+                            />
+                          </div>
+                        </Col>
+                      </>
+                    ) : displayOptionSelected === 3 ||
+                      displayOptionSelected === 4 ||
+                      displayOptionSelected === 10 ? (
+                      <>
+                        <Col className="col-3 mx-4">
+                          <div className="form-outline">
+                            <Label className="form-label">
+                              Instruction Label
+                            </Label>
+                            <Input
+                              type="select"
+                              name="addon_label"
+                              onChange={(e) => {
+                                setAddonLabelSelected(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(addonLabelData, (type, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={type.id}
-                                  selected={
-                                    dataEdit
-                                      ? type.id ===
+                            >
+                              <option value="">Select....</option>
+                              {map(addonLabelData, (type, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={type.id}
+                                    selected={
+                                      dataEdit
+                                        ? type.id ===
                                         dataEdit.instruction_label_id
-                                      : false
-                                  }
-                                >
-                                  {type.text}
-                                </option>
-                              );
-                            })}
-                          </Input>
-                        </div>
-                      </Col>
-                      <Col className="col-6 mx-4">
-                        <div className="form-outline">
-                          <Label className="form-label">
-                            Add-On Description
-                          </Label>
+                                        : false
+                                    }
+                                  >
+                                    {type.text}
+                                  </option>
+                                );
+                              })}
+                            </Input>
+                          </div>
+                        </Col>
+                        <Col className="col-6 mx-4">
+                          <div className="form-outline">
+                            <Label className="form-label">
+                              Add-On Description
+                            </Label>
+                            <Input
+                              name="addon_description"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={
+                                validationType.values.addon_description || ""
+                              }
+                              invalid={
+                                validationType.touched.addon_description &&
+                                  validationType.errors.addon_description
+                                  ? true
+                                  : false
+                              }
+                            />
+                          </div>
+                        </Col>
+                      </>
+                    ) : null}
+                  </Col>
+                </Row>
+                <Row>
+                  {isCustomMessage ? (
+                    <>
+                      <Col className="d-flex flex-column justify-content-start mt-4 col-7">
+                        <p style={{ color: "#495057", fontWeight: "bold" }}>
+                          Mal's Message
+                        </p>
+                        {customMessage === true ? (
                           <Input
-                            name="addon_description"
+                            name="custom_message"
                             placeholder=""
                             type="text"
                             onChange={validationType.handleChange}
                             onBlur={validationType.handleBlur}
-                            value={
-                              validationType.values.addon_description || ""
-                            }
+                            value={validationType.values.custom_message || ""}
                             invalid={
-                              validationType.touched.addon_description &&
-                              validationType.errors.addon_description
+                              validationType.touched.custom_message &&
+                                validationType.errors.custom_message
                                 ? true
                                 : false
                             }
                           />
+                        ) : (
+                          <p>{`We want to ${addonTypeNameSelected !== ""
+                            ? addonTypeNameSelected
+                            : "[Add-On Type]"
+                            } for $ ${validationType.values.our_price !== ""
+                              ? validationType.values.our_price
+                              : "[Price]"
+                            } ${priceTypeNameSelected !== ""
+                              ? priceTypeNameSelected
+                              : "[Price Type]"
+                            }, paid in cash on the day of the tour.`}</p>
+                        )}
+                      </Col>
+                      <Col className="col-1 mt-4">
+                        <div
+                          className="form-outline"
+                          style={{ marginRight: "20px" }}
+                        >
+                          <Label className="form-label">Custom</Label>
+                          <Col className="col-4">
+                            <div className="form-check form-switch form-switch-md mx-2">
+                              <Input
+                                name="custom"
+                                placeholder=""
+                                type="checkbox"
+                                checked={customMessage}
+                                className="form-check-input"
+                                onChange={() => setCustomMessage(!customMessage)}
+                              />
+                            </div>
+                          </Col>
                         </div>
                       </Col>
                     </>
                   ) : null}
-                </Col>
-              </Row>
-              <Row>
-                { isCustomMessage  ? (
-                  <>
-                    <Col className="d-flex flex-column justify-content-start mt-4 col-7">
-                      <p style={{ color: "#495057", fontWeight: "bold" }}>
-                        Mal's Message
-                      </p>
-                      {customMessage === true ? (
+                </Row>
+
+                <Row
+                  className="col-12 p-1 mt-4 mb-2"
+                  style={{ backgroundColor: "#FFEFDE" }}
+                >
+                  <p
+                    className="py-2"
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      color: "#495057",
+                      marginBottom: "0px",
+                    }}
+                  >
+                    Pricing
+                  </p>
+                </Row>
+                <Row className="col-12 d-flex">
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="our_price">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Our Price*</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="ourPrice"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop12}
+                            target="ourPrice"
+                            toggle={() => {
+                              setttop12(!ttop12);
+                            }}
+                          >
+                            The price we will sell the addon for.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          $
+                        </span>
                         <Input
-                          name="custom_message"
+                          name="our_price"
                           placeholder=""
                           type="text"
                           onChange={validationType.handleChange}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.custom_message || ""}
+                          onBlur={(e) => {
+                            setRecalc(true)
+                            const value = e.target.value || "";
+                            customTextAssing({
+                              type: "ourPrice",
+                              label: value,
+                            });
+                            validationType.setFieldValue(
+                              "our_price",
+                              setDecimalFormat(value)
+                            );
+                          }}
+                          value={validationType.values.our_price || ""}
                           invalid={
-                            validationType.touched.custom_message &&
-                            validationType.errors.custom_message
+                            validationType.touched.our_price &&
+                              validationType.errors.our_price
                               ? true
                               : false
                           }
                         />
-                      ) : (
-                        <p>{`We want to ${
-                          addonTypeNameSelected !== ""
-                            ? addonTypeNameSelected
-                            : "[Add-On Type]"
-                        } for $ ${
-                          validationType.values.our_price !== ""
-                            ? validationType.values.our_price
-                            : "[Price]"
-                        } ${
-                          priceTypeNameSelected !== ""
-                            ? priceTypeNameSelected
-                            : "[Price Type]"
-                        }, paid in cash on the day of the tour.`}</p>
-                      )}
-                    </Col>
-                    <Col className="col-1 mt-4">
-                      <div
-                        className="form-outline"
-                        style={{ marginRight: "20px" }}
-                      >
-                        <Label className="form-label">Custom</Label>
-                        <Col className="col-4">
-                          <div className="form-check form-switch form-switch-md mx-2">
-                            <Input
-                              name="custom"
-                              placeholder=""
-                              type="checkbox"
-                              checked={customMessage}
-                              className="form-check-input"
-                              onChange={() => setCustomMessage(!customMessage)}
-                            />
-                          </div>
-                        </Col>
                       </div>
-                    </Col>
-                  </>
-                ) : null}
-              </Row>
-
-              <Row
-                className="col-12 p-1 mt-4 mb-2"
-                style={{ backgroundColor: "#FFEFDE" }}
-              >
-                <p
-                  className="py-2"
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                    color: "#495057",
-                    marginBottom: "0px",
-                  }}
-                >
-                  Pricing
-                </p>
-              </Row>
-              <Row className="col-12 d-flex">
-                <Col className="col-2">
-                  <div className="form-outline mb-2" id="our_price">
-                    <Label className="form-label">Our Price*</Label>
-                    <div className="input-group">
-                      <span
-                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                        id="basic-addon1"
-                        style={{ fontSize: "0.85em" }}
-                      >
-                        $
-                      </span>
-                      <Input
-                        name="our_price"
-                        placeholder=""
-                        type="text"
-                        min="0"
-                        step="any"
-                        onChange={validationType.handleChange}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-                          //  setOurPriceValue(value)
-                          customTextAssing({
-                            type: "ourPrice",
-                            label: value,
-                          });
-                          validationType.setFieldValue(
-                            "our_price",
-                            multipleOurPriceCalcs(value)
-                          );
-                        }}
-                        value={validationType.values.our_price || ""}
-                        invalid={
-                          validationType.touched.our_price &&
-                          validationType.errors.our_price
-                            ? true
-                            : false
-                        }
-                      />
                       {validationType.touched.our_price &&
-                      validationType.errors.our_price ? (
+                        validationType.errors.our_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.our_price}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="our_price">
-                      The price we will sell the tour for.
-                    </UncontrolledTooltip>
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-2" id="you_save">
-                    <Label className="form-label">You Save*</Label>
-                    <div className="input-group">
-                      <Input
-                        name="you_save"
-                        placeholder=""
-                        type="text"
-                        min="0"
-                        step="any"
-                        onChange={validationType.handleChange}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-
-                          validationType.setFieldValue(
-                            "you_save",
-                            setDecimalFormat(value)
-                          );
-                        }}
-                        value={validationType.values.you_save || ""}
-                        invalid={
-                          validationType.touched.you_save &&
-                          validationType.errors.you_save
-                            ? true
-                            : false
-                        }
-                      />
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="you_save">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">You Save*</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="youSave"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop13}
+                            target="youSave"
+                            toggle={() => {
+                              setttop13(!ttop13);
+                            }}
+                          >
+                            This is the amount they save by booking with us compared
+                            to the "other guys" from the compare at price.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <Input
+                          name="you_save"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          onBlur={(e) => {
+                            const value = e.target.value || "";
+                            validationType.setFieldValue(
+                              "you_save",
+                              setYouSaveFormat(value)
+                            );
+                          }}
+                          value={validationType.values.you_save || ""}
+                          invalid={
+                            validationType.touched.you_save &&
+                              validationType.errors.you_save
+                              ? true
+                              : false
+                          }
+                        />
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          %
+                        </span>
+                      </div>
                       {validationType.touched.you_save &&
-                      validationType.errors.you_save ? (
+                        validationType.errors.you_save ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.you_save}
                         </FormFeedback>
                       ) : null}
-                      <span
-                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                        id="basic-addon1"
-                        style={{ fontSize: "0.85em" }}
-                      >
-                        %
-                      </span>
                     </div>
-                    <UncontrolledTooltip placement="top" target="you_save">
-                      This is the amount they save by booking with us compared
-                      to the "other guys" from the compare at price.
-                    </UncontrolledTooltip>
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-2" id="rate">
-                    <Label className="form-label">Rate %</Label>
-                    <div className="input-group">
-                      <Input
-                        name="rate"
-                        placeholder=""
-                        type="text"
-                        step="any"
-                        onChange={validationType.handleChange}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-                          validationType.setFieldValue(
-                            "rate",
-                            multipleRateCalcs(value)
-                          );
-                        }}
-                        value={validationType.values.rate || ""}
-                        invalid={
-                          validationType.touched.rate &&
-                          validationType.errors.rate
-                            ? true
-                            : false
-                        }
-                      />
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="rate">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Rate %</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15 "
+                            id="rate_t"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop7}
+                            target="rate_t"
+                            toggle={() => {
+                              setttop7(!ttop7);
+                            }}
+                          >
+                            The commission rate for the addon that is specified in our
+                            service agreement.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <Input
+                          name="rate"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          onBlur={(e) => {
+                            setRecalc(true)
+                            const value = e.target.value || "";
+                            validationType.setFieldValue(
+                              "rate",
+                              setRateFormat(value)
+                            );
+                          }}
+                          value={validationType.values.rate || ""}
+                          invalid={
+                            validationType.touched.rate &&
+                              validationType.errors.rate
+                              ? true
+                              : false
+                          }
+                        />
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          %
+                        </span>
+                      </div>
                       {validationType.touched.rate &&
-                      validationType.errors.rate ? (
+                        validationType.errors.rate ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.rate}
                         </FormFeedback>
                       ) : null}
-                      <span
-                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                        id="basic-addon1"
-                        style={{ fontSize: "0.85em" }}
-                      >
-                        %
-                      </span>
                     </div>
-                    <UncontrolledTooltip placement="top" target="rate">
-                      The commission rate for the tour that is specified in our
-                      service agreement.
-                    </UncontrolledTooltip>
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-2" id="commission">
-                    <Label className="form-label">Commission*</Label>
-                    <div className="input-group">
-                      <span
-                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                        id="basic-addon1"
-                        style={{ fontSize: "0.85em" }}
-                      >
-                        $
-                      </span>
-                      <Input
-                        name="commission"
-                        placeholder=""
-                        type="text"
-                        min="0"
-                        step="any"
-                        onChange={validationType.handleChange}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-                          validationType.setFieldValue(
-                            "commission",
-                            multipleCommissionCalcs(value),
-                            validationType.handleBlur
-                          );
-                        }}
-                        value={validationType.values.commission || ""}
-                        invalid={
-                          validationType.touched.commission &&
-                          validationType.errors.commission
-                            ? true
-                            : false
-                        }
-                      />
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="commission">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Commission*</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="commission_t"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop15}
+                            target="commission_t"
+                            toggle={() => {
+                              setttop15(!ttop15);
+                            }}
+                          >
+                            The $$ amount that we earn from the sale.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          $
+                        </span>
+                        <Input
+                          name="commission"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          onBlur={(e) => {
+                            const value = e.target.value || "";
+                            validationType.setFieldValue(
+                              "commission",
+                              setDecimalFormat(value),
+                              validationType.handleBlur
+                            );
+                          }}
+                          value={validationType.values.commission || ""}
+                          invalid={
+                            validationType.touched.commission &&
+                              validationType.errors.commission
+                              ? true
+                              : false
+                          }
+                        />
+                      </div>
                       {validationType.touched.commission &&
-                      validationType.errors.commission ? (
+                        validationType.errors.commission ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.commission}
                         </FormFeedback>
                       ) : null}
-                      <UncontrolledTooltip placement="top" target="commission">
-                        The $$ amount that we earn from the sale.
-                      </UncontrolledTooltip>
                     </div>
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-2" id="deposit">
-                    <Label className="form-label">Deposit*</Label>
-                    <div className="input-group">
-                      <span
-                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                        id="basic-addon1"
-                        style={{ fontSize: "0.85em" }}
-                      >
-                        $
-                      </span>
-                      <Input
-                        name="deposit"
-                        placeholder=""
-                        type="text"
-                        min="0"
-                        step="any"
-                        onChange={validationType.handleChange}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-                          validationType.setFieldValue(
-                            "deposit",
-                            setDecimalFormat(value)
-                          );
-                        }}
-                        value={validationType.values.deposit || ""}
-                        invalid={
-                          validationType.touched.deposit &&
-                          validationType.errors.deposit
-                            ? true
-                            : false
-                        }
-                      />
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="deposit">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Deposit*</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="deposit_t"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop16}
+                            target="deposit_t"
+                            toggle={() => {
+                              setttop16(!ttop16);
+                            }}
+                          >
+                            The amount we collect at the time of booking. This is
+                            calculated based on the option chosen in "Collect"
+                            above.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          $
+                        </span>
+                        <Input
+                          name="deposit"
+                          placeholder=""
+                          readOnly={priceCollectSelected !== "1" && priceCollectSelected !== "25" && priceCollectSelected !== "3"}
+                          type="text"
+                          onChange={validationType.handleChange}
+                          onBlur={(e) => {
+                            const value = e.target.value || "";
+                            validationType.setFieldValue(
+                              "deposit",
+                              setDecimalFormat(value)
+                            );
+                          }}
+                          value={validationType.values.deposit || ""}
+                          invalid={
+                            validationType.touched.deposit &&
+                              validationType.errors.deposit
+                              ? true
+                              : false
+                          }
+                        />
+                      </div>
                       {validationType.touched.deposit &&
-                      validationType.errors.deposit ? (
+                        validationType.errors.deposit ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.deposit}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <UncontrolledTooltip placement="top" target="deposit">
-                      The amount we collect at the time of booking.
-                    </UncontrolledTooltip>
-                  </div>
-                </Col>
-                <Col className="col-2">
-                  <div className="form-outline mb-2" id="balance_due">
-                    <Label className="form-label">Net Price*</Label>
-                    <div className="input-group">
-                      <span
-                        className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                        id="basic-addon1"
-                        style={{ fontSize: "0.85em" }}
-                      >
-                        $
-                      </span>
-                      <Input
-                        name="balance_due"
-                        placeholder=""
-                        type="text"
-                        min="0"
-                        step="any"
-                        onChange={validationType.handleChange}
-                        onBlur={(e) => {
-                          const value = e.target.value || "";
-                          validationType.setFieldValue(
-                            "balance_due",
-                            setDecimalFormat(value),
-                            validationType.handleBlur
-                          );
-                        }}
-                        value={validationType.values.balance_due || ""}
-                        invalid={
-                          validationType.touched.balance_due &&
-                          validationType.errors.balance_due
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.balance_due &&
-                      validationType.errors.balance_due ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.balance_due}
-                        </FormFeedback>
-                      ) : null}
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="balance_due">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Balance Due*</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="balanceDue"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop17}
+                            target="balanceDue"
+                            toggle={() => {
+                              setttop17(!ttop17);
+                            }}
+                          >
+                            The amount due to the provider on the invoice.<br />Our Price - Our Commission.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          $
+                        </span>
+                        <Input
+                          name="balance_due"
+                          placeholder=""
+                          type="text"
+                          readOnly
+                          onChange={validationType.handleChange}
+                          onBlur={(e) => {
+                            const value = e.target.value || "";
+                            validationType.setFieldValue(
+                              "balance_due",
+                              setDecimalFormat(value),
+                              validationType.handleBlur
+                            );
+                          }}
+                          value={validationType.values.balance_due || ""}
+                          invalid={
+                            validationType.touched.balance_due &&
+                              validationType.errors.balance_due
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.balance_due &&
+                          validationType.errors.balance_due ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.balance_due}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
                     </div>
-                    <UncontrolledTooltip placement="top" target="balance_due">
-                      The amount due to the provider on the day of the tour.
-                    </UncontrolledTooltip>
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row xl={12}>
-            <Row
-              className="col-12 d-flex justify-content-end mt-5"
-              style={{ paddingRight: "30px" }}
-            >
-              <Button
-                color="paradise"
-                outline
-                className="waves-effect waves-light col-2 mx-4"
-                type="button"
-                onClick={() => setNewAddon(false)}
-              >
-                Close
-              </Button>
-              <Button
-                style={{ backgroundColor: "#F6851F" }}
-                type="submit"
-                className="font-16 btn-block col-2"
-                // onClick={toggleCategory}
-              >
-                Save
-              </Button>
+                  </Col>
+                </Row>
+              </Col>
             </Row>
-          </Row>
-        </Form>
+            <Row xl={12}>
+              <Row
+                className="col-12 d-flex justify-content-end mt-5"
+                style={{ paddingRight: "30px" }}
+              >
+                <Button
+                  color="paradise"
+                  outline
+                  className="waves-effect waves-light col-2 mx-4"
+                  type="button"
+                  onClick={() => setNewAddon(false)}
+                >
+                  Close
+                </Button>
+                <Button
+                  id="save-button"
+                  type="submit"
+                  className="font-16 btn-block col-2 btn-orange"
+                >
+                  Save
+                </Button>
+              </Row>
+            </Row>
+          </Form>
+        )}
       </div>
     </Modal>
   );

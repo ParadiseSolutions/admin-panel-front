@@ -145,7 +145,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       },
     },
     {
-      Header: "Net Price",
+      Header: "Balance Due",
       accessor: "net_price",
       disableFilters: false,
       filterable: true,

@@ -138,7 +138,8 @@ const BulkEditModal = ({
                   <Table className="table table-bordered mb-0">
                     <thead>
                       <tr>
-                        {Object.keys(preciosIniciales[0]).map((campo) => {
+                        { preciosIniciales.length > 0 ? 
+                        Object.keys(preciosIniciales[0]).map((campo) => {
                           if (campo !== "id") {
                             if (campo === "label") {
                               return (
@@ -174,7 +175,7 @@ const BulkEditModal = ({
                           } else {
                             return null;
                           }
-                        })}
+                        }) : null }
                       </tr>
                     </thead>
                     <tbody>

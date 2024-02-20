@@ -137,7 +137,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         },
       },
       {
-        Header: "Net Price",
+        Header: "Balance Due",
         accessor: "net_price",
         disableFilters: true,
         filterable: false,

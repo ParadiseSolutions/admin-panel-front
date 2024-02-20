@@ -54,7 +54,7 @@ const AddNewAirportTransfer = ({
       setDataEdit(null);
     }
   }, [id, addNewAirportTransfer]);
-  
+
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -661,8 +661,6 @@ const AddNewAirportTransfer = ({
                             could be Per Adult, or Per Child.
                           </Tooltip>
                         </div>
-
-
                       </div>
                       <Input
                         type="select"
@@ -1313,12 +1311,12 @@ const AddNewAirportTransfer = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15 "
-                            id="rate"
+                            id="rate_t"
                           />
                           <Tooltip
                             placement="right"
                             isOpen={ttop7}
-                            target="rate"
+                            target="rate_t"
                             toggle={() => {
                               setttop7(!ttop7);
                             }}
@@ -1349,7 +1347,6 @@ const AddNewAirportTransfer = ({
                               : false
                           }
                         />
-
                         <span
                           className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                           id="basic-addon1"
@@ -1573,8 +1570,6 @@ const AddNewAirportTransfer = ({
                           name="our_price"
                           placeholder=""
                           type="text"
-                          min="0"
-                          step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             setRecalc(true)
@@ -1763,7 +1758,6 @@ const AddNewAirportTransfer = ({
                           </FormFeedback>
                         ) : null}
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -2047,8 +2041,6 @@ const AddNewAirportTransfer = ({
                           name="you_save"
                           placeholder=""
                           type="text"
-                          min="0"
-                          step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";
