@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-
+import React from "react";
 import { createTourType } from "../../../../Utils/API/TourTypes";
-
 import {
   Row,
   Col,
@@ -46,6 +44,7 @@ const AddTourTypeModal = ({ addModal, setAddModal, onClickAddTourType }) => {
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
+            return true
           });
 
           Swal.fire(

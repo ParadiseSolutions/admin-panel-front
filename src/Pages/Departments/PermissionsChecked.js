@@ -13,6 +13,7 @@ const PermissionsChecked = ({ module, permsId, setPermsIds }) => {
       
       setChecked(permsId.includes(module.id) ? true : false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked]);
   const onChangeModules = (e) => {
     setChecked(!checked);

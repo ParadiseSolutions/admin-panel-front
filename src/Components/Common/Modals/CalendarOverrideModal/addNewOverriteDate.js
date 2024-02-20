@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import OverriteDateImg from "../../../../Components/Assets/images/overriteDates.png";
 import { postOverriteDate, triggerUpdate } from "../../../../Utils/API/Tours";
 import CheckBoxs from "./Components/checkboxs";
@@ -94,6 +94,7 @@ const AddNewOverriteDate = ({
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
+            return true
           });
 
           Swal.fire(
@@ -166,7 +167,7 @@ const AddNewOverriteDate = ({
                         }}
                         onBlur={validationType.handleBlur}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         <option value={"1"}>Range</option>
                         <option value={"2"}>Weekdays</option>
                         <option value={"3"}>Month</option>
@@ -192,7 +193,7 @@ const AddNewOverriteDate = ({
                         }}
                         onBlur={validationType.handleBlur}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         <option value={"1"}>One Time Event</option>
                         <option value={"2"}>Yearly</option>
                       </Input>
@@ -211,7 +212,7 @@ const AddNewOverriteDate = ({
                         }}
                         onBlur={validationType.handleBlur}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         <option value={"Available"}>Available</option>
                         <option value={"Unavailable"}>Unavailable</option>
                       </Input>

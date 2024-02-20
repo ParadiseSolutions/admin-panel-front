@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { websitesData } from "../../../../Utils/Redux/Actions/WebsitesActions";
-import PrivateCharterImage from "../../../Assets/images/private-charter.png";
 import FiltersImage from "../../../Assets/images/filters.jpg";
 import {
   Row,
   Col,
   Modal,
   Form,
-  Label,
   Input,
   FormFeedback,
   Button,
@@ -18,7 +16,6 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 import { map } from "lodash";
-import Swal from "sweetalert2";
 import { providersData } from "../../../../Utils/Redux/Actions/ProvidersActions";
 import { categoriesData } from "../../../../Utils/Redux/Actions/CategoriesActions";
 import { operatorsData } from "../../../../Utils/Redux/Actions/OperatorsActions";
@@ -94,6 +91,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
   };
   useEffect(() => {
     initialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     websiteInfo,
     providerInfo,
@@ -281,13 +279,13 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                     value={validationType.values.search || ""}
                     invalid={
                       validationType.touched.search &&
-                      validationType.errors.search
+                        validationType.errors.search
                         ? true
                         : false
                     }
                   />
                   {validationType.touched.search &&
-                  validationType.errors.search ? (
+                    validationType.errors.search ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.search}
                     </FormFeedback>
@@ -299,9 +297,9 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   className="waves-effect waves-light mx-2 col-1"
                   style={{ height: "40px", marginTop: "33px" }}
                   type="submit"
-                  // onClick={() => setFilters(false)}
+                // onClick={() => setFilters(false)}
                 >
-                  <i className="bx bx-search-alt-2 " style={{fontSize:'30px'}}></i>
+                  <i className="bx bx-search-alt-2 " style={{ fontSize: '30px' }}></i>
                 </Button>
               </Col>
               <Col
@@ -333,7 +331,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                         onChangeWebsite(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={0}>Select....</option>
                       {map(websiteData, (website, index) => {
@@ -354,7 +352,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                         setProviderSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(providerData, (provider, index) => {
@@ -379,7 +377,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                         setCategorySelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(categoryData, (category, index) => {
@@ -397,11 +395,11 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                       type="select"
                       name="operator"
                       onChange={(e) => {
-                        
+
                         setOperatorSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(operatorData, (operator, index) => {
@@ -426,7 +424,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                         setLocationSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(locationData, (location, index) => {
@@ -447,7 +445,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                         setTourSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(tourData, (tour, index) => {
@@ -480,7 +478,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                     setTourData([]);
                   }}
                 >
-                  <i className="bx bx-revision"style={{fontSize:'25px'}}></i>
+                  <i className="bx bx-revision" style={{ fontSize: '25px' }}></i>
                 </Button>
                 <Button
                   color="paradise"
@@ -490,7 +488,7 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
                   type="button"
                   onClick={() => submitAdvanceFilters()}
                 >
-                  <i className="bx bx-search-alt-2" style={{fontSize:'25px'}}></i>
+                  <i className="bx bx-search-alt-2" style={{ fontSize: '25px' }}></i>
                 </Button>
                 {/* <Button
                   type="submit"

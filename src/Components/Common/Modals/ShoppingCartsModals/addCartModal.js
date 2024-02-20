@@ -231,7 +231,7 @@ const AddCartModal = ({ addCartModal, setAddCartModal, onClickAddNewCart }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(dataWebsites, (website, index) => {
                         return (
                           <option value={website.id}>

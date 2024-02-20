@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProviderAPI, updateProviderAPI, updateSocialProviderAPI } from "../../../Utils/API/Providers";
+import { updateSocialProviderAPI } from "../../../Utils/API/Providers";
 import {
   Collapse,
   Form,
@@ -14,13 +14,9 @@ import classnames from "classnames";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useHistory } from 'react-router-dom'
 
 const SocialMedia = ({socialData, id}) => {
 
-  // const {id} = useHistory()
-  // console.log(id)
-  //initial info
   const [initialData, setInitialData] = useState({})
   
   useEffect(() => {
@@ -63,7 +59,7 @@ const SocialMedia = ({socialData, id}) => {
         foreign_key: id
         };
     //  console.log(data)
-        updateSocialProviderAPI(initialData.id, data)
+        updateSocialProviderAPI(id, data)
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 200) {

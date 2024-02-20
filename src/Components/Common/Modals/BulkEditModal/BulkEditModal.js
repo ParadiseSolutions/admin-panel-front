@@ -53,6 +53,7 @@ const BulkEditModal = ({
     if (preciosIniciales.length > 0) {
       setValues(preciosIniciales);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pricesData]);
 
   const handleChange = (index, e) => {
@@ -85,6 +86,7 @@ const BulkEditModal = ({
         let errorMessages = [];
         Object.entries(error.response.data.data).map((item) => {
           errorMessages.push(item[1]);
+          return true
         });
 
         Swal.fire(
@@ -136,7 +138,8 @@ const BulkEditModal = ({
                   <Table className="table table-bordered mb-0">
                     <thead>
                       <tr>
-                        {Object.keys(preciosIniciales[0]).map((campo) => {
+                        { preciosIniciales.length > 0 ? 
+                        Object.keys(preciosIniciales[0]).map((campo) => {
                           if (campo !== "id") {
                             if (campo === "label") {
                               return (
@@ -172,7 +175,7 @@ const BulkEditModal = ({
                           } else {
                             return null;
                           }
-                        })}
+                        }) : null }
                       </tr>
                     </thead>
                     <tbody>

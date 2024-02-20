@@ -265,7 +265,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(dataDepartments, (department, index) => {
                         return (
                           <option
@@ -295,7 +295,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(dataRoles, (rol, index) => {
                         return (
                           <option

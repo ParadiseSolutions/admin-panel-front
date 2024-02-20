@@ -227,7 +227,7 @@ const AddExtraFeeModal = ({
                         //   value={validationType.values.department || ""}
                         disabled={dataEdit?.length === 0 ? false : true}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(extraFeeData, (fee, index) => {
                           return (
                             <option
@@ -305,7 +305,7 @@ const AddExtraFeeModal = ({
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(currencyData, (currency, index) => {
                           return (
                             <option
@@ -336,7 +336,7 @@ const AddExtraFeeModal = ({
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceTypeData, (priceType, index) => {
                           return (
                             <option

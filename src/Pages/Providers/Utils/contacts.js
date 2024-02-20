@@ -10,14 +10,12 @@ import {
   
 } from "./ProvidersCols";
 import { Collapse, Row, Col, Card, CardBody,   UncontrolledTooltip, } from "reactstrap";
-import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import classnames from "classnames";
 import EditContactProviderModal from "../../../Components/Common/Modals/ContactsProviderModal/editContactProviderModal";
 const Contacts = ({contacts}) => {
 
-  const {id} = useHistory()
   const [col2, setcol2] = useState(false);
   const [addContactModal, setAddContactModal] = useState(false)
   const [editContactModal, setEditContactModal] = useState(false)

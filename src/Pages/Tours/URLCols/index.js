@@ -1,9 +1,5 @@
-import React, { useState } from "react";
-// const OrderId = (cell) => {
-//     return (
-//         <Link to="#" className="text-body fw-bold">{cell.value ? cell.value : ''}</Link>
-//     );
-// };
+import React from "react";
+
 const URLType = (cell) => {
   return cell.value ? cell.value : "";
 };

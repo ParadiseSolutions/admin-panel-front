@@ -1,4 +1,3 @@
-import { Container } from 'reactstrap';
 import Header from './Header'
 import Sidebar from './Sidebar';
 const Layout = (props) => {

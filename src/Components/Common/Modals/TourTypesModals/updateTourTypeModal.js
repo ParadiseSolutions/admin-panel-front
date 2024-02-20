@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getTourType, editTourType } from "../../../../Utils/API/TourTypes";
-import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Modal, Form, Label, Input, FormFeedback, Button } from "reactstrap";
-import Select from "react-select";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { map } from "lodash";
 import Swal from "sweetalert2";
 
 const EditTourTypeModal = ({ tourTypeId, editModal, setEditModal, onClickEditTourType }) => {
@@ -46,6 +43,7 @@ const EditTourTypeModal = ({ tourTypeId, editModal, setEditModal, onClickEditTou
 					let errorMessages = [];
 					Object.entries(error.response.data.data).map((item) => {
 						errorMessages.push(item[1]);
+						return true
 					});
 
 					Swal.fire(

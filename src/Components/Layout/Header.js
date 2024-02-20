@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import MyProfileModal from "../Common/Modals/ProfileModal";
 import { getStorageSync } from "../../Utils/API";
 import { useHistory } from "react-router-dom";
-import user4 from "../Assets/images/users/avatar-4.jpg";
 import { Link } from "react-router-dom";
 import {
   Dropdown,
@@ -30,6 +29,7 @@ const Header = () => {
   useEffect(() => {
     setusername(token.user.first_name);
     setProfilePicture(token.user.picture)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //logOut

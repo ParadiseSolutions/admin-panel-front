@@ -145,7 +145,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       },
     },
     {
-      Header: "Net Price",
+      Header: "Balance Due",
       accessor: "net_price",
       disableFilters: false,
       filterable: true,
@@ -284,8 +284,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         );
       },
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  ],[]);
+  ]);
   //add new product
   const [addNewProduct, setAddNewProduct] = useState(false);
   const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);

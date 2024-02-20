@@ -106,6 +106,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
             let errorMessages = [];
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
+              return true
             });
   
             Swal.fire(
@@ -335,7 +336,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(dataDepartments, (department, index) => {
                         return (
                           <option value={department.id}>
@@ -358,7 +359,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(dataRoles, (rol, index) => {
                         return <option value={rol.id}>{rol.name}</option>;
                       })}

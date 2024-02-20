@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Switch from "react-switch";
 import { statusUpdate } from "../../Utils/API/ShoppingCarts";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { shoppingCartsData } from "../../Utils/Redux/Actions/ShoppingCartActions";
 // const OrderId = (cell) => {
 //     return (
@@ -23,7 +23,7 @@ const Website = (cell) => {
   return cell.value ? cell.value : "";
 };
 const TestLink = (cell) => {
-  return cell.value ?  <a href={cell.value} target="_blank">{cell.value}</a> : "";
+  return cell.value ?  <a href={cell.value} target="_blank" rel="noreferrer">{cell.value}</a> : "";
 };
 const Active = (cell) => {
   const id = cell.row.original.id;
@@ -114,16 +114,5 @@ const Active = (cell) => {
     />
   );
 };
-
-// const Active = (cell) => {
-//     return (
-//         <Badge
-//           className={"badge badge-pill bg-pill font-size-12 bg-soft-" +
-//           (cell.value === 1 ? "success" : "danger")}
-//         >
-//           {cell.value === 1 ? 'Active' : 'Inactive'}
-//         </Badge>
-//     )
-// };
 
 export { CartName, CartID, Server, Website, TestLink, Active };

@@ -295,7 +295,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(templatesData, (template, index) => {
                         return (
                           <option

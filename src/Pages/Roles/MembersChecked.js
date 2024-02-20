@@ -11,6 +11,7 @@ const MembersChecked = ({ user, membersIds, setMembersIds }) => {
     if (membersIds.length > 0) {
       setChecked(membersIds.includes(user.id) ? true : false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked]);
 
   const onChangeMembers = (e) => {
