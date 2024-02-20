@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.dc97ebd3.css",
-    "main.js": "/static/js/main.75b7f615.js",
+    "main.css": "/static/css/main.7c678f86.css",
+    "main.js": "/static/js/main.d595c285.js",
     "static/js/144.63e33fc3.chunk.js": "/static/js/144.63e33fc3.chunk.js",
     "static/media/filters.jpg": "/static/media/filters.d764aae9f45ddb567bb5.jpg",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
@@ -57,7 +57,6 @@
     "static/media/twovariants.jpg": "/static/media/twovariants.1fa238ff0aaec1ea4316.jpg",
     "static/media/logo-dark.png": "/static/media/logo-dark.2e223add1ac7fd0c30a3.png",
     "static/media/logo-light.png": "/static/media/logo-light.d439429043f095522249.png",
-    "static/media/avatar-4.jpg": "/static/media/avatar-4.b23e41d9c09997efbc21.jpg",
     "static/media/fa-regular-400.woff2": "/static/media/fa-regular-400.c52405129ae48097815d.woff2",
     "static/media/onevariant.jpg": "/static/media/onevariant.eaa9d8ada69b90562125.jpg",
     "static/media/paradise-logo-color.png": "/static/media/paradise-logo-color.7202d63b4dfed004a919.png",
@@ -66,12 +65,12 @@
     "index.html": "/index.html",
     "static/media/Intersection2.svg": "/static/media/Intersection2.9f8fdbff1f8cc8e8e585399d1070a56e.svg",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
-    "main.dc97ebd3.css.map": "/static/css/main.dc97ebd3.css.map",
-    "main.75b7f615.js.map": "/static/js/main.75b7f615.js.map",
+    "main.7c678f86.css.map": "/static/css/main.7c678f86.css.map",
+    "main.d595c285.js.map": "/static/js/main.d595c285.js.map",
     "144.63e33fc3.chunk.js.map": "/static/js/144.63e33fc3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.dc97ebd3.css",
-    "static/js/main.75b7f615.js"
+    "static/css/main.7c678f86.css",
+    "static/js/main.d595c285.js"
   ]
 }
