@@ -54,6 +54,7 @@ const AddNewAirportTransfer = ({
       setDataEdit(null);
     }
   }, [id, addNewAirportTransfer]);
+  
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);

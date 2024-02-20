@@ -1227,12 +1227,12 @@ const AddNewPrivateCharter = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15 "
-                            id="rate"
+                            id="rate_t"
                           />
                           <Tooltip
                             placement="right"
                             isOpen={ttop7}
-                            target="rate"
+                            target="rate_t"
                             toggle={() => {
                               setttop7(!ttop7);
                             }}

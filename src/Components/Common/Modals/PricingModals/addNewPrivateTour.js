@@ -157,6 +157,7 @@ const AddNewPrivateTour = ({
       }
     } else {
       setRecalc(true)
+      setCurrencySelected("")
       setPriceTypeSelected("");
       setPriceOptionSelected("");
       setPriceCollectSelected("");

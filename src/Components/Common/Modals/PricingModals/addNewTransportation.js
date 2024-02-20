@@ -17,7 +17,6 @@ import {
   Input,
   FormFeedback,
   Button,
-  UncontrolledTooltip,
   Tooltip,
 } from "reactstrap";
 import * as Yup from "yup";
@@ -171,6 +170,7 @@ const AddNewTransportation = ({
       }
     } else {
       setRecalc(true)
+      setCurrencySelected("")
       setPriceTypeSelected("");
       setPriceOptionSelected("");
       setPriceCollectSelected("");
@@ -763,12 +763,12 @@ const AddNewTransportation = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15 mx-2"
-                            id="collect"
+                            id="collect_t"
                           />
                           <Tooltip
                             placement="right"
                             isOpen={ttop3}
-                            target="collect"
+                            target="collect_t"
                             toggle={() => {
                               setttop3(!ttop3);
                             }}
@@ -1302,12 +1302,12 @@ const AddNewTransportation = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15 "
-                            id="rate"
+                            id="rate_t"
                           />
                           <Tooltip
                             placement="right"
                             isOpen={ttop7}
-                            target="rate"
+                            target="rate_t"
                             toggle={() => {
                               setttop7(!ttop7);
                             }}
