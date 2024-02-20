@@ -393,7 +393,7 @@ const EditScheduleModal = ({
                       }}
                       onBlur={validationType.handleBlur}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(productsData, (product, index) => {
                         return (
                           <option
@@ -423,7 +423,7 @@ const EditScheduleModal = ({
                       }}
                       onBlur={validationType.handleBlur}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(scheduleTypesData, (type, index) => {
                         return (
                           <option

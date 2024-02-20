@@ -327,7 +327,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>Select....</option>
+                    <option value="">Select....</option>
                     {map(dataTourType, (tourType, index) => {
                       return (
                         <option
@@ -358,7 +358,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>Select....</option>
+                    <option value="">Select....</option>
                     {map(dataWebsite, (website, index) => {
                       return (
                         <option
@@ -525,7 +525,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>Select....</option>
+                    <option value="">Select....</option>
                     {map(locationData, (location, index) => {
                       return (
                         <option
@@ -590,7 +590,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
-                    <option>Select....</option>
+                    <option value="">Select....</option>
                     {map(subCategoriesData, (subCategory, index) => {
                       return (
                         <option

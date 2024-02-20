@@ -476,7 +476,7 @@ const Schedules = ({ tourData, toggle }) => {
                       }}
                       onBlur={validationType.handleBlur}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {seasonalityValues.map((option, index) => {
                         return (
                           <option

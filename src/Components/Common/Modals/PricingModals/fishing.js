@@ -564,7 +564,7 @@ const Fishing = ({
                       onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(priceOptions, (option, index) => {
                         return (
                           <option
@@ -625,7 +625,7 @@ const Fishing = ({
                       }}
                     //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(priceCollect, (collect, index) => {
                         return (
                           <option
@@ -662,7 +662,7 @@ const Fishing = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(priceSeason, (season, index) => {
                           return (
                             <option
@@ -807,7 +807,7 @@ const Fishing = ({
                       onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(priceCharterType, (charterType, index) => {
                         return (
                           <option
@@ -839,7 +839,7 @@ const Fishing = ({
                       onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(priceDuration, (duration, index) => {
                         return (
                           <option
@@ -921,7 +921,7 @@ const Fishing = ({
                       onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(priceLocation, (location, index) => {
                         return (
                           <option
@@ -1460,7 +1460,7 @@ const Fishing = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(currency, (curr, index) => {
                           return (
                             <option

@@ -2142,7 +2142,6 @@ const AddNewAirportTransfer = ({
                       id="save-button"
                       type="submit"
                       className="font-16 btn-block col-2 btn-orange"
-                    // onClick={toggleCategory}
                     >
                       Save
                     </Button>

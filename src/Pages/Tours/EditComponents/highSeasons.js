@@ -275,7 +275,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                         onBlur={validationType.handleBlur}
                         disabled={!activeDep}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(seasonNames, (season, index) => {
                           return (
                             <option

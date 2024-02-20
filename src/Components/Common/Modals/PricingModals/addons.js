@@ -506,7 +506,7 @@ useEffect(() => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(priceMatchQuantityData, (quantity, index) => {
                         return (
                           <option
@@ -560,7 +560,7 @@ useEffect(() => {
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(priceTypeData, (type, index) => {
                               if (
                                 type.add_on_type === 1 ||
@@ -600,7 +600,7 @@ useEffect(() => {
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(addonType, (type, index) => {
                               if (
                                 type.add_on_type === 1 ||
@@ -638,7 +638,7 @@ useEffect(() => {
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(priceOptions, (option, index) => {
                               if (
                                 option.add_on_type === 1 ||
@@ -692,7 +692,7 @@ useEffect(() => {
                               );
                             }}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(priceCollect, (collect, index) => {
                               return (
                                 <option
@@ -726,7 +726,7 @@ useEffect(() => {
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(priceTypeData, (type, index) => {
                               if (
                                 type.add_on_type === 2 ||
@@ -762,7 +762,7 @@ useEffect(() => {
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(addonType, (type, index) => {
                               if (
                                 type.add_on_type === 2 ||
@@ -800,7 +800,7 @@ useEffect(() => {
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(priceOptions, (option, index) => {
                               if (
                                 option.add_on_type === 2 ||
@@ -855,7 +855,7 @@ useEffect(() => {
                               );
                             }}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(priceCollect, (collect, index) => {
                               return (
                                 <option
@@ -984,7 +984,7 @@ useEffect(() => {
 
                         //   value={validationType.values.department || ""}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         {map(displayOptionData, (type, index) => {
                           return (
                             <option
@@ -1050,7 +1050,7 @@ useEffect(() => {
                             onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                           >
-                            <option>Select....</option>
+                            <option value="">Select....</option>
                             {map(addonLabelData, (type, index) => {
                               return (
                                 <option

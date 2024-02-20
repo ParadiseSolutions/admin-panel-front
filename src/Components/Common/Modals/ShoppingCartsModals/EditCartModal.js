@@ -242,7 +242,7 @@ const EditCartModal = ({ editCartModal, setEditCartModal, onClickEditCart, cartI
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(dataWebsites, (website, index) => {
                         return (
                           <option value={website.id} selected={dataCarts.website_id === website.id ? 'true' : 'false'} >
