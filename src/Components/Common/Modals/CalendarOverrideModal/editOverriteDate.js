@@ -197,7 +197,7 @@ const EdditOverriteDate = ({
                         }}
                         onBlur={validationType.handleBlur}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         <option
                           value={"1"}
                           selected={
@@ -256,7 +256,7 @@ const EdditOverriteDate = ({
                         }}
                         onBlur={validationType.handleBlur}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         <option
                           value={"1"}
                           selected={
@@ -295,7 +295,7 @@ const EdditOverriteDate = ({
                         }}
                         onBlur={validationType.handleBlur}
                       >
-                        <option>Select....</option>
+                        <option value="">Select....</option>
                         <option
                           value={"Available"}
                           selected={

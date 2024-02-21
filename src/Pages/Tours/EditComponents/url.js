@@ -299,7 +299,7 @@ const URL = ({ tourData, toggle }) => {
                 // onBlur={validationType.handleBlur}
                 //   value={validationType.values.department || ""}
               >
-                <option>Select....</option>
+                <option value="">Select....</option>
                 {map(urlTypes, (type, index) => {
                   return (
                     <option
@@ -331,7 +331,7 @@ const URL = ({ tourData, toggle }) => {
                   // onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
-                  <option>Select....</option>
+                  <option value="">Select....</option>
                   {map(locationData, (location, index) => {
                     return (
                       <option

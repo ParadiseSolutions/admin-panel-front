@@ -286,7 +286,7 @@ const AddNewScheduleModal = ({
                       }}
                       onBlur={validationType.handleBlur}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(productsData, (product, index) => {
                         return (
                           <option key={index} value={product.id}>
@@ -310,7 +310,7 @@ const AddNewScheduleModal = ({
                       }}
                       onBlur={validationType.handleBlur}
                     >
-                      <option>Select....</option>
+                      <option value="">Select....</option>
                       {map(scheduleTypesData, (type, index) => {
                         return (
                           <option key={index} value={type.id}>
