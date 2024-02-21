@@ -23,7 +23,7 @@ export const setDecimalFormatVBalance = (currentValue, currencySelected) => {
 }
 
 export const setRateFormat = (currentValue) => {
-    if(isNaN(currentValue) || currentValue === "") {
+    if(isNaN(currentValue) || currentValue === "" || currentValue === null) {
         currentValue = "";
     } else if(currentValue <= 1) {
         currentValue *= 100;
@@ -35,7 +35,7 @@ export const setRateFormat = (currentValue) => {
 }
 
 export const setYouSaveFormat = (currentValue) => {
-    if(isNaN(currentValue) || currentValue === "") {
+    if(isNaN(currentValue) || currentValue === "" || currentValue === null) {
         currentValue = "";
     } else if(currentValue <= 1) {
         currentValue *= 100;
