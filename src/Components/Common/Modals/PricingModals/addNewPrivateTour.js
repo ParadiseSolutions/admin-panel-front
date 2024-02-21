@@ -137,7 +137,7 @@ const AddNewPrivateTour = ({
         setRecalc(false)
       }
       setCurrencySelected(dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD")
-      setPriceCollectSelected(dataEdit.pricedetails.filter((x) => x.pricing_option_id === 14)[0]
+      setPriceCollectSelected(dataEdit.pricedetails.filter((x) => x.pricing_option_id === 9)[0]
         ?.source_id)
       let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.pricedetails.filter((x) => x.pricing_option_id === 14)[0]
         ?.source_id)
