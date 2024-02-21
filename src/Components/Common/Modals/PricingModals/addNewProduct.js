@@ -1418,7 +1418,7 @@ const AddNewProductPricing = ({
                           <Input
                             name="deposit"
                             placeholder=""
-                            readOnly={priceCollectSelected !== "1" && priceCollectSelected !== "25" && priceCollectSelected !== "3"}
+                            readOnly={+priceCollectSelected !== 1 && +priceCollectSelected !== 25 && +priceCollectSelected !== 3}
                             type="text"
                             onChange={validationType.handleChange}
                             onBlur={(e) => {
