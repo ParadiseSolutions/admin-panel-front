@@ -179,10 +179,12 @@ export const calcDeposit = (our_price, collect, commission, current_deposit) => 
                 current_deposit = our_price * 0.2;
             break;
             case "Commission":
+                current_deposit = commission;
+            break;
             case "Affiliate":
             case "Cash Only":
             case "Deposit":
-                current_deposit = commission;
+                current_deposit = current_deposit;
             break;
             default:
             break;
