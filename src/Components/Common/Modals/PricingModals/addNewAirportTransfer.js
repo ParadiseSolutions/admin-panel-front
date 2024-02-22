@@ -212,7 +212,7 @@ const AddNewAirportTransfer = ({
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
-      rate: dataEdit ? setRateFormat(dataEdit.rate) : "",
+      rate: dataEdit ? setRateFormat(dataEdit.provider_rate) : "",
       net_rate: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
@@ -329,7 +329,7 @@ const AddNewAirportTransfer = ({
           tour_id: tourData.id,
           public: values.public_price,
           provider_price: values.provider_price,
-          rate:
+          provider_rate:
             values.rate !== ""
               ? values.rate > 1
                 ? values.rate / 100

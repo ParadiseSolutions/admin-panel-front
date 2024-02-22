@@ -119,7 +119,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         },
       },
       {
-        Header: "Rate %",
+        Header: "Our Rate %",
         accessor: "rate",
         disableFilters: true,
         filterable: false,

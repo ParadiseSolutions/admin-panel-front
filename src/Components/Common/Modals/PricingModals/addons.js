@@ -1318,7 +1318,7 @@ const Addons = ({
                   <Col className="col-2">
                     <div className="form-outline mb-2" id="rate">
                       <div className="d-flex justify-content-between">
-                        <Label className="form-label">Rate %</Label>
+                        <Label className="form-label">Our Rate %</Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15 "
