@@ -35,7 +35,7 @@ export var options = {
 };
 
 export const getCookie = (cname, json = false) => {
-  let name = cname + "=";
+  /*let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
   let ca = decodedCookie.split(';');
   for (let i = 0; i < ca.length; i++) {
@@ -51,19 +51,28 @@ export const getCookie = (cname, json = false) => {
       }
     }
   }
-  return null;
+  return null;*/
+  //Johann asked to change it for SessionStorage for cookie size restiction
+  if (json) {
+    return JSON.parse(sessionStorage.getItem(cname));
+  } else {
+    return sessionStorage.getItem(cname);
+  }
 }
 
 export const setCookie = (cname, cvalue, seconds = 24 * 60 * 60 * 1000) => {
-  const d = new Date();
+  /*const d = new Date();
   // d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
   d.setTime(d.getTime() + (seconds * 1000));
   let expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + "; " + expires + ";path=/;domain=" + window.location.hostname;
+  document.cookie = cname + "=" + cvalue + "; " + expires + ";path=/;domain=" + window.location.hostname;*/
+  //Johann asked to change it for SessionStorage for cookie size restiction
+  sessionStorage.setItem(cname, cvalue);
 }
 
 export const removeCookie = (cname) => {
-  document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;domain=" + window.location.hostname;
+  //document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;domain=" + window.location.hostname;
+  sessionStorage.removeItem(cname);
 }
 
 export const switchTourTab = (tab) => {
