@@ -57,6 +57,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         }
       });
     }
+    
   }, [availableData, tourSettings]);
 
   //available from
@@ -64,12 +65,13 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
 
   useEffect(() => {
     setAvailableFromIDs(tourSettings.available_from);
+    setTemplateSelected(tourSettings.voucher_template_id)
   }, [tourSettings]);
 
   //modal reserve page
   const [reserveModal, setReserveModal] = useState(false)
 
-
+console.log('template id', templateSelected)
   //form creation
 
   // console.log('id',availableFromIDs)
