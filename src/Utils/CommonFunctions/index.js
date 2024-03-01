@@ -27,9 +27,9 @@ export const setRateFormat = (currentValue) => {
         currentValue = "";
     } else if(currentValue <= 1) {
         currentValue *= 100;
-        currentValue = round(currentValue, 1).toFixed(1)
+        currentValue = Math.trunc(parseFloat(currentValue))
     } else if(currentValue > 1) {
-        currentValue = round(+currentValue, 1).toFixed(1)
+        currentValue = Math.trunc(parseFloat(+currentValue))
     }
     return currentValue
 }
@@ -115,7 +115,7 @@ export const calcNetRate = (public_price, rate, current_net_rate) => {
             rate /= 100;
         }
         if(public_price != null && !isNaN(public_price) && public_price !== "") {
-            current_net_rate = public_price * rate;
+            current_net_rate = public_price * (1 - rate);
             current_net_rate = round(current_net_rate,2).toFixed(2)
         }
     }
@@ -158,6 +158,7 @@ export const calcDeposit = (our_price, collect, commission, current_deposit) => 
     if(our_price !== null && !isNaN(our_price) && our_price !== "") {
         switch (collect) {
             case "100% Deposit":
+            case "Affiliate":
                 current_deposit = our_price;
             break;
             case "50% Deposit":
@@ -181,8 +182,9 @@ export const calcDeposit = (our_price, collect, commission, current_deposit) => 
             case "Commission":
                 current_deposit = commission;
             break;
-            case "Affiliate":
             case "Cash Only":
+                current_deposit = 0;
+            break;
             case "Deposit":
                 current_deposit = current_deposit;
             break;
