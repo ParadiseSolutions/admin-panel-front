@@ -269,118 +269,133 @@ const Addons = ({
       balance_due: Yup.number().required("Field Required"),
     }),
     onSubmit: (values, { resetForm }) => {
-      let data = {
-        tour_id: +id,
-        match_qty_id: matchQuantitySelected ? matchQuantitySelected : (dataEdit ? dataEdit.match_qty_id : null),
-        price_type_id: priceTypeSelected ? priceTypeSelected : (dataEdit ? dataEdit.price_type_id : null),
-        add_on_type_id: addonTypeSelected ? addonTypeSelected : (dataEdit ? dataEdit.add_on_type_id : null),
-        price_option_id: priceOptionSelected ? priceOptionSelected : (dataEdit ? dataEdit.price_option_id : null),
-        collect_id: priceCollectSelected ? priceCollectSelected : (dataEdit ? dataEdit.collect_id : null),
-        display_option: displayOptionSelected ? displayOptionSelected : (dataEdit ? dataEdit.display_option : null),
-        instruction_label_id: addonLabelSelected ? addonLabelSelected : (dataEdit ? dataEdit.instruction_label_id : null),
-        description: values.addon_description,
-        show_balance_due: balance,
-        price: values.our_price,
-        you_save: values.you_save,
-        net_rate:
-          values.rate !== ""
-            ? values.rate > 1
-              ? values.rate / 100
-              : values.rate
-            : values.rate,
-        commission: values.commission,
-        deposit: values.deposit,
-        net_price: values.balance_due,
-        type: isUpgrade ? 2 : 1,
-        custom_text: customMessage === true ? 1 : 0,
-        option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${addonTypeNameSelected !== ""
-          ? addonTypeNameSelected
-          : "[Add-On Type]"
-          } for $ ${validationType.values.our_price !== ""
-            ? validationType.values.our_price
-            : "[Price]"
-          } ${priceTypeNameSelected !== ""
-            ? priceTypeNameSelected
-            : "[Price Type]"
-          }, paid in cash on the day of the tour.` : values.custom_message,
-        min_qty: values.min_qty,
-        max_qty: values.max_qty
-      };
-
-      document.getElementById("save-button").disabled = true;
-      if (dataEdit) {
-        putAddonAPI(editProductID, data)
-          .then((resp) => {
-            triggerUpdate();
-            editID = null
-            setNewAddon(false);
-            refreshTable();
-            resetForm({ values: "" });
-            document.getElementById("save-button").disabled = false;
-          })
-          .catch((error) => {
-            if (error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                String(error.response.data.message)
-              );
-            } else {
-              let errorMessages = [];
-              Object.entries(error.response.data.data).map((item) => {
-                errorMessages.push(item[1]);
-                return true
-              });
-
-              Swal.fire(
-                "Error!",
-                String(errorMessages[0])
-              );
-            }
-            document.getElementById("save-button").disabled = false;
-          });
+      if ((displayOptionSelected === 13 || displayOptionSelected === 5 || displayOptionSelected === 4) && (values.min_qty == "" || values.min_qty == null || values.max_qty == "" || values.max_qty == null)) {
+        Swal.fire(
+          "Error!",
+          "Min and Max Qty are required for this display option"
+        );
       } else {
-        postAddonsAPI(data)
-          .then((resp) => {
-            triggerUpdate();
-            editID = null
-            setNewAddon(false);
-            refreshTable();
-            resetForm({ values: "" });
-            document.getElementById("save-button").disabled = false;
-          })
-          .catch((error) => {
-            if (error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                String(error.response.data.message)
-              );
-            } else {
-              let errorMessages = [];
-              Object.entries(error.response.data.data).map((item) => {
-                errorMessages.push(item[1]);
-                return true
-              });
+        let match_qty = matchQuantitySelected ? matchQuantitySelected : (dataEdit ? dataEdit.match_qty_id : null)
+        let price_type = priceTypeSelected ? priceTypeSelected : (dataEdit ? dataEdit.price_type_id : null)
+        let addon_type = addonTypeSelected ? addonTypeSelected : (dataEdit ? dataEdit.add_on_type_id : null)
+        let price_option = priceOptionSelected ? priceOptionSelected : (dataEdit ? dataEdit.price_option_id : null)
+        let collect = priceCollectSelected ? priceCollectSelected : (dataEdit ? dataEdit.collect_id : null)
+        let display_option = displayOptionSelected ? displayOptionSelected : (dataEdit ? dataEdit.display_option : null)
+        let instruction_label = addonLabelSelected ? addonLabelSelected : (dataEdit ? dataEdit.instruction_label_id : null)
 
-              Swal.fire(
-                "Error!",
-                String(errorMessages[0])
-              );
-            }
-            document.getElementById("save-button").disabled = false;
-          });
+        let data = {
+          tour_id: +id,
+          match_qty_id: match_qty === "-1" ? null : match_qty,
+          price_type_id: price_type === "-1" ? null : price_type,
+          add_on_type_id: addon_type === "-1" ? null : addon_type,
+          price_option_id: price_option === "-1" ? null : price_option,
+          collect_id: collect === "-1" ? null : collect,
+          display_option: display_option === "-1" ? null : display_option,
+          instruction_label_id: instruction_label === "-1" ? null : instruction_label,
+          description: values.addon_description,
+          show_balance_due: balance,
+          price: values.our_price,
+          you_save: values.you_save,
+          net_rate:
+            values.rate !== ""
+              ? values.rate > 1
+                ? values.rate / 100
+                : values.rate
+              : values.rate,
+          commission: values.commission,
+          deposit: values.deposit,
+          net_price: values.balance_due,
+          type: isUpgrade ? 2 : 1,
+          custom_text: customMessage === true ? 1 : 0,
+          option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${addonTypeNameSelected !== ""
+            ? addonTypeNameSelected
+            : "[Add-On Type]"
+            } for $ ${validationType.values.our_price !== ""
+              ? validationType.values.our_price
+              : "[Price]"
+            } ${priceTypeNameSelected !== ""
+              ? priceTypeNameSelected
+              : "[Price Type]"
+            }, paid in cash on the day of the tour.` : values.custom_message,
+          min_qty: values.min_qty,
+          max_qty: values.max_qty
+        };
+
+        document.getElementById("save-button").disabled = true;
+        if (dataEdit) {
+          putAddonAPI(editProductID, data)
+            .then((resp) => {
+              triggerUpdate();
+              editID = null
+              setNewAddon(false);
+              refreshTable();
+              resetForm({ values: "" });
+              document.getElementById("save-button").disabled = false;
+            })
+            .catch((error) => {
+              if (error.response.data.data === null) {
+                Swal.fire(
+                  "Error!",
+                  String(error.response.data.message)
+                );
+              } else {
+                let errorMessages = [];
+                Object.entries(error.response.data.data).map((item) => {
+                  errorMessages.push(item[1]);
+                  return true
+                });
+
+                Swal.fire(
+                  "Error!",
+                  String(errorMessages[0])
+                );
+              }
+              document.getElementById("save-button").disabled = false;
+            });
+        } else {
+          postAddonsAPI(data)
+            .then((resp) => {
+              triggerUpdate();
+              editID = null
+              setNewAddon(false);
+              refreshTable();
+              resetForm({ values: "" });
+              document.getElementById("save-button").disabled = false;
+            })
+            .catch((error) => {
+              if (error.response.data.data === null) {
+                Swal.fire(
+                  "Error!",
+                  String(error.response.data.message)
+                );
+              } else {
+                let errorMessages = [];
+                Object.entries(error.response.data.data).map((item) => {
+                  errorMessages.push(item[1]);
+                  return true
+                });
+
+                Swal.fire(
+                  "Error!",
+                  String(errorMessages[0])
+                );
+              }
+              document.getElementById("save-button").disabled = false;
+            });
+        }
+        refreshTable();
       }
-      refreshTable();
     },
   });
 
   useEffect(() => {
-    if (validationType.values.our_price !== "" && validationType.values.our_price !== 0 && validationType.values.commission !== "" && validationType.values.commission !== 0) {
-      validationType.setFieldValue("balance_due", (validationType.values.our_price - validationType.values.commission).toFixed(2))
+    if (validationType.values.deposit !== "" && validationType.values.deposit !== 0 && validationType.values.commission !== "" && validationType.values.commission !== 0) {
+      validationType.setFieldValue("balance_due", (validationType.values.deposit - validationType.values.commission).toFixed(2))
     }
-  }, [validationType.values.our_price, validationType.values.commission])
+  }, [validationType.values.deposit, validationType.values.commission])
 
   useEffect(() => {
-    if (validationType.values.our_price !== "" && priceCollectNameSelected !== "") {
+    if (validationType.values.our_price !== "" && validationType.values.commission !== "" && priceCollectNameSelected !== "") {
       validationType.setFieldValue(
         "deposit",
         calcDeposit(
@@ -391,7 +406,7 @@ const Addons = ({
         )
       )
     }
-  }, [validationType.values.our_price, priceCollectNameSelected])
+  }, [validationType.values.our_price, validationType.values.commission, priceCollectNameSelected])
 
   return (
     <Modal
@@ -477,37 +492,38 @@ const Addons = ({
                       />
                     </div>
                   </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-4">
-                      <Label className="form-label">Match Quantity to</Label>
-                      <Input
-                        type="select"
-                        name="match_qty_id"
-                        onChange={(e) => {
-                          setMatchQuantitySelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
-                      >
-                        <option value="">Select....</option>
-                        {map(priceMatchQuantityData, (quantity, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={quantity.id}
-                              selected={
-                                dataEdit
-                                  ? quantity.id === dataEdit.match_qty_id
-                                  : false
-                              }
-                            >
-                              {quantity.text}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
+                  {displayOptionSelected === 10 || displayOptionSelected === 1 ?
+                    <Col className="col-2">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">Match Quantity</Label>
+                        <Input
+                          type="select"
+                          name="match_qty_id"
+                          onChange={(e) => {
+                            setMatchQuantitySelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                        >
+                          <option value="-1">Select....</option>
+                          {map(priceMatchQuantityData, (quantity, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={quantity.id}
+                                selected={
+                                  dataEdit
+                                    ? quantity.id === dataEdit.match_qty_id
+                                    : false
+                                }
+                              >
+                                {quantity.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    </Col> : null}
                   <Col className="col-2">
                     <div className="m-2">
                       <Switch
@@ -563,7 +579,7 @@ const Addons = ({
                               onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(priceTypeData, (type, index) => {
                                 if (
                                   type.add_on_type === 1 ||
@@ -603,7 +619,7 @@ const Addons = ({
                               onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(addonType, (type, index) => {
                                 if (
                                   type.add_on_type === 1 ||
@@ -641,7 +657,7 @@ const Addons = ({
                               onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(priceOptions, (option, index) => {
                                 if (
                                   option.add_on_type === 1 ||
@@ -702,7 +718,7 @@ const Addons = ({
                                 );
                               }}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(priceCollect, (collect, index) => {
                                 return (
                                   <option
@@ -756,7 +772,7 @@ const Addons = ({
                               onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(priceTypeData, (type, index) => {
                                 if (
                                   type.add_on_type === 2 ||
@@ -792,7 +808,7 @@ const Addons = ({
                               onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(addonType, (type, index) => {
                                 if (
                                   type.add_on_type === 2 ||
@@ -830,7 +846,7 @@ const Addons = ({
                               onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(priceOptions, (option, index) => {
                                 if (
                                   option.add_on_type === 2 ||
@@ -867,7 +883,7 @@ const Addons = ({
                                 );
                               }}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(priceCollect, (collect, index) => {
                                 return (
                                   <option
@@ -935,7 +951,7 @@ const Addons = ({
                       </div>
                     </Col>
                   </Col>
-                  {displayOptionSelected === 1 || displayOptionSelected === 5 || displayOptionSelected === 4 ?
+                  {displayOptionSelected === 13 || displayOptionSelected === 5 || displayOptionSelected === 4 ?
                     <Col className="col-3 d-flex justify-content-between">
                       <Col className="col-4">
                         <Label className="form-label ">Min. Qty.*</Label>
@@ -1005,8 +1021,8 @@ const Addons = ({
                           }}
                           onBlur={validationType.handleBlur}
                         >
-                          <option value="">Select....</option>
-                          {map(displayOptionData.filter(x => x.id !== 2), (type, index) => {
+                          <option value="-1">Select....</option>
+                          {map(displayOptionData.filter(display => display.id !== 2 && display.id !== 13 && display.id !== 1 && display.id !== 9), (type, index) => {
                             return (
                               <option
                                 key={index}
@@ -1024,7 +1040,7 @@ const Addons = ({
                         </Input>
                       </div>
                     </Col>
-                    {displayOptionSelected === 1 ||
+                    {displayOptionSelected === 13 ||
                       displayOptionSelected === 2 ||
                       displayOptionSelected === 5 ? (
                       <>
@@ -1070,7 +1086,7 @@ const Addons = ({
                               onBlur={validationType.handleBlur}
                             //   value={validationType.values.department || ""}
                             >
-                              <option value="">Select....</option>
+                              <option value="-1">Select....</option>
                               {map(addonLabelData, (type, index) => {
                                 return (
                                   <option
@@ -1318,7 +1334,7 @@ const Addons = ({
                   <Col className="col-2">
                     <div className="form-outline mb-2" id="rate">
                       <div className="d-flex justify-content-between">
-                        <Label className="form-label">Our Rate %</Label>
+                        <Label className="form-label">Rate %</Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15 "
@@ -1468,7 +1484,7 @@ const Addons = ({
                         <Input
                           name="deposit"
                           placeholder=""
-                          readOnly={+priceCollectSelected !== 1 && +priceCollectSelected !== 25 && +priceCollectSelected !== 3}
+                          readOnly={+priceCollectSelected !== 1}
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
@@ -1498,7 +1514,7 @@ const Addons = ({
                   <Col className="col-2">
                     <div className="form-outline mb-2" id="balance_due">
                       <div className="d-flex justify-content-between">
-                        <Label className="form-label">Balance Due*</Label>
+                        <Label className="form-label">Invoice Amt</Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
@@ -1512,7 +1528,7 @@ const Addons = ({
                               setttop17(!ttop17);
                             }}
                           >
-                            The amount due to the provider on the invoice.<br />Our Price - Our Commission.
+                            The amount due to the provider on the invoice.<br />Our Deposit - Our Commission.
                           </Tooltip>
                         </div>
                       </div>

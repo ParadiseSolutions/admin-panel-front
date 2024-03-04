@@ -193,26 +193,19 @@ const AddNewAirportTransfer = ({
     }
   }, [dataEdit, priceCollect]);
 
-  const onChangeActiveToggle = () => {
-    setActiveCheckbox(!activeCheckbox);
-  };
-  const onChangeBalanceDueToggle = () => {
-    setBalanceDueCheckbox(!balanceDueCheckbox);
-  };
-
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      min: dataEdit ? dataEdit?.pricedetails?.filter((x) => x.pricing_option_id === 17)[0]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails?.filter((x) => x.pricing_option_id === 17)[0]?.max : "",
+      min: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 17)[0]?.min : "",
+      max: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 17)[0]?.max : "",
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
       public_price: dataEdit ? dataEdit.public : "",
       provider_price: dataEdit ? dataEdit.provider_price : "",
-      rate: dataEdit ? setRateFormat(dataEdit.provider_rate) : "",
+      rate: dataEdit ? setRateFormat(dataEdit.rate) : "",
       net_rate: dataEdit ? dataEdit.net_rate : "",
       compare_at_url: dataEdit ? dataEdit.compare_at_url : "",
       ship_price: dataEdit ? dataEdit.ship_price : "",
@@ -236,7 +229,7 @@ const AddNewAirportTransfer = ({
       compare_at_url: Yup.string().url("URL invalid format").trim().nullable(),
       our_price: Yup.number().required("Field Required"),
       deposit: Yup.number().required("Field Required"),
-      balance_due: Yup.number(),
+      balance_due: Yup.number()
     }),
     onSubmit: (values, { resetForm }) => {
       let price_type =
@@ -329,13 +322,13 @@ const AddNewAirportTransfer = ({
           tour_id: tourData.id,
           public: values.public_price,
           provider_price: values.provider_price,
-          provider_rate:
+          rate:
             values.rate !== ""
-              ? values.rate > 1
+              ? (values.rate > 1
                 ? values.rate / 100
-                : values.rate
-              : values.rate,
-          net_rate: values.net_rate,
+                : values.rate)
+              : null,
+          net_rate: values.net_rate, //net price
           compare_at_url: values.compare_at_url,
           ship_price: values.ship_price,
           compare_at: values.compare_at,
@@ -344,64 +337,64 @@ const AddNewAirportTransfer = ({
           eff_rate: values.eff_rate,
           commission: ourCommission,
           deposit: values.deposit,
-          net_price: values.balance_due,
+          net_price: values.balance_due, //invoice amt
           active: activeCheckbox ? 1 : 0,
-          show_balance_due: balanceDueCheckbox ? 1 : 0,
+          show_balance_due: values.voucher_balance > 0 ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
           price_details: [
             {
               pricing_option_id: 10,
-              source_id: price_type,
+              source_id: price_type === "-1" ? null : price_type,
               min: null,
               max: null,
               label: null,
             },
             {
               pricing_option_id: 11,
-              source_id: price_option,
+              source_id: price_option === "-1" ? null : price_option,
               min: null,
               max: null,
               label: null,
             },
             {
               pricing_option_id: 14,
-              source_id: price_collect,
+              source_id: price_collect === "-1" ? null : price_collect,
               min: null,
               max: null,
               label: null,
             },
             {
               pricing_option_id: 30,
-              source_id: price_season,
+              source_id: price_season === "-1" ? null : price_season,
               min: null,
               max: null,
               label: null,
             },
             {
               pricing_option_id: 12,
-              source_id: transfer_type,
+              source_id: transfer_type === "-1" ? null : transfer_type,
               min: null,
               max: null,
               label: null,
             },
             {
               pricing_option_id: 13,
-              source_id: direction,
+              source_id: direction === "-1" ? null : direction,
               min: null,
               max: null,
               label: null,
             },
             {
               pricing_option_id: 17,
-              source_id: vehicle,
+              source_id: vehicle === "-1" ? null : vehicle,
               min: values.min === "" ? null : values.min,
               max: values.max === "" ? null : values.max,
               label: null,
             },
             {
               pricing_option_id: 50,
-              source_id: price_zone,
+              source_id: price_zone === "-1" ? null : price_zone,
               min: null,
               max: null,
               label: null,
@@ -477,9 +470,16 @@ const AddNewAirportTransfer = ({
     },
   });
 
+  const onChangeActiveToggle = () => {
+    setActiveCheckbox(!activeCheckbox);
+  };
+  const onChangeBalanceDueToggle = () => {
+    setBalanceDueCheckbox(!balanceDueCheckbox);
+  };
+
   //Pricing Validations
   useEffect(() => {
-    if (recalc) {
+    if (validationType && recalc) {
       if (validationType.values.public_price !== "" && validationType.values.public_price !== 0) {
         if (validationType.values.rate !== "" && validationType.values.rate !== 0) {
           let net_rate = calcNetRate(validationType.values.public_price, validationType.values.rate, validationType.values.net_rate)
@@ -487,61 +487,77 @@ const AddNewAirportTransfer = ({
         }
       }
     }
-  }, [validationType.values.public_price, validationType.values.rate])
+  }, [validationType?.values.public_price, validationType?.values.rate])
 
   useEffect(() => {
-    if (validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
-      setProviderCommission((validationType.values.public_price - validationType.values.net_rate).toFixed(2))
-      if (recalc) {
-        if (validationType.values.our_price !== "" && validationType.values.our_price !== 0 && validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
-          setOurCommission((validationType.values.our_price - validationType.values.net_rate).toFixed(2))
+    if (validationType) {
+      if (validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
+        if (validationType.values.public_price !== "" && validationType.values.public_price !== 0 && validationType.values.public_price !== null) {
+          setProviderCommission((validationType.values.public_price - validationType.values.net_rate).toFixed(2))
+        } else {
+          setProviderCommission("")
+        }
+        if (recalc) {
+          if (validationType.values.our_price !== "" && validationType.values.our_price !== 0 && validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
+            setOurCommission((validationType.values.our_price - validationType.values.net_rate).toFixed(2))
+          }
         }
       }
     }
-  }, [validationType.values.net_rate, validationType.values.our_price])
+  }, [validationType.values.public_price, validationType?.values.net_rate, validationType?.values.our_price])
 
   useEffect(() => {
-    if (validationType.values.our_price !== "" && validationType.values.our_price !== 0) {
-      validationType.setFieldValue("balance_due", (validationType.values.our_price - ourCommission).toFixed(2))
-      validationType.setFieldValue("eff_rate", setRateFormat(ourCommission / validationType.values.our_price, 1))
+    if (validationType) {
+      if (validationType.values.public_price !== null && validationType.values.public_price !== "" && validationType.values.public_price !== 0) {
+        validationType.setFieldValue("eff_rate", setRateFormat(ourCommission / validationType.values.public_price, 1))
+      } else if (validationType.values.net_rate !== null && validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
+        validationType.setFieldValue("eff_rate", setRateFormat(ourCommission / (+validationType.values.net_rate + +ourCommission), 1))
+      }
+      if (validationType.values.deposit !== null && validationType.values.deposit !== "" && validationType.values.deposit !== 0) {
+        validationType.setFieldValue("balance_due", (validationType.values.deposit - ourCommission).toFixed(2))
+      }
     }
-  }, [validationType.values.our_price, ourCommission])
+  }, [validationType?.values.public_price, validationType?.values.net_rate, validationType?.values.deposit, ourCommission])
 
   useEffect(() => {
-    if (currencySelected) {
+    if (currencySelected && validationType) {
       validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance(validationType.values.voucher_balance, currencySelected))
     }
   }, [currencySelected])
 
   useEffect(() => {
-    if (validationType.values.our_price !== "" && validationType.values.deposit !== "") {
-      validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((validationType.values.our_price - validationType.values.deposit), currencySelected))
+    if (validationType) {
+      if (validationType.values.our_price !== "" && validationType.values.deposit !== "") {
+        validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((validationType.values.our_price - validationType.values.deposit), currencySelected))
+      }
     }
-  }, [validationType.values.our_price, validationType.values.deposit])
+  }, [validationType?.values.our_price, validationType?.values.deposit])
 
   useEffect(() => {
-    if (validationType.values.our_price !== "" && priceCollectNameSelected !== "") {
-      validationType.setFieldValue(
-        "deposit",
-        calcDeposit(
-          validationType.values.our_price,
-          priceCollectNameSelected,
-          ourCommission,
-          validationType.values.deposit
+    if (validationType) {
+      if (validationType.values.our_price !== "" && priceCollectNameSelected !== "") {
+        validationType.setFieldValue(
+          "deposit",
+          calcDeposit(
+            validationType.values.our_price,
+            priceCollectNameSelected,
+            ourCommission,
+            validationType.values.deposit
+          )
         )
-      )
+      }
     }
-  }, [validationType.values.our_price, priceCollectNameSelected])
+  }, [validationType?.values.our_price, priceCollectNameSelected, ourCommission])
 
   useEffect(() => {
-    if (recalc) {
+    if (recalc && validationType) {
       if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
         validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
       } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
         validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
       }
     }
-  }, [validationType.values.our_price, validationType.values.ship_price, validationType.values.compare_at])
+  }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
 
   return (
     <Modal
@@ -728,7 +744,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option value="">Select....</option>
+                        <option value="-1">Select....</option>
                         {map(priceOptions, (option, index) => {
                           return (
                             <option
@@ -767,17 +783,17 @@ const AddNewAirportTransfer = ({
                               setttop3(!ttop3);
                             }}
                           >
-                            Select the amount of deposit that will be collected at
-                            the time of booking. Commission = The deposit is equal
-                            to the amount of commission we earn for the tour.
-                            Afilliate = The payment is made directly through the
-                            provider's website, such as the case of dTraveller or
-                            Viator. Deposit = Manually type the amount of deposit
-                            we will collect in the "Deposit" field below.
+                            <p>Select the amount of deposit that will be collected at
+                              the time of booking.</p>
+                            <p>Commission = The deposit is equal
+                              to the amount of commission we earn for the tour.</p>
+                            <p>Afilliate = The payment is made directly through the
+                              provider's website, such as the case of dTraveller or
+                              Viator.</p>
+                            Deposit = Manually type the amount of deposit we will collect in the "Deposit" field below.
                           </Tooltip>
                         </div>
                       </div>
-
                       <Input
                         type="select"
                         name="collect"
@@ -789,7 +805,7 @@ const AddNewAirportTransfer = ({
                           );
                         }}
                       >
-                        <option value="">Select....</option>
+                        <option value="-1">Select....</option>
                         {map(priceCollect, (collect, index) => {
                           return (
                             <option
@@ -839,7 +855,7 @@ const AddNewAirportTransfer = ({
                           }}
                           onBlur={validationType.handleBlur}
                         >
-                          <option value="">Select....</option>
+                          <option value="-1">Select....</option>
                           {map(priceSeason, (season, index) => {
                             return (
                               <option
@@ -862,100 +878,6 @@ const AddNewAirportTransfer = ({
                       </div>
                     </Col>
                   ) : null}
-
-                  <Col className="col-3 d-flex">
-                    {activeCheckbox !== null ? (
-                      <div className="d-flex flex-column align-items-center mx-1">
-                        <div className="d-flex justify-content-between">
-                          <Label className="form-label">Active</Label>
-                          <i
-                            className="uil-question-circle font-size-15 mx-2"
-                            id="active-t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop18}
-                            target="active-t"
-                            toggle={() => {
-                              setttop18(!ttop18);
-                            }}
-                          >
-                            Select if the tour is active for booking or not.
-                          </Tooltip>
-                        </div>
-                        <div className="form-check form-switch form-switch-md">
-                          <Input
-                            name="active"
-                            placeholder=""
-                            type="checkbox"
-                            checked={activeCheckbox}
-                            className={activeCheckbox ? "form-check-input start-0 blue-switch-filled-mini" : "form-check-input start-0"}
-                            onChange={() => onChangeActiveToggle()}
-                            onBlur={validationType.handleBlur}
-                            value={validationType.values.active || ""}
-                            invalid={
-                              validationType.touched.active &&
-                                validationType.errors.active
-                                ? true
-                                : false
-                            }
-                          />
-                          {validationType.touched.active &&
-                            validationType.errors.active ? (
-                            <FormFeedback type="invalid">
-                              {validationType.errors.active}
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {balanceDueCheckbox !== null ? (
-                      <div className="d-flex flex-column align-items-center">
-                        <div className="d-flex justify-content-between">
-                          <Label className="form-label">Balance Due</Label>
-                          <i
-                            className="uil-question-circle font-size-15 mx-1"
-                            id="balance-t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop19}
-                            target="balance-t"
-                            toggle={() => {
-                              setttop19(!ttop19);
-                            }}
-                          >
-                            Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
-                          </Tooltip>
-                        </div>
-                        <div className="form-check form-switch form-switch-md">
-                          <Input
-                            name="balance_checkbox"
-                            placeholder=""
-                            type="checkbox"
-                            checked={balanceDueCheckbox}
-                            className={balanceDueCheckbox ? "form-check-input start-0 blue-switch-filled-mini" : "form-check-input start-0"}
-                            onChange={() => onChangeBalanceDueToggle()}
-                            onBlur={validationType.handleBlur}
-                            value={validationType.values.balance_checkbox || ""}
-                            invalid={
-                              validationType.touched.balance_checkbox &&
-                                validationType.errors.balance_checkbox
-                                ? true
-                                : false
-                            }
-                          />
-                          {validationType.touched.balance_checkbox &&
-                            validationType.errors.balance_checkbox ? (
-                            <FormFeedback type="invalid">
-                              {validationType.errors.balance_checkbox}
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                      </div>
-                    ) : null}
-                  </Col>
                 </Row>
 
                 <Col
@@ -987,7 +909,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option value="">Select....</option>
+                        <option value="-1">Select....</option>
                         {map(priceTransferType, (transferType, index) => {
                           return (
                             <option
@@ -1021,7 +943,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option value="">Select....</option>
+                        <option value="-1">Select....</option>
                         {map(priceDirection, (direction, index) => {
                           return (
                             <option
@@ -1055,7 +977,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option value="">Select....</option>
+                        <option value="-1">Select....</option>
                         {map(priceVehicle, (vehicle, index) => {
                           return (
                             <option
@@ -1089,7 +1011,7 @@ const AddNewAirportTransfer = ({
                         onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                       >
-                        <option value="">Select....</option>
+                        <option value="-1">Select....</option>
                         {map(priceZone, (zone, index) => {
                           return (
                             <option
@@ -1211,7 +1133,8 @@ const AddNewAirportTransfer = ({
                               setttop5(!ttop5);
                             }}
                           >
-                            The price the provider refers to in our service agreement as the "Public Price" or "Regular Price".
+                            <p>The price the provider refers to in our service agreement as the "Public Price" or "Regular Price".</p>
+                            <p>If Provider only shows a net price on the agreement, and the tour or a comparable tour is not found anywhere on the internet, leave blank.</p>
                           </Tooltip>
                         </div>
                       </div>
@@ -1459,7 +1382,7 @@ const AddNewAirportTransfer = ({
                   <Col className="col-2">
                     <div className="form-outline mb-2" id="balance_due">
                       <div className="d-flex justify-content-between">
-                        <Label className="form-label">Balance Due</Label>
+                        <Label className="form-label">Invoice Amt</Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
@@ -1473,7 +1396,7 @@ const AddNewAirportTransfer = ({
                               setttop17(!ttop17);
                             }}
                           >
-                            The amount due to the provider on the invoice.<br />Our Price - Our Commission.
+                            The amount due to the provider on the invoice.<br />Our Deposit - Our Commission.
                           </Tooltip>
                         </div>
                       </div>
@@ -1614,7 +1537,8 @@ const AddNewAirportTransfer = ({
                               setttop15(!ttop15);
                             }}
                           >
-                            The $$ amount that we earn from the sale.
+                            <p>The $$ amount we earn from the sale after discount.</p>
+                            Calculated automatically:<br />Our Price - Net Price = Commission.
                           </Tooltip>
                         </div>
                       </div>
@@ -1653,10 +1577,11 @@ const AddNewAirportTransfer = ({
                               setttop14(!ttop14);
                             }}
                           >
-                            After discounting the tour, what our effective
+                            <p>After discounting the tour, what our effective
                             commission rate is (what we have left after the
                             discount). This is calculated based on (Commission /
-                            Our Price = Eff. Rate).
+                            Our Price = Eff. Rate).</p>
+                            If there is no public price specified, then it is calculated based on (Commission / (Net Price + Commission))
                           </Tooltip>
                         </div>
                       </div>
@@ -1716,9 +1641,10 @@ const AddNewAirportTransfer = ({
                               setttop16(!ttop16);
                             }}
                           >
-                            The amount we collect at the time of booking. This is
+                            <p>The amount we collect at the time of booking. This is
                             calculated based on the option chosen in "Collect"
-                            above.
+                            above.</p>
+                            If "Deposit" is the Collect type then you will type in the amount of Deposit you will collect.
                           </Tooltip>
                         </div>
                       </div>
@@ -1733,7 +1659,7 @@ const AddNewAirportTransfer = ({
                         <Input
                           name="deposit"
                           placeholder=""
-                          readOnly={+priceCollectSelected !== 1 && +priceCollectSelected !== 25 && +priceCollectSelected !== 3}
+                          readOnly={+priceCollectSelected !== 1}
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
@@ -1791,7 +1717,7 @@ const AddNewAirportTransfer = ({
                           onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                         >
-                          <option value="">Select....</option>
+                          <option value="-1">Select....</option>
                           {map(currency, (curr, index) => {
                             return (
                               <option
@@ -2041,6 +1967,7 @@ const AddNewAirportTransfer = ({
                           name="you_save"
                           placeholder=""
                           type="text"
+                          readOnly={(validationType.values.ship_price != "" && validationType.values.ship_price != null) || (validationType.values.compare_at != "" && validationType.values.compare_at != null)}
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";
@@ -2081,12 +2008,12 @@ const AddNewAirportTransfer = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-                            id="compareAt"
+                            id="compareAtURL"
                           />
                           <Tooltip
                             placement="right"
                             isOpen={ttop9}
-                            target="compareAt"
+                            target="compareAtURL"
                             toggle={() => {
                               setttop9(!ttop9);
                             }}
