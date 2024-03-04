@@ -26,7 +26,7 @@ export const getSessionSync = (key) => {
 
 var tokenData = JSON.parse(getStorageSync("token"));
 var bearerToken = tokenData ? `Bearer ${tokenData.token}` : '';
-export const API_URL = `https://apitest.paradisesolutions.com/api`;
+export const API_URL = `https://api.paradisesolutions.com/api`;
 
 export var options = {
   "Content-Type": "application/json",

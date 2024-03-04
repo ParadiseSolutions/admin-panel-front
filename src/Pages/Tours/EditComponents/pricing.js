@@ -127,7 +127,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       },
     },
     {
-      Header: "Our Rate %",
+      Header: "Rate %",
       accessor: "rate",
       disableFilters: true,
       filterable: true,
@@ -145,7 +145,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       },
     },
     {
-      Header: "Balance Due",
+      Header: "Invoice Amt",
       accessor: "net_price",
       disableFilters: false,
       filterable: true,

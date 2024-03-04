@@ -119,7 +119,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         },
       },
       {
-        Header: "Our Rate %",
+        Header: "Rate %",
         accessor: "rate",
         disableFilters: true,
         filterable: false,
@@ -137,7 +137,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         },
       },
       {
-        Header: "Balance Due",
+        Header: "Invoice Amt",
         accessor: "net_price",
         disableFilters: true,
         filterable: false,
