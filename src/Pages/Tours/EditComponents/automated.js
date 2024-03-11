@@ -387,20 +387,24 @@ const AutomatedConfirmation = ({ tourData, id }) => {
             </Col>
           </Row>
           <Row>
-            <p
-              style={{
-                color: "#495057",
-                fontSize: "15px",
-                fontWeight: "bold",
-              }}
-            >
-              Enter the details that will be shown on the customer's
-              confirmation voucher. Some of the details will also show on the
-              website. Everything defined here will be applied to ALL of the
-              tours for this operator. If a field may be different for certain
-              tours then leave it blank. You will define it for each tour in the
-              Voucher Templates tab of the Tour Panel.
-            </p>
+          <Col className="col-12">
+                  <div className="p-3" style={{ backgroundColor: "#d9f0ff" }}>
+                    <p className="mb-0 lh-2" style={{ fontSize: "20px" }}>
+                      <i
+                        class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                        style={{ width: "32px", height: "32px" }}
+                      ></i>{" "}
+                      The details below will be shown on the customer's
+                      confirmation voucher. Some of the details will also show
+                      on the website. If any details appear greyed out, they
+                      have been specified in the operator panel and apply to all
+                      of the tours for this operator. They can only be changed
+                      in the operator panel. New details added here will only
+                      display for this tour and not for other tours from this
+                      operator.
+                    </p>
+                  </div>
+                </Col>
           </Row>
           <Row className="mt-3">
             <Col className="col-6">

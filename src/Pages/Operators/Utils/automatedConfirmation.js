@@ -23,7 +23,7 @@ import {
   getBringList,
   getExtraFeeTable,
   getVoucherInfo,
-  putVoucherInformation
+  putVoucherInformation,
 } from "../../../Utils/API/Operators";
 import { map } from "lodash";
 import { Option } from "antd/lib/mentions";
@@ -148,36 +148,46 @@ const AutomatedConfirmation = ({ socialData, id }) => {
       if (rest1) {
         restArr.push({
           restriction_1: rest1,
-          restriction_read_only_1: restrictionList[0]?.restriction_read_only_1 ? restrictionList[0]?.restriction_read_only_1 : 0,
-        })
+          restriction_read_only_1: restrictionList[0]?.restriction_read_only_1
+            ? restrictionList[0]?.restriction_read_only_1
+            : 0,
+        });
       }
       if (rest2) {
         restArr.push({
           restriction_2: rest2,
-          restriction_read_only_2: restrictionList[1]?.restriction_read_only_2 ? restrictionList[1]?.restriction_read_only_2 : 0,
-        })
+          restriction_read_only_2: restrictionList[1]?.restriction_read_only_2
+            ? restrictionList[1]?.restriction_read_only_2
+            : 0,
+        });
       }
       if (rest3) {
         restArr.push({
           restriction_3: rest3,
-          restriction_read_only_3: restrictionList[2]?.restriction_read_only_3 ? restrictionList[2]?.restriction_read_only_3 : 0,
-        })
+          restriction_read_only_3: restrictionList[2]?.restriction_read_only_3
+            ? restrictionList[2]?.restriction_read_only_3
+            : 0,
+        });
       }
       if (rest4) {
         restArr.push({
           restriction_4: rest4,
-          restriction_read_only_4: restrictionList[3]?.restriction_read_only_4 ? restrictionList[3]?.restriction_read_only_4 : 0,
-        })
+          restriction_read_only_4: restrictionList[3]?.restriction_read_only_4
+            ? restrictionList[3]?.restriction_read_only_4
+            : 0,
+        });
       }
 
       let data = {
         additional_information: values.aditional_information,
-        additional_information_read_only: voucherInitialData.additional_information_read_only,
+        additional_information_read_only:
+          voucherInitialData.additional_information_read_only,
         brings: selectionID,
         brings_read_only: voucherInitialData.brings_read_only,
         restrictions: restArr,
         meeting_location: values.meeting_location,
-        meeting_location_read_only: voucherInitialData.meeting_location_read_only,
+        meeting_location_read_only:
+          voucherInitialData.meeting_location_read_only,
       };
       console.log("data a enviar", data);
       putVoucherInformation(voucherInitialData.operator_id, data)
@@ -259,20 +269,24 @@ const AutomatedConfirmation = ({ socialData, id }) => {
               className="custom-validation"
             >
               <Row>
-                <p
-                  style={{
-                    color: "#495057",
-                    fontSize: "15px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Enter the details that will be shown on the customer's
-                  confirmation voucher. Some of the details will also show on
-                  the website. Everything defined here will be applied to ALL of
-                  the tours for this operator. If a field may be different for
-                  certain tours then leave it blank. You will define it for each
-                  tour in the Voucher Templates tab of the Tour Panel.
-                </p>
+                <Col className="col-12">
+                  <div className="p-3" style={{ backgroundColor: "#d9f0ff" }}>
+                    <p className="mb-0 lh-2" style={{ fontSize: "20px" }}>
+                      <i
+                        class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                        style={{ width: "32px", height: "32px" }}
+                      ></i>{" "}
+                      The details below will be shown on the customer's
+                      confirmation voucher. Some of the details will also show
+                      on the website. If any details appear greyed out, they
+                      have been specified in the operator panel and apply to all
+                      of the tours for this operator. They can only be changed
+                      in the operator panel. New details added here will only
+                      display for this tour and not for other tours from this
+                      operator.
+                    </p>
+                  </div>
+                </Col>
               </Row>
               <Row className="mt-3">
                 <Col className="col-6">
@@ -451,7 +465,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     {/* {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  } */}
                   </Col>
                 ) : null}
-                {voucherInitialData?.brings && initialOptionsArea.length === 0 ? (
+                {voucherInitialData?.brings &&
+                initialOptionsArea.length === 0 ? (
                   <Col className="col-6 mt-3">
                     <label>Bring </label>
                     <i
@@ -492,89 +507,89 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   </Col>
                 ) : null}
 
-                      {restrictionList ? 
-                      
-                <Col className="col-6 my-3">
-                  <label>Restrictions</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="restrictions"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop4}
-                    target="restrictions"
-                    toggle={() => {
-                      setttop4(!ttop4);
-                    }}
-                  >
-                    If the tour has any restrictions specify them one line at a
-                    time. They will be shown on the voucher and on the website
-                    in the order displayed.
-                    <br />
-                    To add additional restrictions, click on "+ Add".
-                  </Tooltip>
-                  <div className="col-10">
-                    <Input
-                      name="rest_one"
-                      placeholder="Add Restriction #1"
-                      type="text"
-                      className="my-1"
-                      onChange={(e) => setRest1(e.target.value)}
-                      value={rest1}
+                {restrictionList ? (
+                  <Col className="col-6 my-3">
+                    <label>Restrictions</label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="restrictions"
                     />
-                  </div>
-                  <div className="col-12 d-flex">
-                    <Input
-                      name="rest_two"
-                      placeholder="Add Restriction #2"
-                      className="my-1"
-                      type="text"
-                      onChange={(e) => setRest2(e.target.value)}
-                      value={rest2}
-                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop4}
+                      target="restrictions"
+                      toggle={() => {
+                        setttop4(!ttop4);
+                      }}
+                    >
+                      If the tour has any restrictions specify them one line at
+                      a time. They will be shown on the voucher and on the
+                      website in the order displayed.
+                      <br />
+                      To add additional restrictions, click on "+ Add".
+                    </Tooltip>
+                    <div className="col-10">
+                      <Input
+                        name="rest_one"
+                        placeholder="Add Restriction #1"
+                        type="text"
+                        className="my-1"
+                        onChange={(e) => setRest1(e.target.value)}
+                        value={rest1}
+                      />
+                    </div>
+                    <div className="col-12 d-flex">
+                      <Input
+                        name="rest_two"
+                        placeholder="Add Restriction #2"
+                        className="my-1"
+                        type="text"
+                        onChange={(e) => setRest2(e.target.value)}
+                        value={rest2}
+                      />
 
-                    <div className="col-2">
-                      <p
-                        style={{
-                          marginLeft: "15px",
-                          marginTop: "10px",
-                          cursor: "pointer",
-                        }}
-                        className="text-paradise"
-                        onClick={() => setAddMore(!addMore)}
-                      >
-                        {addMore ? null && restrictionList.length > 0 : "+ Add"}
-                      </p>
+                      <div className="col-2">
+                        <p
+                          style={{
+                            marginLeft: "15px",
+                            marginTop: "10px",
+                            cursor: "pointer",
+                          }}
+                          className="text-paradise"
+                          onClick={() => setAddMore(!addMore)}
+                        >
+                          {addMore
+                            ? null && restrictionList.length > 0
+                            : "+ Add"}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  {addMore || restrictionList.length > 2 ? (
-                    <>
-                    <div className="col-10 d-flex">
-                      <Input
-                        name="rest_three"
-                        placeholder="Add Restriction #3"
-                        className="my-1"
-                        type="text"
-                        onChange={(e) => setRest3(e.target.value)}
-                        value={rest3}
-                      />
-                    </div>
-                    <div className="col-10 d-flex">
-                      <Input
-                        name="rest_four"
-                        placeholder="Add Restriction #4"
-                        className="my-1"
-                        type="text"
-                        onChange={(e) => setRest4(e.target.value)}
-                        value={rest4}
-                      />
-                    </div>
-                    
-                    </>
-                  ) : null}
-                </Col>
-                      : null}
+                    {addMore || restrictionList.length > 2 ? (
+                      <>
+                        <div className="col-10 d-flex">
+                          <Input
+                            name="rest_three"
+                            placeholder="Add Restriction #3"
+                            className="my-1"
+                            type="text"
+                            onChange={(e) => setRest3(e.target.value)}
+                            value={rest3}
+                          />
+                        </div>
+                        <div className="col-10 d-flex">
+                          <Input
+                            name="rest_four"
+                            placeholder="Add Restriction #4"
+                            className="my-1"
+                            type="text"
+                            onChange={(e) => setRest4(e.target.value)}
+                            value={rest4}
+                          />
+                        </div>
+                      </>
+                    ) : null}
+                  </Col>
+                ) : null}
               </Row>
               <Row>
                 <Col className="col-6 my-3">
@@ -642,7 +657,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         setExtraFeeModal={setExtraFeeModal}
         extraFeeEditData={extraFeeEditData}
         id={id}
-        section={'operators'}
+        section={"operators"}
         refreshTable={refreshTable}
       />
     </div>
