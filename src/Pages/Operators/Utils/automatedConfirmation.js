@@ -271,7 +271,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
               <Row>
                 <Col className="col-12">
                   <div className="p-3" style={{ backgroundColor: "#d9f0ff" }}>
-                    <p className="mb-0 lh-2" style={{ fontSize: "20px" }}>
+                    <p className="mb-0 lh-2" style={{ fontSize: "16px" }}>
                       <i
                         class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
                         style={{ width: "32px", height: "32px" }}
