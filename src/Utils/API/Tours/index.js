@@ -277,7 +277,12 @@ export const deletePriceAPI = (id) => {
   });
 };
 
-
+export const putPriceRangesAPI = (tour_id, body) => {
+  const url = `${API_URL}/tours/${tour_id}/rangePrices/status`;
+  return axios.put (url,body, {
+    headers: options,
+  });
+};
 
 //pricing options select
 
