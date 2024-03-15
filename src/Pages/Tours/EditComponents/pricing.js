@@ -11,14 +11,24 @@ import {
   getPricesPricingAPI,
   deletePriceAPI,
   triggerUpdate,
+  putPriceRangesAPI,
 } from "../../../Utils/API/Tours";
-import { TabPane, Row, Col, Button, UncontrolledTooltip } from "reactstrap";
+import {
+  TabPane,
+  Row,
+  Col,
+  Button,
+  UncontrolledTooltip,
+  Label,
+  Input,
+} from "reactstrap";
 import { Name, Code, Price, Rate, Active } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 
 const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
+  const [priceRangeCheck, setPriceRangeCheck] = useState(false);
 
   useEffect(() => {
     getPricesPricingAPI(id).then((resp) => {
@@ -30,6 +40,18 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     getPricesPricingAPI(id).then((resp) => {
       setPricesData(resp.data.data);
     });
+  };
+
+  useEffect(() => {
+   if (tourData !== undefined) {
+    tourData?.range_price === 0 ? setPriceRangeCheck(false) : setPriceRangeCheck(true)
+   }
+  }, [tourData]);
+
+  console.log(tourData);
+  const postPriceRange = () => {
+    let data = { active: priceRangeCheck === false ? 1 : 0 };
+    putPriceRangesAPI(id, data).then((resp) => {});
   };
 
   //table actions
@@ -63,7 +85,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
-                return true
+                return true;
               });
 
               Swal.fire(
@@ -297,6 +319,9 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   // bulk edit
   const [bulkEditModal, setBulkEditModal] = useState(false);
 
+  //price range
+  
+
   const onClickNewProduct = () => {
     setEditProductID(null);
     setCopyProduct(false);
@@ -332,6 +357,38 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         </Col>
         <Col>
           <div className="text-sm-end">
+            <div className="waves-effect waves-light mx-2">
+              <div className="d-flex">
+                <Label
+                  className="fs-5 form-label mt-2"
+                  style={{
+                    fontSize: "10px",
+                    // fontWeight: "bold",
+                    color: "#495057",
+                    marginBottom: "0px",
+                  }}
+                >
+                  Price Ranges
+                </Label>
+                <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                  <Input
+                    name="seasonality"
+                    placeholder=""
+                    type="checkbox"
+                    checked={
+                      priceRangeCheck
+                    }
+                    className="form-check-input"
+                    onChange={() => {
+                      setPriceRangeCheck(!priceRangeCheck);
+                      postPriceRange();
+                    }}
+                    // onBlur={validationType.handleBlur}
+                    value={priceRangeCheck}
+                  />
+                </div>
+              </div>
+            </div>
             <Button
               type="button"
               className="waves-effect waves-light mb-3 btn btn-orange mx-2"
@@ -385,7 +442,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           </Button>
         </Col>
       </Row>
-      {tourData?.type_id === 1 ?
+      {tourData?.type_id === 1 ? (
         <AddNewProductPricing
           addNewProduct={addNewProduct}
           setAddNewProduct={setAddNewProduct}
@@ -393,9 +450,11 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
-        /> : (null)
-      }
-      {tourData?.type_id === 2 ?
+          priceRangeCheck={priceRangeCheck}
+          setPriceRangeCheck={setPriceRangeCheck}
+        />
+      ) : null}
+      {tourData?.type_id === 2 ? (
         <AddNewPrivateTour
           addNewPrivateTour={addNewPrivateTour}
           setAddNewPrivateTour={setAddNewPrivateTour}
@@ -403,9 +462,11 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
-        /> : (null)
-      }
-      {tourData?.type_id === 3 ?
+          priceRangeCheck={priceRangeCheck}
+          setPriceRangeCheck={setPriceRangeCheck}
+        />
+      ) : null}
+      {tourData?.type_id === 3 ? (
         <AddNewAirportTransfer
           addNewAirportTransfer={addNewAirportTransfer}
           setAddNewAirportTransfer={setAddNewAirportTransfer}
@@ -413,38 +474,46 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
-        /> : (null)
-      }
-      {tourData?.type_id === 4 ?
+          priceRangeCheck={priceRangeCheck}
+          setPriceRangeCheck={setPriceRangeCheck}
+        />
+      ) : null}
+      {tourData?.type_id === 4 ? (
         <AddNewTransportation
-        addNewTransportation={addNewTransportation}
-        setAddNewTransportation={setAddNewTransportation}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      /> : (null)
-    }
-      {tourData?.type_id === 5 ?
+          addNewTransportation={addNewTransportation}
+          setAddNewTransportation={setAddNewTransportation}
+          editProductID={editProductID}
+          tourData={tourData}
+          refreshTable={refreshTable}
+          copyProduct={copyProduct}
+          priceRangeCheck={priceRangeCheck}
+          setPriceRangeCheck={setPriceRangeCheck}
+        />
+      ) : null}
+      {tourData?.type_id === 5 ? (
         <Fishing
-        addNewFishing={addNewFishing}
-        setAddNewFishing={setAddNewFishing}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      /> : (null)
-    }
-     {tourData?.type_id === 6 ?
-         <AddNewPrivateCharter
-        addNewPrivateCharter={addNewPrivateCharter}
-        setAddNewPrivateCharter={setAddNewPrivateCharter}
-        editProductID={editProductID}
-        tourData={tourData}
-        refreshTable={refreshTable}
-        copyProduct={copyProduct}
-      /> : (null)
-    }
+          addNewFishing={addNewFishing}
+          setAddNewFishing={setAddNewFishing}
+          editProductID={editProductID}
+          tourData={tourData}
+          refreshTable={refreshTable}
+          copyProduct={copyProduct}
+          priceRangeCheck={priceRangeCheck}
+          setPriceRangeCheck={setPriceRangeCheck}
+        />
+      ) : null}
+      {tourData?.type_id === 6 ? (
+        <AddNewPrivateCharter
+          addNewPrivateCharter={addNewPrivateCharter}
+          setAddNewPrivateCharter={setAddNewPrivateCharter}
+          editProductID={editProductID}
+          tourData={tourData}
+          refreshTable={refreshTable}
+          copyProduct={copyProduct}
+          priceRangeCheck={priceRangeCheck}
+          setPriceRangeCheck={setPriceRangeCheck}
+        />
+      ) : null}
 
       <BulkEditModal
         bulkEditModal={bulkEditModal}

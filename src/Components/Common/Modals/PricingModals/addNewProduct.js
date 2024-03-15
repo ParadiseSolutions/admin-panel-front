@@ -39,12 +39,14 @@ const AddNewProductPricing = ({
   editProductID,
   tourData,
   copyProduct,
+  priceRangeCheck
 }) => {
   let id = "";
   id = editProductID;
   //edit data
   const [dataEdit, setDataEdit] = useState();
   const [loadingData, setLoadingData] = useState(true);
+  console.log('check', priceRangeCheck)
   useEffect(() => {
     if (id) {
       getPriceAPI(id).then((resp) => {
@@ -59,6 +61,7 @@ const AddNewProductPricing = ({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
+      
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
       active: dataEdit?.active ? 1 : 0,
@@ -75,7 +78,13 @@ const AddNewProductPricing = ({
       eff_rate: dataEdit ? setRateFormat(dataEdit.eff_rate) : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      voucher_balance: dataEdit ? (dataEdit.voucher_balance ? setDecimalFormatVBalance(dataEdit.voucher_balance, dataEdit.voucher_currency) : setDecimalFormatVBalance(dataEdit.price - dataEdit.deposit)) : ""
+      voucher_balance: dataEdit ? (dataEdit.voucher_balance ? setDecimalFormatVBalance(dataEdit.voucher_balance, dataEdit.voucher_currency) : setDecimalFormatVBalance(dataEdit.price - dataEdit.deposit)) : "",
+      //------- esto es de capacity
+      min_qty: dataEdit ? dataEdit.min_qty : '' ,
+      max_qty: dataEdit ? dataEdit.max_qty : '' ,
+      //------- esto es price tiers
+      min: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 2)[0]?.min : "",
+      max: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 2)[0]?.max : "",
     },
     validationSchema: Yup.object().shape({
       public_price: Yup.number().required("Field Required"),
@@ -146,6 +155,10 @@ const AddNewProductPricing = ({
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
+          
+          //--------------- pendiente passangers min y max
+          min_qty: values.min_qty,
+          max_qty: values.max_qty,
           price_details: [
             {
               pricing_option_id: 1,
@@ -157,8 +170,9 @@ const AddNewProductPricing = ({
             {
               pricing_option_id: 2,
               source_id: price_option === "-1" ? null : price_option,
-              min: null,
-              max: null,
+              //------- aqui van los price tiers
+              min: values.min === "" ? null : values.min,
+              max: values.max === "" ? null : values.max,
               label: null,
             },
             {
@@ -487,14 +501,14 @@ const AddNewProductPricing = ({
         </button>
       </div>
       <div className="modal-body p-4">
-        {loadingData ? (
+        {/* {loadingData ? (
           <div className="d-flex justify-content-center">
             <div className="spinner-border text-orange" role="status">
               <span className="sr-only">Loading...</span>
             </div>
             <h2 className="mx-5 text-orange">Loading...</h2>
           </div>
-        ) : (
+        ) : ( */}
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -508,7 +522,7 @@ const AddNewProductPricing = ({
                 <img
                   src={NewProductPricingImage}
                   alt="new-product"
-                  className="w-100"
+                  className="w-100 h-100"
                 />
               </Col>
               <Col className="col-9">
@@ -517,6 +531,7 @@ const AddNewProductPricing = ({
                     <Col className="col-9">
                       <div className="form-outline mb-4">
                         <Label className="form-label">Product Name</Label>
+                        
                         <Input
                           name="product_name"
                           placeholder=""
@@ -756,6 +771,300 @@ const AddNewProductPricing = ({
                       </div>
                     </Col>
                   ) : null}
+                </Row>
+
+
+                <Row className="d-flex mt-4">
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="public_price">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Capacity</Label>
+                       
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Min
+                        </span>
+                        <Input
+                          name="min_qty"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          // onBlur={(e) => {
+                          //   setRecalc(true)
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "public_price",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.min_qty || ""}
+                          invalid={
+                            validationType.touched.min_qty &&
+                              validationType.errors.min_qty
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.min_qty &&
+                          validationType.errors.min_qty ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.min_qty}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="provider_price">
+                      <div className="d-flex justify-content-between" style={{marginTop:'6px'}}>
+                        <Label className="form-label"></Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="providerPrice"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop6}
+                            target="providerPrice"
+                            toggle={() => {
+                              setttop6(!ttop6);
+                            }}
+                          >
+                            The price the provider sells the tour for on their own
+                            website.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Max
+                        </span>
+                        <Input
+                          name="max_qty"
+                          placeholder=""
+                          type="text"
+                          min="0"
+                          step="any"
+                          onChange={validationType.handleChange}
+                          // onBlur={(e) => {
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "max_qty",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.max_qty || ""}
+                          invalid={
+                            validationType.touched.max_qty &&
+                              validationType.errors.max_qty
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.max_qty &&
+                          validationType.errors.max_qty ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.max_qty}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="public_price">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Price Tiers</Label>
+                       
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Min
+                        </span>
+                        <Input
+                          name="min"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   setRecalc(true)
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "min",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.min || ""}
+                          invalid={
+                            validationType.touched.min &&
+                              validationType.errors.min
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.min &&
+                          validationType.errors.min ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.min}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="provider_price">
+                      <div className="d-flex justify-content-between" style={{marginTop:'6px'}}>
+                        <Label className="form-label"></Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="providerPrice"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop6}
+                            target="providerPrice"
+                            toggle={() => {
+                              setttop6(!ttop6);
+                            }}
+                          >
+                            The price the provider sells the tour for on their own
+                            website.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Max
+                        </span>
+                        <Input
+                          name="max"
+                          placeholder=""
+                          type="text"
+                          min="0"
+                          step="any"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "max",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.max || ""}
+                          invalid={
+                            validationType.touched.max &&
+                              validationType.errors.max
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.max &&
+                          validationType.errors.max ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.max}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2 mt-1">
+                    <div className="form-outline mb-2" id="net_rate">
+                      <div className="d-flex mx-4">
+                        <Label className="form-label mx-2">Active</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="netRate"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop8}
+                            target="netRate"
+                            toggle={() => {
+                              setttop8(!ttop8);
+                            }}
+                          >
+                            The Net Price specified in our service agreement for
+                            the tour. If only a commission rate is specified in
+                            the agreement then this will automatically calculate
+                            and no entry is required.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-5 mt-1 ">
+                  <Input
+                    name="seasonality"
+                    placeholder=""
+                    type="checkbox"
+                    // checked={seasonalPrice}
+                    className="form-check-input"
+                    // onChange={() => setPriceRangeCheck(!priceRangeCheck)}
+                    // onBlur={validationType.handleBlur}
+                    value={priceRangeCheck}
+                  />
+                </div>
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="commission">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Balance Notify</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="commission_p"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttop20}
+                            target="commission_p"
+                            toggle={() => {
+                              setttop20(!ttop20);
+                            }}
+                          >
+                            The agreed commission based on the service agreement before any discounts are applied. This is automatically calculated based on the Net Price so no entry is required.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                  <Input
+                    name="seasonality"
+                    placeholder=""
+                    type="checkbox"
+                    // checked={seasonalPrice}
+                    className="form-check-input"
+                    // onChange={() => setPriceRangeCheck(!priceRangeCheck)}
+                    // onBlur={validationType.handleBlur}
+                    value={priceRangeCheck}
+                  />
+                </div>
+                    </div>
+                  </Col>
+                  
                 </Row>
 
                 <Col
@@ -1754,7 +2063,7 @@ const AddNewProductPricing = ({
               </Col>
             </Row>
           </Form>
-        )}
+        {/* )} */}
       </div>
     </Modal>
   );
