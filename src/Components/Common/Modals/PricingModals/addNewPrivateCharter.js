@@ -404,7 +404,7 @@ const AddNewPrivateCharter = ({
       setCurrencySelected(dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD")
       setPriceCollectSelected(dataEdit.pricedetails.filter((x) => x.pricing_option_id === 41)[0]
         ?.source_id)
-      let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.pricedetails.filter((x) => x.pricing_option_id === 14)[0]
+      let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.pricedetails.filter((x) => x.pricing_option_id === 41)[0]
         ?.source_id)
       if (priceCollectSe.length > 0) {
         setPriceCollectNameSelected(priceCollectSe[0].text)
