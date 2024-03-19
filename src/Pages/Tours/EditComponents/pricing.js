@@ -358,11 +358,10 @@ const Pricing = ({ history, id, tourData, toggle }) => {
         <Col>
           <div className="text-sm-end">
             <div className="waves-effect waves-light mx-2">
-              <div className="d-flex">
+              <div className="d-flex" style={{visibility:"hidden"}}>
                 <Label
-                  className="fs-5 form-label mt-2"
+                  className="form-label mt-2"
                   style={{
-                    fontSize: "10px",
                     // fontWeight: "bold",
                     color: "#495057",
                     marginBottom: "0px",
