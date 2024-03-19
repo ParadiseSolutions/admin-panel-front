@@ -774,7 +774,7 @@ const AddNewProductPricing = ({
                 </Row>
 
 
-                <Row className="d-flex" style={{visibility: "hidden", height: 0}}>
+                <Row className="d-flex mt-4">
                   <Col className="col-2">
                     <div className="form-outline mb-2" id="public_price">
                       <div className="d-flex justify-content-between">
