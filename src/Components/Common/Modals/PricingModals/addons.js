@@ -1022,7 +1022,7 @@ const Addons = ({
                           onBlur={validationType.handleBlur}
                         >
                           <option value="-1">Select....</option>
-                          {map(displayOptionData.filter(display => display.id !== 2 && display.id !== 13 && display.id !== 1 && display.id !== 9), (type, index) => {
+                          {map(displayOptionData.filter(display => display.id !== 2 && display.id !== 13 && display.id !== 9), (type, index) => {
                             return (
                               <option
                                 key={index}
@@ -1068,7 +1068,8 @@ const Addons = ({
                           </div>
                         </Col>
                       </>
-                    ) : displayOptionSelected === 3 ||
+                    ) : displayOptionSelected === 1 ||
+                      displayOptionSelected === 3 ||
                       displayOptionSelected === 4 ||
                       displayOptionSelected === 10 ? (
                       <>
