@@ -46,7 +46,7 @@ const AddNewProductPricing = ({
   //edit data
   const [dataEdit, setDataEdit] = useState();
   const [loadingData, setLoadingData] = useState(true);
-  console.log('check', priceRangeCheck)
+  console.log('check', dataEdit)
   useEffect(() => {
     if (id) {
       getPriceAPI(id).then((resp) => {
@@ -1020,11 +1020,11 @@ const AddNewProductPricing = ({
                     name="seasonality"
                     placeholder=""
                     type="checkbox"
-                    // checked={seasonalPrice}
+                    checked={activeCheckbox}
                     className="form-check-input"
-                    // onChange={() => setPriceRangeCheck(!priceRangeCheck)}
+                    onChange={() => setActiveCheckbox(!activeCheckbox)}
                     // onBlur={validationType.handleBlur}
-                    value={priceRangeCheck}
+                    value={activeCheckbox}
                   />
                 </div>
                     </div>
@@ -1055,11 +1055,11 @@ const AddNewProductPricing = ({
                     name="seasonality"
                     placeholder=""
                     type="checkbox"
-                    // checked={seasonalPrice}
+                    checked={balanceDueCheckbox}
                     className="form-check-input"
-                    // onChange={() => setPriceRangeCheck(!priceRangeCheck)}
+                    onChange={() => setBalanceDueCheckbox(!balanceDueCheckbox)}
                     // onBlur={validationType.handleBlur}
-                    value={priceRangeCheck}
+                    value={balanceDueCheckbox}
                   />
                 </div>
                     </div>
