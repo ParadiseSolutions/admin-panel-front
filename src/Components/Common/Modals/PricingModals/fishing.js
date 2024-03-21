@@ -282,6 +282,8 @@ const Fishing = ({
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
+          min_qty: (values.min === "") ? null : values.min,
+          max_qty: (values.max === "") ? null : values.max,
           price_details: [
             {
               pricing_option_id: 33,
@@ -293,8 +295,8 @@ const Fishing = ({
             {
               pricing_option_id: 34,
               source_id: price_option === "-1" ? null : price_option,
-              min: null,
-              max: null,
+              min: (values.min === "") ? null : values.min,
+              max: (values.max === "") ? null : values.max,
               label: null,
             },
             {
@@ -321,8 +323,8 @@ const Fishing = ({
             {
               pricing_option_id: 35,
               source_id: price_duration === "-1" ? null : price_duration,
-              min: (values.min === "") ? null : values.min,
-              max: (values.max === "") ? null : values.max,
+              min: null,
+              max: null,
               label: null,
             },
             {
