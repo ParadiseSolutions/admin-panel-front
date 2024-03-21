@@ -296,8 +296,8 @@ const Fishing = ({
             {
               pricing_option_id: 34,
               source_id: price_option === "-1" ? null : price_option,
-              min: (values.min === "") ? null : values.min,
-              max: (values.max === "") ? null : values.max,
+              min: null,
+              max: null,
               label: null,
             },
             {
@@ -324,8 +324,8 @@ const Fishing = ({
             {
               pricing_option_id: 35,
               source_id: price_duration === "-1" ? null : price_duration,
-              min: null,
-              max: null,
+              min: (values.min === "") ? null : values.min,
+              max: (values.max === "") ? null : values.max,
               label: null,
             },
             {
