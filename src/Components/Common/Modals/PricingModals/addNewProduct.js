@@ -46,7 +46,7 @@ const AddNewProductPricing = ({
   //edit data
   const [dataEdit, setDataEdit] = useState();
   const [loadingData, setLoadingData] = useState(true);
-  console.log('check', priceRangeCheck)
+  console.log('check', dataEdit)
   useEffect(() => {
     if (id) {
       getPriceAPI(id).then((resp) => {
@@ -998,33 +998,30 @@ const AddNewProductPricing = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-                            id="netRate"
+                            id="activeT"
                           />
                           <Tooltip
                             placement="right"
                             isOpen={ttop8}
-                            target="netRate"
+                            target="activeT"
                             toggle={() => {
                               setttop8(!ttop8);
                             }}
                           >
-                            The Net Price specified in our service agreement for
-                            the tour. If only a commission rate is specified in
-                            the agreement then this will automatically calculate
-                            and no entry is required.
+                            
                           </Tooltip>
                         </div>
                       </div>
                       <div className="form-check form-switch form-switch-md mx-5 mt-1 ">
                   <Input
-                    name="seasonality"
+                    name="active_t"
                     placeholder=""
                     type="checkbox"
-                    // checked={seasonalPrice}
+                    checked={activeCheckbox}
                     className="form-check-input"
-                    // onChange={() => setPriceRangeCheck(!priceRangeCheck)}
+                    onChange={() => setActiveCheckbox(!activeCheckbox)}
                     // onBlur={validationType.handleBlur}
-                    value={priceRangeCheck}
+                    value={activeCheckbox}
                   />
                 </div>
                     </div>
@@ -1036,30 +1033,30 @@ const AddNewProductPricing = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-                            id="commission_p"
+                            id="balanceN"
                           />
                           <Tooltip
                             placement="right"
                             isOpen={ttop20}
-                            target="commission_p"
+                            target="balanceN"
                             toggle={() => {
                               setttop20(!ttop20);
                             }}
                           >
-                            The agreed commission based on the service agreement before any discounts are applied. This is automatically calculated based on the Net Price so no entry is required.
+                            
                           </Tooltip>
                         </div>
                       </div>
                       <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
                   <Input
-                    name="seasonality"
+                    name="balanceT"
                     placeholder=""
                     type="checkbox"
-                    // checked={seasonalPrice}
+                    checked={balanceDueCheckbox}
                     className="form-check-input"
-                    // onChange={() => setPriceRangeCheck(!priceRangeCheck)}
+                    onChange={() => setBalanceDueCheckbox(!balanceDueCheckbox)}
                     // onBlur={validationType.handleBlur}
-                    value={priceRangeCheck}
+                    value={balanceDueCheckbox}
                   />
                 </div>
                     </div>
