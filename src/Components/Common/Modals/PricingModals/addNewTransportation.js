@@ -360,8 +360,8 @@ const AddNewTransportation = ({
             {
               pricing_option_id: 21,
               source_id: price_option === "-1" ? null : price_option,
-              min: values.min === "" ? null : values.min,
-              max: values.max === "" ? null : values.max,
+              min: null,
+              max: null,
               label: null,
             },
             {
@@ -395,8 +395,8 @@ const AddNewTransportation = ({
             {
               pricing_option_id: 24,
               source_id: vehicle === "-1" ? null : vehicle,
-              min: null,
-              max: null,
+              min: values.min === "" ? null : values.min,
+              max: values.max === "" ? null : values.max,
               label: null,
             },
             {
