@@ -346,8 +346,9 @@ const AddNewTransportation = ({
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
-          min_qty: values.min === "" ? null : values.min,
-          max_qty: values.max === "" ? null : values.max,
+          //--------------- pendiente passangers min y max
+          min_qty: values.min === "" || values.min === null ? 0 : values.min,
+          max_qty: values.max === "" || values.max === null ? 20 : values.max,
           price_details: [
             {
               pricing_option_id: 20,
