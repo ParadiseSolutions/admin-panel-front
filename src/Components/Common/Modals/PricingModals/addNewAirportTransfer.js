@@ -391,8 +391,8 @@ const AddNewAirportTransfer = ({
             {
               pricing_option_id: 17,
               source_id: vehicle === "-1" ? null : vehicle,
-              min: values.min === "" ? null : values.min,
-              max: values.max === "" ? null : values.max,
+              min: !values.min || values.min === "" ? null : values.min,
+              max: !values.max || values.max === "" ? null : values.max,
               label: null,
             },
             {
