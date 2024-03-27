@@ -274,7 +274,7 @@ const AddNewScheduleModal = ({
               />
             </Col>
             <Col className="col-8">
-              <Row>
+              <Row hidden={true}>
                 <Col>
                   <div className="form-outline">
                     <Label className="form-label">Products</Label>
@@ -298,7 +298,7 @@ const AddNewScheduleModal = ({
                   </div>
                 </Col>
               </Row>
-              <Row className="mt-4 d-flex">
+              <Row className="d-flex">
                 <Col className="col-4">
                   <div className="form-outline">
                     <Label className="form-label">Type</Label>
