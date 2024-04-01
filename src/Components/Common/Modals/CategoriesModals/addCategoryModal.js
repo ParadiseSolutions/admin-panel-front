@@ -30,8 +30,7 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
 
   useEffect(() => {
     setCatData(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  });
 
   //select
   const [parent, setParent] = useState([]);
@@ -71,7 +70,7 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
           }
         })
         .catch((error) => {
-          if(error.response.data.data === null) {
+          if (error.response.data.data === null) {
             Swal.fire(
               "Error!",
               // {error.response.},
@@ -83,7 +82,7 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
               errorMessages.push(item[1]);
               return true
             });
-  
+
             Swal.fire(
               "Error!",
               // {error.response.},
@@ -143,20 +142,20 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
                         placeholder="Airport Transfer"
                         type="text"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value;
                           validationType.setFieldValue('name', nameFormat(value));
                         }}
                         value={validationType.values.name}
                         invalid={
                           validationType.touched.name &&
-                          validationType.errors.name
+                            validationType.errors.name
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.name &&
-                      validationType.errors.name ? (
+                        validationType.errors.name ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.name}
                         </FormFeedback>
@@ -171,20 +170,20 @@ const AddCategoryModal = ({ addModal, setAddModal, onClickAddCategory }) => {
                         placeholder="AT"
                         type="text"
                         onChange={validationType.handleChange}
-                        onBlur={(e)=>{
+                        onBlur={(e) => {
                           const value = e.target.value;
                           validationType.setFieldValue('code', codeFormat(cleanUpSpecialCharacters(value)));
                         }}
                         value={validationType.values.code}
                         invalid={
                           validationType.touched.code &&
-                          validationType.errors.code
+                            validationType.errors.code
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.code &&
-                      validationType.errors.code ? (
+                        validationType.errors.code ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.code}
                         </FormFeedback>
