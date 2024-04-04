@@ -1000,30 +1000,17 @@ const AddNewProductPricing = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-<<<<<<< HEAD
-                            id="activett"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttactive}
-                            target="activett"
-=======
                             id="activeT"
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop8}
+                            isOpen={ttactive}
                             target="activeT"
->>>>>>> 85307de675dcc84353b7559c81c028e30b066241
                             toggle={() => {
                               setttactive(!ttactive);
                             }}
                           >
-<<<<<<< HEAD
                             Select if the tour is active for booking or not.
-=======
-                            
->>>>>>> 85307de675dcc84353b7559c81c028e30b066241
                           </Tooltip>
                         </div>
                       </div>
@@ -1048,30 +1035,17 @@ const AddNewProductPricing = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-<<<<<<< HEAD
-                            id="ttbd"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttbd}
-                            target="ttbd"
-=======
                             id="balanceN"
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop20}
+                            isOpen={ttbd}
                             target="balanceN"
->>>>>>> 85307de675dcc84353b7559c81c028e30b066241
                             toggle={() => {
                               setbd(!ttbd);
                             }}
                           >
-<<<<<<< HEAD
                             Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
-=======
-                            
->>>>>>> 85307de675dcc84353b7559c81c028e30b066241
                           </Tooltip>
                         </div>
                       </div>
