@@ -44,7 +44,7 @@ const BulkEditTour = ({
       you_save: element.you_save,
       commission: element.commission,
       deposit: element.deposit,
-      net_price: element.net_price,
+      net_rate: element.net_rate,
     });
   });
 
@@ -162,7 +162,7 @@ const BulkEditTour = ({
                                     ? "Comm."
                                     : campo === "deposit"
                                     ? "Deposit"
-                                    : campo === "net_price"
+                                    : campo === "net_rate"
                                     ? "Net Price"
                                     : campo}
                                 </th>

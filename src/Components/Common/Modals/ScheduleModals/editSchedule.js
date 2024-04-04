@@ -173,7 +173,6 @@ const EditScheduleModal = ({
   // checkbox list
 
   const onAddDay = (day) => {
-    debugger
     const selection = day;
     const selectionFlag = daysList.includes(selection);
     if (selection === "7") {
@@ -381,7 +380,7 @@ const EditScheduleModal = ({
               />
             </Col>
             <Col className="col-9">
-              <Row className="">
+              <Row hidden={true} className="">
                 <Col>
                   <div className="form-outline">
                     <Label className="form-label">Products</Label>
@@ -411,7 +410,7 @@ const EditScheduleModal = ({
                   </div>
                 </Col>
               </Row>
-              <Row className="mt-4 d-flex">
+              <Row className="d-flex">
                 <Col className="col-3">
                   <div className="form-outline">
                     <Label className="form-label">Type</Label>

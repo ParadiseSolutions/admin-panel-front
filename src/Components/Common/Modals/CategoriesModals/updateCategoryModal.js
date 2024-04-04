@@ -24,27 +24,26 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 
 	useEffect(() => {
 		setCatData(data);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	},[]);
+	});
 
 	useEffect(() => {
-		if(editModal === false) {
+		if (editModal === false) {
 			setCatData(null)
 			setCategoryData(null)
 		}
 		if (categoryId) {
-			getCategory(categoryId).then((resp) => {				
-				setCategoryData(resp.data.data)				
+			getCategory(categoryId).then((resp) => {
+				setCategoryData(resp.data.data)
 			})
 		} else {
 			setCategoryData(null)
 		}
-	},[categoryId,editModal])
+	}, [categoryId, editModal])
 	// console.log(categoryData)
 	//select
 	const [parent, setParent] = useState([]);
 	const onChangeSelectionParent = (value) => {
-		
+
 		setParent(value);
 	};
 
@@ -54,7 +53,7 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 		initialValues: {
 			name: categoryData ? categoryData.name : "",
 			code: categoryData ? categoryData.code : "",
-			
+
 		},
 		validationSchema: Yup.object().shape({
 			name: Yup.string().required("Name is required"),
@@ -77,25 +76,25 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 					}
 				})
 				.catch((error) => {
-				  if(error.response.data.data === null) {
-					Swal.fire(
-					  "Error!",
-					  // {error.response.},
-					  String(error.response.data.message)
-					);
-				  } else {
-					let errorMessages = [];
-					Object.entries(error.response.data.data).map((item) => {
-					  errorMessages.push(item[1]);
-					  return true
-					});
-		  
-					Swal.fire(
-					  "Error!",
-					  // {error.response.},
-					  String(errorMessages[0])
-					);
-				  }
+					if (error.response.data.data === null) {
+						Swal.fire(
+							"Error!",
+							// {error.response.},
+							String(error.response.data.message)
+						);
+					} else {
+						let errorMessages = [];
+						Object.entries(error.response.data.data).map((item) => {
+							errorMessages.push(item[1]);
+							return true
+						});
+
+						Swal.fire(
+							"Error!",
+							// {error.response.},
+							String(errorMessages[0])
+						);
+					}
 				});
 		},
 	});
@@ -146,10 +145,10 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 												placeholder="Airport Transfer"
 												type="text"
 												onChange={validationType.handleChange}
-												onBlur={(e)=>{
+												onBlur={(e) => {
 													const value = e.target.value;
 													validationType.setFieldValue('name', nameFormat(value));
-												  }}
+												}}
 												value={validationType.values.name || ""}
 												invalid={validationType.touched.name && validationType.errors.name ? true : false}
 											/>
@@ -164,10 +163,10 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 												placeholder="AT"
 												type="text"
 												onChange={validationType.handleChange}
-												onBlur={(e)=>{
+												onBlur={(e) => {
 													const value = e.target.value;
 													validationType.setFieldValue('code', codeFormat(cleanUpSpecialCharacters(value)));
-												  }}
+												}}
 												value={validationType.values.code || ""}
 												invalid={validationType.touched.code && validationType.errors.code ? true : false}
 											/>
@@ -183,16 +182,17 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 												type="select"
 												onChange={(e) => onChangeSelectionParent(e.target.value)}
 												onBlur={validationType.handleBlur}
-												
+
 												invalid={validationType.touched.parent_category && validationType.errors.parent_category ? true : false}
 											>
-											
+
+												<option value>Select One...</option>
 												{map(catData, (category, index) => {
 													return (
 														<option key={index}
 															selected={
-																 categoryData && categoryData.parent_id === category.id ? true : false
-															} 
+																categoryData && categoryData.parent_id === category.id ? true : false
+															}
 															value={category.id}
 														>
 															{category.name}
@@ -200,7 +200,7 @@ const EditCategoryModal = ({ categoryId, editModal, setEditModal, onClickEditCat
 													);
 												})}
 											</Input>
-											
+
 										</div>
 									</Col>
 								</Row>

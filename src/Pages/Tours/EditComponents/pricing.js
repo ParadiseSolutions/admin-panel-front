@@ -43,15 +43,15 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   };
 
   useEffect(() => {
-   if (tourData !== undefined) {
-    tourData?.range_price === 0 ? setPriceRangeCheck(false) : setPriceRangeCheck(true)
-   }
+    if (tourData !== undefined) {
+      tourData?.range_price === 0 ? setPriceRangeCheck(false) : setPriceRangeCheck(true)
+    }
   }, [tourData]);
 
   console.log(tourData);
   const postPriceRange = () => {
     let data = { active: priceRangeCheck === false ? 1 : 0 };
-    putPriceRangesAPI(id, data).then((resp) => {});
+    putPriceRangesAPI(id, data).then((resp) => { });
   };
 
   //table actions
@@ -160,6 +160,15 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     {
       Header: "Comm.",
       accessor: "commission",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Price {...cellProps} />;
+      },
+    },
+    {
+      Header: "Net Price",
+      accessor: "net_rate",
       disableFilters: false,
       filterable: true,
       Cell: (cellProps) => {
@@ -320,7 +329,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   const [bulkEditModal, setBulkEditModal] = useState(false);
 
   //price range
-  
+
 
   const onClickNewProduct = () => {
     setEditProductID(null);
