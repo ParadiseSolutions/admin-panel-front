@@ -321,6 +321,10 @@ const AddNewProductPricing = ({
   const [ttop20, setttop20] = useState(false);
   const [ttop21, setttop21] = useState(false);
   const [ttop22, setttop22] = useState(false);
+  const [ttCapacity, setttCapacity] = useState(false);
+  const [ttiers, setttiers] = useState(false);
+  const [ttactive, setttactive] = useState(false);
+  const [ttbd, setbd] = useState(false);
 
   const [providerCommission, setProviderCommission] = useState('')
   const [ourCommission, setOurCommission] = useState('')
@@ -739,7 +743,7 @@ const AddNewProductPricing = ({
                               toggle={() => {
                                 setttop4(!ttop4);
                               }}
-                            ></Tooltip>
+                            >Tooltip Pending</Tooltip>
                           </div>
                         </div>
                         <Input
@@ -821,24 +825,23 @@ const AddNewProductPricing = ({
                     </div>
                   </Col>
                   <Col className="col-2">
-                    <div className="form-outline mb-2" id="provider_price">
+                    <div className="form-outline mb-2" id="">
                       <div className="d-flex justify-content-between" style={{marginTop:'6px'}}>
                         <Label className="form-label"></Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-                            id="providerPrice"
+                            id="capacity"
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop6}
-                            target="providerPrice"
+                            isOpen={ttCapacity}
+                            target="capacity"
                             toggle={() => {
-                              setttop6(!ttop6);
+                              setttCapacity(!ttCapacity);
                             }}
                           >
-                            The price the provider sells the tour for on their own
-                            website.
+                            Tooltip Pending
                           </Tooltip>
                         </div>
                       </div>
@@ -929,24 +932,23 @@ const AddNewProductPricing = ({
                     </div>
                   </Col>
                   <Col className="col-2">
-                    <div className="form-outline mb-2" id="provider_price">
+                    <div className="form-outline mb-2" id="">
                       <div className="d-flex justify-content-between" style={{marginTop:'6px'}}>
                         <Label className="form-label"></Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-                            id="providerPrice"
+                            id="tiers"
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop6}
-                            target="providerPrice"
+                            isOpen={ttiers}
+                            target="tiers"
                             toggle={() => {
-                              setttop6(!ttop6);
+                              setttiers(!ttiers);
                             }}
                           >
-                            The price the provider sells the tour for on their own
-                            website.
+                            Write the ranges of people that will appear in the name of the product and will determine the price of it.
                           </Tooltip>
                         </div>
                       </div>
@@ -998,20 +1000,17 @@ const AddNewProductPricing = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-                            id="netRate"
+                            id="activett"
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop8}
-                            target="netRate"
+                            isOpen={ttactive}
+                            target="activett"
                             toggle={() => {
-                              setttop8(!ttop8);
+                              setttactive(!ttactive);
                             }}
                           >
-                            The Net Price specified in our service agreement for
-                            the tour. If only a commission rate is specified in
-                            the agreement then this will automatically calculate
-                            and no entry is required.
+                            Select if the tour is active for booking or not.
                           </Tooltip>
                         </div>
                       </div>
@@ -1036,17 +1035,17 @@ const AddNewProductPricing = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
-                            id="commission_p"
+                            id="ttbd"
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop20}
-                            target="commission_p"
+                            isOpen={ttbd}
+                            target="ttbd"
                             toggle={() => {
-                              setttop20(!ttop20);
+                              setbd(!ttbd);
                             }}
                           >
-                            The agreed commission based on the service agreement before any discounts are applied. This is automatically calculated based on the Net Price so no entry is required.
+                            Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
                           </Tooltip>
                         </div>
                       </div>
