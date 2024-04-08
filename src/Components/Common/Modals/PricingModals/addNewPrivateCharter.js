@@ -206,13 +206,7 @@ const AddNewPrivateCharter = ({
           min_qty: values.min_qty === "" || values.min_qty === null ? 0 : values.min_qty,
           max_qty: values.max_qty === "" || values.max_qty === null ? 20 : values.max_qty,
           price_details: [
-            {
-              pricing_option_id: 68,
-              source_id: price_type === "-1" ? null : price_type2,
-              min: null,
-              max: null,
-              label: null,
-            },
+            
             {
               pricing_option_id: 38,
               source_id: price_type === "-1" ? null : price_type,
@@ -258,6 +252,13 @@ const AddNewPrivateCharter = ({
             {
               pricing_option_id: 42,
               source_id: price_location === "-1" ? null : price_location,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 68,
+              source_id: price_type === "-1" ? null : price_type2,
               min: null,
               max: null,
               label: null,
@@ -415,6 +416,7 @@ const AddNewPrivateCharter = ({
   const [ttop21, setttop21] = useState(false);
   const [ttop22, setttop22] = useState(false);
   const [ttiers, setttiers] = useState(false);
+  const [ttprice2, setttprice2] = useState(false);
   const [ttactive, setttactive] = useState(false);
   const [ttbd, setbd] = useState(false);
 
@@ -783,14 +785,14 @@ const AddNewPrivateCharter = ({
                         <div>
                           <i
                             className="uil-question-circle font-size-15 mx-2"
-                            id="collect_t"
+                            id="price2"
                           />
                           <Tooltip
                             placement="right"
-                            isOpen={ttop3}
-                            target="collect_t"
+                            isOpen={ttprice2}
+                            target="price2"
                             toggle={() => {
-                              setttop3(!ttop3);
+                              setttprice2(!ttprice2);
                             }}
                           >
                            pending tooltip
