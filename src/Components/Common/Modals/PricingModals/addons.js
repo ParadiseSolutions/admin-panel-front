@@ -269,122 +269,117 @@ const Addons = ({
       balance_due: Yup.number().required("Field Required"),
     }),
     onSubmit: (values, { resetForm }) => {
-      if ((displayOptionSelected === 13 || displayOptionSelected === 5 || displayOptionSelected === 4) && (values.min_qty == "" || values.min_qty == null || values.max_qty == "" || values.max_qty == null)) {
-        Swal.fire(
-          "Error!",
-          "Min and Max Qty are required for this display option"
-        );
+
+      let match_qty = matchQuantitySelected ? matchQuantitySelected : (dataEdit ? dataEdit.match_qty_id : null)
+      let price_type = priceTypeSelected ? priceTypeSelected : (dataEdit ? dataEdit.price_type_id : null)
+      let addon_type = addonTypeSelected ? addonTypeSelected : (dataEdit ? dataEdit.add_on_type_id : null)
+      let price_option = priceOptionSelected ? priceOptionSelected : (dataEdit ? dataEdit.price_option_id : null)
+      let collect = priceCollectSelected ? priceCollectSelected : (dataEdit ? dataEdit.collect_id : null)
+      let display_option = displayOptionSelected ? displayOptionSelected : (dataEdit ? dataEdit.display_option : null)
+      let instruction_label = addonLabelSelected ? addonLabelSelected : (dataEdit ? dataEdit.instruction_label_id : null)
+
+      let data = {
+        tour_id: +id,
+        match_qty_id: match_qty === "-1" ? null : match_qty,
+        price_type_id: price_type === "-1" ? null : price_type,
+        add_on_type_id: addon_type === "-1" ? null : addon_type,
+        price_option_id: price_option === "-1" ? null : price_option,
+        collect_id: collect === "-1" ? null : collect,
+        display_option: display_option === "-1" ? null : display_option,
+        instruction_label_id: instruction_label === "-1" ? null : instruction_label,
+        description: values.addon_description,
+        show_balance_due: balance,
+        price: values.our_price,
+        you_save: values.you_save,
+        net_rate:
+          values.rate !== ""
+            ? values.rate > 1
+              ? values.rate / 100
+              : values.rate
+            : values.rate,
+        commission: values.commission,
+        deposit: values.deposit,
+        net_price: values.balance_due,
+        type: isUpgrade ? 2 : 1,
+        custom_text: customMessage === true ? 1 : 0,
+        option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${addonTypeNameSelected !== ""
+          ? addonTypeNameSelected
+          : "[Add-On Type]"
+          } for $ ${validationType.values.our_price !== ""
+            ? validationType.values.our_price
+            : "[Price]"
+          } ${priceTypeNameSelected !== ""
+            ? priceTypeNameSelected
+            : "[Price Type]"
+          }, paid in cash on the day of the tour.` : values.custom_message,
+        min_qty: values.min_qty === "" || values.min_qty === null ? 0 : values.min_qty,
+        max_qty: values.max_qty === "" || values.max_qty === null ? 20 : values.max_qty
+      };
+
+      document.getElementById("save-button").disabled = true;
+      if (dataEdit) {
+        putAddonAPI(editProductID, data)
+          .then((resp) => {
+            triggerUpdate();
+            editID = null
+            setNewAddon(false);
+            refreshTable();
+            resetForm({ values: "" });
+            document.getElementById("save-button").disabled = false;
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true
+              });
+
+              Swal.fire(
+                "Error!",
+                String(errorMessages[0])
+              );
+            }
+            document.getElementById("save-button").disabled = false;
+          });
       } else {
-        let match_qty = matchQuantitySelected ? matchQuantitySelected : (dataEdit ? dataEdit.match_qty_id : null)
-        let price_type = priceTypeSelected ? priceTypeSelected : (dataEdit ? dataEdit.price_type_id : null)
-        let addon_type = addonTypeSelected ? addonTypeSelected : (dataEdit ? dataEdit.add_on_type_id : null)
-        let price_option = priceOptionSelected ? priceOptionSelected : (dataEdit ? dataEdit.price_option_id : null)
-        let collect = priceCollectSelected ? priceCollectSelected : (dataEdit ? dataEdit.collect_id : null)
-        let display_option = displayOptionSelected ? displayOptionSelected : (dataEdit ? dataEdit.display_option : null)
-        let instruction_label = addonLabelSelected ? addonLabelSelected : (dataEdit ? dataEdit.instruction_label_id : null)
+        postAddonsAPI(data)
+          .then((resp) => {
+            triggerUpdate();
+            editID = null
+            setNewAddon(false);
+            refreshTable();
+            resetForm({ values: "" });
+            document.getElementById("save-button").disabled = false;
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true
+              });
 
-        let data = {
-          tour_id: +id,
-          match_qty_id: match_qty === "-1" ? null : match_qty,
-          price_type_id: price_type === "-1" ? null : price_type,
-          add_on_type_id: addon_type === "-1" ? null : addon_type,
-          price_option_id: price_option === "-1" ? null : price_option,
-          collect_id: collect === "-1" ? null : collect,
-          display_option: display_option === "-1" ? null : display_option,
-          instruction_label_id: instruction_label === "-1" ? null : instruction_label,
-          description: values.addon_description,
-          show_balance_due: balance,
-          price: values.our_price,
-          you_save: values.you_save,
-          net_rate:
-            values.rate !== ""
-              ? values.rate > 1
-                ? values.rate / 100
-                : values.rate
-              : values.rate,
-          commission: values.commission,
-          deposit: values.deposit,
-          net_price: values.balance_due,
-          type: isUpgrade ? 2 : 1,
-          custom_text: customMessage === true ? 1 : 0,
-          option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${addonTypeNameSelected !== ""
-            ? addonTypeNameSelected
-            : "[Add-On Type]"
-            } for $ ${validationType.values.our_price !== ""
-              ? validationType.values.our_price
-              : "[Price]"
-            } ${priceTypeNameSelected !== ""
-              ? priceTypeNameSelected
-              : "[Price Type]"
-            }, paid in cash on the day of the tour.` : values.custom_message,
-          min_qty: values.min_qty,
-          max_qty: values.max_qty
-        };
-
-        document.getElementById("save-button").disabled = true;
-        if (dataEdit) {
-          putAddonAPI(editProductID, data)
-            .then((resp) => {
-              triggerUpdate();
-              editID = null
-              setNewAddon(false);
-              refreshTable();
-              resetForm({ values: "" });
-              document.getElementById("save-button").disabled = false;
-            })
-            .catch((error) => {
-              if (error.response.data.data === null) {
-                Swal.fire(
-                  "Error!",
-                  String(error.response.data.message)
-                );
-              } else {
-                let errorMessages = [];
-                Object.entries(error.response.data.data).map((item) => {
-                  errorMessages.push(item[1]);
-                  return true
-                });
-
-                Swal.fire(
-                  "Error!",
-                  String(errorMessages[0])
-                );
-              }
-              document.getElementById("save-button").disabled = false;
-            });
-        } else {
-          postAddonsAPI(data)
-            .then((resp) => {
-              triggerUpdate();
-              editID = null
-              setNewAddon(false);
-              refreshTable();
-              resetForm({ values: "" });
-              document.getElementById("save-button").disabled = false;
-            })
-            .catch((error) => {
-              if (error.response.data.data === null) {
-                Swal.fire(
-                  "Error!",
-                  String(error.response.data.message)
-                );
-              } else {
-                let errorMessages = [];
-                Object.entries(error.response.data.data).map((item) => {
-                  errorMessages.push(item[1]);
-                  return true
-                });
-
-                Swal.fire(
-                  "Error!",
-                  String(errorMessages[0])
-                );
-              }
-              document.getElementById("save-button").disabled = false;
-            });
-        }
-        refreshTable();
+              Swal.fire(
+                "Error!",
+                String(errorMessages[0])
+              );
+            }
+            document.getElementById("save-button").disabled = false;
+          });
       }
+      refreshTable();
+
     },
   });
 

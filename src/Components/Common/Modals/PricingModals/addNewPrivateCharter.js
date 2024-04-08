@@ -6,6 +6,7 @@ import {
   postPricesAPI,
   updatePriceAPI,
   triggerUpdate,
+  getPricingOptions2API,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -39,6 +40,7 @@ const AddNewPrivateCharter = ({
   tourData,
   editProductID,
   copyProduct,
+  priceRangeCheck
 }) => {
   let id = "";
   id = editProductID;
@@ -61,6 +63,8 @@ const AddNewPrivateCharter = ({
     initialValues: {
       min: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 40)[0]?.min : "",
       max: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 40)[0]?.max : "",
+      min_qty: dataEdit ? dataEdit.min_qty : '' ,
+      max_qty: dataEdit ? dataEdit.max_qty : '' ,
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
       active: dataEdit?.active ? 1 : 0,
@@ -101,6 +105,13 @@ const AddNewPrivateCharter = ({
               ?.source_id
             : null
           : priceTypeSelected;
+      let price_type2 =
+        priceTypeSelected2 === "" || priceTypeSelected2 === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 68)[0]
+              ?.source_id
+            : null
+          : priceTypeSelected2;
 
       let price_option =
         priceOptionSelected === "" || priceOptionSelected === undefined
@@ -192,7 +203,10 @@ const AddNewPrivateCharter = ({
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
+          min_qty: values.min_qty === "" || values.min_qty === null ? 0 : values.min_qty,
+          max_qty: values.max_qty === "" || values.max_qty === null ? 20 : values.max_qty,
           price_details: [
+            
             {
               pricing_option_id: 38,
               source_id: price_type === "-1" ? null : price_type,
@@ -238,6 +252,13 @@ const AddNewPrivateCharter = ({
             {
               pricing_option_id: 42,
               source_id: price_location === "-1" ? null : price_location,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 68,
+              source_id: price_type === "-1" ? null : price_type2,
               min: null,
               max: null,
               label: null,
@@ -316,6 +337,7 @@ const AddNewPrivateCharter = ({
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
+  const [priceOptions2, setPriceOptions2] = useState([]);
   const [priceCollect, setPriceCollect] = useState([]);
   const [priceSeason, setPriceSeason] = useState([]);
   const [currency, setCurrency] = useState([])
@@ -324,6 +346,7 @@ const AddNewPrivateCharter = ({
   const [priceDuration, setPriceDuration] = useState([]);
   const [priceLocation, setPriceLocation] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
+  const [priceTypeSelected2, setPriceTypeSelected2] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
@@ -331,6 +354,7 @@ const AddNewPrivateCharter = ({
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
   const [priceLocationSelected, setPriceLocationSelected] = useState("");
+  const [pricingOption2Selected, setPricingOption2Selected] = useState("");
 
   useEffect(() => {
     if (addNewPrivateCharter) {
@@ -355,6 +379,9 @@ const AddNewPrivateCharter = ({
       });
       getPricingOptionsAPI(42).then((resp) => {
         setPriceLocation(resp.data.data);
+      });
+      getPricingOptions2API(68).then((resp) => {
+        setPricingOption2Selected(resp.data.data);
       });
       getCurrency().then((resp) => {
         setCurrency(resp.data.data)
@@ -388,6 +415,10 @@ const AddNewPrivateCharter = ({
   const [ttop20, setttop20] = useState(false);
   const [ttop21, setttop21] = useState(false);
   const [ttop22, setttop22] = useState(false);
+  const [ttiers, setttiers] = useState(false);
+  const [ttprice2, setttprice2] = useState(false);
+  const [ttactive, setttactive] = useState(false);
+  const [ttbd, setbd] = useState(false);
 
   const [providerCommission, setProviderCommission] = useState('')
   const [ourCommission, setOurCommission] = useState('')
@@ -750,7 +781,102 @@ const AddNewPrivateCharter = ({
                   <Col className="col">
                     <div className="form-outline">
                       <div className="d-flex justify-content-between">
-                        <Label className="form-label">Collect*</Label>
+                        <Label className="form-label">Price Option 2</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15 mx-2"
+                            id="price2"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttprice2}
+                            target="price2"
+                            toggle={() => {
+                              setttprice2(!ttprice2);
+                            }}
+                          >
+                           pending tooltip
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <Input
+                        type="select"
+                        name="price_2"
+                        onChange={(e) => {
+                          setRecalc(true)
+                          setPriceTypeSelected2(e.target.value);
+                          // setPriceCollectNameSelected(
+                          //   e.target.selectedOptions[0].label
+                          // );
+                        }}
+                      >
+                        <option value="-1">Select....</option>
+                        {map(pricingOption2Selected, (collect, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={collect.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? collect.id ===
+                                  dataEdit.pricedetails.filter(
+                                    (x) => x.pricing_option_id === 68
+                                  )[0]?.source_id
+                                  : false
+                              }
+                            >
+                              {collect.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </Col>
+                  {tourData?.seasonality === 1 ? (
+                    <Col className="col">
+                      <div
+                        className="form-outline"
+                        style={{ marginRight: "20px", marginLeft: "-20px" }}
+                      >
+                        <Label className="form-label">Season*</Label>
+                        <Input
+                          type="select"
+                          name="season"
+                          onChange={(e) => {
+                            setPriceSeasonSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                        >
+                          <option value="-1">Select....</option>
+                          {map(priceSeason, (season, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={season.id}
+                                selected={
+                                  dataEdit && dataEdit.pricedetails
+                                    ? season.id ===
+                                    dataEdit.pricedetails.filter(
+                                      (x) => x.pricing_option_id === 44
+                                    )[0]?.source_id
+                                    : false
+                                }
+                              >
+                                {season.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    </Col>
+                  ) : null}
+                </Row>
+                <Row className="d-flex mt-4">
+                <Col className="col">
+                    <div className="form-outline">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Collect</Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15 mx-2"
@@ -808,45 +934,185 @@ const AddNewPrivateCharter = ({
                       </Input>
                     </div>
                   </Col>
-                  {tourData?.seasonality === 1 ? (
-                    <Col className="col">
-                      <div
-                        className="form-outline"
-                        style={{ marginRight: "20px", marginLeft: "-20px" }}
-                      >
-                        <Label className="form-label">Season*</Label>
-                        <Input
-                          type="select"
-                          name="season"
-                          onChange={(e) => {
-                            setPriceSeasonSelected(e.target.value);
-                          }}
-                          onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                        >
-                          <option value="-1">Select....</option>
-                          {map(priceSeason, (season, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={season.id}
-                                selected={
-                                  dataEdit && dataEdit.pricedetails
-                                    ? season.id ===
-                                    dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 44
-                                    )[0]?.source_id
-                                    : false
-                                }
-                              >
-                                {season.text}
-                              </option>
-                            );
-                          })}
-                        </Input>
+
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="public_price">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Price Tiers</Label>
+                       
                       </div>
-                    </Col>
-                  ) : null}
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Min
+                        </span>
+                        <Input
+                          name="min"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   setRecalc(true)
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "min",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.min || ""}
+                          invalid={
+                            validationType.touched.min &&
+                              validationType.errors.min
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.min &&
+                          validationType.errors.min ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.min}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="">
+                      <div className="d-flex justify-content-between" style={{marginTop:'6px'}}>
+                        <Label className="form-label"></Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="tiers"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttiers}
+                            target="tiers"
+                            toggle={() => {
+                              setttiers(!ttiers);
+                            }}
+                          >
+                            Write the ranges of people that will appear in the name of the product and will determine the price of it.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Max
+                        </span>
+                        <Input
+                          name="max"
+                          placeholder=""
+                          type="text"
+                          min="0"
+                          step="any"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "max",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.max || ""}
+                          invalid={
+                            validationType.touched.max &&
+                              validationType.errors.max
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.max &&
+                          validationType.errors.max ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.max}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2 mt-1">
+                    <div className="form-outline mb-2" id="net_rate">
+                      <div className="d-flex mx-4">
+                        <Label className="form-label mx-2">Active</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="activeT"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttactive}
+                            target="activeT"
+                            toggle={() => {
+                              setttactive(!ttactive);
+                            }}
+                          >
+                            Select if the tour is active for booking or not.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-5 mt-1 ">
+                  <Input
+                    name="active_t"
+                    placeholder=""
+                    type="checkbox"
+                    checked={activeCheckbox}
+                    className="form-check-input"
+                    onChange={() => setActiveCheckbox(!activeCheckbox)}
+                    // onBlur={validationType.handleBlur}
+                    value={activeCheckbox}
+                  />
+                </div>
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="commission">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Balance Notify</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="balanceN"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttbd}
+                            target="balanceN"
+                            toggle={() => {
+                              setbd(!ttbd);
+                            }}
+                          >
+                            Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                  <Input
+                    name="balanceT"
+                    placeholder=""
+                    type="checkbox"
+                    checked={balanceDueCheckbox}
+                    className="form-check-input"
+                    onChange={() => setBalanceDueCheckbox(!balanceDueCheckbox)}
+                    // onBlur={validationType.handleBlur}
+                    value={balanceDueCheckbox}
+                  />
+                </div>
+                    </div>
+                  </Col>
                 </Row>
                 <Col
                   className="col-12 p-1 my-2"
@@ -934,50 +1200,50 @@ const AddNewPrivateCharter = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Min. Pax.</Label>
+                      <Label className="form-label">Capacity.</Label>
                       <Input
-                        name="min"
+                        name="min_qty"
                         placeholder=""
                         className="me-1"
                         type="number"
                         min="0"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.min || ""}
+                        value={validationType.values.min_qty || ""}
                         invalid={
-                          validationType.touched.min && validationType.errors.min
+                          validationType.touched.min_qty && validationType.errors.min_qty
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.min && validationType.errors.min ? (
+                      {validationType.touched.min_qty && validationType.errors.min_qty ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.min}
+                          {validationType.errors.min_qty}
                         </FormFeedback>
                       ) : null}
                     </div>
                   </Col>
 
                   <Col className="col-2">
-                    <div className="form-outline mb-2">
-                      <Label className="form-label">Max. Pax.</Label>
+                    <div className="form-outline mb-2 mt-2">
+                      <Label className="form-label"></Label>
                       <Input
-                        name="max"
+                        name="max_qty"
                         placeholder=""
                         type="number"
                         min="0"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
-                        value={validationType.values.max || ""}
+                        value={validationType.values.max_qty || ""}
                         invalid={
-                          validationType.touched.max && validationType.errors.max
+                          validationType.touched.max_qty && validationType.errors.max_qty
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.max && validationType.errors.max ? (
+                      {validationType.touched.max_qty && validationType.errors.max_qty ? (
                         <FormFeedback type="invalid">
-                          {validationType.errors.max}
+                          {validationType.errors.max_qty}
                         </FormFeedback>
                       ) : null}
                     </div>
