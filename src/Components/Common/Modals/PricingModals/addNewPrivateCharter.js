@@ -108,7 +108,7 @@ const AddNewPrivateCharter = ({
       let price_type2 =
         priceTypeSelected2 === "" || priceTypeSelected2 === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 38)[0]
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 68)[0]
               ?.source_id
             : null
           : priceTypeSelected2;
