@@ -6,6 +6,7 @@ import {
   getPriceAPI,
   updatePriceAPI,
   triggerUpdate,
+  getPricingOptions2API,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -106,7 +107,13 @@ const AddNewProductPricing = ({
             ? dataEdit.pricedetails[0]?.source_id
             : null
           : priceTypeSelected;
-
+          let price_type2 =
+          priceTypeSelected2 === "" || priceTypeSelected2 === undefined
+            ? dataEdit && dataEdit.pricedetails
+              ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 63)[0]
+                ?.source_id
+              : null
+            : priceTypeSelected2;
       let price_option =
         priceOptionSelected === "" || priceOptionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
@@ -185,6 +192,13 @@ const AddNewProductPricing = ({
             {
               pricing_option_id: 28,
               source_id: price_season === "-1" ? null : price_season,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 68,
+              source_id: price_type === "-1" ? null : price_type2,
               min: null,
               max: null,
               label: null,
@@ -273,7 +287,8 @@ const AddNewProductPricing = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
   const [currency, setCurrency] = useState([])
   const [currencySelected, setCurrencySelected] = useState('')
-
+  const [pricingOption2Selected, setPricingOption2Selected] = useState("");
+  const [priceTypeSelected2, setPriceTypeSelected2] = useState("");
   useEffect(() => {
     if (addNewProduct) {
       setLoadingData(true)
@@ -288,6 +303,9 @@ const AddNewProductPricing = ({
       });
       getPricingOptionsAPI(28).then((resp) => {
         setPriceSeason(resp.data.data);
+      });
+      getPricingOptions2API(63).then((resp) => {
+        setPricingOption2Selected(resp.data.data);
       });
       getCurrency().then((resp) => {
         setCurrency(resp.data.data)
@@ -323,6 +341,7 @@ const AddNewProductPricing = ({
   const [ttop22, setttop22] = useState(false);
   const [ttCapacity, setttCapacity] = useState(false);
   const [ttiers, setttiers] = useState(false);
+  const [ttprice2, setttprice2] = useState(false);
   const [ttactive, setttactive] = useState(false);
   const [ttbd, setbd] = useState(false);
 
@@ -661,6 +680,60 @@ const AddNewProductPricing = ({
                               }
                             >
                               {option.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </Col>
+                  <Col className="col">
+                    <div className="form-outline">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Price Option 2</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15 mx-2"
+                            id="price2"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttprice2}
+                            target="price2"
+                            toggle={() => {
+                              setttprice2(!ttprice2);
+                            }}
+                          >
+                           pending tooltip
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <Input
+                        type="select"
+                        name="price_2"
+                        onChange={(e) => {
+                          setRecalc(true)
+                          setPriceTypeSelected2(e.target.value);
+                          // setPriceCollectNameSelected(
+                          //   e.target.selectedOptions[0].label
+                          // );
+                        }}
+                      >
+                        <option value="-1">Select....</option>
+                        {map(pricingOption2Selected, (collect, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={collect.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? collect.id ===
+                                  dataEdit.pricedetails.filter(
+                                    (x) => x.pricing_option_id === 63
+                                  )[0]?.source_id
+                                  : false
+                              }
+                            >
+                              {collect.text}
                             </option>
                           );
                         })}
