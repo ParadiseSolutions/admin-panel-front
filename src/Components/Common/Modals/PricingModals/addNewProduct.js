@@ -197,7 +197,7 @@ const AddNewProductPricing = ({
               label: null,
             },
             {
-              pricing_option_id: 68,
+              pricing_option_id: 63,
               source_id: price_type === "-1" ? null : price_type2,
               min: null,
               max: null,

@@ -277,7 +277,8 @@ const AddNewPrivateTour = ({
   const [priceTypeSelected, setPriceTypeSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0]?.source_id : ""
   );
-  const [priceTypeSelected2, setPriceTypeSelected2] = useState("");
+  const [priceTypeSelected2, setPriceTypeSelected2] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[64]?.source_id : "");
   const [priceOptionSelected, setPriceOptionSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1]?.source_id : ""
   );
@@ -738,7 +739,7 @@ const AddNewPrivateTour = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? collect.id ===
                                   dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 68
+                                    (x) => x.pricing_option_id === 64
                                   )[0]?.source_id
                                   : false
                               }
