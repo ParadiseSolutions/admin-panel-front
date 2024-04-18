@@ -932,7 +932,7 @@ const Fishing = ({
                   </Col>
                   <Col className="col-3">
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Meeting Location</Label>
+                      <Label className="form-label">Location</Label>
                       <Input
                         type="select"
                         name="meetingLocation"
