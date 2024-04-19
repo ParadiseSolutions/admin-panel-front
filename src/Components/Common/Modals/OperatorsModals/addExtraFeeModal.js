@@ -59,10 +59,8 @@ const AddExtraFeeModal = ({
   }, []);
 
   useEffect(() => {
-    if (extraFeeEditData) {
-      setDataEdit(extraFeeEditData);
-    }
-  }, [extraFeeEditData]);
+    setDataEdit(extraFeeEditData);
+  }, [extraFeeEditData, extraFeeModal]);
   useEffect(() => {
     if (dataEdit) {
       setExtraFeeSelected(dataEdit.fee_type_id)
