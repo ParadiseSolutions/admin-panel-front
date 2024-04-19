@@ -434,7 +434,10 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 <label
                   className="text-paradise"
                   style={{ cursor: "pointer" }}
-                  onClick={() => setExtraFeeModal(!extraFeeModal)}
+                  onClick={() => {
+                    setExtraFeeEditData([]);
+                    setExtraFeeModal(!extraFeeModal)
+                  }}
                 >
                   + Add Extra Fee
                 </label>
@@ -459,8 +462,9 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                                     <div
                                       className="text-success"
                                       onClick={() => {
-                                        setExtraFeeModal(true);
+                                        setExtraFeeEditData([]);
                                         setExtraFeeEditData(fee);
+                                        setExtraFeeModal(true);
                                       }}
                                     >
                                       <i
