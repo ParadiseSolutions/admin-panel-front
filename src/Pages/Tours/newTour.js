@@ -100,11 +100,11 @@ const NewTour = ({ history }) => {
     if (mainCatID) {
       getSubCategory(websiteID, categoryId).then((resp) => {
         setSubCategoriesData(resp.data.data);
-        if (resp.data.data.length === 1) {
+        /*if (resp.data.data.length === 1) {
           setSecondCatID(resp.data.data[0].category_id);
         } else {
           setSecondCatID(null);
-        }
+        }*/
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
