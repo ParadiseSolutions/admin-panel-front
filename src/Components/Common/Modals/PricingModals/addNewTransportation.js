@@ -559,9 +559,9 @@ const AddNewTransportation = ({
   useEffect(() => {
     if (recalc && validationType) {
       if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
       } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
       }
     }
   }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
@@ -1317,6 +1317,7 @@ const AddNewTransportation = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
+                            setRecalc(true)
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "net_rate",
@@ -1966,7 +1967,6 @@ const AddNewTransportation = ({
                           name="you_save"
                           placeholder=""
                           type="text"
-                          readOnly={(validationType.values.ship_price != "" && validationType.values.ship_price != null) || (validationType.values.compare_at != "" && validationType.values.compare_at != null)}
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";
