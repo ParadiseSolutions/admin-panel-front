@@ -490,9 +490,9 @@ const AddNewPrivateTour = ({
   useEffect(() => {
     if (recalc && validationType) {
       if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
       } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
       }
     }
   }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
@@ -1033,7 +1033,7 @@ const AddNewPrivateTour = ({
                   </Col>
 
                   <Col className="col-2 mt-1">
-                    <div className="form-outline mb-2" id="net_rate">
+                    <div className="form-outline mb-2" id="active">
                       <div className="d-flex mx-4">
                         <Label className="form-label mx-2">Active</Label>
                         <div>
@@ -1344,6 +1344,7 @@ const AddNewPrivateTour = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
+                            setRecalc(true)
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "net_rate",
@@ -1998,7 +1999,6 @@ const AddNewPrivateTour = ({
                           name="you_save"
                           placeholder=""
                           type="text"
-                          readOnly={(validationType.values.ship_price != "" && validationType.values.ship_price != null) || (validationType.values.compare_at != "" && validationType.values.compare_at != null)}
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";
