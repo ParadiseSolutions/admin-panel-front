@@ -5,6 +5,9 @@ import TwoVariantsIMG2 from "../../../Assets/images/reservePages/twovariantsprev
 import TwoVariantsChooseOneIMG2 from "../../../Assets/images/reservePages/twovariantschooseone.jpg";
 import ThreeVariantsIMG from "../../../Assets/images/reservePages/threevariants.jpg";
 import ChoseActivityIMG from "../../../Assets/images/reservePages/chooseactivity.jpg";
+import ChooseActivityQtyLblIMG from "../../../Assets/images/reservePages/chooseactivityqtylbl.jpg";
+import ChooseQtyActivityIMG from "../../../Assets/images/reservePages/qtyactivitymessage.jpg";
+
 import {
   getTourAPI,
   updateBookingSettings,
@@ -283,7 +286,55 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                     name="type2"
                     id="type2"
                     onChange={(e) => setTemplateType(+e.target.value)}
-                    value={2}
+                    value={12}
+                    checked={templateType === 12 ? true : false}
+                  />
+                  <label className="form-check-label" htmlFor="type2">
+                    Qty Label Choose Activity
+                  </label>
+                </div>
+                <div className="col-1">
+                  <img
+                    src={ChooseActivityQtyLblIMG}
+                    alt="two-variant-choose-one"
+                    style={{ width: "350px", margin: "10px" }}
+                  />
+                </div>
+              </Col>
+            </Row>
+            <Row className="">
+              <Col className="col-4">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="type4"
+                    id="type4"
+                    onChange={(e) => setTemplateType(+e.target.value)}
+                    value={10}
+                    checked={templateType === 10 ? true : false}
+                  />
+                  <label className="form-check-label" htmlFor="type4">
+                    People Msg + Qty + Choose Activity
+                  </label>
+                </div>
+                <div className="col-1">
+                  <img
+                    src={ChooseQtyActivityIMG}
+                    alt="choose-qty-activity"
+                    style={{ width: "350px", margin: "10px" }}
+                  />
+                </div>
+              </Col>
+              <Col className="col-4">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="type2"
+                    id="type2"
+                    onChange={(e) => setTemplateType(+e.target.value)}
+                    value={9}
                     checked={templateType === 9 ? true : false}
                   />
                   <label className="form-check-label" htmlFor="type2">
