@@ -589,7 +589,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   ) : null}
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-3">
                 <Col className="col-4">
                   <label>Meeting Location</label>
                   <i
@@ -711,7 +711,7 @@ Examples:
                   </Col>
                 ) : null}
               </Row>
-              <Row>
+              <Row className="mt-3">
                 <Col className="col-4">
                   <label>Google Maps URL</label>
                   <i
@@ -809,7 +809,7 @@ Examples:
                   </div>
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-2">
                 <Col className="col-4 ">
                   <label>Arrival Instructions</label>
                   <i
@@ -901,7 +901,7 @@ Examples:
                   </div>
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-2">
                 <Col className="col-2">
                   <label>Voucher Contact</label>
                   {/* <i
