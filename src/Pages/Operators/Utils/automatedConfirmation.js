@@ -21,6 +21,7 @@ import { Select } from "antd";
 import {
   deleteExtraFee,
   getBringList,
+  getChannels,
   getExtraFeeTable,
   getVoucherInfo,
   putVoucherInformation,
@@ -40,6 +41,12 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   const [voucherInitialData, setVoucherInitialData] = useState();
   const [extraFeeEditData, setExtraFeeEditData] = useState([]);
   const [restrictionList, setRestrictionList] = useState([]);
+  const [channelList, setChannelList] = useState([]);
+  const [primaryContactChannelSelected, setPrimaryContactChannelSelected] =
+    useState();
+  const [secondaryContactChannelSelected, setSecondaryContactChannelSelected] =
+    useState();
+  const [sendVoucherChk, setSendVoucherChk] = useState();
   const [rest1, setRest1] = useState();
   const [rest2, setRest2] = useState();
   const [rest3, setRest3] = useState();
@@ -50,6 +57,12 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   const [ttop3, setttop3] = useState(false);
   const [ttop4, setttop4] = useState(false);
   const [ttop5, setttop5] = useState(false);
+  const [ttGM, settGm] = useState(false);
+  const [ttimg, setimg] = useState(false);
+  const [ttml, setml] = useState(false);
+  const [ttmi, setmi] = useState(false);
+  const [ttdp, setdp] = useState(false);
+  const [ttai, setai] = useState(false);
   const [extraFeeModal, setExtraFeeModal] = useState(false);
 
   useEffect(() => {
@@ -68,6 +81,12 @@ const AutomatedConfirmation = ({ socialData, id }) => {
     getVoucherInfo(id)
       .then((resp) => {
         setVoucherInitialData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+
+    getChannels()
+      .then((resp) => {
+        setChannelList(resp.data.data);
       })
       .catch((err) => console.log(err));
   }, [id]);
@@ -108,6 +127,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
       setInitialOptionsArea(optionsArea);
       setSelectionID(optionsAreaShort);
       setRestrictionList(voucherInitialData.restrictions);
+      setSendVoucherChk(voucherInitialData.send_voucher === 1 ? true : false);
     }
   }, [voucherInitialData, bringListInitialData]);
 
@@ -133,12 +153,27 @@ const AutomatedConfirmation = ({ socialData, id }) => {
       meeting_location: voucherInitialData?.meeting_location
         ? voucherInitialData.meeting_location
         : "",
-      // youtube: initialData && initialData[2]?.url ? initialData[2].url : "",
-      // twitter: initialData && initialData[3]?.url ? initialData[3].url : "",
-      // trip_advisor:
-      //   initialData && initialData[4]?.url ? initialData[4].url : "",
-      // yelp: initialData && initialData[5]?.url ? initialData[5].url : "",
-      // others: initialData && initialData[6]?.url ? initialData[6].url : "",
+      meeting_instructions: voucherInitialData?.meeting_instructions
+        ? voucherInitialData.meeting_instructions
+        : "",
+      google_maps_url: voucherInitialData?.google_maps_url
+        ? voucherInitialData.google_maps_url
+        : "",
+      images_url: voucherInitialData?.images_url
+        ? voucherInitialData.images_url
+        : "",
+      arrival_instructions: voucherInitialData?.arrival_instructions
+        ? voucherInitialData.arrival_instructions
+        : "",
+      departure_instructions: voucherInitialData?.departure_instructions
+        ? voucherInitialData.departure_instructions
+        : "",
+      primary_contact_phone: voucherInitialData?.primary_contact_phone
+        ? voucherInitialData.primary_contact_phone
+        : "",
+      secondary_contact_phone: voucherInitialData?.secondary_contact_phone
+        ? voucherInitialData.secondary_contact_phone
+        : "",
     },
     validationSchema: Yup.object().shape({
       // name: Yup.string().required("Name is required"),
@@ -188,6 +223,36 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         meeting_location: values.meeting_location,
         meeting_location_read_only:
           voucherInitialData.meeting_location_read_only,
+        meeting_instructions: values.meeting_instructions,
+        meeting_instructions_read_only:
+          voucherInitialData.meeting_instructions_read_only,
+        google_maps_url: values.google_maps_url,
+        google_maps_url_read_only: voucherInitialData.google_maps_url_read_only,
+        images_url: values.images_url,
+        images_url_read_only: voucherInitialData.images_url_read_only,
+        arrival_instructions: values.arrival_instructions,
+        arrival_instructions_read_only:
+          voucherInitialData.arrival_instructions_read_only,
+        departure_instructions: values.departure_instructions,
+        departure_instructions_read_only:
+          voucherInitialData.departure_instructions_read_only,
+        primary_contact_phone: values.primary_contact_phone,
+        primary_contact_phone_read_only:
+          voucherInitialData.primary_contact_channel_read_only,
+        primary_contact_channel: primaryContactChannelSelected
+          ? primaryContactChannelSelected
+          : voucherInitialData.primary_contact_channel,
+        primary_contact_channel_read_only:
+          voucherInitialData.primary_contact_channel_read_only,
+        secondary_contact_phone: values.secondary_contact_phone,
+        secondary_contact_phone_read_only:
+          voucherInitialData.secondary_contact_phone_read_only,
+        secondary_contact_channel: secondaryContactChannelSelected
+          ? secondaryContactChannelSelected
+          : voucherInitialData.secondary_contact_channel,
+        secondary_contact_channel_read_only:
+          voucherInitialData.secondary_contact_channel_read_only,
+        send_voucher: sendVoucherChk,
       };
       console.log("data a enviar", data);
       putVoucherInformation(voucherInitialData.operator_id, data)
@@ -289,7 +354,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                 </Col>
               </Row>
               <Row className="mt-3">
-                <Col className="col-6">
+                <Col className="col-4">
                   <div className="d-flex justify-content-between">
                     <div className="d-flex">
                       <label>Additional Fees</label>
@@ -384,49 +449,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     </Card>
                   </div>
                 </Col>
-                <Col className="col-6">
-                  <label>Additional Information</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="additionalInfo"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop2}
-                    target="additionalInfo"
-                    toggle={() => {
-                      setttop2(!ttop2);
-                    }}
-                  >
-                    Any additional information that needs to be shown on the
-                    voucher that isn't already specified in other fields.
-                  </Tooltip>
-                  <Input
-                    name="aditional_information"
-                    placeholder=""
-                    type="textarea"
-                    rows="5"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.aditional_information || ""}
-                    invalid={
-                      validationType.touched.aditional_information &&
-                      validationType.errors.aditional_information
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.aditional_information &&
-                  validationType.errors.aditional_information ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.aditional_information}
-                    </FormFeedback>
-                  ) : null}
-                </Col>
-              </Row>
-              <Row>
                 {voucherInitialData?.brings && initialOptionsArea.length > 0 ? (
-                  <Col className="col-6 mt-3">
+                  <Col className="col-4">
                     <label>Bring </label>
                     <i
                       className="uil-question-circle font-size-15 mx-2"
@@ -467,7 +491,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                 ) : null}
                 {voucherInitialData?.brings &&
                 initialOptionsArea.length === 0 ? (
-                  <Col className="col-6 mt-3">
+                  <Col className="col-4 ">
                     <label>Bring </label>
                     <i
                       className="uil-question-circle font-size-15 mx-2"
@@ -506,110 +530,72 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     {/* {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  } */}
                   </Col>
                 ) : null}
-
-                {restrictionList ? (
-                  <Col className="col-6 my-3">
-                    <label>Restrictions</label>
-                    <i
-                      className="uil-question-circle font-size-15 mx-2"
-                      id="restrictions"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={ttop4}
-                      target="restrictions"
-                      toggle={() => {
-                        setttop4(!ttop4);
-                      }}
-                    >
-                      If the tour has any restrictions specify them one line at
-                      a time. They will be shown on the voucher and on the
-                      website in the order displayed.
-                      <br />
-                      To add additional restrictions, click on "+ Add".
-                    </Tooltip>
-                    <div className="col-10">
-                      <Input
-                        name="rest_one"
-                        placeholder="Add Restriction #1"
-                        type="text"
-                        className="my-1"
-                        onChange={(e) => setRest1(e.target.value)}
-                        value={rest1}
-                      />
-                    </div>
-                    <div className="col-12 d-flex">
-                      <Input
-                        name="rest_two"
-                        placeholder="Add Restriction #2"
-                        className="my-1"
-                        type="text"
-                        onChange={(e) => setRest2(e.target.value)}
-                        value={rest2}
-                      />
-
-                      <div className="col-2">
-                        <p
-                          style={{
-                            marginLeft: "15px",
-                            marginTop: "10px",
-                            cursor: "pointer",
-                          }}
-                          className="text-paradise"
-                          onClick={() => setAddMore(!addMore)}
-                        >
-                          {addMore
-                            ? null && restrictionList.length > 0
-                            : "+ Add"}
-                        </p>
-                      </div>
-                    </div>
-                    {addMore || restrictionList.length > 2 ? (
-                      <>
-                        <div className="col-10 d-flex">
-                          <Input
-                            name="rest_three"
-                            placeholder="Add Restriction #3"
-                            className="my-1"
-                            type="text"
-                            onChange={(e) => setRest3(e.target.value)}
-                            value={rest3}
-                          />
-                        </div>
-                        <div className="col-10 d-flex">
-                          <Input
-                            name="rest_four"
-                            placeholder="Add Restriction #4"
-                            className="my-1"
-                            type="text"
-                            onChange={(e) => setRest4(e.target.value)}
-                            value={rest4}
-                          />
-                        </div>
-                      </>
-                    ) : null}
-                  </Col>
-                ) : null}
-              </Row>
-              <Row>
-                <Col className="col-6 my-3">
-                  <label>Meeting Location</label>
+                <Col className="col-4">
+                  <label>Additional Information</label>
                   <i
                     className="uil-question-circle font-size-15 mx-2"
-                    id="meetingLocation"
+                    id="additionalInfo"
                   />
                   <Tooltip
                     placement="right"
-                    isOpen={ttop5}
-                    target="meetingLocation"
+                    isOpen={ttop2}
+                    target="additionalInfo"
                     toggle={() => {
-                      setttop5(!ttop5);
+                      setttop2(!ttop2);
                     }}
                   >
-                    Fill this field only if the meeting location will always be
-                    the same. If the meeting location could be different, leave
-                    it blank and the provider will specify it when confirming
-                    the tour.
+                    Any additional information that needs to be shown on the
+                    voucher that isn't already specified in other fields.
+                  </Tooltip>
+                  <Input
+                    name="aditional_information"
+                    placeholder=""
+                    type="textarea"
+                    rows="5"
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.aditional_information || ""}
+                    invalid={
+                      validationType.touched.aditional_information &&
+                      validationType.errors.aditional_information
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.aditional_information &&
+                  validationType.errors.aditional_information ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.aditional_information}
+                    </FormFeedback>
+                  ) : null}
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-4">
+                  <label>Meeting Location</label>
+                  <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="meeting_location"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttml}
+                    target="meeting_location"
+                    toggle={() => {
+                      setml(!ttml);
+                    }}
+                  >
+                    The exact meeting location of the tour.
+<br/>
+<br/>
+Examples:
+<br/>
+<br/>
+"Your Hotel's Front Door"
+<br/>
+"Meet at the Security Gate at your Hotel"
+<br/>
+"Aquaworld Marina at Km 15.2 of the Hotel Zone."
                   </Tooltip>
                   <div className="">
                     <Input
@@ -634,8 +620,497 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     ) : null}
                   </div>
                 </Col>
-              </Row>
+                <Col className="col-4 ">
+                  <label>Meeting Instructions</label>
+                  <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="meeting_instructions"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttmi}
+                    target="meeting_instructions"
+                    toggle={() => {
+                      setmi(!ttmi);
+                    }}
+                  >
+                   Specific Instructions of how to meet the tour or transfer.
+                  </Tooltip>
+                  <div className="">
+                    <Input
+                      name="meeting_instructions"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.meeting_instructions || ""}
+                      invalid={
+                        validationType.touched.meeting_instructions &&
+                        validationType.errors.meeting_instructions
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.meeting_instructions &&
+                    validationType.errors.meeting_instructions ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.meeting_instructions}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
 
+                {restrictionList ? (
+                  <Col className="col-4 ">
+                    <label>Restrictions</label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="restrictions"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop4}
+                      target="restrictions"
+                      toggle={() => {
+                        setttop4(!ttop4);
+                      }}
+                    >
+                      If the tour has any restrictions specify them one line at
+                      a time. They will be shown on the voucher and on the
+                      website in the order displayed.
+                      <br />
+                      To add additional restrictions, click on "+ Add".
+                    </Tooltip>
+                    <div className="col-12">
+                      <Input
+                        name="rest_one"
+                        placeholder="Add Restriction #1"
+                        type="text"
+                        className=""
+                        onChange={(e) => setRest1(e.target.value)}
+                        value={rest1}
+                      />
+                    </div>
+                  </Col>
+                ) : null}
+              </Row>
+              <Row>
+                <Col className="col-4">
+                  <label>Google Maps URL</label>
+                  <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="google_maps_url"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttGM}
+                    target="google_maps_url"
+                    toggle={() => {
+                      settGm(!ttGM);
+                    }}
+                  >
+                    Paste the URL from Google Maps of the exact meeting
+                    location, so the customer can view exact directions of how
+                    to get there.
+                    <br />
+                    <br />
+                    Be very specific, zoom in and make certain that the pin is
+                    exactly where the customer should stand.
+                  </Tooltip>
+                  <div className="">
+                    <Input
+                      name="google_maps_url"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.google_maps_url || ""}
+                      invalid={
+                        validationType.touched.google_maps_url &&
+                        validationType.errors.google_maps_url
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.google_maps_url &&
+                    validationType.errors.google_maps_url ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.google_maps_url}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+                <Col className="col-4 ">
+                  <label>Images URL</label>
+                  <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="images_url"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttimg}
+                    target="images_url"
+                    toggle={() => {
+                      setimg(!ttimg);
+                    }}
+                  >
+                   Paste the URL of an image or a gallery where the customer can see photos of the exact meeting location, or of a map showing how to get to the location.
+                  </Tooltip>
+                  <div className="">
+                    <Input
+                      name="images_url"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.images_url || ""}
+                      invalid={
+                        validationType.touched.images_url &&
+                        validationType.errors.images_url
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.images_url &&
+                    validationType.errors.images_url ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.images_url}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+                <Col className="col-4">
+                  <div className="col-12 d-flex mt-4">
+                    <Input
+                      name="rest_two"
+                      placeholder="Add Restriction #2"
+                      className="my-2"
+                      type="text"
+                      onChange={(e) => setRest2(e.target.value)}
+                      value={rest2}
+                    />
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-4 ">
+                  <label>Arrival Instructions</label>
+                  <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="arrival_instructions"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttai}
+                    target="arrival_instructions"
+                    toggle={() => {
+                      setai(!ttai);
+                    }}
+                  >
+                   Provide clear directions to the customer of what will happen on arrival to the airport, or where to find their driver.
+                  </Tooltip>
+                  <div className="">
+                    <Input
+                      name="arrival_instructions"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.arrival_instructions || ""}
+                      invalid={
+                        validationType.touched.arrival_instructions &&
+                        validationType.errors.arrival_instructions
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.arrival_instructions &&
+                    validationType.errors.arrival_instructions ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.arrival_instructions}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+                <Col className="col-4 ">
+                  <label>Depature Instructions</label>
+                  <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="departure_instructions"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttdp}
+                    target="departure_instructions"
+                    toggle={() => {
+                      setdp(!ttdp);
+                    }}
+                  >
+                   Provide clear directions to the customer as to where they will meet their transfer for their departure, or any clarifications of what they need to do.
+                  </Tooltip>
+                  <div className="">
+                    <Input
+                      name="departure_instructions"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.departure_instructions || ""}
+                      invalid={
+                        validationType.touched.departure_instructions &&
+                        validationType.errors.departure_instructions
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.departure_instructions &&
+                    validationType.errors.departure_instructions ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.departure_instructions}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+                <Col className="col-4">
+                  <div className="col-12 d-flex mt-4">
+                    <Input
+                      name="rest_three"
+                      placeholder="Add Restriction #3"
+                      className="my-2"
+                      type="text"
+                      onChange={(e) => setRest3(e.target.value)}
+                      value={rest3}
+                    />
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-2">
+                  <label>Voucher Contact</label>
+                  {/* <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="primary_contact_phone"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttop5}
+                    target="primary_contact_phone"
+                    toggle={() => {
+                      setttop5(!ttop5);
+                    }}
+                  >
+                    Fill this field only if the meeting location will always be
+                    the same. If the meeting location could be different, leave
+                    it blank and the provider will specify it when confirming
+                    the tour.
+                  </Tooltip> */}
+                  <div className="">
+                    <Input
+                      name="primary_contact_phone"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.primary_contact_phone || ""}
+                      invalid={
+                        validationType.touched.primary_contact_phone &&
+                        validationType.errors.primary_contact_phone
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.primary_contact_phone &&
+                    validationType.errors.primary_contact_phone ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.primary_contact_phone}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <label>Channel(s)</label>
+                  {/* <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="channel_contact1"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttop5}
+                    target="channel_contact1"
+                    toggle={() => {
+                      setttop5(!ttop5);
+                    }}
+                  >
+                    Fill this field only if the meeting location will always be
+                    the same. If the meeting location could be different, leave
+                    it blank and the provider will specify it when confirming
+                    the tour.
+                  </Tooltip> */}
+                  <div className="">
+                    <Input
+                      type="select"
+                      name="primary_contact_channel"
+                      onChange={(e) => {
+                        setPrimaryContactChannelSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value={null}>Select....</option>
+                      {map(channelList, (channel, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={channel.name}
+                            selected={
+                              voucherInitialData?.primary_contact_channel ===
+                              channel.name
+                            }
+                          >
+                            {channel.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                    {/* <Input
+                      name="channel_contact1"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.channel_contact1 || ""}
+                      invalid={
+                        validationType.touched.channel_contact1 &&
+                        validationType.errors.channel_contact1
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.channel_contact1 &&
+                    validationType.errors.channel_contact1 ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.channel_contact1}
+                      </FormFeedback>
+                    ) : null} */}
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <label>Voucher Contact</label>
+                  {/* <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="secondary_contact_phone"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttop5}
+                    target="secondary_contact_phone"
+                    toggle={() => {
+                      setttop5(!ttop5);
+                    }}
+                  >
+                    Fill this field only if the meeting location will always be
+                    the same. If the meeting location could be different, leave
+                    it blank and the provider will specify it when confirming
+                    the tour.
+                  </Tooltip> */}
+                  <div className="">
+                    <Input
+                      name="secondary_contact_phone"
+                      placeholder=""
+                      type="text"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={
+                        validationType.values.secondary_contact_phone || ""
+                      }
+                      invalid={
+                        validationType.touched.secondary_contact_phone &&
+                        validationType.errors.secondary_contact_phone
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.secondary_contact_phone &&
+                    validationType.errors.secondary_contact_phone ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.secondary_contact_phone}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </Col>
+                <Col className="col-2">
+                  <label>Channel(s)</label>
+                  {/* <i
+                    className="uil-question-circle font-size-15 mx-2"
+                    id="channels2"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={ttop5}
+                    target="channels2"
+                    toggle={() => {
+                      setttop5(!ttop5);
+                    }}
+                  >
+                    Fill this field only if the meeting location will always be
+                    the same. If the meeting location could be different, leave
+                    it blank and the provider will specify it when confirming
+                    the tour.
+                  </Tooltip> */}
+                  <div className="">
+                    <Input
+                      type="select"
+                      name="secondary_contact_channel"
+                      onChange={(e) => {
+                        setSecondaryContactChannelSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value={null}>Select....</option>
+                      {map(channelList, (channel, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={channel.name}
+                            selected={
+                              voucherInitialData?.secondary_contact_channel ===
+                              channel.name
+                            }
+                          >
+                            {channel.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col-4">
+                  <div className="col-12 mt-4 d-flex">
+                    <Input
+                      name="rest_four"
+                      placeholder="Add Restriction #4"
+                      className="my-2"
+                      type="text"
+                      onChange={(e) => setRest4(e.target.value)}
+                      value={rest4}
+                    />
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col className=" d-flex justify-content-end my-2">
+                  <Input
+                    name="send_voucher"
+                    className="my-2 mx-2"
+                    type="checkbox"
+                    checked={sendVoucherChk}
+                    onChange={() => setSendVoucherChk(!sendVoucherChk)}
+                    value={sendVoucherChk}
+                  />
+                  <label className="mt-1">Send Voucher to Provider</label>
+                </Col>
+              </Row>
               <Row>
                 <Col className=" d-flex justify-content-end">
                   <Button

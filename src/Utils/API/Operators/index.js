@@ -47,6 +47,10 @@ export const deleteOperatorAPI = (id) => {
     const url = `${API_URL}/vouchers/priceTypes`;
     return axios.get(url, {headers:options})
   };
+  export const getChannels = () => {
+    const url = `${API_URL}/vouchers/getChannels`;
+    return axios.get(url, {headers:options})
+  };
 
   export const postExtraFee = (body) => {
     const url = `${API_URL}/vouchers/addExtraFee`;
