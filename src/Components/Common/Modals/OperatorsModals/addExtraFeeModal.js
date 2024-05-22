@@ -59,16 +59,14 @@ const AddExtraFeeModal = ({
   }, []);
 
   useEffect(() => {
-    if (extraFeeEditData) {
-      setDataEdit(extraFeeEditData);
-    }
-  }, [extraFeeEditData]);
+    setDataEdit(extraFeeEditData);
+  }, [extraFeeEditData, extraFeeModal]);
   useEffect(() => {
     if (dataEdit) {
       setExtraFeeSelected(dataEdit.fee_type_id)
       setCurrencySelected(dataEdit.currency)
       setPriceTypeSelected(dataEdit.price_type)
-      setOptionalCheck(dataEdit.optional === 1 ? true : false)
+      setOptionalCheck(+dataEdit.optional === 1 ? true : false)
     }
   }, [dataEdit]);
 

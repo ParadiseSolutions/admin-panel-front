@@ -159,6 +159,10 @@ const AddNewPrivateTour = ({
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
+          
+          //--------------- pendiente passangers min y max
+          min_qty: values.min_qty === "" || values.min_qty === null ? 0 : values.min_qty,
+          max_qty: values.max_qty === "" || values.max_qty === null ? 20 : values.max_qty,
           price_details: [
             {
               pricing_option_id: 6,
@@ -170,8 +174,9 @@ const AddNewPrivateTour = ({
             {
               pricing_option_id: 7,
               source_id: price_option === "-1" ? null : price_option,
-              min: null,
-              max: null,
+              //------- aqui van los price tiers
+              min: values.min === "" ? null : values.min,
+              max: values.max === "" ? null : values.max,
               label: null,
             },
             {
@@ -277,7 +282,8 @@ const AddNewPrivateTour = ({
   const [priceTypeSelected, setPriceTypeSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0]?.source_id : ""
   );
-  const [priceTypeSelected2, setPriceTypeSelected2] = useState("");
+  const [priceTypeSelected2, setPriceTypeSelected2] = useState(
+    dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[64]?.source_id : "");
   const [priceOptionSelected, setPriceOptionSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[1]?.source_id : ""
   );
@@ -484,9 +490,9 @@ const AddNewPrivateTour = ({
   useEffect(() => {
     if (recalc && validationType) {
       if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
       } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
       }
     }
   }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
@@ -738,7 +744,7 @@ const AddNewPrivateTour = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? collect.id ===
                                   dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 68
+                                    (x) => x.pricing_option_id === 64
                                   )[0]?.source_id
                                   : false
                               }
@@ -1027,7 +1033,7 @@ const AddNewPrivateTour = ({
                   </Col>
 
                   <Col className="col-2 mt-1">
-                    <div className="form-outline mb-2" id="net_rate">
+                    <div className="form-outline mb-2" id="active">
                       <div className="d-flex mx-4">
                         <Label className="form-label mx-2">Active</Label>
                         <div>
@@ -1338,6 +1344,7 @@ const AddNewPrivateTour = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
+                            setRecalc(true)
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "net_rate",
@@ -1992,7 +1999,6 @@ const AddNewPrivateTour = ({
                           name="you_save"
                           placeholder=""
                           type="text"
-                          readOnly={(validationType.values.ship_price != "" && validationType.values.ship_price != null) || (validationType.values.compare_at != "" && validationType.values.compare_at != null)}
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";

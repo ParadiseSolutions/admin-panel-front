@@ -197,7 +197,7 @@ const AddNewProductPricing = ({
               label: null,
             },
             {
-              pricing_option_id: 68,
+              pricing_option_id: 63,
               source_id: price_type === "-1" ? null : price_type2,
               min: null,
               max: null,
@@ -481,9 +481,9 @@ const AddNewProductPricing = ({
   useEffect(() => {
     if (recalc && validationType) {
       if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
       } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
-        validationType.setFieldValue("you_save", setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
+        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
       }
     }
   }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
@@ -1067,7 +1067,7 @@ const AddNewProductPricing = ({
                     </div>
                   </Col>
                   <Col className="col-2 mt-1">
-                    <div className="form-outline mb-2" id="net_rate">
+                    <div className="form-outline mb-2" id="net_rate2">
                       <div className="d-flex mx-4">
                         <Label className="form-label mx-2">Active</Label>
                         <div>
@@ -1379,6 +1379,7 @@ const AddNewProductPricing = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
+                            setRecalc(true)
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "net_rate",
@@ -2030,7 +2031,6 @@ const AddNewProductPricing = ({
                           name="you_save"
                           placeholder=""
                           type="text"
-                          readOnly={(validationType.values.ship_price != "" && validationType.values.ship_price != null) || (validationType.values.compare_at != "" && validationType.values.compare_at != null)}
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";
