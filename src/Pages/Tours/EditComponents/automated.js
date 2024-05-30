@@ -993,7 +993,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   </div>
                 </Col>
                 <Col className="col-4 ">
-                  <label>Depature Instructions</label>
+                  <label>Departure Instructions</label>
                   <i
                     className="uil-question-circle font-size-15 mx-2"
                     id="departure_instructions"
