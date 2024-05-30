@@ -325,6 +325,135 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           className="custom-validation"
         >
           <Row>
+          <Col
+              className="col-12 p-1 my-2"
+              style={{ backgroundColor: "#3DC7F41A" }}
+            >
+              <p
+                className="p-2"
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  color: "#495057",
+                  marginBottom: "0px",
+                }}
+              >
+                Define Reserve Page
+              </p>
+            </Col>
+          </Row>
+          <Row className="d-flex ">
+            <Col className="col-2">
+              <Col className="mb-2 " style={{ paddingTop: "23px" }}>
+                <Button
+                  type="button"
+                  className="font-16 btn-orange"
+                  onClick={() => {
+                    setReserveModal(true);
+                  }}
+                >
+                  {" "}
+                  + Set Up Reserve Page Template
+                </Button>
+              </Col>
+              <div className="col-12 mt-4">
+                <input
+                  type="checkbox"
+                  onChange={() =>
+                    setSpecialInstructionCheck(!specialInstrucionCheck)
+                  }
+                  value={specialInstrucionCheck}
+                  checked={specialInstrucionCheck}
+                />
+                <label className="mx-2">Add Special Instructions box</label>
+              </div>
+            </Col>
+            <Col className="col-8 my-3 d-flex flex-column">
+              {specialInstrucionCheck ? (
+                <>
+                  <div>
+                    <label>Special Instructions Box - Title</label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="special_instruction_title"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop6}
+                      target="special_instruction_title"
+                      toggle={() => {
+                        setttop6(!ttop6);
+                      }}
+                    >
+                      Help us Create Your Itinerary!
+                    </Tooltip>
+                    <div className="col-8 d-flex">
+                      <Input
+                        name="special_instruction_title"
+                        placeholder=""
+                        type="text"
+                        className="my-1"
+                        onChange={validationType.handleChange}
+                        value={
+                          validationType.values.special_instruction_title || ""
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label>Special Instructions Box - Description</label>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="special_instruction_description"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop7}
+                      target="special_instruction_description"
+                      toggle={() => {
+                        setttop7(!ttop7);
+                      }}
+                    >
+                      Tell us how you would like your day to look like, what you would like to do or see, or any special requests.
+                    </Tooltip>
+                    <div className="col-10">
+                      <Input
+                        name="special_instruction_description"
+                        placeholder=""
+                        type="text"
+                        className="my-1"
+                        onChange={validationType.handleChange}
+                        value={
+                          validationType.values
+                            .special_instruction_description || ""
+                        }
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : null}
+            </Col>
+          </Row>
+          <Row>
+            <Col
+              className="col-12 p-1 my-2"
+              style={{ backgroundColor: "#FFEFDE" }}
+            >
+              <p
+                className="p-2"
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  color: "#495057",
+                  marginBottom: "0px",
+                }}
+              >
+                Define Voucher Templates
+              </p>
+            </Col>
+          </Row>
+          <Row>
             <Col className="col-12">
               <div className="p-3" style={{ backgroundColor: "#d9f0ff" }}>
                 <p className="mb-0 lh-2" style={{ fontSize: "16px" }}>
