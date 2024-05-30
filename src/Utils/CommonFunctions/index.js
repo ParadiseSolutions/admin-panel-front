@@ -27,9 +27,9 @@ export const setRateFormat = (currentValue) => {
         currentValue = "";
     } else if(currentValue <= 1) {
         currentValue *= 100;
-        currentValue = Math.trunc(parseFloat(currentValue))
+        currentValue = Math.round(parseFloat(currentValue) * 10) / 10
     } else if(currentValue > 1) {
-        currentValue = Math.trunc(parseFloat(+currentValue))
+        currentValue = Math.round(parseFloat(+currentValue) * 10) / 10
     }
     return currentValue
 }
