@@ -139,6 +139,15 @@ const AutomatedConfirmation = ({ tourData, id }) => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
+      
+      special_instruction_title: voucherInitialData?.special_instruction_title
+        ? voucherInitialData?.special_instruction_title
+        : "",
+      special_instruction_description:
+        voucherInitialData?.special_instruction_description
+          ? voucherInitialData?.special_instruction_description
+          : "",
+
       aditional_information: voucherInitialData?.additional_information
         ? voucherInitialData.additional_information
         : "",
@@ -212,6 +221,9 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       }
 
       let data = {
+        special_instruction_title: values.special_instruction_title,
+        special_instruction_description: values.special_instruction_description,
+        special_instruction_enable : specialInstrucionCheck === true ? 1 : 0,
         additional_information: values.aditional_information,
         additional_information_read_only:
           voucherInitialData.additional_information_read_only,
@@ -534,6 +546,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 rows="5"
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
+                disabled={voucherInitialData?.additional_information_read_only === 0 ? false : true}
                 value={validationType.values.aditional_information || ""}
                 invalid={
                   validationType.touched.aditional_information &&
@@ -623,6 +636,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder=""
                   type="text"
                   onChange={validationType.handleChange}
+                  maxLength={80}
                   onBlur={validationType.handleBlur}
                   disabled={tourData?.type_id === 3 || voucherInitialData?.meeting_instructions_read_only !== 0 ? true : false}
                   value={validationType.values.meeting_instructions || ""}
@@ -669,6 +683,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     placeholder="Add Restriction #1"
                     type="text"
                     className=""
+                    disabled={voucherInitialData?.restrictions[0]?.restriction_read_only_1 === 0 ? false : true}
                     onChange={(e) => setRest1(e.target.value)}
                     value={rest1}
                   />
@@ -769,6 +784,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #2"
                   className="my-2"
                   type="text"
+                  disabled={voucherInitialData?.restrictions[1]?.restriction_read_only_2 === 0 ? false : true}
                   onChange={(e) => setRest2(e.target.value)}
                   value={rest2}
                 />
@@ -810,6 +826,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                           : false
                       }
                       value={validationType.values.boat_location || ""}
+                      maxLength={80}
                       invalid={
                         validationType.touched.boat_location &&
                         validationType.errors.boat_location
@@ -901,6 +918,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
+                      maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
                         tourData?.type_id === 2 ||
@@ -950,6 +968,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
+                      maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
                         tourData?.type_id === 2 ||
@@ -984,6 +1003,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #3"
                   className="my-2"
                   type="text"
+                  disabled={voucherInitialData?.restrictions[2]?.restriction_read_only_3 === 0 ? false : true}
                   onChange={(e) => setRest3(e.target.value)}
                   value={rest3}
                 />
@@ -1017,6 +1037,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   type="text"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
+                  disabled={voucherInitialData?.primary_contact_phone_read_only === 0 ? false : true}
                   value={validationType.values.primary_contact_phone || ""}
                   invalid={
                     validationType.touched.primary_contact_phone &&
@@ -1059,6 +1080,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   onChange={(e) => {
                     setPrimaryContactChannelSelected(e.target.value);
                   }}
+                  disabled={voucherInitialData?.primary_contact_channel_read_only === 0 ? false : true}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
@@ -1127,6 +1149,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.secondary_contact_phone || ""}
+                  disabled={voucherInitialData?.secondary_contact_phone_read_only === 0 ? false : true}
                   invalid={
                     validationType.touched.secondary_contact_phone &&
                     validationType.errors.secondary_contact_phone
@@ -1168,6 +1191,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   onChange={(e) => {
                     setSecondaryContactChannelSelected(e.target.value);
                   }}
+                  disabled={voucherInitialData?.secondary_contact_channel_read_only === 0 ? false : true}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
@@ -1196,13 +1220,14 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #4"
                   className="my-2"
                   type="text"
+                  disabled={voucherInitialData?.restrictions[3]?.restriction_read_only_4 === 0 ? false : true}
                   onChange={(e) => setRest4(e.target.value)}
                   value={rest4}
                 />
               </div>
             </Col>
           </Row>
-          <Row>
+         {/*  <Row>
             <Col className=" d-flex justify-content-end my-2">
               <Input
                 name="send_voucher"
@@ -1214,7 +1239,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               />
               <label className="mt-1">Send Voucher to Provider</label>
             </Col>
-          </Row>
+          </Row> */} 
           <Row>
             <Col className=" d-flex justify-content-end">
               <Button
