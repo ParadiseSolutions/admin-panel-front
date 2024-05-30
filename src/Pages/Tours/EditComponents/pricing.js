@@ -48,7 +48,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     }
   }, [tourData]);
 
-  console.log(tourData);
+  // console.log(tourData);
   const postPriceRange = () => {
     let data = { active: priceRangeCheck === false ? 1 : 0 };
     putPriceRangesAPI(id, data).then((resp) => { });
