@@ -372,7 +372,10 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       >
                         These are the additional fees that will be shown on the
                         website and the voucher for this tour, in the order they
-                        are displayed in the list. To add a fee to the list,
+                        are displayed in the list.
+                        <br />
+                        <br />
+                        To add a fee to the list,
                         click on "Add Extra Fee". To edit a fee, click on the
                         pencil icon next to the fee.
                       </Tooltip>
@@ -469,8 +472,14 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       }}
                     >
                       Add the items the client will need to bring on the day of
-                      the tour. This will be shown on the voucher and on the
-                      website. The items will be shown in the order they are
+                      the tour.
+                      <br />
+                      <br />
+                      This will be shown on the voucher and on the
+                      website.
+                      <br />
+                      <br />
+                      The items will be shown in the order they are
                       selected.
                     </Tooltip>
                     <Select
@@ -510,8 +519,14 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       }}
                     >
                       Add the items the client will need to bring on the day of
-                      the tour. This will be shown on the voucher and on the
-                      website. The items will be shown in the order they are
+                      the tour.
+                      <br />
+                      <br />
+                      This will be shown on the voucher and on the
+                      website.
+                      <br />
+                      <br />
+                      The items will be shown in the order they are
                       selected.
                     </Tooltip>
                     <Select
@@ -574,7 +589,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   ) : null}
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-3">
                 <Col className="col-4">
                   <label>Meeting Location</label>
                   <i
@@ -682,8 +697,6 @@ Examples:
                       If the tour has any restrictions specify them one line at
                       a time. They will be shown on the voucher and on the
                       website in the order displayed.
-                      <br />
-                      To add additional restrictions, click on "+ Add".
                     </Tooltip>
                     <div className="col-12">
                       <Input
@@ -698,7 +711,7 @@ Examples:
                   </Col>
                 ) : null}
               </Row>
-              <Row>
+              <Row className="mt-3">
                 <Col className="col-4">
                   <label>Google Maps URL</label>
                   <i
@@ -796,7 +809,7 @@ Examples:
                   </div>
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-2">
                 <Col className="col-4 ">
                   <label>Arrival Instructions</label>
                   <i
@@ -888,7 +901,7 @@ Examples:
                   </div>
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-2">
                 <Col className="col-2">
                   <label>Voucher Contact</label>
                   {/* <i
