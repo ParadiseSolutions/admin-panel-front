@@ -263,17 +263,16 @@ const AutomatedConfirmation = ({ socialData, id }) => {
               "Edited!",
               "Automated Confirmation Information has been edited.",
               "success"
-            ).then(() => {});
+            ).then(() => { });
           }
         })
         .catch((error) => {
           // console.log(error.response);
           Swal.fire(
             "Error!",
-            `${
-              error.response.data.data.name
-                ? error.response.data.data.name
-                : error.response.data.data.code
+            `${error.response.data.data.name
+              ? error.response.data.data.name
+              : error.response.data.data.code
             }`,
             "error"
           );
@@ -399,9 +398,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                           {map(extraFeeInitialData, (fee, index) => {
                             return (
                               <tr>
-                                <th className="col-11">{`${index + 1}. ${
-                                  fee.fee_type
-                                }`}</th>
+                                <th className="col-11">{`${index + 1}. ${fee.fee_type
+                                  }`}</th>
                                 <td className="col-1">
                                   <div className="d-flex gap-3">
                                     <div className="text-paradise">
@@ -503,7 +501,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   </Col>
                 ) : null}
                 {voucherInitialData?.brings &&
-                initialOptionsArea.length === 0 ? (
+                  initialOptionsArea.length === 0 ? (
                   <Col className="col-4 ">
                     <label>Bring </label>
                     <i
@@ -576,13 +574,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     value={validationType.values.aditional_information || ""}
                     invalid={
                       validationType.touched.aditional_information &&
-                      validationType.errors.aditional_information
+                        validationType.errors.aditional_information
                         ? true
                         : false
                     }
                   />
                   {validationType.touched.aditional_information &&
-                  validationType.errors.aditional_information ? (
+                    validationType.errors.aditional_information ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.aditional_information}
                     </FormFeedback>
@@ -605,16 +603,16 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     }}
                   >
                     The exact meeting location of the tour.
-<br/>
-<br/>
-Examples:
-<br/>
-<br/>
-"Your Hotel's Front Door"
-<br/>
-"Meet at the Security Gate at your Hotel"
-<br/>
-"Aquaworld Marina at Km 15.2 of the Hotel Zone."
+                    <br />
+                    <br />
+                    Examples:
+                    <br />
+                    <br />
+                    "Your Hotel's Front Door"
+                    <br />
+                    "Meet at the Security Gate at your Hotel"
+                    <br />
+                    "Aquaworld Marina at Km 15.2 of the Hotel Zone."
                   </Tooltip>
                   <div className="">
                     <Input
@@ -626,13 +624,13 @@ Examples:
                       value={validationType.values.meeting_location || ""}
                       invalid={
                         validationType.touched.meeting_location &&
-                        validationType.errors.meeting_location
+                          validationType.errors.meeting_location
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.meeting_location &&
-                    validationType.errors.meeting_location ? (
+                      validationType.errors.meeting_location ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.meeting_location}
                       </FormFeedback>
@@ -653,7 +651,7 @@ Examples:
                       setmi(!ttmi);
                     }}
                   >
-                   Specific Instructions of how to meet the tour or transfer.
+                    Specific Instructions of how to meet the tour or transfer.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -663,15 +661,26 @@ Examples:
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.meeting_instructions || ""}
+                      maxLength={80}
                       invalid={
                         validationType.touched.meeting_instructions &&
-                        validationType.errors.meeting_instructions
+                          validationType.errors.meeting_instructions
                           ? true
                           : false
                       }
-                    />
+                    />                    
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                        marginBottom: 0
+                      }}
+                    >
+                      80 characters max
+                    </p>
                     {validationType.touched.meeting_instructions &&
-                    validationType.errors.meeting_instructions ? (
+                      validationType.errors.meeting_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.meeting_instructions}
                       </FormFeedback>
@@ -711,7 +720,7 @@ Examples:
                   </Col>
                 ) : null}
               </Row>
-              <Row className="mt-3">
+              <Row>
                 <Col className="col-4">
                   <label>Google Maps URL</label>
                   <i
@@ -744,13 +753,13 @@ Examples:
                       value={validationType.values.google_maps_url || ""}
                       invalid={
                         validationType.touched.google_maps_url &&
-                        validationType.errors.google_maps_url
+                          validationType.errors.google_maps_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.google_maps_url &&
-                    validationType.errors.google_maps_url ? (
+                      validationType.errors.google_maps_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.google_maps_url}
                       </FormFeedback>
@@ -771,7 +780,7 @@ Examples:
                       setimg(!ttimg);
                     }}
                   >
-                   Paste the URL of an image or a gallery where the customer can see photos of the exact meeting location, or of a map showing how to get to the location.
+                    Paste the URL of an image or a gallery where the customer can see photos of the exact meeting location, or of a map showing how to get to the location.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -783,13 +792,13 @@ Examples:
                       value={validationType.values.images_url || ""}
                       invalid={
                         validationType.touched.images_url &&
-                        validationType.errors.images_url
+                          validationType.errors.images_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.images_url &&
-                    validationType.errors.images_url ? (
+                      validationType.errors.images_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.images_url}
                       </FormFeedback>
@@ -824,7 +833,7 @@ Examples:
                       setai(!ttai);
                     }}
                   >
-                   Provide clear directions to the customer of what will happen on arrival to the airport, or where to find their driver.
+                    Provide clear directions to the customer of what will happen on arrival to the airport, or where to find their driver.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -834,15 +843,26 @@ Examples:
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.arrival_instructions || ""}
+                      maxLength={80}
                       invalid={
                         validationType.touched.arrival_instructions &&
-                        validationType.errors.arrival_instructions
+                          validationType.errors.arrival_instructions
                           ? true
                           : false
                       }
                     />
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                        marginBottom: 0
+                      }}
+                    >
+                      80 characters max
+                    </p>
                     {validationType.touched.arrival_instructions &&
-                    validationType.errors.arrival_instructions ? (
+                      validationType.errors.arrival_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.arrival_instructions}
                       </FormFeedback>
@@ -850,7 +870,7 @@ Examples:
                   </div>
                 </Col>
                 <Col className="col-4 ">
-                  <label>Depature Instructions</label>
+                  <label>Departure Instructions</label>
                   <i
                     className="uil-question-circle font-size-15 mx-2"
                     id="departure_instructions"
@@ -863,7 +883,7 @@ Examples:
                       setdp(!ttdp);
                     }}
                   >
-                   Provide clear directions to the customer as to where they will meet their transfer for their departure, or any clarifications of what they need to do.
+                    Provide clear directions to the customer as to where they will meet their transfer for their departure, or any clarifications of what they need to do.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -873,15 +893,26 @@ Examples:
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.departure_instructions || ""}
+                      maxLength={80}
                       invalid={
                         validationType.touched.departure_instructions &&
-                        validationType.errors.departure_instructions
+                          validationType.errors.departure_instructions
                           ? true
                           : false
                       }
                     />
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                        marginBottom: 0
+                      }}
+                    >
+                      80 characters max
+                    </p>
                     {validationType.touched.departure_instructions &&
-                    validationType.errors.departure_instructions ? (
+                      validationType.errors.departure_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.departure_instructions}
                       </FormFeedback>
@@ -931,13 +962,13 @@ Examples:
                       value={validationType.values.primary_contact_phone || ""}
                       invalid={
                         validationType.touched.primary_contact_phone &&
-                        validationType.errors.primary_contact_phone
+                          validationType.errors.primary_contact_phone
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.primary_contact_phone &&
-                    validationType.errors.primary_contact_phone ? (
+                      validationType.errors.primary_contact_phone ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.primary_contact_phone}
                       </FormFeedback>
@@ -971,7 +1002,7 @@ Examples:
                         setPrimaryContactChannelSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(channelList, (channel, index) => {
@@ -1042,13 +1073,13 @@ Examples:
                       }
                       invalid={
                         validationType.touched.secondary_contact_phone &&
-                        validationType.errors.secondary_contact_phone
+                          validationType.errors.secondary_contact_phone
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.secondary_contact_phone &&
-                    validationType.errors.secondary_contact_phone ? (
+                      validationType.errors.secondary_contact_phone ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.secondary_contact_phone}
                       </FormFeedback>
@@ -1082,7 +1113,7 @@ Examples:
                         setSecondaryContactChannelSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                    //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(channelList, (channel, index) => {

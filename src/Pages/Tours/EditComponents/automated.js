@@ -139,7 +139,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      
+
       special_instruction_title: voucherInitialData?.special_instruction_title
         ? voucherInitialData?.special_instruction_title
         : "",
@@ -223,7 +223,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       let data = {
         special_instruction_title: values.special_instruction_title,
         special_instruction_description: values.special_instruction_description,
-        special_instruction_enable : specialInstrucionCheck === true ? 1 : 0,
+        special_instruction_enable: specialInstrucionCheck === true ? 1 : 0,
         additional_information: values.aditional_information,
         additional_information_read_only:
           voucherInitialData.additional_information_read_only,
@@ -273,17 +273,16 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               "Edited!",
               "Automated Confirmation Information has been edited.",
               "success"
-            ).then(() => {});
+            ).then(() => { });
           }
         })
         .catch((error) => {
           // console.log(error.response);
           Swal.fire(
             "Error!",
-            `${
-              error.response.data.data.name
-                ? error.response.data.data.name
-                : error.response.data.data.code
+            `${error.response.data.data.name
+              ? error.response.data.data.name
+              : error.response.data.data.code
             }`,
             "error"
           );
@@ -363,7 +362,10 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   >
                     These are the additional fees that will be shown on the
                     website and the voucher for this tour, in the order they are
-                    displayed in the list. To add a fee to the list, click on
+                    displayed in the list.
+                    <br />
+                    <br />
+                    To add a fee to the list, click on
                     "Add Extra Fee". To edit a fee, click on the pencil icon
                     next to the fee.
                   </Tooltip>
@@ -386,10 +388,14 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     <tbody>
                       {map(extraFeeInitialData, (fee, index) => {
                         return (
-                          <tr>
-                            <th className="col-11">{`${index + 1}. ${
-                              fee.fee_type
-                            }`}</th>
+                          <tr
+                            key={index}
+                            style={{
+                              backgroundColor: fee.read_only === 1 ? "#f5f6f8" : "#ffffff",
+                            }}
+                          >
+                            <th className="col-11">{`${index + 1}. ${fee.fee_type
+                              }`}</th>
                             <td className="col-1">
                               <div className="d-flex gap-3">
                                 <div className="text-paradise">
@@ -401,39 +407,44 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                                       setExtraFeeModal(true);
                                     }}
                                   >
+                                    {fee.read_only === 0 ?
+                                      <>
+                                        <i
+                                          className="mdi mdi-pencil-outline font-size-17 text-paradise"
+                                          id="edittooltip"
+                                          style={{ cursor: "pointer" }}
+                                        />
+                                        <UncontrolledTooltip
+                                          placement="top"
+                                          target="edittooltip"
+                                        >
+                                          Edit
+                                        </UncontrolledTooltip>
+                                      </>
+                                      : (null)}
+                                  </div>
+                                </div>
+                                {fee.read_only === 0 ?
+                                  <div
+                                    className="text-danger"
+                                    onClick={() => {
+                                      // const tourData = cellProps.row.original;
+                                      // // setconfirm_alert(true);
+                                      onDelete(fee.fee_id);
+                                    }}
+                                  >
                                     <i
-                                      className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                      id="edittooltip"
+                                      className="mdi mdi-delete-outline font-size-17"
+                                      id="deletetooltip"
                                       style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="edittooltip"
+                                      target="deletetooltip"
                                     >
-                                      Edit
+                                      Delete
                                     </UncontrolledTooltip>
-                                  </div>
-                                </div>
-                                <div
-                                  className="text-danger"
-                                  onClick={() => {
-                                    // const tourData = cellProps.row.original;
-                                    // // setconfirm_alert(true);
-                                    onDelete(fee.fee_id);
-                                  }}
-                                >
-                                  <i
-                                    className="mdi mdi-delete-outline font-size-17"
-                                    id="deletetooltip"
-                                    style={{ cursor: "pointer" }}
-                                  />
-                                  <UncontrolledTooltip
-                                    placement="top"
-                                    target="deletetooltip"
-                                  >
-                                    Delete
-                                  </UncontrolledTooltip>
-                                </div>
+                                  </div> : (null)}
                               </div>
                             </td>
                           </tr>
@@ -460,7 +471,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   }}
                 >
                   Add the items the client will need to bring on the day of the
-                  tour. This will be shown on the voucher and on the website.
+                  tour.
+                  <br />
+                  <br />
+                  This will be shown on the voucher and on the website.
+                  <br />
+                  <br />
                   The items will be shown in the order they are selected.
                 </Tooltip>
                 <Select
@@ -471,6 +487,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Please select"
                   defaultValue={initialOptionsArea}
                   onChange={handleMulti}
+                  disabled={voucherInitialData?.brings_read_only === 1 ? true : false}
                 >
                   {map(bringListInitialData, (item, index) => {
                     return (
@@ -480,7 +497,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     );
                   })}
                 </Select>
-                {/* {serviceAreaError && <p style={{color:'#f46a6a', fontSize:'13px', marginTop:'4px'}}>Select a Service Area</p>  } */}
               </Col>
             ) : null}
             {voucherInitialData?.brings && initialOptionsArea.length === 0 ? (
@@ -499,7 +515,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   }}
                 >
                   Add the items the client will need to bring on the day of the
-                  tour. This will be shown on the voucher and on the website.
+                  tour.
+                  <br />
+                  <br />
+                  This will be shown on the voucher and on the website.
+                  <br />
+                  <br />
                   The items will be shown in the order they are selected.
                 </Tooltip>
                 <Select
@@ -550,20 +571,20 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 value={validationType.values.aditional_information || ""}
                 invalid={
                   validationType.touched.aditional_information &&
-                  validationType.errors.aditional_information
+                    validationType.errors.aditional_information
                     ? true
                     : false
                 }
               />
               {validationType.touched.aditional_information &&
-              validationType.errors.aditional_information ? (
+                validationType.errors.aditional_information ? (
                 <FormFeedback type="invalid">
                   {validationType.errors.aditional_information}
                 </FormFeedback>
               ) : null}
             </Col>
           </Row>
-          <Row>
+          <Row className="mt-3">
             <Col className="col-4">
               <label>Meeting Location</label>
               <i
@@ -601,13 +622,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   value={validationType.values.meeting_location || ""}
                   invalid={
                     validationType.touched.meeting_location &&
-                    validationType.errors.meeting_location
+                      validationType.errors.meeting_location
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.meeting_location &&
-                validationType.errors.meeting_location ? (
+                  validationType.errors.meeting_location ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.meeting_location}
                   </FormFeedback>
@@ -642,54 +663,61 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   value={validationType.values.meeting_instructions || ""}
                   invalid={
                     validationType.touched.meeting_instructions &&
-                    validationType.errors.meeting_instructions
+                      validationType.errors.meeting_instructions
                       ? true
                       : false
                   }
                 />
+                <p
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: "lighter",
+                    textAlign: "right",
+                    marginBottom: 0
+                  }}
+                >
+                  80 characters max
+                </p>
                 {validationType.touched.meeting_instructions &&
-                validationType.errors.meeting_instructions ? (
+                  validationType.errors.meeting_instructions ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.meeting_instructions}
                   </FormFeedback>
                 ) : null}
               </div>
             </Col>
-
-            {restrictionList ? (
-              <Col className="col-4 ">
-                <label>Restrictions</label>
-                <i
-                  className="uil-question-circle font-size-15 mx-2"
-                  id="restrictions"
+            <Col className="col-4 ">
+              <label>Restrictions</label>
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="restrictions"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttop4}
+                target="restrictions"
+                toggle={() => {
+                  setttop4(!ttop4);
+                }}
+              >
+                If the tour has any restrictions specify them one line at a
+                time. They will be shown on the voucher and on the website in
+                the order displayed.
+                <br />
+                To add additional restrictions, click on "+ Add".
+              </Tooltip>
+              <div className="col-12">
+                <Input
+                  name="rest_one"
+                  placeholder="Add Restriction #1"
+                  type="text"
+                  className=""
+                  disabled={voucherInitialData?.restrictions[0]?.restriction_read_only_1 === 1 ? true : false}
+                  onChange={(e) => setRest1(e.target.value)}
+                  value={rest1}
                 />
-                <Tooltip
-                  placement="right"
-                  isOpen={ttop4}
-                  target="restrictions"
-                  toggle={() => {
-                    setttop4(!ttop4);
-                  }}
-                >
-                  If the tour has any restrictions specify them one line at a
-                  time. They will be shown on the voucher and on the website in
-                  the order displayed.
-                  <br />
-                  To add additional restrictions, click on "+ Add".
-                </Tooltip>
-                <div className="col-12">
-                  <Input
-                    name="rest_one"
-                    placeholder="Add Restriction #1"
-                    type="text"
-                    className=""
-                    disabled={voucherInitialData?.restrictions[0]?.restriction_read_only_1 === 0 ? false : true}
-                    onChange={(e) => setRest1(e.target.value)}
-                    value={rest1}
-                  />
-                </div>
-              </Col>
-            ) : null}
+              </div>
+            </Col>
           </Row>
           <Row>
             <Col className="col-4">
@@ -724,13 +752,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   value={validationType.values.google_maps_url || ""}
                   invalid={
                     validationType.touched.google_maps_url &&
-                    validationType.errors.google_maps_url
+                      validationType.errors.google_maps_url
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.google_maps_url &&
-                validationType.errors.google_maps_url ? (
+                  validationType.errors.google_maps_url ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.google_maps_url}
                   </FormFeedback>
@@ -764,13 +792,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   value={validationType.values.images_url || ""}
                   invalid={
                     validationType.touched.images_url &&
-                    validationType.errors.images_url
+                      validationType.errors.images_url
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.images_url &&
-                validationType.errors.images_url ? (
+                  validationType.errors.images_url ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.images_url}
                   </FormFeedback>
@@ -784,14 +812,14 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #2"
                   className="my-2"
                   type="text"
-                  disabled={voucherInitialData?.restrictions[1]?.restriction_read_only_2 === 0 ? false : true}
+                  disabled={voucherInitialData?.restrictions[1]?.restriction_read_only_2 === 1 ? true : false}
                   onChange={(e) => setRest2(e.target.value)}
                   value={rest2}
                 />
               </div>
             </Col>
           </Row>
-          <Row>
+          <Row className="mt-2">
             {tourData?.type_id === 5 || tourData?.type_id === 6 ? (
               <>
                 <Col className="col-4 ">
@@ -819,23 +847,33 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       onBlur={validationType.handleBlur}
                       disabled={
                         tourData?.type_id === 1 ||
-                        tourData?.type_id === 2 ||
-                        voucherInitialData?.boat_location_read_only !== 0 ||
-                        tourData?.type_id === 4
+                          tourData?.type_id === 2 ||
+                          voucherInitialData?.boat_location_read_only !== 0 ||
+                          tourData?.type_id === 4
                           ? true
                           : false
                       }
                       value={validationType.values.boat_location || ""}
-                      maxLength={80}
+                      maxLength={100}
                       invalid={
                         validationType.touched.boat_location &&
-                        validationType.errors.boat_location
+                          validationType.errors.boat_location
                           ? true
                           : false
                       }
                     />
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                        marginBottom: 0
+                      }}
+                    >
+                      100 characters max
+                    </p>
                     {validationType.touched.boat_location &&
-                    validationType.errors.boat_location ? (
+                      validationType.errors.boat_location ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.boat_location}
                       </FormFeedback>
@@ -869,22 +907,22 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       onBlur={validationType.handleBlur}
                       disabled={
                         tourData?.type_id === 1 ||
-                        tourData?.type_id === 2 ||
-                        voucherInitialData?.boat_google_maps_url_read_only!== 0 ||
-                        tourData?.type_id === 4
+                          tourData?.type_id === 2 ||
+                          voucherInitialData?.boat_google_maps_url_read_only !== 0 ||
+                          tourData?.type_id === 4
                           ? true
                           : false
                       }
                       value={validationType.values.boat_google_maps_url || ""}
                       invalid={
                         validationType.touched.boat_google_maps_url &&
-                        validationType.errors.boat_google_maps_url
+                          validationType.errors.boat_google_maps_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.boat_google_maps_url &&
-                    validationType.errors.boat_google_maps_url ? (
+                      validationType.errors.boat_google_maps_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.boat_google_maps_url}
                       </FormFeedback>
@@ -921,22 +959,33 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
-                        tourData?.type_id === 2 ||
-                        voucherInitialData?.arrival_instructions_read_only !== 0 ||
-                        tourData?.type_id === 4
+                          tourData?.type_id === 2 ||
+                          voucherInitialData?.arrival_instructions_read_only !== 0 ||
+                          tourData?.type_id === 4
                           ? true
                           : false
                       }
                       value={validationType.values.arrival_instructions || ""}
                       invalid={
                         validationType.touched.arrival_instructions &&
-                        validationType.errors.arrival_instructions
+                          validationType.errors.arrival_instructions
                           ? true
                           : false
                       }
                     />
+
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                        marginBottom: 0
+                      }}
+                    >
+                      80 characters max
+                    </p>
                     {validationType.touched.arrival_instructions &&
-                    validationType.errors.arrival_instructions ? (
+                      validationType.errors.arrival_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.arrival_instructions}
                       </FormFeedback>
@@ -971,22 +1020,33 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
-                        tourData?.type_id === 2 ||
-                        voucherInitialData?.departure_instructions_read_only !== 0 ||
-                        tourData?.type_id === 4
+                          tourData?.type_id === 2 ||
+                          voucherInitialData?.departure_instructions_read_only !== 0 ||
+                          tourData?.type_id === 4
                           ? true
                           : false
                       }
                       value={validationType.values.departure_instructions || ""}
                       invalid={
                         validationType.touched.departure_instructions &&
-                        validationType.errors.departure_instructions
+                          validationType.errors.departure_instructions
                           ? true
                           : false
                       }
                     />
+
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                        marginBottom: 0
+                      }}
+                    >
+                      80 characters max
+                    </p>
                     {validationType.touched.departure_instructions &&
-                    validationType.errors.departure_instructions ? (
+                      validationType.errors.departure_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.departure_instructions}
                       </FormFeedback>
@@ -1003,14 +1063,14 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #3"
                   className="my-2"
                   type="text"
-                  disabled={voucherInitialData?.restrictions[2]?.restriction_read_only_3 === 0 ? false : true}
+                  disabled={voucherInitialData?.restrictions[2]?.restriction_read_only_3 === 1 ? true : false}
                   onChange={(e) => setRest3(e.target.value)}
                   value={rest3}
                 />
               </div>
             </Col>
           </Row>
-          <Row>
+          <Row className="mt-2">
             <Col className="col-2">
               <label>Voucher Contact</label>
               {/* <i
@@ -1041,13 +1101,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   value={validationType.values.primary_contact_phone || ""}
                   invalid={
                     validationType.touched.primary_contact_phone &&
-                    validationType.errors.primary_contact_phone
+                      validationType.errors.primary_contact_phone
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.primary_contact_phone &&
-                validationType.errors.primary_contact_phone ? (
+                  validationType.errors.primary_contact_phone ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.primary_contact_phone}
                   </FormFeedback>
@@ -1082,7 +1142,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   }}
                   disabled={voucherInitialData?.primary_contact_channel_read_only === 0 ? false : true}
                   onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
+                //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
                   {map(channelList, (channel, index) => {
@@ -1152,13 +1212,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   disabled={voucherInitialData?.secondary_contact_phone_read_only === 0 ? false : true}
                   invalid={
                     validationType.touched.secondary_contact_phone &&
-                    validationType.errors.secondary_contact_phone
+                      validationType.errors.secondary_contact_phone
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.secondary_contact_phone &&
-                validationType.errors.secondary_contact_phone ? (
+                  validationType.errors.secondary_contact_phone ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.secondary_contact_phone}
                   </FormFeedback>
@@ -1193,7 +1253,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   }}
                   disabled={voucherInitialData?.secondary_contact_channel_read_only === 0 ? false : true}
                   onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
+                //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
                   {map(channelList, (channel, index) => {
@@ -1220,14 +1280,14 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #4"
                   className="my-2"
                   type="text"
-                  disabled={voucherInitialData?.restrictions[3]?.restriction_read_only_4 === 0 ? false : true}
+                  disabled={voucherInitialData?.restrictions[3]?.restriction_read_only_4 === 1 ? true : false}
                   onChange={(e) => setRest4(e.target.value)}
                   value={rest4}
                 />
               </div>
             </Col>
           </Row>
-         {/*  <Row>
+          {/*  <Row>
             <Col className=" d-flex justify-content-end my-2">
               <Input
                 name="send_voucher"
@@ -1239,7 +1299,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               />
               <label className="mt-1">Send Voucher to Provider</label>
             </Col>
-          </Row> */} 
+          </Row> */}
           <Row>
             <Col className=" d-flex justify-content-end">
               <Button
