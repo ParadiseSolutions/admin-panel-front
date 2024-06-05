@@ -465,7 +465,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   voucher. Some of the details will also show on the website. If
                   any details appear greyed out, they have been specified in the
                   operator panel and apply to all of the tours for this
-                  operator. They can only be changed in the operator panel. New
+                  operator or are not used for this tour type. They can only be changed in the operator panel. New
                   details added here will only display for this tour and not for
                   other tours from this operator.
                 </p>
@@ -832,8 +832,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 If the tour has any restrictions specify them one line at a
                 time. They will be shown on the voucher and on the website in
                 the order displayed.
-                <br />
-                To add additional restrictions, click on "+ Add".
+                
               </Tooltip>
               <div className="col-12">
                 <Input
@@ -908,8 +907,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   setimg(!ttimg);
                 }}
               >
-                {/* Paste the URL of an image or a gallery where the customer can see photos of the exact meeting location, or of a map showing how to get to the location. */}
-              </Tooltip>
+                Paste the URL of an image or a gallery where the customer can see photos of the exact meeting location, or of a map showing how to get to the location.
+                </Tooltip>
               <div className="">
                 <Input
                   name="images_url"
@@ -1023,9 +1022,10 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       setdp(!ttdp);
                     }}
                   >
-                    {/* Provide clear directions to the customer as to where they
-                    will meet their transfer for their departure, or any
-                    clarifications of what they need to do. */}
+                   Paste the URL from Google Maps of the exact boat location, so the customer can view exact directions of how to get there.
+<br/>
+<br/>
+Be very specific, zoom in and make certain that the pin is exactly where the customer should stand.
                   </Tooltip>
                   <div className="">
                     <Input
