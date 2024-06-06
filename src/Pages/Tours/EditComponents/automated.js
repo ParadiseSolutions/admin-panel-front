@@ -268,8 +268,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
         send_voucher: sendVoucherChk,
         boat_google_maps_url: values.boat_google_maps_url,
         boat_location: values.boat_location,
-        boat_google_maps_url_read_only: voucherInitialData.boat_google_maps_url,
-        boat_location_read_only: voucherInitialData.boat_location,
+        boat_google_maps_url_read_only: voucherInitialData.boat_google_maps_url_read_only,
+        boat_location_read_only: voucherInitialData.boat_location_read_only,
       };
       // console.log("data a enviar", data);
       putVoucherInformationTours(voucherInitialData.tour_id, data)
