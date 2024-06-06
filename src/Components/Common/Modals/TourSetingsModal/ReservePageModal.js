@@ -260,8 +260,8 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="type5"
-                    id="type5"
+                    name="type8"
+                    id="type8"
                     onChange={(e) => setTemplateType(+e.target.value)}
                     value={8}
                     checked={templateType === 8 ? true : false}
@@ -283,13 +283,13 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="type2"
-                    id="type2"
+                    name="type12"
+                    id="type12"
                     onChange={(e) => setTemplateType(+e.target.value)}
                     value={12}
                     checked={templateType === 12 ? true : false}
                   />
-                  <label className="form-check-label" htmlFor="type2">
+                  <label className="form-check-label" htmlFor="type12">
                     Qty Label Choose Activity
                   </label>
                 </div>
@@ -308,13 +308,13 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="type4"
-                    id="type4"
+                    name="type10"
+                    id="type10"
                     onChange={(e) => setTemplateType(+e.target.value)}
                     value={10}
                     checked={templateType === 10 ? true : false}
                   />
-                  <label className="form-check-label" htmlFor="type4">
+                  <label className="form-check-label" htmlFor="type10">
                     People Msg + Qty + Choose Activity
                   </label>
                 </div>
@@ -331,13 +331,13 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="type2"
-                    id="type2"
+                    name="type9"
+                    id="type9"
                     onChange={(e) => setTemplateType(+e.target.value)}
                     value={9}
                     checked={templateType === 9 ? true : false}
                   />
-                  <label className="form-check-label" htmlFor="type2">
+                  <label className="form-check-label" htmlFor="type9">
                     Two Price Options + Choose One
                   </label>
                 </div>
