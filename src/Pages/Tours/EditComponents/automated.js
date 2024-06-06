@@ -61,6 +61,10 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [ttmi, setmi] = useState(false);
   const [ttdp, setdp] = useState(false);
   const [ttai, setai] = useState(false);
+  const [ttpcontact, settpcontact] = useState(false);
+  const [ttpchanel, settpchanel] = useState(false);
+  const [ttscontact, settscontact] = useState(false);
+  const [ttschanel, settschanel] = useState(false);
   const [extraFeeModal, setExtraFeeModal] = useState(false);
   const [specialInstrucionCheck, setSpecialInstructionCheck] = useState(false);
 
@@ -139,7 +143,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-
       special_instruction_title: voucherInitialData?.special_instruction_title
         ? voucherInitialData?.special_instruction_title
         : "",
@@ -273,16 +276,17 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               "Edited!",
               "Automated Confirmation Information has been edited.",
               "success"
-            ).then(() => { });
+            ).then(() => {});
           }
         })
         .catch((error) => {
           // console.log(error.response);
           Swal.fire(
             "Error!",
-            `${error.response.data.data.name
-              ? error.response.data.data.name
-              : error.response.data.data.code
+            `${
+              error.response.data.data.name
+                ? error.response.data.data.name
+                : error.response.data.data.code
             }`,
             "error"
           );
@@ -325,7 +329,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           className="custom-validation"
         >
           <Row>
-          <Col
+            <Col
               className="col-12 p-1 my-2"
               style={{ backgroundColor: "#3DC7F41A" }}
             >
@@ -415,7 +419,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                         setttop7(!ttop7);
                       }}
                     >
-                      Tell us how you would like your day to look like, what you would like to do or see, or any special requests.
+                      Tell us how you would like your day to look like, what you
+                      would like to do or see, or any special requests.
                     </Tooltip>
                     <div className="col-10">
                       <Input
@@ -464,10 +469,11 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   The details below will be shown on the customer's confirmation
                   voucher. Some of the details will also show on the website. If
                   any details appear greyed out, they have been specified in the
-                  operator panel and apply to all of the tours for this
-                  operator or are not used for this tour type. They can only be changed in the operator panel. New
-                  details added here will only display for this tour and not for
-                  other tours from this operator.
+                  operator panel and apply to all of the tours for this operator
+                  or are not used for this tour type. They can only be changed
+                  in the operator panel. New details added here will only
+                  display for this tour and not for other tours from this
+                  operator.
                 </p>
               </div>
             </Col>
@@ -494,9 +500,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     displayed in the list.
                     <br />
                     <br />
-                    To add a fee to the list, click on
-                    "Add Extra Fee". To edit a fee, click on the pencil icon
-                    next to the fee.
+                    To add a fee to the list, click on "Add Extra Fee". To edit
+                    a fee, click on the pencil icon next to the fee.
                   </Tooltip>
                 </div>
 
@@ -520,11 +525,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                           <tr
                             key={index}
                             style={{
-                              backgroundColor: fee.read_only === 1 ? "#f5f6f8" : "#ffffff",
+                              backgroundColor:
+                                fee.read_only === 1 ? "#f5f6f8" : "#ffffff",
                             }}
                           >
-                            <th className="col-11">{`${index + 1}. ${fee.fee_type
-                              }`}</th>
+                            <th className="col-11">{`${index + 1}. ${
+                              fee.fee_type
+                            }`}</th>
                             <td className="col-1">
                               <div className="d-flex gap-3">
                                 <div className="text-paradise">
@@ -536,7 +543,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                                       setExtraFeeModal(true);
                                     }}
                                   >
-                                    {fee.read_only === 0 ?
+                                    {fee.read_only === 0 ? (
                                       <>
                                         <i
                                           className="mdi mdi-pencil-outline font-size-17 text-paradise"
@@ -550,10 +557,10 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                                           Edit
                                         </UncontrolledTooltip>
                                       </>
-                                      : (null)}
+                                    ) : null}
                                   </div>
                                 </div>
-                                {fee.read_only === 0 ?
+                                {fee.read_only === 0 ? (
                                   <div
                                     className="text-danger"
                                     onClick={() => {
@@ -573,7 +580,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                                     >
                                       Delete
                                     </UncontrolledTooltip>
-                                  </div> : (null)}
+                                  </div>
+                                ) : null}
                               </div>
                             </td>
                           </tr>
@@ -616,7 +624,9 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Please select"
                   defaultValue={initialOptionsArea}
                   onChange={handleMulti}
-                  disabled={voucherInitialData?.brings_read_only === 1 ? true : false}
+                  disabled={
+                    voucherInitialData?.brings_read_only === 1 ? true : false
+                  }
                 >
                   {map(bringListInitialData, (item, index) => {
                     return (
@@ -696,17 +706,21 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 rows="5"
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
-                disabled={voucherInitialData?.additional_information_read_only === 0 ? false : true}
+                disabled={
+                  voucherInitialData?.additional_information_read_only === 0
+                    ? false
+                    : true
+                }
                 value={validationType.values.aditional_information || ""}
                 invalid={
                   validationType.touched.aditional_information &&
-                    validationType.errors.aditional_information
+                  validationType.errors.aditional_information
                     ? true
                     : false
                 }
               />
               {validationType.touched.aditional_information &&
-                validationType.errors.aditional_information ? (
+              validationType.errors.aditional_information ? (
                 <FormFeedback type="invalid">
                   {validationType.errors.aditional_information}
                 </FormFeedback>
@@ -747,17 +761,21 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   type="text"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
-                  disabled={voucherInitialData?.meeting_location_read_only === 0 ? false : true}
+                  disabled={
+                    voucherInitialData?.meeting_location_read_only === 0
+                      ? false
+                      : true
+                  }
                   value={validationType.values.meeting_location || ""}
                   invalid={
                     validationType.touched.meeting_location &&
-                      validationType.errors.meeting_location
+                    validationType.errors.meeting_location
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.meeting_location &&
-                  validationType.errors.meeting_location ? (
+                validationType.errors.meeting_location ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.meeting_location}
                   </FormFeedback>
@@ -788,11 +806,16 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   onChange={validationType.handleChange}
                   maxLength={80}
                   onBlur={validationType.handleBlur}
-                  disabled={tourData?.type_id === 3 || voucherInitialData?.meeting_instructions_read_only !== 0 ? true : false}
+                  disabled={
+                    tourData?.type_id === 3 ||
+                    voucherInitialData?.meeting_instructions_read_only !== 0
+                      ? true
+                      : false
+                  }
                   value={validationType.values.meeting_instructions || ""}
                   invalid={
                     validationType.touched.meeting_instructions &&
-                      validationType.errors.meeting_instructions
+                    validationType.errors.meeting_instructions
                       ? true
                       : false
                   }
@@ -802,13 +825,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     fontSize: "12px",
                     fontWeight: "lighter",
                     textAlign: "right",
-                    marginBottom: 0
+                    marginBottom: 0,
                   }}
                 >
                   80 characters max
                 </p>
                 {validationType.touched.meeting_instructions &&
-                  validationType.errors.meeting_instructions ? (
+                validationType.errors.meeting_instructions ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.meeting_instructions}
                   </FormFeedback>
@@ -832,7 +855,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                 If the tour has any restrictions specify them one line at a
                 time. They will be shown on the voucher and on the website in
                 the order displayed.
-                
               </Tooltip>
               <div className="col-12">
                 <Input
@@ -840,7 +862,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #1"
                   type="text"
                   className=""
-                  disabled={voucherInitialData?.restrictions[0]?.restriction_read_only_1 === 1 ? true : false}
+                  disabled={
+                    voucherInitialData?.restrictions[0]
+                      ?.restriction_read_only_1 === 1
+                      ? true
+                      : false
+                  }
                   onChange={(e) => setRest1(e.target.value)}
                   value={rest1}
                 />
@@ -876,17 +903,21 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   type="text"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
-                  disabled={voucherInitialData?.google_maps_url_read_only !== 0 ? true : false}
+                  disabled={
+                    voucherInitialData?.google_maps_url_read_only !== 0
+                      ? true
+                      : false
+                  }
                   value={validationType.values.google_maps_url || ""}
                   invalid={
                     validationType.touched.google_maps_url &&
-                      validationType.errors.google_maps_url
+                    validationType.errors.google_maps_url
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.google_maps_url &&
-                  validationType.errors.google_maps_url ? (
+                validationType.errors.google_maps_url ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.google_maps_url}
                   </FormFeedback>
@@ -907,8 +938,10 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   setimg(!ttimg);
                 }}
               >
-                Paste the URL of an image or a gallery where the customer can see photos of the exact meeting location, or of a map showing how to get to the location.
-                </Tooltip>
+                Paste the URL of an image or a gallery where the customer can
+                see photos of the exact meeting location, or of a map showing
+                how to get to the location.
+              </Tooltip>
               <div className="">
                 <Input
                   name="images_url"
@@ -916,17 +949,21 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   type="text"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
-                  disabled={voucherInitialData?.images_url_read_only !== 0 ? true : false}
+                  disabled={
+                    voucherInitialData?.images_url_read_only !== 0
+                      ? true
+                      : false
+                  }
                   value={validationType.values.images_url || ""}
                   invalid={
                     validationType.touched.images_url &&
-                      validationType.errors.images_url
+                    validationType.errors.images_url
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.images_url &&
-                  validationType.errors.images_url ? (
+                validationType.errors.images_url ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.images_url}
                   </FormFeedback>
@@ -940,7 +977,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   placeholder="Add Restriction #2"
                   className="my-2"
                   type="text"
-                  disabled={voucherInitialData?.restrictions[1]?.restriction_read_only_2 === 1 ? true : false}
+                  disabled={
+                    voucherInitialData?.restrictions[1]
+                      ?.restriction_read_only_2 === 1
+                      ? true
+                      : false
+                  }
                   onChange={(e) => setRest2(e.target.value)}
                   value={rest2}
                 />
@@ -964,7 +1006,20 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       setai(!ttai);
                     }}
                   >
-                    {/* Provide clear directions to the customer of what will happen on arrival to the airport, or where to find their driver. */}
+                    Enter the address where the actual boat is located, for
+                    example the marina it is located in. Be specific, if there
+                    is a certain dock or slip or area. This will be shown on the
+                    customer's voucher.
+                    <br />
+                    <br />
+                    Example: Marina Puerto Aventuras, next to Dolphin Discovery.
+                    <br />
+                    Example: El Cid Marina in Puerto Morelos.
+                    <br />
+                    Example: Marina Las Perlas at Km 2 of the Cancun Hotel Zone.
+                    <br />
+                    Example: Marina Los Peines, Marina Vallarta, Dock K, Slip
+                    12.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -975,9 +1030,9 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       onBlur={validationType.handleBlur}
                       disabled={
                         tourData?.type_id === 1 ||
-                          tourData?.type_id === 2 ||
-                          voucherInitialData?.boat_location_read_only !== 0 ||
-                          tourData?.type_id === 4
+                        tourData?.type_id === 2 ||
+                        voucherInitialData?.boat_location_read_only !== 0 ||
+                        tourData?.type_id === 4
                           ? true
                           : false
                       }
@@ -985,7 +1040,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       maxLength={100}
                       invalid={
                         validationType.touched.boat_location &&
-                          validationType.errors.boat_location
+                        validationType.errors.boat_location
                           ? true
                           : false
                       }
@@ -995,13 +1050,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                         fontSize: "12px",
                         fontWeight: "lighter",
                         textAlign: "right",
-                        marginBottom: 0
+                        marginBottom: 0,
                       }}
                     >
                       100 characters max
                     </p>
                     {validationType.touched.boat_location &&
-                      validationType.errors.boat_location ? (
+                    validationType.errors.boat_location ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.boat_location}
                       </FormFeedback>
@@ -1022,10 +1077,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       setdp(!ttdp);
                     }}
                   >
-                   Paste the URL from Google Maps of the exact boat location, so the customer can view exact directions of how to get there.
-<br/>
-<br/>
-Be very specific, zoom in and make certain that the pin is exactly where the customer should stand.
+                    Paste the URL from Google Maps of the exact boat location,
+                    so the customer can view exact directions of how to get
+                    there.
+                    <br />
+                    <br />
+                    Be very specific, zoom in and make certain that the pin is
+                    exactly where the customer should stand.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -1036,22 +1094,23 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                       onBlur={validationType.handleBlur}
                       disabled={
                         tourData?.type_id === 1 ||
-                          tourData?.type_id === 2 ||
-                          voucherInitialData?.boat_google_maps_url_read_only !== 0 ||
-                          tourData?.type_id === 4
+                        tourData?.type_id === 2 ||
+                        voucherInitialData?.boat_google_maps_url_read_only !==
+                          0 ||
+                        tourData?.type_id === 4
                           ? true
                           : false
                       }
                       value={validationType.values.boat_google_maps_url || ""}
                       invalid={
                         validationType.touched.boat_google_maps_url &&
-                          validationType.errors.boat_google_maps_url
+                        validationType.errors.boat_google_maps_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.boat_google_maps_url &&
-                      validationType.errors.boat_google_maps_url ? (
+                    validationType.errors.boat_google_maps_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.boat_google_maps_url}
                       </FormFeedback>
@@ -1088,16 +1147,17 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                       maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
-                          tourData?.type_id === 2 ||
-                          voucherInitialData?.arrival_instructions_read_only !== 0 ||
-                          tourData?.type_id === 4
+                        tourData?.type_id === 2 ||
+                        voucherInitialData?.arrival_instructions_read_only !==
+                          0 ||
+                        tourData?.type_id === 4
                           ? true
                           : false
                       }
                       value={validationType.values.arrival_instructions || ""}
                       invalid={
                         validationType.touched.arrival_instructions &&
-                          validationType.errors.arrival_instructions
+                        validationType.errors.arrival_instructions
                           ? true
                           : false
                       }
@@ -1108,13 +1168,13 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                         fontSize: "12px",
                         fontWeight: "lighter",
                         textAlign: "right",
-                        marginBottom: 0
+                        marginBottom: 0,
                       }}
                     >
                       80 characters max
                     </p>
                     {validationType.touched.arrival_instructions &&
-                      validationType.errors.arrival_instructions ? (
+                    validationType.errors.arrival_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.arrival_instructions}
                       </FormFeedback>
@@ -1149,16 +1209,17 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                       maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
-                          tourData?.type_id === 2 ||
-                          voucherInitialData?.departure_instructions_read_only !== 0 ||
-                          tourData?.type_id === 4
+                        tourData?.type_id === 2 ||
+                        voucherInitialData?.departure_instructions_read_only !==
+                          0 ||
+                        tourData?.type_id === 4
                           ? true
                           : false
                       }
                       value={validationType.values.departure_instructions || ""}
                       invalid={
                         validationType.touched.departure_instructions &&
-                          validationType.errors.departure_instructions
+                        validationType.errors.departure_instructions
                           ? true
                           : false
                       }
@@ -1169,13 +1230,13 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                         fontSize: "12px",
                         fontWeight: "lighter",
                         textAlign: "right",
-                        marginBottom: 0
+                        marginBottom: 0,
                       }}
                     >
                       80 characters max
                     </p>
                     {validationType.touched.departure_instructions &&
-                      validationType.errors.departure_instructions ? (
+                    validationType.errors.departure_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.departure_instructions}
                       </FormFeedback>
@@ -1192,7 +1253,12 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                   placeholder="Add Restriction #3"
                   className="my-2"
                   type="text"
-                  disabled={voucherInitialData?.restrictions[2]?.restriction_read_only_3 === 1 ? true : false}
+                  disabled={
+                    voucherInitialData?.restrictions[2]
+                      ?.restriction_read_only_3 === 1
+                      ? true
+                      : false
+                  }
                   onChange={(e) => setRest3(e.target.value)}
                   value={rest3}
                 />
@@ -1202,23 +1268,25 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
           <Row className="mt-2">
             <Col className="col-2">
               <label>Voucher Contact</label>
-              {/* <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="primary_contact_phone"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop5}
-                    target="primary_contact_phone"
-                    toggle={() => {
-                      setttop5(!ttop5);
-                    }}
-                  >
-                    Fill this field only if the meeting location will always be
-                    the same. If the meeting location could be different, leave
-                    it blank and the provider will specify it when confirming
-                    the tour.
-                  </Tooltip> */}
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="primary_contact_phone"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttpcontact}
+                target="primary_contact_phone"
+                toggle={() => {
+                  settpcontact(!ttpcontact);
+                }}
+              >
+                This will be the primary contact for the customer if they have
+                trouble finding their driver or meeting location. It will be
+                shown on their voucher.
+                <br />
+                <br />
+                Use format +52 (998) 123-4567.
+              </Tooltip>
               <div className="">
                 <Input
                   name="primary_contact_phone"
@@ -1226,17 +1294,21 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                   type="text"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
-                  disabled={voucherInitialData?.primary_contact_phone_read_only === 0 ? false : true}
+                  disabled={
+                    voucherInitialData?.primary_contact_phone_read_only === 0
+                      ? false
+                      : true
+                  }
                   value={validationType.values.primary_contact_phone || ""}
                   invalid={
                     validationType.touched.primary_contact_phone &&
-                      validationType.errors.primary_contact_phone
+                    validationType.errors.primary_contact_phone
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.primary_contact_phone &&
-                  validationType.errors.primary_contact_phone ? (
+                validationType.errors.primary_contact_phone ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.primary_contact_phone}
                   </FormFeedback>
@@ -1245,23 +1317,21 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
             </Col>
             <Col className="col-2">
               <label>Channel(s)</label>
-              {/* <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="channel_contact1"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop5}
-                    target="channel_contact1"
-                    toggle={() => {
-                      setttop5(!ttop5);
-                    }}
-                  >
-                    Fill this field only if the meeting location will always be
-                    the same. If the meeting location could be different, leave
-                    it blank and the provider will specify it when confirming
-                    the tour.
-                  </Tooltip> */}
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="channel_contact1"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttpchanel}
+                target="channel_contact1"
+                toggle={() => {
+                  settpchanel(!ttpchanel);
+                }}
+              >
+                Choose which type of contact number you just entered in the
+                "Voucher Contact" field.
+              </Tooltip>
               <div className="">
                 <Input
                   type="select"
@@ -1269,9 +1339,13 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                   onChange={(e) => {
                     setPrimaryContactChannelSelected(e.target.value);
                   }}
-                  disabled={voucherInitialData?.primary_contact_channel_read_only === 0 ? false : true}
+                  disabled={
+                    voucherInitialData?.primary_contact_channel_read_only === 0
+                      ? false
+                      : true
+                  }
                   onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
+                  //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
                   {map(channelList, (channel, index) => {
@@ -1289,47 +1363,29 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                     );
                   })}
                 </Input>
-                {/* <Input
-                      name="channel_contact1"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.channel_contact1 || ""}
-                      invalid={
-                        validationType.touched.channel_contact1 &&
-                        validationType.errors.channel_contact1
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.channel_contact1 &&
-                    validationType.errors.channel_contact1 ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.channel_contact1}
-                      </FormFeedback>
-                    ) : null} */}
               </div>
             </Col>
             <Col className="col-2">
               <label>Voucher Contact</label>
-              {/* <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="secondary_contact_phone"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop5}
-                    target="secondary_contact_phone"
-                    toggle={() => {
-                      setttop5(!ttop5);
-                    }}
-                  >
-                    Fill this field only if the meeting location will always be
-                    the same. If the meeting location could be different, leave
-                    it blank and the provider will specify it when confirming
-                    the tour.
-                  </Tooltip> */}
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="secondary_contact_phone"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttscontact}
+                target="secondary_contact_phone"
+                toggle={() => {
+                  settscontact(!ttscontact);
+                }}
+              >
+                Alternate contact for the customer to contact in case they can't
+                find their driver or meeting location and the first number isn't
+                available. This will be shown on the customer's voucher.
+                <br />
+                <br />
+                Use format +52 (998) 123-4567
+              </Tooltip>
               <div className="">
                 <Input
                   name="secondary_contact_phone"
@@ -1338,16 +1394,20 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.secondary_contact_phone || ""}
-                  disabled={voucherInitialData?.secondary_contact_phone_read_only === 0 ? false : true}
+                  disabled={
+                    voucherInitialData?.secondary_contact_phone_read_only === 0
+                      ? false
+                      : true
+                  }
                   invalid={
                     validationType.touched.secondary_contact_phone &&
-                      validationType.errors.secondary_contact_phone
+                    validationType.errors.secondary_contact_phone
                       ? true
                       : false
                   }
                 />
                 {validationType.touched.secondary_contact_phone &&
-                  validationType.errors.secondary_contact_phone ? (
+                validationType.errors.secondary_contact_phone ? (
                   <FormFeedback type="invalid">
                     {validationType.errors.secondary_contact_phone}
                   </FormFeedback>
@@ -1356,23 +1416,21 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
             </Col>
             <Col className="col-2">
               <label>Channel(s)</label>
-              {/* <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="channels2"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttop5}
-                    target="channels2"
-                    toggle={() => {
-                      setttop5(!ttop5);
-                    }}
-                  >
-                    Fill this field only if the meeting location will always be
-                    the same. If the meeting location could be different, leave
-                    it blank and the provider will specify it when confirming
-                    the tour.
-                  </Tooltip> */}
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="channels2"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttschanel}
+                target="channels2"
+                toggle={() => {
+                  settschanel(!ttschanel);
+                }}
+              >
+                Choose which type of contact number you just entered in the
+                "Voucher Contact" field.
+              </Tooltip>
               <div className="">
                 <Input
                   type="select"
@@ -1380,9 +1438,14 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                   onChange={(e) => {
                     setSecondaryContactChannelSelected(e.target.value);
                   }}
-                  disabled={voucherInitialData?.secondary_contact_channel_read_only === 0 ? false : true}
+                  disabled={
+                    voucherInitialData?.secondary_contact_channel_read_only ===
+                    0
+                      ? false
+                      : true
+                  }
                   onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
+                  //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
                   {map(channelList, (channel, index) => {
@@ -1409,7 +1472,12 @@ Be very specific, zoom in and make certain that the pin is exactly where the cus
                   placeholder="Add Restriction #4"
                   className="my-2"
                   type="text"
-                  disabled={voucherInitialData?.restrictions[3]?.restriction_read_only_4 === 1 ? true : false}
+                  disabled={
+                    voucherInitialData?.restrictions[3]
+                      ?.restriction_read_only_4 === 1
+                      ? true
+                      : false
+                  }
                   onChange={(e) => setRest4(e.target.value)}
                   value={rest4}
                 />
