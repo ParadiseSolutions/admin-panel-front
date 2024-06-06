@@ -266,6 +266,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
         secondary_contact_channel_read_only:
           voucherInitialData.secondary_contact_channel_read_only,
         send_voucher: sendVoucherChk,
+        boat_google_maps_url: values.boat_google_maps_url,
+        boat_location: values.boat_location,
       };
       // console.log("data a enviar", data);
       putVoucherInformationTours(voucherInitialData.tour_id, data)
