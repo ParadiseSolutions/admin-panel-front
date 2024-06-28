@@ -6,6 +6,8 @@ import {
   postAddonsAPI,
   putAddonAPI,
   triggerUpdate,
+  getApplyOptionsAPI,
+  getPricesPricingAPI,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -29,6 +31,8 @@ import {
   calcDeposit,
   setYouSaveFormat,
 } from "../../../../Utils/CommonFunctions";
+import { Select } from "antd";
+import { Option } from "antd/lib/mentions";
 
 const Offsymbol = () => {
   return (
@@ -75,7 +79,7 @@ const Addons = ({
   id,
 }) => {
   //edit data
-  let editID = editProductID
+  let editID = editProductID;
   const [dataEdit, setDataEdit] = useState();
   const [loadingData, setLoadingData] = useState(true);
   useEffect(() => {
@@ -93,6 +97,11 @@ const Addons = ({
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
   const [priceCollect, setPriceCollect] = useState([]);
+  const [applyOptions, setApplyOptions] = useState([]);
+  const [applyOptionsSelected, setApplyOptionsSelected] = useState([]);
+  const [matchingProducts, setMatchingProducts] = useState([]);
+  const [matchingProductsSelected, setMatchingProductsSelected] = useState([]);
+  const [initialProductsList, setInitialProductList] = useState([])
   const [addonType, setAddonType] = useState([]);
   const [displayOptionData, setDisplayOptionData] = useState([]);
   const [addonLabelData, setAddonLabelData] = useState([]);
@@ -109,11 +118,13 @@ const Addons = ({
   const [balance, setBalance] = useState(dataEdit?.active === 1 ? true : false);
   const [customMessage, setCustomMessage] = useState(false);
   const [isCustomMessage, setIsCustomMessage] = useState(false);
-  const [isUpgrade, setIsUpgrade] = useState(dataEdit?.type === 2 ? true : false);
+  const [isUpgrade, setIsUpgrade] = useState(
+    dataEdit?.type === 2 ? true : false
+  );
 
   useEffect(() => {
     if (newAddon) {
-      setLoadingData(true)
+      setLoadingData(true);
       getPricingOptionsAPI(52).then((resp) => {
         setPriceMatchQuantityData(resp.data.data);
       });
@@ -135,9 +146,15 @@ const Addons = ({
       getPricingOptionsAPI(60).then((resp) => {
         setAddonLabelData(resp.data.data);
       });
+      getApplyOptionsAPI().then((resp) => {
+        setApplyOptions(resp.data.data);
+      });
+      getPricesPricingAPI(id).then((resp) => {
+        setMatchingProducts(resp.data.data);
+      });
     }
   }, [newAddon]);
-
+  // console.log(applyOptions);
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
@@ -161,70 +178,73 @@ const Addons = ({
   const [ttop21, setttop21] = useState(false);
   const [ttop22, setttop22] = useState(false);
 
-  const [recalc, setRecalc] = useState(false)
-  let changing = false
+  const [recalc, setRecalc] = useState(false);
+  let changing = false;
 
   useEffect(() => {
     if (dataEdit && newAddon && priceCollect) {
-      setRecalc(false)
-      setPriceCollectSelected(dataEdit.collect_id)
-      let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.collect_id)
+      setRecalc(false);
+      setPriceCollectSelected(dataEdit.collect_id);
+      setInitialProductList(dataEdit.products)
+      setApplyOptionsSelected(dataEdit.apply_to)
+      let priceCollectSe = priceCollect.filter(
+        (x) => x.id === dataEdit.collect_id
+      );
       if (priceCollectSe.length > 0) {
-        setPriceCollectNameSelected(priceCollectSe[0].text)
+        setPriceCollectNameSelected(priceCollectSe[0].text);
       }
       if (dataEdit?.collect_id === 25 && dataEdit.display_option === 10) {
-        setIsCustomMessage(true)
-        setAddonTypeNameSelected(dataEdit?.add_on_type)
-        setPriceTypeNameSelected(dataEdit?.price_type)
+        setIsCustomMessage(true);
+        setAddonTypeNameSelected(dataEdit?.add_on_type);
+        setPriceTypeNameSelected(dataEdit?.price_type);
       } else {
-        setIsCustomMessage(false)
+        setIsCustomMessage(false);
       }
 
       setBalance(dataEdit?.active === 1 ? true : false);
       setIsUpgrade(dataEdit?.type === 2 ? true : false);
       setDisplayOptionSelected(dataEdit?.display_option);
-      setCustomMessage(dataEdit?.custom_text === 0 ? false : true)
+      setCustomMessage(dataEdit?.custom_text === 0 ? false : true);
 
       if (!changing) {
-        changing = true
+        changing = true;
         setTimeout(() => {
-          setLoadingData(false)
-          changing = false
+          setLoadingData(false);
+          changing = false;
         }, 1000);
       }
     } else {
-      setRecalc(true)
-      setPriceTypeSelected("")
-      setAddonTypeSelected("")
-      setPriceOptionSelected("")
-      setPriceCollectSelected("")
-      setPriceCollectNameSelected("")
-      setAddonTypeNameSelected("")
-      setPriceTypeNameSelected("")
-      setAddonLabelSelected("")
-      setDisplayOptionSelected("")
-      setMatchQuantitySelected("")
-      setBalance(false)
-      setCustomMessage(false)
-      setIsCustomMessage(false)
-      setIsUpgrade(false)
+      setRecalc(true);
+      setPriceTypeSelected("");
+      setAddonTypeSelected("");
+      setPriceOptionSelected("");
+      setPriceCollectSelected("");
+      setPriceCollectNameSelected("");
+      setAddonTypeNameSelected("");
+      setPriceTypeNameSelected("");
+      setAddonLabelSelected("");
+      setDisplayOptionSelected("");
+      setMatchQuantitySelected("");
+      setBalance(false);
+      setCustomMessage(false);
+      setIsCustomMessage(false);
+      setIsUpgrade(false);
       if (validationType) {
-        validationType.resetForm()
+        validationType.resetForm();
       }
       if (!changing) {
-        changing = true
+        changing = true;
         setTimeout(() => {
-          setLoadingData(false)
-          changing = false
+          setLoadingData(false);
+          changing = false;
         }, 1000);
       }
     }
   }, [dataEdit, priceCollect]);
 
   useEffect(() => {
-    if (priceCollectSelected === "25" &&
-      displayOptionSelected === 10) {
-      setIsCustomMessage(true)
+    if (priceCollectSelected === "25" && displayOptionSelected === 10) {
+      setIsCustomMessage(true);
     }
   }, [priceCollectSelected, displayOptionSelected]);
 
@@ -242,6 +262,10 @@ const Addons = ({
     setIsUpgrade(!isUpgrade);
   };
 
+  // apply selected
+  function handleMulti(selected) {
+    setMatchingProductsSelected(selected);
+  }
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -257,7 +281,7 @@ const Addons = ({
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      custom_message: dataEdit ? dataEdit.option_label : ""
+      custom_message: dataEdit ? dataEdit.option_label : "",
     },
     validationSchema: Yup.object().shape({
       min_qty: Yup.number().integer().nullable(),
@@ -269,14 +293,41 @@ const Addons = ({
       balance_due: Yup.number().required("Field Required"),
     }),
     onSubmit: (values, { resetForm }) => {
-
-      let match_qty = matchQuantitySelected ? matchQuantitySelected : (dataEdit ? dataEdit.match_qty_id : null)
-      let price_type = priceTypeSelected ? priceTypeSelected : (dataEdit ? dataEdit.price_type_id : null)
-      let addon_type = addonTypeSelected ? addonTypeSelected : (dataEdit ? dataEdit.add_on_type_id : null)
-      let price_option = priceOptionSelected ? priceOptionSelected : (dataEdit ? dataEdit.price_option_id : null)
-      let collect = priceCollectSelected ? priceCollectSelected : (dataEdit ? dataEdit.collect_id : null)
-      let display_option = displayOptionSelected ? displayOptionSelected : (dataEdit ? dataEdit.display_option : null)
-      let instruction_label = addonLabelSelected ? addonLabelSelected : (dataEdit ? dataEdit.instruction_label_id : null)
+      let match_qty = matchQuantitySelected
+        ? matchQuantitySelected
+        : dataEdit
+        ? dataEdit.match_qty_id
+        : null;
+      let price_type = priceTypeSelected
+        ? priceTypeSelected
+        : dataEdit
+        ? dataEdit.price_type_id
+        : null;
+      let addon_type = addonTypeSelected
+        ? addonTypeSelected
+        : dataEdit
+        ? dataEdit.add_on_type_id
+        : null;
+      let price_option = priceOptionSelected
+        ? priceOptionSelected
+        : dataEdit
+        ? dataEdit.price_option_id
+        : null;
+      let collect = priceCollectSelected
+        ? priceCollectSelected
+        : dataEdit
+        ? dataEdit.collect_id
+        : null;
+      let display_option = displayOptionSelected
+        ? displayOptionSelected
+        : dataEdit
+        ? dataEdit.display_option
+        : null;
+      let instruction_label = addonLabelSelected
+        ? addonLabelSelected
+        : dataEdit
+        ? dataEdit.instruction_label_id
+        : null;
 
       let data = {
         tour_id: +id,
@@ -286,7 +337,8 @@ const Addons = ({
         price_option_id: price_option === "-1" ? null : price_option,
         collect_id: collect === "-1" ? null : collect,
         display_option: display_option === "-1" ? null : display_option,
-        instruction_label_id: instruction_label === "-1" ? null : instruction_label,
+        instruction_label_id:
+          instruction_label === "-1" ? null : instruction_label,
         description: values.addon_description,
         show_balance_due: balance,
         price: values.our_price,
@@ -302,26 +354,41 @@ const Addons = ({
         net_price: values.balance_due,
         type: isUpgrade ? 2 : 1,
         custom_text: customMessage === true ? 1 : 0,
-        option_label: customMessage === true ? values.custom_message : addonTypeNameSelected ? `We want to ${addonTypeNameSelected !== ""
-          ? addonTypeNameSelected
-          : "[Add-On Type]"
-          } for $ ${validationType.values.our_price !== ""
-            ? validationType.values.our_price
-            : "[Price]"
-          } ${priceTypeNameSelected !== ""
-            ? priceTypeNameSelected
-            : "[Price Type]"
-          }, paid in cash on the day of the tour.` : values.custom_message,
-        min_qty: values.min_qty === "" || values.min_qty === null ? 0 : values.min_qty,
-        max_qty: values.max_qty === "" || values.max_qty === null ? 20 : values.max_qty
+        option_label:
+          customMessage === true
+            ? values.custom_message
+            : addonTypeNameSelected
+            ? `We want to ${
+                addonTypeNameSelected !== ""
+                  ? addonTypeNameSelected
+                  : "[Add-On Type]"
+              } for $ ${
+                validationType.values.our_price !== ""
+                  ? validationType.values.our_price
+                  : "[Price]"
+              } ${
+                priceTypeNameSelected !== ""
+                  ? priceTypeNameSelected
+                  : "[Price Type]"
+              }, paid in cash on the day of the tour.`
+            : values.custom_message,
+        min_qty:
+          values.min_qty === "" || values.min_qty === null ? 0 : values.min_qty,
+        max_qty:
+          values.max_qty === "" || values.max_qty === null
+            ? 20
+            : values.max_qty,
+        apply_to: applyOptionsSelected,
+        products: applyOptionsSelected === 0 ? [] : matchingProductsSelected
       };
 
+      // console.log(data)
       document.getElementById("save-button").disabled = true;
       if (dataEdit) {
         putAddonAPI(editProductID, data)
           .then((resp) => {
             triggerUpdate();
-            editID = null
+            editID = null;
             setNewAddon(false);
             refreshTable();
             resetForm({ values: "" });
@@ -329,21 +396,15 @@ const Addons = ({
           })
           .catch((error) => {
             if (error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                String(error.response.data.message)
-              );
+              Swal.fire("Error!", String(error.response.data.message));
             } else {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
-                return true
+                return true;
               });
 
-              Swal.fire(
-                "Error!",
-                String(errorMessages[0])
-              );
+              Swal.fire("Error!", String(errorMessages[0]));
             }
             document.getElementById("save-button").disabled = false;
           });
@@ -351,7 +412,7 @@ const Addons = ({
         postAddonsAPI(data)
           .then((resp) => {
             triggerUpdate();
-            editID = null
+            editID = null;
             setNewAddon(false);
             refreshTable();
             resetForm({ values: "" });
@@ -359,38 +420,45 @@ const Addons = ({
           })
           .catch((error) => {
             if (error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                String(error.response.data.message)
-              );
+              Swal.fire("Error!", String(error.response.data.message));
             } else {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
-                return true
+                return true;
               });
 
-              Swal.fire(
-                "Error!",
-                String(errorMessages[0])
-              );
+              Swal.fire("Error!", String(errorMessages[0]));
             }
             document.getElementById("save-button").disabled = false;
           });
       }
       refreshTable();
-
     },
   });
 
   useEffect(() => {
-    if (validationType.values.deposit !== "" && validationType.values.deposit !== 0 && validationType.values.commission !== "" && validationType.values.commission !== 0) {
-      validationType.setFieldValue("balance_due", (validationType.values.deposit - validationType.values.commission).toFixed(2))
+    if (
+      validationType.values.deposit !== "" &&
+      validationType.values.deposit !== 0 &&
+      validationType.values.commission !== "" &&
+      validationType.values.commission !== 0
+    ) {
+      validationType.setFieldValue(
+        "balance_due",
+        (
+          validationType.values.deposit - validationType.values.commission
+        ).toFixed(2)
+      );
     }
-  }, [validationType.values.deposit, validationType.values.commission])
+  }, [validationType.values.deposit, validationType.values.commission]);
 
   useEffect(() => {
-    if (validationType.values.our_price !== "" && validationType.values.commission !== "" && priceCollectNameSelected !== "") {
+    if (
+      validationType.values.our_price !== "" &&
+      validationType.values.commission !== "" &&
+      priceCollectNameSelected !== ""
+    ) {
       validationType.setFieldValue(
         "deposit",
         calcDeposit(
@@ -399,9 +467,15 @@ const Addons = ({
           validationType.values.commission,
           validationType.values.deposit
         )
-      )
+      );
     }
-  }, [validationType.values.our_price, validationType.values.commission, priceCollectNameSelected])
+  }, [
+    validationType.values.our_price,
+    validationType.values.commission,
+    priceCollectNameSelected,
+  ]);
+
+  // console.log("---", dataEdit);
 
   return (
     <Modal
@@ -410,7 +484,7 @@ const Addons = ({
       isOpen={newAddon}
       toggle={() => {
         // onClickAddNew();
-        editID = 0
+        editID = 0;
       }}
     >
       <div
@@ -426,7 +500,7 @@ const Addons = ({
           onClick={() => {
             setNewAddon(false);
             // setDataEdit()
-            editID = 0
+            editID = 0;
           }}
           type="button"
           className="close"
@@ -487,7 +561,8 @@ const Addons = ({
                       />
                     </div>
                   </Col>
-                  {displayOptionSelected === 10 || displayOptionSelected === 1 ?
+                  {displayOptionSelected === 10 ||
+                  displayOptionSelected === 1 ? (
                     <Col className="col-2">
                       <div className="form-outline mb-4">
                         <Label className="form-label">Match Quantity</Label>
@@ -498,7 +573,7 @@ const Addons = ({
                             setMatchQuantitySelected(e.target.value);
                           }}
                           onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                         >
                           <option value="-1">Select....</option>
                           {map(priceMatchQuantityData, (quantity, index) => {
@@ -518,7 +593,8 @@ const Addons = ({
                           })}
                         </Input>
                       </div>
-                    </Col> : null}
+                    </Col>
+                  ) : null}
                   <Col className="col-2">
                     <div className="m-2">
                       <Switch
@@ -555,9 +631,10 @@ const Addons = ({
                                     setttop1(!ttop1);
                                   }}
                                 >
-                                  Select how the product will be priced. Example: "Per
-                                  Item" could be Per ATV, or Per Boat. "Per Person"
-                                  could be Per Adult, or Per Child.
+                                  Select how the product will be priced.
+                                  Example: "Per Item" could be Per ATV, or Per
+                                  Boat. "Per Person" could be Per Adult, or Per
+                                  Child.
                                 </Tooltip>
                               </div>
                             </div>
@@ -572,7 +649,7 @@ const Addons = ({
                                 });
                               }}
                               onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                             >
                               <option value="-1">Select....</option>
                               {map(priceTypeData, (type, index) => {
@@ -612,7 +689,7 @@ const Addons = ({
                                 });
                               }}
                               onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                             >
                               <option value="-1">Select....</option>
                               {map(addonType, (type, index) => {
@@ -650,7 +727,7 @@ const Addons = ({
                                 setPriceOptionSelected(e.target.value);
                               }}
                               onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                             >
                               <option value="-1">Select....</option>
                               {map(priceOptions, (option, index) => {
@@ -664,7 +741,8 @@ const Addons = ({
                                       value={option.id}
                                       selected={
                                         dataEdit
-                                          ? option.id === dataEdit.price_option_id
+                                          ? option.id ===
+                                            dataEdit.price_option_id
                                           : false
                                       }
                                     >
@@ -693,13 +771,15 @@ const Addons = ({
                                     setttop3(!ttop3);
                                   }}
                                 >
-                                  Select the amount of deposit that will be collected at
-                                  the time of booking. Commission = The deposit is equal
-                                  to the amount of commission we earn for the tour.
-                                  Afilliate = The payment is made directly through the
-                                  provider's website, such as the case of dTraveller or
-                                  Viator. Deposit = Manually type the amount of deposit
-                                  we will collect in the "Deposit" field below.
+                                  Select the amount of deposit that will be
+                                  collected at the time of booking. Commission =
+                                  The deposit is equal to the amount of
+                                  commission we earn for the tour. Afilliate =
+                                  The payment is made directly through the
+                                  provider's website, such as the case of
+                                  dTraveller or Viator. Deposit = Manually type
+                                  the amount of deposit we will collect in the
+                                  "Deposit" field below.
                                 </Tooltip>
                               </div>
                             </div>
@@ -752,9 +832,10 @@ const Addons = ({
                                     setttop1(!ttop1);
                                   }}
                                 >
-                                  Select how the product will be priced. Example: "Per
-                                  Item" could be Per ATV, or Per Boat. "Per Person"
-                                  could be Per Adult, or Per Child.
+                                  Select how the product will be priced.
+                                  Example: "Per Item" could be Per ATV, or Per
+                                  Boat. "Per Person" could be Per Adult, or Per
+                                  Child.
                                 </Tooltip>
                               </div>
                             </div>
@@ -765,7 +846,7 @@ const Addons = ({
                                 setPriceTypeSelected(e.target.value);
                               }}
                               onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                             >
                               <option value="-1">Select....</option>
                               {map(priceTypeData, (type, index) => {
@@ -801,7 +882,7 @@ const Addons = ({
                                 setAddonTypeSelected(+e.target.value);
                               }}
                               onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                             >
                               <option value="-1">Select....</option>
                               {map(addonType, (type, index) => {
@@ -839,7 +920,7 @@ const Addons = ({
                                 setPriceOptionSelected(e.target.value);
                               }}
                               onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                             >
                               <option value="-1">Select....</option>
                               {map(priceOptions, (option, index) => {
@@ -853,7 +934,8 @@ const Addons = ({
                                       value={option.id}
                                       selected={
                                         dataEdit
-                                          ? option.id === dataEdit.price_option_id
+                                          ? option.id ===
+                                            dataEdit.price_option_id
                                           : false
                                       }
                                     >
@@ -916,7 +998,11 @@ const Addons = ({
                               setttop19(!ttop19);
                             }}
                           >
-                            Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
+                            Select whether the balance due should be shown to
+                            the provider in the "Please Confirm" email. This
+                            amount will be the same as in the "Voucher Balance"
+                            below. It is the amount the customer will pay to the
+                            provider on the day of the tour.
                           </Tooltip>
                         </div>
                         <div className="form-check form-switch form-switch-md">
@@ -931,13 +1017,13 @@ const Addons = ({
                             value={validationType.values.active || ""}
                             invalid={
                               validationType.touched.active &&
-                                validationType.errors.active
+                              validationType.errors.active
                                 ? true
                                 : false
                             }
                           />
                           {validationType.touched.active &&
-                            validationType.errors.active ? (
+                          validationType.errors.active ? (
                             <FormFeedback type="invalid">
                               {validationType.errors.active}
                             </FormFeedback>
@@ -946,7 +1032,9 @@ const Addons = ({
                       </div>
                     </Col>
                   </Col>
-                  {displayOptionSelected === 13 || displayOptionSelected === 5 || displayOptionSelected === 4 ?
+                  {displayOptionSelected === 13 ||
+                  displayOptionSelected === 5 ||
+                  displayOptionSelected === 4 ? (
                     <Col className="col-3 d-flex justify-content-between">
                       <Col className="col-4">
                         <Label className="form-label ">Min. Qty.*</Label>
@@ -960,13 +1048,13 @@ const Addons = ({
                             value={validationType.values.min_qty || ""}
                             invalid={
                               validationType.touched.min_qty &&
-                                validationType.errors.min_qty
+                              validationType.errors.min_qty
                                 ? true
                                 : false
                             }
                           />
                           {validationType.touched.min_qty &&
-                            validationType.errors.min_qty ? (
+                          validationType.errors.min_qty ? (
                             <FormFeedback type="invalid">
                               {validationType.errors.min_qty}
                             </FormFeedback>
@@ -985,21 +1073,21 @@ const Addons = ({
                             value={validationType.values.max_qty || ""}
                             invalid={
                               validationType.touched.max_qty &&
-                                validationType.errors.max_qty
+                              validationType.errors.max_qty
                                 ? true
                                 : false
                             }
                           />
                           {validationType.touched.max_qty &&
-                            validationType.errors.max_qty ? (
+                          validationType.errors.max_qty ? (
                             <FormFeedback type="invalid">
                               {validationType.errors.max_qty}
                             </FormFeedback>
                           ) : null}
                         </div>
                       </Col>
-                    </Col> : null
-                  }
+                    </Col>
+                  ) : null}
                 </Row>
 
                 <Row className="d-flex">
@@ -1017,27 +1105,35 @@ const Addons = ({
                           onBlur={validationType.handleBlur}
                         >
                           <option value="-1">Select....</option>
-                          {map(displayOptionData.filter(display => display.id !== 2 && display.id !== 13 && display.id !== 9), (type, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={type.id}
-                                selected={
-                                  dataEdit
-                                    ? type.id === dataEdit.display_option
-                                    : false
-                                }
-                              >
-                                {type.text}
-                              </option>
-                            );
-                          })}
+                          {map(
+                            displayOptionData.filter(
+                              (display) =>
+                                display.id !== 2 &&
+                                display.id !== 13 &&
+                                display.id !== 9
+                            ),
+                            (type, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={type.id}
+                                  selected={
+                                    dataEdit
+                                      ? type.id === dataEdit.display_option
+                                      : false
+                                  }
+                                >
+                                  {type.text}
+                                </option>
+                              );
+                            }
+                          )}
                         </Input>
                       </div>
                     </Col>
                     {displayOptionSelected === 13 ||
-                      displayOptionSelected === 2 ||
-                      displayOptionSelected === 5 ? (
+                    displayOptionSelected === 2 ||
+                    displayOptionSelected === 5 ? (
                       <>
                         <Col className="col-6 mx-4">
                           <div className="form-outline">
@@ -1055,7 +1151,7 @@ const Addons = ({
                               }
                               invalid={
                                 validationType.touched.addon_description &&
-                                  validationType.errors.addon_description
+                                validationType.errors.addon_description
                                   ? true
                                   : false
                               }
@@ -1080,7 +1176,7 @@ const Addons = ({
                                 setAddonLabelSelected(e.target.value);
                               }}
                               onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                              //   value={validationType.values.department || ""}
                             >
                               <option value="-1">Select....</option>
                               {map(addonLabelData, (type, index) => {
@@ -1091,7 +1187,7 @@ const Addons = ({
                                     selected={
                                       dataEdit
                                         ? type.id ===
-                                        dataEdit.instruction_label_id
+                                          dataEdit.instruction_label_id
                                         : false
                                     }
                                   >
@@ -1118,7 +1214,7 @@ const Addons = ({
                               }
                               invalid={
                                 validationType.touched.addon_description &&
-                                  validationType.errors.addon_description
+                                validationType.errors.addon_description
                                   ? true
                                   : false
                               }
@@ -1127,6 +1223,106 @@ const Addons = ({
                         </Col>
                       </>
                     ) : null}
+                  </Col>
+                </Row>
+                <Row className="d-flex mt-4">
+                  <Col className="col-10 d-flex justify-content-start">
+                    <Col className="col-4">
+                      <div className="form-outline">
+                        <Label className="form-label">Apply to</Label>
+                        <Input
+                          type="select"
+                          name="apply_to"
+                          onChange={(e) => {
+                            setApplyOptionsSelected(+e.target.value);
+                            // console.log(+e.target.value);
+                            setMatchingProductsSelected([])
+                            setInitialProductList([])
+                          }}
+                          onBlur={validationType.handleBlur}
+                        >
+                          <option value="-1">Select....</option>
+                          {map(applyOptions, (option, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={option.apply_id}
+                                selected={
+                                  dataEdit
+                                    ? option.apply_id === dataEdit.apply_to
+                                    : false
+                                }
+                              >
+                                {option.currency}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    </Col>
+                    <Col className="col-6 mx-4">
+                      <div className="form-outline">
+                        {applyOptionsSelected === 1 ? (
+                          <>
+                            <Label className="form-label">
+                              Matching Product(s)
+                            </Label>
+                            <Input
+                              type="select"
+                              name="apply_to"
+                              onChange={(e) => {
+                                setMatchingProductsSelected([+e.target.value]);
+                               
+                              }}
+                              
+                              onBlur={validationType.handleBlur}
+                            >
+                              <option value="-1">Select....</option>
+                              {map(matchingProducts, (item, index) => {
+                                return (
+                                  <option key={index} value={item.id}
+                                  selected={
+                                    dataEdit
+                                      ? item.id === dataEdit?.products[0]
+                                      : false
+                                  }
+                                  >
+                                    {item.label}
+                                  </option>
+                                );
+                              })}
+                            </Input>
+                          </>
+                        ) : applyOptionsSelected === 2 ? (
+                          <>
+                            <Label className="form-label">
+                              Matching Product(s)
+                            </Label>
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              rows="5"
+                              style={{ width: "100%", paddingTop: "5px" }}
+                              placeholder="Please select"
+                              defaultValue={initialProductsList}
+                              onChange={handleMulti}
+                              // disabled={
+                              //   voucherInitialData?.brings_read_only === 1 ? true : false
+                              // }
+                            >
+                              {map(matchingProducts, (item, index) => {
+                                return (
+                                  <Option key={index} value={item.id}>
+                                    {item.label}
+                                  </Option>
+                                );
+                              })}
+                             
+                            </Select>
+                          </>
+                        ) : null}
+                      </div>
+                    </Col>
                   </Col>
                 </Row>
                 <Row>
@@ -1146,22 +1342,25 @@ const Addons = ({
                             value={validationType.values.custom_message || ""}
                             invalid={
                               validationType.touched.custom_message &&
-                                validationType.errors.custom_message
+                              validationType.errors.custom_message
                                 ? true
                                 : false
                             }
                           />
                         ) : (
-                          <p>{`We want to ${addonTypeNameSelected !== ""
-                            ? addonTypeNameSelected
-                            : "[Add-On Type]"
-                            } for $ ${validationType.values.our_price !== ""
+                          <p>{`We want to ${
+                            addonTypeNameSelected !== ""
+                              ? addonTypeNameSelected
+                              : "[Add-On Type]"
+                          } for $ ${
+                            validationType.values.our_price !== ""
                               ? validationType.values.our_price
                               : "[Price]"
-                            } ${priceTypeNameSelected !== ""
+                          } ${
+                            priceTypeNameSelected !== ""
                               ? priceTypeNameSelected
                               : "[Price Type]"
-                            }, paid in cash on the day of the tour.`}</p>
+                          }, paid in cash on the day of the tour.`}</p>
                         )}
                       </Col>
                       <Col className="col-1 mt-4">
@@ -1178,7 +1377,9 @@ const Addons = ({
                                 type="checkbox"
                                 checked={customMessage}
                                 className="form-check-input"
-                                onChange={() => setCustomMessage(!customMessage)}
+                                onChange={() =>
+                                  setCustomMessage(!customMessage)
+                                }
                               />
                             </div>
                           </Col>
@@ -1240,7 +1441,7 @@ const Addons = ({
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
-                            setRecalc(true)
+                            setRecalc(true);
                             const value = e.target.value || "";
                             customTextAssing({
                               type: "ourPrice",
@@ -1254,14 +1455,14 @@ const Addons = ({
                           value={validationType.values.our_price || ""}
                           invalid={
                             validationType.touched.our_price &&
-                              validationType.errors.our_price
+                            validationType.errors.our_price
                               ? true
                               : false
                           }
                         />
                       </div>
                       {validationType.touched.our_price &&
-                        validationType.errors.our_price ? (
+                      validationType.errors.our_price ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.our_price}
                         </FormFeedback>
@@ -1285,8 +1486,9 @@ const Addons = ({
                               setttop13(!ttop13);
                             }}
                           >
-                            This is the amount they save by booking with us compared
-                            to the "other guys" from the compare at price.
+                            This is the amount they save by booking with us
+                            compared to the "other guys" from the compare at
+                            price.
                           </Tooltip>
                         </div>
                       </div>
@@ -1306,7 +1508,7 @@ const Addons = ({
                           value={validationType.values.you_save || ""}
                           invalid={
                             validationType.touched.you_save &&
-                              validationType.errors.you_save
+                            validationType.errors.you_save
                               ? true
                               : false
                           }
@@ -1320,7 +1522,7 @@ const Addons = ({
                         </span>
                       </div>
                       {validationType.touched.you_save &&
-                        validationType.errors.you_save ? (
+                      validationType.errors.you_save ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.you_save}
                         </FormFeedback>
@@ -1344,8 +1546,8 @@ const Addons = ({
                               setttop7(!ttop7);
                             }}
                           >
-                            The commission rate for the addon that is specified in our
-                            service agreement.
+                            The commission rate for the addon that is specified
+                            in our service agreement.
                           </Tooltip>
                         </div>
                       </div>
@@ -1356,7 +1558,7 @@ const Addons = ({
                           type="text"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
-                            setRecalc(true)
+                            setRecalc(true);
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "rate",
@@ -1366,7 +1568,7 @@ const Addons = ({
                           value={validationType.values.rate || ""}
                           invalid={
                             validationType.touched.rate &&
-                              validationType.errors.rate
+                            validationType.errors.rate
                               ? true
                               : false
                           }
@@ -1380,7 +1582,7 @@ const Addons = ({
                         </span>
                       </div>
                       {validationType.touched.rate &&
-                        validationType.errors.rate ? (
+                      validationType.errors.rate ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.rate}
                         </FormFeedback>
@@ -1432,14 +1634,14 @@ const Addons = ({
                           value={validationType.values.commission || ""}
                           invalid={
                             validationType.touched.commission &&
-                              validationType.errors.commission
+                            validationType.errors.commission
                               ? true
                               : false
                           }
                         />
                       </div>
                       {validationType.touched.commission &&
-                        validationType.errors.commission ? (
+                      validationType.errors.commission ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.commission}
                         </FormFeedback>
@@ -1463,9 +1665,9 @@ const Addons = ({
                               setttop16(!ttop16);
                             }}
                           >
-                            The amount we collect at the time of booking. This is
-                            calculated based on the option chosen in "Collect"
-                            above.
+                            The amount we collect at the time of booking. This
+                            is calculated based on the option chosen in
+                            "Collect" above.
                           </Tooltip>
                         </div>
                       </div>
@@ -1493,14 +1695,14 @@ const Addons = ({
                           value={validationType.values.deposit || ""}
                           invalid={
                             validationType.touched.deposit &&
-                              validationType.errors.deposit
+                            validationType.errors.deposit
                               ? true
                               : false
                           }
                         />
                       </div>
                       {validationType.touched.deposit &&
-                        validationType.errors.deposit ? (
+                      validationType.errors.deposit ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.deposit}
                         </FormFeedback>
@@ -1524,7 +1726,9 @@ const Addons = ({
                               setttop17(!ttop17);
                             }}
                           >
-                            The amount due to the provider on the invoice.<br />Our Deposit - Our Commission.
+                            The amount due to the provider on the invoice.
+                            <br />
+                            Our Deposit - Our Commission.
                           </Tooltip>
                         </div>
                       </div>
@@ -1553,13 +1757,13 @@ const Addons = ({
                           value={validationType.values.balance_due || ""}
                           invalid={
                             validationType.touched.balance_due &&
-                              validationType.errors.balance_due
+                            validationType.errors.balance_due
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.balance_due &&
-                          validationType.errors.balance_due ? (
+                        validationType.errors.balance_due ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.balance_due}
                           </FormFeedback>

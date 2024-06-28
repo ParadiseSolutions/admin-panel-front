@@ -117,7 +117,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           optionsAreaShort.push(+element.id);
         }
       });
-      // console.log('option area', optionsArea)
       setInitialOptionsArea(optionsArea);
       setSelectionID(optionsAreaShort);
       setRestrictionList(voucherInitialData.restrictions);
@@ -127,7 +126,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
     }
   }, [voucherInitialData, bringListInitialData, tourData]);
 
-  console.log(voucherInitialData);
 
   useEffect(() => {
     if (restrictionList.length > 0) {
@@ -271,10 +269,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
         boat_google_maps_url_read_only: voucherInitialData.boat_google_maps_url_read_only,
         boat_location_read_only: voucherInitialData.boat_location_read_only,
       };
-      // console.log("data a enviar", data);
       putVoucherInformationTours(voucherInitialData.tour_id, data)
         .then((resp) => {
-          // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire(
               "Edited!",
@@ -284,7 +280,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           }
         })
         .catch((error) => {
-          // console.log(error.response);
           Swal.fire(
             "Error!",
             `${
@@ -299,7 +294,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   });
 
   const onDelete = (feeID) => {
-    // console.log(feeID);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -311,7 +305,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteExtraFeeTours(feeID).then((resp) => {
-          // console.log(resp.data.data);
           if (resp.data.status === 200) {
             refreshTable();
             Swal.fire("deleted!", "Extra fee has been edited.", "success");

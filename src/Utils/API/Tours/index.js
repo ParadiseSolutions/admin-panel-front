@@ -292,6 +292,12 @@ export const getPricingOptionsAPI = (id) => {
     headers: options,
   });
 };
+export const getApplyOptionsAPI = () => {
+  const url = `${API_URL}/addons/list/appliesTo`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 export const getPricingOptions2API = (id) => {
   const url = `${API_URL}/pricingOptions/${id}/items`;
   return axios.get (url, {
