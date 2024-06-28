@@ -104,13 +104,9 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   function togglecol1() {
     setcol1(!col1);
   }
-  // console.log("lista de brings", bringListInitialData);
-  console.log("data inicial", voucherInitialData);
-  // console.log("opciones que deberian de ir en el select", initialOptionsArea);
   //----- bring list
   function handleMulti(selected) {
     setSelectionID(selected);
-    console.log(selectionID);
   }
   useEffect(() => {
     if (voucherInitialData) {
@@ -123,7 +119,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           optionsAreaShort.push(+element.id);
         }
       });
-      // console.log('option area', optionsArea)
       setInitialOptionsArea(optionsArea);
       setSelectionID(optionsAreaShort);
       setRestrictionList(voucherInitialData.restrictions);
@@ -131,7 +126,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
     }
   }, [voucherInitialData, bringListInitialData]);
 
-  console.log(selectionID);
+ 
 
   useEffect(() => {
     if (restrictionList.length > 0) {
@@ -254,10 +249,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           voucherInitialData.secondary_contact_channel_read_only,
         send_voucher: sendVoucherChk,
       };
-      console.log("data a enviar", data);
       putVoucherInformation(voucherInitialData.operator_id, data)
         .then((resp) => {
-          // console.log(resp.data);
           if (resp.data.status === 201) {
             Swal.fire(
               "Edited!",
@@ -267,7 +260,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           }
         })
         .catch((error) => {
-          // console.log(error.response);
           Swal.fire(
             "Error!",
             `${error.response.data.data.name
@@ -281,7 +273,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   });
 
   const onDelete = (feeID) => {
-    console.log(feeID);
+    
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -293,7 +285,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteExtraFee(feeID).then((resp) => {
-          console.log(resp.data.data);
+         
           if (resp.data.status === 200) {
             refreshTable();
             Swal.fire("deleted!", "Extra fee has been edited.", "success");
