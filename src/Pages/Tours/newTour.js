@@ -153,7 +153,8 @@ const NewTour = ({ history }) => {
     getCategoryWebsiteAPI(id).then((resp) => {
       setCategoryData(resp.data.data);
       if (resp.data.data.length === 1) {
-        setMainCatID(resp.data.data[0].id);
+        setMainCatID(resp.data.data[0].category_id);
+        setCategoryId(resp.data.data[0].category_id);
       } else {
         setMainCatID(null);
       }
