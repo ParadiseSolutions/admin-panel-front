@@ -126,8 +126,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
     }
   }, [voucherInitialData, bringListInitialData]);
 
- 
-
   useEffect(() => {
     if (restrictionList.length > 0) {
       setRest1(restrictionList[0]?.restriction_1);
@@ -256,15 +254,16 @@ const AutomatedConfirmation = ({ socialData, id }) => {
               "Edited!",
               "Automated Confirmation Information has been edited.",
               "success"
-            ).then(() => { });
+            ).then(() => {});
           }
         })
         .catch((error) => {
           Swal.fire(
             "Error!",
-            `${error.response.data.data.name
-              ? error.response.data.data.name
-              : error.response.data.data.code
+            `${
+              error.response.data.data.name
+                ? error.response.data.data.name
+                : error.response.data.data.code
             }`,
             "error"
           );
@@ -273,7 +272,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   });
 
   const onDelete = (feeID) => {
-    
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -285,7 +283,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteExtraFee(feeID).then((resp) => {
-         
           if (resp.data.status === 200) {
             refreshTable();
             Swal.fire("deleted!", "Extra fee has been edited.", "success");
@@ -332,14 +329,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         class="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
                         style={{ width: "32px", height: "32px" }}
                       ></i>{" "}
-                      The details below will be shown on the customer's
+                      Enter the details that will be shown on the customer's
                       confirmation voucher. Some of the details will also show
-                      on the website. If any details appear greyed out, they
-                      have been specified in the operator panel and apply to all
-                      of the tours for this operator. They can only be changed
-                      in the operator panel. New details added here will only
-                      display for this tour and not for other tours from this
-                      operator.
+                      on the website. Everything defined here will be applied to
+                      ALL of the tours for this operator. If a field may be
+                      different for certain tours then leave it blank. You will
+                      define it for each tour in the Voucher Templates tab of
+                      the Tour Panel.
                     </p>
                   </div>
                 </Col>
@@ -366,9 +362,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         are displayed in the list.
                         <br />
                         <br />
-                        To add a fee to the list,
-                        click on "Add Extra Fee". To edit a fee, click on the
-                        pencil icon next to the fee.
+                        To add a fee to the list, click on "Add Extra Fee". To
+                        edit a fee, click on the pencil icon next to the fee.
                       </Tooltip>
                     </div>
 
@@ -377,7 +372,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       style={{ cursor: "pointer" }}
                       onClick={() => {
                         setExtraFeeEditData([]);
-                        setExtraFeeModal(!extraFeeModal)
+                        setExtraFeeModal(!extraFeeModal);
                       }}
                     >
                       + Add Extra Fee
@@ -390,8 +385,9 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                           {map(extraFeeInitialData, (fee, index) => {
                             return (
                               <tr>
-                                <th className="col-11">{`${index + 1}. ${fee.fee_type
-                                  }`}</th>
+                                <th className="col-11">{`${index + 1}. ${
+                                  fee.fee_type
+                                }`}</th>
                                 <td className="col-1">
                                   <div className="d-flex gap-3">
                                     <div className="text-paradise">
@@ -465,12 +461,10 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       the tour.
                       <br />
                       <br />
-                      This will be shown on the voucher and on the
-                      website.
+                      This will be shown on the voucher and on the website.
                       <br />
                       <br />
-                      The items will be shown in the order they are
-                      selected.
+                      The items will be shown in the order they are selected.
                     </Tooltip>
                     <Select
                       mode="multiple"
@@ -493,7 +487,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   </Col>
                 ) : null}
                 {voucherInitialData?.brings &&
-                  initialOptionsArea.length === 0 ? (
+                initialOptionsArea.length === 0 ? (
                   <Col className="col-4 ">
                     <label>Bring </label>
                     <i
@@ -512,12 +506,10 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       the tour.
                       <br />
                       <br />
-                      This will be shown on the voucher and on the
-                      website.
+                      This will be shown on the voucher and on the website.
                       <br />
                       <br />
-                      The items will be shown in the order they are
-                      selected.
+                      The items will be shown in the order they are selected.
                     </Tooltip>
                     <Select
                       mode="multiple"
@@ -566,13 +558,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     value={validationType.values.aditional_information || ""}
                     invalid={
                       validationType.touched.aditional_information &&
-                        validationType.errors.aditional_information
+                      validationType.errors.aditional_information
                         ? true
                         : false
                     }
                   />
                   {validationType.touched.aditional_information &&
-                    validationType.errors.aditional_information ? (
+                  validationType.errors.aditional_information ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.aditional_information}
                     </FormFeedback>
@@ -616,13 +608,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       value={validationType.values.meeting_location || ""}
                       invalid={
                         validationType.touched.meeting_location &&
-                          validationType.errors.meeting_location
+                        validationType.errors.meeting_location
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.meeting_location &&
-                      validationType.errors.meeting_location ? (
+                    validationType.errors.meeting_location ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.meeting_location}
                       </FormFeedback>
@@ -656,23 +648,23 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       maxLength={80}
                       invalid={
                         validationType.touched.meeting_instructions &&
-                          validationType.errors.meeting_instructions
+                        validationType.errors.meeting_instructions
                           ? true
                           : false
                       }
-                    />                    
+                    />
                     <p
                       style={{
                         fontSize: "12px",
                         fontWeight: "lighter",
                         textAlign: "right",
-                        marginBottom: 0
+                        marginBottom: 0,
                       }}
                     >
                       80 characters max
                     </p>
                     {validationType.touched.meeting_instructions &&
-                      validationType.errors.meeting_instructions ? (
+                    validationType.errors.meeting_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.meeting_instructions}
                       </FormFeedback>
@@ -745,13 +737,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       value={validationType.values.google_maps_url || ""}
                       invalid={
                         validationType.touched.google_maps_url &&
-                          validationType.errors.google_maps_url
+                        validationType.errors.google_maps_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.google_maps_url &&
-                      validationType.errors.google_maps_url ? (
+                    validationType.errors.google_maps_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.google_maps_url}
                       </FormFeedback>
@@ -772,7 +764,9 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       setimg(!ttimg);
                     }}
                   >
-                    Paste the URL of an image or a gallery where the customer can see photos of the exact meeting location, or of a map showing how to get to the location.
+                    Paste the URL of an image or a gallery where the customer
+                    can see photos of the exact meeting location, or of a map
+                    showing how to get to the location.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -784,13 +778,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       value={validationType.values.images_url || ""}
                       invalid={
                         validationType.touched.images_url &&
-                          validationType.errors.images_url
+                        validationType.errors.images_url
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.images_url &&
-                      validationType.errors.images_url ? (
+                    validationType.errors.images_url ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.images_url}
                       </FormFeedback>
@@ -825,7 +819,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       setai(!ttai);
                     }}
                   >
-                    Provide clear directions to the customer of what will happen on arrival to the airport, or where to find their driver.
+                    Provide clear directions to the customer of what will happen
+                    on arrival to the airport, or where to find their driver.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -838,7 +833,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       maxLength={80}
                       invalid={
                         validationType.touched.arrival_instructions &&
-                          validationType.errors.arrival_instructions
+                        validationType.errors.arrival_instructions
                           ? true
                           : false
                       }
@@ -848,13 +843,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         fontSize: "12px",
                         fontWeight: "lighter",
                         textAlign: "right",
-                        marginBottom: 0
+                        marginBottom: 0,
                       }}
                     >
                       80 characters max
                     </p>
                     {validationType.touched.arrival_instructions &&
-                      validationType.errors.arrival_instructions ? (
+                    validationType.errors.arrival_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.arrival_instructions}
                       </FormFeedback>
@@ -875,7 +870,9 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       setdp(!ttdp);
                     }}
                   >
-                    Provide clear directions to the customer as to where they will meet their transfer for their departure, or any clarifications of what they need to do.
+                    Provide clear directions to the customer as to where they
+                    will meet their transfer for their departure, or any
+                    clarifications of what they need to do.
                   </Tooltip>
                   <div className="">
                     <Input
@@ -888,7 +885,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       maxLength={80}
                       invalid={
                         validationType.touched.departure_instructions &&
-                          validationType.errors.departure_instructions
+                        validationType.errors.departure_instructions
                           ? true
                           : false
                       }
@@ -898,13 +895,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         fontSize: "12px",
                         fontWeight: "lighter",
                         textAlign: "right",
-                        marginBottom: 0
+                        marginBottom: 0,
                       }}
                     >
                       80 characters max
                     </p>
                     {validationType.touched.departure_instructions &&
-                      validationType.errors.departure_instructions ? (
+                    validationType.errors.departure_instructions ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.departure_instructions}
                       </FormFeedback>
@@ -954,13 +951,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       value={validationType.values.primary_contact_phone || ""}
                       invalid={
                         validationType.touched.primary_contact_phone &&
-                          validationType.errors.primary_contact_phone
+                        validationType.errors.primary_contact_phone
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.primary_contact_phone &&
-                      validationType.errors.primary_contact_phone ? (
+                    validationType.errors.primary_contact_phone ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.primary_contact_phone}
                       </FormFeedback>
@@ -994,7 +991,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         setPrimaryContactChannelSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(channelList, (channel, index) => {
@@ -1065,13 +1062,13 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       }
                       invalid={
                         validationType.touched.secondary_contact_phone &&
-                          validationType.errors.secondary_contact_phone
+                        validationType.errors.secondary_contact_phone
                           ? true
                           : false
                       }
                     />
                     {validationType.touched.secondary_contact_phone &&
-                      validationType.errors.secondary_contact_phone ? (
+                    validationType.errors.secondary_contact_phone ? (
                       <FormFeedback type="invalid">
                         {validationType.errors.secondary_contact_phone}
                       </FormFeedback>
@@ -1105,7 +1102,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         setSecondaryContactChannelSelected(e.target.value);
                       }}
                       onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
                       {map(channelList, (channel, index) => {
