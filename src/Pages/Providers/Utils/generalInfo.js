@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { serviceAreaData } from "../../../Utils/Redux/Actions/ServiceAreaActions";
-import { createProviderAPI } from "../../../Utils/API/Providers";
+import { createProviderAPI, getNotyfyChannelAPI } from "../../../Utils/API/Providers";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -81,7 +81,8 @@ const GeneralInformation = () => {
   const [col3, setcol3] = useState(false);
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
-
+  const [voucherChannelList, setVoucherChannelList] = useState([]);
+  const [voucherChannelSelected, setVoucherChannelSelected] = useState([]);
   const [switchNotify, setSwitchNotify] = useState(false)
   const [switchOperator, setSwitchOperator] = useState(false)
   
@@ -97,6 +98,13 @@ useEffect(() => {
     setServiceAreaError(false)
   }
 }, [selectionID]);
+
+useEffect(() => {
+  
+  getNotyfyChannelAPI().then((resp) =>{
+    setVoucherChannelList(resp.data.data)
+        })
+}, []);
 
 
   function togglecol1() {
@@ -146,7 +154,7 @@ useEffect(() => {
                 ? values.reservation_email
                 : "",
               cc_email: values.cc_email ? values.cc_email : "",
-              notification_email: switchNotify === true ? 1 : 0,
+              notification_email: voucherChannelSelected,
               description: values.description ? values.description : "",
               is_operator: switchOperator === true ? 1 : 0,
               phone1: values.phone1 ? values.phone1 : '',
@@ -352,41 +360,35 @@ useEffect(() => {
                   </div>
                 </Col>
                 <Col className="col-1">
-                    <Label className="form-label mt-2">Notify</Label>
-                  <div className="">
-                  <Switch
-                      uncheckedIcon={<Offsymbol />}
-                      checkedIcon={<OnSymbol />}
-                      onColor="#3DC7F4"
-                      width={70}
-                      onChange={() => {
-                        setSwitchNotify(!switchNotify);
+                  <Label className="form-label ">Notify Channel</Label>
+                    <div className="">
+                    <div className="">
+                    <Input
+                      type="select"
+                      name="voucher_channel"
+                      onChange={(e) => {
+                        setVoucherChannelSelected(e.target.value);
                       }}
-                      checked={switchNotify}
-                    />
-                    {/* <Input
-                      name="notification_email"
-                      placeholder=""
-                      type="checkbox"
-                      className="form-check-input"
-                      onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      value={validationType.values.notification_email || ""}
-                      invalid={
-                        validationType.touched.notification_email &&
-                        validationType.errors.notification_email
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.notification_email &&
-                    validationType.errors.notification_email ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.notification_email}
-                      </FormFeedback>
-                    ) : null} */}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value={null}>Select....</option>
+                      {map(voucherChannelList, (voucher, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={voucher.channel}
+                           
+                          >
+                            {voucher.channel}
+                          </option>
+                        );
+                      })}
+                    </Input>
                   </div>
-                </Col>
+                     
+                    </div>
+                  </Col>
                 <Col className="col-1">
                     <Label className="form-label mt-2">Operator</Label>
                   <div className="">

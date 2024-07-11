@@ -42,6 +42,18 @@ export const deleteProviderAPI = (id) => {
       headers: options,
     });
   };
+  export const getNotyfyChannelAPI = () => {
+    const url = `${API_URL}/vouchers/getConfirmChannels`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getSendVoucherFromAPI = () => {
+    const url = `${API_URL}/websites`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 
   export const updateProviderAPI = (id, body) => {
     const url = `${API_URL}/providers/${id}`;
