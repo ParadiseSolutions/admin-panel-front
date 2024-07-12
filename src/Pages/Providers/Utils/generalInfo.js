@@ -377,7 +377,7 @@ useEffect(() => {
                         return (
                           <option
                             key={index}
-                            value={voucher.channel}
+                            value={voucher.id}
                            
                           >
                             {voucher.channel}
