@@ -23,6 +23,8 @@ import {
   getBringList,
   getChannels,
   getExtraFeeTable,
+  getSendVoucherFromAPI,
+  getVoucherChannels,
   getVoucherInfo,
   putVoucherInformation,
 } from "../../../Utils/API/Operators";
@@ -42,6 +44,10 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   const [extraFeeEditData, setExtraFeeEditData] = useState([]);
   const [restrictionList, setRestrictionList] = useState([]);
   const [channelList, setChannelList] = useState([]);
+  const [voucherChannelList, setVoucherChannelList] = useState([]);
+  const [voucherChannelSelected, setVoucherChannelSelected] = useState([]);
+  const [voucherSendList, setVoucherSendList] = useState([]);
+  const [voucherSendSelected, setVoucherSendSelected] = useState([]);
   const [primaryContactChannelSelected, setPrimaryContactChannelSelected] =
     useState();
   const [secondaryContactChannelSelected, setSecondaryContactChannelSelected] =
@@ -87,6 +93,16 @@ const AutomatedConfirmation = ({ socialData, id }) => {
     getChannels()
       .then((resp) => {
         setChannelList(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+    getVoucherChannels()
+      .then((resp) => {
+        setVoucherChannelList(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+      getSendVoucherFromAPI()
+      .then((resp) => {
+        setVoucherSendList(resp.data.data);
       })
       .catch((err) => console.log(err));
   }, [id]);
@@ -245,7 +261,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           : voucherInitialData.secondary_contact_channel,
         secondary_contact_channel_read_only:
           voucherInitialData.secondary_contact_channel_read_only,
-        send_voucher: sendVoucherChk,
+        send_voucher: voucherChannelSelected,
+        send_voucher_form: voucherSendSelected,
       };
       putVoucherInformation(voucherInitialData.operator_id, data)
         .then((resp) => {
@@ -1136,7 +1153,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                 </Col>
               </Row>
               <Row>
-                <Col className=" d-flex justify-content-end my-2">
+                {/* <Col className=" d-flex justify-content-end my-2">
                   <Input
                     name="send_voucher"
                     className="my-2 mx-2"
@@ -1146,6 +1163,67 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     value={sendVoucherChk}
                   />
                   <label className="mt-1">Send Voucher to Provider</label>
+                </Col> */}
+                <Col className="col-4 mt-3">
+                  <label>Send Voucher From</label>
+
+                  <div className="">
+                    <Input
+                      type="select"
+                      name="voucher_send"
+                      onChange={(e) => {
+                        setVoucherSendSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value={null}>Select....</option>
+                      {map(voucherSendList, (voucher, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={voucher.id}
+                            selected={
+                              voucherInitialData?.send_voucher_form ===
+                              voucher.id
+                            }
+                          >
+                            {voucher.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                <Col className="col-2 mt-3">
+                  <label>Voucher Channel</label>
+
+                  <div className="">
+                    <Input
+                      type="select"
+                      name="voucher_channel"
+                      onChange={(e) => {
+                        setVoucherChannelSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value={null}>Select....</option>
+                      {map(voucherChannelList, (voucher, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={voucher.id}
+                            selected={
+                              voucherInitialData?.send_voucher === voucher.id
+                            }
+                          >
+                            {voucher.channel}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
                 </Col>
               </Row>
               <Row>
