@@ -441,7 +441,7 @@ const EditGeneralInformation = ({ data }) => {
                           return (
                             <option
                               key={index}
-                              value={voucher.channel}
+                              value={voucher.id}
                               selected={
                                 initialData?.notification_email === voucher.id
                               }
