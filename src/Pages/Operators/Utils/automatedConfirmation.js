@@ -139,6 +139,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
       setSelectionID(optionsAreaShort);
       setRestrictionList(voucherInitialData.restrictions);
       setSendVoucherChk(voucherInitialData.send_voucher === 1 ? true : false);
+      setVoucherSendSelected(voucherInitialData.send_voucher)
+      setVoucherChannelSelected(voucherInitialData.send_voucher_from)
     }
   }, [voucherInitialData, bringListInitialData]);
 
@@ -262,7 +264,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         secondary_contact_channel_read_only:
           voucherInitialData.secondary_contact_channel_read_only,
         send_voucher: voucherChannelSelected,
-        send_voucher_form: voucherSendSelected,
+        send_voucher_from: voucherSendSelected,
       };
       putVoucherInformation(voucherInitialData.operator_id, data)
         .then((resp) => {
@@ -1168,6 +1170,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   <label>Send Voucher From</label>
 
                   <div className="">
+
+
                     <Input
                       type="select"
                       name="voucher_send"
@@ -1184,7 +1188,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                             key={index}
                             value={voucher.id}
                             selected={
-                              voucherInitialData?.send_voucher_form ===
+                              voucherInitialData?.send_voucher_from ===
                               voucher.id
                             }
                           >
@@ -1215,7 +1219,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                             key={index}
                             value={voucher.id}
                             selected={
-                              voucherInitialData?.send_voucher === voucher.id
+                              voucherInitialData?.send_voucher == voucher.id
                             }
                           >
                             {voucher.channel}
