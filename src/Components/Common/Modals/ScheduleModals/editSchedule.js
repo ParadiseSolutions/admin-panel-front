@@ -154,6 +154,10 @@ const EditScheduleModal = ({
     getScheduleTypesAPI().then((resp) => {
       setSchedulesTypesData(resp.data.data);
     });
+    if(!editSchedule) {
+      setTypeSelected(null)
+      setDayList([])
+    }
   }, [editSchedule]);
 
   useEffect(() => {
@@ -440,7 +444,7 @@ const EditScheduleModal = ({
 
                 <Col className="col-9">
                   <Row className="d-flex">
-                    {typeSelected === "4" || typeToEdit === 4 ? (
+                    {+typeSelected === 4 || typeToEdit === 4 ? (
                       <>
                         <Col className="col-4">
                           <Label className="form-label">Start Time</Label>
@@ -1025,7 +1029,7 @@ const EditScheduleModal = ({
                   />
                 </Col>
 
-                <Col className="col-9 mt-3">
+                <Col className="col-9 mt-3" hidden="true">
                   <Row className="">
                     <div className="form-check form-switch form-switch-md mt-1">
                       <Label className="form-label mt-2 ">
@@ -1044,7 +1048,7 @@ const EditScheduleModal = ({
                 </Col>
               </Row>
 
-              <Row className="col-9">
+              <Row className="col-9" hidden="true">
                 <Col className="col-6">
                   <div className="form-outline my-3">
                     <div className="d-flex">

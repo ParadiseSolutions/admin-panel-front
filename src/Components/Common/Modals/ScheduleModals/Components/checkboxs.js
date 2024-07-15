@@ -20,6 +20,8 @@ const [dailyChecked, setDailyChecked] = useState(false)
 useEffect(() => {
   if (scheduleEditID) {
     setInitialRun(scheduleEditID.runs)
+  } else {
+    setInitialRun(null)
   }
 }, [scheduleEditID]);
 
