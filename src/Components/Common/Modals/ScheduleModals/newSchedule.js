@@ -33,28 +33,35 @@ const AddNewScheduleModal = ({
   //initial Data
   const [scheduleTypesData, setSchedulesTypesData] = useState([]);
   const [productsData, setProductsData] = useState([]);
+  const [typeSelected, setTypeSelected] = useState(null);
   useEffect(() => {
     getScheduleTypesAPI().then((resp) => {
       setSchedulesTypesData(resp.data.data);
     });
+    if(!newSchedule) {
+      setTypeSelected(null)
+      setDayList([])
+    }
   }, [newSchedule]);
-
+  
+  const [daysList, setDayList] = useState([]);
   useEffect(() => {
     if (tourData) {
       getPricesPricingAPI(tourData.id).then((resp) => {
         setProductsData(resp.data.data);
       });
+    } else {
+      setTypeSelected(null)
+      setDayList([])
     }
   }, [tourData]);
 
   // type onChange
-  const [typeSelected, setTypeSelected] = useState(null);
   const onChangeType = (selectionType) => {
     setTypeSelected(selectionType);
   };
 
   // checkbox list
-  const [daysList, setDayList] = useState([]);
   const onAddDay = (day) => {
     const selection = day;
     const selectionFlag = daysList.includes(selection);
@@ -263,17 +270,17 @@ const AddNewScheduleModal = ({
             </span>
           </button>
         </div>
-        <div className="modal-body p-4">
-          <Row className="d-flex g-4">
-            <Col className="col-4">
+        <div className="modal-body">
+          <Row className="d-flex">
+            <Col className="col-3">
               <img
-                className="w-100"
+                className="img-fluid"
                 src={ScheduleImage}
                 alt="new-product"
                 // style={{ height: "590px", width: "260px" }}
               />
             </Col>
-            <Col className="col-8">
+            <Col className="col-9">
               <Row hidden={true}>
                 <Col>
                   <div className="form-outline">
@@ -322,7 +329,7 @@ const AddNewScheduleModal = ({
                   </div>
                 </Col>
 
-                {typeSelected && typeSelected === "4" ? (
+                {typeSelected && +typeSelected === 4 ? (
                   <>
                     <Col className="col">
                       <Label className="form-label">Start Time</Label>
@@ -404,7 +411,7 @@ const AddNewScheduleModal = ({
                   </>
                 ) : null}
 
-                {typeSelected && typeSelected === "6" ? (
+                {typeSelected && +typeSelected === 6 ? (
                   <>
                     <Col className="col">
                       <Label className="form-label">Time Unit</Label>
@@ -450,7 +457,7 @@ const AddNewScheduleModal = ({
                   </>
                 ) : null}
 
-                {typeSelected && typeSelected === "6" ? (
+                {typeSelected && +typeSelected === 6 ? (
                   <Col className="col-12 mt-4">
                     <Row className="d-flex">
                       <Label>Available Time</Label>
@@ -533,7 +540,7 @@ const AddNewScheduleModal = ({
                   </Col>
                 ) : null}
 
-                {typeSelected && typeSelected === "3" ? (
+                {typeSelected && +typeSelected === 3 ? (
                   <Col className="col-12 mt-3">
                     <div className="mt-4">
                       <Row>
@@ -777,16 +784,11 @@ const AddNewScheduleModal = ({
                     </div>
                   </Col>
                 ) : null}
-                {typeSelected &&
-                (typeSelected === "4" ||
-                  typeSelected === "3" ||
-                  typeSelected === "6") ? (
-                  <Col className="col-12 mt-3">
-                    <CheckBoxs onAddDay={onAddDay} />
-                  </Col>
-                ) : null}
+                <Col className="col-12 mt-3">
+                  <CheckBoxs onAddDay={onAddDay} />
+                </Col>
 
-                <Col className="col-9 mt-3">
+                <Col className="col-9 mt-3" hidden="true">
                   <Row className="">
                     <div className="mt-1">
                       <Label className="form-label mt-2 ">
@@ -805,7 +807,7 @@ const AddNewScheduleModal = ({
                 </Col>
               </Row>
 
-              <Row className="col-9">
+              <Row className="col-9" hidden="true">
                 <Col className="col-6">
                   <div className="form-outline my-3">
                     <div className="d-flex">

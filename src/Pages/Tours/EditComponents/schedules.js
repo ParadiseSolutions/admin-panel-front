@@ -262,7 +262,10 @@ const Schedules = ({ tourData, toggle }) => {
                                   ? "Single Schedule"
                                   : schedule.type_id === 3
                                   ? "Multiple Schedule"
-                                  : "Intervals"}
+                                  : schedule.type_id === 6 
+                                  ? "Intervals"
+                                  : "Custom"
+                                }
                               </td>
                               <td>
                                 {schedule.detail === ""
@@ -330,7 +333,7 @@ const Schedules = ({ tourData, toggle }) => {
                   </tbody>
                 </Table>
               </section>
-              <section className="d-flex justify-content-between mb-5">
+              <section className="d-flex justify-content-between mb-5" hidden="true">
                 <h2 className="text-paradise font-bold">
                   Override Calendar Dates
                 </h2>
@@ -342,7 +345,7 @@ const Schedules = ({ tourData, toggle }) => {
                   + New Entry
                 </Button>
               </section>
-              <section className="table-responsive border-top mb-5">
+              <section className="table-responsive border-top mb-5" hidden="true">
                 <Table className="table mb-0">
                   <thead>
                     <tr>
