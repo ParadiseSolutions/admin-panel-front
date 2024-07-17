@@ -456,7 +456,7 @@ const AddNewProductPricing = ({
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.our_price !== "" && validationType.values.deposit !== "") {
+      if (validationType.values.our_price !== "" && validationType.values.deposit !== "" && currencySelected != "MXN") {
         validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((validationType.values.our_price - validationType.values.deposit), currencySelected))
       }
     }
@@ -853,7 +853,7 @@ const AddNewProductPricing = ({
 
                 <Row className="d-flex mt-4">
                   <Col className="col-2">
-                    <div className="form-outline mb-2" id="public_price">
+                    <div className="form-outline mb-2" id="min_qty_div">
                       <div className="d-flex justify-content-between">
                         <Label className="form-label">Capacity</Label>
                        
@@ -959,7 +959,7 @@ const AddNewProductPricing = ({
                     </div>
                   </Col>
                   <Col className="col-2">
-                    <div className="form-outline mb-2" id="public_price">
+                    <div className="form-outline mb-2" id="price_tierss">
                       <div className="d-flex justify-content-between">
                         <Label className="form-label">Price Tiers</Label>
                        

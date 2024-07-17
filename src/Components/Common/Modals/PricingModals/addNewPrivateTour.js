@@ -465,7 +465,7 @@ const AddNewPrivateTour = ({
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.our_price !== "" && validationType.values.deposit !== "") {
+      if (validationType.values.our_price !== "" && validationType.values.deposit !== "" && currencySelected != "MXN") {
         validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((validationType.values.our_price - validationType.values.deposit), currencySelected))
       }
     }
