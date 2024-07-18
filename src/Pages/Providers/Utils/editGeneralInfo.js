@@ -78,12 +78,15 @@ const EditGeneralInformation = ({ data }) => {
   const [selectionID, setSelectionID] = useState({});
   const [serviceAreaError, setServiceAreaError] = useState(false);
   const [voucherChannelList, setVoucherChannelList] = useState([]);
-  const [voucherChannelSelected, setVoucherChannelSelected] = useState([]);
+  const [voucherChannelSelected, setVoucherChannelSelected] = useState(null);
   useEffect(() => {
     setInitialData(data);
   }, [data]);
 
   useEffect(() => {
+    if(initialData) {
+      setVoucherChannelSelected(initialData.notification_email)
+    }
     if (initialData && initialData.notification_email === 1) {
       setSwitchNotify(true);
     } else {

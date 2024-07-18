@@ -82,7 +82,7 @@ const GeneralInformation = () => {
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
   const [voucherChannelList, setVoucherChannelList] = useState([]);
-  const [voucherChannelSelected, setVoucherChannelSelected] = useState([]);
+  const [voucherChannelSelected, setVoucherChannelSelected] = useState(null);
   const [switchNotify, setSwitchNotify] = useState(false)
   const [switchOperator, setSwitchOperator] = useState(false)
   
