@@ -211,7 +211,7 @@ const EditGeneralInformation = ({ data }) => {
             ? values.reservation_email
             : "",
           cc_email: values.cc_email ? values.cc_email : "",
-          notification_email: voucherChannelSelected,
+          notification_email: voucherChannelSelected === "" ? null : voucherChannelSelected,
           is_operator: switchOperator === true ? 1 : 0,
           description: values.description ? values.description : "",
           phone1: values.phone1 ? values.phone1 : "",
@@ -439,7 +439,7 @@ const EditGeneralInformation = ({ data }) => {
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
-                        <option value={null}>Select....</option>
+                        <option value="">Select....</option>
                         {map(voucherChannelList, (voucher, index) => {
                           return (
                             <option

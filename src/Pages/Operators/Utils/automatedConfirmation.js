@@ -263,8 +263,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           : voucherInitialData.secondary_contact_channel,
         secondary_contact_channel_read_only:
           voucherInitialData.secondary_contact_channel_read_only,
-        send_voucher: voucherChannelSelected,
-        send_voucher_from: voucherSendSelected,
+        send_voucher: voucherChannelSelected === "" ? null : voucherChannelSelected,
+        send_voucher_from: voucherSendSelected === "" ? null : voucherSendSelected,
       };
       putVoucherInformation(voucherInitialData.operator_id, data)
         .then((resp) => {
@@ -1012,7 +1012,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option value={null}>Select....</option>
+                      <option value="">Select....</option>
                       {map(channelList, (channel, index) => {
                         return (
                           <option
@@ -1123,7 +1123,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option value={null}>Select....</option>
+                      <option value="">Select....</option>
                       {map(channelList, (channel, index) => {
                         return (
                           <option
@@ -1181,7 +1181,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option value={null}>Select....</option>
+                      <option value="">Select....</option>
                       {map(voucherSendList, (voucher, index) => {
                         return (
                           <option
@@ -1212,7 +1212,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option value={null}>Select....</option>
+                      <option value="">Select....</option>
                       {map(voucherChannelList, (voucher, index) => {
                         return (
                           <option
