@@ -82,7 +82,7 @@ const GeneralInformation = () => {
   const [addMore1, setAddMore1] = useState(false);
   const [addMore2, setAddMore2] = useState(false);
   const [voucherChannelList, setVoucherChannelList] = useState([]);
-  const [voucherChannelSelected, setVoucherChannelSelected] = useState([]);
+  const [voucherChannelSelected, setVoucherChannelSelected] = useState(null);
   const [switchNotify, setSwitchNotify] = useState(false)
   const [switchOperator, setSwitchOperator] = useState(false)
   
@@ -154,7 +154,7 @@ useEffect(() => {
                 ? values.reservation_email
                 : "",
               cc_email: values.cc_email ? values.cc_email : "",
-              notification_email: voucherChannelSelected,
+              notification_email: voucherChannelSelected === "" ? null : voucherChannelSelected,
               description: values.description ? values.description : "",
               is_operator: switchOperator === true ? 1 : 0,
               phone1: values.phone1 ? values.phone1 : '',
@@ -372,7 +372,7 @@ useEffect(() => {
                       onBlur={validationType.handleBlur}
                       //   value={validationType.values.department || ""}
                     >
-                      <option value={null}>Select....</option>
+                      <option value="">Select....</option>
                       {map(voucherChannelList, (voucher, index) => {
                         return (
                           <option
