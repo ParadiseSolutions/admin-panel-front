@@ -16,7 +16,12 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { Select } from "antd";
-import { getBringList, getChannels } from "../../../Utils/API/Operators";
+import {
+  getBringList,
+  getChannels,
+  getSendVoucherFromAPI,
+  getVoucherChannels,
+} from "../../../Utils/API/Operators";
 import { map } from "lodash";
 import { Option } from "antd/lib/mentions";
 import {
@@ -26,6 +31,7 @@ import {
   putVoucherInformationTours,
 } from "../../../Utils/API/Tours/TemplatesAPI";
 import ReservePageModal from "../../../Components/Common/Modals/TourSetingsModal/ReservePageModal";
+import { getNotyfyChannelAPI } from "../../../Utils/API/Providers";
 
 const AutomatedConfirmation = ({ tourData, id }) => {
   const tourID = tourData?.id;
@@ -41,18 +47,23 @@ const AutomatedConfirmation = ({ tourData, id }) => {
     useState();
   const [secondaryContactChannelSelected, setSecondaryContactChannelSelected] =
     useState();
-  const [sendVoucherChk, setSendVoucherChk] = useState();
+  const [voucherSendSelected, setVoucherSendSelected] = useState([]);
+  const [voucherSendList, setVoucherSendList] = useState([]);
+  const [voucherChannelList, setVoucherChannelList] = useState([]);
+  const [voucherChannelSelected, setVoucherChannelSelected] = useState([]);
+  const [confirmationChannelList, setConfirmationChannelList] = useState([]);
+  const [confirmationChannelSelected, setConfirmationChannelSelected] =
+    useState([]);
+
   const [reserveModal, setReserveModal] = useState(false);
   const [rest1, setRest1] = useState();
   const [rest2, setRest2] = useState();
   const [rest3, setRest3] = useState();
   const [rest4, setRest4] = useState();
-  const [addMore, setAddMore] = useState(false);
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
   const [ttop4, setttop4] = useState(false);
-  const [ttop5, setttop5] = useState(false);
   const [ttop6, setttop6] = useState(false);
   const [ttop7, setttop7] = useState(false);
   const [ttGM, settGm] = useState(false);
@@ -92,6 +103,19 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           setChannelList(resp.data.data);
         })
         .catch((err) => console.log(err));
+      getSendVoucherFromAPI()
+        .then((resp) => {
+          setVoucherSendList(resp.data.data);
+        })
+        .catch((err) => console.log(err));
+      getVoucherChannels()
+        .then((resp) => {
+          setVoucherChannelList(resp.data.data);
+        })
+        .catch((err) => console.log(err));
+      getNotyfyChannelAPI().then((resp) => {
+        setConfirmationChannelList(resp.data.data);
+      });
     }
   }, [tourID]);
 
@@ -125,7 +149,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       );
     }
   }, [voucherInitialData, bringListInitialData, tourData]);
-
 
   useEffect(() => {
     if (restrictionList.length > 0) {
@@ -263,11 +286,23 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           : voucherInitialData.secondary_contact_channel,
         secondary_contact_channel_read_only:
           voucherInitialData.secondary_contact_channel_read_only,
-        send_voucher: sendVoucherChk,
+
         boat_google_maps_url: values.boat_google_maps_url,
         boat_location: values.boat_location,
-        boat_google_maps_url_read_only: voucherInitialData.boat_google_maps_url_read_only,
+        boat_google_maps_url_read_only:
+          voucherInitialData.boat_google_maps_url_read_only,
         boat_location_read_only: voucherInitialData.boat_location_read_only,
+        send_voucher_from:
+          voucherSendSelected === "" ? null : voucherSendSelected,
+        send_voucher:
+          voucherChannelSelected === "" ? null : voucherChannelSelected,
+        notification_email:
+          confirmationChannelSelected === ""
+            ? null
+            : confirmationChannelSelected,
+            send_voucher_from_read_only: voucherInitialData.send_voucher_from_read_only,
+            send_voucher_read_only: voucherInitialData.send_voucher_read_only,
+            notification_email_read_only: voucherInitialData.notification_email_read_only
       };
       putVoucherInformationTours(voucherInitialData.tour_id, data)
         .then((resp) => {
@@ -292,7 +327,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
         });
     },
   });
-
+  console.log("data inicial", voucherInitialData);
   const onDelete = (feeID) => {
     Swal.fire({
       title: "Are you sure?",
@@ -1481,19 +1516,116 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               </div>
             </Col>
           </Row>
-          {/*  <Row>
-            <Col className=" d-flex justify-content-end my-2">
-              <Input
-                name="send_voucher"
-                className="my-2 mx-2"
-                type="checkbox"
-                checked={sendVoucherChk}
-                onChange={() => setSendVoucherChk(!sendVoucherChk)}
-                value={sendVoucherChk}
-              />
-              <label className="mt-1">Send Voucher to Provider</label>
+          <Row className="mt-4">
+            <Col className="col-4">
+              <label>Send Voucher From</label>
+
+              <div className="">
+                <Input
+                  type="select"
+                  name="voucher_send"
+                  onChange={(e) => {
+                    setVoucherSendSelected(e.target.value);
+                  }}
+                  onBlur={validationType.handleBlur}
+                  //   value={validationType.values.department || ""}
+                  disabled={
+                    voucherInitialData?.send_voucher_from_read_only === 1
+                      ? true
+                      : false
+                  }
+                >
+                  <option value="">Select....</option>
+                  {map(voucherSendList, (voucher, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={voucher.id}
+                        selected={
+                          voucherInitialData?.send_voucher_from === voucher.id
+                        }
+                      >
+                        {voucher.name}
+                      </option>
+                    );
+                  })}
+                </Input>
+              </div>
             </Col>
-          </Row> */}
+            <Col className="col-2">
+              <label>Voucher Channel</label>
+
+              <div className="">
+                <Input
+                  type="select"
+                  name="voucher_channel"
+                  onChange={(e) => {
+                    setVoucherChannelSelected(e.target.value);
+                  }}
+                  onBlur={validationType.handleBlur}
+                  //   value={validationType.values.department || ""}
+                  disabled={
+                    voucherInitialData?.send_voucher_read_only === 1
+                      ? true
+                      : false
+                  }
+                >
+                  <option value="">Select....</option>
+                  {map(voucherChannelList, (voucher, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={voucher.id}
+                        selected={
+                          voucherInitialData?.send_voucher == voucher.id
+                        }
+                      >
+                        {voucher.channel}
+                      </option>
+                    );
+                  })}
+                </Input>
+              </div>
+            </Col>
+            <Col className="col-2">
+              <label className="form-label ">Confirmation Channel</label>
+              <div className="">
+                <div className="">
+                  <Input
+                    type="select"
+                    name="confirmation_channel"
+                    onChange={(e) => {
+                      setConfirmationChannelSelected(e.target.value);
+                    }}
+                    onBlur={validationType.handleBlur}
+                    //   value={validationType.values.department || ""}
+                    disabled={
+                      voucherInitialData?.notification_email_read_only === 1
+                        ? true
+                        : false
+                    }
+                  >
+                    <option value="">Select....</option>
+                    {map(confirmationChannelList, (voucher, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={voucher.id}
+                          selected={
+                            voucherInitialData?.notification_email ===
+                            voucher.id
+                          }
+                        >
+                          {voucher.channel}
+                        </option>
+                      );
+                    })}
+                  </Input>
+                </div>
+              </div>
+            </Col>
+          </Row>
+
           <Row>
             <Col className=" d-flex justify-content-end">
               <Button

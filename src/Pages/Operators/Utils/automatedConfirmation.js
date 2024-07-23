@@ -1170,8 +1170,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   <label>Send Voucher From</label>
 
                   <div className="">
-
-
                     <Input
                       type="select"
                       name="voucher_send"
