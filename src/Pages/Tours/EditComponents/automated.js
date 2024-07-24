@@ -78,6 +78,9 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [ttschanel, settschanel] = useState(false);
   const [extraFeeModal, setExtraFeeModal] = useState(false);
   const [specialInstrucionCheck, setSpecialInstructionCheck] = useState(false);
+  const [ttsendvoucherdfrom, setttsendvoucherdfrom] = useState(false);
+  const [ttvoucherchannel, setttvoucherchannel] = useState(false);
+  const [ttconfirmationchannel, setttconfirmationchannel] = useState(false);
 
   useEffect(() => {
     if (tourID) {
@@ -147,6 +150,9 @@ const AutomatedConfirmation = ({ tourData, id }) => {
       setSpecialInstructionCheck(
         tourData.special_instruction_enable === 1 ? true : false
       );
+      setVoucherSendSelected(voucherInitialData.send_voucher_from)
+      setVoucherChannelSelected(voucherInitialData.send_voucher)
+      setConfirmationChannelSelected(voucherInitialData.notification_email)
     }
   }, [voucherInitialData, bringListInitialData, tourData]);
 
@@ -293,13 +299,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           voucherInitialData.boat_google_maps_url_read_only,
         boat_location_read_only: voucherInitialData.boat_location_read_only,
         send_voucher_from:
-          voucherSendSelected.length > 0 ? voucherSendSelected : voucherInitialData.send_voucher_from,
+          voucherSendSelected === "" ? null : voucherSendSelected,
         send_voucher:
-          voucherChannelSelected.length > 0 ? voucherChannelSelected : voucherInitialData.send_voucher,
+          voucherChannelSelected === "" ? null : voucherChannelSelected,
         notification_email:
-          confirmationChannelSelected.length > 0
-            ? confirmationChannelSelected
-            : voucherInitialData.notification_email,
+          confirmationChannelSelected === ""
+            ? null
+            : confirmationChannelSelected,
             send_voucher_from_read_only: voucherInitialData.send_voucher_from_read_only,
             send_voucher_read_only: voucherInitialData.send_voucher_read_only,
             notification_email_read_only: voucherInitialData.notification_email_read_only
@@ -1069,7 +1075,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                           : false
                       }
                       value={validationType.values.boat_location || ""}
-                      maxLength={100}
                       invalid={
                         validationType.touched.boat_location &&
                         validationType.errors.boat_location
@@ -1077,16 +1082,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                           : false
                       }
                     />
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "lighter",
-                        textAlign: "right",
-                        marginBottom: 0,
-                      }}
-                    >
-                      100 characters max
-                    </p>
                     {validationType.touched.boat_location &&
                     validationType.errors.boat_location ? (
                       <FormFeedback type="invalid">
@@ -1176,7 +1171,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
                         tourData?.type_id === 2 ||
@@ -1195,16 +1189,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       }
                     />
 
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "lighter",
-                        textAlign: "right",
-                        marginBottom: 0,
-                      }}
-                    >
-                      80 characters max
-                    </p>
                     {validationType.touched.arrival_instructions &&
                     validationType.errors.arrival_instructions ? (
                       <FormFeedback type="invalid">
@@ -1238,7 +1222,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                       type="text"
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      maxLength={80}
                       disabled={
                         tourData?.type_id === 1 ||
                         tourData?.type_id === 2 ||
@@ -1256,17 +1239,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                           : false
                       }
                     />
-
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "lighter",
-                        textAlign: "right",
-                        marginBottom: 0,
-                      }}
-                    >
-                      80 characters max
-                    </p>
                     {validationType.touched.departure_instructions &&
                     validationType.errors.departure_instructions ? (
                       <FormFeedback type="invalid">
@@ -1518,7 +1490,21 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           </Row>
           <Row className="mt-4">
             <Col className="col-4">
-              <label>Send Voucher From</label>
+              <label>Send Voucher As</label>
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="channel55"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttsendvoucherdfrom}
+                target="channel55"
+                toggle={() => {
+                  setttsendvoucherdfrom(!ttsendvoucherdfrom);
+                }}
+              >
+                Choose which brand this tour will use for Emails and Vouchers.  Default is the website the tour is located on, but can be changed for providers that are conflictive due to MF and prefer to see other brands such as JS Tour & Travel or Cancun Discounts.  If this value is set in the provider tool, then it will appear greyed out.
+              </Tooltip>
 
               <div className="">
                 <Input
@@ -1553,42 +1539,21 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               </div>
             </Col>
             <Col className="col-2">
-              <label>Voucher Channel</label>
-
-              <div className="">
-                <Input
-                  type="select"
-                  name="voucher_channel"
-                  onChange={(e) => {
-                    setVoucherChannelSelected(e.target.value);
-                  }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                  disabled={
-                    voucherInitialData?.send_voucher_read_only === 1
-                      ? true
-                      : false
-                  }
-                >
-                  <option value="">Select....</option>
-                  {map(voucherChannelList, (voucher, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={voucher.id}
-                        selected={
-                          voucherInitialData?.send_voucher == voucher.id
-                        }
-                      >
-                        {voucher.channel}
-                      </option>
-                    );
-                  })}
-                </Input>
-              </div>
-            </Col>
-            <Col className="col-2">
-              <label className="form-label ">Confirmation Channel</label>
+              <label>Request Availability Via</label>
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="channel599"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttconfirmationchannel}
+                target="channel599"
+                toggle={() => {
+                  setttconfirmationchannel(!ttconfirmationchannel);
+                }}
+              >
+                Select how this provider wants to receive their "please confirm" request for this tour.  If this value is set in the provider tool, then it will appear greyed out.
+              </Tooltip>
               <div className="">
                 <div className="">
                   <Input
@@ -1622,6 +1587,55 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     })}
                   </Input>
                 </div>
+              </div>
+            </Col>
+            <Col className="col-2">
+              <label>Issue Voucher Via</label>
+              <i
+                className="uil-question-circle font-size-15 mx-2"
+                id="channel599"
+              />
+              <Tooltip
+                placement="right"
+                isOpen={ttvoucherchannel}
+                target="channel599"
+                toggle={() => {
+                  setttvoucherchannel(!ttvoucherchannel);
+                }}
+              >
+                Select how this provider wants to receive a copy of the voucher for this tour. If this value is set in the provider tool, then it will appear greyed out.
+              </Tooltip>
+
+              <div className="">
+                <Input
+                  type="select"
+                  name="voucher_channel"
+                  onChange={(e) => {
+                    setVoucherChannelSelected(e.target.value);
+                  }}
+                  onBlur={validationType.handleBlur}
+                  //   value={validationType.values.department || ""}
+                  disabled={
+                    voucherInitialData?.send_voucher_read_only === 1
+                      ? true
+                      : false
+                  }
+                >
+                  <option value="">Select....</option>
+                  {map(voucherChannelList, (voucher, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={voucher.id}
+                        selected={
+                          voucherInitialData?.send_voucher == voucher.id
+                        }
+                      >
+                        {voucher.channel}
+                      </option>
+                    );
+                  })}
+                </Input>
               </div>
             </Col>
           </Row>

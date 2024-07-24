@@ -139,8 +139,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
       setSelectionID(optionsAreaShort);
       setRestrictionList(voucherInitialData.restrictions);
       setSendVoucherChk(voucherInitialData.send_voucher === 1 ? true : false);
-      setVoucherSendSelected(voucherInitialData.send_voucher)
-      setVoucherChannelSelected(voucherInitialData.send_voucher_from)
+      setVoucherSendSelected(voucherInitialData.send_voucher_from)
+      setVoucherChannelSelected(voucherInitialData.send_voucher)
     }
   }, [voucherInitialData, bringListInitialData]);
 
@@ -849,7 +849,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.arrival_instructions || ""}
-                      maxLength={80}
                       invalid={
                         validationType.touched.arrival_instructions &&
                         validationType.errors.arrival_instructions
@@ -857,16 +856,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                           : false
                       }
                     />
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "lighter",
-                        textAlign: "right",
-                        marginBottom: 0,
-                      }}
-                    >
-                      80 characters max
-                    </p>
                     {validationType.touched.arrival_instructions &&
                     validationType.errors.arrival_instructions ? (
                       <FormFeedback type="invalid">
@@ -901,7 +890,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.departure_instructions || ""}
-                      maxLength={80}
                       invalid={
                         validationType.touched.departure_instructions &&
                         validationType.errors.departure_instructions
@@ -909,16 +897,6 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                           : false
                       }
                     />
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "lighter",
-                        textAlign: "right",
-                        marginBottom: 0,
-                      }}
-                    >
-                      80 characters max
-                    </p>
                     {validationType.touched.departure_instructions &&
                     validationType.errors.departure_instructions ? (
                       <FormFeedback type="invalid">
@@ -1167,7 +1145,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   <label className="mt-1">Send Voucher to Provider</label>
                 </Col> */}
                 <Col className="col-4 mt-3">
-                  <label>Send Voucher From</label>
+                  <label>Send Voucher As</label>
 
                   <div className="">
                     <Input
@@ -1198,7 +1176,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   </div>
                 </Col>
                 <Col className="col-2 mt-3">
-                  <label>Voucher Channel</label>
+                  <label>Issue Voucher Via</label>
 
                   <div className="">
                     <Input
