@@ -1168,7 +1168,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     <Input
                       name="arrival_instructions"
                       placeholder=""
-                      type="text"
+                      type="textarea"
+                      rows={1}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       disabled={
@@ -1219,7 +1220,8 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                     <Input
                       name="departure_instructions"
                       placeholder=""
-                      type="text"
+                      type="textarea"
+                      rows={1}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       disabled={
