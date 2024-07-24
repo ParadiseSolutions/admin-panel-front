@@ -293,13 +293,13 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           voucherInitialData.boat_google_maps_url_read_only,
         boat_location_read_only: voucherInitialData.boat_location_read_only,
         send_voucher_from:
-          voucherSendSelected === "" ? null : voucherSendSelected,
+          voucherSendSelected.length > 0 ? voucherSendSelected : voucherInitialData.send_voucher_from,
         send_voucher:
-          voucherChannelSelected === "" ? null : voucherChannelSelected,
+          voucherChannelSelected.length > 0 ? voucherChannelSelected : voucherInitialData.send_voucher,
         notification_email:
-          confirmationChannelSelected === ""
-            ? null
-            : confirmationChannelSelected,
+          confirmationChannelSelected.length > 0
+            ? confirmationChannelSelected
+            : voucherInitialData.notification_email,
             send_voucher_from_read_only: voucherInitialData.send_voucher_from_read_only,
             send_voucher_read_only: voucherInitialData.send_voucher_read_only,
             notification_email_read_only: voucherInitialData.notification_email_read_only
