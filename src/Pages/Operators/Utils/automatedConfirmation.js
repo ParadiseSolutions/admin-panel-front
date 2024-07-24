@@ -845,7 +845,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     <Input
                       name="arrival_instructions"
                       placeholder=""
-                      type="text"
+                      type="textarea"
+                      rows={1}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.arrival_instructions || ""}
@@ -886,7 +887,8 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     <Input
                       name="departure_instructions"
                       placeholder=""
-                      type="text"
+                      type="textarea"
+                      rows={1}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
                       value={validationType.values.departure_instructions || ""}
