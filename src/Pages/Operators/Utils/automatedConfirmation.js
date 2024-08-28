@@ -19,10 +19,16 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { Select } from "antd";
 import {
+  deleteBoatLocation,
   deleteExtraFee,
+  deleteMeetingLocation,
+  deleteRestriction,
+  getBoatLocationTable,
   getBringList,
   getChannels,
   getExtraFeeTable,
+  getMeetingLocationTable,
+  getRestrictionsTable,
   getSendVoucherFromAPI,
   getVoucherChannels,
   getVoucherInfo,
@@ -30,6 +36,9 @@ import {
 } from "../../../Utils/API/Operators";
 import { map } from "lodash";
 import { Option } from "antd/lib/mentions";
+import AddLocationModal from "../../../Components/Common/Modals/OperatorsModals/addLocationModal";
+import AddBoatModal from "../../../Components/Common/Modals/OperatorsModals/addBoatModal";
+import AddRestrictionModal from "../../../Components/Common/Modals/OperatorsModals/addRestrictionModal";
 
 const AutomatedConfirmation = ({ socialData, id }) => {
   // const {id} = useHistory()
@@ -37,11 +46,17 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   //initial info
   // const [initialData, setInitialData] = useState({});
   const [extraFeeInitialData, setExtraFeeInitialData] = useState({});
+  const [meetingLocationTable, setMeetingLocationTable] = useState({});
+  const [boatLocationTable, setBoatLocationTable] = useState({});
+  const [restrictionTable, setRestrictionTable] = useState({});
   const [bringListInitialData, setBringListInitialData] = useState([]);
   const [initialOptionsArea, setInitialOptionsArea] = useState([]);
   const [selectionID, setSelectionID] = useState({});
   const [voucherInitialData, setVoucherInitialData] = useState();
   const [extraFeeEditData, setExtraFeeEditData] = useState([]);
+  const [locationEditData, setLocationEditData] = useState([]);
+  const [boatEditData, setBoatEditData] = useState([]);
+  const [restrictionEditData, setRestrictionEditData] = useState([]);
   const [restrictionList, setRestrictionList] = useState([]);
   const [channelList, setChannelList] = useState([]);
   const [voucherChannelList, setVoucherChannelList] = useState([]);
@@ -70,11 +85,30 @@ const AutomatedConfirmation = ({ socialData, id }) => {
   const [ttdp, setdp] = useState(false);
   const [ttai, setai] = useState(false);
   const [extraFeeModal, setExtraFeeModal] = useState(false);
+  const [locationModal, setLocationModal] = useState(false);
+  const [boatModal, setBoatModal] = useState(false);
+  const [restrictionModal, setRestrictionModal] = useState(false);
 
   useEffect(() => {
     getExtraFeeTable(id)
       .then((resp) => {
         setExtraFeeInitialData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+
+    getMeetingLocationTable(id)
+      .then((resp) => {
+        setMeetingLocationTable(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+    getBoatLocationTable(id)
+      .then((resp) => {
+        setBoatLocationTable(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+    getRestrictionsTable(id)
+      .then((resp) => {
+        setRestrictionTable(resp.data.data);
       })
       .catch((err) => console.log(err));
 
@@ -100,7 +134,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         setVoucherChannelList(resp.data.data);
       })
       .catch((err) => console.log(err));
-      getSendVoucherFromAPI()
+    getSendVoucherFromAPI()
       .then((resp) => {
         setVoucherSendList(resp.data.data);
       })
@@ -111,6 +145,21 @@ const AutomatedConfirmation = ({ socialData, id }) => {
     getExtraFeeTable(id)
       .then((resp) => {
         setExtraFeeInitialData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+    getMeetingLocationTable(id)
+      .then((resp) => {
+        setMeetingLocationTable(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+    getBoatLocationTable(id)
+      .then((resp) => {
+        setBoatLocationTable(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+    getRestrictionsTable(id)
+      .then((resp) => {
+        setRestrictionTable(resp.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -153,6 +202,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
       // setRest1(restrictionList[3]?.restriction_4)
     }
   }, [restrictionList]);
+  console.log("locations", meetingLocationTable);
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -263,8 +313,10 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           : voucherInitialData.secondary_contact_channel,
         secondary_contact_channel_read_only:
           voucherInitialData.secondary_contact_channel_read_only,
-        send_voucher: voucherChannelSelected === "" ? null : voucherChannelSelected,
-        send_voucher_from: voucherSendSelected === "" ? null : voucherSendSelected,
+        send_voucher:
+          voucherChannelSelected === "" ? null : voucherChannelSelected,
+        send_voucher_from:
+          voucherSendSelected === "" ? null : voucherSendSelected,
       };
       putVoucherInformation(voucherInitialData.operator_id, data)
         .then((resp) => {
@@ -305,6 +357,66 @@ const AutomatedConfirmation = ({ socialData, id }) => {
           if (resp.data.status === 200) {
             refreshTable();
             Swal.fire("deleted!", "Extra fee has been edited.", "success");
+          }
+        });
+      }
+    });
+  };
+  const onDeleteLocation = (locationID) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteMeetingLocation(locationID).then((resp) => {
+          if (resp.data.status === 200) {
+            refreshTable();
+            Swal.fire("deleted!", "Meeting Location has been deleted.", "success");
+          }
+        });
+      }
+    });
+  };
+  const onDeleteBoatLocation = (locationID) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteBoatLocation(locationID).then((resp) => {
+          if (resp.data.status === 200) {
+            refreshTable();
+            Swal.fire("deleted!", "Boat Location has been deleted.", "success");
+          }
+        });
+      }
+    });
+  };
+  const onDeleteRestriction = (locationID) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteRestriction(locationID).then((resp) => {
+          if (resp.data.status === 200) {
+            refreshTable();
+            Swal.fire("deleted!", "Restriction has been deleted.", "success");
           }
         });
       }
@@ -592,237 +704,311 @@ const AutomatedConfirmation = ({ socialData, id }) => {
               </Row>
               <Row className="mt-3">
                 <Col className="col-4">
-                  <label>Meeting Location</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="meeting_location"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttml}
-                    target="meeting_location"
-                    toggle={() => {
-                      setml(!ttml);
-                    }}
-                  >
-                    The exact meeting location of the tour.
-                    <br />
-                    <br />
-                    Examples:
-                    <br />
-                    <br />
-                    "Your Hotel's Front Door"
-                    <br />
-                    "Meet at the Security Gate at your Hotel"
-                    <br />
-                    "Aquaworld Marina at Km 15.2 of the Hotel Zone."
-                  </Tooltip>
-                  <div className="">
-                    <Input
-                      name="meeting_location"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.meeting_location || ""}
-                      invalid={
-                        validationType.touched.meeting_location &&
-                        validationType.errors.meeting_location
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.meeting_location &&
-                    validationType.errors.meeting_location ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.meeting_location}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-                <Col className="col-4 ">
-                  <label>Meeting Instructions</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="meeting_instructions"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttmi}
-                    target="meeting_instructions"
-                    toggle={() => {
-                      setmi(!ttmi);
-                    }}
-                  >
-                    Specific Instructions of how to meet the tour or transfer.
-                  </Tooltip>
-                  <div className="">
-                    <Input
-                      name="meeting_instructions"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.meeting_instructions || ""}
-                      maxLength={80}
-                      invalid={
-                        validationType.touched.meeting_instructions &&
-                        validationType.errors.meeting_instructions
-                          ? true
-                          : false
-                      }
-                    />
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "lighter",
-                        textAlign: "right",
-                        marginBottom: 0,
-                      }}
-                    >
-                      80 characters max
-                    </p>
-                    {validationType.touched.meeting_instructions &&
-                    validationType.errors.meeting_instructions ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.meeting_instructions}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </Col>
-
-                {restrictionList ? (
-                  <Col className="col-4 ">
-                    <label>Restrictions</label>
-                    <i
-                      className="uil-question-circle font-size-15 mx-2"
-                      id="restrictions"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={ttop4}
-                      target="restrictions"
-                      toggle={() => {
-                        setttop4(!ttop4);
-                      }}
-                    >
-                      If the tour has any restrictions specify them one line at
-                      a time. They will be shown on the voucher and on the
-                      website in the order displayed.
-                    </Tooltip>
-                    <div className="col-12">
-                      <Input
-                        name="rest_one"
-                        placeholder="Add Restriction #1"
-                        type="text"
-                        className=""
-                        onChange={(e) => setRest1(e.target.value)}
-                        value={rest1}
+                  <div className="d-flex justify-content-between">
+                    <div className="d-flex">
+                      <label>Meeting Locations</label>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="zfees"
                       />
+                      <Tooltip
+                        placement="right"
+                        isOpen={ttop1}
+                        target="zfees"
+                        toggle={() => {
+                          setttop1(!ttop1);
+                        }}
+                      >
+                        {/* These are the additional fees that will be shown on the
+                        website and the voucher for this tour, in the order they
+                        are displayed in the list.
+                        <br />
+                        <br />
+                        To add a fee to the list, click on "Add Extra Fee". To
+                        edit a fee, click on the pencil icon next to the fee. */}
+                      </Tooltip>
                     </div>
-                  </Col>
-                ) : null}
-              </Row>
-              <Row>
-                <Col className="col-4">
-                  <label>Google Maps URL</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="google_maps_url"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttGM}
-                    target="google_maps_url"
-                    toggle={() => {
-                      settGm(!ttGM);
-                    }}
-                  >
-                    Paste the URL from Google Maps of the exact meeting
-                    location, so the customer can view exact directions of how
-                    to get there.
-                    <br />
-                    <br />
-                    Be very specific, zoom in and make certain that the pin is
-                    exactly where the customer should stand.
-                  </Tooltip>
-                  <div className="">
-                    <Input
-                      name="google_maps_url"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.google_maps_url || ""}
-                      invalid={
-                        validationType.touched.google_maps_url &&
-                        validationType.errors.google_maps_url
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.google_maps_url &&
-                    validationType.errors.google_maps_url ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.google_maps_url}
-                      </FormFeedback>
-                    ) : null}
+
+                    <label
+                      className="text-paradise"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setLocationEditData([]);
+                        setLocationModal(!locationModal);
+                      }}
+                    >
+                      + Add Location
+                    </label>
                   </div>
-                </Col>
-                <Col className="col-4 ">
-                  <label>Images URL</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="images_url"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttimg}
-                    target="images_url"
-                    toggle={() => {
-                      setimg(!ttimg);
-                    }}
-                  >
-                    Paste the URL of an image or a gallery where the customer
-                    can see photos of the exact meeting location, or of a map
-                    showing how to get to the location.
-                  </Tooltip>
-                  <div className="">
-                    <Input
-                      name="images_url"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.images_url || ""}
-                      invalid={
-                        validationType.touched.images_url &&
-                        validationType.errors.images_url
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.images_url &&
-                    validationType.errors.images_url ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.images_url}
-                      </FormFeedback>
-                    ) : null}
+                  <div className="table-responsive" style={{ height: "127px" }}>
+                    <Card>
+                      <Table className="table mb-0">
+                        <tbody>
+                          {map(meetingLocationTable, (location, index) => {
+                            return (
+                              <tr>
+                                <th className="col-11">{`${index + 1}. ${
+                                  location.title
+                                }`}</th>
+                                <td className="col-1">
+                                  <div className="d-flex gap-3">
+                                    <div className="text-paradise">
+                                      <div
+                                        className="text-success"
+                                        onClick={() => {
+                                          setLocationEditData([]);
+                                          setLocationEditData(location);
+                                          setLocationModal(true);
+                                        }}
+                                      >
+                                        <i
+                                          className="mdi mdi-pencil-outline font-size-17 text-paradise"
+                                          id="edittooltip"
+                                          style={{ cursor: "pointer" }}
+                                        />
+                                        <UncontrolledTooltip
+                                          placement="top"
+                                          target="edittooltip"
+                                        >
+                                          Edit
+                                        </UncontrolledTooltip>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="text-danger"
+                                      onClick={() => {
+                                        // const tourData = cellProps.row.original;
+                                        // // setconfirm_alert(true);
+                                        onDeleteLocation(location.id);
+                                      }}
+                                    >
+                                      <i
+                                        className="mdi mdi-delete-outline font-size-17"
+                                        id="deletetooltip"
+                                        style={{ cursor: "pointer" }}
+                                      />
+                                      <UncontrolledTooltip
+                                        placement="top"
+                                        target="deletetooltip"
+                                      >
+                                        Delete
+                                      </UncontrolledTooltip>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </Card>
                   </div>
                 </Col>
                 <Col className="col-4">
-                  <div className="col-12 d-flex mt-4">
-                    <Input
-                      name="rest_two"
-                      placeholder="Add Restriction #2"
-                      className="my-2"
-                      type="text"
-                      onChange={(e) => setRest2(e.target.value)}
-                      value={rest2}
-                    />
+                  <div className="d-flex justify-content-between">
+                    <div className="d-flex">
+                      <label>Boat Locations</label>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="zfees"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={ttop1}
+                        target="zfees"
+                        toggle={() => {
+                          setttop1(!ttop1);
+                        }}
+                      >
+                        {/* These are the additional fees that will be shown on the
+                        website and the voucher for this tour, in the order they
+                        are displayed in the list.
+                        <br />
+                        <br />
+                        To add a fee to the list, click on "Add Extra Fee". To
+                        edit a fee, click on the pencil icon next to the fee. */}
+                      </Tooltip>
+                    </div>
+
+                    <label
+                      className="text-paradise"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setBoatEditData([]);
+                        setBoatModal(!boatModal);
+                      }}
+                    >
+                      + Add Boat
+                    </label>
+                  </div>
+                  <div className="table-responsive" style={{ height: "127px" }}>
+                    <Card>
+                      <Table className="table mb-0">
+                        <tbody>
+                          {map(boatLocationTable, (fee, index) => {
+                            return (
+                              <tr>
+                                <th className="col-11">{`${index + 1}. ${
+                                  fee.title
+                                }`}</th>
+                                <td className="col-1">
+                                  <div className="d-flex gap-3">
+                                    <div className="text-paradise">
+                                      <div
+                                        className="text-success"
+                                        onClick={() => {
+                                          setBoatEditData([]);
+                                          setBoatEditData(fee);
+                                          setBoatModal(true);
+                                        }}
+                                      >
+                                        <i
+                                          className="mdi mdi-pencil-outline font-size-17 text-paradise"
+                                          id="edittooltip"
+                                          style={{ cursor: "pointer" }}
+                                        />
+                                        <UncontrolledTooltip
+                                          placement="top"
+                                          target="edittooltip"
+                                        >
+                                          Edit
+                                        </UncontrolledTooltip>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="text-danger"
+                                      onClick={() => {
+                                        // const tourData = cellProps.row.original;
+                                        // // setconfirm_alert(true);
+                                        onDeleteBoatLocation(fee.id);
+                                      }}
+                                    >
+                                      <i
+                                        className="mdi mdi-delete-outline font-size-17"
+                                        id="deletetooltip"
+                                        style={{ cursor: "pointer" }}
+                                      />
+                                      <UncontrolledTooltip
+                                        placement="top"
+                                        target="deletetooltip"
+                                      >
+                                        Delete
+                                      </UncontrolledTooltip>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </Card>
+                  </div>
+                </Col>
+                <Col className="col-4">
+                  <div className="d-flex justify-content-between">
+                    <div className="d-flex">
+                      <label>Restrictions</label>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="zfees"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={ttop1}
+                        target="zfees"
+                        toggle={() => {
+                          setttop1(!ttop1);
+                        }}
+                      >
+                        {/* These are the additional fees that will be shown on the
+                        website and the voucher for this tour, in the order they
+                        are displayed in the list.
+                        <br />
+                        <br />
+                        To add a fee to the list, click on "Add Extra Fee". To
+                        edit a fee, click on the pencil icon next to the fee. */}
+                      </Tooltip>
+                    </div>
+
+                    <label
+                      className="text-paradise"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setRestrictionEditData([]);
+                        setRestrictionModal(!restrictionModal);
+                      }}
+                    >
+                      + Add Restriction
+                    </label>
+                  </div>
+                  <div className="table-responsive" style={{ height: "127px" }}>
+                    <Card>
+                      <Table className="table mb-0">
+                        <tbody>
+                          {map(restrictionTable, (fee, index) => {
+                            return (
+                              <tr>
+                                <th className="col-11">{`${index + 1}. ${
+                                  fee.restriction
+                                }`}</th>
+                                <td className="col-1">
+                                  <div className="d-flex gap-3">
+                                    <div className="text-paradise">
+                                      <div
+                                        className="text-success"
+                                        onClick={() => {
+                                          setRestrictionEditData([]);
+                                          setRestrictionEditData(fee);
+                                          setRestrictionModal(true);
+                                        }}
+                                      >
+                                        <i
+                                          className="mdi mdi-pencil-outline font-size-17 text-paradise"
+                                          id="edittooltip"
+                                          style={{ cursor: "pointer" }}
+                                        />
+                                        <UncontrolledTooltip
+                                          placement="top"
+                                          target="edittooltip"
+                                        >
+                                          Edit
+                                        </UncontrolledTooltip>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="text-danger"
+                                      onClick={() => {
+                                        // const tourData = cellProps.row.original;
+                                        // // setconfirm_alert(true);
+                                        onDeleteRestriction(fee.id);
+                                      }}
+                                    >
+                                      <i
+                                        className="mdi mdi-delete-outline font-size-17"
+                                        id="deletetooltip"
+                                        style={{ cursor: "pointer" }}
+                                      />
+                                      <UncontrolledTooltip
+                                        placement="top"
+                                        target="deletetooltip"
+                                      >
+                                        Delete
+                                      </UncontrolledTooltip>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </Card>
                   </div>
                 </Col>
               </Row>
+             
+              
               <Row className="mt-2">
                 <Col className="col-4 ">
                   <label>Arrival Instructions</label>
@@ -907,18 +1093,68 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     ) : null}
                   </div>
                 </Col>
-                <Col className="col-4">
-                  <div className="col-12 d-flex mt-4">
+                <Col className="col-2">
+                  <label>Send Voucher From</label>
+
+                  <div className="">
                     <Input
-                      name="rest_three"
-                      placeholder="Add Restriction #3"
-                      className="my-2"
-                      type="text"
-                      onChange={(e) => setRest3(e.target.value)}
-                      value={rest3}
-                    />
+                      type="select"
+                      name="voucher_send"
+                      onChange={(e) => {
+                        setVoucherSendSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value="">Select....</option>
+                      {map(voucherSendList, (voucher, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={voucher.id}
+                            selected={
+                              voucherInitialData?.send_voucher_from ===
+                              voucher.id
+                            }
+                          >
+                            {voucher.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
                   </div>
                 </Col>
+                <Col className="col-2">
+                  <label>Voucher Channel</label>
+
+                  <div className="">
+                    <Input
+                      type="select"
+                      name="voucher_channel"
+                      onChange={(e) => {
+                        setVoucherChannelSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value="">Select....</option>
+                      {map(voucherChannelList, (voucher, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={voucher.id}
+                            selected={
+                              voucherInitialData?.send_voucher == voucher.id
+                            }
+                          >
+                            {voucher.channel}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </Col>
+                
               </Row>
               <Row className="mt-2">
                 <Col className="col-2">
@@ -1008,26 +1244,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         );
                       })}
                     </Input>
-                    {/* <Input
-                      name="channel_contact1"
-                      placeholder=""
-                      type="text"
-                      onChange={validationType.handleChange}
-                      onBlur={validationType.handleBlur}
-                      value={validationType.values.channel_contact1 || ""}
-                      invalid={
-                        validationType.touched.channel_contact1 &&
-                        validationType.errors.channel_contact1
-                          ? true
-                          : false
-                      }
-                    />
-                    {validationType.touched.channel_contact1 &&
-                    validationType.errors.channel_contact1 ? (
-                      <FormFeedback type="invalid">
-                        {validationType.errors.channel_contact1}
-                      </FormFeedback>
-                    ) : null} */}
+                   
                   </div>
                 </Col>
                 <Col className="col-2">
@@ -1121,18 +1338,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                     </Input>
                   </div>
                 </Col>
-                <Col className="col-4">
-                  <div className="col-12 mt-4 d-flex">
-                    <Input
-                      name="rest_four"
-                      placeholder="Add Restriction #4"
-                      className="my-2"
-                      type="text"
-                      onChange={(e) => setRest4(e.target.value)}
-                      value={rest4}
-                    />
-                  </div>
-                </Col>
+              
               </Row>
               <Row>
                 {/* <Col className=" d-flex justify-content-end my-2">
@@ -1146,67 +1352,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                   />
                   <label className="mt-1">Send Voucher to Provider</label>
                 </Col> */}
-                <Col className="col-4 mt-3">
-                  <label>Send Voucher As</label>
-
-                  <div className="">
-                    <Input
-                      type="select"
-                      name="voucher_send"
-                      onChange={(e) => {
-                        setVoucherSendSelected(e.target.value);
-                      }}
-                      onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
-                    >
-                      <option value="">Select....</option>
-                      {map(voucherSendList, (voucher, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={voucher.id}
-                            selected={
-                              voucherInitialData?.send_voucher_from ===
-                              voucher.id
-                            }
-                          >
-                            {voucher.name}
-                          </option>
-                        );
-                      })}
-                    </Input>
-                  </div>
-                </Col>
-                <Col className="col-2 mt-3">
-                  <label>Issue Voucher Via</label>
-
-                  <div className="">
-                    <Input
-                      type="select"
-                      name="voucher_channel"
-                      onChange={(e) => {
-                        setVoucherChannelSelected(e.target.value);
-                      }}
-                      onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
-                    >
-                      <option value="">Select....</option>
-                      {map(voucherChannelList, (voucher, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={voucher.id}
-                            selected={
-                              voucherInitialData?.send_voucher == voucher.id
-                            }
-                          >
-                            {voucher.channel}
-                          </option>
-                        );
-                      })}
-                    </Input>
-                  </div>
-                </Col>
+                
               </Row>
               <Row>
                 <Col className=" d-flex justify-content-end">
@@ -1228,6 +1374,30 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         extraFeeModal={extraFeeModal}
         setExtraFeeModal={setExtraFeeModal}
         extraFeeEditData={extraFeeEditData}
+        id={id}
+        section={"operators"}
+        refreshTable={refreshTable}
+      />
+      <AddLocationModal
+        locationModal={locationModal}
+        setLocationModal={setLocationModal}
+        locationEditData={locationEditData}
+        id={id}
+        section={"operators"}
+        refreshTable={refreshTable}
+      />
+      <AddBoatModal
+        locationModal={boatModal}
+        setLocationModal={setBoatModal}
+        locationEditData={boatEditData}
+        id={id}
+        section={"operators"}
+        refreshTable={refreshTable}
+      />
+      <AddRestrictionModal
+        locationModal={restrictionModal}
+        setLocationModal={setRestrictionModal}
+        locationEditData={restrictionEditData}
         id={id}
         section={"operators"}
         refreshTable={refreshTable}
