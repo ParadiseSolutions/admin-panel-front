@@ -72,7 +72,7 @@ const AddLocationModal = ({
     }
   }, [dataEdit]);
 
-  console.log(dataEdit);
+  console.log('data edit de tour',dataEdit);
 
   // console.log(dataEdit.length);
   const validationType = useFormik({
@@ -83,8 +83,8 @@ const AddLocationModal = ({
       title: dataEdit?.title ? dataEdit.title : "",
       meeting_location: dataEdit?.meeting_location ? dataEdit.meeting_location : "",
       google_maps_url: dataEdit?.google_maps_url ? dataEdit.google_maps_url : "",
-      image_url: dataEdit?.image_url ? dataEdit.google_maps_url : "",
-      meeting_instructions: dataEdit?.meeting_instructions ? dataEdit.google_maps_url : "",
+      image_url: dataEdit?.image_url ? dataEdit.image_url : "",
+      meeting_instructions: dataEdit?.meeting_instructions ? dataEdit.meeting_instructions : "",
     },
     // validationSchema: Yup.object().shape({
     //   // cpanel_account: Yup.string().required("cPanel Account Name is required"),

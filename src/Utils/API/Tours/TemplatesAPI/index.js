@@ -27,3 +27,41 @@ export const deleteExtraFeeTours = (id) => {
       headers: options,
     });
   };
+
+  export const getMeetingLocationToursTable = (id) => {
+    const url = `${API_URL}/vouchers/meeting_locations/tours/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getBoatLocationToursTable = (id) => {
+    const url = `${API_URL}/vouchers/boat_locations/tours/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const getRestrictionsToursTable = (id) => {
+    const url = `${API_URL}/vouchers/restrictions/tours/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+
+  export const deleteMeetingLocationsTours = (id) => {
+    const url = `${API_URL}/vouchers/deleteMeetingLocation/${id}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
+  export const deleteBoatLocationsTours = (id) => {
+    const url = `${API_URL}/vouchers/deleteBoatLocation/${id}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
+  export const deleteRestrictionTours = (id) => {
+    const url = `${API_URL}/vouchers/deleteRestriction/${id}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
