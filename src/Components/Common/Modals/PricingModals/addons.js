@@ -379,7 +379,7 @@ const Addons = ({
             ? 20
             : values.max_qty,
         apply_to: applyOptionsSelected,
-        products: applyOptionsSelected === 0 ? [] : matchingProductsSelected
+        products: matchingProductsSelected.length === 0 ? dataEdit?.products : matchingProductsSelected
       };
 
       // console.log(data)
