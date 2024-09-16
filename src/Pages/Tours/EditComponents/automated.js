@@ -219,12 +219,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      special_instruction_title: voucherInitialData?.special_instruction_title
-        ? voucherInitialData?.special_instruction_title
+      special_instruction_title: tourData?.special_instruction_title
+        ? tourData?.special_instruction_title
         : "",
       special_instruction_description:
-        voucherInitialData?.special_instruction_description
-          ? voucherInitialData?.special_instruction_description
+      tourData?.special_instruction_description
+          ? tourData?.special_instruction_description
           : "",
 
       aditional_information: voucherInitialData?.additional_information
