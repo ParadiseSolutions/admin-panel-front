@@ -76,6 +76,8 @@ const Addons = ({
   refreshTable,
   editProductID,
   tourData,
+  copyProduct,
+  setCopyProduct,
   id,
 }) => {
   //edit data
@@ -91,6 +93,7 @@ const Addons = ({
       setDataEdit(null);
     }
   }, [editID, newAddon]);
+console.log(copyProduct);
 
   //combo box request
   const [priceMatchQuantityData, setPriceMatchQuantityData] = useState([]);
@@ -98,7 +101,7 @@ const Addons = ({
   const [priceOptions, setPriceOptions] = useState([]);
   const [priceCollect, setPriceCollect] = useState([]);
   const [applyOptions, setApplyOptions] = useState([]);
-  const [applyOptionsSelected, setApplyOptionsSelected] = useState([]);
+  const [applyOptionsSelected, setApplyOptionsSelected] = useState();
   const [matchingProducts, setMatchingProducts] = useState([]);
   const [matchingProductsSelected, setMatchingProductsSelected] = useState([]);
   const [initialProductsList, setInitialProductList] = useState([])
@@ -153,8 +156,10 @@ const Addons = ({
         setMatchingProducts(resp.data.data);
       });
     }
+    setApplyOptionsSelected(0)
   }, [newAddon]);
   // console.log(applyOptions);
+  console.log('apply options------>', applyOptionsSelected);
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
@@ -382,7 +387,7 @@ const Addons = ({
         products: matchingProductsSelected.length === 0 ? dataEdit?.products : matchingProductsSelected
       };
 
-      // console.log(data)
+      
       document.getElementById("save-button").disabled = true;
       if (dataEdit) {
         putAddonAPI(editProductID, data)
@@ -408,7 +413,8 @@ const Addons = ({
             }
             document.getElementById("save-button").disabled = false;
           });
-      } else {
+      } 
+      if (copyProduct || dataEdit === undefined || dataEdit === null) {
         postAddonsAPI(data)
           .then((resp) => {
             triggerUpdate();
@@ -493,7 +499,8 @@ const Addons = ({
       >
         {dataEdit?.id ? (
           <h1 className="modal-title mt-0 text-white">Edit Add-On</h1>
-        ) : (
+        ) :
+        (
           <h1 className="modal-title mt-0 text-white">+ New Add-On</h1>
         )}
         <button
@@ -1784,7 +1791,10 @@ const Addons = ({
                   outline
                   className="waves-effect waves-light col-2 mx-4"
                   type="button"
-                  onClick={() => setNewAddon(false)}
+                  onClick={() => {
+                    setNewAddon(false)
+                    setCopyProduct(false)
+                  }}
                 >
                   Close
                 </Button>

@@ -25,6 +25,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
 
   //
   const [addonsData, setAddonsData] = useState([]);
+  const [copyProduct, setCopyProduct] = useState(false);
   useEffect(() => {
     getAddonsPricingAPI(id).then((resp) => {
       setAddonsData(resp.data.data);
@@ -175,6 +176,19 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
                 </UncontrolledTooltip>
               </div>
               <div
+                onClick={() => {
+                  setNewAddon(true);
+                  setEditProductID(depData.id);
+                  setCopyProduct(true);
+                }}
+                className="text-warning"
+              >
+                <i className="mdi mdi-content-copy font-size-18" id="copytooltip" style={{ cursor: "pointer" }} />
+                <UncontrolledTooltip placement="top" target="edittooltip">
+                  Copy
+                </UncontrolledTooltip>
+              </div>
+              <div
                 className="text-danger"
                 onClick={() => {
                   const depData = cellProps.row.original;
@@ -252,6 +266,8 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         refreshTable={refreshTable}
         editProductID={editProductID}
         id={id}
+        copyProduct={copyProduct}
+        setCopyProduct={setCopyProduct}
       />
       <AddonsInstructionModal
         instructionModal={instructionModal}
