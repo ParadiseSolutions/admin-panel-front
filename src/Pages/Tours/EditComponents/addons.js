@@ -11,10 +11,20 @@ import { Name, Code, Price, ActiveAddon, Rate } from "./PricingTables/PricingCol
 import Swal from "sweetalert2";
 
 const AddonsComponent = ({ id, tourData, toggle }) => {
+
   useEffect(() => {
+    let isMounted = true; // Bandera para verificar si el componente está montado
+
     getAddonsPricingAPI(id).then((resp) => {
-      setAddonsData(resp.data.data);
+      if (isMounted) {
+        setAddonsData(resp.data.data);
+      }
     });
+
+    // Función de limpieza
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   const refreshTable = () => {
@@ -25,11 +35,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
 
   //
   const [addonsData, setAddonsData] = useState([]);
-  useEffect(() => {
-    getAddonsPricingAPI(id).then((resp) => {
-      setAddonsData(resp.data.data);
-    });
-  }, [id]);
+  const [copyProduct, setCopyProduct] = useState(false);
 
   //table actions
   const onDeleteAddon = (depData) => {
@@ -48,22 +54,21 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
           refreshTable()
         }).catch((error) => {
           let errorMessages = [];
-          if (error.response.data.data === null) {
-            Swal.fire(
-              "Error!",
-              String(error.response.data.message)
-            );
-          } else {
+          if (error.response && error.response.data && error.response.data.data) {
             Object.entries(error.response.data.data).map((item) => {
               errorMessages.push(item[1]);
               return true;
             });
-
-            Swal.fire(
-              "Error!",
-              String(errorMessages[0])
-            );
+          } else {
+            errorMessages.push('An unexpected error occurred');
           }
+          
+          // Mostrar el error
+          Swal.fire({
+            title: "Error!",
+            text: errorMessages.join(', '),
+            icon: "error",
+          });
         });
       }
     });
@@ -161,7 +166,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         Cell: (cellProps) => {
           const depData = cellProps.row.original;
           return (
-            <div className="d-flex gap-3">
+            <div className="d-flex gap-3" data-testid="delete-addon">
               <div
                 onClick={() => {
                   setNewAddon(true);
@@ -175,14 +180,28 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
                 </UncontrolledTooltip>
               </div>
               <div
+                onClick={() => {
+                  setNewAddon(true);
+                  setEditProductID(depData.id);
+                  setCopyProduct(true);
+                }}
+                className="text-warning"
+              >
+                <i className="mdi mdi-content-copy font-size-18" id="copytooltip" style={{ cursor: "pointer" }} />
+                <UncontrolledTooltip placement="top" target="edittooltip">
+                  Copy
+                </UncontrolledTooltip>
+              </div>
+              <div
                 className="text-danger"
+                data-testid={`delete-addon-${depData.id}`}
                 onClick={() => {
                   const depData = cellProps.row.original;
                   // setconfirm_alert(true);
                   onDeleteAddon(depData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" style={{ cursor: "pointer" }} />
+                <i className="mdi mdi-delete font-size-18" title="Delete" id="deletetooltip" style={{ cursor: "pointer" }} />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -211,7 +230,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
   return (
     <TabPane tabId="1" className="">
       <Row xl={12}>
-        {addonsData ? (
+        {addonsData.length > 0  ? (
           <AddonsTables
             columns={columnsAddons}
             data={addonsData}
@@ -252,6 +271,8 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         refreshTable={refreshTable}
         editProductID={editProductID}
         id={id}
+        copyProduct={copyProduct}
+        setCopyProduct={setCopyProduct}
       />
       <AddonsInstructionModal
         instructionModal={instructionModal}

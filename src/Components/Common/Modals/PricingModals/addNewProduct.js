@@ -40,6 +40,7 @@ const AddNewProductPricing = ({
   editProductID,
   tourData,
   copyProduct,
+  setCopyProduct,
   priceRangeCheck
 }) => {
   let id = "";
@@ -212,6 +213,7 @@ const AddNewProductPricing = ({
               triggerUpdate();
               setAddNewProduct(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -240,6 +242,7 @@ const AddNewProductPricing = ({
             .then((resp) => {
               triggerUpdate();
               setAddNewProduct(false);
+              setCopyProduct(false)
               refreshTable();
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
@@ -2118,7 +2121,9 @@ const AddNewProductPricing = ({
                       outline
                       className="waves-effect waves-light col-2 mx-4"
                       type="button"
-                      onClick={() => setAddNewProduct(false)}
+                      onClick={() => {setAddNewProduct(false)
+                        setCopyProduct(false)
+                      }}
                     >
                       Close
                     </Button>
