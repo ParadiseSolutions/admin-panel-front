@@ -40,6 +40,7 @@ const AddNewPrivateCharter = ({
   tourData,
   editProductID,
   copyProduct,
+  setCopyProduct,
   priceRangeCheck
 }) => {
   let id = "";
@@ -273,6 +274,7 @@ const AddNewPrivateCharter = ({
               triggerUpdate();
               setAddNewPrivateCharter(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -301,6 +303,7 @@ const AddNewPrivateCharter = ({
             .then((resp) => {
               triggerUpdate();
               setAddNewPrivateCharter(false);
+              setCopyProduct(false)
               refreshTable();
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
@@ -2242,7 +2245,9 @@ const AddNewPrivateCharter = ({
                       outline
                       className="waves-effect waves-light col-2 mx-4"
                       type="button"
-                      onClick={() => setAddNewPrivateCharter(false)}
+                      onClick={() => {setAddNewPrivateCharter(false)
+                        setCopyProduct(false)
+                      }}
                     >
                       Close
                     </Button>

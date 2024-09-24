@@ -39,6 +39,7 @@ const AddNewAirportTransfer = ({
   editProductID,
   tourData,
   copyProduct,
+  setCopyProduct
 }) => {
   let id = "";
   id = editProductID;
@@ -412,6 +413,7 @@ const AddNewAirportTransfer = ({
               triggerUpdate();
               setAddNewAirportTransfer(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -441,6 +443,7 @@ const AddNewAirportTransfer = ({
               triggerUpdate();
               setAddNewAirportTransfer(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -2057,7 +2060,9 @@ const AddNewAirportTransfer = ({
                       outline
                       className="waves-effect waves-light col-2 mx-4"
                       type="button"
-                      onClick={() => setAddNewAirportTransfer(false)}
+                      onClick={() => {setAddNewAirportTransfer(false)
+                        setCopyProduct(false)
+                      }}
                     >
                       Close
                     </Button>
