@@ -93,7 +93,7 @@ const Addons = ({
       setDataEdit(null);
     }
   }, [editID, newAddon]);
-console.log(copyProduct);
+// console.log(copyProduct);
 
   //combo box request
   const [priceMatchQuantityData, setPriceMatchQuantityData] = useState([]);
@@ -159,7 +159,7 @@ console.log(copyProduct);
     setApplyOptionsSelected(0)
   }, [newAddon]);
   // console.log(applyOptions);
-  console.log('apply options------>', applyOptionsSelected);
+  // console.log('apply options------>', applyOptionsSelected);
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
@@ -389,8 +389,9 @@ console.log(copyProduct);
 
       
       document.getElementById("save-button").disabled = true;
-      if (dataEdit) {
+      if (dataEdit && !copyProduct) {
         putAddonAPI(editProductID, data)
+       
           .then((resp) => {
             triggerUpdate();
             editID = null;
@@ -414,7 +415,8 @@ console.log(copyProduct);
             document.getElementById("save-button").disabled = false;
           });
       } 
-      if (copyProduct || dataEdit === undefined || dataEdit === null) {
+      else if (copyProduct || dataEdit === undefined || dataEdit === null) {
+       
         postAddonsAPI(data)
           .then((resp) => {
             triggerUpdate();
@@ -1107,7 +1109,7 @@ console.log(copyProduct);
                           name="display_option"
                           onChange={(e) => {
                             setDisplayOptionSelected(+e.target.value);
-                            console.log(+e.target.value);
+                            // console.log(+e.target.value);
                           }}
                           onBlur={validationType.handleBlur}
                         >
