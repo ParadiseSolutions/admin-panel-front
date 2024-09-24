@@ -39,6 +39,7 @@ const Fishing = ({
   editProductID,
   tourData,
   copyProduct,
+  setCopyProduct
 }) => {
   let id = "";
   id = editProductID;
@@ -345,6 +346,7 @@ const Fishing = ({
             triggerUpdate()
             setAddNewFishing(false);
             refreshTable();
+            setCopyProduct(false)
             resetForm({ values: "" });
             document.getElementById("save-button").disabled = false;
           }).catch((error) => {
@@ -372,6 +374,7 @@ const Fishing = ({
             triggerUpdate()
             setAddNewFishing(false);
             refreshTable();
+            setCopyProduct(false)
             resetForm({ values: "" });
             document.getElementById("save-button").disabled = false;
           }).catch((error) => {
@@ -1925,7 +1928,9 @@ const Fishing = ({
                       outline
                       className="waves-effect waves-light col-2 mx-4"
                       type="button"
-                      onClick={() => setAddNewFishing(false)}
+                      onClick={() => {setAddNewFishing(false)
+                        setCopyProduct(false)
+                      }}
                     >
                       Close
                     </Button>

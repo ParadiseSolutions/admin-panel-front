@@ -458,6 +458,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
+          setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
         />
@@ -470,6 +471,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
+          setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
         />
@@ -482,6 +484,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
+          setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
         />
@@ -494,6 +497,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
+          setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
         />
@@ -506,6 +510,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
+          setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
         />
@@ -518,6 +523,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           tourData={tourData}
           refreshTable={refreshTable}
           copyProduct={copyProduct}
+          setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
         />

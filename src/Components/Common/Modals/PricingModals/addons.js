@@ -397,6 +397,7 @@ const Addons = ({
             editID = null;
             setNewAddon(false);
             refreshTable();
+            setCopyProduct(false)
             resetForm({ values: "" });
             document.getElementById("save-button").disabled = false;
           })
@@ -423,6 +424,7 @@ const Addons = ({
             editID = null;
             setNewAddon(false);
             refreshTable();
+            setCopyProduct(false)
             resetForm({ values: "" });
             document.getElementById("save-button").disabled = false;
           })
