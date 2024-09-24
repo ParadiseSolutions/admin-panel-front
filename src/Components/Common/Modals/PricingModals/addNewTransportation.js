@@ -40,6 +40,7 @@ const AddNewTransportation = ({
   editProductID,
   tourData,
   copyProduct,
+  setCopyProduct
 }) => {
   let id = "";
   id = editProductID;
@@ -416,6 +417,7 @@ const AddNewTransportation = ({
               triggerUpdate();
               setAddNewTransportation(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -445,6 +447,7 @@ const AddNewTransportation = ({
               triggerUpdate();
               setAddNewTransportation(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -2053,7 +2056,9 @@ const AddNewTransportation = ({
                       outline
                       className="waves-effect waves-light col-2 mx-4"
                       type="button"
-                      onClick={() => setAddNewTransportation(false)}
+                      onClick={() => {setAddNewTransportation(false)
+                        setCopyProduct(false)
+                      }}
                     >
                       Close
                     </Button>

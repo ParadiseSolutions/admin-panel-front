@@ -40,6 +40,7 @@ const AddNewPrivateTour = ({
   editProductID,
   tourData,
   copyProduct,
+  setCopyProduct,
   priceRangeCheck
 }) => {
   let id = "";
@@ -210,6 +211,7 @@ const AddNewPrivateTour = ({
               triggerUpdate();
               setAddNewPrivateTour(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -239,6 +241,7 @@ const AddNewPrivateTour = ({
               triggerUpdate();
               setAddNewPrivateTour(false);
               refreshTable();
+              setCopyProduct(false)
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -2086,7 +2089,9 @@ const AddNewPrivateTour = ({
                       outline
                       className="waves-effect waves-light col-2 mx-4"
                       type="button"
-                      onClick={() => setAddNewPrivateTour(false)}
+                      onClick={() => {setAddNewPrivateTour(false)
+                        setCopyProduct(false)
+                      }}
                     >
                       Close
                     </Button>
