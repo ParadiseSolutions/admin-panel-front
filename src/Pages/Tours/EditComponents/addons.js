@@ -230,7 +230,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
   return (
     <TabPane tabId="1" className="">
       <Row xl={12}>
-        {addonsData.length > 0  ? (
+        {addonsData ? (
           <AddonsTables
             columns={columnsAddons}
             data={addonsData}
