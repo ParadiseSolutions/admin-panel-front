@@ -25,6 +25,7 @@ import classnames from "classnames";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AutomatedConfirmationTab from "./EditComponents/automated";
+import RelatedComponent from "./EditComponents/related";
 const EditTour = ({ history }) => {
   const { id } = useParams();
   //tabs
@@ -305,6 +306,32 @@ const EditTour = ({ history }) => {
                     <span className="d-none d-sm-block">+ Templates</span>
                   </NavLink>
                 </NavItem>
+                <NavItem className="d-flex">
+                  <NavLink
+                    style={{
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      backgroundColor: `${activeTab === "9" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "9" ? "white" : ""}`,
+                      border: "none",
+                      flexWrap: "wrap",
+                      display: "grid",
+                      alignContent: "center",
+                    }}
+                    className={classnames({
+                      active: activeTab === "9",
+                    })}
+                    onClick={() => {
+                      if (tourData?.edit_mode === 0) {
+                        toggle("9");
+                      }
+                    }}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-envelope"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ Related</span>
+                  </NavLink>
+                </NavItem>
               </Nav>
             </CardHeader>
             <CardBody className="p-0">
@@ -349,6 +376,9 @@ const EditTour = ({ history }) => {
                 </TabPane>
                 <TabPane tabId="8">
                   <AutomatedConfirmationTab id={id} tourData={tourData} toggle={toggle} />
+                </TabPane>
+                <TabPane tabId="9">
+                  <RelatedComponent id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
               </TabContent>
             </CardBody>
