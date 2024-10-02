@@ -10,7 +10,7 @@ import {
 } from "react-table";
 import { Table, Row, Col, Button, Input } from "reactstrap";
 
-const RelatedTables = ({
+const FilteredTable = ({
   columns,
   data,
   productsTable,
@@ -53,26 +53,7 @@ const RelatedTables = ({
   return (
     <Fragment>
       <Row>
-      {addonsTable && (
-        <>
-        <Col sm="4">
-        </Col>  
-        <Col sm="8">
-          <div className="text-sm-end">
-            
-            <Button
-              type="button"
-              style={{ backgroundColor: "#F6851F", border: "none" }}
-              className="waves-effect waves-light mb-3 btn btn-success mt-3"
-              onClick={() => setRelatedFilter(!relatedFilter)}
-            >
-              <i className="mdi mdi-plus me-1" />
-              Add Related Tour
-            </Button>
-          </div>
-        </Col>
-        </>
-      )}
+      
 
       {addonsTable && (
         <div className="table-responsive">
@@ -98,7 +79,7 @@ const RelatedTables = ({
                 prepareRow(row);
                 return (
                   <Fragment key={row.getRowProps().key}>
-                    <tr >
+                    <tr id={`row-selected-${row.original.id}`} >
                       {row.cells.map((cell) => {
                         return (
                           <td key={cell.id} {...cell.getCellProps()}>
@@ -115,9 +96,6 @@ const RelatedTables = ({
         </div>
       )}
       </Row>
-      
-      
-
       <Row className="justify-content-md-end justify-content-center align-items-center">
         <Col className="col-md-auto">
           
@@ -179,4 +157,4 @@ const RelatedTables = ({
   );
 };
 
-export default RelatedTables;
+export default FilteredTable;

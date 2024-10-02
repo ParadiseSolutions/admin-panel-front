@@ -23,6 +23,9 @@ const Rate = (cell) => {
   return cell.value ? setRateFormat(cell.value) + "%" : ""
 }
 
+const URL = (cell) => {
+  return cell.value ?  <a href={`${cell.value}`} target="_blank" rel="noreferrer">{cell.row.original.name}</a> : "";
+};
 const Price = (cell) => {
   return cell.value ? "$" + cell.value : "";
 };
@@ -201,4 +204,4 @@ const ActiveAddon = (cell) => {
   );
 };
 
-export { Name, Code, Date, Members, Price, Active, Rate, ActiveAddon };
+export { Name, Code, Date, Members, Price, Active, Rate, ActiveAddon, URL };

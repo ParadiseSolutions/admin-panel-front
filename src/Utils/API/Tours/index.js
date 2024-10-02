@@ -174,6 +174,40 @@ export const bulkToursPut = (body) => {
     });
   };
 
+  export const typeRelatedTourSelect = () => {
+    const url = `${API_URL}/booking-way/types`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  
+  export const postRelatedFilterByName = (body) => {
+    const url = `${API_URL}/booking-way/tours/name-link`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+
+  export const postRelatedAdvanceFilter = (body) => {
+    const url = `${API_URL}/booking-way/tours/params`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+  export const postAddRelated = (body) => {
+    const url = `${API_URL}/booking-way/add`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+  export const deleteRelated = (current, related) => {
+    const url = `${API_URL}/booking-way/remove-all/${current}/${related}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
+
+
   export const putSettingsAPI = (id, body) => {
     const url = `${API_URL}/tours/${id}/settings`;
     return axios.put (url, body, {
