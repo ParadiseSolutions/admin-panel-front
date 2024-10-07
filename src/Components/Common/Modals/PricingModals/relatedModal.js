@@ -353,7 +353,7 @@ const RelatedModal = ({
             .querySelector(`#row-selected-${row.id}`)
             .classList.add("selected-row");
           
-          setCounter(counter + 1)
+          setCounter(counter => counter + 1)
         }
       })
       .catch((err) => console.log(err));
@@ -372,7 +372,7 @@ const RelatedModal = ({
           .querySelector(`#row-selected-${row.id}`)
           .classList.remove("selected-row");
         
-        setCounter(counter - 1)
+          setCounter(counter => counter - 1)
       }
     });
   };
@@ -638,17 +638,21 @@ const RelatedModal = ({
               className="waves-effect waves-light col-2 mx-4"
               type="button"
               onClick={() => {
-                setRelatedFilter(false);
+              setFilteredData([])
               }}
             >
-              Close
+              Refresh
             </Button>
             <Button
               id="save-button"
               type="submit"
               className="font-16 btn-block col-2 btn-orange"
+              onClick={() =>{
+                
+                setRelatedFilter(false);
+              }}
             >
-              Save
+              Close
             </Button>
           </Row>
         </Row>
