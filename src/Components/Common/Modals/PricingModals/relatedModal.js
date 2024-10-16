@@ -216,13 +216,7 @@ const RelatedModal = ({
               <option value="-1">Select....</option>
               <option value="1">Backup</option>
               <option value="2">Alternative</option>
-              {/*  {map(typeSelectData, (type, index) => {
-                return (
-                  <option key={index} value={type.id}>
-                    {type.type}
-                  </option>
-                );
-              })} */}
+              
             </Input>
           );
         },
@@ -639,6 +633,7 @@ const RelatedModal = ({
               type="button"
               onClick={() => {
               setFilteredData([])
+              setWebsiteSelected('-1')
               }}
             >
               Refresh

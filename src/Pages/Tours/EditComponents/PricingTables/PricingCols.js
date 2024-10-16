@@ -27,7 +27,7 @@ const URL = (cell) => {
   return cell.value ?  <a href={`${cell.value}`} target="_blank" rel="noreferrer">{cell.row.original.name}</a> : "";
 };
 const Price = (cell) => {
-  return cell.value ? "$" + cell.value : "";
+  return cell.value ? cell.value : "";
 };
 const Date = (cell) => {
   return cell.value ? cell.value : "";

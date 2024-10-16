@@ -1,27 +1,41 @@
 import React, { useEffect, useState, useMemo } from "react";
-import AddonsTables from "./PricingTables/addonsTables";
-import Addons from "../../../Components/Common/Modals/PricingModals/addons";
 import {
   getAddonsPricingAPI,
-  deleteAddonAPI,
+  getRelatedTourAPI,
+  priorityRelatedAPI,
 } from "../../../Utils/API/Tours";
-import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
-import { Name, Code, Price, ActiveAddon, Rate } from "./PricingTables/PricingCols";
+import {
+  TabPane,
+  Row,
+  Button,
+  UncontrolledTooltip,
+  Col,
+  Tooltip,
+} from "reactstrap";
+import { Name, Price, ActiveAddon } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 import RelatedTables from "./PricingTables/relatedTable";
 import RelatedModal from "../../../Components/Common/Modals/PricingModals/relatedModal";
+import { TiArrowSortedUp, TiArrowSortedDown } from "react-icons/ti";
+import { FaPaperclip } from "react-icons/fa";
+import { FaLink } from "react-icons/fa6";
+import RelatedActionsModal from "../../../Components/Common/Modals/RelatedActionsModal/relatedModal";
 
 const RelatedComponent = ({ id, tourData, toggle }) => {
-
-  const [addonsData, setAddonsData] = useState([]);
-  const [relatedFilter, setRelatedFilter] = useState(false)
+  const [relatedData, setRelatedData] = useState([]);
+  const [relatedFilter, setRelatedFilter] = useState(false);
+  const [relatedEdit, setRelatedEdit] = useState(false);
+  const [editRelatedData, setEditRelatedData] = useState(null);
 
   useEffect(() => {
     let isMounted = true; // Bandera para verificar si el componente está montado
 
-    getAddonsPricingAPI(id).then((resp) => {
+    let data = {
+      current_tour_id: id,
+    };
+    getRelatedTourAPI(data).then((resp) => {
       if (isMounted) {
-        setAddonsData(resp.data.data);
+        setRelatedData(resp.data.data);
       }
     });
 
@@ -32,58 +46,74 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
   }, [id]);
 
   const refreshTable = () => {
-    getAddonsPricingAPI(id).then((resp) => {
-      setAddonsData(resp.data.data);
+    let data = {
+      current_tour_id: id,
+    };
+    getRelatedTourAPI(data).then((resp) => {
+      setRelatedData(resp.data.data);
     });
   };
 
-  //
+  const indexSubmit = (row, position) => {
+    let data = {
+      current_tour_id: id,
+      related_tour_index: row.row.index,
+      action: position,
+    };
+    priorityRelatedAPI(data).then((resp) => {
+      if (resp.status === 200) {
+        refreshTable();
+      }
+    });
+  };
 
   
-
-  //table actions
-  // const onDeleteAddon = (depData) => {
-  //   Swal.fire({
-  //     title: "Delete Addon?",
-  //     icon: "question",
-  //     text: `Do you want delete ${depData.label}`,
-  //     showCancelButton: true,
-  //     confirmButtonText: "Yes",
-  //     confirmButtonColor: "#F38430",
-  //     cancelButtonText: "Cancel",
-  //   }).then((resp) => {
-  //     if (resp.isConfirmed) {
-  //       deleteAddonAPI(depData.id)
-  //       .then((response) => {
-  //         refreshTable()
-  //       }).catch((error) => {
-  //         let errorMessages = [];
-  //         if (error.response && error.response.data && error.response.data.data) {
-  //           Object.entries(error.response.data.data).map((item) => {
-  //             errorMessages.push(item[1]);
-  //             return true;
-  //           });
-  //         } else {
-  //           errorMessages.push('An unexpected error occurred');
-  //         }
-          
-  //         // Mostrar el error
-  //         Swal.fire({
-  //           title: "Error!",
-  //           text: errorMessages.join(', '),
-  //           icon: "error",
-  //         });
-  //       });
-  //     }
-  //   });
-  // };
-
-  const [editProductID, setEditProductID] = useState(null);
-
   const columnsAddons = useMemo(
     () => [
       {
-        Header: "ID",
+        Header: "Priority",
+        accessor: "",
+        Cell: (cellProps) => {
+          const rowIndex = cellProps.row.index;
+          const totalRows = cellProps.rows.length;
+
+          // Función que decide el color del ícono
+          const getArrowColor = (isUpArrow) => {
+            if (isUpArrow && rowIndex === 0) {
+              return "text-paradiseGray";
+            }
+            if (!isUpArrow && rowIndex === totalRows - 1) {
+              return "text-paradiseGray";
+            }
+            return "text-paradise";
+          };
+
+          return (
+            <Row>
+              <TiArrowSortedUp
+                size={35}
+                style={{ padding: "0" }}
+                className={`${getArrowColor(true)} cursor-pointer`}
+                onClick={
+                  rowIndex !== 0 ? () => indexSubmit(cellProps, "UP") : null
+                }
+              />
+              <TiArrowSortedDown
+                size={35}
+                style={{ padding: "0" }}
+                className={`${getArrowColor(false)} cursor-pointer`}
+                onClick={
+                  rowIndex !== totalRows - 1
+                    ? () => indexSubmit(cellProps, "DOWN")
+                    : null
+                }
+              />
+            </Row>
+          );
+        },
+      },
+      {
+        Header: "Tour ID",
         accessor: "id",
         disableFilters: false,
         filterable: true,
@@ -91,67 +121,81 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           return <Name {...cellProps} />;
         },
       },
+
       {
-        Header: "Add-On Name",
+        Header: "Tour Name",
         accessor: "name",
         disableFilters: true,
         filterable: false,
+        Cell: (cellProps) => {
+          
+          return (
+            <div>
+              <>{cellProps.row.original.name}</>
+              <>
+              
+                <FaLink
+                  className="mx-2 cursor-pointer text-paradise"
+                  id="copyTT"
+                  size={20}
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      cellProps.row.original.tour_link
+                    );
+                   
+                  }}
+                />
+                <UncontrolledTooltip placement="top" target="copyTT">
+                  Copy
+                </UncontrolledTooltip>
+              </>
+            </div>
+          );
+        },
+      },
+      {
+        Header: "Category",
+        accessor: "category_name",
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
           return <Name {...cellProps} />;
         },
       },
       {
-        Header: "SKU",
-        accessor: "sku",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <Code {...cellProps} />;
-        },
-      },
-      {
-        Header: "Deposit",
-        accessor: "deposit",
+        Header: "Location",
+        accessor: "location_name",
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          return <Price {...cellProps} />;
+          return <Name {...cellProps} />;
         },
       },
       {
-        Header: "Our Price",
-        accessor: "price",
-        disableFilters: true,
-        filterable: false,
+        Header: "Operator",
+        accessor: "operator_name",
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
-          return <Price {...cellProps} />;
+          return <Name {...cellProps} />;
         },
       },
       {
-        Header: "Rate %",
-        accessor: "rate",
-        disableFilters: true,
-        filterable: false,
+        Header: "Website",
+        accessor: "website_name",
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
-          return <Rate {...cellProps} />;
+          return <Name {...cellProps} />;
         },
       },
       {
-        Header: "Comm.",
-        accessor: "commission",
-        disableFilters: true,
-        filterable: false,
+        Header: "Type",
+        accessor: "type_name",
+        disableFilters: false,
+        filterable: true,
         Cell: (cellProps) => {
-          return <Price {...cellProps} />;
-        },
-      },
-      {
-        Header: "Invoice Amt",
-        accessor: "net_price",
-        disableFilters: true,
-        filterable: false,
-        Cell: (cellProps) => {
-          return <Price {...cellProps} />;
+          return <Name {...cellProps} />;
         },
       },
       {
@@ -173,16 +217,21 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
             <div className="d-flex gap-3" data-testid="delete-addon">
               <div
                 onClick={() => {
-                  setEditProductID(depData.id);
+                  setRelatedEdit(true);
+                  setEditRelatedData(depData)
                 }}
                 className="text-success"
               >
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{ cursor: "pointer" }} />
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
               </div>
-             
+
               <div
                 className="text-danger"
                 data-testid={`delete-addon-${depData.id}`}
@@ -192,7 +241,12 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
                   // onDeleteAddon(depData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" title="Delete" id="deletetooltip" style={{ cursor: "pointer" }} />
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  title="Delete"
+                  id="deletetooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -201,18 +255,18 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           );
         },
       },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    ],[]);
-
-
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],
+    []
+  );
 
   return (
     <TabPane tabId="1" className="">
       <Row xl={12}>
-        {addonsData ? (
+        {relatedData ? (
           <RelatedTables
             columns={columnsAddons}
-            data={addonsData}
+            data={relatedData}
             isGlobalFilter={true}
             addonsTable={true}
             relatedFilter={relatedFilter}
@@ -250,7 +304,13 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         refreshTable={refreshTable}
         id={id}
       />
-     
+      <RelatedActionsModal 
+       relatedEdit={relatedEdit}
+       setRelatedEdit={setRelatedEdit}
+       editRelatedData={editRelatedData}
+       refreshTable={refreshTable}
+       id={id}
+      />
     </TabPane>
   );
 };

@@ -206,6 +206,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const editRelatedType = (id,data) => {
+    const url = `${API_URL}/booking-way/tours/${id}/type`;
+    return axios.put (url, data, {
+      headers: options,
+    });
+  };
 
 
   export const putSettingsAPI = (id, body) => {
@@ -279,6 +285,18 @@ export const getPricesPricingAPI = (id) => {
 export const getAddonsPricingAPI = (id) => {
   const url = `${API_URL}/tours/${id}/addons`;
   return axios.get (url, {
+    headers: options,
+  });
+};
+export const getRelatedTourAPI = (data) => {
+  const url = `${API_URL}/booking-way/tours/list`;
+  return axios.post (url,data, {
+    headers: options,
+  });
+};
+export const priorityRelatedAPI = (data) => {
+  const url = `${API_URL}/booking-way/tours/change-priority`;
+  return axios.post (url,data, {
     headers: options,
   });
 };
