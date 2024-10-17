@@ -51,6 +51,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const statusUpdateRelated = (id, body) => {
+    const url = `${API_URL}/booking-way/tours/${id}/status`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
 
   export const deleteTourAPI = (id) => {
     const url = `${API_URL}/tours/${id}`;
@@ -297,6 +303,12 @@ export const getRelatedTourAPI = (data) => {
 export const priorityRelatedAPI = (data) => {
   const url = `${API_URL}/booking-way/tours/change-priority`;
   return axios.post (url,data, {
+    headers: options,
+  });
+};
+export const deleteRelatedAPI = (id) => {
+  const url = `${API_URL}/booking-way/remove/${id}`;
+  return axios.delete (url, {
     headers: options,
   });
 };

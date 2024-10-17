@@ -3,6 +3,7 @@ import {
   getAddonsPricingAPI,
   getRelatedTourAPI,
   priorityRelatedAPI,
+  deleteRelatedAPI
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -12,7 +13,7 @@ import {
   Col,
   Tooltip,
 } from "reactstrap";
-import { Name, Price, ActiveAddon } from "./PricingTables/PricingCols";
+import { Name, Price, ActiveAddon, ActiveRelated } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 import RelatedTables from "./PricingTables/relatedTable";
 import RelatedModal from "../../../Components/Common/Modals/PricingModals/relatedModal";
@@ -27,47 +28,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
   const [relatedEdit, setRelatedEdit] = useState(false);
   const [editRelatedData, setEditRelatedData] = useState(null);
 
-  useEffect(() => {
-    let isMounted = true; // Bandera para verificar si el componente está montado
-
-    let data = {
-      current_tour_id: id,
-    };
-    getRelatedTourAPI(data).then((resp) => {
-      if (isMounted) {
-        setRelatedData(resp.data.data);
-      }
-    });
-
-    // Función de limpieza
-    return () => {
-      isMounted = false;
-    };
-  }, [id]);
-
-  const refreshTable = () => {
-    let data = {
-      current_tour_id: id,
-    };
-    getRelatedTourAPI(data).then((resp) => {
-      setRelatedData(resp.data.data);
-    });
-  };
-
-  const indexSubmit = (row, position) => {
-    let data = {
-      current_tour_id: id,
-      related_tour_index: row.row.index,
-      action: position,
-    };
-    priorityRelatedAPI(data).then((resp) => {
-      if (resp.status === 200) {
-        refreshTable();
-      }
-    });
-  };
-
-  
+    
   const columnsAddons = useMemo(
     () => [
       {
@@ -118,7 +79,12 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          return <Name {...cellProps} />;
+          console.log(cellProps.row)
+          return (
+            <>
+            <a href={`${cellProps.row.original.admin_panel_link}`} target="_blank" className="text-paradise" rel="noreferrer">{cellProps.row.original.id}</a>
+            </>
+          )
         },
       },
 
@@ -204,7 +170,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <ActiveAddon {...cellProps} />;
+          return <ActiveRelated {...cellProps} />;
         },
       },
       {
@@ -236,9 +202,8 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
                 className="text-danger"
                 data-testid={`delete-addon-${depData.id}`}
                 onClick={() => {
-                  const depData = cellProps.row.original;
-                  // setconfirm_alert(true);
-                  // onDeleteAddon(depData);
+                   onDelete(cellProps);
+                  
                 }}
               >
                 <i
@@ -259,6 +224,84 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     ],
     []
   );
+
+  useEffect(() => {
+    let isMounted = true; // Bandera para verificar si el componente está montado
+
+    let data = {
+      current_tour_id: id,
+    };
+    getRelatedTourAPI(data).then((resp) => {
+      if (isMounted) {
+        setRelatedData(resp.data.data);
+      }
+    });
+
+    // Función de limpieza
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  const refreshTable = () => {
+    let data = {
+      current_tour_id: id,
+    };
+    getRelatedTourAPI(data).then((resp) => {
+      setRelatedData(resp.data.data);
+    });
+  };
+
+  const indexSubmit = (row, position) => {
+    let data = {
+      current_tour_id: id,
+      related_tour_index: row.row.index,
+      action: position,
+    };
+    priorityRelatedAPI(data).then((resp) => {
+      if (resp.status === 200) {
+        refreshTable();
+      }
+    });
+  };
+
+  const onDelete = (related) =>{
+    Swal.fire({
+      title: "Delete Related Tour?",
+      icon: "question",
+      text: `Do you want delete ${related.row.original.name}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        deleteRelatedAPI(related.row.original.id)
+        .then((response) => {
+          refreshTable()
+        }).catch((error) => {
+          let errorMessages = [];
+          if (error.response && error.response.data && error.response.data.data) {
+            Object.entries(error.response.data.data).map((item) => {
+              errorMessages.push(item[1]);
+              return true;
+            });
+          } else {
+            errorMessages.push('An unexpected error occurred');
+          }
+          
+          // Mostrar el error
+          Swal.fire({
+            title: "Error!",
+            text: errorMessages.join(', '),
+            icon: "error",
+          });
+        });
+      }
+    });
+  }
+
+
 
   return (
     <TabPane tabId="1" className="">
