@@ -216,7 +216,6 @@ const RelatedModal = ({
               <option value="-1">Select....</option>
               <option value="1">Backup</option>
               <option value="2">Alternative</option>
-              
             </Input>
           );
         },
@@ -346,8 +345,8 @@ const RelatedModal = ({
           document
             .querySelector(`#row-selected-${row.id}`)
             .classList.add("selected-row");
-          
-          setCounter(counter => counter + 1)
+
+          setCounter((counter) => counter + 1);
         }
       })
       .catch((err) => console.log(err));
@@ -365,10 +364,23 @@ const RelatedModal = ({
         document
           .querySelector(`#row-selected-${row.id}`)
           .classList.remove("selected-row");
-        
-          setCounter(counter => counter - 1)
+
+        setCounter((counter) => counter - 1);
       }
     });
+  };
+
+  const refreshFilters = () => {
+    setFilteredData([]);
+    setWebsiteData([]);
+    setProviderData([]);
+    setCategoryData([]);
+    setOperatorData([]);
+    setLocationData([]);
+    setFilterByNameData("");
+    const websitesRequest = () => dispatch(websitesData());
+    websitesRequest();
+    
   };
 
   return (
@@ -414,12 +426,13 @@ const RelatedModal = ({
                 />
               </div>
             </Col>
-            <Col className="pt-1">
+            <Col className="pt-2">
               <Button
                 color="paradise"
                 outline
                 className="waves-effect waves-light mt-4 p-0"
                 type="button"
+                onClick={() => onsubmitNameFilter()}
               >
                 <i
                   className="bx bx-search-alt-2"
@@ -430,7 +443,6 @@ const RelatedModal = ({
                     margin: "5px",
                     cursor: "pointer",
                   }}
-                  onClick={() => onsubmitNameFilter()}
                 ></i>
               </Button>
             </Col>
@@ -576,6 +588,7 @@ const RelatedModal = ({
                 outline
                 className="waves-effect waves-light mt-4 p-0"
                 type="button"
+                onClick={() => submitAdvanceFilters()}
               >
                 <i
                   className="bx bx-search-alt-2"
@@ -586,7 +599,6 @@ const RelatedModal = ({
                     margin: "5px",
                     cursor: "pointer",
                   }}
-                  onClick={() => submitAdvanceFilters()}
                 ></i>
               </Button>
             </Col>
@@ -632,8 +644,7 @@ const RelatedModal = ({
               className="waves-effect waves-light col-2 mx-4"
               type="button"
               onClick={() => {
-              setFilteredData([])
-              setWebsiteSelected('-1')
+                refreshFilters();
               }}
             >
               Refresh
@@ -642,8 +653,7 @@ const RelatedModal = ({
               id="save-button"
               type="submit"
               className="font-16 btn-block col-2 btn-orange"
-              onClick={() =>{
-                
+              onClick={() => {
                 setRelatedFilter(false);
               }}
             >
