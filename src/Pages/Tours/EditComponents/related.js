@@ -75,14 +75,14 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
       },
       {
         Header: "Tour ID",
-        accessor: "id",
+        accessor: "related_tour_id",
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
           console.log(cellProps.row)
           return (
             <>
-            <a href={`${cellProps.row.original.admin_panel_link}`} target="_blank" className="text-paradise" rel="noreferrer">{cellProps.row.original.id}</a>
+            <a href={`${cellProps.row.original.admin_panel_link}`} target="_blank" className="text-paradise" rel="noreferrer">{cellProps.row.original.related_tour_id}</a>
             </>
           )
         },
