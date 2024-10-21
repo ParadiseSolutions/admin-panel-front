@@ -51,6 +51,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const statusUpdateRelated = (id, body) => {
+    const url = `${API_URL}/booking-way/tours/${id}/status`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
 
   export const deleteTourAPI = (id) => {
     const url = `${API_URL}/tours/${id}`;
@@ -174,6 +180,46 @@ export const bulkToursPut = (body) => {
     });
   };
 
+  export const typeRelatedTourSelect = () => {
+    const url = `${API_URL}/booking-way/types`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  
+  export const postRelatedFilterByName = (body) => {
+    const url = `${API_URL}/booking-way/tours/name-link`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+
+  export const postRelatedAdvanceFilter = (body) => {
+    const url = `${API_URL}/booking-way/tours/params`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+  export const postAddRelated = (body) => {
+    const url = `${API_URL}/booking-way/add`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
+  export const deleteRelated = (current, related) => {
+    const url = `${API_URL}/booking-way/remove-all/${current}/${related}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
+  export const editRelatedType = (id,data) => {
+    const url = `${API_URL}/booking-way/tours/${id}/type`;
+    return axios.put (url, data, {
+      headers: options,
+    });
+  };
+
+
   export const putSettingsAPI = (id, body) => {
     const url = `${API_URL}/tours/${id}/settings`;
     return axios.put (url, body, {
@@ -245,6 +291,24 @@ export const getPricesPricingAPI = (id) => {
 export const getAddonsPricingAPI = (id) => {
   const url = `${API_URL}/tours/${id}/addons`;
   return axios.get (url, {
+    headers: options,
+  });
+};
+export const getRelatedTourAPI = (data) => {
+  const url = `${API_URL}/booking-way/tours/list`;
+  return axios.post (url,data, {
+    headers: options,
+  });
+};
+export const priorityRelatedAPI = (data) => {
+  const url = `${API_URL}/booking-way/tours/change-priority`;
+  return axios.post (url,data, {
+    headers: options,
+  });
+};
+export const deleteRelatedAPI = (id) => {
+  const url = `${API_URL}/booking-way/remove/${id}`;
+  return axios.delete (url, {
     headers: options,
   });
 };
