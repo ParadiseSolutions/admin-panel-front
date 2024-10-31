@@ -26,6 +26,7 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AutomatedConfirmationTab from "./EditComponents/automated";
 import RelatedComponent from "./EditComponents/related";
+import Payments from "./EditComponents/payments";
 const EditTour = ({ history }) => {
   const { id } = useParams();
   //tabs
@@ -169,12 +170,9 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-user"></i>
                     </span>
-                    <span className="d-none d-sm-block">
-                      + High Season Dates
-                    </span>
+                    <span className="d-none d-sm-block">+ Payments</span>
                   </NavLink>
                 </NavItem>
-
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
@@ -196,9 +194,11 @@ const EditTour = ({ history }) => {
                     }}
                   >
                     <span className="d-block d-sm-none">
-                      <i className="far fa-envelope"></i>
+                      <i className="far fa-user"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ URLs</span>
+                    <span className="d-none d-sm-block">
+                      + High Season Dates
+                    </span>
                   </NavLink>
                 </NavItem>
 
@@ -225,14 +225,15 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Products</span>
+                    <span className="d-none d-sm-block">+ URLs</span>
                   </NavLink>
                 </NavItem>
+
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
-                      backgroundColor: `${activeTab === "6" ? "#F6861F" : ""}`,
+                      backgroundColor: `${activeTab === "6" ? "#F6851F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
                       border: "none",
                       flexWrap: "wrap",
@@ -251,14 +252,14 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Addons</span>
+                    <span className="d-none d-sm-block">+ Products</span>
                   </NavLink>
                 </NavItem>
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
                       cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
-                      backgroundColor: `${activeTab === "7" ? "#F6851F" : ""}`,
+                      backgroundColor: `${activeTab === "7" ? "#F6861F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
                       border: "none",
                       flexWrap: "wrap",
@@ -277,7 +278,7 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Schedule</span>
+                    <span className="d-none d-sm-block">+ Addons</span>
                   </NavLink>
                 </NavItem>
                 <NavItem className="d-flex">
@@ -303,7 +304,7 @@ const EditTour = ({ history }) => {
                     <span className="d-block d-sm-none">
                       <i className="far fa-envelope"></i>
                     </span>
-                    <span className="d-none d-sm-block">+ Templates</span>
+                    <span className="d-none d-sm-block">+ Schedule</span>
                   </NavLink>
                 </NavItem>
                 <NavItem className="d-flex">
@@ -323,6 +324,32 @@ const EditTour = ({ history }) => {
                     onClick={() => {
                       if (tourData?.edit_mode === 0) {
                         toggle("9");
+                      }
+                    }}
+                  >
+                    <span className="d-block d-sm-none">
+                      <i className="far fa-envelope"></i>
+                    </span>
+                    <span className="d-none d-sm-block">+ Templates</span>
+                  </NavLink>
+                </NavItem>
+                <NavItem className="d-flex">
+                  <NavLink
+                    style={{
+                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      backgroundColor: `${activeTab === "10" ? "#F6851F" : ""}`,
+                      color: `${activeTab === "10" ? "white" : ""}`,
+                      border: "none",
+                      flexWrap: "wrap",
+                      display: "grid",
+                      alignContent: "center",
+                    }}
+                    className={classnames({
+                      active: activeTab === "10",
+                    })}
+                    onClick={() => {
+                      if (tourData?.edit_mode === 0) {
+                        toggle("10");
                       }
                     }}
                   >
@@ -354,30 +381,39 @@ const EditTour = ({ history }) => {
                   ) : null}
                 </TabPane>
                 <TabPane tabId="3">
-                  <HighSeasons tourData={tourData} toggle={toggle} />
+                  {tourSettings ? (
+                    <Payments
+                      tourSettings={tourSettings}
+                      id={id}
+                      toggle={toggle}
+                    />
+                  ) : null}
                 </TabPane>
                 <TabPane tabId="4">
+                  <HighSeasons tourData={tourData} toggle={toggle} />
+                </TabPane>
+                <TabPane tabId="5">
                   {tourData ? (
                     <URL tourData={tourData} toggle={toggle} />
                   ) : null}
                 </TabPane>
-                <TabPane tabId="5">
+                <TabPane tabId="6">
                   <Pricing id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
-                <TabPane tabId="6">
+                <TabPane tabId="7">
                   <AddonsComponent
                     id={id}
                     tourData={tourData}
                     toggle={toggle}
                   />
                 </TabPane>
-                <TabPane tabId="7">
+                <TabPane tabId="8">
                   <Schedules id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
-                <TabPane tabId="8">
+                <TabPane tabId="9">
                   <AutomatedConfirmationTab id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
-                <TabPane tabId="9">
+                <TabPane tabId="10">
                   <RelatedComponent id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
               </TabContent>
