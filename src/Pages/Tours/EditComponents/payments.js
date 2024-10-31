@@ -4,7 +4,8 @@ import {
   paymentsGratuiteGet,
   paymentsGratuiteTypeGet,
   paymentsBaseOnGet,
-  paymentsApplyGet
+  paymentsApplyGet,
+  postPaymentsAPI,
 } from "../../../Utils/API/Tours";
 import { getCurrency } from "../../../Utils/API/Operators";
 import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
@@ -25,74 +26,63 @@ import Swal from "sweetalert2";
 import { map } from "lodash";
 
 const Payments = ({ history, tourSettings, id, toggle }) => {
-
-  const [taxData, setTaxData] = useState([])
-  const [gratuitesData, setGratuitesData] = useState([])
-  const [gratuitesTypeData, setGratuitesTypeData] = useState([])
-  const [basedOnData, setBasedOnData] = useState([])
-  const [applyData, setApplyData] = useState([])
-  const [currencyData, setCurrencyData] = useState([])
-  const [taxSelected, setTaxSelected] = useState([])
-  const [gratuitesSelected, setGratuitesSelected] = useState([])
-  const [gratuitesTypeSelected, setGratuitesTypeSelected] = useState([])
-  const [basedOnSelected, setBasedOnSelected] = useState([])
-  const [applySelected, setApplySelected] = useState([])
-  const [currencySelected, setCurrencySelected] = useState([])
+  const [taxData, setTaxData] = useState([]);
+  const [gratuitesData, setGratuitesData] = useState([]);
+  const [gratuitesTypeData, setGratuitesTypeData] = useState([]);
+  const [basedOnData, setBasedOnData] = useState([]);
+  const [applyData, setApplyData] = useState([]);
+  const [currencyData, setCurrencyData] = useState([]);
+  const [taxSelected, setTaxSelected] = useState([]);
+  const [gratuitesSelected, setGratuitesSelected] = useState([]);
+  const [gratuitesTypeSelected, setGratuitesTypeSelected] = useState([]);
+  const [basedOnSelected, setBasedOnSelected] = useState([]);
+  const [applySelected, setApplySelected] = useState([]);
+  const [currencySelected, setCurrencySelected] = useState([]);
   //initial Data
   useEffect(() => {
-    paymentsTaxGet().then((resp) =>{
-      setTaxData(resp.data.data)
-    })
-    paymentsGratuiteGet().then((resp) =>{
-      setGratuitesData(resp.data.data)
-    })
-    paymentsGratuiteTypeGet().then((resp) =>{
-      setGratuitesTypeData(resp.data.data)
-    })
-    paymentsBaseOnGet().then((resp) =>{
-      setBasedOnData(resp.data.data)
-    })
-    paymentsApplyGet().then((resp) =>{
-      setApplyData(resp.data.data)
-    })
-    getCurrency().then((resp) =>{
-      setCurrencyData(resp.data.data)
-    })
-  }, [])
-
-  console.log('---------------->',taxData)
+    paymentsTaxGet().then((resp) => {
+      setTaxData(resp.data.data);
+    });
+    paymentsGratuiteGet().then((resp) => {
+      setGratuitesData(resp.data.data);
+    });
+    paymentsGratuiteTypeGet().then((resp) => {
+      setGratuitesTypeData(resp.data.data);
+    });
+    paymentsBaseOnGet().then((resp) => {
+      setBasedOnData(resp.data.data);
+    });
+    paymentsApplyGet().then((resp) => {
+      setApplyData(resp.data.data);
+    });
+    getCurrency().then((resp) => {
+      setCurrencyData(resp.data.data);
+    });
+  }, []);
+  useEffect(() => {
+ if (tourSettings) {
+  setTaxSelected(tourSettings.tax_id)
+  setGratuitesSelected(tourSettings.gratuity_id)
+  setGratuitesTypeSelected(tourSettings.gratuity_type_id)
+  setBasedOnSelected(tourSettings.based_on_id)
+  setApplySelected(tourSettings.payment_apply_id)
+  setCurrencySelected(tourSettings.payment_currency)
+ }
+  }, [tourSettings])
   
-
-
+  console.log("data ---->", tourSettings);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
       tour_id: id,
-      provider_tour_name: tourSettings.provider_tour_name
-        ? tourSettings.provider_tour_name
+      gratuity_percentage: tourSettings.gratuity
+        ? tourSettings.gratuity
         : "",
-      provider_tour_url: tourSettings.provider_tour_url
-        ? tourSettings.provider_tour_url
+        exchange_rate: tourSettings.exchange_rate
+        ? tourSettings.exchange_rate
         : "",
-      infants_range_from: tourSettings.infants_range_from
-        ? tourSettings.infants_range_from
-        : "",
-      infants_range_to: tourSettings.infants_range_to
-        ? tourSettings.infants_range_to
-        : "",
-      kids_range_from: tourSettings.kids_range_from
-        ? tourSettings.kids_range_from
-        : "",
-      kids_range_to: tourSettings.kids_range_to
-        ? tourSettings.kids_range_to
-        : "",
-      teenagers_range_from: tourSettings.teenagers_range_from
-        ? tourSettings.teenagers_range_from
-        : "",
-      teenagers_range_to: tourSettings.teenagers_range_to
-        ? tourSettings.teenagers_range_to
-        : "",
+    
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -102,37 +92,47 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     //     .required("Max 2 chars"),
     // }),
     onSubmit: (values) => {
-      let data = {};
+      let data = {
+        tax_id: +taxSelected,
+        gratuity_id: +gratuitesSelected,
+        gratuity_type_id: +gratuitesTypeSelected,
+        gratuity: values.gratuity_percentage,
+        based_on_id: +basedOnSelected,
+        payment_apply_id: +applySelected,
+        payment_currency: currencySelected,
+        exchange_rate: values.exchange_rate,
+        tour_id: id,
+      };
 
-      // putSettingsAPI(id, data)
-      //   .then((resp) => {
-      //     // console.log(resp.data);
-      //     if (resp.data.status === 200) {
-      //       triggerUpdate();
-      //       Swal.fire("Edited!", "Settings has been created.", "success");
-      //       toggle("3");
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     let errorMessages = [];
-      //     if (error.response.data.data) {
-      //       Object.entries(error.response.data.data).map((item) =>
-      //         errorMessages.push(item[1])
-      //       );
-      //     } else {
-      //       if (error.response.data.message === "Array to string conversion") {
-      //         errorMessages.push("Available From is required");
-      //       } else {
-      //         errorMessages.push(error.response.data.message);
-      //       }
-      //     }
+      postPaymentsAPI(data)
+        .then((resp) => {
+          // console.log(resp.data);
+          if (resp.data.status === 200) {
+            // triggerUpdate();
+            Swal.fire("Edited!", "Payments has been edited.", "success");
+            toggle("3");
+          }
+        })
+        .catch((error) => {
+          let errorMessages = [];
+          if (error.response.data.data) {
+            Object.entries(error.response.data.data).map((item) =>
+              errorMessages.push(item[1])
+            );
+          } else {
+            if (error.response.data.message === "Array to string conversion") {
+              errorMessages.push("Available From is required");
+            } else {
+              errorMessages.push(error.response.data.message);
+            }
+          }
 
-      //     Swal.fire(
-      //       "Error!",
-      //       // {error.response.},
-      //       String(errorMessages[0])
-      //     );
-      //   });
+          Swal.fire(
+            "Error!",
+            // {error.response.},
+            String(errorMessages[0])
+          );
+        });
     },
   });
 
@@ -183,24 +183,24 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                     onChange={(e) => {
-                       setTaxSelected(e.target.value);
-                     }}
+                    onChange={(e) => {
+                      setTaxSelected(e.target.value);
+                    }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
                     <option value="">Select....</option>
-                     {map(taxData, (tax, index) => {
+                    {map(taxData, (tax, index) => {
                       return (
                         <option
                           key={index}
                           value={tax.id}
-                         /*  selected={
-                            tourSettings && tourSettings.voucher_tax_id
-                              ? tax.voucher_tax_id ===
-                                tourSettings.voucher_tax_id
+                           selected={
+                            tourSettings && tourSettings.tax_id
+                              ? tax.id ===
+                              tourSettings.tax_id
                               : false
-                          } */
+                          }
                         >
                           {tax.name}
                         </option>
@@ -217,9 +217,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                     onChange={(e) => {
-                       setGratuitesSelected(e.target.value);
-                     }}
+                    onChange={(e) => {
+                      setGratuitesSelected(e.target.value);
+                    }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -229,12 +229,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <option
                           key={index}
                           value={gratuites.id}
-                         /*  selected={
-                            tourSettings && tourSettings.voucher_template_id
-                              ? template.voucher_template_id ===
-                                tourSettings.voucher_template_id
+                           selected={
+                            tourSettings && tourSettings.gratuity_id
+                              ? gratuites.id ===
+                                tourSettings.gratuity_id
                               : false
-                          } */
+                          }
                         >
                           {gratuites.name}
                         </option>
@@ -251,9 +251,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                     onChange={(e) => {
-                       setGratuitesTypeSelected(e.target.value);
-                     }}
+                    onChange={(e) => {
+                      setGratuitesTypeSelected(e.target.value);
+                    }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -263,12 +263,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <option
                           key={index}
                           value={type.id}
-                          /* selected={
-                            tourSettings && tourSettings.voucher_template_id
-                              ? template.voucher_template_id ===
-                                tourSettings.voucher_template_id
+                          selected={
+                            tourSettings && tourSettings.gratuity_type_id
+                              ? type.id ===
+                                tourSettings.gratuity_type_id
                               : false
-                          } */
+                          }
                         >
                           {type.name}
                         </option>
@@ -290,17 +290,11 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   </div>
                 </div>
                 <div className="input-group">
-                  <span
-                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                    id="basic-addon1"
-                    style={{ fontSize: "0.85em" }}
-                  >
-                    %
-                  </span>
+                  
                   <Input
                     name="gratuity_percentage"
                     placeholder=""
-                    type="text"
+                    type="number"
                     onChange={validationType.handleChange}
                     value={validationType.values.gratuity_percentage || ""}
                     invalid={
@@ -310,6 +304,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         : false
                     }
                   />
+                  <span
+                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                    id="basic-addon1"
+                    style={{ fontSize: "0.85em" }}
+                  >
+                    %
+                  </span>
                 </div>
               </div>
             </Col>
@@ -320,9 +321,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                     onChange={(e) => {
-                       setBasedOnSelected(e.target.value);
-                     }}
+                    onChange={(e) => {
+                      setBasedOnSelected(e.target.value);
+                    }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -332,12 +333,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <option
                           key={index}
                           value={based.id}
-                          /* selected={
-                            tourSettings && tourSettings.voucher_template_id
-                              ? template.voucher_template_id ===
-                                tourSettings.voucher_template_id
+                          selected={
+                            tourSettings && tourSettings.based_on_id
+                              ? based.id ===
+                                tourSettings.based_on_id
                               : false
-                          } */
+                          }
                         >
                           {based.name}
                         </option>
@@ -354,9 +355,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                     onChange={(e) => {
-                       setApplySelected(e.target.value);
-                     }}
+                    onChange={(e) => {
+                      setApplySelected(e.target.value);
+                    }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -366,12 +367,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <option
                           key={index}
                           value={apply.id}
-                          /* selected={
-                            tourSettings && tourSettings.voucher_template_id
-                              ? template.voucher_template_id ===
-                                tourSettings.voucher_template_id
+                          selected={
+                            tourSettings && tourSettings.payment_apply_id
+                              ? apply.id ===
+                                tourSettings.payment_apply_id
                               : false
-                          } */
+                          }
                         >
                           {apply.name}
                         </option>
@@ -388,9 +389,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <Input
                     type="select"
                     name=""
-                     onChange={(e) => {
-                       setCurrencySelected(e.target.value);
-                     }}
+                    onChange={(e) => {
+                      setCurrencySelected(e.target.value);
+                    }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -400,12 +401,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <option
                           key={index}
                           value={currency.currency_id}
-                          /* selected={
-                            tourSettings && tourSettings.voucher_template_id
-                              ? template.voucher_template_id ===
-                                tourSettings.voucher_template_id
+                          selected={
+                            tourSettings && tourSettings.payment_currency
+                              ? currency.currency ===
+                                tourSettings.payment_currency
                               : false
-                          } */
+                          }
                         >
                           {currency.currency}
                         </option>
@@ -421,7 +422,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <Input
                   name="exchange_rate"
                   placeholder="$0.00"
-                  type="text"
+                  type="number"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.exchange_rate || ""}

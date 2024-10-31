@@ -381,9 +381,9 @@ const EditTour = ({ history }) => {
                   ) : null}
                 </TabPane>
                 <TabPane tabId="3">
-                  {tourSettings ? (
+                  {tourData ? (
                     <Payments
-                      tourSettings={tourSettings}
+                      tourSettings={tourData}
                       id={id}
                       toggle={toggle}
                     />

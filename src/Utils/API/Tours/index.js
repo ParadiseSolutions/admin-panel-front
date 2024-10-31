@@ -260,6 +260,13 @@ export const paymentsApplyGet = () => {
   });
 };
 
+export const postPaymentsAPI = (body) => {
+  const url = `${API_URL}/payments`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
 
 //high seasons
 export const getSeasonsListAPI = (id) => {

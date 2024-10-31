@@ -119,7 +119,17 @@ const RelatedModal = ({
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          return <Name {...cellProps} />;
+          return cellProps.cell.value ? (
+            <a
+              href={`${cellProps.cell.row.original.admin_panel_link}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {cellProps.cell.row.original.id}
+            </a>
+          ) : (
+            <>{cellProps.cell.row.original.id}</>
+          );
         },
       },
       {
