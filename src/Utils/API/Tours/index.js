@@ -227,6 +227,46 @@ export const bulkToursPut = (body) => {
     });
   };
 
+// payments
+
+export const paymentsTaxGet = () => {
+  const url = `${API_URL}/payments/tab/taxes`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsGratuiteGet = () => {
+  const url = `${API_URL}/payments/tab/gratuities`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsGratuiteTypeGet = () => {
+  const url = `${API_URL}/payments/tab/gratuites-types`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsBaseOnGet = () => {
+  const url = `${API_URL}/payments/tab/based-on`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsApplyGet = () => {
+  const url = `${API_URL}/payments/tab/apply`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const postPaymentsAPI = (body) => {
+  const url = `${API_URL}/payments`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
 
 //high seasons
 export const getSeasonsListAPI = (id) => {
