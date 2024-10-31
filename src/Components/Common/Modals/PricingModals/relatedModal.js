@@ -30,7 +30,7 @@ import {
 } from "../../../../Utils/API/Tours";
 import FilteredTable from "../../../../Pages/Tours/EditComponents/PricingTables/filteredTable";
 import { Name } from "../../../../Pages/Tours/EditComponents/PricingTables/PricingCols";
-
+import Swal from "sweetalert2";
 const RelatedModal = ({
   setRelatedFilter,
   relatedFilter,
@@ -359,7 +359,25 @@ const RelatedModal = ({
           setCounter((counter) => counter + 1);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        let errorMessages = [];
+        if (error.response.data.data) {
+          Object.entries(error.response.data.data).map((item) =>
+            errorMessages.push(item[1])
+          );
+        } else {
+          if (error.response.data.message === "Array to string conversion") {
+            errorMessages.push("Available From is required");
+          } else {
+            errorMessages.push(error.response.data.message);
+          }
+        }
+        Swal.fire(
+          "Error!",
+          // {error.response.},
+          String(errorMessages[0])
+        );
+      });
   };
 
   const deleteRelation = (row) => {
