@@ -229,6 +229,12 @@ export const bulkToursPut = (body) => {
 
 // payments
 
+export const paymentsIndexGet = () => {
+  const url = `${API_URL}/payments`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 export const paymentsTaxGet = () => {
   const url = `${API_URL}/payments/tab/taxes`;
   return axios.get (url, {
