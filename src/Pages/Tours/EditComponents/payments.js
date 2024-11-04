@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   paymentsTaxGet,
   paymentsGratuiteGet,
@@ -6,6 +6,7 @@ import {
   paymentsBaseOnGet,
   paymentsApplyGet,
   postPaymentsAPI,
+  paymentsIndexGet,
 } from "../../../Utils/API/Tours";
 import { getCurrency } from "../../../Utils/API/Operators";
 import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
@@ -20,12 +21,16 @@ import {
   Input,
   FormFeedback,
   Button,
+  UncontrolledTooltip,
 } from "reactstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { map } from "lodash";
+import PricingTables from "./PricingTables/pricingTables";
+import { Name } from "./PricingTables/PricingCols";
 
 const Payments = ({ history, tourSettings, id, toggle }) => {
+  const [paymentData, setPaymentData] = useState([])
   const [taxData, setTaxData] = useState([]);
   const [gratuitesData, setGratuitesData] = useState([]);
   const [gratuitesTypeData, setGratuitesTypeData] = useState([]);
@@ -40,6 +45,10 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [currencySelected, setCurrencySelected] = useState([]);
   //initial Data
   useEffect(() => {
+
+    paymentsIndexGet().then((resp) => {
+      setPaymentData(resp.data.data);
+    });
     paymentsTaxGet().then((resp) => {
       setTaxData(resp.data.data);
     });
@@ -69,8 +78,171 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   setCurrencySelected(tourSettings.payment_currency)
  }
   }, [tourSettings])
+
+  const columnsProducts = useMemo(() => [
+    {
+      Header: "Type",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Payment Options",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Amount",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Based On",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Taxes",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Gratuity",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Paid By",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Method",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Due Date",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "When",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Event",
+      accessor: "",
+      disableFilters: false,
+      filterable: true,
+      Cell: (cellProps) => {
+        return <Name {...cellProps} />;
+      },
+    },
+    {
+      Header: "Action",
+      accessor: "action",
+      disableFilters: true,
+      Cell: (cellProps) => {
+        return (
+          <div className="d-flex gap-3">
+            <div
+              className="text-success"
+              onClick={() => {
+                const prodData = cellProps.row.original;
+                // console.log("data del producto", prodData);
+              }}
+            >
+              <i
+                className="mdi mdi-pencil font-size-18"
+                id="edittooltip"
+                style={{ cursor: "pointer" }}
+              />
+              <UncontrolledTooltip placement="top" target="edittooltip">
+                Edit
+              </UncontrolledTooltip>
+            </div>
+            <div
+              className="text-warning"
+              onClick={() => {
+                const prodData = cellProps.row.original;
+                // console.log("data del producto", prodData);
+             /*  */
+              }}
+            >
+              <i
+                className="mdi mdi-content-copy font-size-18"
+                id="copytooltip"
+                style={{ cursor: "pointer" }}
+              />
+              <UncontrolledTooltip placement="top" target="copytooltip">
+                Copy
+              </UncontrolledTooltip>
+            </div>
+            <div
+              className="text-danger"
+              onClick={() => {
+                const depData = cellProps.row.original;
+                // setconfirm_alert(true);
+                /* onDelete(depData); */
+              }}
+            >
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                style={{ cursor: "pointer" }}
+              />
+              <UncontrolledTooltip placement="top" target="deletetooltip">
+                Delete
+              </UncontrolledTooltip>
+            </div>
+          </div>
+        );
+      },
+    },
+  ], []);
   
-  console.log("data ---->", tourSettings);
+  console.log("data ---->", paymentData);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -462,7 +634,17 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
               </div>
             </Col>
           </Row>
-          <Row className="row"></Row>
+          <Row>
+        {paymentData ? (
+          <PricingTables
+            columns={columnsProducts}
+            data={paymentData}
+            isGlobalFilter={true}
+            productsTable={true}
+            /* onClickNewProduct={onClickNewProduct} */
+          />
+        ) : null}
+      </Row>
 
           <Row>
             <div className="col-12 d-flex justify-content-end mt-5">
