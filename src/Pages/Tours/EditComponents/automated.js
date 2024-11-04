@@ -72,13 +72,11 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
   const [ttop3, setttop3] = useState(false);
-  const [ttop4, setttop4] = useState(false);
   const [ttop6, setttop6] = useState(false);
   const [ttop7, setttop7] = useState(false);
-  const [ttGM, settGm] = useState(false);
-  const [ttimg, setimg] = useState(false);
-  const [ttml, setml] = useState(false);
-  const [ttmi, setmi] = useState(false);
+  const [ttmlocation, setttmlocation] = useState(false);
+  const [ttblocation, setttblocation] = useState(false);
+
   const [ttdp, setdp] = useState(false);
   const [ttai, setai] = useState(false);
   const [ttpcontact, settpcontact] = useState(false);
@@ -90,6 +88,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
   const [ttsendvoucherdfrom, setttsendvoucherdfrom] = useState(false);
   const [ttvoucherchannel, setttvoucherchannel] = useState(false);
   const [ttconfirmationchannel, setttconfirmationchannel] = useState(false);
+  const [ttrest, setttrest] = useState(false);
 
   const [meetingLocationTable, setMeetingLocationTable] = useState({});
   const [boatLocationTable, setBoatLocationTable] = useState({});
@@ -889,23 +888,17 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   <label>Meeting Locations</label>
                   <i
                     className="uil-question-circle font-size-15 mx-2"
-                    id="zfees"
+                    id="mlocations"
                   />
                   <Tooltip
                     placement="right"
-                    isOpen={ttop1}
-                    target="zfees"
+                    isOpen={ttmlocation}
+                    target="mlocations"
                     toggle={() => {
-                      setttop1(!ttop1);
+                      setttmlocation(!ttmlocation);
                     }}
                   >
-                    {/* These are the additional fees that will be shown on the
-                        website and the voucher for this tour, in the order they
-                        are displayed in the list.
-                        <br />
-                        <br />
-                        To add a fee to the list, click on "Add Extra Fee". To
-                        edit a fee, click on the pencil icon next to the fee. */}
+                    missing tooltip definition
                   </Tooltip>
                 </div>
 
@@ -1002,23 +995,17 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   <label>Boat Locations</label>
                   <i
                     className="uil-question-circle font-size-15 mx-2"
-                    id="zfees"
+                    id="blocation"
                   />
                   <Tooltip
                     placement="right"
-                    isOpen={ttop1}
-                    target="zfees"
+                    isOpen={ttblocation}
+                    target="blocation"
                     toggle={() => {
-                      setttop1(!ttop1);
+                      setttblocation(!ttblocation);
                     }}
                   >
-                    {/* These are the additional fees that will be shown on the
-                        website and the voucher for this tour, in the order they
-                        are displayed in the list.
-                        <br />
-                        <br />
-                        To add a fee to the list, click on "Add Extra Fee". To
-                        edit a fee, click on the pencil icon next to the fee. */}
+                    missing tooltip definition
                   </Tooltip>
                 </div>
                 {tourData?.type_id !== 3 ? (
@@ -1111,23 +1098,22 @@ const AutomatedConfirmation = ({ tourData, id }) => {
                   <label>Restrictions</label>
                   <i
                     className="uil-question-circle font-size-15 mx-2"
-                    id="zfees"
+                    id="restrictionstt"
                   />
                   <Tooltip
                     placement="right"
-                    isOpen={ttop1}
-                    target="zfees"
+                    isOpen={ttrest}
+                    target="restrictionstt"
                     toggle={() => {
-                      setttop1(!ttop1);
+                      setttrest(!ttrest);
                     }}
                   >
-                    {/* These are the additional fees that will be shown on the
-                        website and the voucher for this tour, in the order they
-                        are displayed in the list.
-                        <br />
-                        <br />
-                        To add a fee to the list, click on "Add Extra Fee". To
-                        edit a fee, click on the pencil icon next to the fee. */}
+                    If the tour has any restrictions specify them one line at a
+                    time. They will be shown on the voucher and on the website
+                    in the order displayed.
+                    <br />
+                    <br />
+                    To add additional restrictions, click on "+ Add".
                   </Tooltip>
                 </div>
 
@@ -1705,12 +1691,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               <label>Request Availability Via</label>
               <i
                 className="uil-question-circle font-size-15 mx-2"
-                id="channel599"
+                id="request_availa"
               />
               <Tooltip
                 placement="right"
                 isOpen={ttconfirmationchannel}
-                target="channel599"
+                target="request_availa"
                 toggle={() => {
                   setttconfirmationchannel(!ttconfirmationchannel);
                 }}
@@ -1758,12 +1744,12 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               <label>Issue Voucher Via</label>
               <i
                 className="uil-question-circle font-size-15 mx-2"
-                id="channel599"
+                id="issue_voucher"
               />
               <Tooltip
                 placement="right"
                 isOpen={ttvoucherchannel}
-                target="channel599"
+                target="issue_voucher"
                 toggle={() => {
                   setttvoucherchannel(!ttvoucherchannel);
                 }}
