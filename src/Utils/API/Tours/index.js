@@ -229,8 +229,8 @@ export const bulkToursPut = (body) => {
 
 // payments
 
-export const paymentsIndexGet = () => {
-  const url = `${API_URL}/payments`;
+export const paymentsIndexGet = (id) => {
+  const url = `${API_URL}/payments/tab/payments/${id}`;
   return axios.get (url, {
     headers: options,
   });
@@ -265,10 +265,64 @@ export const paymentsApplyGet = () => {
     headers: options,
   });
 };
+export const paymentstypeGet = () => {
+  const url = `${API_URL}/payments/tab/payment-type`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsOptionsGet = () => {
+  const url = `${API_URL}/payments/tab/payment-options`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsPaidByGet = () => {
+  const url = `${API_URL}/payments/tab/paid-by`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsMethodGet = () => {
+  const url = `${API_URL}/payments/tab/methods`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsDueGet = () => {
+  const url = `${API_URL}/payments/tab/due`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsWhenGet = () => {
+  const url = `${API_URL}/payments/tab/when`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsEventGet = () => {
+  const url = `${API_URL}/payments/tab/event`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 
 export const postPaymentsAPI = (body) => {
   const url = `${API_URL}/payments`;
   return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const postPaymentsNewAPI = (body) => {
+  const url = `${API_URL}/payments/tab/new`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const putPaymentsAPI = (id,body) => {
+  const url = `${API_URL}/payments/${id}`;
+  return axios.put (url, body, {
     headers: options,
   });
 };
