@@ -7,6 +7,13 @@ import {
   paymentsApplyGet,
   postPaymentsAPI,
   paymentsIndexGet,
+  paymentstypeGet,
+  paymentsOptionsGet,
+  paymentsPaidByGet,
+  paymentsMethodGet,
+  paymentsDueGet,
+  paymentsWhenGet,
+  paymentsEventGet,
 } from "../../../Utils/API/Tours";
 import { getCurrency } from "../../../Utils/API/Operators";
 import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
@@ -28,25 +35,41 @@ import Swal from "sweetalert2";
 import { map } from "lodash";
 import PricingTables from "./PricingTables/pricingTables";
 import { Name } from "./PricingTables/PricingCols";
+import PaymentsToursModal from "../../../Components/Common/Modals/PaymentsTourModal/paymentsTourModal";
 
 const Payments = ({ history, tourSettings, id, toggle }) => {
-  const [paymentData, setPaymentData] = useState([])
+  const [paymentData, setPaymentData] = useState([]);
   const [taxData, setTaxData] = useState([]);
   const [gratuitesData, setGratuitesData] = useState([]);
   const [gratuitesTypeData, setGratuitesTypeData] = useState([]);
   const [basedOnData, setBasedOnData] = useState([]);
   const [applyData, setApplyData] = useState([]);
   const [currencyData, setCurrencyData] = useState([]);
+  const [paymentsTypeData, setPaymentsTypeData] = useState([]);
+  const [paymentsOptionsData, setPaymentsOptionsData] = useState([]);
+  const [paidByData, setPaidByData] = useState([]);
+  const [methodData, setMethodData] = useState([]);
+  const [dueData, setDueData] = useState([]);
+  const [whenData, setWhenData] = useState([]);
+  const [eventData, setEventData] = useState([]);
   const [taxSelected, setTaxSelected] = useState([]);
   const [gratuitesSelected, setGratuitesSelected] = useState([]);
   const [gratuitesTypeSelected, setGratuitesTypeSelected] = useState([]);
   const [basedOnSelected, setBasedOnSelected] = useState([]);
   const [applySelected, setApplySelected] = useState([]);
   const [currencySelected, setCurrencySelected] = useState([]);
+  const [paymentsAdd, setPaymentsAdd] = useState(false);
+  const [dataEdit, setDataEdit] = useState([])
+  
+  const initialRequest = () =>{
+    paymentsIndexGet(id).then((resp) => {
+      setPaymentData(resp.data.data);
+    });
+  }
+
   //initial Data
   useEffect(() => {
-
-    paymentsIndexGet().then((resp) => {
+    paymentsIndexGet(id).then((resp) => {
       setPaymentData(resp.data.data);
     });
     paymentsTaxGet().then((resp) => {
@@ -67,194 +90,202 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     getCurrency().then((resp) => {
       setCurrencyData(resp.data.data);
     });
-  }, []);
-  useEffect(() => {
- if (tourSettings) {
-  setTaxSelected(tourSettings.tax_id)
-  setGratuitesSelected(tourSettings.gratuity_id)
-  setGratuitesTypeSelected(tourSettings.gratuity_type_id)
-  setBasedOnSelected(tourSettings.based_on_id)
-  setApplySelected(tourSettings.payment_apply_id)
-  setCurrencySelected(tourSettings.payment_currency)
- }
-  }, [tourSettings])
+    paymentstypeGet().then((resp) => {
+      setPaymentsTypeData(resp.data.data);
+    });
+    paymentsOptionsGet().then((resp) => {
+      setPaymentsOptionsData(resp.data.data);
+    });
+    paymentsPaidByGet().then((resp) => {
+      setPaidByData(resp.data.data);
+    });
+    paymentsMethodGet().then((resp) => {
+      setMethodData(resp.data.data);
+    });
+    paymentsDueGet().then((resp) => {
+      setDueData(resp.data.data);
+    });
+    paymentsWhenGet().then((resp) => {
+      setWhenData(resp.data.data);
+    });
+    paymentsEventGet().then((resp) => {
+      setEventData(resp.data.data);
+    });
+  }, [id]);
 
-  const columnsProducts = useMemo(() => [
-    {
-      Header: "Type",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+  useEffect(() => {
+    if (tourSettings) {
+      setTaxSelected(tourSettings.tax_id);
+      setGratuitesSelected(tourSettings.gratuity_id);
+      setGratuitesTypeSelected(tourSettings.gratuity_type_id);
+      setBasedOnSelected(tourSettings.based_on_id);
+      setApplySelected(tourSettings.payment_apply_id);
+      setCurrencySelected(tourSettings.payment_currency);
+    }
+  }, [tourSettings]);
+
+  const columnsProducts = useMemo(
+    () => [
+      {
+        Header: "Type",
+        accessor: "payment_type",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Payment Options",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Payment Options",
+        accessor: "payment_option",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Amount",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Amount",
+        accessor: "amount",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Based On",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Based On",
+        accessor: "payment_base_on",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Taxes",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Taxes",
+        accessor: "payment_tax",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Gratuity",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Gratuity",
+        accessor: "payment_gratuity",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Paid By",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Paid By",
+        accessor: "payment_paid_by",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Method",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Method",
+        accessor: "payment_method",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Due Date",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Due Date",
+        accessor: "payment_due",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "When",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "When",
+        accessor: "payment_when",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Event",
-      accessor: "",
-      disableFilters: false,
-      filterable: true,
-      Cell: (cellProps) => {
-        return <Name {...cellProps} />;
+      {
+        Header: "Event",
+        accessor: "payment_event",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
       },
-    },
-    {
-      Header: "Action",
-      accessor: "action",
-      disableFilters: true,
-      Cell: (cellProps) => {
-        return (
-          <div className="d-flex gap-3">
-            <div
-              className="text-success"
-              onClick={() => {
-                const prodData = cellProps.row.original;
-                // console.log("data del producto", prodData);
-              }}
-            >
-              <i
-                className="mdi mdi-pencil font-size-18"
-                id="edittooltip"
-                style={{ cursor: "pointer" }}
-              />
-              <UncontrolledTooltip placement="top" target="edittooltip">
-                Edit
-              </UncontrolledTooltip>
+      {
+        Header: "Action",
+        accessor: "action",
+        disableFilters: true,
+        Cell: (cellProps) => {
+          return (
+            <div className="d-flex gap-3">
+              <div
+                className="text-success"
+                onClick={() => {
+                  const prodData = cellProps.row.original;
+                  setPaymentsAdd(true);
+                  setDataEdit(prodData)
+                  // console.log("data del producto", prodData);
+                }}
+              >
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  style={{ cursor: "pointer" }}
+                />
+                <UncontrolledTooltip placement="top" target="edittooltip">
+                  Edit
+                </UncontrolledTooltip>
+              </div>
+              
+              <div
+                className="text-danger"
+                onClick={() => {
+                  const depData = cellProps.row.original;
+                  // setconfirm_alert(true);
+                  /* onDelete(depData); */
+                }}
+              >
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                  style={{ cursor: "pointer" }}
+                />
+                <UncontrolledTooltip placement="top" target="deletetooltip">
+                  Delete
+                </UncontrolledTooltip>
+              </div>
             </div>
-            <div
-              className="text-warning"
-              onClick={() => {
-                const prodData = cellProps.row.original;
-                // console.log("data del producto", prodData);
-             /*  */
-              }}
-            >
-              <i
-                className="mdi mdi-content-copy font-size-18"
-                id="copytooltip"
-                style={{ cursor: "pointer" }}
-              />
-              <UncontrolledTooltip placement="top" target="copytooltip">
-                Copy
-              </UncontrolledTooltip>
-            </div>
-            <div
-              className="text-danger"
-              onClick={() => {
-                const depData = cellProps.row.original;
-                // setconfirm_alert(true);
-                /* onDelete(depData); */
-              }}
-            >
-              <i
-                className="mdi mdi-delete font-size-18"
-                id="deletetooltip"
-                style={{ cursor: "pointer" }}
-              />
-              <UncontrolledTooltip placement="top" target="deletetooltip">
-                Delete
-              </UncontrolledTooltip>
-            </div>
-          </div>
-        );
+          );
+        },
       },
-    },
-  ], []);
-  
+    ],
+    []
+  );
+
   console.log("data ---->", paymentData);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
       tour_id: id,
-      gratuity_percentage: tourSettings.gratuity
-        ? tourSettings.gratuity
-        : "",
-        exchange_rate: tourSettings.exchange_rate
+      gratuity_percentage: tourSettings.gratuity ? tourSettings.gratuity : "",
+      exchange_rate: tourSettings.exchange_rate
         ? tourSettings.exchange_rate
         : "",
-    
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -367,10 +398,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <option
                           key={index}
                           value={tax.id}
-                           selected={
+                          selected={
                             tourSettings && tourSettings.tax_id
-                              ? tax.id ===
-                              tourSettings.tax_id
+                              ? tax.id === tourSettings.tax_id
                               : false
                           }
                         >
@@ -401,10 +431,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <option
                           key={index}
                           value={gratuites.id}
-                           selected={
+                          selected={
                             tourSettings && tourSettings.gratuity_id
-                              ? gratuites.id ===
-                                tourSettings.gratuity_id
+                              ? gratuites.id === tourSettings.gratuity_id
                               : false
                           }
                         >
@@ -437,8 +466,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                           value={type.id}
                           selected={
                             tourSettings && tourSettings.gratuity_type_id
-                              ? type.id ===
-                                tourSettings.gratuity_type_id
+                              ? type.id === tourSettings.gratuity_type_id
                               : false
                           }
                         >
@@ -462,7 +490,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   </div>
                 </div>
                 <div className="input-group">
-                  
                   <Input
                     name="gratuity_percentage"
                     placeholder=""
@@ -507,8 +534,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                           value={based.id}
                           selected={
                             tourSettings && tourSettings.based_on_id
-                              ? based.id ===
-                                tourSettings.based_on_id
+                              ? based.id === tourSettings.based_on_id
                               : false
                           }
                         >
@@ -541,8 +567,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                           value={apply.id}
                           selected={
                             tourSettings && tourSettings.payment_apply_id
-                              ? apply.id ===
-                                tourSettings.payment_apply_id
+                              ? apply.id === tourSettings.payment_apply_id
                               : false
                           }
                         >
@@ -616,10 +641,11 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           </Row>
 
           <Row>
-            <Col className="col-12">
+            <Col className="col-xl">
               <div
                 className="mb-4 py-2 px-3"
-                style={{ backgroundColor: "#FFEFDE" }}
+                style={{ backgroundColor: "#FFEFDE"}}
+                
               >
                 <p
                   className="fs-5"
@@ -633,18 +659,28 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </p>
               </div>
             </Col>
+            <Col className='col-1'>
+            <Button
+                type="button"
+                className="btn-orange"
+                onClick={() =>  setPaymentsAdd(true)}
+                style={{fontSize:'12px', padding:'11px'}}
+              >
+               + Add Payment                
+              </Button>
+            </Col>
           </Row>
           <Row>
-        {paymentData ? (
-          <PricingTables
-            columns={columnsProducts}
-            data={paymentData}
-            isGlobalFilter={true}
-            productsTable={true}
-            /* onClickNewProduct={onClickNewProduct} */
-          />
-        ) : null}
-      </Row>
+            {paymentData ? (
+              <PricingTables
+                columns={columnsProducts}
+                data={paymentData}
+                isGlobalFilter={true}
+                productsTable={true}
+                /* onClickNewProduct={onClickNewProduct} */
+              />
+            ) : null}
+          </Row>
 
           <Row>
             <div className="col-12 d-flex justify-content-end mt-5">
@@ -670,6 +706,24 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           </Row>
         </TabPane>
       </Form>
+      <PaymentsToursModal
+        setPaymentsAdd={setPaymentsAdd}
+        paymentsAdd={paymentsAdd}
+        gratuitesTypeData={gratuitesTypeData}
+        basedOnData={basedOnData}
+        taxData={taxData}
+        gratuitesData={gratuitesData}
+        paymentsTypeData={paymentsTypeData}
+        paymentsOptionsData={paymentsOptionsData}
+        paidByData={paidByData}
+        methodData={methodData}
+        dueData={dueData}
+        whenData={whenData}
+        eventData={eventData}
+        dataEdit={dataEdit}
+        id={id}
+        initialRequest={initialRequest}
+      />
     </>
   );
 };
