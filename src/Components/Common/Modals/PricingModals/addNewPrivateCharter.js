@@ -231,7 +231,12 @@ const AddNewPrivateCharter = ({
           eff_rate: values.eff_rate,
           commission: ourCommission,
           deposit: values.deposit,
-          net_price: priceSheetSelected === 1 ? values.net_price : priceSheetSelected === 2 ? values.net_price_percentage : values.net_price_fixed,
+          net_price:
+            priceSheetSelected === 1
+              ? values.net_price
+              : priceSheetSelected === 2
+              ? values.net_price_percentage
+              : values.net_price_fixed,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
@@ -528,7 +533,7 @@ const AddNewPrivateCharter = ({
     setBalanceDueCheckbox(!balanceDueCheckbox);
   };
 
- // provider pricing funcion
+  // provider pricing funcion
   const providerPricingCalc = () => {
     // esto es net price en price sheet select
     let netPriceInput = validationType.values.net_rate;
@@ -619,16 +624,7 @@ const AddNewPrivateCharter = ({
         setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
       );
 
-      if (
-        validationType.values.deposit !== null &&
-        validationType.values.deposit !== "" &&
-        validationType.values.deposit !== 0
-      ) {
-        validationType.setFieldValue(
-          "net_price",
-          (validationType.values.deposit - ourCommission).toFixed(2)
-        );
-      }
+      
     }
 
     if (
@@ -707,16 +703,7 @@ const AddNewPrivateCharter = ({
         setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
       );
 
-      if (
-        validationType.values.deposit !== null &&
-        validationType.values.deposit !== "" &&
-        validationType.values.deposit !== 0
-      ) {
-        validationType.setFieldValue(
-          "net_price_percentage",
-          (validationType.values.deposit - ourCommission).toFixed(2)
-        );
-      }
+      
     }
     if (
       priceSheetSelected === "3" &&
@@ -796,28 +783,17 @@ const AddNewPrivateCharter = ({
         setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
       );
 
-      if (
-        validationType.values.deposit !== null &&
-        validationType.values.deposit !== "" &&
-        validationType.values.deposit !== 0
-      ) {
-        validationType.setFieldValue(
-          "net_price_fixed",
-          (validationType.values.deposit - ourCommission).toFixed(2)
-        );
-      }
+     
     }
     ourPricingCalc();
   };
-
-
 
   // console.log(tourData)
   const ourPricingCalc = () => {
     let ourPriceInput = validationType.values.our_price;
     let netPriceInput = validationType.values.net_rate;
     let ourCommisionPricing = ourPriceInput - netPriceInput;
-    let depositInput = validationType.values.deposit
+    let depositInput = validationType.values.deposit;
     let baseAmountInput = validationType.values.t_base_amount;
     let ivaInput = validationType.values.t_iva;
     let gratuityInput = validationType.values.t_gratuity;
@@ -858,84 +834,129 @@ const AddNewPrivateCharter = ({
         priceCollectNameSelected,
         ourCommisionPricing,
         depositInput
-      ) 
+      );
+      validationType.setFieldValue("deposit", depositInput);
+    }
+
+    if (
+      ourPriceInput !== "" &&
+      depositInput !== "" &&
+      currencySelected !== "MXN"
+    ) {
       validationType.setFieldValue(
-        "deposit",
-       depositInput  
+        "voucher_balance",
+        setDecimalFormatVBalance(ourPriceInput - depositInput, currencySelected)
       );
     }
 
-    if (ourPriceInput !== "" && depositInput !== "" && currencySelected !== "MXN") {
-      validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((ourPriceInput - depositInput), currencySelected))
-      }
-    
-      if (tourData.tax_id === 1 && tourData.gratuity_id === 2) {
-        //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
-        // then this field would be calculated as:
-        // [Net Price] / [1.16]
-        baseAmountInput = setDecimalFormat(ourPriceInput / 1.16);
-      } else if (tourData.tax_id === 2 && tourData.gratuity_id === 2) {
-        // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
-        // then this will be a straight reference, no calculation needed.
-        baseAmountInput = setDecimalFormat(ourPriceInput);
-      } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1) {
-        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
-        baseAmountInput = setDecimalFormat(
-          ourPriceInput / 1.16 / (tourData.gratuity / 100)
-        );
-      } else {
-        baseAmountInput = setDecimalFormat(0);
-      }
-      validationType.setFieldValue(
-        "t_base_amount",
-        setDecimalFormat(baseAmountInput)
+    if (tourData.tax_id === 1 && tourData.gratuity_id === 2) {
+      //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
+      // then this field would be calculated as:
+      // [Net Price] / [1.16]
+      baseAmountInput = setDecimalFormat(ourPriceInput / 1.16);
+    } else if (tourData.tax_id === 2 && tourData.gratuity_id === 2) {
+      // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
+      // then this will be a straight reference, no calculation needed.
+      baseAmountInput = setDecimalFormat(ourPriceInput);
+    } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1) {
+      // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+      baseAmountInput = setDecimalFormat(
+        ourPriceInput / 1.16 / (tourData.gratuity / 100)
       );
+    } else {
+      baseAmountInput = setDecimalFormat(0);
+    }
+    validationType.setFieldValue(
+      "t_base_amount",
+      setDecimalFormat(baseAmountInput)
+    );
 
-      ivaInput = baseAmountInput * 0.16;
-      validationType.setFieldValue("t_iva", setDecimalFormat(ivaInput));
+    ivaInput = baseAmountInput * 0.16;
+    validationType.setFieldValue("t_iva", setDecimalFormat(ivaInput));
+    validationType.setFieldValue(
+      "t_total_price",
+      setDecimalFormat(+baseAmountInput + +ivaInput)
+    );
+    if (tourData.gratuity_type_id === 3) {
+      gratuityInput = +tourData.gratuity;
+    }
+    if (tourData.gratuity_type_id === 4) {
+      gratuityInput = (+tourData.gratuity / 100) * +ourPriceInput;
+    }
+    if (tourData.gratuity_type_id === 5) {
+      gratuityInput =
+        (+tourData.gratuity / 100) * +ourPriceInput + +ourCommisionPricing;
+    }
+    if (tourData.gratuity_type_id === 6) {
+      gratuityInput = 0;
+    }
+    validationType.setFieldValue("t_gratuity", setDecimalFormat(gratuityInput));
+    validationType.setFieldValue(
+      "t_final_total",
+      setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
+    );
+    if (
+      ourPriceInput !== "" &&
+      validationType.values.ship_price &&
+      validationType.values.ship_price !== null &&
+      validationType.values.ship_price !== "0.00" &&
+      validationType.values.ship_price !== "0"
+    ) {
       validationType.setFieldValue(
-        "t_total_price",
-        setDecimalFormat(+baseAmountInput + +ivaInput)
+        "you_save",
+        100 - setYouSaveFormat(ourPriceInput / validationType.values.ship_price)
       );
-      if (tourData.gratuity_type_id === 3) {
-        gratuityInput = +tourData.gratuity;
-      }
-      if (tourData.gratuity_type_id === 4) {
-        gratuityInput = (+tourData.gratuity / 100) * +ourPriceInput;
-      }
-      if (tourData.gratuity_type_id === 5) {
-        gratuityInput =
-          (+tourData.gratuity / 100) * +ourPriceInput + +ourCommisionPricing;
-      }
-      if (tourData.gratuity_type_id === 6) {
-        gratuityInput = 0;
-      }
+    } else if (
+      ourPriceInput !== "" &&
+      validationType.values.compare_at !== "" &&
+      validationType.values.compare_at !== null &&
+      validationType.values.compare_at !== "0.00" &&
+      validationType.values.compare_at !== "0"
+    ) {
       validationType.setFieldValue(
-        "t_gratuity",
-        setDecimalFormat(gratuityInput)
+        "you_save",
+        100 - setYouSaveFormat(ourPriceInput / validationType.values.compare_at)
       );
+    }
+    if (
+      depositInput !== null &&
+      depositInput !== "" &&
+      depositInput !== 0
+    ) {
       validationType.setFieldValue(
-        "t_final_total",
-        setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
+        "net_price_fixed",
+        (depositInput - ourCommisionPricing).toFixed(2)
       );
-      if (ourPriceInput !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00" && validationType.values.ship_price !== "0") {
-        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((ourPriceInput / validationType.values.ship_price)))
-        } else if (ourPriceInput !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00" && validationType.values.compare_at !== "0") {
-        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((ourPriceInput / validationType.values.compare_at)))
-        }
+    }
+    if (
+      depositInput !== null &&
+      depositInput !== "" &&
+      depositInput !== 0
+    ) {
+      validationType.setFieldValue(
+        "net_price_percentage",
+        (depositInput - ourCommisionPricing).toFixed(2)
+      );
+    }
+    if (
+      depositInput !== null &&
+      depositInput !== "" &&
+      depositInput !== 0
+    ) {
+      validationType.setFieldValue(
+        "net_price",
+        (depositInput - ourCommisionPricing).toFixed(2)
+      );
+    }
+  
   };
-
-
-
+ 
   useEffect(() => {
     if (priceCollectNameSelected) {
-     providerPricingCalc()
-
+      providerPricingCalc();
     }
-  }, [
-    priceCollectNameSelected,
-    currencySelected
-  ]);
+  }, [priceCollectNameSelected, currencySelected]);
+
   return (
     <Modal
       centered
@@ -3050,7 +3071,10 @@ const AddNewPrivateCharter = ({
                                 //     setDecimalFormat(value)
                                 //   );
                                 // }}
-                                value={validationType.values.net_price_percentage || ""}
+                                value={
+                                  validationType.values.net_price_percentage ||
+                                  ""
+                                }
                                 invalid={
                                   validationType.touched.net_price_percentage &&
                                   validationType.errors.net_price_percentage
@@ -3722,7 +3746,9 @@ const AddNewPrivateCharter = ({
                                 //     setDecimalFormat(value)
                                 //   );
                                 // }}
-                                value={validationType.values.net_price_fixed || ""}
+                                value={
+                                  validationType.values.net_price_fixed || ""
+                                }
                                 invalid={
                                   validationType.touched.net_price_fixed &&
                                   validationType.errors.net_price_fixed
@@ -4002,7 +4028,7 @@ const AddNewPrivateCharter = ({
                                   "deposit",
                                   setDecimalFormat(value)
                                 );
-                                providerPricingCalc()
+                                providerPricingCalc();
                               }}
                               value={validationType.values.deposit || ""}
                               invalid={
