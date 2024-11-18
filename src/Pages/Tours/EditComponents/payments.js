@@ -120,10 +120,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     if (tourSettings) {
       setTaxSelected(tourSettings.tax_id);
       setGratuitesSelected(tourSettings.gratuity_id);
-      setGratuitesTypeSelected(tourSettings.gratuity_type_id.toString());
+      setGratuitesTypeSelected(tourSettings.gratuity_type_id);
       setBasedOnSelected(tourSettings.based_on_id);
       setApplySelected(tourSettings.payment_apply_id);
       setCurrencySelected(tourSettings.payment_currency);
+    }
+    if (tourSettings.gratuity_type_id) {
+      setGratuitesTypeSelected(tourSettings.gratuity_type_id.toString());
     }
   }, [tourSettings]);
 

@@ -53,6 +53,7 @@ const AddNewPrivateCharter = ({
     if (id) {
       getPriceAPI(id).then((resp) => {
         setDataEdit(resp.data.data[0]);
+        setPriceSheetSelected(resp.data.data[0].p_price_sheet);
       });
     } else {
       setDataEdit(null);
@@ -112,6 +113,8 @@ const AddNewPrivateCharter = ({
       t_total_price: dataEdit ? dataEdit.t_total_price : "",
       t_gratuity: dataEdit ? dataEdit.t_gratuity : "",
       t_final_total: dataEdit ? dataEdit.t_final_total : "",
+      p_price_sheet: dataEdit ? dataEdit.p_price_sheet : "",
+      
       net_price: dataEdit ? dataEdit.net_price : "",
       net_price_percentage: dataEdit ? dataEdit.net_price : "",
       net_price_fixed: dataEdit ? dataEdit.net_price : "",
@@ -241,6 +244,23 @@ const AddNewPrivateCharter = ({
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
+
+          p_est_rate: values.p_est_rate,
+      p_est_commission: values.p_est_commission,
+      p_base_amount: values.p_base_amount,
+      p_iva: values.p_iva,
+      p_total_price: values.p_total_price,
+      p_gratuity: values.p_gratuity,
+      p_final_total: values.p_final_total,
+      provider_commission: values.provider_commission,
+      p_commission: values.p_commission,
+      t_base_amount: values.t_base_amount,
+      t_iva: values.t_iva,
+      t_total_price: values.t_total_price,
+      t_gratuity: values.t_gratuity,
+      t_final_total: values.t_final_total,
+      p_price_sheet: values.p_price_sheet,
+      
           min_qty:
             values.min_qty === "" || values.min_qty === null
               ? 0
@@ -1791,7 +1811,7 @@ const AddNewPrivateCharter = ({
                           }}
                         >
                           <option value="-1">Select....</option>
-                          <option value={1}>Net Price</option>
+                          <option value={1}  >Net Price</option>
                           <option value={2}>Rate %</option>
                           <option value={3}>Fixed Commision</option>
                         </Input>
