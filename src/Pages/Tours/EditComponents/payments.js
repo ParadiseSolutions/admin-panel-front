@@ -36,6 +36,7 @@ import { map } from "lodash";
 import PricingTables from "./PricingTables/pricingTables";
 import { Name } from "./PricingTables/PricingCols";
 import PaymentsToursModal from "../../../Components/Common/Modals/PaymentsTourModal/paymentsTourModal";
+import { setDecimalFormat, setRateFormat } from "../../../Utils/CommonFunctions";
 
 const Payments = ({ history, tourSettings, id, toggle }) => {
   const [paymentData, setPaymentData] = useState([]);
@@ -66,7 +67,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
       setPaymentData(resp.data.data);
     });
   }
-
+  
   //initial Data
   useEffect(() => {
     paymentsIndexGet(id).then((resp) => {
@@ -111,6 +112,8 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     paymentsEventGet().then((resp) => {
       setEventData(resp.data.data);
     });
+
+    
   }, [id]);
 
   useEffect(() => {
@@ -121,6 +124,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
       setBasedOnSelected(tourSettings.based_on_id);
       setApplySelected(tourSettings.payment_apply_id);
       setCurrencySelected(tourSettings.payment_currency);
+    }
+    if (tourSettings.gratuity_type_id) {
+      setGratuitesTypeSelected(tourSettings.gratuity_type_id.toString());
     }
   }, [tourSettings]);
 
@@ -150,7 +156,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          return <Name {...cellProps} />;
+          let rowData = cellProps.row.original
+          return (
+            <>
+            {rowData.payment_option_id === 1 && `$ ${setDecimalFormat(rowData.amount)}`}
+            {rowData.payment_option_id === 2 || rowData.payment_option_id === 3 ? `${setRateFormat(rowData.amount)}%` : null}
+            </>
+          )
         },
       },
       {
@@ -275,8 +287,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     ],
     []
   );
-
-  console.log("data ---->", paymentData);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -454,6 +464,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     name=""
                     onChange={(e) => {
                       setGratuitesTypeSelected(e.target.value);
+                      console.log(e.target.value)
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
@@ -481,7 +492,11 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2">
                 <div className="d-flex justify-content-between">
+                  { gratuitesTypeSelected === '3' ? 
+                  <Label className="form-label">Amount</Label>
+                  :  
                   <Label className="form-label">% Gratuity</Label>
+                  }
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -490,6 +505,15 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   </div>
                 </div>
                 <div className="input-group">
+                  {gratuitesTypeSelected === '3' ? 
+                  <span
+                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                  id="basic-addon1"
+                  style={{ fontSize: "0.85em" }}
+                >
+                  $
+                </span>
+                  : null}
                   <Input
                     name="gratuity_percentage"
                     placeholder=""
@@ -503,13 +527,16 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         : false
                     }
                   />
+                  {gratuitesTypeSelected !== '3' ? 
                   <span
-                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                    id="basic-addon1"
-                    style={{ fontSize: "0.85em" }}
-                  >
-                    %
-                  </span>
+                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                  id="basic-addon1"
+                  style={{ fontSize: "0.85em" }}
+                >
+                  %
+                </span>
+                  : null}
+                  
                 </div>
               </div>
             </Col>
@@ -523,6 +550,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     onChange={(e) => {
                       setBasedOnSelected(e.target.value);
                     }}
+                    disabled={ gratuitesTypeSelected === '3' ? true : false }
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -581,7 +609,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Currency</Label>
+                <Label className="form-label text-paradise">Currency</Label>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -615,7 +643,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline">
-                <Label className="form-label">Exchange Rate</Label>
+                <Label className="form-label text-paradise">Exchange Rate</Label>
                 <Input
                   name="exchange_rate"
                   placeholder="$0.00"
