@@ -1811,9 +1811,9 @@ const AddNewPrivateCharter = ({
                           }}
                         >
                           <option value="-1">Select....</option>
-                          <option value={1}  >Net Price</option>
-                          <option value={2}>Rate %</option>
-                          <option value={3}>Fixed Commision</option>
+                          <option value={'1'} selected={ dataEdit.p_price_sheet === '1' } >Net Price</option>
+                          <option value={'2'} selected={ dataEdit.p_price_sheet === '2' } >Rate %</option>
+                          <option value={'3'} selected={ dataEdit.p_price_sheet === '3' } >Fixed Commision</option>
                         </Input>
                       </div>
                     </Col>
