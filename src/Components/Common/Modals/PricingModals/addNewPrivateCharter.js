@@ -245,20 +245,20 @@ const AddNewPrivateCharter = ({
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
 
-          p_est_rate: values.p_est_rate,
-      p_est_commission: values.p_est_commission,
-      p_base_amount: values.p_base_amount,
-      p_iva: values.p_iva,
-      p_total_price: values.p_total_price,
-      p_gratuity: values.p_gratuity,
-      p_final_total: values.p_final_total,
+          p_est_rate: values.p_est_rate !== '' ? values.p_est_rate : null,
+      p_est_commission: values.p_est_commission !== '' ? values.p_est_commission : null,
+      p_base_amount: values.p_base_amount !== '' ? values.p_base_amount : null,
+      p_iva: values.p_iva !== '' ? values.p_iva : null,
+      p_total_price: values.p_total_price !== '' ? values.p_total_price : null ,
+      p_gratuity: values.p_gratuity !== '' ? values.p_gratuity : null ,
+      p_final_total: values.p_final_total !== '' ? values.p_final_total : null,
       provider_commission: values.provider_commission,
-      p_commission: values.p_commission,
-      t_base_amount: values.t_base_amount,
-      t_iva: values.t_iva,
-      t_total_price: values.t_total_price,
-      t_gratuity: values.t_gratuity,
-      t_final_total: values.t_final_total,
+      p_commission: values.p_commission !== '' ? values.p_commission : null,
+      t_base_amount: values.t_base_amount !== '' ? values.t_base_amount : null ,
+      t_iva: values.t_iva !== '' ? values.t_iva : null ,
+      t_total_price: values.t_total_price !== '' ? values.t_total_price : null,
+      t_gratuity: values.t_gratuity !==  '' ? values.t_gratuity : null,
+      t_final_total: values.t_final_total !== '' ? values.t_final_total : null,
       p_price_sheet: values.p_price_sheet,
       
           min_qty:
@@ -1811,9 +1811,9 @@ const AddNewPrivateCharter = ({
                           }}
                         >
                           <option value="-1">Select....</option>
-                          <option value={'1'} selected={ dataEdit.p_price_sheet === '1' } >Net Price</option>
-                          <option value={'2'} selected={ dataEdit.p_price_sheet === '2' } >Rate %</option>
-                          <option value={'3'} selected={ dataEdit.p_price_sheet === '3' } >Fixed Commision</option>
+                          <option value={'1'} selected={ dataEdit?.p_price_sheet === '1' } >Net Price</option>
+                          <option value={'2'} selected={ dataEdit?.p_price_sheet === '2' } >Rate %</option>
+                          <option value={'3'} selected={ dataEdit?.p_price_sheet === '3' } >Fixed Commision</option>
                         </Input>
                       </div>
                     </Col>
