@@ -13,7 +13,10 @@ import {
 
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { postPaymentsNewAPI, putPaymentsAPI } from "../../../../Utils/API/Tours";
+import {
+  postPaymentsNewAPI,
+  putPaymentsAPI,
+} from "../../../../Utils/API/Tours";
 const PaymentsToursModal = ({
   setPaymentsAdd,
   paymentsAdd,
@@ -30,7 +33,7 @@ const PaymentsToursModal = ({
   eventData,
   dataEdit,
   id,
-  initialRequest
+  initialRequest,
 }) => {
   const [taxSelected, setTaxSelected] = useState([]);
   const [gratuitesSelected, setGratuitesSelected] = useState([]);
@@ -86,7 +89,7 @@ const PaymentsToursModal = ({
         when_id: whenSelected,
         payment_event_id: eventSelected,
       };
-console.log(dataEdit.length)
+      console.log(dataEdit.length);
       if (!dataEdit.id) {
         postPaymentsNewAPI(data)
           .then((resp) => {
@@ -94,7 +97,7 @@ console.log(dataEdit.length)
             if (resp.data.status === 201) {
               // triggerUpdate();
               Swal.fire("Created!", "Payments has been edited.", "success");
-              initialRequest()
+              initialRequest();
             }
           })
           .catch((error) => {
@@ -104,29 +107,33 @@ console.log(dataEdit.length)
                 errorMessages.push(item[1])
               );
             } else {
-              if (error.response.data.message === "Array to string conversion") {
+              if (
+                error.response.data.message === "Array to string conversion"
+              ) {
                 errorMessages.push("Available From is required");
               } else {
                 errorMessages.push(error.response.data.message);
               }
             }
-  
+
             Swal.fire(
               "Error!",
               // {error.response.},
               String(errorMessages[0])
             );
           });
-        
-      }else{
-        putPaymentsAPI(dataEdit.id, data).then((resp) =>{
-          if (resp.data.status === 200) {
-            // triggerUpdate();
-            Swal.fire("Edited!", "Payments has been edited.", "success");
-            initialRequest()
-          }
-        }).catch((err) => console.log(err))
+      } else {
+        putPaymentsAPI(dataEdit.id, data)
+          .then((resp) => {
+            if (resp.data.status === 200) {
+              // triggerUpdate();
+              Swal.fire("Edited!", "Payments has been edited.", "success");
+              initialRequest();
+            }
+          })
+          .catch((err) => console.log(err));
       }
+      initialRequest();
     },
   });
   return (
