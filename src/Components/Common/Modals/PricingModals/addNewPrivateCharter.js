@@ -114,7 +114,7 @@ const AddNewPrivateCharter = ({
       t_gratuity: dataEdit ? dataEdit.t_gratuity : "",
       t_final_total: dataEdit ? dataEdit.t_final_total : "",
       p_price_sheet: dataEdit ? dataEdit.p_price_sheet : "",
-      
+
       net_price: dataEdit ? dataEdit.net_price : "",
       net_price_percentage: dataEdit ? dataEdit.net_price : "",
       net_price_fixed: dataEdit ? dataEdit.net_price : "",
@@ -245,22 +245,29 @@ const AddNewPrivateCharter = ({
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
 
-          p_est_rate: values.p_est_rate !== '' ? values.p_est_rate : null,
-      p_est_commission: values.p_est_commission !== '' ? values.p_est_commission : null,
-      p_base_amount: values.p_base_amount !== '' ? values.p_base_amount : null,
-      p_iva: values.p_iva !== '' ? values.p_iva : null,
-      p_total_price: values.p_total_price !== '' ? values.p_total_price : null ,
-      p_gratuity: values.p_gratuity !== '' ? values.p_gratuity : null ,
-      p_final_total: values.p_final_total !== '' ? values.p_final_total : null,
-      provider_commission: values.provider_commission,
-      p_commission: values.p_commission !== '' ? values.p_commission : null,
-      t_base_amount: values.t_base_amount !== '' ? values.t_base_amount : null ,
-      t_iva: values.t_iva !== '' ? values.t_iva : null ,
-      t_total_price: values.t_total_price !== '' ? values.t_total_price : null,
-      t_gratuity: values.t_gratuity !==  '' ? values.t_gratuity : null,
-      t_final_total: values.t_final_total !== '' ? values.t_final_total : null,
-      p_price_sheet: values.p_price_sheet,
-      
+          p_est_rate: values.p_est_rate !== "" ? values.p_est_rate : null,
+          p_est_commission:
+            values.p_est_commission !== "" ? values.p_est_commission : null,
+          p_base_amount:
+            values.p_base_amount !== "" ? values.p_base_amount : null,
+          p_iva: values.p_iva !== "" ? values.p_iva : null,
+          p_total_price:
+            values.p_total_price !== "" ? values.p_total_price : null,
+          p_gratuity: values.p_gratuity !== "" ? values.p_gratuity : null,
+          p_final_total:
+            values.p_final_total !== "" ? values.p_final_total : null,
+          provider_commission: values.provider_commission,
+          p_commission: values.p_commission !== "" ? values.p_commission : null,
+          t_base_amount:
+            values.t_base_amount !== "" ? values.t_base_amount : null,
+          t_iva: values.t_iva !== "" ? values.t_iva : null,
+          t_total_price:
+            values.t_total_price !== "" ? values.t_total_price : null,
+          t_gratuity: values.t_gratuity !== "" ? values.t_gratuity : null,
+          t_final_total:
+            values.t_final_total !== "" ? values.t_final_total : null,
+          p_price_sheet: priceSheetSelected,
+
           min_qty:
             values.min_qty === "" || values.min_qty === null
               ? 0
@@ -643,8 +650,6 @@ const AddNewPrivateCharter = ({
         "p_final_total",
         setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
       );
-
-      
     }
 
     if (
@@ -722,8 +727,6 @@ const AddNewPrivateCharter = ({
         "p_final_total",
         setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
       );
-
-      
     }
     if (
       priceSheetSelected === "3" &&
@@ -802,8 +805,6 @@ const AddNewPrivateCharter = ({
         "p_final_total",
         setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
       );
-
-     
     }
     ourPricingCalc();
   };
@@ -938,39 +939,26 @@ const AddNewPrivateCharter = ({
         100 - setYouSaveFormat(ourPriceInput / validationType.values.compare_at)
       );
     }
-    if (
-      depositInput !== null &&
-      depositInput !== "" &&
-      depositInput !== 0
-    ) {
+    if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
       validationType.setFieldValue(
         "net_price_fixed",
         (depositInput - ourCommisionPricing).toFixed(2)
       );
     }
-    if (
-      depositInput !== null &&
-      depositInput !== "" &&
-      depositInput !== 0
-    ) {
+    if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
       validationType.setFieldValue(
         "net_price_percentage",
         (depositInput - ourCommisionPricing).toFixed(2)
       );
     }
-    if (
-      depositInput !== null &&
-      depositInput !== "" &&
-      depositInput !== 0
-    ) {
+    if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
       validationType.setFieldValue(
         "net_price",
         (depositInput - ourCommisionPricing).toFixed(2)
       );
     }
-  
   };
- 
+
   useEffect(() => {
     if (priceCollectNameSelected) {
       providerPricingCalc();
@@ -1811,9 +1799,24 @@ const AddNewPrivateCharter = ({
                           }}
                         >
                           <option value="-1">Select....</option>
-                          <option value={'1'} selected={ dataEdit?.p_price_sheet === '1' } >Net Price</option>
-                          <option value={'2'} selected={ dataEdit?.p_price_sheet === '2' } >Rate %</option>
-                          <option value={'3'} selected={ dataEdit?.p_price_sheet === '3' } >Fixed Commision</option>
+                          <option
+                            value={"1"}
+                            selected={dataEdit?.p_price_sheet === "1"}
+                          >
+                            Net Price
+                          </option>
+                          <option
+                            value={"2"}
+                            selected={dataEdit?.p_price_sheet === "2"}
+                          >
+                            Rate %
+                          </option>
+                          <option
+                            value={"3"}
+                            selected={dataEdit?.p_price_sheet === "3"}
+                          >
+                            Fixed Commision
+                          </option>
                         </Input>
                       </div>
                     </Col>
