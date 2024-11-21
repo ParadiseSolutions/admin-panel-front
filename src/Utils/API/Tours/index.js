@@ -326,6 +326,12 @@ export const putPaymentsAPI = (id,body) => {
     headers: options,
   });
 };
+export const deletePaymentsAPI = (id) => {
+  const url = `${API_URL}/payments/${id}`;
+  return axios.delete (url, {
+    headers: options,
+  });
+};
 
 
 //high seasons
