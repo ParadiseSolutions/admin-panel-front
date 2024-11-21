@@ -14,6 +14,7 @@ import {
   paymentsDueGet,
   paymentsWhenGet,
   paymentsEventGet,
+  deletePaymentsAPI,
 } from "../../../Utils/API/Tours";
 import { getCurrency } from "../../../Utils/API/Operators";
 import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
@@ -129,6 +130,47 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
       setGratuitesTypeSelected(tourSettings.gratuity_type_id.toString());
     }
   }, [tourSettings]);
+
+  const onDelete = (depData) => {
+    Swal.fire({
+      title: "Delete Payment?",
+      icon: "question",
+      text: `Do you want delete ${depData.payment_option}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        deletePaymentsAPI(depData.id)
+          .then((resp) => {
+            initialRequest()
+            Swal.fire("Deleted!", "The Payment has been deleted.", "success");
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
+    });
+  };
 
   const columnsProducts = useMemo(
     () => [
@@ -268,7 +310,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 onClick={() => {
                   const depData = cellProps.row.original;
                   // setconfirm_alert(true);
-                  /* onDelete(depData); */
+                  onDelete(depData);
                 }}
               >
                 <i
