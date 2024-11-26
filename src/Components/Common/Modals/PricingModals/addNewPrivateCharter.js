@@ -2254,7 +2254,7 @@ const AddNewPrivateCharter = ({
                         <Col className="col-2">
                           <div className="form-outline mb-2" id="balance_due">
                             <div className="d-flex justify-content-between">
-                              <Label className="form-label">Total Price</Label>
+                              <Label className="form-label text-paradiseOrange">Total Price</Label>
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
@@ -2866,7 +2866,7 @@ const AddNewPrivateCharter = ({
                         <Col className="col-2">
                           <div className="form-outline mb-2" id="balance_due">
                             <div className="d-flex justify-content-between">
-                              <Label className="form-label">Total Price</Label>
+                              <Label className="form-label text-paradiseOrange">Total Price</Label>
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
@@ -3541,7 +3541,7 @@ const AddNewPrivateCharter = ({
                         <Col className="col-2">
                           <div className="form-outline mb-2" id="balance_due">
                             <div className="d-flex justify-content-between">
-                              <Label className="form-label">Total Price</Label>
+                              <Label className="form-label text-paradiseOrange">Total Price</Label>
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
