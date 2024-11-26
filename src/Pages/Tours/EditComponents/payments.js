@@ -17,9 +17,9 @@ import {
   deletePaymentsAPI,
 } from "../../../Utils/API/Tours";
 import { getCurrency } from "../../../Utils/API/Operators";
-import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
-import SettingsImageTwo from "../../../Components/Assets/images/settings2.png";
-import SettingsImageThree from "../../../Components/Assets/images/settings3.png";
+import SettingsImageOne from "../../../Components/Assets/images/header-one.png";
+import SettingsImageTwo from "../../../Components/Assets/images/header-two.png";
+import SettingsImageThree from "../../../Components/Assets/images/header-three.png";
 import {
   TabPane,
   Row,
@@ -562,6 +562,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     type="number"
                     onChange={validationType.handleChange}
                     value={validationType.values.gratuity_percentage || ""}
+                    disabled={gratuitesTypeSelected === '6'}
                     invalid={
                       validationType.touched.gratuity_percentage &&
                       validationType.errors.gratuity_percentage
@@ -592,7 +593,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     onChange={(e) => {
                       setBasedOnSelected(e.target.value);
                     }}
-                    disabled={ gratuitesTypeSelected === '3' ? true : false }
+                    disabled={ gratuitesTypeSelected === '3' || gratuitesTypeSelected === '6' ? true : false }
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
