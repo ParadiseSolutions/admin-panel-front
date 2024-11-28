@@ -10,7 +10,8 @@ import {
   Button,
   Tooltip,
 } from "reactstrap";
-
+import PaymentBannerOne from '../../../Assets/images/paymentBannerOne.png'
+import PaymentBannerTwo from '../../../Assets/images/paymentBannerTwo.png'
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import {
@@ -199,6 +200,14 @@ const PaymentsToursModal = ({
           }}
           className="custom-validation"
         >
+          <Row className='d-flex'>
+<Col className='col-6'>
+<img src={PaymentBannerOne} alt="PaymentBannerOne" style={{ width: '100%', height: '100%'}}/>
+</Col>
+<Col className='col-6'>
+<img src={PaymentBannerTwo} alt="PaymentBannerTwo"  style={{ width: '100%', height: '100%'}}/>
+</Col>
+          </Row>
           <Row>
             <Col className="col-12 my-2" style={{ backgroundColor: "#E9F4FF" }}>
               <p
