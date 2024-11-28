@@ -160,7 +160,7 @@ const Providers = () => {
           const providersData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link to={`/providers/${providersData.id}  `}>
+              <Link to={`/providers/${providersData.id}  `} target="_blank" >
                 <div className="text-paradise">
                   <i
                     className="mdi mdi-pencil-outline font-size-18"

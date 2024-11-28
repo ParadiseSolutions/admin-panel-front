@@ -146,7 +146,7 @@ const Operators = () => {
           const providersData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link to={`/operators/${providersData.id}  `}>
+              <Link to={`/operators/${providersData.id}  ` } target="_blank" >
                 <div className="text-success">
                   <i
                     className="mdi mdi-pencil-outline font-size-18 text-paradise"

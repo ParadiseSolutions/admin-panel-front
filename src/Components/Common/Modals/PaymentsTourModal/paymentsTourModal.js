@@ -46,6 +46,18 @@ const PaymentsToursModal = ({
   const [whenSelected, setWhenSelected] = useState([]);
   const [eventSelected, setEventSelected] = useState([]);
 
+  //tooltips
+  const [typeTooltip, setTypeTooltip] = useState(false);
+  const [paymentOptionTooltip, setPaymentOptionTooltip] = useState(false);
+  const [taxesTooltip, setTaxesTooltip] = useState(false);
+  const [gratuityTooltip, setGratuityTooltip] = useState(false);
+  const [paidByTooltip, setPaidByTooltip] = useState(false);
+  const [paymentMethodTooltip, setPaymentMethodTooltip] = useState(false);
+  const [paymentDueTooltip, setPaymentDueTooltip] = useState(false);
+  const [whenTooltip, setWhenTooltip] = useState(false);
+  const [eventTooltip, setEventTooltip] = useState(false);
+
+
   useEffect(() => {
     if (dataEdit) {
       setGratuitesTypeSelected(dataEdit.payment_type_id);
@@ -58,6 +70,17 @@ const PaymentsToursModal = ({
       setDueSelected(dataEdit.payment_due_id);
       setWhenSelected(dataEdit.when_id);
       setEventSelected(dataEdit.payment_event_id);
+    }else{
+      setGratuitesTypeSelected('');
+      setPaymentOptionSelected('');
+      setBasedOnSelected('');
+      setTaxSelected('');
+      setGratuitesSelected('');
+      setPaidBySelected('');
+      setMethodSelected('');
+      setDueSelected('');
+      setWhenSelected('');
+      setEventSelected('');
     }
   }, [dataEdit]);
 
@@ -89,7 +112,7 @@ const PaymentsToursModal = ({
         when_id: whenSelected,
         payment_event_id: eventSelected,
       };
-      console.log(dataEdit.length);
+      
       if (!dataEdit.id) {
         postPaymentsNewAPI(data)
           .then((resp) => {
@@ -136,6 +159,9 @@ const PaymentsToursModal = ({
       initialRequest();
     },
   });
+
+  console.log(paymentOptionSelected);
+  
   return (
     <Modal
       centered
@@ -191,7 +217,45 @@ const PaymentsToursModal = ({
           <Row className="flex mx-3 my-2">
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Type</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Type</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="typeTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={typeTooltip}
+                      target="typeTooltip"
+                      style={{ textAlign: "left" }}
+                      toggle={() => {
+                        setTypeTooltip(!typeTooltip);
+                      }}
+                    >
+                      Choose what type of payment you are defining.
+                      <br />
+                      Initial Deposit - Customer pays us the deposit to reserve
+                      the tour.
+                      <br />
+                      <br />
+                      Provider Payment - Advance payment sent to the provider to
+                      secure the tour. Can be from us or from the customer
+                      directly.
+                      <br />
+                      <br />
+                      Customer Payment - Payment to us by the customer. This may
+                      or may not precede a Provider payment where we pass on the
+                      money to the provider.
+                      <br />
+                      <br />
+                      Final Payment - The balance due paid to the provider,
+                      either by us or by the customer. Once this payment is
+                      made, the balance remaining is zero and a final
+                      confirmation is sent.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -224,7 +288,48 @@ const PaymentsToursModal = ({
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Payment Option</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Payment Option</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="paymentOptionTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={paymentOptionTooltip}
+                      target="paymentOptionTooltip"
+                      style={{ textAlign: "left" }}
+                      toggle={() => {
+                        setPaymentOptionTooltip(!paymentOptionTooltip);
+                      }}
+                    >
+                      How will the payment to be sent be calculated? Will it be
+                      a fixed amount (such as $1,000.00) or a percentage (such
+                      as 50%) of a certain value?
+                      <br />
+                      Amount - A set amount will be collected or sent to the
+                      Provider, such as $1,000.00.
+                      <br />
+                      <br />
+                      Percent % - A percentage of either the public price or net
+                      price will be sent to the Provider.
+                      <br />
+                      <br />
+                      Commission - Our commission will be collected as the
+                      entire deposit.
+                      <br />
+                      <br />
+                      Comm + Amount - We will collect or commission amount plus
+                      a set amount such as $1,000.00.
+                      <br />
+                      <br />
+                      Comm + Percent % - We will collect our commission amount
+                      plus a percentage of the balance due to the provider (such
+                      as 50% of the Net Price).
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -258,7 +363,7 @@ const PaymentsToursModal = ({
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">% Gratuity</Label>
+                  <Label className="form-label">Amount</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -267,6 +372,16 @@ const PaymentsToursModal = ({
                   </div>
                 </div>
                 <div className="input-group">
+                  { paymentOptionSelected != 2 && paymentOptionSelected != 5 ? 
+                <span
+                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                    id="basic-addon1"
+                    style={{ fontSize: "0.85em" }}
+                  >
+                    $
+                  </span>
+                  
+                  : null }
                   <Input
                     name="gratuity_percentage"
                     placeholder=""
@@ -280,16 +395,21 @@ const PaymentsToursModal = ({
                         : false
                     }
                   />
-                  <span
-                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                    id="basic-addon1"
-                    style={{ fontSize: "0.85em" }}
-                  >
-                    %
-                  </span>
+                  { 
+                     paymentOptionSelected == '2' || paymentOptionSelected == '5' ? (
+                      <span
+                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                      id="basic-addon1"
+                      style={{ fontSize: "0.85em" }}
+                    >
+                      %
+                    </span>
+                     ) : null
+                  }
                 </div>
               </div>
             </Col>
+            { paymentOptionSelected !== '1' ?  
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
                 <Label className="form-label">Based on</Label>
@@ -323,9 +443,32 @@ const PaymentsToursModal = ({
                 </div>
               </div>
             </Col>
+            :
+            null }
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Taxes</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Taxes</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="taxesTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={taxesTooltip}
+                      target="taxesTooltip"
+                      style={{ textAlign: "left" }}
+                      toggle={() => {
+                        setTaxesTooltip(!taxesTooltip);
+                      }}
+                    >
+                      Does this amount include taxes? "Unspecified" means that
+                      the operator is not charging taxes. The amount is assumed
+                      to be a pre-tax amount but the tax will not be added.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -358,7 +501,37 @@ const PaymentsToursModal = ({
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Gratuities</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Gratuity</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="gratuityTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={gratuityTooltip}
+                      style={{ textAlign: "left" }}
+                      target="gratuityTooltip"
+                      toggle={() => {
+                        setGratuityTooltip(!gratuityTooltip);
+                      }}
+                    >
+                      Does this amount include a mandatory gratuity amount?
+                      <br />
+                      Included - The amount includes the mandatory gratuity.
+                      <br />
+                      <br />
+                      Not Included - The mount does not include the mandatory
+                      gratuity.
+                      <br />
+                      <br />
+                      Unspecified - The gratuity is not collected in advance and
+                      no specific requirement of the amount is set. It is up to
+                      the customer's discretion on the day of the tour.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -411,7 +584,37 @@ const PaymentsToursModal = ({
           <Row className="flex mx-3">
             <Col className="mb-2 col-3" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Paid By</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Paid By</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="paidByTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={paidByTooltip}
+                      style={{ textAlign: "left" }}
+                      target="paidByTooltip"
+                      toggle={() => {
+                        setPaidByTooltip(!paidByTooltip);
+                      }}
+                    >
+                      Does this amount include a mandatory gratuity amount?
+                      <br />
+                      Included - The amount includes the mandatory gratuity.
+                      <br />
+                      <br />
+                      Not Included - The mount does not include the mandatory
+                      gratuity.
+                      <br />
+                      <br />
+                      Unspecified - The gratuity is not collected in advance and
+                      no specific requirement of the amount is set. It is up to
+                      the customer's discretion on the day of the tour.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -444,7 +647,25 @@ const PaymentsToursModal = ({
             </Col>
             <Col className="mb-2 col-3" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Payment Method</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Payment Method</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="paymentMethodTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={paymentMethodTooltip}
+                      target="paymentMethodTooltip"
+                      toggle={() => {
+                        setPaymentMethodTooltip(!paymentMethodTooltip);
+                      }}
+                    >
+                      How must the payment be made?
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -477,7 +698,26 @@ const PaymentsToursModal = ({
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Payment Due</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Payment Due</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="paymentDueTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={paymentDueTooltip}
+                      style={{ textAlign: "left" }}
+                      target="paymentDueTooltip"
+                      toggle={() => {
+                        setPaymentDueTooltip(!paymentDueTooltip);
+                      }}
+                    >
+                      When must the payment be made by?
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -510,7 +750,28 @@ const PaymentsToursModal = ({
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">When</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">When</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="whenTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={whenTooltip}
+                      style={{ textAlign: "left" }}
+                      target="whenTooltip"
+                      toggle={() => {
+                        setWhenTooltip(!whenTooltip);
+                      }}
+                    >
+                      Does the payment need to be made some days before the tour
+                      date, or some days after the booking date, or on the day
+                      of the tour?
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -543,7 +804,28 @@ const PaymentsToursModal = ({
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Event</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-labe">Event</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="eventTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={eventTooltip}
+                      style={{ textAlign: "left" }}
+                      target="eventTooltip"
+                      toggle={() => {
+                        setEventTooltip(!eventTooltip);
+                      }}
+                    >
+                      Choose if the time frame is related to the booking date or
+                      the tour date. For example, 30 days before the tour date,
+                      or 7 days after the booking date.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -587,6 +869,7 @@ const PaymentsToursModal = ({
               type="button"
               onClick={() => {
                 setPaymentsAdd(false);
+                dataEdit = null;
               }}
             >
               Cancel
