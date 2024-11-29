@@ -334,7 +334,7 @@ const Tours = () => {
           return (
             <div className="d-flex gap-3">
               <div className="text-paradise">
-                <Link to={`/tours/${tourData.id}`} className="text-success">
+                <Link to={`/tours/${tourData.id}`} target="_blank" className="text-success">
                   <i
                     className="mdi mdi-pencil-outline font-size-18 text-paradise"
                     id="edittooltip"

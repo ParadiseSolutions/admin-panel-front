@@ -30,6 +30,7 @@ import {
   FormFeedback,
   Button,
   UncontrolledTooltip,
+  Tooltip,
 } from "reactstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
@@ -37,7 +38,10 @@ import { map } from "lodash";
 import PricingTables from "./PricingTables/pricingTables";
 import { Name } from "./PricingTables/PricingCols";
 import PaymentsToursModal from "../../../Components/Common/Modals/PaymentsTourModal/paymentsTourModal";
-import { setDecimalFormat, setRateFormat } from "../../../Utils/CommonFunctions";
+import {
+  setDecimalFormat,
+  setRateFormat,
+} from "../../../Utils/CommonFunctions";
 
 const Payments = ({ history, tourSettings, id, toggle }) => {
   const [paymentData, setPaymentData] = useState([]);
@@ -61,14 +65,24 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [applySelected, setApplySelected] = useState([]);
   const [currencySelected, setCurrencySelected] = useState([]);
   const [paymentsAdd, setPaymentsAdd] = useState(false);
-  const [dataEdit, setDataEdit] = useState([])
-  
-  const initialRequest = () =>{
+  const [dataEdit, setDataEdit] = useState([]);
+
+  //tooltips
+  const [taxTooltip, setTaxTooltip] = useState(false);
+  const [gratuitiesTooltip, setGratuitiesTooltip] = useState(false);
+  const [gratuityTypeTooltip, setGratuityTypeTooltip] = useState(false);
+  const [amountTooltip, setAmountTooltip] = useState(false);
+  const [basedOnTooltip, setBasedOnTooltip] = useState(false);
+  const [applyTooltip, setApplyTooltip] = useState(false);
+  const [currencyTooltip, setCurrencyTooltip] = useState(false);
+  const [exchangeTooltip, setExchangeTooltip] = useState(false);
+
+  const initialRequest = () => {
     paymentsIndexGet(id).then((resp) => {
       setPaymentData(resp.data.data);
     });
-  }
-  
+  };
+
   //initial Data
   useEffect(() => {
     paymentsIndexGet(id).then((resp) => {
@@ -113,8 +127,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     paymentsEventGet().then((resp) => {
       setEventData(resp.data.data);
     });
-
-    
   }, [id]);
 
   useEffect(() => {
@@ -144,7 +156,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
       if (resp.isConfirmed) {
         deletePaymentsAPI(depData.id)
           .then((resp) => {
-            initialRequest()
+            initialRequest();
             Swal.fire("Deleted!", "The Payment has been deleted.", "success");
           })
           .catch((error) => {
@@ -198,13 +210,17 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          let rowData = cellProps.row.original
+          let rowData = cellProps.row.original;
           return (
             <>
-            {rowData.payment_option_id === 1 && `$ ${setDecimalFormat(rowData.amount)}`}
-            {rowData.payment_option_id === 2 || rowData.payment_option_id === 3 ? `${setRateFormat(rowData.amount)}%` : null}
+              {rowData.payment_option_id === 1 || rowData.payment_option_id === 3 || rowData.payment_option_id === 4 ?
+                `$ ${setDecimalFormat(rowData.amount)}` : null}
+              {rowData.payment_option_id === 2 ||
+              rowData.payment_option_id === 5
+                ? `${setRateFormat(rowData.amount)}%`
+                : null}
             </>
-          )
+          );
         },
       },
       {
@@ -291,7 +307,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 onClick={() => {
                   const prodData = cellProps.row.original;
                   setPaymentsAdd(true);
-                  setDataEdit(prodData)
+                  setDataEdit(prodData);
                   // console.log("data del producto", prodData);
                 }}
               >
@@ -304,7 +320,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   Edit
                 </UncontrolledTooltip>
               </div>
-              
+
               <div
                 className="text-danger"
                 onClick={() => {
@@ -433,7 +449,28 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           <Row>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Taxes</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Taxes</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="taxtooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={taxTooltip}
+                      target="taxtooltip"
+                      toggle={() => {
+                        setTaxTooltip(!taxTooltip);
+                      }}
+                    >
+                      Does the price include tax (16% IVA) or is it priced
+                      before taxes are included? If the operator will not charge
+                      tax, such as when paying in cash on the day of the tour,
+                      then select "Not Applicable".
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -466,7 +503,25 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Gratuities</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Gratuities</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="gratuitiestooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={gratuitiesTooltip}
+                      target="gratuitiestooltip"
+                      toggle={() => {
+                        setGratuitiesTooltip(!gratuitiesTooltip);
+                      }}
+                    >
+                      Does the price include gratuity or are gratuities extra?.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -499,14 +554,45 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Gratuity Type</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Gratuity Type</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="gratuityTypeTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={gratuityTypeTooltip}
+                      target="gratuityTypeTooltip"
+                      toggle={() => {
+                        setGratuityTypeTooltip(!gratuityTypeTooltip);
+                      }}
+                    >
+                      How does the provider price the gratuity?
+                      <br />
+                      <br />
+                      Not Specified - The provider doesn't require a certain
+                      gratuity. It is up to the customer to decide how much to
+                      pay on the day of the tour.
+                      <br />
+                      <br />
+                      Percentage - The provider requires a certain percentage of
+                      the price as gratuity, such as a 15% gratuity.
+                      <br />
+                      <br />
+                      Fixed Amount - The provider requires a set amount, like
+                      $500.00, as a gratuity.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
                     name=""
                     onChange={(e) => {
                       setGratuitesTypeSelected(e.target.value);
-                      console.log(e.target.value)
+                      console.log(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
@@ -533,36 +619,49 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2">
-                <div className="d-flex justify-content-between">
-                  { gratuitesTypeSelected === '3' ? 
-                  <Label className="form-label">Amount</Label>
-                  :  
-                  <Label className="form-label">% Gratuity</Label>
-                  }
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15"
-                      id="publicPrice"
-                    />
-                  </div>
+                <div className="">
+                  {gratuitesTypeSelected === "3" ? (
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Amount</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="amountTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={amountTooltip}
+                          target="amountTooltip"
+                          toggle={() => {
+                            setAmountTooltip(!amountTooltip);
+                          }}
+                        >
+                          The amount or percentage of gratuity required by the
+                          provider.
+                        </Tooltip>
+                      </div>
+                    </div>
+                  ) : (
+                    <Label className="form-label">% Gratuity</Label>
+                  )}
                 </div>
                 <div className="input-group">
-                  {gratuitesTypeSelected === '3' ? 
-                  <span
-                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                  id="basic-addon1"
-                  style={{ fontSize: "0.85em" }}
-                >
-                  $
-                </span>
-                  : null}
+                  {gratuitesTypeSelected === "3" ? (
+                    <span
+                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                      id="basic-addon1"
+                      style={{ fontSize: "0.85em" }}
+                    >
+                      $
+                    </span>
+                  ) : null}
                   <Input
                     name="gratuity_percentage"
                     placeholder=""
                     type="number"
                     onChange={validationType.handleChange}
                     value={validationType.values.gratuity_percentage || ""}
-                    disabled={gratuitesTypeSelected === '6'}
+                    disabled={gratuitesTypeSelected === "6"}
                     invalid={
                       validationType.touched.gratuity_percentage &&
                       validationType.errors.gratuity_percentage
@@ -570,22 +669,41 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         : false
                     }
                   />
-                  {gratuitesTypeSelected !== '3' ? 
-                  <span
-                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                  id="basic-addon1"
-                  style={{ fontSize: "0.85em" }}
-                >
-                  %
-                </span>
-                  : null}
-                  
+                  {gratuitesTypeSelected !== "3" ? (
+                    <span
+                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                      id="basic-addon1"
+                      style={{ fontSize: "0.85em" }}
+                    >
+                      %
+                    </span>
+                  ) : null}
                 </div>
               </div>
             </Col>
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Based on</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Based On</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="basedOnTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={basedOnTooltip}
+                      target="basedOnTooltip"
+                      toggle={() => {
+                        setBasedOnTooltip(!basedOnTooltip);
+                      }}
+                    >
+                      If the gratuity is a percentage, specify what it is a
+                      percentage of - for example 15% of the Net Price Before
+                      Taxes, or 15% of the Total Price Including Taxes.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -593,7 +711,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     onChange={(e) => {
                       setBasedOnSelected(e.target.value);
                     }}
-                    disabled={ gratuitesTypeSelected === '3' || gratuitesTypeSelected === '6' ? true : false }
+                    disabled={
+                      gratuitesTypeSelected === "3" ||
+                      gratuitesTypeSelected === "6"
+                        ? true
+                        : false
+                    }
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
                   >
@@ -619,7 +742,27 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Apply</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Apply</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="applyTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={applyTooltip}
+                      target="applyTooltip"
+                      toggle={() => {
+                        setApplyTooltip(!applyTooltip);
+                      }}
+                    >
+                      Is the amount of gratuity calculated on the net price of
+                      the tour before taxes, or on the total price of the tour
+                      including taxes?.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -652,7 +795,26 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label text-paradise">Currency</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label text-paradise">Currency</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="currencyTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={currencyTooltip}
+                      target="currencyTooltip"
+                      toggle={() => {
+                        setCurrencyTooltip(!currencyTooltip);
+                      }}
+                    >
+                      Specify the currency that the provider is quoting the
+                      price in.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -686,7 +848,29 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline">
-                <Label className="form-label text-paradise">Exchange Rate</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label text-paradise">Exchange</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="exchangeTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={exchangeTooltip}
+                      target="exchangeTooltip"
+                      toggle={() => {
+                        setExchangeTooltip(!exchangeTooltip);
+                      }}
+                    >
+                      Specify the exchange rate that we will use if the price is
+                      in MXN.
+                      <br />
+                      <br />
+                      Note: This will be greyed out if the currency is in USD.
+                    </Tooltip>
+                  </div>
+                </div>
                 <Input
                   name="exchange_rate"
                   placeholder="$0.00"
@@ -715,8 +899,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             <Col className="col-xl">
               <div
                 className="mb-4 py-2 px-3"
-                style={{ backgroundColor: "#FFEFDE"}}
-                
+                style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
                   className="fs-5"
@@ -730,14 +913,14 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </p>
               </div>
             </Col>
-            <Col className='col-1'>
-            <Button
+            <Col className="col-1">
+              <Button
                 type="button"
                 className="btn-orange"
-                onClick={() =>  setPaymentsAdd(true)}
-                style={{fontSize:'12px', padding:'11px'}}
+                onClick={() => setPaymentsAdd(true)}
+                style={{ fontSize: "12px", padding: "11px" }}
               >
-               + Add Payment                
+                + Add Payment
               </Button>
             </Col>
           </Row>
