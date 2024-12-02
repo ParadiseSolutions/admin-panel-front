@@ -7,6 +7,7 @@ import ThreeVariantsIMG from "../../../Assets/images/reservePages/threevariants.
 import ChoseActivityIMG from "../../../Assets/images/reservePages/chooseactivity.jpg";
 import ChooseActivityQtyLblIMG from "../../../Assets/images/reservePages/chooseactivityqtylbl.jpg";
 import ChooseQtyActivityIMG from "../../../Assets/images/reservePages/qtyactivitymessage.jpg";
+import { MdModeEdit } from "react-icons/md";
 
 import {
   getTourAPI,
@@ -19,11 +20,13 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
   const [instructionArea, setInstructionArea] = useState(false);
+  const [instructionPopUp, setInstructionPopUp] = useState(false);
   const [titleExample, setTitleExample] = useState("Example Title");
   const [templateType, setTemplateType] = useState(1);
   const [instructionDescriptionExample, setInstructionDescriptionExample] =
     useState("");
-
+  const [specialInstruction, setSpecialInstruction] = useState("");
+  const [instructionDisable, setInstructionDisable] = useState(true);
   const [initialData, setInitialData] = useState();
   useEffect(() => {
     getTourAPI(id)
@@ -34,7 +37,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
         let errorMessages = [];
         Object.entries(error.response.data.data).map((item) => {
           errorMessages.push(item[1]);
-          return true
+          return true;
         });
 
         Swal.fire(
@@ -52,6 +55,8 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       setTitleExample(initialData.instructions_title);
       setInstructionDescriptionExample(initialData.instructions_details);
       setTemplateType(initialData.template_id);
+      setInstructionDisable(initialData.require_checkbox === 0 ? false : true)
+      setSpecialInstruction(initialData.checkbox_instructions ? initialData.checkbox_instructions : "");
     }
   }, [initialData]);
 
@@ -61,14 +66,15 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       description: "",
       title: "",
     },
-    validationSchema: Yup.object().shape({
-    }),
+    validationSchema: Yup.object().shape({}),
 
     onSubmit: (values) => {
       let data = {
         template_id: templateType,
         instructions_title: titleExample,
         instructions_details: instructionDescriptionExample,
+        require_checkbox: instructionDisable ? 1 : 0,
+        checkbox_instructions: specialInstruction,
       };
       updateBookingSettings(id, data)
         .then((resp) => {
@@ -87,7 +93,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
           let errorMessages = [];
           Object.entries(error.response.data.data).map((item) => {
             errorMessages.push(item[1]);
-            return true
+            return true;
           });
 
           Swal.fire(
@@ -354,6 +360,66 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
               <Col className="col-12">
                 <div
                   className="mb-4 py-2 px-3 d-flex"
+                  style={{ backgroundColor: "#F3DC3C1A" }}
+                >
+                  <Label
+                    className="fs-5 form-label mt-2"
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      color: "#495057",
+                      marginBottom: "0px",
+                    }}
+                  >
+                    Add Restrictions & Requirements Pop-Up
+                  </Label>
+                  <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                    <Input
+                      name="seasonality"
+                      placeholder=""
+                      type="checkbox"
+                      // checked={seasonalPrice}
+                      className="form-check-input"
+                      onChange={() => setInstructionPopUp(!instructionPopUp)}
+                      onBlur={validationType.handleBlur}
+                      // value={seasonalPrice}
+                    />
+                  </div>
+                </div>
+              </Col>
+            </Row>
+            {instructionPopUp ? (
+              <Row className="row-12">
+                <div>
+                  <div className="form-outline mb-2 col-12">
+                    <div className="col-12 d-flex justify-content-between">
+                      <Label className="form-label">
+                        Special Instructions Box - Title
+                      </Label>
+                      <div className="d-flex pointer" role='button' onClick={() => setInstructionDisable(!instructionDisable)} >
+                        <MdModeEdit className="text-paradise m-1" />
+                        <Label className="form-label text-paradise" role='button'>
+                          Edit Text
+                        </Label>
+                      </div>
+                    </div>
+                    <Input
+                      name="popup"
+                      placeholder=""
+                      type="textarea"
+                      style={{ height: 147 }}
+                      onChange={(e) => setSpecialInstruction(e.target.value)}
+                      value={specialInstruction}
+                      disabled={instructionDisable}
+                    />
+                  </div>
+                </div>
+              </Row>
+            ) : null}
+            <Row className="mt-4">
+              <Col className="col-12">
+                <div
+                  className="mb-4 py-2 px-3 d-flex"
                   style={{ backgroundColor: "#3CC6F31A" }}
                 >
                   <Label
@@ -385,7 +451,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
 
             {instructionArea ? (
               <Row className="row-12">
-                <div style={{width: "calc(100% - 500px)"}}>
+                <div style={{ width: "calc(100% - 500px)" }}>
                   <div className="form-outline mb-2 col-11">
                     <Label className="form-label">Instruction Title</Label>
                     <Input
@@ -397,7 +463,13 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       maxLength={50}
                     />
 
-                    <p style={{ fontSize: "12px", fontWeight: "lighter", textAlign: "right" }}>
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                      }}
+                    >
                       * Title should be max 50 chars
                     </p>
                   </div>
@@ -416,16 +488,20 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       value={instructionDescriptionExample}
                       maxLength={210}
                     />
-                    <p style={{ fontSize: "12px", fontWeight: "lighter", textAlign: "right" }}>
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "lighter",
+                        textAlign: "right",
+                      }}
+                    >
                       * Description should be max 210 chars
                     </p>
                   </div>
                 </div>
-                <div style={{width:"490px"}}>
+                <div style={{ width: "490px" }}>
                   <div className="form-outline mb-2 col-11">
-                    <Label className="form-label">
-                      Reserve Page Preview
-                    </Label>
+                    <Label className="form-label">Reserve Page Preview</Label>
                   </div>
                   <div
                     style={{
@@ -437,7 +513,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                       gap: "8px",
                       alignSelf: "stretch",
                       border: "1px solid #FFF1BD",
-                      background: "#FFFAE7"
+                      background: "#FFFAE7",
                     }}
                   >
                     {titleExample}
@@ -453,16 +529,30 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
                         fontStyle: "normal",
                         fontWeight: "400",
                         lineHeight: "17px",
-                        margin: "0px"
+                        margin: "0px",
                       }}
                     >
                       {instructionDescriptionExample}
                     </p>
                   </div>
                   <img
-                    src={templateType === 1 ? OneVariantIMG : templateType === 2 ? TwoVariantsIMG : templateType === 3 ? ThreeVariantsIMG : templateType === 4 || templateType === 8 ? ChoseActivityIMG : TwoVariantsIMG2}
+                    src={
+                      templateType === 1
+                        ? OneVariantIMG
+                        : templateType === 2
+                        ? TwoVariantsIMG
+                        : templateType === 3
+                        ? ThreeVariantsIMG
+                        : templateType === 4 || templateType === 8
+                        ? ChoseActivityIMG
+                        : TwoVariantsIMG2
+                    }
                     alt="two-variant"
-                    style={{ width: "472.5px", marginTop: "-1px", marginLeft: "-1px"}}
+                    style={{
+                      width: "472.5px",
+                      marginTop: "-1px",
+                      marginLeft: "-1px",
+                    }}
                   />
                 </div>
               </Row>
