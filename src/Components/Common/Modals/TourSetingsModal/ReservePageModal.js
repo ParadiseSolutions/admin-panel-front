@@ -55,11 +55,12 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       setTitleExample(initialData.instructions_title);
       setInstructionDescriptionExample(initialData.instructions_details);
       setTemplateType(initialData.template_id);
-      setInstructionDisable(initialData.require_checkbox === 0 ? false : true)
-      setSpecialInstruction(initialData.checkbox_instructions ? initialData.checkbox_instructions : "");
+      setInstructionPopUp(initialData.require_checkbox == 0 ? false : true)
+      setSpecialInstruction(initialData.checkbox_instructions !== null ? initialData.checkbox_instructions : "");
     }
   }, [initialData]);
-
+console.log(initialData)
+console.log(instructionPopUp)
   const validationType = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -73,7 +74,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
         template_id: templateType,
         instructions_title: titleExample,
         instructions_details: instructionDescriptionExample,
-        require_checkbox: instructionDisable ? 1 : 0,
+        require_checkbox: instructionPopUp === true ? 1 : 0,
         checkbox_instructions: specialInstruction,
       };
       updateBookingSettings(id, data)
