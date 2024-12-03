@@ -55,7 +55,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       setTitleExample(initialData.instructions_title);
       setInstructionDescriptionExample(initialData.instructions_details);
       setTemplateType(initialData.template_id);
-      setInstructionPopUp(initialData.require_checkbox == 0 ? false : true)
+      setInstructionPopUp(initialData.require_checkbox === 1 ? true : false)
       setSpecialInstruction(initialData.checkbox_instructions !== null ? initialData.checkbox_instructions : "");
     }
   }, [initialData]);
@@ -379,11 +379,11 @@ console.log(instructionPopUp)
                       name="seasonality"
                       placeholder=""
                       type="checkbox"
-                      // checked={seasonalPrice}
+                      checked={instructionPopUp}
                       className="form-check-input"
                       onChange={() => setInstructionPopUp(!instructionPopUp)}
                       onBlur={validationType.handleBlur}
-                      // value={seasonalPrice}
+                       value={instructionPopUp}
                     />
                   </div>
                 </div>
