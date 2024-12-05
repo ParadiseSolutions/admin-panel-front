@@ -406,7 +406,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         });
     },
   });
-
+  
+/* useEffect(() => {
+  if (gratuitesSelected == 2) {
+    validationType.values.gratuity_percentage = '';
+  }
+}, [gratuitesSelected])
+ */
   return (
     <>
       <Form
@@ -595,7 +601,8 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                       console.log(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                    value={gratuitesSelected == 2 ? '' : gratuitesTypeSelected}
+                    disabled={gratuitesSelected == 2 ? true : false }
                   >
                     <option value="">Select....</option>
                     {map(gratuitesTypeData, (type, index) => {
@@ -661,7 +668,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     type="number"
                     onChange={validationType.handleChange}
                     value={validationType.values.gratuity_percentage || ""}
-                    disabled={gratuitesTypeSelected === "6"}
+                    disabled={gratuitesTypeSelected === "6" || gratuitesSelected == 2 ? true : false}
                     invalid={
                       validationType.touched.gratuity_percentage &&
                       validationType.errors.gratuity_percentage
@@ -713,12 +720,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     }}
                     disabled={
                       gratuitesTypeSelected === "3" ||
-                      gratuitesTypeSelected === "6"
+                      gratuitesTypeSelected === "6" ||
+                      gratuitesSelected == 2 
                         ? true
                         : false
                     }
                     onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                    value={gratuitesSelected == 2 ? '' : basedOnSelected}
                   >
                     <option value="">Select....</option>
                     {map(basedOnData, (based, index) => {
@@ -771,7 +779,8 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                       setApplySelected(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
+                    disabled={gratuitesSelected == 2 ? true : false}
+                    value={gratuitesSelected == 2 ? '' : applySelected}
                   >
                     <option value="">Select....</option>
                     {map(applyData, (apply, index) => {
