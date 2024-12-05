@@ -42,6 +42,7 @@ import {
   setDecimalFormat,
   setRateFormat,
 } from "../../../Utils/CommonFunctions";
+import { switchTourTab } from "../../../Utils/API";
 
 const Payments = ({ history, tourSettings, id, toggle }) => {
   const [paymentData, setPaymentData] = useState([]);
@@ -381,7 +382,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           if (resp.data.status === 200) {
             // triggerUpdate();
             Swal.fire("Edited!", "Payments has been edited.", "success");
-            toggle("3");
+            window.location.href = switchTourTab(4)
           }
         })
         .catch((error) => {
@@ -952,7 +953,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 outline
                 className="waves-effect waves-light me-2"
                 type="button"
-                onClick={() => toggle("1")}
+                onClick={() => toggle("2")}
               >
                 <i className="uil-angle-double-left" />
                 Previous
