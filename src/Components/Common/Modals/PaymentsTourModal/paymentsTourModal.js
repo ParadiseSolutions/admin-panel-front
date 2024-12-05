@@ -161,8 +161,6 @@ const PaymentsToursModal = ({
     },
   });
 
-  console.log(paymentOptionSelected);
-  
   return (
     <Modal
       centered
