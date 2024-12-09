@@ -97,7 +97,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           
           return (
             <div>
-              <>{cellProps.row.original.name}</>
+              <a href={`${cellProps.row.original.tour_link}`} target="_blank" className="text-paradise" rel="noreferrer">{cellProps.row.original.name}</a>
               <>
               
                 <FaLink
