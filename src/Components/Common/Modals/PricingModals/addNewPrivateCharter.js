@@ -606,7 +606,7 @@ const AddNewPrivateCharter = ({
       } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1) {
         // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
         baseAmountInput = setDecimalFormat(
-          netPriceInput / 1.16 / (tourData.gratuity / 100)
+          netPriceInput / 1.16 / (1 + tourData.gratuity / 100)
         );
       } else {
         baseAmountInput = setDecimalFormat(0);
@@ -682,7 +682,7 @@ const AddNewPrivateCharter = ({
       } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1) {
         // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
         baseAmountInput = setDecimalFormat(
-          netPriceInputRate / 1.16 / (tourData.gratuity / 100)
+          netPriceInputRate / 1.16 / (1 + tourData.gratuity / 100)
         );
       } else {
         baseAmountInput = setDecimalFormat(0);
@@ -757,7 +757,7 @@ const AddNewPrivateCharter = ({
       } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1) {
         // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
         baseAmountInput = setDecimalFormat(
-          netPriceInputCommision / 1.16 / (tourData.gratuity / 100)
+          netPriceInputCommision / 1.16 / (1 + tourData.gratuity / 100)
         );
       } else {
         baseAmountInput = setDecimalFormat(0);
@@ -882,7 +882,7 @@ const AddNewPrivateCharter = ({
     } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1) {
       // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
       baseAmountInput = setDecimalFormat(
-        ourPriceInput / 1.16 / (tourData.gratuity / 100)
+        ourPriceInput / 1.16 / (1 + tourData.gratuity / 100)
       );
     } else {
       baseAmountInput = setDecimalFormat(0);
