@@ -10,8 +10,8 @@ import {
   Button,
   Tooltip,
 } from "reactstrap";
-import PaymentBannerOne from '../../../Assets/images/paymentBannerOne.png'
-import PaymentBannerTwo from '../../../Assets/images/paymentBannerTwo.png'
+import PaymentBannerOne from "../../../Assets/images/paymentBannerOne.png";
+import PaymentBannerTwo from "../../../Assets/images/paymentBannerTwo.png";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import {
@@ -57,7 +57,7 @@ const PaymentsToursModal = ({
   const [paymentDueTooltip, setPaymentDueTooltip] = useState(false);
   const [whenTooltip, setWhenTooltip] = useState(false);
   const [eventTooltip, setEventTooltip] = useState(false);
-
+  const [amountTooltip, setamountTooltip] = useState(false);
 
   useEffect(() => {
     if (dataEdit) {
@@ -71,17 +71,17 @@ const PaymentsToursModal = ({
       setDueSelected(dataEdit.payment_due_id);
       setWhenSelected(dataEdit.when_id);
       setEventSelected(dataEdit.payment_event_id);
-    }else{
-      setGratuitesTypeSelected('');
-      setPaymentOptionSelected('');
-      setBasedOnSelected('');
-      setTaxSelected('');
-      setGratuitesSelected('');
-      setPaidBySelected('');
-      setMethodSelected('');
-      setDueSelected('');
-      setWhenSelected('');
-      setEventSelected('');
+    } else {
+      setGratuitesTypeSelected("");
+      setPaymentOptionSelected("");
+      setBasedOnSelected("");
+      setTaxSelected("");
+      setGratuitesSelected("");
+      setPaidBySelected("");
+      setMethodSelected("");
+      setDueSelected("");
+      setWhenSelected("");
+      setEventSelected("");
     }
   }, [dataEdit]);
 
@@ -113,7 +113,7 @@ const PaymentsToursModal = ({
         when_id: whenSelected,
         payment_event_id: eventSelected,
       };
-      
+
       if (!dataEdit.id) {
         postPaymentsNewAPI(data)
           .then((resp) => {
@@ -198,13 +198,21 @@ const PaymentsToursModal = ({
           }}
           className="custom-validation"
         >
-          <Row className='d-flex'>
-<Col className='col-6'>
-<img src={PaymentBannerOne} alt="PaymentBannerOne" style={{ width: '100%', height: '100%'}}/>
-</Col>
-<Col className='col-6'>
-<img src={PaymentBannerTwo} alt="PaymentBannerTwo"  style={{ width: '100%', height: '100%'}}/>
-</Col>
+          <Row className="d-flex">
+            <Col className="col-6">
+              <img
+                src={PaymentBannerOne}
+                alt="PaymentBannerOne"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Col>
+            <Col className="col-6">
+              <img
+                src={PaymentBannerTwo}
+                alt="PaymentBannerTwo"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Col>
           </Row>
           <Row>
             <Col className="col-12 my-2" style={{ backgroundColor: "#E9F4FF" }}>
@@ -374,21 +382,31 @@ const PaymentsToursModal = ({
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="publicPrice"
+                      id="amountTooltip"
                     />
+                    <Tooltip
+                      placement="right"
+                      isOpen={amountTooltip}
+                      target="amountTooltip"
+                      style={{ textAlign: "left" }}
+                      toggle={() => {
+                        setamountTooltip(!amountTooltip);
+                      }}
+                    >
+                    The fixed amount or percentage of the payment that will be made.  This option is dependent on the option chosen in the previous drop-down.
+                    </Tooltip>
                   </div>
                 </div>
                 <div className="input-group">
-                  { paymentOptionSelected != 2 && paymentOptionSelected != 5 ? 
-                <span
-                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                    id="basic-addon1"
-                    style={{ fontSize: "0.85em" }}
-                  >
-                    $
-                  </span>
-                  
-                  : null }
+                  {paymentOptionSelected != 2 && paymentOptionSelected != 5 ? (
+                    <span
+                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                      id="basic-addon1"
+                      style={{ fontSize: "0.85em" }}
+                    >
+                      $
+                    </span>
+                  ) : null}
                   <Input
                     name="gratuity_percentage"
                     placeholder=""
@@ -402,56 +420,54 @@ const PaymentsToursModal = ({
                         : false
                     }
                   />
-                  { 
-                     paymentOptionSelected == '2' || paymentOptionSelected == '5' ? (
-                      <span
+                  {paymentOptionSelected == "2" ||
+                  paymentOptionSelected == "5" ? (
+                    <span
                       className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                       id="basic-addon1"
                       style={{ fontSize: "0.85em" }}
                     >
                       %
                     </span>
-                     ) : null
-                  }
+                  ) : null}
                 </div>
               </div>
             </Col>
-            { paymentOptionSelected !== '1' ?  
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Based on</Label>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setBasedOnSelected(e.target.value);
-                    }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(basedOnData, (based, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={based.id}
-                          selected={
-                            dataEdit && dataEdit.based_on_id
-                              ? based.id === dataEdit.based_on_id
-                              : false
-                          }
-                        >
-                          {based.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
+            {paymentOptionSelected !== "1" ? (
+              <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                <div className="form-outline mb-2" id="voucher_currency">
+                  <Label className="form-label">Based on</Label>
+                  <div className="input-group">
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setBasedOnSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value="">Select....</option>
+                      {map(basedOnData, (based, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={based.id}
+                            selected={
+                              dataEdit && dataEdit.based_on_id
+                                ? based.id === dataEdit.based_on_id
+                                : false
+                            }
+                          >
+                            {based.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
                 </div>
-              </div>
-            </Col>
-            :
-            null }
+              </Col>
+            ) : null}
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
                 <div className="d-flex justify-content-between">
@@ -607,18 +623,7 @@ const PaymentsToursModal = ({
                         setPaidByTooltip(!paidByTooltip);
                       }}
                     >
-                      Does this amount include a mandatory gratuity amount?
-                      <br />
-                      Included - The amount includes the mandatory gratuity.
-                      <br />
-                      <br />
-                      Not Included - The mount does not include the mandatory
-                      gratuity.
-                      <br />
-                      <br />
-                      Unspecified - The gratuity is not collected in advance and
-                      no specific requirement of the amount is set. It is up to
-                      the customer's discretion on the day of the tour.
+                    Who is responsible for making this payment?  Who pays who?  Do we pay the provider, or does the customer pay them directly?  Or does the customer pay us?
                     </Tooltip>
                   </div>
                 </div>

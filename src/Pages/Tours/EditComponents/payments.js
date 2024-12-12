@@ -77,6 +77,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [applyTooltip, setApplyTooltip] = useState(false);
   const [currencyTooltip, setCurrencyTooltip] = useState(false);
   const [exchangeTooltip, setExchangeTooltip] = useState(false);
+  const [headerTT, setheaderTT] = useState(false);
 
   const initialRequest = () => {
     paymentsIndexGet(id).then((resp) => {
@@ -439,7 +440,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
 
           <Row>
             <Col className="col-12">
-              <div className="mb-2 p-2" style={{ backgroundColor: "#E9F4FF" }}>
+              <div className="mb-2 p-2 d-flex" style={{ backgroundColor: "#E9F4FF" }}>
                 <p
                   className="px-2 fs-5"
                   style={{
@@ -450,6 +451,25 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 >
                   TAXES & GRATUITIES
                 </p>
+                <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="headerTT"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={headerTT}
+                      target="headerTT"
+                      toggle={() => {
+                        setheaderTT(!headerTT);
+                      }}
+                    >
+                     Use this section to define how the provider prices the tour on the service agreement. 
+<br />
+<br />
+These settings will be applied to your entries in the price modal when adding a product.
+                    </Tooltip>
+                  </div>
               </div>
             </Col>
           </Row>
@@ -525,7 +545,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         setGratuitiesTooltip(!gratuitiesTooltip);
                       }}
                     >
-                      Does the price include gratuity or are gratuities extra?.
+                      Does the price include gratuity or are gratuities extra?
                     </Tooltip>
                   </div>
                 </div>
@@ -579,12 +599,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                       How does the provider price the gratuity?
                       <br />
                       <br />
-                      Not Specified - The provider doesn't require a certain
+                      Unspecified - The provider doesn't require a certain
                       gratuity. It is up to the customer to decide how much to
                       pay on the day of the tour.
                       <br />
                       <br />
-                      Percentage - The provider requires a certain percentage of
+                      % Percent - The provider requires a certain percentage of
                       the price as gratuity, such as a 15% gratuity.
                       <br />
                       <br />
@@ -644,7 +664,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                             setAmountTooltip(!amountTooltip);
                           }}
                         >
-                          The amount or percentage of gratuity required by the
+                          The amount of gratuity required by the
                           provider.
                         </Tooltip>
                       </div>
@@ -749,7 +769,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </div>
               </div>
             </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+            <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Apply</Label>
@@ -856,10 +876,10 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </div>
               </div>
             </Col>
-            <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
+            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label text-paradise">Exchange</Label>
+                  <Label className="form-label text-paradise">Exchange Rate</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15 mx-2"
@@ -875,9 +895,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     >
                       Specify the exchange rate that we will use if the price is
                       in MXN.
-                      <br />
-                      <br />
-                      Note: This will be greyed out if the currency is in USD.
+                     
                     </Tooltip>
                   </div>
                 </div>
