@@ -63,10 +63,7 @@ const URL = ({ tourData, toggle }) => {
   }, [urlTypeSelected]);
 
   useEffect(() => {
-    console.log('type:', urlTypeSelected)
-    console.log('location:', locationSelected)
     if (urlTypeSelected !== null && locationSelected !== null) {
-      
       getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
         setBasePath(resp.data.data.base_path)
         // setComplementURL(resp.data.data.filename);
