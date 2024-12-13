@@ -53,11 +53,11 @@ const URL = ({ tourData, toggle }) => {
   useEffect(() => {
     getURLAvailableFromAPI(tourData.id, urlTypeSelected).then((resp) => {
       setLocationData(resp.data.data);
-      if (resp.data.data.length === 1) {
-        setLocationSelected(resp.data.data[0].available_from_id);
-      } else {
-        setLocationSelected(null);
-      }
+      // if (resp.data.data.length === 1) {
+      //   setLocationSelected(resp.data.data[0].available_from_id);
+      // } else {
+      //   setLocationSelected(null);
+      // }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlTypeSelected]);
