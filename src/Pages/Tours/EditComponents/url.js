@@ -32,6 +32,7 @@ const URL = ({ tourData, toggle }) => {
   const [urlTypeSelected, setUrlTypeSelected] = useState(null);
   const [locationData, setLocationData] = useState();
   const [locationSelected, setLocationSelected] = useState(0);
+  const [pathData, setPathData] = useState();
   const [basePath, setBasePath] = useState(null);
   const [complementURL, setComplementURL] = useState(null);
   const [editURLID, setEditURLID] = useState(null);
@@ -62,12 +63,13 @@ const URL = ({ tourData, toggle }) => {
   }, [urlTypeSelected]);
 
   useEffect(() => {
-    
-    getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
-      setBasePath(resp.data.data.base_path)
-      setComplementURL(resp.data.data.filename);
-     
-    });
+    if (urlTypeSelected !== null && locationSelected !== null) {
+      getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
+        setBasePath(resp.data.data.base_path)
+        // setComplementURL(resp.data.data.filename);
+        // setPathData(resp.data.data);
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlTypeSelected, locationSelected]);
 
@@ -89,6 +91,7 @@ const URL = ({ tourData, toggle }) => {
     setLocationSelected(null);
     setComplementURL(null);
     setEditURLID(null);
+    setPathData(null);
   };
 
   const onDeleteURL = (urlData) => {
