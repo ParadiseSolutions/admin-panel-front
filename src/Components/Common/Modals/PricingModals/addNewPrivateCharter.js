@@ -465,6 +465,12 @@ const AddNewPrivateCharter = ({
   const [estRateTooltip, setestRateTooltip] = useState(false);
   const [estComTooltip, setestComTooltip] = useState(false);
   const [ivaTooltip, setivaTooltip] = useState(false);
+  const [ivaTooltipOP, setivaTooltipOP] = useState(false);
+  const [totalPriceTooltipOP, settotalPriceTooltipOP] = useState(false);
+  const [totalPriceTooltip, settotalPriceTooltip] = useState(false);
+  const [gratuityTooltip, setgratuityTooltip] = useState(false);
+  const [finalTotalTooltipOP, setfinalTotalTooltipOP] = useState(false);
+  const [finalTotalTooltip, setfinalTotalTooltip] = useState(false);
 
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
@@ -2245,7 +2251,9 @@ const AddNewPrivateCharter = ({
                                     setivaTooltip(!ivaTooltip);
                                   }}
                                 >
-                                  The amount of IVA (VAT) that is due to the Mexican Government.  If "Not Applicable" is chosen in Payment Settings (the Provider will not require IVA to be collected) then this will be zero.
+                                  The amount of IVA (VAT) that is due to the
+                                  Mexican Government. 
+
                                 </Tooltip>
                               </div>
                             </div>
@@ -2296,19 +2304,17 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="totalPriceTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={totalPriceTooltip}
+                                  target="totalPriceTooltip"
+                                  toggle={() => {
+                                    settotalPriceTooltip(!totalPriceTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                 Net Price including Taxes not including Gratuity.  This is the main price for comparison purposes.
                                 </Tooltip>
                               </div>
                             </div>
@@ -2359,19 +2365,20 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="gratuityTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={gratuityTooltip}
+                                  target="gratuityTooltip"
+                                  toggle={() => {
+                                    setgratuityTooltip(!gratuityTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                 The amount of mandatory Gratuity that is required by the Provider to be collected.  
+<br/>
+<br/>
+This is based on the Payment Settings.  If "Unspecified" is chosen, then this field will be zero.  Even though a gratuity is encouraged and expected, the Provider doesn't mandate what it is.  The customer can decide on the day of the tour what gratuity they will give.
                                 </Tooltip>
                               </div>
                             </div>
@@ -2420,19 +2427,17 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="finalTotalTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={finalTotalTooltip}
+                                  target="finalTotalTooltip"
+                                  toggle={() => {
+                                    setfinalTotalTooltip(!finalTotalTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                The total cost of the boat, including taxes and any mandatory Gratuity.
                                 </Tooltip>
                               </div>
                             </div>
@@ -2844,7 +2849,7 @@ const AddNewPrivateCharter = ({
                             <div className="d-flex justify-content-between">
                               <Label className="form-label">16% IVA</Label>
                               <div>
-                              <i
+                                <i
                                   className="uil-question-circle font-size-15"
                                   id="ivaTooltip"
                                 />
@@ -2856,7 +2861,8 @@ const AddNewPrivateCharter = ({
                                     setivaTooltip(!ivaTooltip);
                                   }}
                                 >
-                                  The amount of IVA (VAT) that is due to the Mexican Government.  If "Not Applicable" is chosen in Payment Settings (the Provider will not require IVA to be collected) then this will be zero.
+                                  The amount of IVA (VAT) that is due to the
+                                  Mexican Government.
                                 </Tooltip>
                               </div>
                             </div>
@@ -2907,19 +2913,17 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="totalPriceTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={totalPriceTooltip}
+                                  target="totalPriceTooltip"
+                                  toggle={() => {
+                                    settotalPriceTooltip(!totalPriceTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                  Net Price including Taxes not including Gratuity.  This is the main price for comparison purposes.
                                 </Tooltip>
                               </div>
                             </div>
@@ -2970,19 +2974,20 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="gratuityTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={gratuityTooltip}
+                                  target="gratuityTooltip"
+                                  toggle={() => {
+                                    setgratuityTooltip(!gratuityTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                 The amount of mandatory Gratuity that is required by the Provider to be collected.  
+<br />
+<br />
+This is based on the Payment Settings.  If "Unspecified" is chosen, then this field will be zero.  Even though a gratuity is encouraged and expected, the Provider doesn't mandate what it is.  The customer can decide on the day of the tour what gratuity they will give.
                                 </Tooltip>
                               </div>
                             </div>
@@ -3031,19 +3036,17 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="finalTotalTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={finalTotalTooltip}
+                                  target="finalTotalTooltip"
+                                  toggle={() => {
+                                    setfinalTotalTooltip(!finalTotalTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                The total cost of the boat, including taxes and any mandatory Gratuity.
                                 </Tooltip>
                               </div>
                             </div>
@@ -3521,7 +3524,7 @@ const AddNewPrivateCharter = ({
                             <div className="d-flex justify-content-between">
                               <Label className="form-label">16% IVA</Label>
                               <div>
-                              <i
+                                <i
                                   className="uil-question-circle font-size-15"
                                   id="ivaTooltip"
                                 />
@@ -3533,7 +3536,8 @@ const AddNewPrivateCharter = ({
                                     setivaTooltip(!ivaTooltip);
                                   }}
                                 >
-                                  The amount of IVA (VAT) that is due to the Mexican Government.  If "Not Applicable" is chosen in Payment Settings (the Provider will not require IVA to be collected) then this will be zero.
+                                  The amount of IVA (VAT) that is due to the
+                                  Mexican Government.
                                 </Tooltip>
                               </div>
                             </div>
@@ -3584,19 +3588,17 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="totalPriceTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={totalPriceTooltip}
+                                  target="totalPriceTooltip"
+                                  toggle={() => {
+                                    settotalPriceTooltip(!totalPriceTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                 Net Price including Taxes not including Gratuity.  This is the main price for comparison purposes.
                                 </Tooltip>
                               </div>
                             </div>
@@ -3647,19 +3649,20 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="gratuityTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={gratuityTooltip}
+                                  target="gratuityTooltip"
+                                  toggle={() => {
+                                    setgratuityTooltip(!gratuityTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                The amount of mandatory Gratuity that is required by the Provider to be collected.  
+<br/>
+<br/>
+This is based on the Payment Settings.  If "Unspecified" is chosen, then this field will be zero.  Even though a gratuity is encouraged and expected, the Provider doesn't mandate what it is.  The customer can decide on the day of the tour what gratuity they will give.
                                 </Tooltip>
                               </div>
                             </div>
@@ -3708,19 +3711,17 @@ const AddNewPrivateCharter = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="balanceDue"
+                                  id="finalTotalTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  /* toggle={() => {
-                                    setttop17(!ttop17);
-                                  }} */
+                                  isOpen={finalTotalTooltip}
+                                  target="finalTotalTooltip"
+                                  toggle={() => {
+                                    setfinalTotalTooltip(!finalTotalTooltip);
+                                  }}
                                 >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
+                                 The total cost of the boat, including taxes and any mandatory Gratuity.
                                 </Tooltip>
                               </div>
                             </div>
@@ -3870,13 +3871,13 @@ const AddNewPrivateCharter = ({
                   <>
                     <Row className="d-flex">
                       <Col className="col-2">
-                        <div className="form-outline mb-2" id="price">
+                        <div className="form-outline mb-2" id="ourPrice">
                           <div className="d-flex justify-content-between">
                             <Label className="form-label">Our Price</Label>
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="price"
+                                id="ourPrice"
                               />
                               <Tooltip
                                 placement="right"
@@ -4316,20 +4317,21 @@ const AddNewPrivateCharter = ({
                           <div className="d-flex justify-content-between">
                             <Label className="form-label">16% IVA</Label>
                             <div>
-                            <i
-                                  className="uil-question-circle font-size-15"
-                                  id="ivaTooltip"
-                                />
-                                <Tooltip
-                                  placement="right"
-                                  isOpen={ivaTooltip}
-                                  target="ivaTooltip"
-                                  toggle={() => {
-                                    setivaTooltip(!ivaTooltip);
-                                  }}
-                                >
-                                  The amount of IVA (VAT) that is due to the Mexican Government.  If "Not Applicable" is chosen in Payment Settings (the Provider will not require IVA to be collected) then this will be zero.
-                                </Tooltip>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="ivaTooltipOP"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ivaTooltipOP}
+                                target="ivaTooltipOP"
+                                toggle={() => {
+                                  setivaTooltipOP(!ivaTooltipOP);
+                                }}
+                              >
+                                The amount of IVA (VAT) that is due to the
+                                Mexican Government.
+                              </Tooltip>
                             </div>
                           </div>
                           <div className="input-group">
@@ -4359,25 +4361,17 @@ const AddNewPrivateCharter = ({
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="effRate"
+                                id="totalPriceTooltipOP"
                               />
                               <Tooltip
                                 placement="right"
-                                isOpen={ttop14}
-                                target="effRate"
-                                // toggle={() => {
-                                //   setttop14(!ttop14);
-                                // }}
+                                isOpen={totalPriceTooltipOP}
+                                target="totalPriceTooltipOP"
+                                toggle={() => {
+                                  settotalPriceTooltipOP(!totalPriceTooltipOP);
+                                }}
                               >
-                                <p>
-                                  After discounting the tour, what our effective
-                                  commission rate is (what we have left after
-                                  the discount). This is calculated based on
-                                  (Commission / Our Price = Eff. Rate).
-                                </p>
-                                If there is no public price specified, then it
-                                is calculated based on (Commission / (Net Price
-                                + Commission))
+                               It should back calculate Our Price if it is entered in.  If Our Price is entered in, then it will calculate the Total Price.
                               </Tooltip>
                             </div>
                           </div>
@@ -4491,23 +4485,17 @@ const AddNewPrivateCharter = ({
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="deposit_t"
+                                id="finalTotalTooltipOP"
                               />
                               <Tooltip
                                 placement="right"
-                                isOpen={ttop16}
-                                target="deposit_t"
-                                // toggle={() => {
-                                //   setttop16(!ttop16);
-                                // }}
+                                isOpen={finalTotalTooltipOP}
+                                target="finalTotalTooltipOP"
+                                toggle={() => {
+                                  setfinalTotalTooltipOP(!finalTotalTooltipOP);
+                                }}
                               >
-                                <p>
-                                  The amount we collect at the time of booking.
-                                  This is calculated based on the option chosen
-                                  in "Collect" above.
-                                </p>
-                                If "Deposit" is the Collect type then you will
-                                type in the amount of Deposit you will collect.
+                                The total cost of the boat, including taxes and any mandatory Gratuity.
                               </Tooltip>
                             </div>
                           </div>
