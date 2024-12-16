@@ -77,6 +77,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [applyTooltip, setApplyTooltip] = useState(false);
   const [currencyTooltip, setCurrencyTooltip] = useState(false);
   const [exchangeTooltip, setExchangeTooltip] = useState(false);
+  const [gratPercentageTooltip, setgratPercentageTooltip] = useState(false);
   const [headerTT, setheaderTT] = useState(false);
 
   const initialRequest = () => {
@@ -670,7 +671,26 @@ These settings will be applied to your entries in the price modal when adding a 
                       </div>
                     </div>
                   ) : (
+                    <div className="d-flex justify-content-between">
                     <Label className="form-label">% Gratuity</Label>
+                    <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="gratPercentageTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={gratPercentageTooltip}
+                          target="gratPercentageTooltip"
+                          toggle={() => {
+                            setgratPercentageTooltip(!gratPercentageTooltip);
+                          }}
+                        >
+                          The percentage of gratuity required by the provider.
+                        </Tooltip>
+                        </div>
+                    </div>
+                    
                   )}
                 </div>
                 <div className="input-group">
@@ -851,6 +871,7 @@ These settings will be applied to your entries in the price modal when adding a 
                     name=""
                     onChange={(e) => {
                       setCurrencySelected(e.target.value);
+                      
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
@@ -903,6 +924,7 @@ These settings will be applied to your entries in the price modal when adding a 
                   name="exchange_rate"
                   placeholder="$0.00"
                   type="number"
+                  disabled={currencySelected === "USD"}
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.exchange_rate || ""}
