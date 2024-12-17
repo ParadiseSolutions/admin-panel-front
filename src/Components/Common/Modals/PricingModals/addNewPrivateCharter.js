@@ -462,6 +462,7 @@ const AddNewPrivateCharter = ({
   const [providerHeaderTooltip, setproviderHeaderTooltip] = useState(false);
   const [priceSheetTooltip, setpriceSheetTooltip] = useState(false);
   const [baseTooltip, setbaseTooltip] = useState(false);
+  const [baseTooltipOP, setbaseTooltipOP] = useState(false);
   const [estRateTooltip, setestRateTooltip] = useState(false);
   const [estComTooltip, setestComTooltip] = useState(false);
   const [ivaTooltip, setivaTooltip] = useState(false);
@@ -471,6 +472,8 @@ const AddNewPrivateCharter = ({
   const [gratuityTooltip, setgratuityTooltip] = useState(false);
   const [finalTotalTooltipOP, setfinalTotalTooltipOP] = useState(false);
   const [finalTotalTooltip, setfinalTotalTooltip] = useState(false);
+  const [netPriceTooltip, setnetPriceTooltip] = useState(false);
+  const [gratuityTooltipOP, setgratuityTooltipOP] = useState(false);
 
   const [ttop1, setttop1] = useState(false);
   const [ttop2, setttop2] = useState(false);
@@ -2674,19 +2677,17 @@ This is based on the Payment Settings.  If "Unspecified" is chosen, then this fi
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15 "
-                                  id="rate_t"
+                                  id="netPriceTooltip"
                                 />
                                 <Tooltip
                                   placement="right"
-                                  isOpen={ttop7}
-                                  target="rate_t"
+                                  isOpen={netPriceTooltip}
+                                  target="netPriceTooltip"
                                   toggle={() => {
-                                    setttop7(!ttop7);
+                                    setnetPriceTooltip(!netPriceTooltip);
                                   }}
                                 >
-                                  The commission rate for the tour that is
-                                  specified in our service agreement. If only a
-                                  Net Price is specified then leave blank.
+                                  The Net Price shown on the Service Agreement.  What it represents is specified on the Payment Settings tab.
                                 </Tooltip>
                               </div>
                             </div>
@@ -3357,9 +3358,7 @@ This is based on the Payment Settings.  If "Unspecified" is chosen, then this fi
                                     setttop7(!ttop7);
                                   }}
                                 >
-                                  The commission rate for the tour that is
-                                  specified in our service agreement. If only a
-                                  Net Price is specified then leave blank.
+                                 The Net Price shown on the Service Agreement.  What it represents is specified on the Payment Settings tab.
                                 </Tooltip>
                               </div>
                             </div>
@@ -4256,14 +4255,14 @@ This is based on the Payment Settings.  If "Unspecified" is chosen, then this fi
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="baseTooltip"
+                                id="baseTooltipOP"
                               />
                               <Tooltip
                                 placement="right"
-                                isOpen={baseTooltip}
-                                target="baseTooltip"
+                                isOpen={baseTooltipOP}
+                                target="baseTooltipOP"
                                 toggle={() => {
-                                  setbaseTooltip(!baseTooltip);
+                                  setbaseTooltipOP(!baseTooltipOP);
                                 }}
                               >
                                 The base price of the product before taxes and
@@ -4420,23 +4419,17 @@ This is based on the Payment Settings.  If "Unspecified" is chosen, then this fi
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="deposit_t"
+                                id="gratuityTooltipOP"
                               />
                               <Tooltip
                                 placement="right"
-                                isOpen={ttop16}
-                                target="deposit_t"
-                                // toggle={() => {
-                                //   setttop16(!ttop16);
-                                // }}
+                                isOpen={gratuityTooltipOP}
+                                target="gratuityTooltipOP"
+                                toggle={() => {
+                                  setgratuityTooltipOP(!gratuityTooltipOP);
+                                }}
                               >
-                                <p>
-                                  The amount we collect at the time of booking.
-                                  This is calculated based on the option chosen
-                                  in "Collect" above.
-                                </p>
-                                If "Deposit" is the Collect type then you will
-                                type in the amount of Deposit you will collect.
+                              The amount of mandatory Gratuity that is required by the Provider to be collected.
                               </Tooltip>
                             </div>
                           </div>
