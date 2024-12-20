@@ -121,7 +121,7 @@ useEffect(() => {
         filterable: false,
         Cell: (cellProps) => {
           const methodData = cellProps.row.original;
-          return <p className="fw-bold">{methodData.first_name}</p>;
+          return <p className="fw-bold">{methodData.email}</p>;
         },
       },
       {
@@ -131,7 +131,7 @@ useEffect(() => {
         filterable: false,
         Cell: (cellProps) => {
           const methodData = cellProps.row.original;
-          return <p className="fw-bold">{methodData.first_name}</p>;
+          return <p className="fw-bold">{methodData.currency}</p>;
         },
       },
       {
