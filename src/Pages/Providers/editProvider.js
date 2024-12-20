@@ -43,7 +43,7 @@ const EditProvider = () => {
           <div xl={8}>
             <EditGeneralInformation data={data} />
             <Contacts contacts={contacts} />
-            <PaymentMethods contacts={contacts} />
+            <PaymentMethods contacts={contacts} id={id} />
             <SocialMedia socialData={socialData} id={id} />
           </div>
         </Container>
