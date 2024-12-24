@@ -160,3 +160,7 @@ export const deleteOperatorAPI = (id) => {
     });
   };
 
+  export const getMethodInfo = (id) => {
+    const url = `${API_URL}/provider-payment-methods/provider/${id}`;
+    return axios.get(url, {headers:options})
+  };
