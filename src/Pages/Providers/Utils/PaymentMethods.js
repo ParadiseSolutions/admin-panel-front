@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { deleteContactAPI } from "../../../Utils/API/Contacts";
 import TableContainer from "../../../Components/Common/TableContainer";
-import AddContactProviderModal from "../../../Components/Common/Modals/ContactsProviderModal/addContactProviderModal";
+import PaymentMethodModal from "../../../Components/Common/Modals/PaymentMethodModal/PaymentMethodModal";
+
 import { Name, Department, Active, LastName } from "./ProvidersCols";
 import {
   Collapse,
@@ -14,7 +15,6 @@ import {
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import classnames from "classnames";
-import EditContactProviderModal from "../../../Components/Common/Modals/ContactsProviderModal/editContactProviderModal";
 import ACHElements from "./PaymentsComponents/ACHElements";
 import CreditCardElements from "./PaymentsComponents/CreditCardElements";
 import { getMethodInfo } from "../../../Utils/API/Operators";
@@ -43,9 +43,7 @@ useEffect(() => {
   const onClickNewContactProvider = () => {
     setAddContactModal(!addContactModal);
   };
-  const onClickEditContactProvider = () => {
-    setEditContactModal(!editContactModal);
-  };
+
 
   //delete contact
   const onDelete = (depData) => {
@@ -216,17 +214,12 @@ useEffect(() => {
             </Col>
           </Row>
         </div>
-        <AddContactProviderModal
+        <PaymentMethodModal
           addContactModal={addContactModal}
           setAddContactModal={setAddContactModal}
           onClickNewContactProvider={onClickNewContactProvider}
         />
-        <EditContactProviderModal
-          editContactModal={editContactModal}
-          setEditContactModal={setEditContactModal}
-          onClickEditContactProvider={onClickEditContactProvider}
-          contactID={contactID}
-        />
+       
       </Collapse>
     </div>
   );

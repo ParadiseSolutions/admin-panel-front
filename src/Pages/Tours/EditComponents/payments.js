@@ -216,8 +216,11 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           let rowData = cellProps.row.original;
           return (
             <>
-              {rowData.payment_option_id === 1 || rowData.payment_option_id === 3 || rowData.payment_option_id === 4 ?
-                `$ ${setDecimalFormat(rowData.amount)}` : null}
+              {rowData.payment_option_id === 1 ||
+              rowData.payment_option_id === 3 ||
+              rowData.payment_option_id === 4
+                ? `$ ${setDecimalFormat(rowData.amount)}`
+                : null}
               {rowData.payment_option_id === 2 ||
               rowData.payment_option_id === 5
                 ? `${setRateFormat(rowData.amount)}%`
@@ -384,7 +387,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           if (resp.data.status === 200) {
             // triggerUpdate();
             Swal.fire("Edited!", "Payments has been edited.", "success");
-            window.location.href = switchTourTab(4)
+            window.location.href = switchTourTab(4);
           }
         })
         .catch((error) => {
@@ -409,8 +412,8 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         });
     },
   });
-  
-/* useEffect(() => {
+
+  /* useEffect(() => {
   if (gratuitesSelected == 2) {
     validationType.values.gratuity_percentage = '';
   }
@@ -441,7 +444,10 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
 
           <Row>
             <Col className="col-12">
-              <div className="mb-2 p-2 d-flex" style={{ backgroundColor: "#E9F4FF" }}>
+              <div
+                className="mb-2 p-2 d-flex"
+                style={{ backgroundColor: "#E9F4FF" }}
+              >
                 <p
                   className="px-2 fs-5"
                   style={{
@@ -453,24 +459,26 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   TAXES & GRATUITIES
                 </p>
                 <div>
-                    <i
-                      className="uil-question-circle font-size-15"
-                      id="headerTT"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={headerTT}
-                      target="headerTT"
-                      toggle={() => {
-                        setheaderTT(!headerTT);
-                      }}
-                    >
-                     Use this section to define how the provider prices the tour on the service agreement. 
-<br />
-<br />
-These settings will be applied to your entries in the price modal when adding a product.
-                    </Tooltip>
-                  </div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="headerTT"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={headerTT}
+                    target="headerTT"
+                    toggle={() => {
+                      setheaderTT(!headerTT);
+                    }}
+                  >
+                    Use this section to define how the provider prices the tour
+                    on the service agreement.
+                    <br />
+                    <br />
+                    These settings will be applied to your entries in the price
+                    modal when adding a product.
+                  </Tooltip>
+                </div>
               </div>
             </Col>
           </Row>
@@ -556,6 +564,7 @@ These settings will be applied to your entries in the price modal when adding a 
                     name=""
                     onChange={(e) => {
                       setGratuitesSelected(e.target.value);
+                      console.log(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
@@ -623,8 +632,8 @@ These settings will be applied to your entries in the price modal when adding a 
                       console.log(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
-                    value={gratuitesSelected == 2 ? '' : gratuitesTypeSelected}
-                    disabled={gratuitesSelected == 2 ? true : false }
+                    value={gratuitesSelected == 2 ? "" : gratuitesTypeSelected}
+                    disabled={gratuitesSelected == 3 ? true : false}
                   >
                     <option value="">Select....</option>
                     {map(gratuitesTypeData, (type, index) => {
@@ -665,15 +674,14 @@ These settings will be applied to your entries in the price modal when adding a 
                             setAmountTooltip(!amountTooltip);
                           }}
                         >
-                          The amount of gratuity required by the
-                          provider.
+                          The amount of gratuity required by the provider.
                         </Tooltip>
                       </div>
                     </div>
                   ) : (
                     <div className="d-flex justify-content-between">
-                    <Label className="form-label">% Gratuity</Label>
-                    <div>
+                      <Label className="form-label">% Gratuity</Label>
+                      <div>
                         <i
                           className="uil-question-circle font-size-15"
                           id="gratPercentageTooltip"
@@ -688,9 +696,8 @@ These settings will be applied to your entries in the price modal when adding a 
                         >
                           The percentage of gratuity required by the provider.
                         </Tooltip>
-                        </div>
+                      </div>
                     </div>
-                    
                   )}
                 </div>
                 <div className="input-group">
@@ -709,7 +716,11 @@ These settings will be applied to your entries in the price modal when adding a 
                     type="number"
                     onChange={validationType.handleChange}
                     value={validationType.values.gratuity_percentage || ""}
-                    disabled={gratuitesTypeSelected === "6" || gratuitesSelected == 2 ? true : false}
+                    disabled={
+                      gratuitesTypeSelected === "6" || gratuitesSelected == 3
+                        ? true
+                        : false
+                    }
                     invalid={
                       validationType.touched.gratuity_percentage &&
                       validationType.errors.gratuity_percentage
@@ -762,12 +773,12 @@ These settings will be applied to your entries in the price modal when adding a 
                     disabled={
                       gratuitesTypeSelected === "3" ||
                       gratuitesTypeSelected === "6" ||
-                      gratuitesSelected == 2 
+                      gratuitesSelected == 3
                         ? true
                         : false
                     }
                     onBlur={validationType.handleBlur}
-                    value={gratuitesSelected == 2 ? '' : basedOnSelected}
+                    value={gratuitesSelected == 2 ? "" : basedOnSelected}
                   >
                     <option value="">Select....</option>
                     {map(basedOnData, (based, index) => {
@@ -820,8 +831,8 @@ These settings will be applied to your entries in the price modal when adding a 
                       setApplySelected(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
-                    disabled={gratuitesSelected == 2 ? true : false}
-                    value={gratuitesSelected == 2 ? '' : applySelected}
+                    disabled={gratuitesSelected == 3 ? true : false}
+                    value={gratuitesSelected == 2 ? "" : applySelected}
                   >
                     <option value="">Select....</option>
                     {map(applyData, (apply, index) => {
@@ -871,7 +882,6 @@ These settings will be applied to your entries in the price modal when adding a 
                     name=""
                     onChange={(e) => {
                       setCurrencySelected(e.target.value);
-                      
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
@@ -900,7 +910,9 @@ These settings will be applied to your entries in the price modal when adding a 
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label text-paradise">Exchange Rate</Label>
+                  <Label className="form-label text-paradise">
+                    Exchange Rate
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15 mx-2"
@@ -916,7 +928,6 @@ These settings will be applied to your entries in the price modal when adding a 
                     >
                       Specify the exchange rate that we will use if the price is
                       in MXN.
-                     
                     </Tooltip>
                   </div>
                 </div>
@@ -967,7 +978,10 @@ These settings will be applied to your entries in the price modal when adding a 
               <Button
                 type="button"
                 className="btn-orange"
-                onClick={() => setPaymentsAdd(true)}
+                onClick={() => {
+                  setPaymentsAdd(true);
+                  setDataEdit(null);
+                }}
                 style={{ fontSize: "12px", padding: "11px" }}
               >
                 + Add Payment
