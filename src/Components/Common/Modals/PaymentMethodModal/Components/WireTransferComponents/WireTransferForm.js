@@ -13,7 +13,7 @@ import {
 const WireTransferForm = () => {
   return (
     <>
-      <Col className="col-md-4 mx-2">
+      <Col className="col-5">
         <div className="form-outline mb-2">
           <Label className="form-label">Country</Label>
           <Input
@@ -36,7 +36,7 @@ const WireTransferForm = () => {
           </Input>
         </div>
       </Col>
-      <Col className="col-md-2 mx-2">
+      <Col className="col-md-2">
         <div className="form-outline mb-2">
           <Label className="form-label">Currency</Label>
           <Input

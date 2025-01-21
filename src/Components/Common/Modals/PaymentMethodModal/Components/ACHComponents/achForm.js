@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, UncontrolledTooltip, Label, Input } from "reactstrap";
+import { Col, UncontrolledTooltip, Label, Input, Row } from "reactstrap";
 
 const AchForm = ({
   validationType,
@@ -12,7 +12,7 @@ const AchForm = ({
 }) => {
   return (
     <>
-      <Col className="col-md-4 mx-2">
+      <Col className="col-5">
         <div className="form-outline mb-2">
           <Label className="form-label">Country</Label>
           <Input
@@ -33,7 +33,7 @@ const AchForm = ({
           </Input>
         </div>
       </Col>
-      <Col className="col-md-2 mx-2">
+      <Col className="col-2">
         <div className="form-outline mb-2">
           <Label className="form-label">Currency</Label>
           <Input
@@ -54,8 +54,8 @@ const AchForm = ({
           </Input>
         </div>
       </Col>
-      <Col className="col-12 mb-2 mx-1">
-        <div className="form-outline">
+      <Col className="col-12">
+        <div className="form-outline mb-2">
           <Label className="form-label">Bank Name</Label>
           <Input
             type="text"
@@ -66,31 +66,33 @@ const AchForm = ({
           />
         </div>
       </Col>
-      <Col className="col-12 d-flex justify-content-between mx-1">
-        <Col className="col-5 ">
-          <div className="form-outline">
-            <Label className="form-label">ABA Routing</Label>
-            <Input
-              type="text"
-              name="ABA_Routing"
-              onChange={validationType.handleChange}
-              onBlur={validationType.handleBlur}
-              value={validationType.values.ABA_Routing || ""}
-            />
-          </div>
-        </Col>
-        <Col className="col-5">
-          <div className="form-outline">
-            <Label className="form-label">Account Number</Label>
-            <Input
-              type="text"
-              name="account_number"
-              onChange={validationType.handleChange}
-              onBlur={validationType.handleBlur}
-              value={validationType.values.account_number || ""}
-            />
-          </div>
-        </Col>
+      <Col className="col-12">
+        <Row>
+          <Col className="col-6">
+            <div className="form-outline">
+              <Label className="form-label">ABA Routing</Label>
+              <Input
+                type="text"
+                name="ABA_Routing"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.ABA_Routing || ""}
+              />
+            </div>
+          </Col>
+          <Col className="col-6">
+            <div className="form-outline">
+              <Label className="form-label">Account Number</Label>
+              <Input
+                type="text"
+                name="account_number"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.account_number || ""}
+              />
+            </div>
+          </Col>
+        </Row>
       </Col>
     </>
   );
