@@ -6,7 +6,7 @@ import { Col, Input, Label } from 'reactstrap';
 const CreditCardForm = () => {
     return ( 
         <>
-        <Col className='col-2 mx-1'>
+        <Col className='col-2'>
         <div className="form-outline">
             <Label className="form-label">Extra Fee</Label>
             <Input
@@ -52,7 +52,7 @@ const CreditCardForm = () => {
             </Input>
           </div>
         </Col>
-        <Col className='col-2 mx-1'>
+        <Col className='col-3'>
         <div className="form-outline">
             <Label className="form-label">Payment Instruction</Label>
             <Input

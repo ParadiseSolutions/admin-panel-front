@@ -6,7 +6,7 @@ import { Col, Input, Label } from 'reactstrap';
 const ZelleForm = () => {
     return ( 
         <>
-        <Col className='col-4 mx-2'>
+        <Col className='col-4'>
         <div className="form-outline">
             <Label className="form-label">Email</Label>
             <Input
@@ -29,7 +29,7 @@ const ZelleForm = () => {
             </Input>
           </div>
         </Col>
-        <Col className='col-2'>
+        <Col className='col-3'>
         <div className="form-outline">
             <Label className="form-label">Extra Fee</Label>
             <Input
@@ -52,7 +52,7 @@ const ZelleForm = () => {
             </Input>
           </div>
         </Col>
-        <Col className='col-2 mx-2'>
+        <Col className='col-2'>
         <div className="form-outline">
             <Label className="form-label">Amount</Label>
             <Input

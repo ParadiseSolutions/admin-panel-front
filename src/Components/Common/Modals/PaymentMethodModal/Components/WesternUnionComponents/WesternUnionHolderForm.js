@@ -17,8 +17,8 @@ const WesternUnionHolderForm = ({
 }) => {
   return (
     <>
-      <Col className="col-12 d-flex justify-content-between">
-        <Col className="col-12 mx-1">
+      <Row>
+        <Col className="col-12">
           <div className="form-outline mb-2">
             <Label className="form-label">Name</Label>
             <Input
@@ -30,9 +30,9 @@ const WesternUnionHolderForm = ({
             />
           </div>
         </Col>
-      </Col>
-      <Col className="col-12 d-flex justify-content-between">
-        <Col className="col-12 mb-2 mx-1">
+      </Row>
+      <Row>
+        <Col className="col-12 mb-2">
           <div className="form-outline">
             <Label className="form-label">Email</Label>
             <Input
@@ -44,9 +44,9 @@ const WesternUnionHolderForm = ({
             />
           </div>
         </Col>
-      </Col>
-      <Col className="col-12 d-flex">
-        <Col className="col-2 mx-1">
+      </Row>
+      <Row>
+        <Col className="col-2">
           <div className="form-outline">
             <Label className="form-label">Country</Label>
             <Input
@@ -58,7 +58,7 @@ const WesternUnionHolderForm = ({
             />
           </div>
         </Col>
-        <Col className="col-3 mx-2">
+        <Col className="col-3">
           <div className="form-outline">
             <Label className="form-label">State</Label>
             <Input
@@ -70,7 +70,7 @@ const WesternUnionHolderForm = ({
             />
           </div>
         </Col>
-        <Col className="col-2 mx-1">
+        <Col className="col-3">
           <div className="form-outline">
             <Label className="form-label">Area Code</Label>
             <Input
@@ -89,7 +89,7 @@ const WesternUnionHolderForm = ({
             </Input>
           </div>
         </Col>
-        <Col className="col-4 mx-2">
+        <Col className="col-4">
           <div className="form-outline">
             <Label className="form-label">Phone</Label>
             <Input
@@ -101,7 +101,7 @@ const WesternUnionHolderForm = ({
             />
           </div>
         </Col>
-      </Col>
+      </Row>
     </>
   );
 };

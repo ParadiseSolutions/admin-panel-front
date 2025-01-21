@@ -278,11 +278,16 @@ const PaymentMethodModal = ({
                   : "col-12"
               }
             >
-              <Col>
-                <Label className="text-bold">Bank's Information</Label>
-              </Col>
-              <Row className="d-flex">
-                <Col className="d-flex flex-wrap">
+              <Row>
+                <Col hidden={
+                    !(paymentTypeSelected === 1 ||
+                    paymentTypeSelected === 4 ||
+                    paymentTypeSelected === 5)
+                  }>
+                  <Label className="text-bold">Bank's Information</Label>
+                </Col>
+              </Row>
+              <Row>
                   <Col
                     className={
                       paymentTypeSelected === 1 ||
@@ -344,16 +349,21 @@ const PaymentMethodModal = ({
                   {paymentTypeSelected === 2 ? <CreditCardForm /> : null}
                   {paymentTypeSelected === 6 ? <ZelleForm /> : null}
                   {paymentTypeSelected === 7 ? <VenmoForm /> : null}
-                </Col>
               </Row>
             </Col>
             {paymentTypeSelected === 1 ||
             paymentTypeSelected === 4 ||
             paymentTypeSelected === 5 ? (
-              <Col className="col-md-6">
-                <Col>
-                  <Label>Account Holder's Information</Label>
-                </Col>
+              <Col
+                style={{
+                  borderLeft: "1px solid #a4a4a5"                
+                }}
+                className="col-md-6">
+                  <Row>
+                    <Col>
+                      <Label>Account Holder's Information</Label>
+                    </Col>
+                  </Row>
                 {paymentTypeSelected === 1 ? (
                   <AchAccHolderForm
                     validationType={validationType}
