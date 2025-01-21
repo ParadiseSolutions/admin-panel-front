@@ -18,6 +18,7 @@ import {
   postPaymentsNewAPI,
   putPaymentsAPI,
 } from "../../../../Utils/API/Tours";
+import { Select } from "antd";
 const PaymentsToursModal = ({
   setPaymentsAdd,
   paymentsAdd,
@@ -60,14 +61,14 @@ const PaymentsToursModal = ({
   const [amountTooltip, setamountTooltip] = useState(false);
 
   useEffect(() => {
-    if (dataEdit) {
+    if (dataEdit !== null) {
       setGratuitesTypeSelected(dataEdit.payment_type_id);
       setPaymentOptionSelected(dataEdit.payment_option_id);
       setBasedOnSelected(dataEdit.based_on_id);
       setTaxSelected(dataEdit.tax_id);
       setGratuitesSelected(dataEdit.gratuity_id);
       setPaidBySelected(dataEdit.paid_by_id);
-      setMethodSelected(dataEdit.payment_method_id);
+      setMethodSelected(dataEdit.payment_methods);
       setDueSelected(dataEdit.payment_due_id);
       setWhenSelected(dataEdit.when_id);
       setEventSelected(dataEdit.payment_event_id);
@@ -78,18 +79,21 @@ const PaymentsToursModal = ({
       setTaxSelected("");
       setGratuitesSelected("");
       setPaidBySelected("");
-      setMethodSelected("");
+      setMethodSelected([]);
       setDueSelected("");
       setWhenSelected("");
       setEventSelected("");
     }
   }, [dataEdit]);
-
+  function handleMulti(selected) {
+    setMethodSelected(selected);
+  }
+  
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      gratuity_percentage: dataEdit.amount ? dataEdit.amount : "",
+      gratuity_percentage: dataEdit?.amount ? dataEdit?.amount : "",
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -100,21 +104,23 @@ const PaymentsToursModal = ({
     // }),
     onSubmit: (values) => {
       let data = {
-        payment_type_id: gratuitesTypeSelected,
-        payment_option_id: paymentOptionSelected,
-        tax_id: taxSelected,
-        gratuity_id: gratuitesSelected,
+        payment_type_id: gratuitesTypeSelected === '' ? null : gratuitesTypeSelected,
+        payment_option_id: paymentOptionSelected === '' ? null : paymentOptionSelected,
+        tax_id: taxSelected === '' ? null : taxSelected,
+        gratuity_id: gratuitesSelected === '' ? null : gratuitesSelected,
         amount: +values.gratuity_percentage,
-        based_on_id: basedOnSelected,
+        based_on_id: basedOnSelected === '' ? null : basedOnSelected,
         tour_id: id,
-        paid_by_id: paidBySelected,
-        payment_method_id: methodSelected,
-        payment_due_id: dueSelected,
-        when_id: whenSelected,
-        payment_event_id: eventSelected,
+        paid_by_id: paidBySelected === '' ? null : paidBySelected,
+        // payment_method_id: methodSelected,
+        payment_due_id: dueSelected === '' ? null : dueSelected,
+        when_id: whenSelected === '' ? null : whenSelected,
+        payment_event_id: eventSelected === '' ? null : eventSelected,
+        payment_methods: methodSelected,
       };
 
-      if (!dataEdit.id) {
+      if (!dataEdit?.id) {
+        debugger
         postPaymentsNewAPI(data)
           .then((resp) => {
             // console.log(resp.data);
@@ -276,7 +282,8 @@ const PaymentsToursModal = ({
                     type="select"
                     name=""
                     onChange={(e) => {
-                      setGratuitesTypeSelected(e.target.value);
+                      setGratuitesTypeSelected(+e.target.value);
+                      console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}
@@ -350,7 +357,8 @@ const PaymentsToursModal = ({
                     type="select"
                     name=""
                     onChange={(e) => {
-                      setPaymentOptionSelected(e.target.value);
+                      setPaymentOptionSelected(+e.target.value);
+                      console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}
@@ -375,216 +383,226 @@ const PaymentsToursModal = ({
                 </div>
               </div>
             </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-label">Amount</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15"
-                      id="amountTooltip"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={amountTooltip}
-                      target="amountTooltip"
-                      style={{ textAlign: "left" }}
-                      toggle={() => {
-                        setamountTooltip(!amountTooltip);
-                      }}
-                    >
-                    The fixed amount or percentage of the payment that will be made.  This option is dependent on the option chosen in the previous drop-down.
-                    </Tooltip>
+            {(gratuitesTypeSelected !== 1 || paymentOptionSelected !== 3) &&
+            !(gratuitesTypeSelected === 1 && paymentOptionSelected === 3) ? (
+              <>
+                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                  <div className="form-outline mb-2">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Amount</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="amountTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={amountTooltip}
+                          target="amountTooltip"
+                          style={{ textAlign: "left" }}
+                          toggle={() => {
+                            setamountTooltip(!amountTooltip);
+                          }}
+                        >
+                          The fixed amount or percentage of the payment that
+                          will be made. This option is dependent on the option
+                          chosen in the previous drop-down.
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      {paymentOptionSelected != 2 &&
+                      paymentOptionSelected != 5 ? (
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          $
+                        </span>
+                      ) : null}
+                      <Input
+                        name="gratuity_percentage"
+                        placeholder=""
+                        type="number"
+                        onChange={validationType.handleChange}
+                        value={validationType.values.gratuity_percentage || ""}
+                        invalid={
+                          validationType.touched.gratuity_percentage &&
+                          validationType.errors.gratuity_percentage
+                            ? true
+                            : false
+                        }
+                      />
+                      {paymentOptionSelected == "2" ||
+                      paymentOptionSelected == "5" ? (
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          %
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-                <div className="input-group">
-                  {paymentOptionSelected != 2 && paymentOptionSelected != 5 ? (
-                    <span
-                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                      id="basic-addon1"
-                      style={{ fontSize: "0.85em" }}
-                    >
-                      $
-                    </span>
-                  ) : null}
-                  <Input
-                    name="gratuity_percentage"
-                    placeholder=""
-                    type="number"
-                    onChange={validationType.handleChange}
-                    value={validationType.values.gratuity_percentage || ""}
-                    invalid={
-                      validationType.touched.gratuity_percentage &&
-                      validationType.errors.gratuity_percentage
-                        ? true
-                        : false
-                    }
-                  />
-                  {paymentOptionSelected == "2" ||
-                  paymentOptionSelected == "5" ? (
-                    <span
-                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                      id="basic-addon1"
-                      style={{ fontSize: "0.85em" }}
-                    >
-                      %
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            </Col>
-            {paymentOptionSelected !== "1" ? (
-              <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                <div className="form-outline mb-2" id="voucher_currency">
-                  <Label className="form-label">Based on</Label>
-                  <div className="input-group">
-                    <Input
-                      type="select"
-                      name=""
-                      onChange={(e) => {
-                        setBasedOnSelected(e.target.value);
-                      }}
-                      onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
-                    >
-                      <option value="">Select....</option>
-                      {map(basedOnData, (based, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={based.id}
-                            selected={
-                              dataEdit && dataEdit.based_on_id
-                                ? based.id === dataEdit.based_on_id
-                                : false
-                            }
-                          >
-                            {based.name}
-                          </option>
-                        );
-                      })}
-                    </Input>
+                </Col>
+                {paymentOptionSelected !== "1" ? (
+                  <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                    <div className="form-outline mb-2" id="voucher_currency">
+                      <Label className="form-label">Based on</Label>
+                      <div className="input-group">
+                        <Input
+                          type="select"
+                          name=""
+                          onChange={(e) => {
+                            setBasedOnSelected(e.target.value);
+                          }}
+                          onBlur={validationType.handleBlur}
+                          //   value={validationType.values.department || ""}
+                        >
+                          <option value="">Select....</option>
+                          {map(basedOnData, (based, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={based.id}
+                                selected={
+                                  dataEdit && dataEdit.based_on_id
+                                    ? based.id === dataEdit.based_on_id
+                                    : false
+                                }
+                              >
+                                {based.name}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                      </div>
+                    </div>
+                  </Col>
+                ) : null}
+                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-labe">Taxes</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="taxesTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={taxesTooltip}
+                          target="taxesTooltip"
+                          style={{ textAlign: "left" }}
+                          toggle={() => {
+                            setTaxesTooltip(!taxesTooltip);
+                          }}
+                        >
+                          Does this amount include taxes? "Unspecified" means
+                          that the operator is not charging taxes. The amount is
+                          assumed to be a pre-tax amount but the tax will not be
+                          added.
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setTaxSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                      >
+                        <option value="">Select....</option>
+                        {map(taxData, (tax, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={tax.id}
+                              selected={
+                                dataEdit && dataEdit.tax_id
+                                  ? tax.id === dataEdit.tax_id
+                                  : false
+                              }
+                            >
+                              {tax.name}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
                   </div>
-                </div>
-              </Col>
+                </Col>
+                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-labe">Gratuity</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="gratuityTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={gratuityTooltip}
+                          style={{ textAlign: "left" }}
+                          target="gratuityTooltip"
+                          toggle={() => {
+                            setGratuityTooltip(!gratuityTooltip);
+                          }}
+                        >
+                          Does this amount include a mandatory gratuity amount?
+                          <br />
+                          Included - The amount includes the mandatory gratuity.
+                          <br />
+                          <br />
+                          Not Included - The mount does not include the
+                          mandatory gratuity.
+                          <br />
+                          <br />
+                          Unspecified - The gratuity is not collected in advance
+                          and no specific requirement of the amount is set. It
+                          is up to the customer's discretion on the day of the
+                          tour.
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setGratuitesSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                      >
+                        <option value="">Select....</option>
+                        {map(gratuitesData, (gratuites, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={gratuites.id}
+                              selected={
+                                dataEdit && dataEdit.gratuity_id
+                                  ? gratuites.id === dataEdit.gratuity_id
+                                  : false
+                              }
+                            >
+                              {gratuites.name}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </div>
+                </Col>
+              </>
             ) : null}
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-labe">Taxes</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15 mx-2"
-                      id="taxesTooltip"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={taxesTooltip}
-                      target="taxesTooltip"
-                      style={{ textAlign: "left" }}
-                      toggle={() => {
-                        setTaxesTooltip(!taxesTooltip);
-                      }}
-                    >
-                      Does this amount include taxes? "Unspecified" means that
-                      the operator is not charging taxes. The amount is assumed
-                      to be a pre-tax amount but the tax will not be added.
-                    </Tooltip>
-                  </div>
-                </div>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setTaxSelected(e.target.value);
-                    }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(taxData, (tax, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={tax.id}
-                          selected={
-                            dataEdit && dataEdit.tax_id
-                              ? tax.id === dataEdit.tax_id
-                              : false
-                          }
-                        >
-                          {tax.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
-              </div>
-            </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-labe">Gratuity</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15 mx-2"
-                      id="gratuityTooltip"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={gratuityTooltip}
-                      style={{ textAlign: "left" }}
-                      target="gratuityTooltip"
-                      toggle={() => {
-                        setGratuityTooltip(!gratuityTooltip);
-                      }}
-                    >
-                      Does this amount include a mandatory gratuity amount?
-                      <br />
-                      Included - The amount includes the mandatory gratuity.
-                      <br />
-                      <br />
-                      Not Included - The mount does not include the mandatory
-                      gratuity.
-                      <br />
-                      <br />
-                      Unspecified - The gratuity is not collected in advance and
-                      no specific requirement of the amount is set. It is up to
-                      the customer's discretion on the day of the tour.
-                    </Tooltip>
-                  </div>
-                </div>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setGratuitesSelected(e.target.value);
-                    }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(gratuitesData, (gratuites, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={gratuites.id}
-                          selected={
-                            dataEdit && dataEdit.gratuity_id
-                              ? gratuites.id === dataEdit.gratuity_id
-                              : false
-                          }
-                        >
-                          {gratuites.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
-              </div>
-            </Col>
           </Row>
           <Row>
             <Col
@@ -623,7 +641,9 @@ const PaymentsToursModal = ({
                         setPaidByTooltip(!paidByTooltip);
                       }}
                     >
-                    Who is responsible for making this payment?  Who pays who?  Do we pay the provider, or does the customer pay them directly?  Or does the customer pay us?
+                      Who is responsible for making this payment? Who pays who?
+                      Do we pay the provider, or does the customer pay them
+                      directly? Or does the customer pay us?
                     </Tooltip>
                   </div>
                 </div>
@@ -633,6 +653,7 @@ const PaymentsToursModal = ({
                     name=""
                     onChange={(e) => {
                       setPaidBySelected(e.target.value);
+                      console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}
@@ -644,9 +665,10 @@ const PaymentsToursModal = ({
                           key={index}
                           value={type.id}
                           selected={
-                            dataEdit && dataEdit.paid_by_id
-                              ? type.id === dataEdit.paid_by_id
-                              : false
+                            (dataEdit &&
+                              dataEdit.paid_by_id &&
+                              type.id === dataEdit.paid_by_id) ||
+                            (gratuitesTypeSelected === 1 && type.id === 3)
                           }
                         >
                           {type.name}
@@ -679,32 +701,32 @@ const PaymentsToursModal = ({
                   </div>
                 </div>
                 <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setMethodSelected(e.target.value);
-                    }}
-
+                  <Select
+                    mode="multiple"
+                    allowClear
+                    rows="5"
+                    style={{ width: "100%", paddingTop: "5px" }}
+                    onChange={handleMulti}
+                    defaultValue={methodSelected}
                     //   value={validationType.values.department || ""}
                   >
-                    <option value="">Select....</option>
+                    
                     {map(methodData, (type, index) => {
                       return (
                         <option
                           key={index}
                           value={type.id}
-                          selected={
-                            dataEdit && dataEdit.payment_method_id
-                              ? type.id === dataEdit.payment_method_id
-                              : false
-                          }
+                          // selected={
+                          //   dataEdit && dataEdit.payment_method_id
+                          //     ? type.id === dataEdit.payment_method_id
+                          //     : false
+                          // }
                         >
                           {type.name}
                         </option>
                       );
                     })}
-                  </Input>
+                  </Select>
                 </div>
               </div>
             </Col>
@@ -736,6 +758,7 @@ const PaymentsToursModal = ({
                     name=""
                     onChange={(e) => {
                       setDueSelected(e.target.value);
+                      console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}
@@ -760,114 +783,118 @@ const PaymentsToursModal = ({
                 </div>
               </div>
             </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-labe">When</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15 mx-2"
-                      id="whenTooltip"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={whenTooltip}
-                      style={{ textAlign: "left" }}
-                      target="whenTooltip"
-                      toggle={() => {
-                        setWhenTooltip(!whenTooltip);
-                      }}
-                    >
-                      Does the payment need to be made some days before the tour
-                      date, or some days after the booking date, or on the day
-                      of the tour?
-                    </Tooltip>
-                  </div>
-                </div>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setWhenSelected(e.target.value);
-                    }}
-
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(whenData, (type, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={type.id}
-                          selected={
-                            dataEdit && dataEdit.when_id
-                              ? type.id === dataEdit.when_id
-                              : false
-                          }
+            {dueSelected == 1 || dueSelected == 6 ? null : (
+              <>
+                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-labe">When</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="whenTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={whenTooltip}
+                          style={{ textAlign: "left" }}
+                          target="whenTooltip"
+                          toggle={() => {
+                            setWhenTooltip(!whenTooltip);
+                          }}
                         >
-                          {type.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
-              </div>
-            </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-labe">Event</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15 mx-2"
-                      id="eventTooltip"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={eventTooltip}
-                      style={{ textAlign: "left" }}
-                      target="eventTooltip"
-                      toggle={() => {
-                        setEventTooltip(!eventTooltip);
-                      }}
-                    >
-                      Choose if the time frame is related to the booking date or
-                      the tour date. For example, 30 days before the tour date,
-                      or 7 days after the booking date.
-                    </Tooltip>
-                  </div>
-                </div>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setEventSelected(e.target.value);
-                    }}
+                          Does the payment need to be made some days before the
+                          tour date, or some days after the booking date, or on
+                          the day of the tour?
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setWhenSelected(e.target.value);
+                        }}
 
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(eventData, (type, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={type.id}
-                          selected={
-                            dataEdit && dataEdit.payment_event_id
-                              ? type.id === dataEdit.payment_event_id
-                              : false
-                          }
+                        //   value={validationType.values.department || ""}
+                      >
+                        <option value="">Select....</option>
+                        {map(whenData, (type, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                dataEdit && dataEdit.when_id
+                                  ? type.id === dataEdit.when_id
+                                  : false
+                              }
+                            >
+                              {type.name}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </div>
+                </Col>
+                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-labe">Event</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="eventTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={eventTooltip}
+                          style={{ textAlign: "left" }}
+                          target="eventTooltip"
+                          toggle={() => {
+                            setEventTooltip(!eventTooltip);
+                          }}
                         >
-                          {type.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
-              </div>
-            </Col>
+                          Choose if the time frame is related to the booking
+                          date or the tour date. For example, 30 days before the
+                          tour date, or 7 days after the booking date.
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setEventSelected(e.target.value);
+                        }}
+
+                        //   value={validationType.values.department || ""}
+                      >
+                        <option value="">Select....</option>
+                        {map(eventData, (type, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                dataEdit && dataEdit.payment_event_id
+                                  ? type.id === dataEdit.payment_event_id
+                                  : false
+                              }
+                            >
+                              {type.name}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </div>
+                </Col>
+              </>
+            )}
           </Row>
 
           <Row

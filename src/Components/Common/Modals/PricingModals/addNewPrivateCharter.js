@@ -624,7 +624,26 @@ const AddNewPrivateCharter = ({
         //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
         // then this field would be calculated as:
         // [Net Price] / [1.16]
+
+        validationType.setFieldValue(
+          "p_gratuity",
+          ""
+        );
+
+        let totalPriceInput = +netPriceInput
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
         baseAmountInput = setDecimalFormat(netPriceInput / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_id === 2) ||
         (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
@@ -636,60 +655,113 @@ const AddNewPrivateCharter = ({
         // Tax - No . Gratuity - No
         // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
         // then this will be a straight reference, no calculation needed.
-        baseAmountInput = setDecimalFormat(netPriceInput);
-      } else if (
-        (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 3) ||
-        (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 4)
-      ) {
+
+        validationType.setFieldValue(
+          "p_gratuity",
+          ""
+        );
+
+        baseAmountInput = setDecimalFormat(+netPriceInput);
+
+        ivaInput = baseAmountInput * .16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 3) {
+        // Tax - Yes . Gratuity - Yes - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+        let totalPriceInput = +netPriceInput
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(
+          netPriceInput / 1.16
+        );
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        gratuityInput = +tourData.gratuity;
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 4) {
         // Tax - Yes . Gratuity - Yes
         // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
         baseAmountInput = setDecimalFormat(
           netPriceInput / 1.16 / (1 + tourData.gratuity / 100)
         );
+
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+baseAmountInput + +ivaInput)
+        );
       } else {
         baseAmountInput = setDecimalFormat(netPriceInput);
+
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+baseAmountInput + +ivaInput)
+        );
       }
       validationType.setFieldValue(
         "p_base_amount",
         setDecimalFormat(baseAmountInput)
       );
 
-      ivaInput = 0;
-      if(tourData.tax_id === 1) {
-        ivaInput = baseAmountInput * 0.16;
-      }
-      validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
-      validationType.setFieldValue(
-        "p_total_price",
-        setDecimalFormat(+baseAmountInput + +ivaInput)
-      );
+      // ivaInput = 0;
+      // if(tourData.tax_id === 1) {
+      //   ivaInput = baseAmountInput * 0.16;
+      // }
+      // validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+      // validationType.setFieldValue(
+      //   "p_total_price",
+      //   setDecimalFormat(+baseAmountInput + +ivaInput)
+      // );
       /* 
       The dollar amount of Gratuity required by the operator based on the Payment Settings.  
       If "Not Specified" is chosen in the Payment Settings, this will show as zero.  
       While gratuity is encouraged no mandatory amount is dictated by the operator to be collected, 
       the customer can decide on the day of the tour what they will pay.
        */
-      if (tourData.gratuity_type_id === 3) {
-        gratuityInput = +tourData.gratuity;
-      }
-      if (tourData.gratuity_type_id === 4) {
-        gratuityInput = (+tourData.gratuity / 100) * +netPriceInput;
-      }
-      if (tourData.gratuity_type_id === 5) {
-        gratuityInput =
-          (+tourData.gratuity / 100) * +netPriceInput + +estCommissionInput;
-      }
-      if (tourData.gratuity_type_id === 6) {
-        gratuityInput = 0;
-      }
-      validationType.setFieldValue(
-        "p_gratuity",
-        setDecimalFormat(gratuityInput)
-      );
-      validationType.setFieldValue(
-        "p_final_total",
-        setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
-      );
+      // if (tourData.gratuity_type_id === 3) {
+      //   gratuityInput = +tourData.gratuity;
+      // }
+      // if (tourData.gratuity_type_id === 4) {
+      //   gratuityInput = (+tourData.gratuity / 100) * +netPriceInput;
+      // }
+      // if (tourData.gratuity_type_id === 5) {
+      //   gratuityInput =
+      //     (+tourData.gratuity / 100) * +netPriceInput + +estCommissionInput;
+      // }
+      // if (tourData.gratuity_type_id === 6) {
+      //   gratuityInput = "";
+      // }
+      // validationType.setFieldValue(
+      //   "p_gratuity",
+      //   setDecimalFormat(gratuityInput)
+      // );
+      // validationType.setFieldValue(
+      //   "p_final_total",
+      //   setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
+      // );
     }
 
     if (
@@ -699,12 +771,12 @@ const AddNewPrivateCharter = ({
       rateInput !== "" &&
       publicPriceInput > 0
     ) {
-      netPriceInputRate = providerPriceInput * (rateInput / 100);
+      netPriceInputRate = providerPriceInput * (1 - rateInput / 100);
       validationType.setFieldValue(
         "net_rate",
         setDecimalFormat(netPriceInputRate)
       );
-      providerCommissionInputRate = providerPriceInput - netPriceInputRate;
+      providerCommissionInputRate = providerPriceInput * (rateInput / 100);
       validationType.setFieldValue(
         "provider_commission",
         setDecimalFormat(providerCommissionInputRate)
@@ -719,7 +791,27 @@ const AddNewPrivateCharter = ({
         //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
         // then this field would be calculated as:
         // [Net Price] / [1.16]
+
+        validationType.setFieldValue(
+          "p_gratuity",
+          ""
+        );
+
+        let totalPriceInput = +netPriceInputRate
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
         baseAmountInput = setDecimalFormat(netPriceInputRate / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_id === 2) ||
         (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
@@ -731,63 +823,78 @@ const AddNewPrivateCharter = ({
         // Tax - No . Gratuity - No
         // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
         // then this will be a straight reference, no calculation needed.
+
+        validationType.setFieldValue(
+          "p_gratuity",
+          ""
+        );
+
         baseAmountInput = setDecimalFormat(netPriceInputRate);
-      } else if (
-        (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 3) ||
-        (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 4)
-      ) {
+
+        ivaInput = baseAmountInput * .16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 3) {
+        // Tax - Yes . Gratuity - Yes - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+        let totalPriceInput = +netPriceInputRate
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(
+          netPriceInputRate / 1.16
+        );
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        gratuityInput = +tourData.gratuity;
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 4) {
         // Tax - Yes . Gratuity - Yes
         // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
         baseAmountInput = setDecimalFormat(
           netPriceInputRate / 1.16 / (1 + tourData.gratuity / 100)
         );
+
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+baseAmountInput + +ivaInput)
+        );
       } else {
         baseAmountInput = setDecimalFormat(netPriceInputRate);
+
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+baseAmountInput + +ivaInput)
+        );
       }
       validationType.setFieldValue(
         "p_base_amount",
         setDecimalFormat(baseAmountInput)
       );
-
-      ivaInput = 0;
-      if(tourData.tax_id === 1) {
-        ivaInput = baseAmountInput * 0.16;
-      }
-      validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
-
-      validationType.setFieldValue(
-        "p_total_price",
-        setDecimalFormat(+baseAmountInput + +ivaInput)
-      );
-      /* 
-      The dollar amount of Gratuity required by the operator based on the Payment Settings.  
-      If "Not Specified" is chosen in the Payment Settings, this will show as zero.  
-      While gratuity is encouraged no mandatory amount is dictated by the operator to be collected, 
-      the customer can decide on the day of the tour what they will pay.
-       */
-      if (tourData.gratuity_type_id === 3) {
-        gratuityInput = +tourData.gratuity;
-      }
-      if (tourData.gratuity_type_id === 4) {
-        gratuityInput = (+tourData.gratuity / 100) * +netPriceInputRate;
-      }
-      if (tourData.gratuity_type_id === 5) {
-        gratuityInput =
-          (+tourData.gratuity / 100) * +netPriceInputRate +
-          +providerCommissionInputRate;
-      }
-      if (tourData.gratuity_type_id === 6) {
-        gratuityInput = 0;
-      }
-      validationType.setFieldValue(
-        "p_gratuity",
-        setDecimalFormat(gratuityInput)
-      );
-      validationType.setFieldValue(
-        "p_final_total",
-        setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
-      );
     }
+
     if (
       priceSheetSelected === "3" &&
       providerPriceInput !== "" &&
@@ -814,7 +921,26 @@ const AddNewPrivateCharter = ({
         //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
         // then this field would be calculated as:
         // [Net Price] / [1.16]
+
+        validationType.setFieldValue(
+          "p_gratuity",
+          ""
+        );
+
+        let totalPriceInput = +netPriceInputCommision
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
         baseAmountInput = setDecimalFormat(netPriceInputCommision / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_id === 2) ||
         (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
@@ -826,63 +952,75 @@ const AddNewPrivateCharter = ({
         // Tax - No . Gratuity - No
         // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
         // then this will be a straight reference, no calculation needed.
-        baseAmountInput = setDecimalFormat(netPriceInputCommision);
-      } else if (
-        (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 3) ||
-        (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 4)
-      ) {
+
+        validationType.setFieldValue(
+          "p_gratuity",
+          ""
+        );
+
+        baseAmountInput = setDecimalFormat(+netPriceInputCommision);
+
+        ivaInput = baseAmountInput * .16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 3) {
+        // Tax - Yes . Gratuity - Yes - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+        let totalPriceInput = +netPriceInputCommision
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(
+          netPriceInputCommision / 1.16
+        );
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        gratuityInput = +tourData.gratuity;
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (tourData.tax_id === 1 && tourData.gratuity_id === 1 && tourData.gratuity_type_id === 4) {
+        // Tax - Yes . Gratuity - Yes
         // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
         baseAmountInput = setDecimalFormat(
           netPriceInputCommision / 1.16 / (1 + tourData.gratuity / 100)
         );
+
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+baseAmountInput + +ivaInput)
+        );
       } else {
         baseAmountInput = setDecimalFormat(netPriceInputCommision);
+
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+baseAmountInput + +ivaInput)
+        );
       }
       validationType.setFieldValue(
         "p_base_amount",
         setDecimalFormat(baseAmountInput)
-      );
-
-      ivaInput = 0;
-      if(tourData.tax_id === 1) {
-        ivaInput = baseAmountInput * 0.16;
-      }
-      validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
-
-      validationType.setFieldValue(
-        "p_total_price",
-        setDecimalFormat(+baseAmountInput + +ivaInput)
-      );
-      /* 
-      The dollar amount of Gratuity required by the operator based on the Payment Settings.  
-      If "Not Specified" is chosen in the Payment Settings, this will show as zero.  
-      While gratuity is encouraged no mandatory amount is dictated by the operator to be collected, 
-      the customer can decide on the day of the tour what they will pay.
-       */
-      if (tourData.gratuity_type_id === 3) {
-        gratuityInput = +tourData.gratuity;
-      }
-      if (tourData.gratuity_type_id === 4) {
-        gratuityInput = (+tourData.gratuity / 100) * +netPriceInputCommision;
-      }
-      if (tourData.gratuity_type_id === 5) {
-        gratuityInput =
-          (+tourData.gratuity / 100) * +netPriceInputCommision +
-          +commissionFixedInput;
-      }
-      if (tourData.gratuity_type_id === 6) {
-        gratuityInput = 0;
-      }
-      if (tourData.gratuity_type_id === 6) {
-        gratuityInput = 0;
-      }
-      validationType.setFieldValue(
-        "p_gratuity",
-        setDecimalFormat(gratuityInput)
-      );
-      validationType.setFieldValue(
-        "p_final_total",
-        setDecimalFormat(+baseAmountInput + +ivaInput + +gratuityInput)
       );
     }
     ourPricingCalc();
