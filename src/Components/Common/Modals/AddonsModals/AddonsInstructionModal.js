@@ -48,7 +48,7 @@ const AddonsInstructionModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // console.log(initialData);
+  //console.log(initialData);
   useEffect(() => {
     if (initialData) {
       setTitleExample(initialData.addons_title);

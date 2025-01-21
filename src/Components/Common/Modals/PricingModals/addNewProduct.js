@@ -48,7 +48,7 @@ const AddNewProductPricing = ({
   //edit data
   const [dataEdit, setDataEdit] = useState();
   const [loadingData, setLoadingData] = useState(true);
-  console.log('check', dataEdit)
+  // console.log('check', dataEdit)
   useEffect(() => {
     if (id) {
       getPriceAPI(id).then((resp) => {

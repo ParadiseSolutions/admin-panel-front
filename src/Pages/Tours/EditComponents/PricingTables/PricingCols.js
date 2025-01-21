@@ -205,7 +205,7 @@ const ActiveAddon = (cell) => {
 };
 const ActiveRelated = (cell) => {
   const id = cell.row.original.id;
-  console.log(cell.row.original.related_active)
+  // console.log(cell.row.original.related_active)
   const Offsymbol = () => {
     return (
       <div

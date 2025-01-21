@@ -37,7 +37,7 @@ const ResetPassword = () => {
       }),
      }),
      onSubmit: (values) => {
-      //  console.log("values", values);
+      //console.log("values", values);
        let data = {
         token: token,
         password: values.password,
@@ -50,12 +50,12 @@ const ResetPassword = () => {
           }
         })
         .catch((error) => {
-          // console.log(error);
+          //console.log(error);
         });
      },
    });
   // const onSubmit = (values) => {
-  //   console.log(values);
+  //console.log(values);
 
   //   let data = {
   //     token: token,
@@ -69,7 +69,7 @@ const ResetPassword = () => {
   //       }
   //     })
   //     .catch((error) => {
-  //       console.log(error);
+  //console.log(error);
   //       setcustom_div2(true)
   //     });
   // };

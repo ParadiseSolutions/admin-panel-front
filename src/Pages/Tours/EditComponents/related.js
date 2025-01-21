@@ -79,7 +79,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          console.log(cellProps.row)
+          // console.log(cellProps.row)
           return (
             <>
             <a href={`${cellProps.row.original.admin_panel_link}`} target="_blank" className="text-paradise" rel="noreferrer">{cellProps.row.original.related_tour_id}</a>

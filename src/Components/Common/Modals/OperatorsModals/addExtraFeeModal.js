@@ -97,7 +97,7 @@ const AddExtraFeeModal = ({
         price_type: priceTypeSelected,
         optional: optionalCheck === true ? 1 : 0,
       };
-      console.log(data);
+      // console.log(data);
       if (dataEdit.length === 0) {
         postExtraFee(data)
         .then((resp) => {

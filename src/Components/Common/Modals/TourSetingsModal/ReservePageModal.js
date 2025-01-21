@@ -59,8 +59,8 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
       setSpecialInstruction(initialData.checkbox_instructions !== null ? initialData.checkbox_instructions : "");
     }
   }, [initialData]);
-console.log(initialData)
-console.log(instructionPopUp)
+// console.log(initialData)
+// console.log(instructionPopUp)
   const validationType = useFormik({
     enableReinitialize: true,
     initialValues: {

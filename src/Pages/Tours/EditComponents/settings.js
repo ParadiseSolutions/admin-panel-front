@@ -120,7 +120,7 @@ setActiveDep(!activeDep)
   //modal reserve page
   const [reserveModal, setReserveModal] = useState(false);
 
-  console.log("template id", tourSettings);
+  // console.log("template id", tourSettings);
   //form creation
 
   // console.log('id',availableFromIDs)
@@ -188,7 +188,7 @@ setActiveDep(!activeDep)
         payment_request: activeDep === true ? 1 : 0
       };
 
-      //  console.log('data a enviar', data)
+      //console.log('data a enviar', data)
 
       putSettingsAPI(id, data)
         .then((resp) => {

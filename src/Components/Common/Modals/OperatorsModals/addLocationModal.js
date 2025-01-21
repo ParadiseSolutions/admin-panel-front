@@ -72,7 +72,7 @@ const AddLocationModal = ({
     }
   }, [dataEdit]);
 
-  console.log('data edit de tour',dataEdit);
+  // console.log('data edit de tour',dataEdit);
 
   // console.log(dataEdit.length);
   const validationType = useFormik({
@@ -104,7 +104,7 @@ const AddLocationModal = ({
         image_url:values.image_url ? values.image_url : '',
         meeting_instructions: values.meeting_instructions
       };
-      console.log(data);
+      // console.log(data);
       if (dataEdit.length === 0) {
         postLocationFee(data)
           .then((resp) => {
