@@ -202,7 +202,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
       // setRest1(restrictionList[3]?.restriction_4)
     }
   }, [restrictionList]);
-  console.log("locations", meetingLocationTable);
+  // console.log("locations", meetingLocationTable);
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed

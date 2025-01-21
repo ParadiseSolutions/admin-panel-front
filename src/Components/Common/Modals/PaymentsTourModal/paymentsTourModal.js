@@ -283,7 +283,7 @@ const PaymentsToursModal = ({
                     name=""
                     onChange={(e) => {
                       setGratuitesTypeSelected(+e.target.value);
-                      console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}
@@ -358,7 +358,7 @@ const PaymentsToursModal = ({
                     name=""
                     onChange={(e) => {
                       setPaymentOptionSelected(+e.target.value);
-                      console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}
@@ -653,7 +653,7 @@ const PaymentsToursModal = ({
                     name=""
                     onChange={(e) => {
                       setPaidBySelected(e.target.value);
-                      console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}
@@ -758,7 +758,7 @@ const PaymentsToursModal = ({
                     name=""
                     onChange={(e) => {
                       setDueSelected(e.target.value);
-                      console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
 
                     //   value={validationType.values.department || ""}

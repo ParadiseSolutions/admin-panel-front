@@ -510,7 +510,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="tax_select_1"
                     onChange={(e) => {
                       setTaxSelected(e.target.value);
                     }}
@@ -561,10 +561,10 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="gratuity_select_1"
                     onChange={(e) => {
                       setGratuitesSelected(e.target.value);
-                      console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
@@ -626,13 +626,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="gratuity_type_select_1"
                     onChange={(e) => {
                       setGratuitesTypeSelected(e.target.value);
-                      console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
-                    value={gratuitesSelected == 2 ? "" : gratuitesTypeSelected}
+                    value={gratuitesSelected == 3 ? "" : gratuitesTypeSelected}
                     disabled={gratuitesSelected == 3 ? true : false}
                   >
                     <option value="">Select....</option>
@@ -715,6 +715,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     placeholder=""
                     type="number"
                     onChange={validationType.handleChange}
+                    onBlur={(e) => {
+                      const value = e.target.value || "";
+                      validationType.setFieldValue(
+                        "gratuity_percentage",
+                        setDecimalFormat(value)
+                      );
+                    }}
                     value={validationType.values.gratuity_percentage || ""}
                     disabled={
                       gratuitesTypeSelected === "6" || gratuitesSelected == 3
@@ -766,7 +773,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="based_on_select_1"
                     onChange={(e) => {
                       setBasedOnSelected(e.target.value);
                     }}
@@ -778,7 +785,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         : false
                     }
                     onBlur={validationType.handleBlur}
-                    value={gratuitesSelected == 2 ? "" : basedOnSelected}
+                    value={gratuitesSelected == 3 ? "" : basedOnSelected}
                   >
                     <option value="">Select....</option>
                     {map(basedOnData, (based, index) => {
@@ -826,12 +833,14 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="apply_select_1"
                     onChange={(e) => {
                       setApplySelected(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
-                    disabled={gratuitesSelected == 3 ? true : false}
+                    disabled={gratuitesTypeSelected === "3" ||
+                      gratuitesTypeSelected === "6" ||
+                      gratuitesSelected == 3 ? true : false}
                     value={gratuitesSelected == 2 ? "" : applySelected}
                   >
                     <option value="">Select....</option>
@@ -879,7 +888,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="currency_select_1"
                     onChange={(e) => {
                       setCurrencySelected(e.target.value);
                     }}
@@ -931,27 +940,42 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     </Tooltip>
                   </div>
                 </div>
-                <Input
-                  name="exchange_rate"
-                  placeholder="$0.00"
-                  type="number"
-                  disabled={currencySelected === "USD"}
-                  onChange={validationType.handleChange}
-                  onBlur={validationType.handleBlur}
-                  value={validationType.values.exchange_rate || ""}
-                  invalid={
-                    validationType.touched.exchange_rate &&
-                    validationType.errors.exchange_rate
-                      ? true
-                      : false
-                  }
-                />
-                {validationType.touched.exchange_rate &&
-                validationType.errors.exchange_rate ? (
-                  <FormFeedback type="invalid">
-                    {validationType.errors.exchange_rate}
-                  </FormFeedback>
-                ) : null}
+                <div className="input-group">
+                  <span
+                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                      id="basic-addon1"
+                      style={{ fontSize: "0.85em" }}
+                    >
+                      $
+                  </span>
+                  <Input
+                    name="exchange_rate"
+                    placeholder=""
+                    type="number"
+                    disabled={currencySelected === "USD"}
+                    onChange={validationType.handleChange}
+                    onBlur={(e) => {
+                      const value = e.target.value || "";
+                      validationType.setFieldValue(
+                        "exchange_rate",
+                        setDecimalFormat(value)
+                      );
+                    }}
+                    value={validationType.values.exchange_rate || ""}
+                    invalid={
+                      validationType.touched.exchange_rate &&
+                      validationType.errors.exchange_rate
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.exchange_rate &&
+                  validationType.errors.exchange_rate ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.exchange_rate}
+                    </FormFeedback>
+                  ) : null}
+                </div>
               </div>
             </Col>
           </Row>

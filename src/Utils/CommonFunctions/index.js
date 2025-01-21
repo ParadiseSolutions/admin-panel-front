@@ -2,11 +2,11 @@ import { round } from "lodash";
 
 export const setDecimalFormat = (currentValue) => {
     if(currentValue !== null && !isNaN(currentValue) && currentValue !== "") {
-        currentValue = parseFloat(currentValue).toFixed(2)
+        currentValue = parseFloat(currentValue)
     } else {
         currentValue = "";
     }
-    return isNaN(currentValue) ? "" : currentValue
+    return isNaN(currentValue) || currentValue === "" ? "" : currentValue.toFixed(2)
 }
 
 export const setDecimalFormatVBalance = (currentValue, currencySelected) => {

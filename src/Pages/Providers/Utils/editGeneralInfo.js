@@ -111,8 +111,8 @@ const EditGeneralInformation = ({ data }) => {
     }
   }, [initialData]);
 
-  // console.log(initialData);
-  // console.log(notification);
+  //console.log(initialData);
+  //console.log(notification);
 
   function togglecol1() {
     setcol1(!col1);
@@ -126,7 +126,7 @@ const EditGeneralInformation = ({ data }) => {
   }, [dispatch]);
   const dataAreas = useSelector((state) => state.serviceArea.serviceArea.data);
 
-  //  console.log('areas',dataAreas)
+  //console.log('areas',dataAreas)
   useEffect(() => {
     if (initialData && dataAreas) {
       let optionsArea = [];

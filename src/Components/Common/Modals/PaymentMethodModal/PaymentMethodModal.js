@@ -110,7 +110,7 @@ const PaymentMethodModal = ({
     //   // ),
     // }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
 
       let data = {};
       switch (paymentTypeSelected) {
@@ -189,7 +189,7 @@ const PaymentMethodModal = ({
           // Acción por defecto si no se cumple ninguno de los casos
           break;
       }
-      console.log(data);
+      // console.log(data);
       // let data = {
       //   foreign_key: id,
       //   title: values.title,

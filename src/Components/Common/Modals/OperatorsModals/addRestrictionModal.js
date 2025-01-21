@@ -73,7 +73,7 @@ const AddRestrictionModal = ({
     }
   }, [dataEdit]);
 
-  console.log(dataEdit);
+  // console.log(dataEdit);
 
   // console.log(dataEdit.length);
   const validationType = useFormik({
@@ -97,7 +97,7 @@ const AddRestrictionModal = ({
         id: id,
         restriction: values.restriction,
       };
-      console.log(data);
+      // console.log(data);
       if (dataEdit.length === 0) {
         postRestriction(data)
           .then((resp) => {
