@@ -240,10 +240,10 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-pencil font-size-18"
-                id="edittooltip"
+                id="edit_tooltip"
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="edittooltip">
+              <UncontrolledTooltip placement="top" target="edit_tooltip">
                 Edit
               </UncontrolledTooltip>
             </div>
