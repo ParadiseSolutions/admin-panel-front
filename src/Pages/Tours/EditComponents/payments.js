@@ -216,8 +216,11 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           let rowData = cellProps.row.original;
           return (
             <>
+              {rowData.payment_option_id === 3 ||
+              rowData.payment_option_id === 6
+                ? ``
+                : null}
               {rowData.payment_option_id === 1 ||
-              rowData.payment_option_id === 3 ||
               rowData.payment_option_id === 4
                 ? `$ ${setDecimalFormat(rowData.amount)}`
                 : null}

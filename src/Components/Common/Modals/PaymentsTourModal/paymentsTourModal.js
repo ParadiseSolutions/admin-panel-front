@@ -111,7 +111,7 @@ const PaymentsToursModal = ({
         amount: +values.gratuity_percentage,
         based_on_id: basedOnSelected === '' ? null : basedOnSelected,
         tour_id: id,
-        paid_by_id: paidBySelected === '' ? null : paidBySelected,
+        paid_by_id: paidBySelected === '' ? (gratuitesTypeSelected === 1 ? 3 : null) : paidBySelected,
         // payment_method_id: methodSelected,
         payment_due_id: dueSelected === '' ? null : dueSelected,
         when_id: whenSelected === '' ? null : whenSelected,
@@ -178,7 +178,11 @@ const PaymentsToursModal = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ New Payment</h1>
+        {
+          (!dataEdit) ? (
+          <h1 className="modal-title mt-0 text-white">+ New Payment</h1>
+          ):<h1 className="modal-title mt-0 text-white">Edit Payment</h1>
+        }
 
         <button
           onClick={() => {
@@ -383,8 +387,7 @@ const PaymentsToursModal = ({
                 </div>
               </div>
             </Col>
-            {(gratuitesTypeSelected !== 1 || paymentOptionSelected !== 3) &&
-            !(gratuitesTypeSelected === 1 && paymentOptionSelected === 3) ? (
+            {(paymentOptionSelected !== 6 && paymentOptionSelected !== 3) ? (
               <>
                 <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
                   <div className="form-outline mb-2">
