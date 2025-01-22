@@ -102,14 +102,14 @@ const AddNewPrivateCharter = ({
       p_est_rate: dataEdit ? dataEdit.p_est_rate : "",
       p_est_commission: dataEdit ? dataEdit.p_est_commission : "",
       p_base_amount: dataEdit ? dataEdit.p_base_amount : "",
-      p_iva: dataEdit ? dataEdit.p_iva : "",
+      p_iva: dataEdit ? setDecimalFormat(dataEdit.p_iva) : "",
       p_total_price: dataEdit ? dataEdit.p_total_price : "",
       p_gratuity: dataEdit ? dataEdit.p_gratuity : "",
       p_final_total: dataEdit ? dataEdit.p_final_total : "",
       provider_commission: dataEdit ? dataEdit.provider_commission : "",
       p_commission: dataEdit ? dataEdit.p_commission : "",
       t_base_amount: dataEdit ? dataEdit.t_base_amount : "",
-      t_iva: dataEdit ? dataEdit.t_iva : "",
+      t_iva: dataEdit ? setDecimalFormat(dataEdit.t_iva) : "",
       t_total_price: dataEdit ? dataEdit.t_total_price : "",
       t_gratuity: dataEdit ? dataEdit.t_gratuity : "",
       t_final_total: dataEdit ? dataEdit.t_final_total : "",
@@ -4735,6 +4735,7 @@ This is based on the Payment Settings.  If "Unspecified" is chosen, then this fi
                               name="t_total_price"
                               placeholder=""
                               type="text"
+                              disabled={true}
                               onChange={validationType.handleChange}
                               // onBlur={(e) => {
                               //   const value = e.target.value || "";
