@@ -451,7 +451,7 @@ const URL = ({ tourData, toggle }) => {
           outline
           className="waves-effect waves-light me-3"
           type="button"
-          onClick={() => toggle("3")}
+          onClick={() => toggle("4")}
         >
           <i className="uil-angle-double-left" />
           Previous
@@ -459,7 +459,7 @@ const URL = ({ tourData, toggle }) => {
         <Button
           type="button"
           className="font-16 btn-block btn-orange"
-          onClick={() => toggle("5")}
+          onClick={() => toggle("6")}
         >
           Continue
           <i className="uil-angle-double-right mx-1 " />

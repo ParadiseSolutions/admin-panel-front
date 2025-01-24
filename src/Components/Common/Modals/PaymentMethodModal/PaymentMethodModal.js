@@ -30,6 +30,7 @@ import {
   getAccountTypePM,
   getCountryPM,
   getCurrencyPM,
+  getExtraFeePM,
 } from "../../../../Utils/API/PaymentsMethods";
 
 const PaymentMethodModal = ({
@@ -44,10 +45,12 @@ const PaymentMethodModal = ({
   const [currencySelected, setCurrencySelected] = useState(0);
   const [countryCodeSelected, setCountryCodeSelected] = useState("");
   const [accountTypeSelected, setAccountTypeSelected] = useState(0);
+  const [extraFeeSelected, setExtraFeeSelected] = useState(0);
 
   const [countryData, setCountryData] = useState([]);
   const [currencyData, setCurrencyData] = useState([]);
   const [accountTypeData, setAccountTypeData] = useState([]);
+  const [extraFeeData, setExtraFeeData] = useState([]);
 
   useEffect(() => {
     getCountryPM().then((response) => {
@@ -58,6 +61,9 @@ const PaymentMethodModal = ({
     });
     getAccountTypePM().then((response) => {
       setAccountTypeData(response.data.data);
+    });
+    getExtraFeePM().then((response) => {
+      setExtraFeeData(response.data.data);
     });
   }, []);
 
@@ -77,17 +83,21 @@ const PaymentMethodModal = ({
       phone_ach: "",
       email_ach: "",
       // Western Union
-      bank_name_WU:'',
-      aba_routing_WU:'',
-      account_number_WU:'',
-      clabe_WU:'',
-      debit_card_WU:'',
-      swift_WU:'',
-      name_WU:'',
-      email_WU:'',
-      country_WU:'',
-      state_WU:'',
-      phone_WU:''
+      bank_name_WU: "",
+      aba_routing_WU: "",
+      account_number_WU: "",
+      clabe_WU: "",
+      debit_card_WU: "",
+      swift_WU: "",
+      name_WU: "",
+      email_WU: "",
+      country_WU: "",
+      state_WU: "",
+      phone_WU: "",
+      // paypal
+      email_PP: "",
+      amount_PP: "",
+      payment_link_PP: "",
     },
     // validationSchema: Yup.object().shape({
     //   // job_title: Yup.string().required("Field required"),
@@ -142,7 +152,7 @@ const PaymentMethodModal = ({
             clabe: null,
           };
           break;
-        // Agregar más casos si es necesario
+          
         case 2:
           data = {
             provider_id: id,
@@ -170,7 +180,7 @@ const PaymentMethodModal = ({
             aba_routing: null,
             account_number: null,
           };
-          
+
           if (countryCodeSelected === 1) {
             data.aba_routing = values.aba_routing_WU;
             data.account_number = values.account_number_WU;
@@ -183,8 +193,37 @@ const PaymentMethodModal = ({
               data.account_type_id = accountTypeSelected;
             }
           }
-         
+
           break;
+
+          case 3:
+            data = {
+              provider_id: id,
+              type_id: paymentTypeSelected,
+              country_id: null,
+              currency_id: null,
+              bank_name: null,
+              bank_country: null,
+              account_name: null,
+              state: null,
+              phone_country: null,
+              phone: null,
+              email: values.email_PP,
+              address: null,
+              postal: null,
+              city: null,
+              routing_number: null,
+              swift: null,
+              account_type_id: null,
+              extrafee_id: extraFeeSelected,
+              amount: values.amount_PP,
+              payment_instruction_id: null,
+              form_url: values.payment_link_PP,
+              clabe: null,
+              aba_routing: null,
+              account_number: null,
+            };
+            break
         default:
           // Acción por defecto si no se cumple ninguno de los casos
           break;
@@ -345,7 +384,14 @@ const PaymentMethodModal = ({
                     />
                   ) : null}
                   {paymentTypeSelected === 5 ? <WireTransferForm /> : null}
-                  {paymentTypeSelected === 3 ? <PaypalForm /> : null}
+                  {paymentTypeSelected === 3 ? (
+                    <PaypalForm
+                      validationType={validationType}
+                      extraFeeData={extraFeeData}
+                      setExtraFeeSelected={setExtraFeeSelected}
+                      extraFeeSelected={extraFeeSelected}
+                    />
+                  ) : null}
                   {paymentTypeSelected === 2 ? <CreditCardForm /> : null}
                   {paymentTypeSelected === 6 ? <ZelleForm /> : null}
                   {paymentTypeSelected === 7 ? <VenmoForm /> : null}

@@ -21,4 +21,10 @@ export const getCurrencyPM = () => {
       headers: options,
     });
   };
+  export const getExtraFeePM = () => {
+    const url = `${API_URL}/provider-payment-methods/extra-fees`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 

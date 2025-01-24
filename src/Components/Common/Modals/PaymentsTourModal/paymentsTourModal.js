@@ -450,7 +450,7 @@ const PaymentsToursModal = ({
                     </div>
                   </div>
                 </Col>
-                {paymentOptionSelected !== "1" ? (
+                { +paymentOptionSelected !== 1 && +paymentOptionSelected !== 4 ? (
                   <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
                     <div className="form-outline mb-2" id="voucher_currency">
                       <Label className="form-label">Based on</Label>
@@ -485,125 +485,130 @@ const PaymentsToursModal = ({
                     </div>
                   </Col>
                 ) : null}
-                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                  <div className="form-outline mb-2" id="voucher_currency">
-                    <div className="d-flex justify-content-between">
-                      <Label className="form-labe">Taxes</Label>
-                      <div>
-                        <i
-                          className="uil-question-circle font-size-15 mx-2"
-                          id="taxesTooltip"
-                        />
-                        <Tooltip
-                          placement="right"
-                          isOpen={taxesTooltip}
-                          target="taxesTooltip"
-                          style={{ textAlign: "left" }}
-                          toggle={() => {
-                            setTaxesTooltip(!taxesTooltip);
-                          }}
-                        >
-                          Does this amount include taxes? "Unspecified" means
-                          that the operator is not charging taxes. The amount is
-                          assumed to be a pre-tax amount but the tax will not be
-                          added.
-                        </Tooltip>
-                      </div>
-                    </div>
-                    <div className="input-group">
-                      <Input
-                        type="select"
-                        name=""
-                        onChange={(e) => {
-                          setTaxSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option value="">Select....</option>
-                        {map(taxData, (tax, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={tax.id}
-                              selected={
-                                dataEdit && dataEdit.tax_id
-                                  ? tax.id === dataEdit.tax_id
-                                  : false
-                              }
+                { !(gratuitesTypeSelected === 1 && (+paymentOptionSelected === 1 || +paymentOptionSelected === 4)) ? (
+                  <>
+                    <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                      <div className="form-outline mb-2" id="voucher_currency">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-labe">Taxes</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15 mx-2"
+                              id="taxesTooltip"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={taxesTooltip}
+                              target="taxesTooltip"
+                              style={{ textAlign: "left" }}
+                              toggle={() => {
+                                setTaxesTooltip(!taxesTooltip);
+                              }}
                             >
-                              {tax.name}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </div>
-                </Col>
-                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                  <div className="form-outline mb-2" id="voucher_currency">
-                    <div className="d-flex justify-content-between">
-                      <Label className="form-labe">Gratuity</Label>
-                      <div>
-                        <i
-                          className="uil-question-circle font-size-15 mx-2"
-                          id="gratuityTooltip"
-                        />
-                        <Tooltip
-                          placement="right"
-                          isOpen={gratuityTooltip}
-                          style={{ textAlign: "left" }}
-                          target="gratuityTooltip"
-                          toggle={() => {
-                            setGratuityTooltip(!gratuityTooltip);
-                          }}
-                        >
-                          Does this amount include a mandatory gratuity amount?
-                          <br />
-                          Included - The amount includes the mandatory gratuity.
-                          <br />
-                          <br />
-                          Not Included - The mount does not include the
-                          mandatory gratuity.
-                          <br />
-                          <br />
-                          Unspecified - The gratuity is not collected in advance
-                          and no specific requirement of the amount is set. It
-                          is up to the customer's discretion on the day of the
-                          tour.
-                        </Tooltip>
+                              Does this amount include taxes? "Unspecified" means
+                              that the operator is not charging taxes. The amount is
+                              assumed to be a pre-tax amount but the tax will not be
+                              added.
+                            </Tooltip>
+                          </div>
+                        </div>
+                        <div className="input-group">
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setTaxSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value="">Select....</option>
+                            {map(taxData, (tax, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={tax.id}
+                                  selected={
+                                    dataEdit && dataEdit.tax_id
+                                      ? tax.id === dataEdit.tax_id
+                                      : false
+                                  }
+                                >
+                                  {tax.name}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
                       </div>
-                    </div>
-                    <div className="input-group">
-                      <Input
-                        type="select"
-                        name=""
-                        onChange={(e) => {
-                          setGratuitesSelected(e.target.value);
-                        }}
-                        onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
-                      >
-                        <option value="">Select....</option>
-                        {map(gratuitesData, (gratuites, index) => {
-                          return (
-                            <option
-                              key={index}
-                              value={gratuites.id}
-                              selected={
-                                dataEdit && dataEdit.gratuity_id
-                                  ? gratuites.id === dataEdit.gratuity_id
-                                  : false
-                              }
+                    </Col>
+                    <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                      <div className="form-outline mb-2" id="voucher_currency">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-labe">Gratuity</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15 mx-2"
+                              id="gratuityTooltip"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={gratuityTooltip}
+                              style={{ textAlign: "left" }}
+                              target="gratuityTooltip"
+                              toggle={() => {
+                                setGratuityTooltip(!gratuityTooltip);
+                              }}
                             >
-                              {gratuites.name}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </div>
-                </Col>
+                              Does this amount include a mandatory gratuity amount?
+                              <br />
+                              Included - The amount includes the mandatory gratuity.
+                              <br />
+                              <br />
+                              Not Included - The mount does not include the
+                              mandatory gratuity.
+                              <br />
+                              <br />
+                              Unspecified - The gratuity is not collected in advance
+                              and no specific requirement of the amount is set. It
+                              is up to the customer's discretion on the day of the
+                              tour.
+                            </Tooltip>
+                          </div>
+                        </div>
+                        <div className="input-group">
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setGratuitesSelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value="">Select....</option>
+                            {map(gratuitesData, (gratuites, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={gratuites.id}
+                                  selected={
+                                    dataEdit && dataEdit.gratuity_id
+                                      ? gratuites.id === dataEdit.gratuity_id
+                                      : false
+                                  }
+                                >
+                                  {gratuites.name}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </div>
+                    </Col>
+                  </>
+                  ):null
+                }
               </>
             ) : null}
           </Row>
