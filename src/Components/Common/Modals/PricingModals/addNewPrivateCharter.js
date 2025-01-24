@@ -214,6 +214,8 @@ const AddNewPrivateCharter = ({
             : null
           : priceLocationSelected;
 
+      let p_commission_value = (+priceSheetSelected === 1)?values.p_est_commission:((+priceSheetSelected === 2)?values.provider_commission:values.p_commission)
+
       if (price_type && price_option && price_collect) {
         let data = {
           tour_id: tourData.id,
@@ -256,8 +258,7 @@ const AddNewPrivateCharter = ({
           p_gratuity: values.p_gratuity !== "" ? values.p_gratuity : null,
           p_final_total:
             values.p_final_total !== "" ? values.p_final_total : null,
-          provider_commission: values.provider_commission,
-          p_commission: values.p_commission !== "" ? values.p_commission : null,
+          p_commission: p_commission_value !== "" ? p_commission_value : null,
           t_base_amount:
             values.t_base_amount !== "" ? values.t_base_amount : null,
           t_iva: values.t_iva !== "" ? values.t_iva : null,
@@ -624,9 +625,13 @@ const AddNewPrivateCharter = ({
         //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
         // then this field would be calculated as:
         // [Net Price] / [1.16]
-
+        gratuityInput = ""
         validationType.setFieldValue(
           "p_gratuity",
+          ""
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
           ""
         );
 
@@ -654,9 +659,13 @@ const AddNewPrivateCharter = ({
         // Tax - No . Gratuity - Un
         // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
         // then this will be a straight reference, no calculation needed.
-
+        gratuityInput = ""
         validationType.setFieldValue(
           "p_gratuity",
+          ""
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
           ""
         );
 
@@ -731,10 +740,14 @@ const AddNewPrivateCharter = ({
           "p_gratuity",
           setDecimalFormat(gratuityInput)
         );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -796,10 +809,14 @@ const AddNewPrivateCharter = ({
           "p_gratuity",
           setDecimalFormat(gratuityInput)
         );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
         );
       }
       validationType.setFieldValue(
@@ -834,9 +851,14 @@ const AddNewPrivateCharter = ({
         //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
         // then this field would be calculated as:
         // [Net Price] / [1.16]
+        gratuityInput = ""
 
         validationType.setFieldValue(
           "p_gratuity",
+          ""
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
           ""
         );
 
@@ -864,9 +886,14 @@ const AddNewPrivateCharter = ({
         // Tax - No . Gratuity - No
         // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
         // then this will be a straight reference, no calculation needed.
+        gratuityInput = ""
 
         validationType.setFieldValue(
           "p_gratuity",
+          ""
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
           ""
         );
 
@@ -941,10 +968,14 @@ const AddNewPrivateCharter = ({
           "p_gratuity",
           setDecimalFormat(gratuityInput)
         );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -1005,10 +1036,14 @@ const AddNewPrivateCharter = ({
           "p_gratuity",
           setDecimalFormat(gratuityInput)
         );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
         );
       }
       validationType.setFieldValue(
@@ -1042,9 +1077,14 @@ const AddNewPrivateCharter = ({
         //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
         // then this field would be calculated as:
         // [Net Price] / [1.16]
+        gratuityInput = ""
 
         validationType.setFieldValue(
           "p_gratuity",
+          ""
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
           ""
         );
 
@@ -1071,9 +1111,14 @@ const AddNewPrivateCharter = ({
         // Tax - No . Gratuity - No
         // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
         // then this will be a straight reference, no calculation needed.
+        gratuityInput = ""
 
         validationType.setFieldValue(
           "p_gratuity",
+          ""
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
           ""
         );
 
@@ -1148,10 +1193,14 @@ const AddNewPrivateCharter = ({
           "p_gratuity",
           setDecimalFormat(gratuityInput)
         );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -1212,10 +1261,14 @@ const AddNewPrivateCharter = ({
           "p_gratuity",
           setDecimalFormat(gratuityInput)
         );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
         );
       }
       validationType.setFieldValue(
@@ -1223,18 +1276,17 @@ const AddNewPrivateCharter = ({
         setDecimalFormat(baseAmountInput)
       );
     }
-    ourPricingCalc();
+    ourPricingCalc(gratuityInput);
   };
 
   // console.log(tourData)
-  const ourPricingCalc = () => {
+  const ourPricingCalc = (gratuityInput) => {
     let ourPriceInput = validationType.values.our_price;
     let netPriceInput = validationType.values.net_rate;
     let ourCommisionPricing = ourPriceInput - netPriceInput;
     let depositInput = validationType.values.deposit;
     let baseAmountInput = validationType.values.t_base_amount;
     let ivaInput = validationType.values.t_iva;
-    let gratuityInput = validationType.values.t_gratuity;
     setOurCommission(setDecimalFormat(ourCommisionPricing));
     if (
       validationType.values.public_price !== null &&
@@ -1296,11 +1348,6 @@ const AddNewPrivateCharter = ({
       // then this field would be calculated as:
       // [Net Price] / [1.16]
 
-      validationType.setFieldValue(
-        "t_gratuity",
-        ""
-      );
-
       let totalPriceInput = +ourPriceInput
       validationType.setFieldValue(
         "t_total_price",
@@ -1325,11 +1372,6 @@ const AddNewPrivateCharter = ({
       // Tax - No . Gratuity - No
       // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
       // then this will be a straight reference, no calculation needed.
-
-      validationType.setFieldValue(
-        "t_gratuity",
-        ""
-      );
 
       baseAmountInput = setDecimalFormat(ourPriceInput);
 
@@ -1365,47 +1407,9 @@ const AddNewPrivateCharter = ({
       ivaInput = totalPriceInput - baseAmountInput;
       validationType.setFieldValue("t_iva", setDecimalFormat(ivaInput));
 
-      if(tourData.gratuity_type_id === 3) {
-        // Fixed
-        gratuityInput = +tourData.gratuity;
-      } else {
-        // Percent
-
-        // Based On
-        // 1- Net Price
-        // 2- Public Price
-
-        // Apply
-        // 1- Before
-        // 2- After
-        if(+tourData.based_on_id === 1) {
-          // 1- Net Price
-          if(+tourData.payment_apply_id === 1) {
-            // 1- Before
-            gratuityInput = +tourData.gratuity*baseAmountInput/100
-          } else {
-            // 2- After
-            gratuityInput = +tourData.gratuity*totalPriceInput/100
-          }
-        } else {
-          // 2- Public Price
-          if(+tourData.payment_apply_id === 1) {
-            // 1- Before
-            gratuityInput = +tourData.gratuity*(+baseAmountInput + +ourCommisionPricing)/100
-          } else {
-            // 2- After
-            gratuityInput = +tourData.gratuity*(+totalPriceInput + +ourCommisionPricing)/100
-          }
-        }
-      }
-      validationType.setFieldValue(
-        "t_gratuity",
-        setDecimalFormat(gratuityInput)
-      );
-
       validationType.setFieldValue(
         "t_final_total",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput + +gratuityInput)
       );
     } else if (
       (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -1429,47 +1433,9 @@ const AddNewPrivateCharter = ({
         setDecimalFormat(+totalPriceInput)
       );
 
-      if(tourData.gratuity_type_id === 3) {
-        // Fixed
-        gratuityInput = +tourData.gratuity;
-      } else {
-        // Percent
-
-        // Based On
-        // 1- Net Price
-        // 2- Public Price
-
-        // Apply
-        // 1- Before
-        // 2- After
-        if(+tourData.based_on_id === 1) {
-          // 1- Net Price
-          if(+tourData.payment_apply_id === 1) {
-            // 1- Before
-            gratuityInput = +tourData.gratuity*baseAmountInput/100
-          } else {
-            // 2- After
-            gratuityInput = +tourData.gratuity*totalPriceInput/100
-          }
-        } else {
-          // 2- Public Price
-          if(+tourData.payment_apply_id === 1) {
-            // 1- Before
-            gratuityInput = +tourData.gratuity*(+baseAmountInput + +ourCommisionPricing)/100
-          } else {
-            // 2- After
-            gratuityInput = +tourData.gratuity*(+totalPriceInput + +ourCommisionPricing)/100
-          }
-        }
-      }
-      validationType.setFieldValue(
-        "t_gratuity",
-        setDecimalFormat(gratuityInput)
-      );
-
       validationType.setFieldValue(
         "t_final_total",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput + +gratuityInput)
       );
     }
     validationType.setFieldValue(
@@ -2387,6 +2353,7 @@ const AddNewPrivateCharter = ({
                           name="p_price_sheet"
                           onChange={(e) => {
                             setPriceSheetSelected(e.target.value);
+                            providerPricingCalc();
                           }}
                         >
                           <option value="-1">Select....</option>

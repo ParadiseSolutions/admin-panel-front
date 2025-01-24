@@ -42,7 +42,7 @@ import AddLocationModal from "../../../Components/Common/Modals/OperatorsModals/
 import AddBoatModal from "../../../Components/Common/Modals/OperatorsModals/addBoatModal";
 import AddRestrictionModal from "../../../Components/Common/Modals/OperatorsModals/addRestrictionModal";
 
-const AutomatedConfirmation = ({ tourData, id }) => {
+const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const tourID = tourData?.id;
   const [extraFeeInitialData, setExtraFeeInitialData] = useState({});
   const [bringListInitialData, setBringListInitialData] = useState([]);
@@ -1787,7 +1787,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           <Row className="mt-4"></Row>
 
           <Row>
-            <Col className=" d-flex justify-content-end">
+            <Col className="col-12 d-flex justify-content-end mt-5">
               <Button
                 type="submit"
                 style={{ backgroundColor: "#F6851F", border: "none" }}

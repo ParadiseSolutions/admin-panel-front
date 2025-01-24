@@ -324,19 +324,19 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
             outline
             className="waves-effect waves-light mx-4"
             type="button"
-            onClick={() => toggle("5")}
+            onClick={() => toggle("9")}
           >
             <i className="uil-angle-double-left" />
             Previous
           </Button>
-          <Button
+          {/* <Button
             type="submit"
             className="font-16 btn-block btn-orange"
             onClick={() => toggle("7")}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />
-          </Button>
+          </Button> */}
         </Col>
       </Row>
 
