@@ -10,207 +10,130 @@ import {
   Input,
 } from "reactstrap";
 
-const WireTransferHolderForm = () => {
+const WireTransferHolderForm = ({
+  validationType,
+  countryData,
+  countryCodeSelected,
+  setCountryCodeSelected,
+}) => {
   return (
-   <>
-      <Col className='col-12'>
+    <>
+      <Col className="row">
+        <Col className="col-6">
+          <div className="form-outline mb-2">
+            <Label className="form-label">Name</Label>
+            <Input
+              type="text"
+              name="name_WT"
+              onChange={validationType.handleChange}
+              onBlur={validationType.handleBlur}
+              value={validationType.values.name_WT || ""}
+            />
+          </div>
+        </Col>
+        <Col className="col-6">
+          <div className="form-outline mb-2">
+            <Label className="form-label">Address</Label>
+            <Input
+              type="text"
+              name="address_WT"
+              onChange={validationType.handleChange}
+              onBlur={validationType.handleBlur}
+              value={validationType.values.address_WT || ""}
+            />
+          </div>
+        </Col>
+      </Col>
+      <Col className="col-12">
         <Row>
-          <Col className="col-6">
+          <Col className="col-4">
             <div className="form-outline mb-2">
-              <Label className="form-label">Name</Label>
+              <Label className="form-label">City</Label>
               <Input
-                type="select"
-                name="price_type"
-                /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                //   onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
-              >
-                <option value={null}>Select....</option>
-                <option value={1}>ACH</option>
-                <option value={2}>Credit Card</option>
-                <option value={3}>PayPal</option>
-                <option value={4}>Western Union</option>
-                <option value={5}>Wire Transfer</option>
-                <option value={6}>Zelle</option>
-                <option value={7}>Venmo</option>
-              </Input>
+                type="text"
+                name="city_WT"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.city_WT || ""}
+              />
             </div>
           </Col>
-          <Col className="col-6">
-            <div className="form-outline mb-2">
-              <Label className="form-label">Address</Label>
+          <Col className="col-4">
+            <div className="form-outline">
+              <Label className="form-label">State</Label>
               <Input
-                type="select"
-                name="price_type"
-                /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                //   onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
-              >
-                <option value={null}>Select....</option>
-                <option value={1}>ACH</option>
-                <option value={2}>Credit Card</option>
-                <option value={3}>PayPal</option>
-                <option value={4}>Western Union</option>
-                <option value={5}>Wire Transfer</option>
-                <option value={6}>Zelle</option>
-                <option value={7}>Venmo</option>
-              </Input>
+                type="text"
+                name="state_WT"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.state_WT || ""}
+              />
+            </div>
+          </Col>
+          <Col className="col-4">
+            <div className="form-outline">
+              <Label className="form-label">Postal</Label>
+              <Input
+                type="text"
+                name="postal_WT"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.postal_WT || ""}
+              />
             </div>
           </Col>
         </Row>
       </Col>
-      <Col className='col-12'>
+      <Col className="col-12">
         <Row>
-          <Col className="col-4 mb-2">
+          <Col className="col-2">
             <div className="form-outline">
-              <Label className="form-label">City</Label>
+              <Label className="form-label">Country</Label>
               <Input
                 type="select"
-                name="price_type"
-                /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                //   onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
+                name="country_ach"
+                onChange={(e) => {
+                  setCountryCodeSelected(e.target.value);
+                }}
+                // onBlur={validationType.handleBlur}
+                // value={countryCodeSelected || ""}
               >
                 <option value={null}>Select....</option>
-                <option value={1}>ACH</option>
-                <option value={2}>Credit Card</option>
-                <option value={3}>PayPal</option>
-                <option value={4}>Western Union</option>
-                <option value={5}>Wire Transfer</option>
-                <option value={6}>Zelle</option>
-                <option value={7}>Venmo</option>
+                {countryData.map((code, index) => (
+                  <option key={index} value={code.country_code}>
+                    {code.country_code}
+                  </option>
+                ))}
               </Input>
             </div>
           </Col>
-          <Col className="col-4 mb-2">
+          <Col className="col-5">
             <div className="form-outline">
-              <Label className="form-label">State</Label>
+              <Label className="form-label">Phone</Label>
               <Input
-                type="select"
-                name="price_type"
-                /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                //   onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
-              >
-                <option value={null}>Select....</option>
-                <option value={1}>ACH</option>
-                <option value={2}>Credit Card</option>
-                <option value={3}>PayPal</option>
-                <option value={4}>Western Union</option>
-                <option value={5}>Wire Transfer</option>
-                <option value={6}>Zelle</option>
-                <option value={7}>Venmo</option>
-              </Input>
+                type="text"
+                name="phone_WT"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.phone_WT || ""}
+              />
             </div>
           </Col>
-          <Col className="col-4 mb-2">
+          <Col className="col-5">
             <div className="form-outline">
-              <Label className="form-label">Postal</Label>
+              <Label className="form-label">Email</Label>
               <Input
-                type="select"
-                name="price_type"
-                /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                //   onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
-              >
-                <option value={null}>Select....</option>
-                <option value={1}>ACH</option>
-                <option value={2}>Credit Card</option>
-                <option value={3}>PayPal</option>
-                <option value={4}>Western Union</option>
-                <option value={5}>Wire Transfer</option>
-                <option value={6}>Zelle</option>
-                <option value={7}>Venmo</option>
-              </Input>
+                type="text"
+                name="email_WT"
+                onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                value={validationType.values.email_WT || ""}
+              />
             </div>
           </Col>
-          
-        </Row>      
+        </Row>
       </Col>
-        <Col className="col-12">
-          <Row>
-            <Col className="col-2">
-              <div className="form-outline">
-                <Label className="form-label">Country</Label>
-                <Input
-                  type="select"
-                  name="price_type"
-                  /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                  //   onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  <option value={1}>ACH</option>
-                  <option value={2}>Credit Card</option>
-                  <option value={3}>PayPal</option>
-                  <option value={4}>Western Union</option>
-                  <option value={5}>Wire Transfer</option>
-                  <option value={6}>Zelle</option>
-                  <option value={7}>Venmo</option>
-                </Input>
-              </div>
-            </Col>
-            <Col className="col-5">
-              <div className="form-outline">
-                <Label className="form-label">Phone</Label>
-                <Input
-                  type="select"
-                  name="price_type"
-                  /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                  //   onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  <option value={1}>ACH</option>
-                  <option value={2}>Credit Card</option>
-                  <option value={3}>PayPal</option>
-                  <option value={4}>Western Union</option>
-                  <option value={5}>Wire Transfer</option>
-                  <option value={6}>Zelle</option>
-                  <option value={7}>Venmo</option>
-                </Input>
-              </div>
-            </Col>
-            <Col className="col-5">
-              <div className="form-outline">
-                <Label className="form-label">Email</Label>
-                <Input
-                  type="select"
-                  name="price_type"
-                  /* onChange={(e) => {
-                            setPaymentTypeSelected(+e.target.value);
-                          }} */
-                  //   onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  <option value={1}>ACH</option>
-                  <option value={2}>Credit Card</option>
-                  <option value={3}>PayPal</option>
-                  <option value={4}>Western Union</option>
-                  <option value={5}>Wire Transfer</option>
-                  <option value={6}>Zelle</option>
-                  <option value={7}>Venmo</option>
-                </Input>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-      </>
+    </>
   );
 };
 

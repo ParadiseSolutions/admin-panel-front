@@ -27,4 +27,16 @@ export const getCurrencyPM = () => {
       headers: options,
     });
   };
+  export const getPaymentInstructionPM = () => {
+    const url = `${API_URL}/provider-payment-methods/payment-instructions`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+  export const postPaymentMethod = (body) => {
+    const url = `${API_URL}/provider-payment-method`;
+    return axios.post (url, body, {
+      headers: options,
+    });
+  };
 
