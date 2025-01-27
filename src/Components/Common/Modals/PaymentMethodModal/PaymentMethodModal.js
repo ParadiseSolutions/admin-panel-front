@@ -32,6 +32,7 @@ import {
   getCurrencyPM,
   getExtraFeePM,
   getPaymentInstructionPM,
+  getPaymentMethod,
   postPaymentMethod,
 } from "../../../../Utils/API/PaymentsMethods";
 
@@ -39,9 +40,12 @@ const PaymentMethodModal = ({
   addContactModal,
   setAddContactModal,
   onClickNewContactProvider,
+  setContactID,
+  contactID
 }) => {
   const { id } = useParams();
-
+console.log(contactID)
+const [paymentDataEdit, setPaymentDataEdit] = useState([])
   const [paymentTypeSelected, setPaymentTypeSelected] = useState(0);
   const [countrySelected, setCountrySelected] = useState(0);
   const [currencySelected, setCurrencySelected] = useState(0);
@@ -75,6 +79,23 @@ const PaymentMethodModal = ({
     });
   }, []);
 
+  //edit data
+  useEffect(() => {
+    if (contactID) {
+      getPaymentMethod(contactID).then((resp) => {
+        setPaymentDataEdit(resp.data.data);
+      })
+    }
+  }, [contactID])
+
+  useEffect(() => {
+    if (paymentDataEdit.length > 0) {
+      setPaymentTypeSelected(paymentDataEdit?.payment_type?.id)
+    }
+  }, [paymentDataEdit])
+  
+  
+console.log(paymentDataEdit?.payment_type?.id)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -451,6 +472,7 @@ const PaymentMethodModal = ({
                       : "col-3"
                   }
                 >
+                  {paymentDataEdit}
                   <div className="form-outline mb-2">
                     <Label className="form-label">Payment Type</Label>
                     <Input
@@ -459,17 +481,18 @@ const PaymentMethodModal = ({
                       onChange={(e) => {
                         setPaymentTypeSelected(+e.target.value);
                       }}
+                      
                       onBlur={validationType.handleBlur}
                       value={paymentTypeSelected || ""}
                     >
                       <option value={null}>Select....</option>
-                      <option value={1}>ACH</option>
-                      <option value={2}>Credit Card</option>
-                      <option value={3}>PayPal</option>
-                      <option value={4}>Western Union</option>
-                      <option value={5}>Wire Transfer</option>
-                      <option value={6}>Zelle</option>
-                      <option value={7}>Venmo</option>
+                      <option value={1} selected={paymentDataEdit?.payment_type?.id === 1 ? true : false}>ACH</option>
+                      <option value={2} selected={paymentDataEdit?.payment_type?.id === 2 ? true : false}>Credit Card</option>
+                      <option value={3} selected={paymentDataEdit?.payment_type?.id === 3 ? true : false}>PayPal</option>
+                      <option value={4} selected={paymentDataEdit?.payment_type?.id === 4 ? true : false}>Western Union</option>
+                      <option value={5} selected={paymentDataEdit?.payment_type?.id === 5 ? true : false}>Wire Transfer</option>
+                      <option value={6} selected={paymentDataEdit?.payment_type?.id === 6 ? true : false}>Zelle</option>
+                      <option value={7} selected={paymentDataEdit?.payment_type?.id === 7 ? true : false}>Venmo</option>
                     </Input>
                   </div>
                 </Col>

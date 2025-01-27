@@ -143,7 +143,7 @@ useEffect(() => {
               <div
                 onClick={() => {
                   setContactID(providersData.id);
-                  setEditContactModal(true);
+                  setAddContactModal(true);
                 }}
                 className="text-info"
               >
@@ -218,6 +218,8 @@ useEffect(() => {
           addContactModal={addContactModal}
           setAddContactModal={setAddContactModal}
           onClickNewContactProvider={onClickNewContactProvider}
+          setContactID={setContactID}
+          contactID={contactID}
         />
        
       </Collapse>
