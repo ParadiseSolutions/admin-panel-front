@@ -47,7 +47,7 @@ const AchForm = ({
           >
             <option value={null}>Select....</option>
             {currencyData.map((item, index) => (
-              <option key={index} value={item.currency_id}>
+              <option key={index} value={item.currency_id}  >
                 {item.currency}
               </option>
             ))}
