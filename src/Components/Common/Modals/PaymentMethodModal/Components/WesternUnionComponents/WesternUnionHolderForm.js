@@ -14,6 +14,7 @@ const WesternUnionHolderForm = ({
   validationType,
   countryData,
   setCountryCodeSelected,
+  countryCodeSelected
 }) => {
   return (
     <>
@@ -79,6 +80,8 @@ const WesternUnionHolderForm = ({
               onChange={(e) => {
                 setCountryCodeSelected(e.target.value);
               }}
+              onBlur={validationType.handleBlur}
+              value={countryCodeSelected || ""}
             >
               <option value={null}>Select....</option>
               {countryData.map((code, index) => (

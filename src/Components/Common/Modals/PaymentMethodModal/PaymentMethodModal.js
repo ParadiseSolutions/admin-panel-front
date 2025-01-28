@@ -34,6 +34,7 @@ import {
   getPaymentInstructionPM,
   getPaymentMethod,
   postPaymentMethod,
+  putPaymentMethod,
 } from "../../../../Utils/API/PaymentsMethods";
 
 const PaymentMethodModal = ({
@@ -93,6 +94,12 @@ const PaymentMethodModal = ({
   useEffect(() => {
     if (paymentDataEdit) {
       setPaymentTypeSelected(paymentDataEdit?.payment_type?.id);
+      setCountrySelected(paymentDataEdit?.bank_country);
+      setCurrencySelected(paymentDataEdit?.currency_id);
+      setCountryCodeSelected(paymentDataEdit?.phone_country);
+      setAccountTypeSelected(paymentDataEdit?.account_type_id);
+      setExtraFeeSelected(paymentDataEdit?.extrafee_id);
+      setPaymentInstructionSelected(paymentDataEdit?.payment_instruction_id);
     }
   }, [paymentDataEdit]);
 
@@ -102,55 +109,83 @@ const PaymentMethodModal = ({
     enableReinitialize: true,
     initialValues: {
       //ach
-      bank_name: "",
-      ABA_Routing: "",
-      account_number: "",
-      name_ach: "",
-      address_ach: "",
-      city_ach: "",
-      state_ach: "",
-      postal_ach: "",
-      phone_ach: "",
-      email_ach: "",
+      bank_name: paymentDataEdit?.bank_name ? paymentDataEdit?.bank_name : "",
+      ABA_Routing: paymentDataEdit?.aba_routing
+        ? paymentDataEdit?.aba_routing
+        : "",
+      account_number: paymentDataEdit?.account_number
+        ? paymentDataEdit?.account_number
+        : "",
+      name_ach: paymentDataEdit?.payment_type_name
+        ? paymentDataEdit?.payment_type_name
+        : "",
+      address_ach: paymentDataEdit?.address ? paymentDataEdit?.address : "",
+      city_ach: paymentDataEdit?.city ? paymentDataEdit?.city : "",
+      state_ach: paymentDataEdit?.state ? paymentDataEdit?.state : "",
+      postal_ach: paymentDataEdit?.postal ? paymentDataEdit?.postal : "",
+      phone_ach: paymentDataEdit?.phone ? paymentDataEdit?.phone : "",
+      email_ach: paymentDataEdit?.email ? paymentDataEdit?.email : "",
       // Western Union
-      bank_name_WU: "",
-      aba_routing_WU: "",
-      account_number_WU: "",
-      clabe_WU: "",
-      debit_card_WU: "",
-      swift_WU: "",
-      name_WU: "",
-      email_WU: "",
-      country_WU: "",
-      state_WU: "",
-      phone_WU: "",
+      bank_name_WU: paymentDataEdit?.bank_name
+        ? paymentDataEdit?.bank_name
+        : "",
+      aba_routing_WU: paymentDataEdit?.aba_routing
+        ? paymentDataEdit?.aba_routing
+        : "",
+      account_number_WU: paymentDataEdit?.account_number
+        ? paymentDataEdit?.account_number
+        : "",
+      clabe_WU: paymentDataEdit?.clabe ? paymentDataEdit?.clabe : "",
+      debit_card_WU: paymentDataEdit?.debit_card
+        ? paymentDataEdit?.debit_card
+        : "",
+      swift_WU: paymentDataEdit?.swift ? paymentDataEdit?.swift : "",
+      name_WU: paymentDataEdit?.payment_type_name
+        ? paymentDataEdit?.payment_type_name
+        : "",
+      email_WU: paymentDataEdit?.email ? paymentDataEdit?.email : "",
+      country_WU: paymentDataEdit?.country ? paymentDataEdit?.country : "",
+      state_WU: paymentDataEdit?.state ? paymentDataEdit?.state : "",
+      phone_WU: paymentDataEdit?.phone ? paymentDataEdit?.phone : "",
       // paypal
-      email_PP: "",
-      amount_PP: "",
-      payment_link_PP: "",
+      email_PP: paymentDataEdit?.email ? paymentDataEdit?.email : "",
+      amount_PP: paymentDataEdit?.amount ? paymentDataEdit?.amount : "",
+      payment_link_PP: paymentDataEdit?.form_url
+        ? paymentDataEdit?.form_url
+        : "",
       // zelle
-      email_zelle: "",
-      amount_zelle: "",
+      email_zelle: paymentDataEdit?.email ? paymentDataEdit?.email : "",
+      amount_zelle: paymentDataEdit?.amount ? paymentDataEdit?.amount : "",
       // venmo
-      email_venmo: "",
-      amount_venmo: "",
+      email_venmo: paymentDataEdit?.email ? paymentDataEdit?.email : "",
+      amount_venmo: paymentDataEdit?.amount ? paymentDataEdit?.amount : "",
       // credit card
-      payment_link_CC: "",
-      phone_CC: "",
-      amount_CC: "",
+      payment_link_CC: paymentDataEdit?.form_url
+        ? paymentDataEdit?.form_url
+        : "",
+      phone_CC: paymentDataEdit?.phone ? paymentDataEdit?.phone : "",
+      amount_CC: paymentDataEdit?.amount ? paymentDataEdit?.amount : "",
       // wire transfer
-      bank_name_WT: "",
-      swift_WT: "",
-      clabe_WT: "",
-      aba_routing_WT: "",
-      account_number_WT: "",
-      name_WT: "",
-      address_WT: "",
-      city_WT: "",
-      state_WT: "",
-      postal_WT: "",
-      phone_WT: "",
-      email_WT: "",
+      bank_name_WT: paymentDataEdit?.bank_name
+        ? paymentDataEdit?.bank_name
+        : "",
+      swift_WT: paymentDataEdit?.swift ? paymentDataEdit?.swift : "",
+      clabe_WT: paymentDataEdit?.clabe ? paymentDataEdit?.clabe : "",
+      aba_routing_WT: paymentDataEdit?.aba_routing
+        ? paymentDataEdit?.aba_routing
+        : "",
+      account_number_WT: paymentDataEdit?.account_number
+        ? paymentDataEdit?.account_number
+        : "",
+      name_WT: paymentDataEdit?.payment_type_name
+        ? paymentDataEdit?.payment_type_name
+        : "",
+      address_WT: paymentDataEdit?.address ? paymentDataEdit?.address : "",
+      city_WT: paymentDataEdit?.city ? paymentDataEdit?.city : "",
+      state_WT: paymentDataEdit?.state ? paymentDataEdit?.state : "",
+      postal_WT: paymentDataEdit?.postal ? paymentDataEdit?.postal : "",
+      phone_WT: paymentDataEdit?.phone ? paymentDataEdit?.phone : "",
+      email_WT: paymentDataEdit?.email ? paymentDataEdit?.email : "",
     },
 
     onSubmit: (values) => {
@@ -375,23 +410,44 @@ const PaymentMethodModal = ({
         default:
           break;
       }
-      postPaymentMethod(data)
-        .then((resp) => {
-          if (resp.data.status === 201) {
-            Swal.fire(
-              "Created!",
-              "Payment Method has been created.",
-              "success"
-            ).then(() => {
-              setAddContactModal(false);
-              document.location.reload();
-            });
-          }
-        })
-        .catch((error) => {
-          // console.log(error.response);
-          Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
-        });
+
+      if (contactID) {
+        putPaymentMethod(contactID, data)
+          .then((resp) => {
+            if (resp.data.status === 200) {
+              Swal.fire(
+                "Edited!",
+                "Payment Method has been Edited.",
+                "success"
+              ).then(() => {
+                setAddContactModal(false);
+                document.location.reload();
+              });
+            }
+          })
+          .catch((error) => {
+            // console.log(error.response);
+            Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+          });
+      } else {
+        postPaymentMethod(data)
+          .then((resp) => {
+            if (resp.data.status === 201) {
+              Swal.fire(
+                "Created!",
+                "Payment Method has been created.",
+                "success"
+              ).then(() => {
+                setAddContactModal(false);
+                document.location.reload();
+              });
+            }
+          })
+          .catch((error) => {
+            // console.log(error.response);
+            Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+          });
+      }
     },
   });
 
@@ -413,7 +469,6 @@ const PaymentMethodModal = ({
           onClick={() => {
             setAddContactModal(false);
             setPaymentDataEdit([]);
-            
           }}
           type="button"
           className="close"

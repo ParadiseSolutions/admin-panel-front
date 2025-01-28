@@ -45,4 +45,10 @@ export const getCurrencyPM = () => {
       headers: options,
     });
   };
+  export const putPaymentMethod = (id, body) => {
+    const url = `${API_URL}/provider-payment-method/${id}`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
 

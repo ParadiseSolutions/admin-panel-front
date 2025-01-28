@@ -95,8 +95,8 @@ const WireTransferHolderForm = ({
                 onChange={(e) => {
                   setCountryCodeSelected(e.target.value);
                 }}
-                // onBlur={validationType.handleBlur}
-                // value={countryCodeSelected || ""}
+                 onBlur={validationType.handleBlur}
+                 value={countryCodeSelected || ""}
               >
                 <option value={null}>Select....</option>
                 {countryData.map((code, index) => (
