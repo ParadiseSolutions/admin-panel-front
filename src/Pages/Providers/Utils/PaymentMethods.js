@@ -119,7 +119,7 @@ useEffect(() => {
         filterable: false,
         Cell: (cellProps) => {
           const methodData = cellProps.row.original;
-          return <p className="fw-bold">{methodData.email}</p>;
+          return <p>{methodData.email}</p>;
         },
       },
       {
@@ -129,7 +129,7 @@ useEffect(() => {
         filterable: false,
         Cell: (cellProps) => {
           const methodData = cellProps.row.original;
-          return <p className="fw-bold">{methodData.currency}</p>;
+          return <p>{methodData.currency}</p>;
         },
       },
       {
@@ -143,7 +143,7 @@ useEffect(() => {
               <div
                 onClick={() => {
                   setContactID(providersData.id);
-                  setEditContactModal(true);
+                  setAddContactModal(true);
                 }}
                 className="text-info"
               >
@@ -218,6 +218,8 @@ useEffect(() => {
           addContactModal={addContactModal}
           setAddContactModal={setAddContactModal}
           onClickNewContactProvider={onClickNewContactProvider}
+          setContactID={setContactID}
+          contactID={contactID}
         />
        
       </Collapse>

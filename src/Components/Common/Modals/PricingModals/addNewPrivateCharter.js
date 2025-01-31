@@ -573,7 +573,6 @@ const AddNewPrivateCharter = ({
     // esto es net price en price sheet select
     let netPriceInput = validationType.values.net_rate;
     let publicPriceInput = validationType.values.public_price;
-    let providerPriceInput = validationType.values.provider_price;
     let estCommissionInput = validationType.values.p_est_commission;
     let rateInput = validationType.values.rate;
     let commissionFixedInput = validationType.values.p_commission;
@@ -827,17 +826,16 @@ const AddNewPrivateCharter = ({
 
     if (
       priceSheetSelected === "2" &&
-      providerPriceInput !== "" &&
       publicPriceInput !== "" &&
       rateInput !== "" &&
       publicPriceInput > 0
     ) {
-      netPriceInputRate = providerPriceInput * (1 - rateInput / 100);
+      netPriceInputRate = publicPriceInput * (1 - rateInput / 100);
       validationType.setFieldValue(
         "net_rate",
         setDecimalFormat(netPriceInputRate)
       );
-      providerCommissionInputRate = providerPriceInput * (rateInput / 100);
+      providerCommissionInputRate = publicPriceInput * (rateInput / 100);
       validationType.setFieldValue(
         "provider_commission",
         setDecimalFormat(providerCommissionInputRate)
@@ -1054,19 +1052,18 @@ const AddNewPrivateCharter = ({
 
     if (
       priceSheetSelected === "3" &&
-      providerPriceInput !== "" &&
       publicPriceInput !== "" &&
       commissionFixedInput !== "" &&
       publicPriceInput > 0
     ) {
-      netPriceInputCommision = providerPriceInput - commissionFixedInput;
+      netPriceInputCommision = publicPriceInput - commissionFixedInput;
       validationType.setFieldValue(
         "net_rate",
         setDecimalFormat(netPriceInputCommision)
       );
       validationType.setFieldValue(
         "p_est_rate",
-        setRateFormat(commissionFixedInput / providerPriceInput)
+        setRateFormat(commissionFixedInput / publicPriceInput)
       );
 
       if (
