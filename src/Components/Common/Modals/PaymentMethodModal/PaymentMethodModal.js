@@ -116,8 +116,8 @@ const PaymentMethodModal = ({
       account_number: paymentDataEdit?.account_number
         ? paymentDataEdit?.account_number
         : "",
-      name_ach: paymentDataEdit?.payment_type_name
-        ? paymentDataEdit?.payment_type_name
+      name_ach: paymentDataEdit?.account_name
+        ? paymentDataEdit?.account_name
         : "",
       address_ach: paymentDataEdit?.address ? paymentDataEdit?.address : "",
       city_ach: paymentDataEdit?.city ? paymentDataEdit?.city : "",
@@ -140,8 +140,8 @@ const PaymentMethodModal = ({
         ? paymentDataEdit?.debit_card
         : "",
       swift_WU: paymentDataEdit?.swift ? paymentDataEdit?.swift : "",
-      name_WU: paymentDataEdit?.payment_type_name
-        ? paymentDataEdit?.payment_type_name
+      name_WU: paymentDataEdit?.account_name
+        ? paymentDataEdit?.account_name
         : "",
       email_WU: paymentDataEdit?.email ? paymentDataEdit?.email : "",
       country_WU: paymentDataEdit?.country ? paymentDataEdit?.country : "",
@@ -177,8 +177,8 @@ const PaymentMethodModal = ({
       account_number_WT: paymentDataEdit?.account_number
         ? paymentDataEdit?.account_number
         : "",
-      name_WT: paymentDataEdit?.payment_type_name
-        ? paymentDataEdit?.payment_type_name
+      name_WT: paymentDataEdit?.account_name
+        ? paymentDataEdit?.account_name
         : "",
       address_WT: paymentDataEdit?.address ? paymentDataEdit?.address : "",
       city_WT: paymentDataEdit?.city ? paymentDataEdit?.city : "",
@@ -464,7 +464,7 @@ const PaymentMethodModal = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ Add New Payment</h1>
+        <h1 className="modal-title mt-0 text-white">+ New Payment Method</h1>
         <button
           onClick={() => {
             setAddContactModal(false);
@@ -594,16 +594,6 @@ const PaymentMethodModal = ({
                           Wire Transfer
                         </option>
                         <option
-                          value={6}
-                          selected={
-                            paymentDataEdit?.payment_type?.id === 6
-                              ? true
-                              : false
-                          }
-                        >
-                          Zelle
-                        </option>
-                        <option
                           value={7}
                           selected={
                             paymentDataEdit?.payment_type?.id === 7
@@ -612,6 +602,16 @@ const PaymentMethodModal = ({
                           }
                         >
                           Venmo
+                        </option>
+                        <option
+                          value={6}
+                          selected={
+                            paymentDataEdit?.payment_type?.id === 6
+                              ? true
+                              : false
+                          }
+                        >
+                          Zelle
                         </option>
                       </Input>
                     </div>
@@ -758,15 +758,26 @@ const PaymentMethodModal = ({
               </Col>
             ) : null}
           </Row>
-          <Row>
-            <Col className="col-12 mt-2 d-flex justify-content-end">
+          <Row className="mt-4">
+            <Col className="col-12 mt-4 d-flex justify-content-end">
+              <Button
+                color="paradise"
+                outline
+                className="waves-effect waves-light mb-3 btn col-1 mx-2"
+                type="button"
+                onClick={() => {
+                  setAddContactModal(false);
+                  setPaymentDataEdit([]);
+                }}
+              >
+                Cancel
+              </Button>
               <Button
                 type="submit"
                 style={{ backgroundColor: "#F6851F", border: "none" }}
-                className="waves-effect waves-light mb-3 btn btn-success"
+                className="waves-effect waves-light mb-3 btn btn-success mx-1 col-1"
               >
-                <i className="mdi mdi-plus me-1" />
-                Submit
+                Save
               </Button>
             </Col>
           </Row>

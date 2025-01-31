@@ -119,7 +119,7 @@ useEffect(() => {
         filterable: false,
         Cell: (cellProps) => {
           const methodData = cellProps.row.original;
-          return <p className="fw-bold">{methodData.email}</p>;
+          return <p>{methodData.email}</p>;
         },
       },
       {
@@ -129,7 +129,7 @@ useEffect(() => {
         filterable: false,
         Cell: (cellProps) => {
           const methodData = cellProps.row.original;
-          return <p className="fw-bold">{methodData.currency}</p>;
+          return <p>{methodData.currency}</p>;
         },
       },
       {
