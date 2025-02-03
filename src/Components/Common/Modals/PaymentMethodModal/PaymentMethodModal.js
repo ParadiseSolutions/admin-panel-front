@@ -11,6 +11,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  Tooltip,
 } from "reactstrap";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -61,6 +62,8 @@ const PaymentMethodModal = ({
   const [accountTypeData, setAccountTypeData] = useState([]);
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [paymentInstructionData, setPaymentInstructionData] = useState([]);
+
+  const [paymentTypeTT, setPaymentTypeTT] = useState(false)
 
   useEffect(() => {
     getCountryPM().then((response) => {
@@ -617,7 +620,29 @@ const PaymentMethodModal = ({
                     </div>
                   ) : (
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Payment Type</Label>
+                      <div className="form-outline mb-2" id="balance_due">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">
+                                Payment Type
+                              </Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="paymentTypeTT"
+                                />
+                                <Tooltip
+                                  placement="right"
+                                  isOpen={paymentTypeTT}
+                                  target="paymentTypeTT"
+                                  toggle={() => {
+                                    setPaymentTypeTT(!paymentTypeTT);
+                                  }}
+                                >
+                                  Select the type of Payment Method you want to define.
+                                </Tooltip>
+                              </div>
+                            </div>
+                            </div>
                       <Input
                         type="select"
                         name="payment_type"

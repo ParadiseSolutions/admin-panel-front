@@ -14,7 +14,19 @@ const AchForm = ({
     <>
       <Col className="col-5">
         <div className="form-outline mb-2">
-          <Label className="form-label">Country</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Country</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="countryTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="countryTT"
+              >
+                Select the Country the bank account is located in.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name="country"
@@ -35,7 +47,19 @@ const AchForm = ({
       </Col>
       <Col className="col-2">
         <div className="form-outline mb-2">
-          <Label className="form-label">Currency</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Currency</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="currencyTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="currencyTT"
+              >
+                Select the Currency of the Bank Account.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name="currency"
@@ -47,7 +71,7 @@ const AchForm = ({
           >
             <option value={null}>Select....</option>
             {currencyData.map((item, index) => (
-              <option key={index} value={item.currency_id}  >
+              <option key={index} value={item.currency_id}>
                 {item.currency}
               </option>
             ))}
@@ -56,7 +80,19 @@ const AchForm = ({
       </Col>
       <Col className="col-12">
         <div className="form-outline mb-2">
-          <Label className="form-label">Bank Name</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Bank Name</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="banknameTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="banknameTT"
+              >
+                Name of the Bank that the account is held at.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="text"
             name="bank_name"
@@ -70,7 +106,19 @@ const AchForm = ({
         <Row>
           <Col className="col-6">
             <div className="form-outline">
-              <Label className="form-label">ABA Routing</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">ABA Routing</Label>
+                <div>
+                  <i className="uil-question-circle font-size-15" id="abaTT" />
+                  <UncontrolledTooltip
+                    autohide={true}
+                    placement="top"
+                    target="abaTT"
+                  >
+                    Pending Tooltip
+                  </UncontrolledTooltip>
+                </div>
+              </div>
               <Input
                 type="text"
                 name="ABA_Routing"
@@ -82,7 +130,22 @@ const AchForm = ({
           </Col>
           <Col className="col-6">
             <div className="form-outline">
-              <Label className="form-label">Account Number</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">Account Number</Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="accountNumberTT"
+                  />
+                  <UncontrolledTooltip
+                    autohide={true}
+                    placement="top"
+                    target="accountNumberTT"
+                  >
+                    Pending Tooltip
+                  </UncontrolledTooltip>
+                </div>
+              </div>
               <Input
                 type="text"
                 name="account_number"

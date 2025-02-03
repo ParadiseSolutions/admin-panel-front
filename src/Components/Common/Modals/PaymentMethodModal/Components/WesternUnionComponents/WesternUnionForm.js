@@ -26,7 +26,19 @@ const WesternUnionForm = ({
     <>
       <Col className="col-5">
         <div className="form-outline mb-2">
-          <Label className="form-label">Country</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Country</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="countryTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="countryTT"
+              >
+                Select the Country the bank account is located in.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name="country"
@@ -47,7 +59,19 @@ const WesternUnionForm = ({
       </Col>
       <Col className="col-2">
         <div className="form-outline mb-2">
-          <Label className="form-label">Currency</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Currency</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="currencyTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="currencyTT"
+              >
+                Select the Currency of the Bank Account.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name="currency"
@@ -70,7 +94,22 @@ const WesternUnionForm = ({
         <Row>
           <Col className="col-6 mb-2">
             <div className="form-outline">
-              <Label className="form-label">Bank Name</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">Bank Name</Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="banknameTT"
+                  />
+                  <UncontrolledTooltip
+                    autohide={true}
+                    placement="top"
+                    target="banknameTT"
+                  >
+                    Name of the Bank that the account is held at.
+                  </UncontrolledTooltip>
+                </div>
+              </div>
               <Input
                 type="text"
                 name="bank_name_WU"
@@ -83,9 +122,25 @@ const WesternUnionForm = ({
           {countrySelected === 1 ? (
             <Col className="col-6 mb-2">
               <div className="form-outline">
-                <Label className="form-label">ABA Routing</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">ABA Routing</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="abaTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="abaTT"
+                    >
+                      Enter the ABA Routing number associated with the account
+                      holder's bank account.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
-                  type="text"
+                  type="number"
                   name="aba_routing_WU"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
@@ -96,7 +151,23 @@ const WesternUnionForm = ({
           ) : (
             <Col className="col-6 mb-2">
               <div className="form-outline">
-                <Label className="form-label">Select One</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Select One</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="selectTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="selectTT"
+                    >
+                      Choose the method you will use to specify the account
+                      information.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name="price_type"
@@ -122,9 +193,21 @@ const WesternUnionForm = ({
       {countrySelected === 1 ? (
         <Col className="col-12">
           <div className="form-outline">
-            <Label className="form-label">Account Number</Label>
+            <div className="d-flex justify-content-between">
+              <Label className="form-label">Account Number</Label>
+              <div>
+                <i className="uil-question-circle font-size-15" id="selectTT" />
+                <UncontrolledTooltip
+                  autohide={true}
+                  placement="top"
+                  target="selectTT"
+                >
+                  Enter the bank account number to send the funds to.
+                </UncontrolledTooltip>
+              </div>
+            </div>
             <Input
-              type="text"
+              type="number"
               name="account_number_WU"
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
@@ -136,9 +219,24 @@ const WesternUnionForm = ({
       {countrySelected === 2 && accountTypeSelected === 1 ? (
         <Col className="col-12">
           <div className="form-outline">
-            <Label className="form-label">Clabe</Label>
+            <div className="d-flex justify-content-between">
+              <Label className="form-label">Clabe</Label>
+              <div>
+                <i className="uil-question-circle font-size-15" id="clabeTT" />
+                <UncontrolledTooltip
+                  autohide={true}
+                  placement="top"
+                  target="clabeTT"
+                >
+                  Enter the CLABE number associated with the account holder's
+                  account.
+                </UncontrolledTooltip>
+              </div>
+            </div>
             <Input
-              type="text"
+              type="number"
+              min="1"
+              max="18"
               name="clabe_WU"
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
@@ -146,15 +244,29 @@ const WesternUnionForm = ({
             />
           </div>
         </Col>
-      ) : 
-     null
-      }
+      ) : null}
       {countrySelected === 2 && accountTypeSelected === 2 ? (
-         <Col className='12'>
+        <Col className="12">
           <Row>
             <Col className="col-6">
               <div className="form-outline">
-                <Label className="form-label">Debit Card</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Debit Card</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="debitTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="debitTT"
+                    >
+                      Enter the account holder's debit card number. The debit
+                      card should contain 16 numerical digits.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="text"
                   name="debit_card_WU"
@@ -166,7 +278,24 @@ const WesternUnionForm = ({
             </Col>
             <Col className="col-6">
               <div className="form-outline">
-                <Label className="form-label">SWIFT</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">SWIFT</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="swiftTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="swiftTT"
+                    >
+                      Enter the SWIFT Code associated with the account holder's
+                      bank account. The SWIFT Code is either 8 or 11 digits, all
+                      capital letters.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="text"
                   name="swift_WU"
@@ -178,9 +307,7 @@ const WesternUnionForm = ({
             </Col>
           </Row>
         </Col>
-      ) : 
-     null
-      }
+      ) : null}
     </>
   );
 };
