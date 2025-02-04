@@ -118,6 +118,7 @@ const WireTransferForm = ({
                   "bank_name_WT",
                   titleCapitalize(value)
                 );
+                validationType.handleBlur(e);
               }}
               // onBlur={validationType.handleBlur}
               value={validationType.values.bank_name_WT || ""}
@@ -164,6 +165,7 @@ const WireTransferForm = ({
                   "swift_WT",
                   value.toUpperCase()
                 );
+                validationType.handleBlur(e);
               }}
               value={validationType.values.swift_WT || ""}
               invalid={
@@ -238,14 +240,16 @@ const WireTransferForm = ({
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="abaTT"
+                      id="abaTTWT"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="abaTT"
+                      target="abaTTWT"
                     >
-                      Pending Tooltip
+                      Enter the ABA Routing number associated with the account holder's bank account.
+                      <br/>
+                      The ABA Routing number is 9 numerical digits.
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -277,14 +281,14 @@ const WireTransferForm = ({
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="accountNumberTT"
+                      id="accountNumberTTWT"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="accountNumberTT"
+                      target="accountNumberTTWT"
                     >
-                      Pending Tooltip
+                      Enter the bank account number to send the funds to. This should be numbers only.
                     </UncontrolledTooltip>
                   </div>
                 </div>

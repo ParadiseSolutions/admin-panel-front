@@ -100,6 +100,7 @@ const AchForm = ({
                 "bank_name",
                 titleCapitalize(value)
               );
+              validationType.handleBlur(e);
             }}
             // onBlur={validationType.handleBlur}
             value={validationType.values.bank_name || ""}
@@ -165,12 +166,12 @@ const AchForm = ({
                 <div>
                   <i
                     className="uil-question-circle font-size-15"
-                    id="accountNumberTT"
+                    id="accountNumberTTAC"
                   />
                   <UncontrolledTooltip
                     autohide={true}
                     placement="top"
-                    target="accountNumberTT"
+                    target="accountNumberTTAC"
                   >
                     Enter the bank account number to send the funds to. This should be numbers only.
                   </UncontrolledTooltip>

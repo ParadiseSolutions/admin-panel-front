@@ -122,6 +122,7 @@ const WesternUnionForm = ({
                     "bank_name_WU",
                     titleCapitalize(value)
                   );
+                  validationType.handleBlur(e);
                 }}
                 // onBlur={validationType.handleBlur}
                 value={validationType.values.bank_name_WU || ""}
@@ -229,11 +230,11 @@ const WesternUnionForm = ({
             <div className="d-flex justify-content-between">
               <Label className="form-label">Account Number</Label>
               <div>
-                <i className="uil-question-circle font-size-15" id="selectTT" />
+                <i className="uil-question-circle font-size-15" id="selectTTWU" />
                 <UncontrolledTooltip
                   autohide={true}
                   placement="top"
-                  target="selectTT"
+                  target="selectTTWU"
                 >
                   Enter the bank account number to send the funds to.
                 </UncontrolledTooltip>
@@ -268,8 +269,6 @@ const WesternUnionForm = ({
             </div>
             <Input
               type="number"
-              min="1"
-              max="18"
               name="clabe_WU"
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
@@ -318,7 +317,19 @@ const WesternUnionForm = ({
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.debit_card_WU || ""}
+                  invalid={
+                    validationType.touched.debit_card_WU &&
+                      validationType.errors.debit_card_WU
+                      ? true
+                      : false
+                  }
                 />
+                {validationType.touched.debit_card_WU &&
+                  validationType.errors.debit_card_WU ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.debit_card_WU}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
             <Col className="col-6">
@@ -351,6 +362,7 @@ const WesternUnionForm = ({
                       "swift_WU",
                       value.toUpperCase()
                     );
+                    validationType.handleBlur(e);
                   }}
                   value={validationType.values.swift_WU || ""}
                   invalid={

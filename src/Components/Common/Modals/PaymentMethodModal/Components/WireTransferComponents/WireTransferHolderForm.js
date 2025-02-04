@@ -77,6 +77,7 @@ const WireTransferHolderForm = ({
                   "address_WT",
                   capitalizeWords2(value)
                 );
+                validationType.handleBlur(e);
               }}
               value={validationType.values.address_WT || ""}
               invalid={
@@ -124,6 +125,7 @@ const WireTransferHolderForm = ({
                     "city_WT",
                     capitalizeWords2(value)
                   );
+                  validationType.handleBlur(e);
                 }}
                 value={validationType.values.city_WT || ""}
                 invalid={
@@ -155,8 +157,7 @@ const WireTransferHolderForm = ({
                     placement="top"
                     target="stateTT"
                   >
-                    Account Holder's Address. This must be the address
-                    associated with the bank account.
+                    Account Holder's State. This must be the city associated with the bank account.  It can be a US state like Nevada or it can be a Mexican State like Quintana Roo.  Write out the name rather than using an abbreviation like NV.
                   </UncontrolledTooltip>
                 </div>
               </div>
@@ -171,6 +172,7 @@ const WireTransferHolderForm = ({
                     "state_WT",
                     capitalizeWords2(value)
                   );
+                  validationType.handleBlur(e);
                 }}
                 value={validationType.values.state_WT || ""}
               />
@@ -208,6 +210,7 @@ const WireTransferHolderForm = ({
                     "postal_WT",
                     capitalizeWords2(value)
                   );
+                  validationType.handleBlur(e);
                 }}
               />
             </div>
@@ -325,6 +328,7 @@ const WireTransferHolderForm = ({
                     "email_WT",
                     value.toLowerCase()
                   );
+                  validationType.handleBlur(e);
                 }}
                 // onBlur={validationType.handleBlur}
                 value={validationType.values.email_WT || ""}

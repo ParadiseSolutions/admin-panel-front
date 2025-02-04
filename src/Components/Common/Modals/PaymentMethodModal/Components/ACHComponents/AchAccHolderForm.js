@@ -96,6 +96,7 @@ const AchAccHolderForm = ({
                     "city_ach",
                     capitalizeWords2(value)
                   );
+                  validationType.handleBlur(e);
                 }}
                 value={validationType.values.city_ach || ""}
                 invalid={
@@ -120,12 +121,12 @@ const AchAccHolderForm = ({
                 <div>
                   <i
                     className="uil-question-circle font-size-15"
-                    id="stateTT"
+                    id="stateTTACH"
                   />
                   <UncontrolledTooltip
                     autohide={true}
                     placement="top"
-                    target="stateTT"
+                    target="stateTTACH"
                   >
                     Account Holder's State. This must be the city associated with the bank account.  It can be a US state like Nevada or it can be a Mexican State like Quintana Roo.  Write out the name rather than using an abbreviation like NV.
                   </UncontrolledTooltip>
@@ -142,6 +143,7 @@ const AchAccHolderForm = ({
                     "state_ach",
                     capitalizeWords2(value)
                   );
+                  validationType.handleBlur(e);
                 }}
                 value={validationType.values.state_ach || ""}
               />
@@ -178,6 +180,7 @@ const AchAccHolderForm = ({
                     "postal_ach",
                     capitalizeWords2(value)
                   );
+                  validationType.handleBlur(e);
                 }}
                 value={validationType.values.postal_ach || ""}
               />
@@ -296,6 +299,7 @@ const AchAccHolderForm = ({
                     "email_ach",
                     value.toLowerCase()
                   );
+                  validationType.handleBlur(e);
                 }}
                 // onBlur={validationType.handleBlur}
                 value={validationType.values.email_ach || ""}

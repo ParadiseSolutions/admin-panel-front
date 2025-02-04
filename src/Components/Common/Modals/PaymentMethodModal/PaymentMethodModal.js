@@ -55,6 +55,7 @@ const PaymentMethodModal = ({
   const [countrySelected, setCountrySelected] = useState(0);
   const [currencySelected, setCurrencySelected] = useState(0);
   const [countryCodeSelected, setCountryCodeSelected] = useState("");
+  const [countryHolderSelected, setCountryHolderSelected] = useState("");
   const [accountTypeSelected, setAccountTypeSelected] = useState(0);
   const [extraFeeSelected, setExtraFeeSelected] = useState(0);
   const [paymentInstructionSelected, setPaymentInstructionSelected] =
@@ -93,7 +94,7 @@ const PaymentMethodModal = ({
         setPaymentDataEdit(resp.data.data);
       });
     } else {
-      setPaymentDataEdit(null);
+      setPaymentDataEdit([]);
     }
   }, [contactID]);
 
@@ -103,6 +104,7 @@ const PaymentMethodModal = ({
       setCountrySelected(paymentDataEdit?.bank_country);
       setCurrencySelected(paymentDataEdit?.currency_id);
       setCountryCodeSelected(paymentDataEdit?.phone_country);
+      setCountryHolderSelected(paymentDataEdit?.country_id)
       setAccountTypeSelected(paymentDataEdit?.account_type_id);
       setExtraFeeSelected(paymentDataEdit?.extrafee_id);
       setPaymentInstructionSelected(paymentDataEdit?.payment_instruction_id);
@@ -142,8 +144,8 @@ const PaymentMethodModal = ({
         ? paymentDataEdit?.account_number
         : "",
       clabe_WU: paymentDataEdit?.clabe ? paymentDataEdit?.clabe : "",
-      debit_card_WU: paymentDataEdit?.debit_card
-        ? paymentDataEdit?.debit_card
+      debit_card_WU: paymentDataEdit?.account_number
+        ? paymentDataEdit?.account_number
         : "",
       swift_WU: paymentDataEdit?.swift ? paymentDataEdit?.swift : "",
       name_WU: paymentDataEdit?.account_name
@@ -209,15 +211,15 @@ const PaymentMethodModal = ({
       }),
       ABA_Routing: Yup.string().when("payment_type", {
         is: 1,
-        then: (schema) => schema.max(9, "Must be 9 numerical digits"),
+        then: (schema) => schema.matches(/^.{9}$/, "Must be 9 numerical digits.").max(9, "Must be 9 numerical digits"),
       }),
       aba_routing_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.max(9, "Must be 9 numerical digits"),
+        then: (schema) => schema.matches(/^.{9}$/, "Must be 9 numerical digits.").max(9, "Must be 9 numerical digits"),
       }),
       aba_routing_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.max(9, "Must be 9 numerical digits"),
+        then: (schema) => schema.matches(/^.{9}$/, "Must be 9 numerical digits.").max(9, "Must be 9 numerical digits"),
       }),
       city_ach: Yup.string().when("payment_type", {
         is: 1,
@@ -229,19 +231,19 @@ const PaymentMethodModal = ({
       }),
       phone_ach: Yup.string().when("payment_type", {
         is: 1,
-        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Enter this is standard format 987 123 4567')
+        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required 987 123 4567')
       }),
       phone_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Enter this is standard format 987 123 4567')
+        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required 987 123 4567')
       }),
       phone_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Enter this is standard format 987 123 4567')
+        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required 987 123 4567')
       }),
       phone_CC: Yup.string().when("payment_type", {
         is: 2,
-        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Enter this is standard format 987 123 4567')
+        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required 987 123 4567')
       }),
       email_ach: Yup.string().when("payment_type", {
         is: 1,
@@ -277,11 +279,15 @@ const PaymentMethodModal = ({
       }),
       clabe_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/^.{18}$/, "Must be 18 characters.").max(18, "Must be 18 characters.")
+        then: (schema) => schema.matches(/^.{18}$/, "Must be 18 numerical digits.").max(18, "Must be 18 numerical digits.")
       }),
       clabe_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/^.{18}$/, "Must be 18 characters.").max(18, "Must be 18 characters.")
+        then: (schema) => schema.matches(/^.{18}$/, "Must be 18 numerical digits.").max(18, "Must be 18 numerical digits.")
+      }),
+      debit_card_WU: Yup.string().when("payment_type", {
+        is: 4,
+        then: (schema) => schema.matches(/^.{16}$/, "Must be 16 numerical digits.").max(16, "Must be 16 numerical digits.")
       }),
     }),
 
@@ -295,7 +301,7 @@ const PaymentMethodModal = ({
             type_id: paymentTypeSelected,
             country_id: null,
             currency_id: 1,
-            bank_name: values.bank_name_ach,
+            bank_name: values.bank_name,
             bank_country: 1,
             aba_routing: values.ABA_Routing,
             account_number: values.account_number,
@@ -317,23 +323,25 @@ const PaymentMethodModal = ({
             clabe: null,
           };
           break;
-
         case 4:
+          // Western Union
           data = {
             provider_id: id,
             type_id: paymentTypeSelected,
-            country_id: 1, // preguntar
+            country_id: countryHolderSelected, // preguntar
             currency_id: currencySelected,
             bank_name: values.bank_name_WU,
             bank_country: countrySelected,
+            aba_routing: null,
+            account_number: null,
             account_name: values.name_WU,
+            address: null,
             state: values.state_WU,
+            postal: null,
+            city: null,
             phone_country: countryCodeSelected,
             phone: values.phone_WU,
             email: values.email_WU,
-            address: null,
-            postal: null,
-            city: null,
             routing_number: null,
             swift: null,
             account_type_id: null,
@@ -342,25 +350,24 @@ const PaymentMethodModal = ({
             payment_instruction_id: null,
             form_url: null,
             clabe: null,
-            aba_routing: null,
-            account_number: null,
           };
 
-          if (countryCodeSelected === 1) {
-            data.aba_routing = values.aba_routing_WU;
-            data.account_number = values.account_number_WU;
-          } else if (countryCodeSelected === 2) {
+          if (countrySelected === 1) {
+            data.aba_routing = values.aba_routing_WU.toString();
+            data.account_number = values.account_number_WU.toString();
+          } else if (countrySelected === 2) {
             if (accountTypeSelected === 1) {
-              data.clabe = values.clabe_WU;
+              data.clabe = values.clabe_WU.toString();
             } else if (accountTypeSelected === 2) {
               data.account_number = values.debit_card_WU;
               data.swift = values.swift_WU;
-              data.account_type_id = accountTypeSelected;
             }
+            data.account_type_id = accountTypeSelected;
           }
 
           break;
         case 5:
+          //Wire Transfer
           data = {
             provider_id: id,
             type_id: paymentTypeSelected,
@@ -544,8 +551,17 @@ const PaymentMethodModal = ({
             }
           })
           .catch((error) => {
-            // console.log(error.response);
-            Swal.fire("Error!", `${error.response.data.data[0]}`, "error");
+            if (error.response.data.data === null) {
+              Swal.fire("Error!", String(error.response.data.message));
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+
+              Swal.fire("Error!", String(errorMessages[0]));
+            }
           });
       }
     },
@@ -565,11 +581,16 @@ const PaymentMethodModal = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ New Payment Method</h1>
+        {
+          contactID === false ? (
+            <h1 className="modal-title mt-0 text-white">+ New Payment Method</h1>
+          ):(<h1 className="modal-title mt-0 text-white">Edit Payment Method</h1>)
+        }
         <button
           onClick={() => {
             setAddContactModal(false);
             setPaymentDataEdit([]);
+            setContactID(false);
           }}
           type="button"
           className="close"
@@ -890,6 +911,8 @@ const PaymentMethodModal = ({
                     countryData={countryData}
                     countryCodeSelected={countryCodeSelected}
                     setCountryCodeSelected={setCountryCodeSelected}
+                    countryHolderSelected={countryHolderSelected}
+                    setCountryHolderSelected={setCountryHolderSelected}
                   />
                 ) : null}
                 {paymentTypeSelected === 5 ? (
@@ -913,6 +936,7 @@ const PaymentMethodModal = ({
                 onClick={() => {
                   setAddContactModal(false);
                   setPaymentDataEdit([]);
+                  setContactID(false);
                 }}
               >
                 Cancel
