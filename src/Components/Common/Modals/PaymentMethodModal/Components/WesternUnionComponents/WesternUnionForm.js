@@ -8,7 +8,9 @@ import {
   UncontrolledTooltip,
   Label,
   Input,
+  FormFeedback,
 } from "reactstrap";
+import { titleCapitalize } from "../../../../../../Utils/CommonFunctions";
 
 const WesternUnionForm = ({
   validationType,
@@ -114,9 +116,28 @@ const WesternUnionForm = ({
                 type="text"
                 name="bank_name_WU"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "bank_name_WU",
+                    titleCapitalize(value)
+                  );
+                }}
+                // onBlur={validationType.handleBlur}
                 value={validationType.values.bank_name_WU || ""}
+                invalid={
+                  validationType.touched.bank_name_WU &&
+                    validationType.errors.bank_name_WU
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.bank_name_WU &&
+                validationType.errors.bank_name_WU ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.bank_name_WU}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
           {countrySelected === 1 ? (
@@ -145,7 +166,19 @@ const WesternUnionForm = ({
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.aba_routing_WU || ""}
+                  invalid={
+                    validationType.touched.aba_routing_WU &&
+                      validationType.errors.aba_routing_WU
+                      ? true
+                      : false
+                  }
                 />
+                {validationType.touched.aba_routing_WU &&
+                  validationType.errors.aba_routing_WU ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.aba_routing_WU}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
           ) : (
@@ -241,7 +274,19 @@ const WesternUnionForm = ({
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
               value={validationType.values.clabe_WU || ""}
+              invalid={
+                validationType.touched.clabe_WU &&
+                  validationType.errors.clabe_WU
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.clabe_WU &&
+              validationType.errors.clabe_WU ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.clabe_WU}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       ) : null}
@@ -300,9 +345,27 @@ const WesternUnionForm = ({
                   type="text"
                   name="swift_WU"
                   onChange={validationType.handleChange}
-                  onBlur={validationType.handleBlur}
+                  onBlur={(e) => {
+                    const value = e.target.value || "";
+                    validationType.setFieldValue(
+                      "swift_WU",
+                      value.toUpperCase()
+                    );
+                  }}
                   value={validationType.values.swift_WU || ""}
+                  invalid={
+                    validationType.touched.swift_WU &&
+                      validationType.errors.swift_WU
+                      ? true
+                      : false
+                  }
                 />
+                {validationType.touched.swift_WU &&
+                  validationType.errors.swift_WU ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.swift_WU}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
           </Row>

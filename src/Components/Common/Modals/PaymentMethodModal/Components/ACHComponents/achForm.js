@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Col, UncontrolledTooltip, Label, Input, Row } from "reactstrap";
+import { Col, UncontrolledTooltip, Label, Input, Row, FormFeedback } from "reactstrap";
+import { titleCapitalize } from "../../../../../../Utils/CommonFunctions";
 
 const AchForm = ({
   validationType,
@@ -17,17 +18,18 @@ const AchForm = ({
           <div className="d-flex justify-content-between">
             <Label className="form-label">Country</Label>
             <div>
-              <i className="uil-question-circle font-size-15" id="countryTT" />
+              <i className="uil-question-circle font-size-15" id="countryTTACH" />
               <UncontrolledTooltip
                 autohide={true}
                 placement="top"
-                target="countryTT"
+                target="countryTTACH"
               >
                 Select the Country the bank account is located in.
               </UncontrolledTooltip>
             </div>
           </div>
           <Input
+            disabled={true}
             type="select"
             name="country"
             onChange={(e) => {
@@ -36,12 +38,9 @@ const AchForm = ({
             onBlur={validationType.handleBlur}
             value={countrySelected || ""}
           >
-            <option value={null}>Select....</option>
-            {countryData.map((item, index) => (
-              <option key={index} value={item.country_id}>
-                {item.country_name}
+              <option value="1">
+                USA
               </option>
-            ))}
           </Input>
         </div>
       </Col>
@@ -61,6 +60,7 @@ const AchForm = ({
             </div>
           </div>
           <Input
+          disabled="true"
             type="select"
             name="currency"
             onChange={(e) => {
@@ -69,12 +69,9 @@ const AchForm = ({
             onBlur={validationType.handleBlur}
             value={currencySelected || ""}
           >
-            <option value={null}>Select....</option>
-            {currencyData.map((item, index) => (
-              <option key={index} value={item.currency_id}>
-                {item.currency}
+            <option value="1">
+                USD
               </option>
-            ))}
           </Input>
         </div>
       </Col>
@@ -97,9 +94,28 @@ const AchForm = ({
             type="text"
             name="bank_name"
             onChange={validationType.handleChange}
-            onBlur={validationType.handleBlur}
+            onBlur={(e) => {
+              const value = e.target.value || "";
+              validationType.setFieldValue(
+                "bank_name",
+                titleCapitalize(value)
+              );
+            }}
+            // onBlur={validationType.handleBlur}
             value={validationType.values.bank_name || ""}
+            invalid={
+              validationType.touched.bank_name &&
+                validationType.errors.bank_name
+                ? true
+                : false
+            }
           />
+          {validationType.touched.bank_name &&
+            validationType.errors.bank_name ? (
+            <FormFeedback type="invalid">
+              {validationType.errors.bank_name}
+            </FormFeedback>
+          ) : null}
         </div>
       </Col>
       <Col className="col-12">
@@ -109,13 +125,15 @@ const AchForm = ({
               <div className="d-flex justify-content-between">
                 <Label className="form-label">ABA Routing</Label>
                 <div>
-                  <i className="uil-question-circle font-size-15" id="abaTT" />
+                  <i className="uil-question-circle font-size-15" id="abaTTACH" />
                   <UncontrolledTooltip
                     autohide={true}
                     placement="top"
-                    target="abaTT"
+                    target="abaTTACH"
                   >
-                    Pending Tooltip
+                    Enter the ABA Routing number associated with the account holder's bank account.
+                    <br/>
+                    The ABA Routing number is 9 numerical digits.
                   </UncontrolledTooltip>
                 </div>
               </div>
@@ -125,7 +143,19 @@ const AchForm = ({
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
                 value={validationType.values.ABA_Routing || ""}
+                invalid={
+                  validationType.touched.ABA_Routing &&
+                    validationType.errors.ABA_Routing
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.ABA_Routing &&
+                validationType.errors.ABA_Routing ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.ABA_Routing}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
           <Col className="col-6">
@@ -142,7 +172,7 @@ const AchForm = ({
                     placement="top"
                     target="accountNumberTT"
                   >
-                    Pending Tooltip
+                    Enter the bank account number to send the funds to. This should be numbers only.
                   </UncontrolledTooltip>
                 </div>
               </div>

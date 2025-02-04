@@ -206,4 +206,23 @@ export const calcNetPrice = (our_price, commission, current_net_price) => {
 
 const roundNearest5 = (num) => {
     return Math.round(num / 5) * 5;
-  }
+}
+
+export const titleCapitalize = (texto) => {
+    const excepciones = [
+        'de', 'del', 'la', 'y', 'en', 'el', 'con', 'a', 'por', 'para', // Español
+        'of', 'the', 'and', 'in', 'on', 'at', 'with', 'for', 'by', 'to', 'from' // Inglés
+    ];
+
+    return texto
+        .toLowerCase() // Convierte todo a minúsculas
+        .split(' ') // Divide el texto en palabras
+        .map((palabra, index) => {
+            // Capitaliza solo si no está en la lista de excepciones o es la primera palabra
+            if (excepciones.includes(palabra) && index !== 0) {
+                return palabra;
+            }
+            return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+        })
+        .join(' '); // Une las palabras en una cadena de texto
+}

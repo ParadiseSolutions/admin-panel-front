@@ -8,6 +8,7 @@ import {
   UncontrolledTooltip,
   Label,
   Input,
+  FormFeedback,
 } from "reactstrap";
 
 const WesternUnionHolderForm = ({
@@ -40,9 +41,28 @@ const WesternUnionHolderForm = ({
               type="text"
               name="email_WU"
               onChange={validationType.handleChange}
-              onBlur={validationType.handleBlur}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "email_WU",
+                  value.toLowerCase()
+                );
+              }}
+              // onBlur={validationType.handleBlur}
               value={validationType.values.email_WU || ""}
+              invalid={
+                validationType.touched.email_WU &&
+                  validationType.errors.email_WU
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.email_WU &&
+              validationType.errors.email_WU ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.email_WU}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       </Row>
@@ -101,7 +121,19 @@ const WesternUnionHolderForm = ({
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
               value={validationType.values.phone_WU || ""}
+              invalid={
+                validationType.touched.phone_WU &&
+                  validationType.errors.phone_WU
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.phone_WU &&
+              validationType.errors.phone_WU ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.phone_WU}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       </Row>
