@@ -369,7 +369,7 @@ const PaymentMethodModal = ({
             bank_name: values.bank_name_WT,
             bank_country: countrySelected,
             aba_routing: values.aba_routing_WT,
-            account_number: countrySelected === 1 ? null : values.account_number_WT,
+            account_number: +countrySelected === 2 ? null : values.account_number_WT.toString(),
             account_name: values.name_WT,
             address: values.address_WT,
             state: values.state_WT,
@@ -385,7 +385,7 @@ const PaymentMethodModal = ({
             amount: null,
             payment_instruction_id: null,
             form_url: null,
-            clabe: countrySelected === 1 ? null : values.clabe_WT,
+            clabe: +countrySelected === 1 ? null : values.clabe_WT,
           };
           break;
 
@@ -519,6 +519,7 @@ const PaymentMethodModal = ({
                 "success"
               ).then(() => {
                 setAddContactModal(false);
+                setPaymentDataEdit([]);
                 refreshTable();
               });
             }
@@ -537,6 +538,7 @@ const PaymentMethodModal = ({
                 "success"
               ).then(() => {
                 setAddContactModal(false);
+                setPaymentDataEdit([]);
                 refreshTable();
               });
             }
