@@ -8,7 +8,9 @@ import {
   UncontrolledTooltip,
   Label,
   Input,
+  FormFeedback,
 } from "reactstrap";
+import { titleCapitalize } from "../../../../../../Utils/CommonFunctions";
 
 const WesternUnionForm = ({
   validationType,
@@ -26,7 +28,19 @@ const WesternUnionForm = ({
     <>
       <Col className="col-5">
         <div className="form-outline mb-2">
-          <Label className="form-label">Country</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Country</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="countryTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="countryTT"
+              >
+                Select the Country the bank account is located in.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name="country"
@@ -47,7 +61,19 @@ const WesternUnionForm = ({
       </Col>
       <Col className="col-2">
         <div className="form-outline mb-2">
-          <Label className="form-label">Currency</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Currency</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="currencyTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="currencyTT"
+              >
+                Select the Currency of the Bank Account.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name="currency"
@@ -70,33 +96,112 @@ const WesternUnionForm = ({
         <Row>
           <Col className="col-6 mb-2">
             <div className="form-outline">
-              <Label className="form-label">Bank Name</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">Bank Name</Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="banknameTT"
+                  />
+                  <UncontrolledTooltip
+                    autohide={true}
+                    placement="top"
+                    target="banknameTT"
+                  >
+                    Name of the Bank that the account is held at.
+                  </UncontrolledTooltip>
+                </div>
+              </div>
               <Input
                 type="text"
                 name="bank_name_WU"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "bank_name_WU",
+                    titleCapitalize(value)
+                  );
+                  validationType.handleBlur(e);
+                }}
+                // onBlur={validationType.handleBlur}
                 value={validationType.values.bank_name_WU || ""}
+                invalid={
+                  validationType.touched.bank_name_WU &&
+                    validationType.errors.bank_name_WU
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.bank_name_WU &&
+                validationType.errors.bank_name_WU ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.bank_name_WU}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
           {countrySelected === 1 ? (
             <Col className="col-6 mb-2">
               <div className="form-outline">
-                <Label className="form-label">ABA Routing</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">ABA Routing</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="abaTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="abaTT"
+                    >
+                      Enter the ABA Routing number associated with the account
+                      holder's bank account.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
-                  type="text"
+                  type="number"
                   name="aba_routing_WU"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.aba_routing_WU || ""}
+                  invalid={
+                    validationType.touched.aba_routing_WU &&
+                      validationType.errors.aba_routing_WU
+                      ? true
+                      : false
+                  }
                 />
+                {validationType.touched.aba_routing_WU &&
+                  validationType.errors.aba_routing_WU ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.aba_routing_WU}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
           ) : (
             <Col className="col-6 mb-2">
               <div className="form-outline">
-                <Label className="form-label">Select One</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Select One</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="selectTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="selectTT"
+                    >
+                      Choose the method you will use to specify the account
+                      information.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name="price_type"
@@ -122,9 +227,21 @@ const WesternUnionForm = ({
       {countrySelected === 1 ? (
         <Col className="col-12">
           <div className="form-outline">
-            <Label className="form-label">Account Number</Label>
+            <div className="d-flex justify-content-between">
+              <Label className="form-label">Account Number</Label>
+              <div>
+                <i className="uil-question-circle font-size-15" id="selectTTWU" />
+                <UncontrolledTooltip
+                  autohide={true}
+                  placement="top"
+                  target="selectTTWU"
+                >
+                  Enter the bank account number to send the funds to.
+                </UncontrolledTooltip>
+              </div>
+            </div>
             <Input
-              type="text"
+              type="number"
               name="account_number_WU"
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
@@ -136,51 +253,136 @@ const WesternUnionForm = ({
       {countrySelected === 2 && accountTypeSelected === 1 ? (
         <Col className="col-12">
           <div className="form-outline">
-            <Label className="form-label">Clabe</Label>
+            <div className="d-flex justify-content-between">
+              <Label className="form-label">Clabe</Label>
+              <div>
+                <i className="uil-question-circle font-size-15" id="clabeTT" />
+                <UncontrolledTooltip
+                  autohide={true}
+                  placement="top"
+                  target="clabeTT"
+                >
+                  Enter the CLABE number associated with the account holder's
+                  account.
+                </UncontrolledTooltip>
+              </div>
+            </div>
             <Input
-              type="text"
+              type="number"
               name="clabe_WU"
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
               value={validationType.values.clabe_WU || ""}
+              invalid={
+                validationType.touched.clabe_WU &&
+                  validationType.errors.clabe_WU
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.clabe_WU &&
+              validationType.errors.clabe_WU ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.clabe_WU}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
-      ) : 
-     null
-      }
+      ) : null}
       {countrySelected === 2 && accountTypeSelected === 2 ? (
-         <Col className='12'>
+        <Col className="12">
           <Row>
             <Col className="col-6">
               <div className="form-outline">
-                <Label className="form-label">Debit Card</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Debit Card</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="debitTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="debitTT"
+                    >
+                      Enter the account holder's debit card number. The debit
+                      card should contain 16 numerical digits.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="text"
                   name="debit_card_WU"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.debit_card_WU || ""}
+                  invalid={
+                    validationType.touched.debit_card_WU &&
+                      validationType.errors.debit_card_WU
+                      ? true
+                      : false
+                  }
                 />
+                {validationType.touched.debit_card_WU &&
+                  validationType.errors.debit_card_WU ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.debit_card_WU}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
             <Col className="col-6">
               <div className="form-outline">
-                <Label className="form-label">SWIFT</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">SWIFT</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="swiftTT"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="swiftTT"
+                    >
+                      Enter the SWIFT Code associated with the account holder's
+                      bank account. The SWIFT Code is either 8 or 11 digits, all
+                      capital letters.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="text"
                   name="swift_WU"
                   onChange={validationType.handleChange}
-                  onBlur={validationType.handleBlur}
+                  onBlur={(e) => {
+                    const value = e.target.value || "";
+                    validationType.setFieldValue(
+                      "swift_WU",
+                      value.toUpperCase()
+                    );
+                    validationType.handleBlur(e);
+                  }}
                   value={validationType.values.swift_WU || ""}
+                  invalid={
+                    validationType.touched.swift_WU &&
+                      validationType.errors.swift_WU
+                      ? true
+                      : false
+                  }
                 />
+                {validationType.touched.swift_WU &&
+                  validationType.errors.swift_WU ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.swift_WU}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
           </Row>
         </Col>
-      ) : 
-     null
-      }
+      ) : null}
     </>
   );
 };

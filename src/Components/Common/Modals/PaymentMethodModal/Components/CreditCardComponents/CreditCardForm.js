@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Input, Label, Row } from "reactstrap";
+import { Col, FormFeedback, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { setDecimalFormatFee } from "../../../../../../Utils/CommonFunctions";
 
 const CreditCardForm = ({
   validationType,
@@ -14,7 +15,21 @@ const CreditCardForm = ({
     <>
       <Col className="col-2">
         <div className="form-outline">
-          <Label className="form-label">Extra Fee</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Extra Fee</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="extrafeeTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="extrafeeTT"
+              >
+                If there is an extra fee charged for accepting a PayPal payment,
+                specify if it is a percentage (Add 3.5%) or a Fixed Amount (Add
+                $10.00 USD).
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name=""
@@ -36,7 +51,20 @@ const CreditCardForm = ({
       </Col>
       {extraFeeSelected === 3 || extraFeeSelected === 1 ? (
         <Col className="col-2">
-          <Label className="form-label">Amount</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Amount</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="amountTTCC" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="amountTTCC"
+              >
+                Enter the Amount of the Extra Fee in either Percentage or
+                Currency.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <div className="input-group">
             {extraFeeSelected === 3 ? (
               <span
@@ -53,6 +81,17 @@ const CreditCardForm = ({
               type="text"
               onChange={validationType.handleChange}
               value={validationType.values.amount_CC || ""}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "amount_CC",
+                  setDecimalFormatFee(
+                    value,
+                    extraFeeSelected
+                  )
+                );
+                validationType.handleBlur(e);
+              }}
             />
             {extraFeeSelected === 1 ? (
               <span
@@ -68,7 +107,22 @@ const CreditCardForm = ({
       ) : null}
       <Col className="col-3">
         <div className="form-outline">
-          <Label className="form-label">Payment Instruction</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Payment Instruction</Label>
+            <div>
+              <i
+                className="uil-question-circle font-size-15"
+                id="paymentinstructionTT"
+              />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="paymentinstructionTT"
+              >
+                Select how the payment should be taken by credit card.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <Input
             type="select"
             name=""
@@ -89,7 +143,20 @@ const CreditCardForm = ({
       </Col>
       {paymentInstructionSelected === 1 ? (
         <Col className="col-2">
-          <Label className="form-label">Phone</Label>
+          <div className="d-flex justify-content-between">
+            <Label className="form-label">Phone</Label>
+            <div>
+              <i className="uil-question-circle font-size-15" id="phoneTT" />
+              <UncontrolledTooltip
+                autohide={true}
+                placement="top"
+                target="phoneTT"
+              >
+                Specify the phone number that should be called to place the
+                credit card payment.
+              </UncontrolledTooltip>
+            </div>
+          </div>
           <div className="input-group">
             <Input
               name="phone_CC"
@@ -97,7 +164,20 @@ const CreditCardForm = ({
               type="text"
               onChange={validationType.handleChange}
               value={validationType.values.phone_CC || ""}
+              onBlur={validationType.handleBlur}
+              invalid={
+                validationType.touched.phone_CC &&
+                  validationType.errors.phone_CC
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.phone_CC &&
+              validationType.errors.phone_CC ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.phone_CC}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       ) : null}
@@ -105,20 +185,52 @@ const CreditCardForm = ({
         <Row>
           <Col className="col-5 mt-2">
             <div className="form-outline">
-              <Label className="form-label">
-                {paymentInstructionSelected === 2
-                  ? "Payment Link"
-                  : paymentInstructionSelected === 4
-                  ? "From URL"
-                  : ""}
-              </Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">
+                  {paymentInstructionSelected === 2
+                    ? "Payment Link"
+                    : paymentInstructionSelected === 4
+                    ? "From URL"
+                    : ""}
+                </Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="paymentTT"
+                  />
+                  <UncontrolledTooltip
+                    autohide={true}
+                    placement="top"
+                    target="paymentTT"
+                  >
+                    {paymentInstructionSelected === 2
+                      ? "Enter the Payment Link you will send to the customer to make the credit card payment."
+                      : paymentInstructionSelected === 4
+                      ? "Enter a link to the credit card authorization form that the customer will need to fill out and return."
+                      : ""}
+                  </UncontrolledTooltip>
+                </div>
+              </div>
+
               <Input
                 type="text"
                 name="payment_link_CC"
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
                 value={validationType.values.payment_link_CC || ""}
+                invalid={
+                  validationType.touched.payment_link_CC &&
+                    validationType.errors.payment_link_CC
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.payment_link_CC &&
+                validationType.errors.payment_link_CC ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.payment_link_CC}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
         </Row>

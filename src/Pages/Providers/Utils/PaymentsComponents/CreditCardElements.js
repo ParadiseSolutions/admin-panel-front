@@ -1,18 +1,9 @@
 import React from "react";
 
-const CreditCardElements = ({}) => {
+const CreditCardElements = ({ methodData }) => {
   return (
     <>
-      <div className="">
-        <span className="">
-          Please download and fill in the following form to complete payment URL
-          example.com
-        </span>
-        <br />
-        <span className="">
-          *A 3.5% fee applies to Credit Card payments. Total to Send: Amount +
-          Fee
-        </span>
+      <div style={{width:"315px"}} className="" dangerouslySetInnerHTML={{ __html: methodData?.getSpecifications.email }}>
       </div>
     </>
   );

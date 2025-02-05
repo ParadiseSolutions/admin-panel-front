@@ -44,6 +44,11 @@ useEffect(() => {
     setAddContactModal(!addContactModal);
   };
 
+  const refreshTable = () => {
+    getMethodInfo(id).then((resp) =>{
+      setTableData(resp.data.data);
+    })
+  };
 
   //delete contact
   const onDelete = (depData) => {
@@ -69,7 +74,6 @@ useEffect(() => {
     });
   };
 
-  console.log(tableData);
   const columns = useMemo(
     () => [
       {
@@ -147,7 +151,7 @@ useEffect(() => {
                 }}
                 className="text-info"
               >
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" />
+                <i style={{cursor:"pointer"}} className="mdi mdi-pencil font-size-18" id="edittooltip" />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -162,7 +166,7 @@ useEffect(() => {
                   onDelete(contactInfo);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i style={{cursor:"pointer"}} className="mdi mdi-delete font-size-18" id="deletetooltip" />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -220,6 +224,7 @@ useEffect(() => {
           onClickNewContactProvider={onClickNewContactProvider}
           setContactID={setContactID}
           contactID={contactID}
+          refreshTable={refreshTable}
         />
        
       </Collapse>
