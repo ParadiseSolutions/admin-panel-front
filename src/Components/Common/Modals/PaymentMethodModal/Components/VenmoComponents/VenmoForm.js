@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { Col, FormFeedback, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { setDecimalFormatFee } from "../../../../../../Utils/CommonFunctions";
 
 const VenmoForm = ({
   validationType,
@@ -14,11 +15,11 @@ const VenmoForm = ({
           <div className="d-flex justify-content-between">
             <Label className="form-label">Email</Label>
             <div>
-              <i className="uil-question-circle font-size-15" id="emailTT" />
+              <i className="uil-question-circle font-size-15" id="emailTTVE" />
               <UncontrolledTooltip
                 autohide={true}
                 placement="top"
-                target="emailTT"
+                target="emailTTVE"
               >
                 Enter the email address associated with the Venmo account.
               </UncontrolledTooltip>
@@ -28,9 +29,29 @@ const VenmoForm = ({
             type="text"
             name="email_venmo"
             onChange={validationType.handleChange}
-            onBlur={validationType.handleBlur}
+            // onBlur={validationType.handleBlur}
             value={validationType.values.email_venmo || ""}
+            onBlur={(e) => {
+              const value = e.target.value || "";
+              validationType.setFieldValue(
+                "email_venmo",
+                value.toLowerCase()
+              );
+              validationType.handleBlur(e);
+            }}
+            invalid={
+              validationType.touched.email_venmo &&
+                validationType.errors.email_venmo
+                ? true
+                : false
+            }
           />
+          {validationType.touched.email_venmo &&
+            validationType.errors.email_venmo ? (
+            <FormFeedback type="invalid">
+              {validationType.errors.email_venmo}
+            </FormFeedback>
+          ) : null}
         </div>
       </Col>
       <Col className="col-3">
@@ -74,11 +95,11 @@ const VenmoForm = ({
           <div className="d-flex justify-content-between">
             <Label className="form-label">Amount</Label>
             <div>
-              <i className="uil-question-circle font-size-15" id="amountTT" />
+              <i className="uil-question-circle font-size-15" id="amountTTVE" />
               <UncontrolledTooltip
                 autohide={true}
                 placement="top"
-                target="amountTT"
+                target="amountTTVE"
               >
                 Enter the Amount of the Extra Fee in either Percentage or
                 Currency.
@@ -101,6 +122,17 @@ const VenmoForm = ({
               type="text"
               onChange={validationType.handleChange}
               value={validationType.values.amount_venmo || ""}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "amount_venmo",
+                  setDecimalFormatFee(
+                    value,
+                    extraFeeSelected
+                  )
+                );
+                validationType.handleBlur(e);
+              }}
             />
             {extraFeeSelected === 1 ? (
               <span

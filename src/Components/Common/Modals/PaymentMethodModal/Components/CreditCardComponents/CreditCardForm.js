@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { Col, FormFeedback, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { setDecimalFormatFee } from "../../../../../../Utils/CommonFunctions";
 
 const CreditCardForm = ({
   validationType,
@@ -53,11 +54,11 @@ const CreditCardForm = ({
           <div className="d-flex justify-content-between">
             <Label className="form-label">Amount</Label>
             <div>
-              <i className="uil-question-circle font-size-15" id="amountTT" />
+              <i className="uil-question-circle font-size-15" id="amountTTCC" />
               <UncontrolledTooltip
                 autohide={true}
                 placement="top"
-                target="amountTT"
+                target="amountTTCC"
               >
                 Enter the Amount of the Extra Fee in either Percentage or
                 Currency.
@@ -80,6 +81,17 @@ const CreditCardForm = ({
               type="text"
               onChange={validationType.handleChange}
               value={validationType.values.amount_CC || ""}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "amount_CC",
+                  setDecimalFormatFee(
+                    value,
+                    extraFeeSelected
+                  )
+                );
+                validationType.handleBlur(e);
+              }}
             />
             {extraFeeSelected === 1 ? (
               <span
@@ -152,7 +164,20 @@ const CreditCardForm = ({
               type="text"
               onChange={validationType.handleChange}
               value={validationType.values.phone_CC || ""}
+              onBlur={validationType.handleBlur}
+              invalid={
+                validationType.touched.phone_CC &&
+                  validationType.errors.phone_CC
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.phone_CC &&
+              validationType.errors.phone_CC ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.phone_CC}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       ) : null}
@@ -193,7 +218,19 @@ const CreditCardForm = ({
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
                 value={validationType.values.payment_link_CC || ""}
+                invalid={
+                  validationType.touched.payment_link_CC &&
+                    validationType.errors.payment_link_CC
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.payment_link_CC &&
+                validationType.errors.payment_link_CC ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.payment_link_CC}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
         </Row>

@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { Col, FormFeedback, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { setDecimalFormatFee } from "../../../../../../Utils/CommonFunctions";
 
 const ZelleForm = ({
   validationType,
@@ -28,9 +29,29 @@ const ZelleForm = ({
             type="text"
             name="email_zelle"
             onChange={validationType.handleChange}
-            onBlur={validationType.handleBlur}
+            // onBlur={validationType.handleBlur}
             value={validationType.values.email_zelle || ""}
+            onBlur={(e) => {
+              const value = e.target.value || "";
+              validationType.setFieldValue(
+                "email_zelle",
+                value.toLowerCase()
+              );
+              validationType.handleBlur(e);
+            }}
+            invalid={
+              validationType.touched.email_zelle &&
+                validationType.errors.email_zelle
+                ? true
+                : false
+            }
           />
+          {validationType.touched.email_zelle &&
+            validationType.errors.email_zelle ? (
+            <FormFeedback type="invalid">
+              {validationType.errors.email_zelle}
+            </FormFeedback>
+          ) : null}
         </div>
       </Col>
       <Col className="col-3">
@@ -74,11 +95,11 @@ const ZelleForm = ({
           <div className="d-flex justify-content-between">
             <Label className="form-label">Amount</Label>
             <div>
-              <i className="uil-question-circle font-size-15" id="amountTT" />
+              <i className="uil-question-circle font-size-15" id="amountTTZE" />
               <UncontrolledTooltip
                 autohide={true}
                 placement="top"
-                target="amountTT"
+                target="amountTTZE"
               >
                 Enter the Amount of the Extra Fee in either Percentage or
                 Currency.
@@ -101,6 +122,17 @@ const ZelleForm = ({
               type="text"
               onChange={validationType.handleChange}
               value={validationType.values.amount_zelle || ""}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "amount_zelle",
+                  setDecimalFormatFee(
+                    value,
+                    extraFeeSelected
+                  )
+                );
+                validationType.handleBlur(e);
+              }}
             />
             {extraFeeSelected === 1 ? (
               <span

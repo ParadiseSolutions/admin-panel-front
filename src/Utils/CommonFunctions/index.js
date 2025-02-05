@@ -226,3 +226,18 @@ export const titleCapitalize = (texto) => {
         })
         .join(' '); // Une las palabras en una cadena de texto
 }
+
+export const setDecimalFormatFee = (currentValue, extraFeeSelected) => {
+    if(currentValue !== null && !isNaN(currentValue) && currentValue !== "") {
+        if(+extraFeeSelected === 1) {
+            currentValue = parseFloat(currentValue).toFixed(1)
+        } else if(+extraFeeSelected === 2) {
+            currentValue = currentValue
+        } else {
+            currentValue = parseFloat(currentValue).toFixed(2)
+        }
+    } else {
+        currentValue = "";
+    }
+    return isNaN(currentValue) ? "" : currentValue
+}
