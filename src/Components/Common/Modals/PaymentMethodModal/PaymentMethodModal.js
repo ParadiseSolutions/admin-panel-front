@@ -273,10 +273,10 @@ const PaymentMethodModal = ({
         is: 5,
         then: (schema) => schema.matches(/^.{8}$|^.{11}$/, "Must be 8 or 11 characters.").max(11, "Max 11 characters.")
       }),
-      swift_WU: Yup.string().when("payment_type", {
-        is: 4,
-        then: (schema) => schema.matches(/^.{8}$|^.{11}$/, "Must be 8 or 11 characters.").max(11, "Max 11 characters.")
-      }),
+      // swift_WU: Yup.string().when("payment_type", {
+      //   is: 4,
+      //   then: (schema) => schema.matches(/^.{8}$|^.{11}$/, "Must be 8 or 11 characters.").max(11, "Max 11 characters.")
+      // }),
       clabe_WT: Yup.string().when("payment_type", {
         is: 5,
         then: (schema) => schema.matches(/^.{18}$/, "Must be 18 numerical digits.").max(18, "Must be 18 numerical digits.")
@@ -368,7 +368,7 @@ const PaymentMethodModal = ({
               data.clabe = values.clabe_WU.toString();
             } else if (accountTypeSelected === 2) {
               data.account_number = values.debit_card_WU;
-              data.swift = values.swift_WU;
+              // data.swift = values.swift_WU;
             }
             data.account_type_id = accountTypeSelected;
           }
