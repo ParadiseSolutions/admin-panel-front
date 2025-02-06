@@ -1,5 +1,7 @@
+import { lowerCase } from "lodash";
 import React, { useState } from "react";
-import { Col, UncontrolledTooltip, Label, Input, Row } from "reactstrap";
+import { Col, UncontrolledTooltip, Label, Input, Row, FormFeedback } from "reactstrap";
+import { capitalizeWords2 } from "../../../../../../Utils/CommonFunctions";
 
 const AchAccHolderForm = ({
   validationType,
@@ -87,9 +89,29 @@ const AchAccHolderForm = ({
                 type="text"
                 name="city_ach"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                // onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "city_ach",
+                    capitalizeWords2(value)
+                  );
+                  validationType.handleBlur(e);
+                }}
                 value={validationType.values.city_ach || ""}
+                invalid={
+                  validationType.touched.city_ach &&
+                    validationType.errors.city_ach
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.city_ach &&
+                validationType.errors.city_ach ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.city_ach}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
           <Col className="col-4">
@@ -99,15 +121,14 @@ const AchAccHolderForm = ({
                 <div>
                   <i
                     className="uil-question-circle font-size-15"
-                    id="stateTT"
+                    id="stateTTACH"
                   />
                   <UncontrolledTooltip
                     autohide={true}
                     placement="top"
-                    target="stateTT"
+                    target="stateTTACH"
                   >
-                    Account Holder's Address. This must be the address
-                    associated with the bank account.
+                    Account Holder's State. This must be the city associated with the bank account.  It can be a US state like Nevada or it can be a Mexican State like Quintana Roo.  Write out the name rather than using an abbreviation like NV.
                   </UncontrolledTooltip>
                 </div>
               </div>
@@ -115,7 +136,15 @@ const AchAccHolderForm = ({
                 type="text"
                 name="state_ach"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                // onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "state_ach",
+                    capitalizeWords2(value)
+                  );
+                  validationType.handleBlur(e);
+                }}
                 value={validationType.values.state_ach || ""}
               />
             </div>
@@ -144,7 +173,15 @@ const AchAccHolderForm = ({
                 type="text"
                 name="postal_ach"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                // onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "postal_ach",
+                    capitalizeWords2(value)
+                  );
+                  validationType.handleBlur(e);
+                }}
                 value={validationType.values.postal_ach || ""}
               />
             </div>
@@ -218,7 +255,19 @@ const AchAccHolderForm = ({
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
                 value={validationType.values.phone_ach || ""}
+                invalid={
+                  validationType.touched.phone_ach &&
+                    validationType.errors.phone_ach
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.phone_ach &&
+                validationType.errors.phone_ach ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.phone_ach}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
           <Col className="col-5">
@@ -244,9 +293,29 @@ const AchAccHolderForm = ({
                 type="text"
                 name="email_ach"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "email_ach",
+                    value.toLowerCase()
+                  );
+                  validationType.handleBlur(e);
+                }}
+                // onBlur={validationType.handleBlur}
                 value={validationType.values.email_ach || ""}
+                invalid={
+                  validationType.touched.email_ach &&
+                    validationType.errors.email_ach
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.email_ach &&
+                validationType.errors.email_ach ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.email_ach}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
         </Row>

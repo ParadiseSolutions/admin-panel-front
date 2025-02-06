@@ -8,7 +8,9 @@ import {
   UncontrolledTooltip,
   Label,
   Input,
+  FormFeedback,
 } from "reactstrap";
+import { capitalizeWords2 } from "../../../../../../Utils/CommonFunctions";
 
 const WireTransferHolderForm = ({
   validationType,
@@ -68,9 +70,29 @@ const WireTransferHolderForm = ({
               type="text"
               name="address_WT"
               onChange={validationType.handleChange}
-              onBlur={validationType.handleBlur}
+              // onBlur={validationType.handleBlur}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "address_WT",
+                  capitalizeWords2(value)
+                );
+                validationType.handleBlur(e);
+              }}
               value={validationType.values.address_WT || ""}
+              invalid={
+                validationType.touched.address_WT &&
+                  validationType.errors.address_WT
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.address_WT &&
+              validationType.errors.address_WT ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.address_WT}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       </Col>
@@ -96,9 +118,29 @@ const WireTransferHolderForm = ({
                 type="text"
                 name="city_WT"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                // onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "city_WT",
+                    capitalizeWords2(value)
+                  );
+                  validationType.handleBlur(e);
+                }}
                 value={validationType.values.city_WT || ""}
+                invalid={
+                  validationType.touched.city_WT &&
+                    validationType.errors.city_WT
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.city_WT &&
+                validationType.errors.city_WT ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.city_WT}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
           <Col className="col-4">
@@ -115,8 +157,7 @@ const WireTransferHolderForm = ({
                     placement="top"
                     target="stateTT"
                   >
-                    Account Holder's Address. This must be the address
-                    associated with the bank account.
+                    Account Holder's State. This must be the city associated with the bank account.  It can be a US state like Nevada or it can be a Mexican State like Quintana Roo.  Write out the name rather than using an abbreviation like NV.
                   </UncontrolledTooltip>
                 </div>
               </div>
@@ -124,7 +165,15 @@ const WireTransferHolderForm = ({
                 type="text"
                 name="state_WT"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                // onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "state_WT",
+                    capitalizeWords2(value)
+                  );
+                  validationType.handleBlur(e);
+                }}
                 value={validationType.values.state_WT || ""}
               />
             </div>
@@ -153,8 +202,16 @@ const WireTransferHolderForm = ({
                 type="text"
                 name="postal_WT"
                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
                 value={validationType.values.postal_WT || ""}
+                // onBlur={validationType.handleBlur}
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "postal_WT",
+                    capitalizeWords2(value)
+                  );
+                  validationType.handleBlur(e);
+                }}
               />
             </div>
           </Col>
@@ -222,12 +279,24 @@ const WireTransferHolderForm = ({
                 </div>
               </div>
               <Input
-                type="number"
+                type="text"
                 name="phone_WT"
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
                 value={validationType.values.phone_WT || ""}
+                invalid={
+                  validationType.touched.phone_WT &&
+                    validationType.errors.phone_WT
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.phone_WT &&
+                validationType.errors.phone_WT ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.phone_WT}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
           <Col className="col-5">
@@ -252,10 +321,30 @@ const WireTransferHolderForm = ({
               <Input
                 type="text"
                 name="email_WT"
-                onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
+                onChange={validationType.handleChange}                
+                onBlur={(e) => {
+                  const value = e.target.value || "";
+                  validationType.setFieldValue(
+                    "email_WT",
+                    value.toLowerCase()
+                  );
+                  validationType.handleBlur(e);
+                }}
+                // onBlur={validationType.handleBlur}
                 value={validationType.values.email_WT || ""}
+                invalid={
+                  validationType.touched.email_WT &&
+                    validationType.errors.email_WT
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.email_WT &&
+                validationType.errors.email_WT ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.email_WT}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
         </Row>

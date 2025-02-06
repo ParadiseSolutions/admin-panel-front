@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { Col, FormFeedback, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { setDecimalFormatFee } from "../../../../../../Utils/CommonFunctions";
 
 const PaypalForm = ({
   validationType,
@@ -14,11 +15,11 @@ const PaypalForm = ({
           <div className="d-flex justify-content-between">
             <Label className="form-label">Email</Label>
             <div>
-              <i className="uil-question-circle font-size-15" id="emailTT" />
+              <i className="uil-question-circle font-size-15" id="emailTTPP" />
               <UncontrolledTooltip
                 autohide={true}
                 placement="top"
-                target="emailTT"
+                target="emailTTPP"
               >
                 Enter the email address associated with the PayPal account.
               </UncontrolledTooltip>
@@ -28,9 +29,28 @@ const PaypalForm = ({
             type="text"
             name="email_PP"
             onChange={validationType.handleChange}
-            onBlur={validationType.handleBlur}
+            onBlur={(e) => {
+              const value = e.target.value || "";
+              validationType.setFieldValue(
+                "email_PP",
+                value.toLowerCase()
+              );
+              validationType.handleBlur(e);
+            }}
             value={validationType.values.email_PP || ""}
+            invalid={
+              validationType.touched.email_PP &&
+                validationType.errors.email_PP
+                ? true
+                : false
+            }
           />
+          {validationType.touched.email_PP &&
+            validationType.errors.email_PP ? (
+            <FormFeedback type="invalid">
+              {validationType.errors.email_PP}
+            </FormFeedback>
+          ) : null}
         </div>
       </Col>
       <Col className="col-3">
@@ -74,11 +94,11 @@ const PaypalForm = ({
           <div className="d-flex justify-content-between">
             <Label className="form-label">Amount</Label>
             <div>
-              <i className="uil-question-circle font-size-15" id="amountTT" />
+              <i className="uil-question-circle font-size-15" id="amountTTPP" />
               <UncontrolledTooltip
                 autohide={true}
                 placement="top"
-                target="amountTT"
+                target="amountTTPP"
               >
                 Enter the Amount of the Extra Fee in either Percentage or
                 Currency.
@@ -101,6 +121,17 @@ const PaypalForm = ({
               type="number"
               onChange={validationType.handleChange}
               value={validationType.values.amount_PP || ""}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "amount_PP",
+                  setDecimalFormatFee(
+                    value,
+                    extraFeeSelected
+                  )
+                );
+                validationType.handleBlur(e);
+              }}
             />
             {extraFeeSelected === 1 ? (
               <span
@@ -140,7 +171,19 @@ const PaypalForm = ({
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
               value={validationType.values.payment_link_PP || ""}
+              invalid={
+                validationType.touched.payment_link_PP &&
+                  validationType.errors.payment_link_PP
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.payment_link_PP &&
+              validationType.errors.payment_link_PP ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.payment_link_PP}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       </Row>

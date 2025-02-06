@@ -1,14 +1,9 @@
 import React from "react";
 
-const PaypalElement = ({}) => {
+const PaypalElement = ({ methodData }) => {
   return (
     <>
-      <div className="">
-        
-        <span className="">
-          *A 3.5% fee applies to Credit Card payments. Total to Send: Amount +
-          Fee
-        </span>
+      <div className="" dangerouslySetInnerHTML={{ __html: methodData?.getSpecifications.admin_panel }}>
       </div>
     </>
   );

@@ -2,13 +2,13 @@ import React from 'react';
 
 
 
-const VenmoElements = ({}) =>{
-    return(
+const VenmoElements = ({ methodData }) => {
+    return (
         <>
-              <span className="mx-2">No Extra Fees Apply</span>
-            
-           </>
-    )
+            <div className="" dangerouslySetInnerHTML={{ __html: methodData?.getSpecifications.email }}>
+            </div>
+        </>
+    );
 }
 
 export default VenmoElements;

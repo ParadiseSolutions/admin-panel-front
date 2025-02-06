@@ -8,7 +8,9 @@ import {
   UncontrolledTooltip,
   Label,
   Input,
+  FormFeedback,
 } from "reactstrap";
+import { titleCapitalize } from "../../../../../../Utils/CommonFunctions";
 
 const WireTransferForm = ({
   validationType,
@@ -110,9 +112,29 @@ const WireTransferForm = ({
               type="text"
               name="bank_name_WT"
               onChange={validationType.handleChange}
-              onBlur={validationType.handleBlur}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "bank_name_WT",
+                  titleCapitalize(value)
+                );
+                validationType.handleBlur(e);
+              }}
+              // onBlur={validationType.handleBlur}
               value={validationType.values.bank_name_WT || ""}
+              invalid={
+                validationType.touched.bank_name_WT &&
+                  validationType.errors.bank_name_WT
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.bank_name_WT &&
+              validationType.errors.bank_name_WT ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.bank_name_WT}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
         <Col className="col-6 mb-2">
@@ -136,9 +158,29 @@ const WireTransferForm = ({
               type="text"
               name="swift_WT"
               onChange={validationType.handleChange}
-              onBlur={validationType.handleBlur}
+              // onBlur={validationType.handleBlur}
+              onBlur={(e) => {
+                const value = e.target.value || "";
+                validationType.setFieldValue(
+                  "swift_WT",
+                  value.toUpperCase()
+                );
+                validationType.handleBlur(e);
+              }}
               value={validationType.values.swift_WT || ""}
+              invalid={
+                validationType.touched.swift_WT &&
+                  validationType.errors.swift_WT
+                  ? true
+                  : false
+              }
             />
+            {validationType.touched.swift_WT &&
+              validationType.errors.swift_WT ? (
+              <FormFeedback type="invalid">
+                {validationType.errors.swift_WT}
+              </FormFeedback>
+            ) : null}
           </div>
         </Col>
       </Col>
@@ -167,10 +209,23 @@ const WireTransferForm = ({
               <Input
                 type="text"
                 name="clabe_WT"
+                max={18}
                 onChange={validationType.handleChange}
                 onBlur={validationType.handleBlur}
                 value={validationType.values.clabe_WT || ""}
+                invalid={
+                  validationType.touched.clabe_WT &&
+                    validationType.errors.clabe_WT
+                    ? true
+                    : false
+                }
               />
+              {validationType.touched.clabe_WT &&
+                validationType.errors.clabe_WT ? (
+                <FormFeedback type="invalid">
+                  {validationType.errors.clabe_WT}
+                </FormFeedback>
+              ) : null}
             </div>
           </Col>
         </>
@@ -185,14 +240,16 @@ const WireTransferForm = ({
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="abaTT"
+                      id="abaTTWT"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="abaTT"
+                      target="abaTTWT"
                     >
-                      Pending Tooltip
+                      Enter the ABA Routing number associated with the account holder's bank account.
+                      <br/>
+                      The ABA Routing number is 9 numerical digits.
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -202,7 +259,19 @@ const WireTransferForm = ({
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
                   value={validationType.values.aba_routing_WT || ""}
+                  invalid={
+                    validationType.touched.aba_routing_WT &&
+                      validationType.errors.aba_routing_WT
+                      ? true
+                      : false
+                  }
                 />
+                {validationType.touched.aba_routing_WT &&
+                  validationType.errors.aba_routing_WT ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.aba_routing_WT}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
             <Col className="col-6 mb-2">
@@ -212,14 +281,14 @@ const WireTransferForm = ({
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="accountNumberTT"
+                      id="accountNumberTTWT"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="accountNumberTT"
+                      target="accountNumberTTWT"
                     >
-                      Pending Tooltip
+                      Enter the bank account number to send the funds to. This should be numbers only.
                     </UncontrolledTooltip>
                   </div>
                 </div>
