@@ -292,7 +292,7 @@ const WesternUnionForm = ({
       {countrySelected === 2 && accountTypeSelected === 2 ? (
         <Col className="12">
           <Row>
-            <Col className="col-12">
+            <Col className="col-6">
               <div className="form-outline">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Debit Card</Label>
@@ -332,7 +332,7 @@ const WesternUnionForm = ({
                 ) : null}
               </div>
             </Col>
-            {/* <Col className="col-6">
+            <Col className="col-6">
               <div className="form-outline">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">SWIFT</Label>
@@ -379,7 +379,7 @@ const WesternUnionForm = ({
                   </FormFeedback>
                 ) : null}
               </div>
-            </Col> */}
+            </Col>
           </Row>
         </Col>
       ) : null}
