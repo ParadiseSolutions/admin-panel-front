@@ -51,4 +51,10 @@ export const getCurrencyPM = () => {
       headers: options,
     });
   };
+  export const deletePaymentMethod = (id) => {
+    const url = `${API_URL}/provider-payment-method/${id}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
 

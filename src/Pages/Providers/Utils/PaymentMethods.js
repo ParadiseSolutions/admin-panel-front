@@ -23,6 +23,7 @@ import WesternUnionElements from "./PaymentsComponents/WesternUnionElements";
 import WireTransferElement from "./PaymentsComponents/WiredTransferElements";
 import ZelleElements from "./PaymentsComponents/ZelleElements";
 import VenmoElements from "./PaymentsComponents/VenmoElements";
+import { deletePaymentMethod } from "../../../Utils/API/PaymentsMethods";
 const PaymentMethods = ({ contacts, id }) => {
   const [col3, setcol3] = useState(false);
   const [addContactModal, setAddContactModal] = useState(false);
@@ -32,37 +33,37 @@ const PaymentMethods = ({ contacts, id }) => {
   function togglecol1() {
     setcol3(!col3);
   }
-// table request
-const [tableData, setTableData] = useState([]);
+  // table request
+  const [tableData, setTableData] = useState([]);
 
-useEffect(() => {
-  getMethodInfo(id).then((resp) =>{
-    setTableData(resp.data.data);
-  })
-}, []);
+  useEffect(() => {
+    getMethodInfo(id).then((resp) => {
+      setTableData(resp.data.data);
+    });
+  }, []);
   const onClickNewContactProvider = () => {
     setAddContactModal(!addContactModal);
   };
 
   const refreshTable = () => {
-    getMethodInfo(id).then((resp) =>{
+    getMethodInfo(id).then((resp) => {
       setTableData(resp.data.data);
-    })
+    });
   };
 
   //delete contact
   const onDelete = (depData) => {
     Swal.fire({
-      title: "Delete Contact?",
+      title: "Delete Method?",
       icon: "question",
-      text: `Do you want delete ${depData.first_name}`,
+      text: `Do you want delete ${depData.payment_type.name}`,
       showCancelButton: true,
       confirmButtonText: "Yes",
       confirmButtonColor: "#F38430",
       cancelButtonText: "Cancel",
     }).then((resp) => {
       if (resp.isConfirmed) {
-        deleteContactAPI(depData.id)
+        deletePaymentMethod(depData.id)
           .then((resp) => {
             Swal.fire("Deleted!", "Contact has been deleted.", "success");
             document.location.reload();
@@ -95,25 +96,26 @@ useEffect(() => {
           const methodData = cellProps.row.original;
           switch (methodData.payment_type.id) {
             case 1:
-                return <ACHElements methodData={methodData} />;
+              return <ACHElements methodData={methodData} />;
             case 2:
-                return <CreditCardElements methodData={methodData} />;
+              return <CreditCardElements methodData={methodData} />;
             case 3:
-                return <PaypalElement methodData={methodData} />;
-            
+              return <PaypalElement methodData={methodData} />;
+
             case 4:
-                return <WesternUnionElements methodData={methodData} />;
-            
+              return <WesternUnionElements methodData={methodData} />;
+
             case 5:
-                return <WireTransferElement methodData={methodData} />;
-            
+              return <WireTransferElement methodData={methodData} />;
+
             case 6:
-                return <ZelleElements methodData={methodData} />;
+              return <ZelleElements methodData={methodData} />;
             case 7:
-                return <VenmoElements methodData={methodData} />;
-            
+              return <VenmoElements methodData={methodData} />;
+
             default:
-                return null;}
+              return null;
+          }
         },
       },
       {
@@ -151,26 +153,32 @@ useEffect(() => {
                 }}
                 className="text-info"
               >
-                <i style={{cursor:"pointer"}} className="mdi mdi-pencil font-size-18" id="edittooltip" />
+                <i
+                  style={{ cursor: "pointer" }}
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
               </div>
 
-              <Link
-                to="#"
+              <div
                 className="text-danger"
                 onClick={() => {
                   const contactInfo = cellProps.row.original;
-
                   onDelete(contactInfo);
                 }}
               >
-                <i style={{cursor:"pointer"}} className="mdi mdi-delete font-size-18" id="deletetooltip" />
+                <i
+                  style={{ cursor: "pointer" }}
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
-              </Link>
+              </div>
             </div>
           );
         },
@@ -226,7 +234,6 @@ useEffect(() => {
           contactID={contactID}
           refreshTable={refreshTable}
         />
-       
       </Collapse>
     </div>
   );
