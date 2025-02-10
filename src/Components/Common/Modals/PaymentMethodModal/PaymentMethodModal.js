@@ -261,10 +261,10 @@ const PaymentMethodModal = ({
         is: 3,
         then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
       }),
-      email_zelle: Yup.string().when("payment_type", {
-        is: 6,
-        then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
-      }),
+      // email_zelle: Yup.string().when("payment_type", {
+      //   is: 6,
+      //   then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
+      // }),
       email_venmo: Yup.string().when("payment_type", {
         is: 7,
         then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
