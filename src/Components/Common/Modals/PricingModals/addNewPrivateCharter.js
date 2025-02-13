@@ -728,10 +728,36 @@ const AddNewPrivateCharter = ({
             // 2- Public Price
             if(+tourData.payment_apply_id === 1) {
               // 1- Before
-              gratuityInput = +tourData.gratuity*(+baseAmountInput + +estCommissionInput)/100
+              baseAmountInput = setDecimalFormat(
+                publicPriceInput / (1.16 + (+tourData.gratuity/100))
+              );
+
+              ivaInput = baseAmountInput * .16;
+              validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+              totalPriceInput = +baseAmountInput + +ivaInput
+              validationType.setFieldValue(
+                "p_total_price",
+                setDecimalFormat(+totalPriceInput)
+              );
+
+              gratuityInput = +tourData.gratuity*(+baseAmountInput)/100
             } else {
-              // 2- After
-              gratuityInput = +tourData.gratuity*(+totalPriceInput + +estCommissionInput)/100
+              // 2- After                
+              totalPriceInput = +publicPriceInput
+              validationType.setFieldValue(
+                "p_total_price",
+                setDecimalFormat(+totalPriceInput)
+              );
+
+              baseAmountInput = setDecimalFormat(
+                publicPriceInput / 1.16
+              );
+
+              ivaInput = totalPriceInput - baseAmountInput;
+              validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+              
+              gratuityInput = +tourData.gratuity*(+totalPriceInput)/100
             }
           }
         }
@@ -794,13 +820,26 @@ const AddNewPrivateCharter = ({
             }
           } else {
             // 2- Public Price
+            
+            baseAmountInput = setDecimalFormat(
+              +publicPriceInput
+            );
+
+            ivaInput = baseAmountInput * .16;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+            totalPriceInput = +baseAmountInput + +ivaInput
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
             if(+tourData.payment_apply_id === 1) {
               // 1- Before
-              console.log("gratuity",tourData.gratuity,"base",baseAmountInput,"com",estCommissionInput)
-              gratuityInput = +tourData.gratuity*(+baseAmountInput + +estCommissionInput)/100
+              gratuityInput = +tourData.gratuity*(+baseAmountInput)/100
             } else {
               // 2- After
-              gratuityInput = +tourData.gratuity*(+totalPriceInput + +estCommissionInput)/100
+              gratuityInput = +tourData.gratuity*(+totalPriceInput)/100
             }
           }
         }
@@ -953,12 +992,26 @@ const AddNewPrivateCharter = ({
             }
           } else {
             // 2- Public Price
+
+            totalPriceInput = +publicPriceInput
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
+            baseAmountInput = setDecimalFormat(
+              publicPriceInput / 1.16
+            );
+
+            ivaInput = totalPriceInput - baseAmountInput;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+            
             if(+tourData.payment_apply_id === 1) {
               // 1- Before
-              gratuityInput = +tourData.gratuity*(+baseAmountInput + +providerCommissionInputRate)/100
+              gratuityInput = +tourData.gratuity*(+baseAmountInput)/100
             } else {
               // 2- After
-              gratuityInput = +tourData.gratuity*(+totalPriceInput + +providerCommissionInputRate)/100
+              gratuityInput = +tourData.gratuity*(+totalPriceInput)/100
             }
           }
         }
@@ -1021,12 +1074,26 @@ const AddNewPrivateCharter = ({
             }
           } else {
             // 2- Public Price
+
+            baseAmountInput = setDecimalFormat(
+              +publicPriceInput
+            );
+    
+            ivaInput = baseAmountInput * .16;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+    
+            totalPriceInput = +baseAmountInput + +ivaInput
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
             if(+tourData.payment_apply_id === 1) {
               // 1- Before
-              gratuityInput = +tourData.gratuity*(+baseAmountInput + +providerCommissionInputRate)/100
+              gratuityInput = +tourData.gratuity*(+baseAmountInput)/100
             } else {
               // 2- After
-              gratuityInput = +tourData.gratuity*(+totalPriceInput + +providerCommissionInputRate)/100
+              gratuityInput = +tourData.gratuity*(+totalPriceInput)/100
             }
           }
         }
@@ -1177,12 +1244,25 @@ const AddNewPrivateCharter = ({
             }
           } else {
             // 2- Public Price
+            totalPriceInput = +publicPriceInput
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
+            baseAmountInput = setDecimalFormat(
+              +publicPriceInput / 1.16
+            );
+
+            ivaInput = totalPriceInput - baseAmountInput;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
             if(+tourData.payment_apply_id === 1) {
               // 1- Before
-              gratuityInput = +tourData.gratuity*(+baseAmountInput + +commissionFixedInput)/100
+              gratuityInput = +tourData.gratuity*(+baseAmountInput)/100
             } else {
               // 2- After
-              gratuityInput = +tourData.gratuity*(+totalPriceInput + +commissionFixedInput)/100
+              gratuityInput = +tourData.gratuity*(+totalPriceInput)/100
             }
           }
         }
@@ -1245,12 +1325,24 @@ const AddNewPrivateCharter = ({
             }
           } else {
             // 2- Public Price
+            baseAmountInput = setDecimalFormat(
+              netPriceInputCommision
+            );
+
+            ivaInput = baseAmountInput * .16;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+            totalPriceInput = +baseAmountInput + +ivaInput
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
             if(+tourData.payment_apply_id === 1) {
               // 1- Before
-              gratuityInput = +tourData.gratuity*(+baseAmountInput + +commissionFixedInput)/100
+              gratuityInput = +tourData.gratuity*(+baseAmountInput)/100
             } else {
               // 2- After
-              gratuityInput = +tourData.gratuity*(+totalPriceInput + +commissionFixedInput)/100
+              gratuityInput = +tourData.gratuity*(+totalPriceInput)/100
             }
           }
         }
