@@ -1,5 +1,4 @@
 // import { createPaymentTypeAPI } from "../../../../Utils/API/Payments";
-import { useState } from "react";
 import {
   Row,
   Col,
@@ -13,20 +12,16 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
+import { useState } from "react";
 
-const BoatComponent = ({
+const VehicleComponent = ({
   setMenu,
 }) => {
-  const [boatTypeSelected, setBoatTypeSelected] = useState(0);
-  const [boatMakeSelected, setBoatMakeSelected] = useState(0)
-  const [boatModelSelected, setBoatModelSelected] = useState(0)
-  const [locationSelected, setLocationSelected] = useState(0)
-  const [boatLocationSelected, setBoatLocationSelected] = useState(0)
-  const [boatSailingSelected, setBoatSailingSelected] = useState(0)
-  const [boatBathroomsSelected, setBoatBathroomsSelected] = useState(0)
-  const [boatShadeSelected, setBoatShadeSelected] = useState(0)
-  const [boatACSelected, setBoatACSelected] = useState(0)
-  const [boatAccessSelected , setBoatAccessSelected] = useState(0)
+  const [vehicleTypeSelected , setVehicleTypeSelected] = useState("");
+  const [vehicleMakeSelected , setVehicleMakeSelected] = useState("");
+  const [vehicleModelSelected , setVehicleModelSelected] = useState("");
+  const [vehicleTransmisionSelected , setVehicleTransmisionSelected] = useState("");
+  const [vehicleLocationSelected , setVehicleLocationSelected]  = useState("");
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -92,36 +87,14 @@ const BoatComponent = ({
         >
           <Row>
             <Row>
-              <Col className="col-2">
-                <div className="form-outline mb-4">
-                  <Label className="form-label">Boat Name</Label>
-                  <Input
-                    name="boat_name"
-                    placeholder=""
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.boat_name || ""}
-                    invalid={
-                      validationType.touched.boat_name && validationType.errors.boat_name
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.boat_name && validationType.errors.boat_name ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.boat_name}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
+             
               <Col className="col-2">
                 <Label className="form-label">Type</Label>
                 <Input
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setBoatTypeSelected(+e.target.value);
+                     setVehicleTypeSelected(+e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -147,45 +120,14 @@ const BoatComponent = ({
                   })} */}
                 </Input>
               </Col>
-              <Col className="col-2">
-                <Label className="form-label">Length</Label>
-                <div className="input-group">
-                  <Input
-                    name="boat_length"
-                    placeholder=""
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.boat_length || ""}
-                    invalid={
-                      validationType.touched.boat_length &&
-                      validationType.errors.boat_length
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.boat_length &&
-                  validationType.errors.boat_length ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.boat_length}
-                    </FormFeedback>
-                  ) : null}
-                  <span
-                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                    id="basic-addon1"
-                    style={{ fontSize: "0.85em" }}
-                  >
-                    Feet
-                  </span>
-                </div>
-              </Col>
+              
               <Col className="col-2">
                 <Label className="form-label">Make</Label>
                 <Input
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setBoatMakeSelected(+e.target.value);
+                     setVehicleMakeSelected(+e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -217,7 +159,7 @@ const BoatComponent = ({
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setBoatModelSelected(+e.target.value);
+                     setVehicleModelSelected(+e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -244,46 +186,12 @@ const BoatComponent = ({
                 </Input>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Location</Label>
+                <Label className="form-label">Transmision</Label>
                 <Input
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setLocationSelected(+e.target.value);
-                   }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
-                </Input>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="col-4">
-                <Label className="form-label">Boat Location / Marina</Label>
-                <Input
-                  type="select"
-                  name="price_type"
-                   onChange={(e) => {
-                     setBoatLocationSelected(+e.target.value);
+                     setVehicleTransmisionSelected(+e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -313,151 +221,55 @@ const BoatComponent = ({
                 <div className="form-outline mb-4">
                   <Label className="form-label">Capacity</Label>
                   <Input
-                    name="boat_capacity"
+                    name="vehicle_capacity"
                     placeholder=""
                     type="text"
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
-                    value={validationType.values.boat_capacity || ""}
+                    value={validationType.values.vehicle_capacity || ""}
                     invalid={
-                      validationType.touched.boat_capacity && validationType.errors.boat_capacity
+                      validationType.touched.vehicle_capacity && validationType.errors.vehicle_capacity
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.boat_capacity && validationType.errors.boat_capacity ? (
+                  {validationType.touched.vehicle_capacity && validationType.errors.vehicle_capacity ? (
                     <FormFeedback type="invalid">
-                      {validationType.errors.boat_capacity}
+                      {validationType.errors.vehicle_capacity}
                     </FormFeedback>
                   ) : null}
                 </div>
-              </Col>
-              <Col className="col-1">
-                <Label className="form-label">Sailing</Label>
-                <Input
-                  type="select"
-                  name=""
-                   onChange={(e) => {
-                     setBoatSailingSelected(+e.target.value);
-                   }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
-                </Input>
               </Col>
               <Col className="col-1">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Bathroom</Label>
+                  <Label className="form-label">Qty</Label>
                   <Input
-                    name="boat_bathroom"
+                    name="vehicle_qty"
                     placeholder=""
                     type="text"
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
-                    value={validationType.values.boat_bathroom || ""}
+                    value={validationType.values.vehicle_qty || ""}
                     invalid={
-                      validationType.touched.boat_bathroom && validationType.errors.boat_bathroom
+                      validationType.touched.vehicle_qty && validationType.errors.vehicle_qty
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.boat_bathroom && validationType.errors.boat_bathroom ? (
+                  {validationType.touched.vehicle_qty && validationType.errors.vehicle_qty ? (
                     <FormFeedback type="invalid">
-                      {validationType.errors.boat_bathroom}
+                      {validationType.errors.vehicle_qty}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
-              <Col className="col-1">
-                <Label className="form-label">Shade</Label>
+              <Col className="col-2">
+                <Label className="form-label">Location</Label>
                 <Input
                   type="select"
-                  name=""
+                  name="price_type"
                    onChange={(e) => {
-                     setBoatShadeSelected(+e.target.value);
-                   }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
-                </Input>
-              </Col>
-              <Col className="col-1">
-                <Label className="form-label">A/C</Label>
-                <Input
-                  type="select"
-                  name=""
-                   onChange={(e) => {
-                     setBoatACSelected(+e.target.value);
-                   }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
-                </Input>
-              </Col>
-              <Col className="col-1">
-                <Label className="form-label">Access.</Label>
-                <Input
-                  type="select"
-                  name=""
-                   onChange={(e) => {
-                     setBoatAccessSelected(+e.target.value);
+                     setVehicleLocationSelected(+e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -484,7 +296,8 @@ const BoatComponent = ({
                 </Input>
               </Col>
             </Row>
-            <Row>
+            
+            <Row className='my-4'>
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-start">
               <Button
                   type="button"
@@ -523,4 +336,4 @@ const BoatComponent = ({
   );
 };
 
-export default BoatComponent;
+export default VehicleComponent;
