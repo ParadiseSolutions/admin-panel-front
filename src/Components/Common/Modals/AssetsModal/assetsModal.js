@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createPaymentTypeAPI } from "../../../../Utils/API/Payments";
 import {
   Row,
@@ -12,10 +13,12 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useState } from "react";
-import BoatComponent from "./components/boatComponent";
+import MenuBannerOne from "../../../Assets/images/asset_banner_one.png";
+import MenuBannerTwo from "../../../Assets/images/asset_banner_two.jpg";
+import MenuBannerThree from "../../../Assets/images/asset_banner_three.jpeg";
 import AssetBannerOne from "../../../Assets/images/assetBannerOne.png";
 import AssetBannerTwo from "../../../Assets/images/assetBannerTwo.png";
+import BoatComponent from "./components/boatComponent";
 import VehicleComponent from "./components/vehicleComponent";
 import OthersComponent from "./components/othersComponent";
 
@@ -111,7 +114,23 @@ const AssetModal = ({ assetModal, setAssetModal, onClickAddNewPayment }) => {
             </span>
           </button>
         </div>
-      ) : null}
+      ) : (
+        <div>
+          <button
+            onClick={() => {
+              setAssetModal(false);
+            }}
+            type="button"
+            className="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true" style={{ color: "white" }}>
+              &times;
+            </span>
+          </button>
+        </div>
+      )}
       <div className="modal-body">
         <Form
           onSubmit={(e) => {
@@ -122,17 +141,70 @@ const AssetModal = ({ assetModal, setAssetModal, onClickAddNewPayment }) => {
           className="custom-validation"
         >
           {menu === 0 ? (
-            <Row className="mb-3 d-flex justify-content-center">
-              <Col md={4}>
-                <h1 onClick={() => setMenu(1)}>Boats</h1>
-              </Col>
-              <Col md={4}>
-                <h1 onClick={() => setMenu(2)}>vehicles</h1>
-              </Col>
-              <Col md={4}>
-                <h1 onClick={() => setMenu(3)}>others</h1>
-              </Col>
-            </Row>
+            <>
+              <Row className="d-flex text-center my-4 mb-5">
+                <h2>Choose Asset Type</h2>
+              </Row>
+              <Row className="mb-3 d-flex justify-content-center ">
+                <Col md={4} className="d-flex justify-content-center my-4">
+                  <div
+                    className="text-center"
+                    onClick={() => setMenu(1)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div
+                      className="rounded-circle bg-orange"
+                      style={{
+                        width: 200,
+                        height: 200,
+                        backgroundImage: `url(${MenuBannerOne})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    ></div>
+                    <h1 className="mt-3">Boats</h1>
+                  </div>
+                </Col>
+                <Col md={4} className="d-flex justify-content-center my-4">
+                  <div
+                    className="text-center"
+                    onClick={() => setMenu(2)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div
+                      className="rounded-circle bg-orange"
+                      style={{
+                        width: 200,
+                        height: 200,
+                        backgroundImage: `url(${MenuBannerThree})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    ></div>
+                    <h1 className="mt-3">Vehicles</h1>
+                  </div>
+                </Col>
+                <Col md={4} className="d-flex justify-content-center my-4">
+                  <div
+                    className="text-center"
+                    onClick={() => setMenu(3)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div
+                      className="rounded-circle bg-orange"
+                      style={{
+                        width: 200,
+                        height: 200,
+                        backgroundImage: `url(${MenuBannerTwo})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    ></div>
+                    <h1 className="mt-3">Others</h1>
+                  </div>
+                </Col>
+              </Row>
+            </>
           ) : menu === 1 || menu === 2 || menu === 3 ? (
             <>
               <Row className=" d-flex justify-content-between pb-4 ">

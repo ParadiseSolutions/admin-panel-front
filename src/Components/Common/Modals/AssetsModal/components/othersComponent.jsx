@@ -230,29 +230,7 @@ const OthersComponent = ({
                   ) : null}
                 </div>
               </Col>
-              <Col className="col-1">
-                <div className="form-outline mb-4">
-                  <Label className="form-label">Max. Cap.</Label>
-                  <Input
-                    name="other_max_cap"
-                    placeholder=""
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.other_max_cap || ""}
-                    invalid={
-                      validationType.touched.other_max_cap && validationType.errors.other_max_cap
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.other_max_cap && validationType.errors.other_max_cap ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.other_max_cap}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
+            
             </Row>
             
             <Row className='my-4'>

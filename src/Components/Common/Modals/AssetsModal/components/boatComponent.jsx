@@ -180,68 +180,50 @@ const BoatComponent = ({
                 </div>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Make</Label>
-                <Input
-                  type="select"
-                  name=""
-                   onChange={(e) => {
-                     setBoatMakeSelected(+e.target.value);
-                   }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
-                </Input>
+                <div className="form-outline mb-4">
+                  <Label className="form-label">Make</Label>
+                  <Input
+                    name="boat_make"
+                    placeholder=""
+                    type="text"
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.boat_make || ""}
+                    invalid={
+                      validationType.touched.boat_make && validationType.errors.boat_make
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.boat_make && validationType.errors.boat_make ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.boat_make}
+                    </FormFeedback>
+                  ) : null}
+                </div>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Model</Label>
-                <Input
-                  type="select"
-                  name=""
-                   onChange={(e) => {
-                     setBoatModelSelected(+e.target.value);
-                   }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
-                </Input>
+                <div className="form-outline mb-4">
+                  <Label className="form-label">Model</Label>
+                  <Input
+                    name="boat_model"
+                    placeholder=""
+                    type="text"
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.boat_model || ""}
+                    invalid={
+                      validationType.touched.boat_model && validationType.errors.boat_model
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.boat_model && validationType.errors.boat_model ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.boat_model}
+                    </FormFeedback>
+                  ) : null}
+                </div>
               </Col>
               <Col className="col-2">
                 <Label className="form-label">Location</Label>
@@ -278,7 +260,7 @@ const BoatComponent = ({
             </Row>
             <Row>
               <Col className="col-4">
-                <Label className="form-label">Boat Location / Marina</Label>
+                <Label className="form-label">Marina Location</Label>
                 <Input
                   type="select"
                   name="price_type"
@@ -338,30 +320,15 @@ const BoatComponent = ({
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setBoatSailingSelected(+e.target.value);
+                     setBoatSailingSelected(e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
+                  <option value={'Yes'}>Yes</option>
+                  <option value={'No'}>No</option>
+                
                 </Input>
               </Col>
               <Col className="col-1">
@@ -393,30 +360,15 @@ const BoatComponent = ({
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setBoatShadeSelected(+e.target.value);
+                     setBoatShadeSelected(e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
+                  <option value={'Yes'}>Yes</option>
+                  <option value={'No'}>No</option>
+                  
                 </Input>
               </Col>
               <Col className="col-1">
@@ -425,30 +377,14 @@ const BoatComponent = ({
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setBoatACSelected(+e.target.value);
+                     setBoatACSelected(e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
+                  <option value={'Yes'}>Yes</option>
+                  <option value={'No'}>No</option>
                 </Input>
               </Col>
               <Col className="col-1">

@@ -120,14 +120,13 @@ const VehicleComponent = ({
                   })} */}
                 </Input>
               </Col>
-              
               <Col className="col-2">
-                <Label className="form-label">Make</Label>
+                <Label className="form-label">Sub-Type</Label>
                 <Input
                   type="select"
                   name=""
                    onChange={(e) => {
-                     setVehicleMakeSelected(+e.target.value);
+                     setVehicleTypeSelected(+e.target.value);
                    }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -153,37 +152,52 @@ const VehicleComponent = ({
                   })} */}
                 </Input>
               </Col>
+              
               <Col className="col-2">
-                <Label className="form-label">Model</Label>
-                <Input
-                  type="select"
-                  name=""
-                   onChange={(e) => {
-                     setVehicleModelSelected(+e.target.value);
-                   }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={type.id}
-                        selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
-                        }
-                      >
-                        {type.text}
-                      </option>
-                    );
-                  })} */}
-                </Input>
+                <div className="form-outline mb-4">
+                  <Label className="form-label">Make</Label>
+                  <Input
+                    name="vehicle_make"
+                    placeholder=""
+                    type="text"
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.vehicle_make || ""}
+                    invalid={
+                      validationType.touched.vehicle_make && validationType.errors.vehicle_make
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.vehicle_make && validationType.errors.vehicle_make ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.vehicle_make}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+              <Col className="col-2">
+                <div className="form-outline mb-4">
+                  <Label className="form-label">Model</Label>
+                  <Input
+                    name="vehicle_model"
+                    placeholder=""
+                    type="text"
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.vehicle_model || ""}
+                    invalid={
+                      validationType.touched.vehicle_model && validationType.errors.vehicle_model
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.vehicle_model && validationType.errors.vehicle_model ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.vehicle_model}
+                    </FormFeedback>
+                  ) : null}
+                </div>
               </Col>
               <Col className="col-2">
                 <Label className="form-label">Transmision</Label>
@@ -263,7 +277,10 @@ const VehicleComponent = ({
                   ) : null}
                 </div>
               </Col>
-              <Col className="col-2">
+             
+            </Row>
+            <Row>
+            <Col className="col-2">
                 <Label className="form-label">Location</Label>
                 <Input
                   type="select"
@@ -295,8 +312,25 @@ const VehicleComponent = ({
                   })} */}
                 </Input>
               </Col>
+              <Col className="col-1">
+                <Label className="form-label">A/C</Label>
+                <Input
+                  type="select"
+                  name=""
+                   onChange={(e) => {
+                     setVehicleLocationSelected(e.target.value);
+                   }}
+                  onBlur={validationType.handleBlur}
+                  //   value={validationType.values.department || ""}
+                >
+                  <option value={null}>Select....</option>
+                  <option value={"Yes"}>Yes</option>
+                  <option value={"No"}>No</option>
+
+                 
+                </Input>
+              </Col>
             </Row>
-            
             <Row className='my-4'>
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-start">
               <Button

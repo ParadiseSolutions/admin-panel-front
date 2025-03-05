@@ -25,8 +25,9 @@ const Assets = ({ contacts, id }) => {
   const [boatData, setboatData] = useState([]);
   const [vehicleData, setvehicleData] = useState([]);
   const [othersData, setothersData] = useState([]);
-  const [showDetails, setshowDetails] = useState({});
+  const [showDetails, setshowDetails] = useState(false);
   const [assetModal, setAssetModal] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState(null);
   function togglecol1() {
     setcol2(!col2);
   }
@@ -38,7 +39,6 @@ const Assets = ({ contacts, id }) => {
       setactiveTab(tab);
     }
   }
-
   useEffect(() => {
     getAssetsAPI(id).then((res) => {
       setinitialData(res.data.data);
@@ -64,15 +64,18 @@ const Assets = ({ contacts, id }) => {
     });
   }, [id]);
 
-  const toggleDetails = (index) => {
-    setshowDetails((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
-  };
-  console.log("boatData", boatData);
-
-  console.log("initialData", initialData);
+  function toggleDetails(index, type) {
+    let selectedAsset = null;
+    if (type === "boat") {
+      selectedAsset = boatData[index];
+    } else if (type === "vehicle") {
+      selectedAsset = vehicleData[index];
+    } else if (type === "other") {
+      selectedAsset = othersData[index];
+    }
+    setSelectedAsset(selectedAsset);
+    setshowDetails(true);
+  }
 
   return (
     <div className="accordion-item">
@@ -104,7 +107,7 @@ const Assets = ({ contacts, id }) => {
                         <Button
                           type="button"
                           className="waves-effect waves-light mb-3 btn btn-orange"
-                         onClick={() => setAssetModal(true)}
+                          onClick={() => setAssetModal(true)}
                         >
                           <i className="mdi mdi-plus me-1" />
                           New
@@ -134,6 +137,7 @@ const Assets = ({ contacts, id }) => {
                             })}
                             onClick={() => {
                               toggle("1");
+                              setshowDetails(false)
                             }}
                           >
                             <span className="d-block d-sm-none">
@@ -160,6 +164,7 @@ const Assets = ({ contacts, id }) => {
                             })}
                             onClick={() => {
                               toggle("2");
+                              setshowDetails(false);
                             }}
                           >
                             <span className="d-block d-sm-none">
@@ -186,6 +191,7 @@ const Assets = ({ contacts, id }) => {
                             })}
                             onClick={() => {
                               toggle("3");
+                              setshowDetails(false);
                             }}
                           >
                             <span className="d-block d-sm-none">
@@ -250,7 +256,7 @@ const Assets = ({ contacts, id }) => {
                                               <VscEye
                                                 size={30}
                                                 onClick={() =>
-                                                  toggleDetails(index)
+                                                  toggleDetails(index, "boat")
                                                 }
                                                 style={{ cursor: "pointer" }}
                                               />
@@ -284,16 +290,6 @@ const Assets = ({ contacts, id }) => {
                                           </div>
                                         </td>
                                       </tr>
-                                      {showDetails[index] ? (
-                                        <tr className="">
-                                          <td>
-                                            Accessibility: {boat.access_name}
-                                          </td>
-                                          <td>Sailing: {boat.sailing}</td>
-                                          <td>Bathrooms: {boat.bathrooms}</td>
-                                          <td>Shade: {boat.shade}</td>
-                                        </tr>
-                                      ) : null}
                                     </>
                                   );
                                 })}
@@ -348,7 +344,10 @@ const Assets = ({ contacts, id }) => {
                                               <VscEye
                                                 size={30}
                                                 onClick={() =>
-                                                  toggleDetails(index)
+                                                  toggleDetails(
+                                                    index,
+                                                    "vehicle"
+                                                  )
                                                 }
                                                 style={{ cursor: "pointer" }}
                                               />
@@ -382,14 +381,6 @@ const Assets = ({ contacts, id }) => {
                                           </div>
                                         </td>
                                       </tr>
-                                      {showDetails[index] ? (
-                                        <tr>
-                                          <td>
-                                            Transmition:{" "}
-                                            {vehicle.transmission_name}
-                                          </td>
-                                        </tr>
-                                      ) : null}
                                     </>
                                   );
                                 })}
@@ -473,8 +464,74 @@ const Assets = ({ contacts, id }) => {
                 </CardBody>
               </Card>
             </Col>
+            {showDetails && 
+            <>
+            {selectedAsset && (
+              <Col xs="12">
+                <Card>
+                  <CardBody>
+                    <Row className="m-4 flex flex-column">
+                      {selectedAsset && (
+                        <Row>
+                          {selectedAsset.asset_id === 1 && (
+                            <div>
+                              <h1 className="text-paradise fw-bold fs-1">
+                                {selectedAsset.name} More Details
+                              </h1>
+                              <Col className="col-12 flex">
+                                <p className="d-inline-block mx-4">
+                                <span className="fw-bold">Accessibility:</span> {selectedAsset.access_name}
+                                </p>
+                                <p className="d-inline-block mx-4">
+                                <span className="fw-bold">Sailing:</span> {selectedAsset.sailing}
+                                </p>
+                                <p className="d-inline-block mx-4">
+                                <span className="fw-bold">Bathrooms:</span> {selectedAsset.bathrooms}
+                                </p>
+                                <p className="d-inline-block mx-4">
+                                <span className="fw-bold">Shade:</span> {selectedAsset.shade}
+                                </p>
+                              </Col>
+                              <Row>
+                              <h1 className="text-paradise fw-bold fs-1 my-5">
+                                Current Tour
+                              </h1>
+                              </Row>
+                            </div>
+                          )}
+                          {selectedAsset.asset_id === 2 ||
+                          selectedAsset.asset_id === 3 ||
+                          selectedAsset.asset_id === 4 ||
+                          selectedAsset.asset_id === 8 ? (
+                            <div>
+                              <h1 className="text-paradise fw-bold fs-1">
+                                {selectedAsset.type_name} More Details
+                              </h1>
+                              <Col className="col-12 flex">
+                                <p className="d-inline-block mx-4">
+                                <span className="fw-bold">Sub-Type:</span> pending
+                                </p>
+                                <p className="d-inline-block mx-4">
+                                  <span className="fw-bold">Transmission:</span> pending
+                                </p>
+                                <p className="d-inline-block mx-4">
+                                  <span className="fw-bold">A/C:</span> pending
+                                </p>
+                              </Col>
+                            </div>
+                          ) : null}
+                          
+                        </Row>
+                      )}
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            )}
+            </>
+            }
           </Row>
-      <AssetModal assetModal={assetModal} setAssetModal={setAssetModal} />
+          <AssetModal assetModal={assetModal} setAssetModal={setAssetModal} />
         </div>
       </Collapse>
     </div>
