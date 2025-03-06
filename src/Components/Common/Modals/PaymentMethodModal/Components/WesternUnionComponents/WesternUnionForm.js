@@ -162,7 +162,7 @@ const WesternUnionForm = ({
                   </div>
                 </div>
                 <Input
-                  type="number"
+                  type="text"
                   name="aba_routing_WU"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
@@ -241,7 +241,7 @@ const WesternUnionForm = ({
               </div>
             </div>
             <Input
-              type="number"
+              type="text"
               name="account_number_WU"
               onChange={validationType.handleChange}
               onBlur={validationType.handleBlur}
