@@ -1,8 +1,10 @@
 {
   "files": {
     "main.css": "/static/css/main.a7af910f.css",
-    "main.js": "/static/js/main.f94da2b0.js",
+    "main.js": "/static/js/main.8bc08dbd.js",
     "static/js/144.ae29c095.chunk.js": "/static/js/144.ae29c095.chunk.js",
+    "static/media/asset_banner_one.png": "/static/media/asset_banner_one.093a7db2ee5a4f2ad6c6.png",
+    "static/media/asset_banner_three.jpeg": "/static/media/asset_banner_three.a5526161d636ad261f97.jpeg",
     "static/media/filters.jpg": "/static/media/filters.d764aae9f45ddb567bb5.jpg",
     "static/media/addons.png": "/static/media/addons.450ce01aeaa8dc21ad60.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
@@ -10,12 +12,14 @@
     "static/media/fa-solid-900.svg": "/static/media/fa-solid-900.3a909e9bcf105f28ebe7.svg",
     "static/media/fishing.png": "/static/media/fishing.faaad2001ddd0ea6b59c.png",
     "static/media/airport-transfer.png": "/static/media/airport-transfer.bf0b83b95db0137f3120.png",
+    "static/media/assetBannerOne.png": "/static/media/assetBannerOne.ff8842e1597264cc934a.png",
     "static/media/boxicons.svg": "/static/media/boxicons.3e906787d0915a1e482c.svg",
     "static/media/fa-brands-400.svg": "/static/media/fa-brands-400.5f363d3d71c36033aff0.svg",
     "static/media/private-charter.png": "/static/media/private-charter.ea0a166d54549b4dd680.png",
     "static/media/transportation.png": "/static/media/transportation.c8fa4d63a996b190cce7.png",
     "static/media/settings2.png": "/static/media/settings2.f66bbf48524b191aa0b5.png",
     "static/media/private-tour.png": "/static/media/private-tour.42904d2f9a828e233569.png",
+    "static/media/assetBannerTwo.png": "/static/media/assetBannerTwo.d2b2bd2190f23d768f16.png",
     "static/media/settings3.png": "/static/media/settings3.c2e71127b1446c0fa42f.png",
     "static/media/settings1.png": "/static/media/settings1.f550dc7e64c320dd47df.png",
     "static/media/highSeason.png": "/static/media/highSeason.bb61452597766670c5ac.png",
@@ -24,6 +28,7 @@
     "static/media/schedulesDolphins.png": "/static/media/schedulesDolphins.ad5dd21efab6bc2b6efc.png",
     "static/media/materialdesignicons-webfont.woff2?v=5.8.55": "/static/media/materialdesignicons-webfont.6147fc3741c622c5de2c.woff2",
     "static/media/newProductPricing.png": "/static/media/newProductPricing.aba6929a0ff1935e5f6b.png",
+    "static/media/asset_banner_two.jpg": "/static/media/asset_banner_two.fab0cbc0ab87968415aa.jpg",
     "static/media/paymentTwo.png": "/static/media/paymentTwo.829f884a4a129d7a5f2f.png",
     "static/media/paymentOne.png": "/static/media/paymentOne.38e5eeb8339ad2269bf5.png",
     "static/media/boxicons.eot": "/static/media/boxicons.6829ebb16362074c0c30.eot",
@@ -76,11 +81,11 @@
     "static/media/Intersection2.svg": "/static/media/Intersection2.9f8fdbff1f8cc8e8e585399d1070a56e.svg",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.a7af910f.css.map": "/static/css/main.a7af910f.css.map",
-    "main.f94da2b0.js.map": "/static/js/main.f94da2b0.js.map",
+    "main.8bc08dbd.js.map": "/static/js/main.8bc08dbd.js.map",
     "144.ae29c095.chunk.js.map": "/static/js/144.ae29c095.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a7af910f.css",
-    "static/js/main.f94da2b0.js"
+    "static/js/main.8bc08dbd.js"
   ]
 }
