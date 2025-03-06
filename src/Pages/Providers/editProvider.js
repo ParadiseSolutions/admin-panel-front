@@ -10,6 +10,7 @@ import SocialMedia from "./Utils/socialMedia";
 import { Container } from "reactstrap";
 import { useParams } from "react-router-dom";
 import PaymentMethods from "./Utils/PaymentMethods";
+import Assets from "./Utils/assets";
 const EditProvider = () => {
   const { id } = useParams();
   const [data, setData] = useState();
@@ -44,6 +45,7 @@ const EditProvider = () => {
             <EditGeneralInformation data={data} />
             <Contacts contacts={contacts} />
             <PaymentMethods contacts={contacts} id={id} />
+            <Assets contacts={contacts} id={id} />
             <SocialMedia socialData={socialData} id={id} />
           </div>
         </Container>

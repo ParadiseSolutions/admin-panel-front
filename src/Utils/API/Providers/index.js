@@ -68,3 +68,10 @@ export const deleteProviderAPI = (id) => {
     });
   };
 
+  export const getAssetsAPI = (id) => {
+    const url = `${API_URL}/assets/provider/${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
+
