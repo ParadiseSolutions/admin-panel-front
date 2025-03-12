@@ -47,8 +47,7 @@ const Assets = ({ contacts, id }) => {
           (data) =>
             data.asset_id === 2 ||
             data.asset_id === 3 ||
-            data.asset_id === 4 ||
-            data.asset_id === 8
+            data.asset_id === 4 
         )
       );
       setothersData(
@@ -57,6 +56,7 @@ const Assets = ({ contacts, id }) => {
             data.asset_id === 5 ||
             data.asset_id === 6 ||
             data.asset_id === 7 ||
+            data.asset_id === 8 ||
             data.asset_id === 9
         )
       );
@@ -82,10 +82,7 @@ const Assets = ({ contacts, id }) => {
       setvehicleData(
         res.data.data.filter(
           (data) =>
-            data.asset_id === 2 ||
-            data.asset_id === 3 ||
-            data.asset_id === 4 ||
-            data.asset_id === 8
+            data.asset_id === 2 || data.asset_id === 3 || data.asset_id === 4
         )
       );
       setothersData(
@@ -94,6 +91,7 @@ const Assets = ({ contacts, id }) => {
             data.asset_id === 5 ||
             data.asset_id === 6 ||
             data.asset_id === 7 ||
+            data.asset_id === 8 ||
             data.asset_id === 9
         )
       );
@@ -544,8 +542,7 @@ const Assets = ({ contacts, id }) => {
                               )}
                               {selectedAsset.asset_id === 2 ||
                               selectedAsset.asset_id === 3 ||
-                              selectedAsset.asset_id === 4 ||
-                              selectedAsset.asset_id === 8 ? (
+                              selectedAsset.asset_id === 4  ? (
                                 <div>
                                   <h1 className="text-paradise fw-bold fs-1">
                                     {selectedAsset.type_name} More Details
@@ -578,7 +575,12 @@ const Assets = ({ contacts, id }) => {
               </>
             )}
           </Row>
-          <AssetModal assetModal={assetModal} setAssetModal={setAssetModal} editID={editID} resetTable={resetTable} />
+          <AssetModal
+            assetModal={assetModal}
+            setAssetModal={setAssetModal}
+            editID={editID}
+            resetTable={resetTable}
+          />
         </div>
       </Collapse>
     </div>

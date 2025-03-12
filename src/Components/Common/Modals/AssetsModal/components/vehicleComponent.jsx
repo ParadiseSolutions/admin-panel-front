@@ -61,11 +61,11 @@ const VehicleComponent = ({
   //edit request
   useEffect(() => {
     if (dataEdit) {
-      setVehicleTypeSelected(dataEdit.type_id);
+      setVehicleTypeSelected(dataEdit.asset_id);
       setVehicleTransmisionSelected(dataEdit.transmision_id);
       setVehicleLocationSelected(dataEdit.location_id);
       setVehicleACSelected(dataEdit.ac);
-      setVehicleSubTypeSelected(dataEdit.subtype_id);
+      setVehicleSubTypeSelected(dataEdit.type_id);
     }
   }, [dataEdit]);
   console.log(dataEdit);
@@ -85,13 +85,12 @@ const VehicleComponent = ({
     onSubmit: (values) => {
       let data = {
         provider_operator_id: +id,
-        asset_id: 2,
+        asset_id: vehicleTypeSelected,
         make: values.vehicle_make,
         model: values.vehicle_model,
         capacity: values.vehicle_capacity,
         quantity: values.vehicle_qty,
-        type_id: vehicleTypeSelected,
-        subtype_id: vehicleSubTypeSelected,
+        type_id: vehicleSubTypeSelected,
         transmision_id: vehicleTransmisionSelected,
         location_id: vehicleLocationSelected,
         ac: vehicleACSelected,
@@ -198,7 +197,7 @@ const VehicleComponent = ({
                         key={index}
                         value={type.id}
                         selected={
-                          dataEdit ? type.id === dataEdit.type_id : false
+                          dataEdit ? type.id === dataEdit.asset_id : false
                         }
                       >
                         {type.name}
@@ -225,7 +224,7 @@ const VehicleComponent = ({
                         key={index}
                         value={subtype.id}
                         selected={
-                          dataEdit ? subtype.id === dataEdit.subtype_id : false
+                          dataEdit ? subtype.id === dataEdit.type_id : false
                         }
                       >
                         {subtype.name}

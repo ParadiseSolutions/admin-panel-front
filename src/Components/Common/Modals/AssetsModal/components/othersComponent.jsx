@@ -48,7 +48,7 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
     //edit request
     useEffect(() => {
       if (dataEdit) {
-        setOtherTypeSelected(dataEdit.type_id);
+        setOtherTypeSelected(dataEdit.asset_id);
         setOtherCategorySelected(dataEdit.category_id);
         setLocationSelected(dataEdit.location_id);
       }
@@ -69,9 +69,8 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
     onSubmit: (values) => {
       let data = {
         provider_operator_id: +id,
-        asset_id: 2, // preguntar que numero es
+        asset_id: otherTypeSelected,
         category_id: otherCategorySelected,
-        type_id: otherTypeSelected,
         location_id: locationSelected,
         quantity: values.other_qty,
         cap_ea: values.other_cap,
@@ -179,7 +178,7 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
                         key={index}
                         value={type.id}
                         selected={
-                          dataEdit ? type.id === dataEdit.type_id : false
+                          dataEdit ? type.id === dataEdit.asset_id : false
                         }
                       >
                         {type.name}
