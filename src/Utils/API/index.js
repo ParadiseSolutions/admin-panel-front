@@ -28,9 +28,9 @@ var tokenData = JSON.parse(getStorageSync("token"));
 var bearerToken = tokenData ? `Bearer ${tokenData.token}` : '';
 
 export var API_URL = `https://api.paradisesolutions.com/api`;
-// if (window.location.href.includes("localhost")) {
-//    API_URL = "http://localhost/Admin-Panel-API/api";
-//   }
+if (window.location.href.includes("localhost")) {
+   API_URL = "http://localhost/Admin-Panel-API/api";
+  }
 
 export var options = {
   "Content-Type": "application/json",
