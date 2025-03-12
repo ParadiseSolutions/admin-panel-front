@@ -1,84 +1,167 @@
 // import { createPaymentTypeAPI } from "../../../../Utils/API/Payments";
-import { useState } from "react";
-import {
-  Row,
-  Col,
-  Modal,
-  Form,
-  Label,
-  Input,
-  FormFeedback,
-  Button,
-} from "reactstrap";
-import * as Yup from "yup";
+import { useEffect, useState } from "react";
+import { Row, Col, Form, Label, Input, FormFeedback, Button } from "reactstrap";
+
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
+import {
+  getAccesability,
+  getBoatLocation,
+  getBoatType,
+  getMarinaLocation,
+  postBoat,
+  putBoat,
+} from "../../../../../Utils/API/Assets";
+import { map } from "lodash";
+import { useParams } from "react-router-dom";
 
-const BoatComponent = ({
-  setMenu,
-}) => {
+const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTable }) => {
+  const { id } = useParams();
+  const [boatTypeData, setBoatTypeData] = useState([]);
+  const [locationData, setLocationData] = useState([]);
+  const [boatLocationData, setBoatLocationData] = useState([]);
+  const [accesData, setAccessData] = useState([]);
   const [boatTypeSelected, setBoatTypeSelected] = useState(0);
-  const [boatMakeSelected, setBoatMakeSelected] = useState(0)
-  const [boatModelSelected, setBoatModelSelected] = useState(0)
-  const [locationSelected, setLocationSelected] = useState(0)
-  const [boatLocationSelected, setBoatLocationSelected] = useState(0)
-  const [boatSailingSelected, setBoatSailingSelected] = useState(0)
-  const [boatBathroomsSelected, setBoatBathroomsSelected] = useState(0)
-  const [boatShadeSelected, setBoatShadeSelected] = useState(0)
-  const [boatACSelected, setBoatACSelected] = useState(0)
-  const [boatAccessSelected , setBoatAccessSelected] = useState(0)
+  const [locationSelected, setLocationSelected] = useState(0);
+  const [boatLocationSelected, setBoatLocationSelected] = useState(0);
+  const [boatSailingSelected, setBoatSailingSelected] = useState(0);
+  const [boatShadeSelected, setBoatShadeSelected] = useState(0);
+  const [boatACSelected, setBoatACSelected] = useState(0);
+  const [boatAccessSelected, setBoatAccessSelected] = useState(0);
+
+  //initial request
+  useEffect(() => {
+    getBoatType().then((resp) => {
+      setBoatTypeData(resp.data.data);
+    });
+    getBoatLocation().then((resp) => {
+      setLocationData(resp.data.data);
+    });
+    getMarinaLocation().then((resp) => {
+      setBoatLocationData(resp.data.data);
+    });
+    getAccesability().then((resp) => {
+      setAccessData(resp.data.data);
+    });
+  }, []);
+
+  //edit request
+  useEffect(() => {
+    if (dataEdit) {
+      setBoatTypeSelected(dataEdit.type_id);
+      setLocationSelected(dataEdit.location_id);
+      setBoatLocationSelected(dataEdit.asset_marina_location_id);
+      setBoatSailingSelected(dataEdit.sailing);
+      setBoatShadeSelected(dataEdit.shade);
+      setBoatACSelected(dataEdit.ac);
+      setBoatAccessSelected(dataEdit.access_id);
+    }
+  }, [dataEdit]);
+
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      name: "",
-      default_label: "",
+      boat_name: dataEdit ? dataEdit.name : "",
+      boat_length: dataEdit ? dataEdit.length : "",
+      boat_make: dataEdit ? dataEdit.make : "",
+      boat_model: dataEdit ? dataEdit.model : "",
+      boat_capacity: dataEdit ? dataEdit.capacity : "",
+      boat_bathroom: dataEdit ? dataEdit.bathrooms : "",
     },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required("Name is required"),
-      default_label: Yup.string().required("Default Label is required"),
-    }),
+    // validationSchema: Yup.object().shape({
+    //   name: Yup.string().required("Name is required"),
+    //   default_label: Yup.string().required("Default Label is required"),
+    // }),
     onSubmit: (values) => {
       let data = {
-        name: values.name,
-        default_label: values.default_label,
+        provider_operator_id: +id,
+        asset_id: 1,
+        name: values.boat_name,
+        type_id: boatTypeSelected,
+        length: values.boat_length,
+        make: values.boat_make,
+        model: values.boat_model,
+        location_id: locationSelected,
+        asset_marina_location_id: boatLocationSelected,
+        capacity: values.boat_capacity,
+        sailing: boatSailingSelected,
+        bathrooms: values.boat_bathroom,
+        shade: boatShadeSelected,
+        ac: boatACSelected,
+        access_id: boatAccessSelected,
       };
-      // createPaymentTypeAPI(data)
-      //   .then((resp) => {
-      //     if (resp.data.status === 201) {
-      //       Swal.fire(
-      //         "Created!",
-      //         "Payment Type has been created.",
-      //         "success"
-      //       ).then(() => {
-      //         setPaymentModal(false);
-      //       });
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     if (error.response.data.data === null) {
-      //       Swal.fire(
-      //         "Error!",
-      //         // {error.response.},
-      //         String(error.response.data.message)
-      //       );
-      //     } else {
-      //       let errorMessages = [];
-      //       Object.entries(error.response.data.data).map((item) => {
-      //         errorMessages.push(item[1]);
-      //         return true;
-      //       });
 
-      //       Swal.fire(
-      //         "Error!",
-      //         // {error.response.},
-      //         String(errorMessages[0])
-      //       );
-      //     }
-      //   });
+      if (dataEdit) {
+        putBoat(dataEdit.id, data)
+          .then((resp) => {
+            if (resp.data.status === 200) {
+              Swal.fire("Edited!", "Asset has been edited.", "success").then(
+                () => {
+                  setAssetModal(false);
+                  resetTable();
+                }
+              );
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      } else {
+        postBoat(data)
+          .then((resp) => {
+            if (resp.data.status === 201) {
+              Swal.fire("Created!", "Asset has been created.", "success").then(
+                () => {
+                   setAssetModal(false);
+                   resetTable();
+                }
+              );
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
     },
   });
-
+  console.log(dataEdit);
   return (
     <>
       <div className="modal-body">
@@ -103,12 +186,14 @@ const BoatComponent = ({
                     onBlur={validationType.handleBlur}
                     value={validationType.values.boat_name || ""}
                     invalid={
-                      validationType.touched.boat_name && validationType.errors.boat_name
+                      validationType.touched.boat_name &&
+                      validationType.errors.boat_name
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.boat_name && validationType.errors.boat_name ? (
+                  {validationType.touched.boat_name &&
+                  validationType.errors.boat_name ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.boat_name}
                     </FormFeedback>
@@ -120,31 +205,26 @@ const BoatComponent = ({
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setBoatTypeSelected(+e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setBoatTypeSelected(+e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
+                  {map(boatTypeData, (type, index) => {
                     return (
                       <option
                         key={index}
                         value={type.id}
                         selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
+                          dataEdit ? type.id === dataEdit.type_id : false
                         }
                       >
-                        {type.text}
+                        {type.name}
                       </option>
                     );
-                  })} */}
+                  })}
                 </Input>
               </Col>
               <Col className="col-2">
@@ -190,12 +270,14 @@ const BoatComponent = ({
                     onBlur={validationType.handleBlur}
                     value={validationType.values.boat_make || ""}
                     invalid={
-                      validationType.touched.boat_make && validationType.errors.boat_make
+                      validationType.touched.boat_make &&
+                      validationType.errors.boat_make
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.boat_make && validationType.errors.boat_make ? (
+                  {validationType.touched.boat_make &&
+                  validationType.errors.boat_make ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.boat_make}
                     </FormFeedback>
@@ -213,12 +295,14 @@ const BoatComponent = ({
                     onBlur={validationType.handleBlur}
                     value={validationType.values.boat_model || ""}
                     invalid={
-                      validationType.touched.boat_model && validationType.errors.boat_model
+                      validationType.touched.boat_model &&
+                      validationType.errors.boat_model
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.boat_model && validationType.errors.boat_model ? (
+                  {validationType.touched.boat_model &&
+                  validationType.errors.boat_model ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.boat_model}
                     </FormFeedback>
@@ -230,31 +314,31 @@ const BoatComponent = ({
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setLocationSelected(+e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setLocationSelected(+e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
+                  {map(locationData, (location, index) => {
+                    if (location.active === 0) {
+                      return null;
+                    }
                     return (
                       <option
                         key={index}
-                        value={type.id}
+                        value={location.id}
                         selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
+                          dataEdit
+                            ? location.id === dataEdit.location_id
                             : false
                         }
                       >
-                        {type.text}
+                        {location.name}
                       </option>
                     );
-                  })} */}
+                  })}
                 </Input>
               </Col>
             </Row>
@@ -264,31 +348,31 @@ const BoatComponent = ({
                 <Input
                   type="select"
                   name="price_type"
-                   onChange={(e) => {
-                     setBoatLocationSelected(+e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setBoatLocationSelected(+e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
+                  {map(boatLocationData, (location, index) => {
+                    if (locationSelected !== location.location_id) {
+                      return null;
+                    }
                     return (
                       <option
                         key={index}
-                        value={type.id}
+                        value={location.id}
                         selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
+                          dataEdit
+                            ? location.id === dataEdit.asset_marina_location_id
                             : false
                         }
                       >
-                        {type.text}
+                        {location.name}
                       </option>
                     );
-                  })} */}
+                  })}
                 </Input>
               </Col>
               <Col className="col-1">
@@ -297,17 +381,19 @@ const BoatComponent = ({
                   <Input
                     name="boat_capacity"
                     placeholder=""
-                    type="text"
+                    type="number"
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
                     value={validationType.values.boat_capacity || ""}
                     invalid={
-                      validationType.touched.boat_capacity && validationType.errors.boat_capacity
+                      validationType.touched.boat_capacity &&
+                      validationType.errors.boat_capacity
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.boat_capacity && validationType.errors.boat_capacity ? (
+                  {validationType.touched.boat_capacity &&
+                  validationType.errors.boat_capacity ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.boat_capacity}
                     </FormFeedback>
@@ -319,16 +405,25 @@ const BoatComponent = ({
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setBoatSailingSelected(e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setBoatSailingSelected(e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  <option value={'Yes'}>Yes</option>
-                  <option value={'No'}>No</option>
-                
+                  <option
+                    selected={dataEdit ? dataEdit.sailing === "Yes" : false}
+                    value={"Yes"}
+                  >
+                    Yes
+                  </option>
+                  <option
+                    selected={dataEdit ? dataEdit.sailing === "No" : false}
+                    value={"No"}
+                  >
+                    No
+                  </option>
                 </Input>
               </Col>
               <Col className="col-1">
@@ -337,17 +432,19 @@ const BoatComponent = ({
                   <Input
                     name="boat_bathroom"
                     placeholder=""
-                    type="text"
+                    type="number"
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
                     value={validationType.values.boat_bathroom || ""}
                     invalid={
-                      validationType.touched.boat_bathroom && validationType.errors.boat_bathroom
+                      validationType.touched.boat_bathroom &&
+                      validationType.errors.boat_bathroom
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.boat_bathroom && validationType.errors.boat_bathroom ? (
+                  {validationType.touched.boat_bathroom &&
+                  validationType.errors.boat_bathroom ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.boat_bathroom}
                     </FormFeedback>
@@ -359,16 +456,25 @@ const BoatComponent = ({
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setBoatShadeSelected(e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setBoatShadeSelected(e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  <option value={'Yes'}>Yes</option>
-                  <option value={'No'}>No</option>
-                  
+                  <option
+                    selected={dataEdit ? dataEdit.shade === "Yes" : false}
+                    value={"Yes"}
+                  >
+                    Yes
+                  </option>
+                  <option
+                    selected={dataEdit ? dataEdit.shade === "No" : false}
+                    value={"No"}
+                  >
+                    No
+                  </option>
                 </Input>
               </Col>
               <Col className="col-1">
@@ -376,15 +482,25 @@ const BoatComponent = ({
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setBoatACSelected(e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setBoatACSelected(e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  <option value={'Yes'}>Yes</option>
-                  <option value={'No'}>No</option>
+                  <option
+                    selected={dataEdit ? dataEdit.ac === "Yes" : false}
+                    value={"Yes"}
+                  >
+                    Yes
+                  </option>
+                  <option
+                    selected={dataEdit ? dataEdit.ac === "No" : false}
+                    value={"No"}
+                  >
+                    No
+                  </option>
                 </Input>
               </Col>
               <Col className="col-1">
@@ -392,45 +508,42 @@ const BoatComponent = ({
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setBoatAccessSelected(+e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setBoatAccessSelected(+e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
+                  {map(accesData, (acces, index) => {
                     return (
                       <option
                         key={index}
-                        value={type.id}
+                        value={acces.id}
                         selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
+                          dataEdit ? dataEdit.access_id === acces.id : false
                         }
                       >
-                        {type.text}
+                        {acces.name}
                       </option>
                     );
-                  })} */}
+                  })}
                 </Input>
               </Col>
             </Row>
             <Row>
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-start">
-              <Button
-                  type="button"
-                  color="paradise"
-                  outline
-                  className="waves-effect waves-light mb-3 btn mx-4"
-                  onClick={() => setMenu(0)}
-                >
-                  Back
-                </Button>
+                {!dataEdit ? (
+                  <Button
+                    type="button"
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light mb-3 btn mx-4"
+                    onClick={() => setMenu(0)}
+                  >
+                    Back
+                  </Button>
+                ) : null}
               </Col>
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-end">
                 <Button
@@ -438,8 +551,12 @@ const BoatComponent = ({
                   color="paradise"
                   outline
                   className="waves-effect waves-light mb-3 btn mx-4"
+                  onClick={() => {
+                    setAssetModal(false);
+                    setDataEdit(null);
+                    setMenu(0);
+                  }}
                 >
-                  
                   Cancel
                 </Button>
                 <Button

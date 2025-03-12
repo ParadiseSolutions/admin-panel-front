@@ -12,64 +12,139 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
-import { useState } from "react";
-
-const OthersComponent = ({
-  setMenu,
-}) => {
+import { useEffect, useState } from "react";
+import {
+  getBoatLocation,
+  getOthersCategory,
+  getVehicleType,
+  postOthers,
+  putOthers,
+} from "../../../../../Utils/API/Assets";
+import { map } from "lodash";
+import { useParams } from "react-router-dom";
+const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTable }) => {
+  const { id } = useParams();
   const [otherTypeSelected, setOtherTypeSelected] = useState("");
   const [otherCategorySelected, setOtherCategorySelected] = useState("");
   const [locationSelected, setLocationSelected] = useState("");
+  const [otherTypeData, setOtherTypeData] = useState([]);
+  const [otherCategoryData, setOtherCategoryData] = useState([]);
+  const [locationData, setLocationData] = useState([]);
+
+  useEffect(() => {
+    getVehicleType().then((res) => {
+      setOtherTypeData(
+        res.data.data.filter((data) => data.asset_type === "Others")
+      );
+    });
+    getOthersCategory().then((res) => {
+      setOtherCategoryData(res.data.data.filter((data) => data.active === 1));
+    });
+    getBoatLocation().then((resp) => {
+      setLocationData(resp.data.data.filter((data) => data.active === 1));
+    });
+  }, []);
+
+    //edit request
+    useEffect(() => {
+      if (dataEdit) {
+        setOtherTypeSelected(dataEdit.type_id);
+        setOtherCategorySelected(dataEdit.category_id);
+        setLocationSelected(dataEdit.location_id);
+      }
+    }, [dataEdit]);
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      name: "",
-      default_label: "",
+      other_qty: dataEdit ? dataEdit.quantity : "",
+      other_cap: dataEdit ? dataEdit.cap_ea : "",
+      
     },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required("Name is required"),
-      default_label: Yup.string().required("Default Label is required"),
-    }),
+    // validationSchema: Yup.object().shape({
+    //   name: Yup.string().required("Name is required"),
+    //   default_label: Yup.string().required("Default Label is required"),
+    // }),
     onSubmit: (values) => {
       let data = {
-        name: values.name,
-        default_label: values.default_label,
+        provider_operator_id: +id,
+        asset_id: 2, // preguntar que numero es
+        category_id: otherCategorySelected,
+        type_id: otherTypeSelected,
+        location_id: locationSelected,
+        quantity: values.other_qty,
+        cap_ea: values.other_cap,
+        max_cap: values.other_qty * values.other_cap,
+       
       };
-      // createPaymentTypeAPI(data)
-      //   .then((resp) => {
-      //     if (resp.data.status === 201) {
-      //       Swal.fire(
-      //         "Created!",
-      //         "Payment Type has been created.",
-      //         "success"
-      //       ).then(() => {
-      //         setPaymentModal(false);
-      //       });
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     if (error.response.data.data === null) {
-      //       Swal.fire(
-      //         "Error!",
-      //         // {error.response.},
-      //         String(error.response.data.message)
-      //       );
-      //     } else {
-      //       let errorMessages = [];
-      //       Object.entries(error.response.data.data).map((item) => {
-      //         errorMessages.push(item[1]);
-      //         return true;
-      //       });
-
-      //       Swal.fire(
-      //         "Error!",
-      //         // {error.response.},
-      //         String(errorMessages[0])
-      //       );
-      //     }
-      //   });
+     if (dataEdit) {
+             putOthers(dataEdit.id, data)
+               .then((resp) => {
+                 if (resp.data.status === 200) {
+                   Swal.fire("Edited!", "Asset has been edited.", "success").then(
+                     () => {
+                       setAssetModal(false);
+                       resetTable();
+                     }
+                   );
+                 }
+               })
+               .catch((error) => {
+                 if (error.response.data.data === null) {
+                   Swal.fire(
+                     "Error!",
+                     // {error.response.},
+                     String(error.response.data.message)
+                   );
+                 } else {
+                   let errorMessages = [];
+                   Object.entries(error.response.data.data).map((item) => {
+                     errorMessages.push(item[1]);
+                     return true;
+                   });
+     
+                   Swal.fire(
+                     "Error!",
+                     // {error.response.},
+                     String(errorMessages[0])
+                   );
+                 }
+               });
+           } else {
+             postOthers(data)
+               .then((resp) => {
+                 if (resp.data.status === 201) {
+                   Swal.fire("Created!", "Asset has been created.", "success").then(
+                     () => {
+                       setAssetModal(false);
+                       resetTable();
+                     }
+                   );
+                 }
+               })
+               .catch((error) => {
+                 if (error.response.data.data === null) {
+                   Swal.fire(
+                     "Error!",
+                     // {error.response.},
+                     String(error.response.data.message)
+                   );
+                 } else {
+                   let errorMessages = [];
+                   Object.entries(error.response.data.data).map((item) => {
+                     errorMessages.push(item[1]);
+                     return true;
+                   });
+     
+                   Swal.fire(
+                     "Error!",
+                     // {error.response.},
+                     String(errorMessages[0])
+                   );
+                 }
+               });
+           }
     },
   });
 
@@ -86,70 +161,59 @@ const OthersComponent = ({
         >
           <Row>
             <Row>
-             
               <Col className="col-2">
                 <Label className="form-label">Type</Label>
                 <Input
                   type="select"
                   name="price_type"
-                   onChange={(e) => {
-                     setOtherTypeSelected(+e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setOtherTypeSelected(+e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
+                  {map(otherTypeData, (type, index) => {
                     return (
                       <option
                         key={index}
                         value={type.id}
                         selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
+                          dataEdit ? type.id === dataEdit.type_id : false
                         }
                       >
-                        {type.text}
+                        {type.name}
                       </option>
                     );
-                  })} */}
+                  })}
                 </Input>
               </Col>
-              
+
               <Col className="col-2">
                 <Label className="form-label">Category</Label>
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setOtherCategorySelected(+e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setOtherCategorySelected(+e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
+                  {map(otherCategoryData, (item, index) => {
                     return (
                       <option
                         key={index}
-                        value={type.id}
+                        value={item.id}
                         selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
+                          dataEdit ? item.id === dataEdit.category_id : false
                         }
                       >
-                        {type.text}
+                        {item.name}
                       </option>
                     );
-                  })} */}
+                  })}
                 </Input>
               </Col>
               <Col className="col-2">
@@ -157,31 +221,26 @@ const OthersComponent = ({
                 <Input
                   type="select"
                   name=""
-                   onChange={(e) => {
-                     setLocationSelected(+e.target.value);
-                   }}
+                  onChange={(e) => {
+                    setLocationSelected(+e.target.value);
+                  }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {/* {map(priceTypeData, (type, index) => {
+                  {map(locationData, (location, index) => {
                     return (
                       <option
                         key={index}
-                        value={type.id}
+                        value={location.id}
                         selected={
-                          dataEdit && dataEdit.pricedetails
-                            ? type.id ===
-                              dataEdit.pricedetails.filter(
-                                (x) => x.pricing_option_id === 10
-                              )[0]?.source_id
-                            : false
+                          dataEdit ? location.id === dataEdit.location_id : false
                         }
                       >
-                        {type.text}
+                        {location.name}
                       </option>
                     );
-                  })} */}
+                  })}
                 </Input>
               </Col>
               <Col className="col-1">
@@ -195,12 +254,14 @@ const OthersComponent = ({
                     onBlur={validationType.handleBlur}
                     value={validationType.values.other_qty || ""}
                     invalid={
-                      validationType.touched.other_qty && validationType.errors.other_qty
+                      validationType.touched.other_qty &&
+                      validationType.errors.other_qty
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.other_qty && validationType.errors.other_qty ? (
+                  {validationType.touched.other_qty &&
+                  validationType.errors.other_qty ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.other_qty}
                     </FormFeedback>
@@ -218,32 +279,35 @@ const OthersComponent = ({
                     onBlur={validationType.handleBlur}
                     value={validationType.values.other_cap || ""}
                     invalid={
-                      validationType.touched.other_cap && validationType.errors.other_cap
+                      validationType.touched.other_cap &&
+                      validationType.errors.other_cap
                         ? true
                         : false
                     }
                   />
-                  {validationType.touched.other_cap && validationType.errors.other_cap ? (
+                  {validationType.touched.other_cap &&
+                  validationType.errors.other_cap ? (
                     <FormFeedback type="invalid">
                       {validationType.errors.other_cap}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
-            
             </Row>
-            
-            <Row className='my-4'>
+
+            <Row className="my-4">
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-start">
-              <Button
-                  type="button"
-                  color="paradise"
-                  outline
-                  className="waves-effect waves-light mb-3 btn mx-4"
-                  onClick={() => setMenu(0)}
-                >
-                  Back
-                </Button>
+              {!dataEdit ? (
+                  <Button
+                    type="button"
+                    color="paradise"
+                    outline
+                    className="waves-effect waves-light mb-3 btn mx-4"
+                    onClick={() => setMenu(0)}
+                  >
+                    Back
+                  </Button>
+                ) : null}
               </Col>
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-end">
                 <Button
@@ -251,8 +315,12 @@ const OthersComponent = ({
                   color="paradise"
                   outline
                   className="waves-effect waves-light mb-3 btn mx-4"
+                  onClick={() => {
+                    setAssetModal(false);
+                    setDataEdit(null);
+                    setMenu(0);
+                  }}
                 >
-                  
                   Cancel
                 </Button>
                 <Button
