@@ -94,5 +94,11 @@ export const getOthersCategory = () => {
       headers: options,
     });
   };
+  export const deleteAsset = (id) => {
+    const url = `${API_URL}/assets/${id}`;
+    return axios.delete (url, {
+      headers: options,
+    });
+  };
 
 
