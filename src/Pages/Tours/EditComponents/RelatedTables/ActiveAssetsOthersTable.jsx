@@ -6,11 +6,11 @@ import {
   TabContent,
   Table,
   TabPane,
-
+  UncontrolledTooltip,
 } from "reactstrap";
 import classnames from "classnames";
 
-const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
+const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
   const [activeTab, setactiveTab] = useState("1");
   const [boatData, setboatData] = useState([]);
   const [vehicleData, setvehicleData] = useState([]);
@@ -23,15 +23,15 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
   }
 
   useEffect(() => {
-    if (relatedAssetsActiveData) {
-      const boat = relatedAssetsActiveData.filter(
+    if (relatedAssetsOtherData) {
+      const boat = relatedAssetsOtherData.filter(
         (item) => item.asset_id === 1
       );
-      const vehicle = relatedAssetsActiveData.filter(
+      const vehicle = relatedAssetsOtherData.filter(
         (item) =>
           item.asset_id === 2 || item.asset_id === 3 || item.asset_id === 4
       );
-      const others = relatedAssetsActiveData.filter(
+      const others = relatedAssetsOtherData.filter(
         (item) =>
           item.asset_id === 5 ||
           item.asset_id === 6 ||
@@ -43,7 +43,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
       setvehicleData(vehicle);
       setothersData(others);
     }
-  }, [relatedAssetsActiveData]);
+  }, [relatedAssetsOtherData]);
 
   return (
     <>
@@ -138,7 +138,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                 {boatData.map((boat, index) => {
                   return (
                     <>
-                      <tr>
+                      <tr key={index}>
                         <td>{boat.name}</td>
                         <td>{boat.type_name}</td>
                         <td>{boat.length}</td>
@@ -149,7 +149,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
 
                         <td>
                           {" "}
-                          <span style={{cursor:'pointer', color:"#3DC7F4"}} onClick={() => removeAsset(boat.id)} >- Remove</span>
+                          <span style={{cursor:'pointer', color:"#F6851F"}} onClick={() => assignAsset(boat.id)} >+ Add</span>
                         </td>
                       </tr>
                     </>
@@ -187,7 +187,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                         <td>{vehicle.capacity}</td>
 
                         <td>
-                          <span style={{cursor:'pointer', color:"#3DC7F4"}} onClick={() => removeAsset(vehicle.id)}>- Remove</span>
+                          <span style={{cursor:'pointer', color:"#F6851F"}} onClick={() => assignAsset(vehicle.id)} >+ Add</span>
                         </td>
                       </tr>
                     </>
@@ -222,7 +222,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                         <td>{item.cap_ea}</td>
                         <td>{item.max_cap}</td>
                         <td>
-                          <span style={{cursor:'pointer', color:"#3DC7F4"}} onClick={() => removeAsset(item.id)}>- Remove</span>
+                          <span style={{cursor:'pointer', color:"#F6851F"}} onClick={() => assignAsset(item.id)} >+ Add</span>
                         </td>
                       </tr>
                     </>
@@ -237,4 +237,4 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
   );
 };
 
-export default ActiveAssetsTable;
+export default ActiveAssetsOthersTable;
