@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import classnames from "classnames";
 import { getAssetsAPI } from "../../../Utils/API/Providers";
 import AssetModal from "../../../Components/Common/Modals/AssetsModal/assetsModal";
+import { deleteAsset } from "../../../Utils/API/Assets";
 const Assets = ({ contacts, id }) => {
   const [col2, setcol2] = useState(false);
   const [boatData, setboatData] = useState([]);
@@ -45,10 +46,7 @@ const Assets = ({ contacts, id }) => {
       setvehicleData(
         res.data.data.filter(
           (data) =>
-            data.asset_id === 2 ||
-            data.asset_id === 3 ||
-            data.asset_id === 4 ||
-            data.asset_id === 8
+            data.asset_id === 2 || data.asset_id === 3 || data.asset_id === 4
         )
       );
       setothersData(
@@ -57,6 +55,7 @@ const Assets = ({ contacts, id }) => {
             data.asset_id === 5 ||
             data.asset_id === 6 ||
             data.asset_id === 7 ||
+            data.asset_id === 8 ||
             data.asset_id === 9
         )
       );
@@ -82,10 +81,7 @@ const Assets = ({ contacts, id }) => {
       setvehicleData(
         res.data.data.filter(
           (data) =>
-            data.asset_id === 2 ||
-            data.asset_id === 3 ||
-            data.asset_id === 4 ||
-            data.asset_id === 8
+            data.asset_id === 2 || data.asset_id === 3 || data.asset_id === 4
         )
       );
       setothersData(
@@ -94,12 +90,44 @@ const Assets = ({ contacts, id }) => {
             data.asset_id === 5 ||
             data.asset_id === 6 ||
             data.asset_id === 7 ||
+            data.asset_id === 8 ||
             data.asset_id === 9
         )
       );
     });
   };
 
+  const deleteAssetSelected = (id) => {
+
+    Swal.fire({
+          title: "Delete Asset?",
+          icon: "question",
+          // text: `Do you want delete ${depData.first_name}`,
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          confirmButtonColor: "#F38430",
+          cancelButtonText: "Cancel",
+        }).then((resp) => {
+          deleteAsset(id)
+          .then((res) => {
+            resetTable();
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "Asset has been deleted.",
+            });
+          })
+          .catch((err) => {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!",
+            });
+          });
+        });
+
+    
+  };
   return (
     <div className="accordion-item">
       <h2 className="accordion-header" id="headingTwo">
@@ -296,11 +324,9 @@ const Assets = ({ contacts, id }) => {
                                             </div>
                                             <div
                                               className="text-danger"
-                                              // onClick={() => {
-                                              //   const rolData = cellProps.row.original;
-                                              //   // setconfirm_alert(true);
-                                              //   onDelete(rolData);
-                                              // }}
+                                             onClick={() => {
+                                              deleteAssetSelected(boat.id);
+                                            }}
                                             >
                                               <i
                                                 className="mdi mdi-delete-outline font-size-18"
@@ -391,11 +417,9 @@ const Assets = ({ contacts, id }) => {
                                             </div>
                                             <div
                                               className="text-danger"
-                                              // onClick={() => {
-                                              //   const rolData = cellProps.row.original;
-                                              //   // setconfirm_alert(true);
-                                              //   onDelete(rolData);
-                                              // }}
+                                              onClick={() => {
+                                                deleteAssetSelected(vehicle.id);
+                                              }}
                                             >
                                               <i
                                                 className="mdi mdi-delete-outline font-size-18"
@@ -465,11 +489,9 @@ const Assets = ({ contacts, id }) => {
                                             </div>
                                             <div
                                               className="text-danger"
-                                              // onClick={() => {
-                                              //   const rolData = cellProps.row.original;
-                                              //   // setconfirm_alert(true);
-                                              //   onDelete(rolData);
-                                              // }}
+                                              onClick={() => {
+                                                deleteAssetSelected(item.id);
+                                              }}
                                             >
                                               <i
                                                 className="mdi mdi-delete-outline font-size-18"
@@ -544,8 +566,7 @@ const Assets = ({ contacts, id }) => {
                               )}
                               {selectedAsset.asset_id === 2 ||
                               selectedAsset.asset_id === 3 ||
-                              selectedAsset.asset_id === 4 ||
-                              selectedAsset.asset_id === 8 ? (
+                              selectedAsset.asset_id === 4 ? (
                                 <div>
                                   <h1 className="text-paradise fw-bold fs-1">
                                     {selectedAsset.type_name} More Details
@@ -568,6 +589,46 @@ const Assets = ({ contacts, id }) => {
                                   </Col>
                                 </div>
                               ) : null}
+                              <Row>
+                                <div className="table-responsive overflow-hidden">
+                                  <Table className="react_table">
+                                    <thead className="table-nowrap">
+                                      <tr>
+                                        <th>Tour ID</th>
+                                        <th>Tour Name</th>
+                                        <th>Category</th>
+                                        <th>Link</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {selectedAsset?.assets_related_tours.map(
+                                        (item, index) => {
+                                          return (
+                                            <>
+                                              <tr key={index}>
+                                                <td>{item.tour_id}</td>
+                                                <td>{item.tour_name}</td>
+                                                <td>
+                                                  {item.tour_category_name}
+                                                </td>
+                                                <td>
+                                                  <a
+                                                    href={item.admin_link}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                  >
+                                                    {item.admin_link}
+                                                  </a>{" "}
+                                                </td>
+                                              </tr>
+                                            </>
+                                          );
+                                        }
+                                      )}
+                                    </tbody>
+                                  </Table>
+                                </div>
+                              </Row>
                             </Row>
                           )}
                         </Row>
@@ -578,7 +639,12 @@ const Assets = ({ contacts, id }) => {
               </>
             )}
           </Row>
-          <AssetModal assetModal={assetModal} setAssetModal={setAssetModal} editID={editID} resetTable={resetTable} />
+          <AssetModal
+            assetModal={assetModal}
+            setAssetModal={setAssetModal}
+            editID={editID}
+            resetTable={resetTable}
+          />
         </div>
       </Collapse>
     </div>
