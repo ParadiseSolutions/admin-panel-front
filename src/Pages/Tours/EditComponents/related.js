@@ -4,6 +4,10 @@ import {
   getRelatedTourAPI,
   priorityRelatedAPI,
   deleteRelatedAPI,
+  getActiveRelatedAsset,
+  getOtherRelatedAsset,
+  assingAssetAPI,
+  removeAssetAPI,
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -27,13 +31,15 @@ import { FaPaperclip } from "react-icons/fa";
 import { FaLink } from "react-icons/fa6";
 import RelatedActionsModal from "../../../Components/Common/Modals/RelatedActionsModal/relatedModal";
 import ActiveAssetsTable from "./RelatedTables/ActiveAssetsTable";
+import ActiveAssetsOthersTable from "./RelatedTables/ActiveAssetsOthersTable";
 
 const RelatedComponent = ({ id, tourData, toggle }) => {
   const [relatedData, setRelatedData] = useState([]);
   const [relatedFilter, setRelatedFilter] = useState(false);
   const [relatedEdit, setRelatedEdit] = useState(false);
   const [editRelatedData, setEditRelatedData] = useState(null);
-
+  const [relatedAssetsActiveData, setRelatedAssetsActiveData] = useState([]);
+  const [relatedAssetsOtherData, setRelatedAssetsOtherData] = useState([]);
   const columnsAddons = useMemo(
     () => [
       {
@@ -267,6 +273,74 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     });
   };
 
+  // request related assets
+
+  useEffect(() => {
+    getActiveRelatedAsset(id).then((resp) => {
+      setRelatedAssetsActiveData(resp.data.data);
+    });
+    getOtherRelatedAsset(id).then((resp) => {
+      setRelatedAssetsOtherData(resp.data.data);
+    });
+  }, [id]);
+
+  const refreshTableAssets = () => {
+    getActiveRelatedAsset(id).then((resp) => {
+      setRelatedAssetsActiveData(resp.data.data);
+    });
+    getOtherRelatedAsset(id).then((resp) => {
+      setRelatedAssetsOtherData(resp.data.data);
+    });
+  };
+
+
+  const assignAsset = (asset_id) => {
+    let data = {
+      tour_id: id,
+      asset_provider_id: asset_id,
+    };
+   
+    Swal.fire({
+      title: "Assign Related Asset?",
+      icon: "question",
+      text: `Do you want assign this asset to this tour`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        assingAssetAPI(data).then((resp) => {
+          refreshTableAssets();
+        });
+      }
+    });
+  };
+  const removeAsset = (asset_id) => {
+    let data = {
+      tour_id: id,
+      asset_provider_id: asset_id,
+    };
+   
+    Swal.fire({
+      title: "Remove Related Asset?",
+      icon: "question",
+      text: `Do you want remove this asset to this tour`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        removeAssetAPI(data).then((resp) => {
+          refreshTableAssets();
+        });
+      }
+    });
+  };
+  
+  console.log(relatedAssetsActiveData)
+
   const indexSubmit = (row, position) => {
     let data = {
       current_tour_id: id,
@@ -391,7 +465,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           </span>
         </Col>
         <Col className="col-12">
-        <ActiveAssetsTable />
+        <ActiveAssetsTable relatedAssetsActiveData={relatedAssetsActiveData} removeAsset={removeAsset}/>
         </Col>
         <Col className="col-12 mt-5">
         <p
@@ -420,7 +494,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           </span>
         </Col>
         <Col className="col-12">
-        <ActiveAssetsTable />
+        <ActiveAssetsOthersTable relatedAssetsOtherData={relatedAssetsOtherData} assignAsset={assignAsset} />
         </Col>
       </Row>
       <Row>

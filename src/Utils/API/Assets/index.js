@@ -83,14 +83,20 @@ export const getOthersCategory = () => {
     });
   };
   export const postOthers = (body) => {
-    const url = `${API_URL}/assets/vehicle`;
+    const url = `${API_URL}/assets/others`;
     return axios.post (url, body, {
       headers: options,
     });
   };
   export const putOthers = (id, body) => {
-    const url = `${API_URL}/assets/vehicle/${id}`;
+    const url = `${API_URL}/assets/others/${id}`;
     return axios.put (url, body, {
+      headers: options,
+    });
+  };
+  export const deleteAsset = (id) => {
+    const url = `${API_URL}/assets/${id}`;
+    return axios.delete (url, {
       headers: options,
     });
   };

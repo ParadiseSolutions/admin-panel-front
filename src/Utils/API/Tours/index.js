@@ -454,6 +454,32 @@ export const putPriceRangesAPI = (tour_id, body) => {
   });
 };
 
+export const getActiveRelatedAsset = (id) => {
+  const url = `${API_URL}/asset-provider-tour/tour/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getOtherRelatedAsset = (id) => {
+  const url = `${API_URL}/asset-provider-tour/other/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const assingAssetAPI = (body) => {
+  const url = `${API_URL}/asset-provider-tour/assign`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const removeAssetAPI = (body) => {
+  const url = `${API_URL}/asset-provider-tour/remove`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
+
 //pricing options select
 
 export const getPricingOptionsAPI = (id) => {

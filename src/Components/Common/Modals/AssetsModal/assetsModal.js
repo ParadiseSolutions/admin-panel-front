@@ -22,8 +22,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
             ? 1
             : res.data.data.asset_id === 2 ||
               res.data.data.asset_id === 3 ||
-              res.data.data.asset_id === 4 ||
-              res.data.data.asset_id === 8
+              res.data.data.asset_id === 4 
             ? 2
             : 3
         );
@@ -45,13 +44,22 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
           style={{ backgroundColor: "#3DC7F4", border: "none" }}
         >
           <h1 className="modal-title mt-0 text-white">
-            {menu === 1
+            {dataEdit ? 
+            menu === 1
+            ? "+ Edit Boat"
+            : menu === 2
+            ? "+ Edit Vehicle"
+            : menu === 3
+            ? "+ Edit Other"
+            : "" : 
+            menu === 1
               ? "+ New Boat"
               : menu === 2
               ? "+ New Vehicle"
               : menu === 3
               ? "+ New Other"
               : ""}
+            {}
           </h1>
           <button
             onClick={() => {
