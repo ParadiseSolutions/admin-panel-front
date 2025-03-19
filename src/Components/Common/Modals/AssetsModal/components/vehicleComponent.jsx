@@ -8,6 +8,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  UncontrolledTooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -32,7 +33,8 @@ const VehicleComponent = ({
 }) => {
   const { id } = useParams();
   const [vehicleTypeSelected, setVehicleTypeSelected] = useState("");
-  const [vehicleTransmisionSelected, setVehicleTransmisionSelected] = useState("");
+  const [vehicleTransmisionSelected, setVehicleTransmisionSelected] =
+    useState("");
   const [vehicleLocationSelected, setVehicleLocationSelected] = useState("");
   const [vehicleSubTypeSelected, setVehicleSubTypeSelected] = useState("");
   const [vehicleACSelected, setVehicleACSelected] = useState("");
@@ -180,7 +182,22 @@ const VehicleComponent = ({
           <Row>
             <Row>
               <Col className="col-2">
-                <Label className="form-label">Type</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Type</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_type"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_type"
+                    >
+                      pending
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -207,7 +224,22 @@ const VehicleComponent = ({
                 </Input>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Sub-Type</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Sub-Type</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_subtype"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_subtype"
+                    >
+                      pending
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -236,7 +268,22 @@ const VehicleComponent = ({
 
               <Col className="col-2">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Make</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Make</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="vehicle_make"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="vehicle_make"
+                      >
+                        pending
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="vehicle_make"
                     placeholder=""
@@ -261,7 +308,22 @@ const VehicleComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Model</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Make</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="vehicle_model"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="vehicle_model"
+                      >
+                        pending
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="vehicle_model"
                     placeholder=""
@@ -285,7 +347,22 @@ const VehicleComponent = ({
                 </div>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Transmision</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Transmision</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="vehicle_transmision"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="vehicle_transmision"
+                    >
+                      Enter the type of transmission this vehicle has.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -315,7 +392,23 @@ const VehicleComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Capacity</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Capacity</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="vehicle_capacity"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="vehicle_capacity"
+                      >
+                        What is the max. capacity of your vehicle? How many
+                        people can ride at a time?
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="vehicle_capacity"
                     placeholder=""
@@ -340,7 +433,22 @@ const VehicleComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Qty</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Qty</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="vehicle_qty"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="vehicle_qty"
+                      >
+                        How many of this type of vehicle does the operator have?
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="vehicle_qty"
                     placeholder=""
@@ -366,7 +474,22 @@ const VehicleComponent = ({
             </Row>
             <Row>
               <Col className="col-2">
-                <Label className="form-label">Location</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Location</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="vehicle_location"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="vehicle_location"
+                    >
+                      Where are these vehicles located?
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name="price_type"
@@ -395,7 +518,22 @@ const VehicleComponent = ({
                 </Input>
               </Col>
               <Col className="col-1">
-                <Label className="form-label">A/C</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">A/C</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="vehicle_ac"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="vehicle_ac"
+                    >
+                      Does your vehicle feature an air-conditioned cabin?
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""

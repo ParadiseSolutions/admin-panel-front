@@ -397,6 +397,35 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
   return (
     <TabPane tabId="1" className="">
       <Row xl={12}>
+      <Col
+          className="col-12 p-1 d-flex"
+          style={{ backgroundColor: "#EBF9FE" }}
+        >
+          <p
+            className="p-2"
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            Related Tours
+          </p>
+          <span
+            style={{
+              fontSize: "20px",
+              marginTop: "10px",
+              fontWeight: "lighter",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            {" "}
+            Identify tour that are either backups (direct replacement, no customer approval required), or alternatives (not quite the same, customer approval required)
+            <br /> to the current tour.
+          </span>
+        </Col>
         {relatedData ? (
           <RelatedTables
             columns={columnsAddons}

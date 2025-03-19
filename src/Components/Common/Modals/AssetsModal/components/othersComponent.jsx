@@ -8,6 +8,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  UncontrolledTooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -22,7 +23,13 @@ import {
 } from "../../../../../Utils/API/Assets";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
-const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTable }) => {
+const OthersComponent = ({
+  setMenu,
+  setAssetModal,
+  dataEdit,
+  setDataEdit,
+  resetTable,
+}) => {
   const { id } = useParams();
   const [otherTypeSelected, setOtherTypeSelected] = useState("");
   const [otherCategorySelected, setOtherCategorySelected] = useState("");
@@ -45,14 +52,14 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
     });
   }, []);
 
-    //edit request
-    useEffect(() => {
-      if (dataEdit) {
-        setOtherTypeSelected(dataEdit.asset_id);
-        setOtherCategorySelected(dataEdit.category_id);
-        setLocationSelected(dataEdit.location_id);
-      }
-    }, [dataEdit]);
+  //edit request
+  useEffect(() => {
+    if (dataEdit) {
+      setOtherTypeSelected(dataEdit.asset_id);
+      setOtherCategorySelected(dataEdit.category_id);
+      setLocationSelected(dataEdit.location_id);
+    }
+  }, [dataEdit]);
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -60,7 +67,6 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
     initialValues: {
       other_qty: dataEdit ? dataEdit.quantity : "",
       other_cap: dataEdit ? dataEdit.cap_ea : "",
-      
     },
     // validationSchema: Yup.object().shape({
     //   name: Yup.string().required("Name is required"),
@@ -75,75 +81,74 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
         quantity: values.other_qty,
         cap_ea: values.other_cap,
         max_cap: values.other_qty * values.other_cap,
-       
       };
-     if (dataEdit) {
-             putOthers(dataEdit.id, data)
-               .then((resp) => {
-                 if (resp.data.status === 200) {
-                   Swal.fire("Edited!", "Asset has been edited.", "success").then(
-                     () => {
-                       setAssetModal(false);
-                       resetTable();
-                     }
-                   );
-                 }
-               })
-               .catch((error) => {
-                 if (error.response.data.data === null) {
-                   Swal.fire(
-                     "Error!",
-                     // {error.response.},
-                     String(error.response.data.message)
-                   );
-                 } else {
-                   let errorMessages = [];
-                   Object.entries(error.response.data.data).map((item) => {
-                     errorMessages.push(item[1]);
-                     return true;
-                   });
-     
-                   Swal.fire(
-                     "Error!",
-                     // {error.response.},
-                     String(errorMessages[0])
-                   );
-                 }
-               });
-           } else {
-             postOthers(data)
-               .then((resp) => {
-                 if (resp.data.status === 201) {
-                   Swal.fire("Created!", "Asset has been created.", "success").then(
-                     () => {
-                       setAssetModal(false);
-                       resetTable();
-                     }
-                   );
-                 }
-               })
-               .catch((error) => {
-                 if (error.response.data.data === null) {
-                   Swal.fire(
-                     "Error!",
-                     // {error.response.},
-                     String(error.response.data.message)
-                   );
-                 } else {
-                   let errorMessages = [];
-                   Object.entries(error.response.data.data).map((item) => {
-                     errorMessages.push(item[1]);
-                     return true;
-                   });
-     
-                   Swal.fire(
-                     "Error!",
-                     // {error.response.},
-                     String(errorMessages[0])
-                   );
-                 }
-               });
-           }
+      if (dataEdit) {
+        putOthers(dataEdit.id, data)
+          .then((resp) => {
+            if (resp.data.status === 200) {
+              Swal.fire("Edited!", "Asset has been edited.", "success").then(
+                () => {
+                  setAssetModal(false);
+                  resetTable();
+                }
+              );
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      } else {
+        postOthers(data)
+          .then((resp) => {
+            if (resp.data.status === 201) {
+              Swal.fire("Created!", "Asset has been created.", "success").then(
+                () => {
+                  setAssetModal(false);
+                  resetTable();
+                }
+              );
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
     },
   });
 
@@ -161,7 +166,22 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
           <Row>
             <Row>
               <Col className="col-2">
-                <Label className="form-label">Type</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Type</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_type"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_type"
+                    >
+                      pending
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name="price_type"
@@ -189,7 +209,22 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
               </Col>
 
               <Col className="col-2">
-                <Label className="form-label">Category</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Category</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_category"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_category"
+                    >
+                      pending
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -216,7 +251,22 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
                 </Input>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Location</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Location</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="vehicle_location"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="vehicle_location"
+                    >
+                      Where are these vehicles located?
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -233,7 +283,9 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
                         key={index}
                         value={location.id}
                         selected={
-                          dataEdit ? location.id === dataEdit.location_id : false
+                          dataEdit
+                            ? location.id === dataEdit.location_id
+                            : false
                         }
                       >
                         {location.name}
@@ -244,7 +296,22 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
               </Col>
               <Col className="col-1">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Qty</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Qty</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="vehicle_qty"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="vehicle_qty"
+                      >
+                        How many of this type of vehicle does the operator have?
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="other_qty"
                     placeholder=""
@@ -269,7 +336,22 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
               </Col>
               <Col className="col-1">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Cap. Ea.</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Cap. Ea.</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="cap_ea"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="cap_ea"
+                      >
+                        pending
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="other_cap"
                     placeholder=""
@@ -296,7 +378,7 @@ const OthersComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetT
 
             <Row className="my-4">
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-start">
-              {!dataEdit ? (
+                {!dataEdit ? (
                   <Button
                     type="button"
                     color="paradise"

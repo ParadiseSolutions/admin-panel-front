@@ -1,6 +1,15 @@
 // import { createPaymentTypeAPI } from "../../../../Utils/API/Payments";
 import { useEffect, useState } from "react";
-import { Row, Col, Form, Label, Input, FormFeedback, Button } from "reactstrap";
+import {
+  Row,
+  Col,
+  Form,
+  Label,
+  Input,
+  FormFeedback,
+  Button,
+  UncontrolledTooltip,
+} from "reactstrap";
 
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
@@ -15,7 +24,13 @@ import {
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
 
-const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTable }) => {
+const BoatComponent = ({
+  setMenu,
+  setAssetModal,
+  dataEdit,
+  setDataEdit,
+  resetTable,
+}) => {
   const { id } = useParams();
   const [boatTypeData, setBoatTypeData] = useState([]);
   const [locationData, setLocationData] = useState([]);
@@ -131,8 +146,8 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
             if (resp.data.status === 201) {
               Swal.fire("Created!", "Asset has been created.", "success").then(
                 () => {
-                   setAssetModal(false);
-                   resetTable();
+                  setAssetModal(false);
+                  resetTable();
                 }
               );
             }
@@ -177,7 +192,25 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
             <Row>
               <Col className="col-2">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Boat Name</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Boat Name</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="boat_name"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="boat_name"
+                      >
+                        Type the name of the Boat. Try to find out this
+                        information as it is very useful. Sometimes you won't be
+                        able to obtain this information in which case you can
+                        leave it blank, but try to find it out.
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="boat_name"
                     placeholder=""
@@ -201,7 +234,22 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
                 </div>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Type</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Type</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_type"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_type"
+                    >
+                      Choose the type of boat you are defining.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -228,7 +276,22 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
                 </Input>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Length</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Length</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_length"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_length"
+                    >
+                      Enter the length of the boat in feet.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     name="boat_length"
@@ -261,7 +324,31 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
               </Col>
               <Col className="col-2">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Make</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Make</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="boat_make"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="boat_make"
+                      >
+                        Type the Make of your boat, such as Bertram, Lagoon, or
+                        Criss Craft.
+                        <br />
+                        For example, if you have a Sea Ray Sundancer, then Sea
+                        Ray is the Make and Sundancer is the model. If you have
+                        a Lagoon 450, then Lagoon is the make and 450 is the
+                        model.
+                        <br />
+                        This is similar to Vehicles, where the Make would be
+                        Chevrolet and the Model Suburban.
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="boat_make"
                     placeholder=""
@@ -286,7 +373,31 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
               </Col>
               <Col className="col-2">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Model</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Model</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="boat_model"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="boat_model"
+                      >
+                        Enter the model of your boat, such as 450, Express, or
+                        Sundancer.
+                        <br />
+                        For example, if the Make is Sea Ray, the Model might be
+                        Sundancer. This is similar to Vehicles where the Make
+                        might be Toyota while the model might be Corolla or
+                        Camry.
+                        <br />
+                        If you don't know the model of your boat, you can leave
+                        this field blank, but fill it if you have it.
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="boat_model"
                     placeholder=""
@@ -310,7 +421,26 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
                 </div>
               </Col>
               <Col className="col-2">
-                <Label className="form-label">Location</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Location</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_location"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_location"
+                    >
+                      Choose the location of your boat. For example, on Cancun
+                      Discounts, you will need to specify if the boat is in
+                      Cancun, or Playa del Carmen, or Cozumel. On Puerto
+                      Vallarta Tours you will need to specify if the boat is
+                      located in Nuevo Vallarta or Puerto Vallarta.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -344,7 +474,25 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
             </Row>
             <Row>
               <Col className="col-4">
-                <Label className="form-label">Marina Location</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Marina Location</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_marina"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_marina"
+                    >
+                      Choose what Marina or Beach your Boat is located at. For
+                      example, if your boat is in Cozumel, you will need to
+                      choose if it is located in Marina Caleta, Puerto Abrigo,
+                      or Marina Cozumel.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name="price_type"
@@ -377,7 +525,22 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
               </Col>
               <Col className="col-1">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Capacity</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Capacity</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="boat_capacity"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="boat_capacity"
+                      >
+                        How many people can this boat take?
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="boat_capacity"
                     placeholder=""
@@ -401,7 +564,25 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
                 </div>
               </Col>
               <Col className="col-1">
-                <Label className="form-label">Sailing</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Sailing</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_sailing"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_sailing"
+                    >
+                      Does your boat have a sail? Or does it always use only
+                      motor power? This would generally apply only to Catamarans
+                      and Sailboats. Some Catamarans have sails and others just
+                      motor.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -428,7 +609,23 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
               </Col>
               <Col className="col-1">
                 <div className="form-outline mb-4">
-                  <Label className="form-label">Bathroom</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Bathroom</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="boat_sailing"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="boat_sailing"
+                      >
+                        Select how many bathrooms are available on board the
+                        boat.
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
                   <Input
                     name="boat_bathroom"
                     placeholder=""
@@ -452,7 +649,23 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
                 </div>
               </Col>
               <Col className="col-1">
-                <Label className="form-label">Shade</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Shade</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_shade"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_shade"
+                    >
+                      Is there shade available on board your boat? This is
+                      important especially for elderly people.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -478,7 +691,22 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
                 </Input>
               </Col>
               <Col className="col-1">
-                <Label className="form-label">A/C</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">A/C</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_ac"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_ac"
+                    >
+                      Does your boat feature an air-conditioned cabin?
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
@@ -504,7 +732,22 @@ const BoatComponent = ({ setMenu, setAssetModal, dataEdit, setDataEdit, resetTab
                 </Input>
               </Col>
               <Col className="col-1">
-                <Label className="form-label">Access.</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Access.</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_access"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_access"
+                    >
+                      Is your boat wheelchair accessible?
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
                 <Input
                   type="select"
                   name=""
