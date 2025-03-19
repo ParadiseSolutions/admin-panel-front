@@ -487,6 +487,24 @@ const Assets = ({ contacts, id }) => {
                                                 Edit
                                               </UncontrolledTooltip>
                                             </div>
+                                            <div className="text-warning">
+                                              <VscEye
+                                                size={30}
+                                                onClick={() =>
+                                                  toggleDetails(
+                                                    index,
+                                                    "other"
+                                                  )
+                                                }
+                                                style={{ cursor: "pointer" }}
+                                              />
+                                              <UncontrolledTooltip
+                                                placement="top"
+                                                target="edittooltip"
+                                              >
+                                                Details
+                                              </UncontrolledTooltip>
+                                            </div>
                                             <div
                                               className="text-danger"
                                               onClick={() => {
@@ -574,17 +592,17 @@ const Assets = ({ contacts, id }) => {
                                   <Col className="col-12 flex">
                                     <p className="d-inline-block mx-4">
                                       <span className="fw-bold">Sub-Type:</span>{" "}
-                                      pending
+                                      { selectedAsset.asset_vehicle_subtype }
                                     </p>
                                     <p className="d-inline-block mx-4">
                                       <span className="fw-bold">
                                         Transmission:
                                       </span>{" "}
-                                      pending
+                                      {selectedAsset.transmission_name}
                                     </p>
                                     <p className="d-inline-block mx-4">
                                       <span className="fw-bold">A/C:</span>{" "}
-                                      pending
+                                      {selectedAsset.ac}
                                     </p>
                                   </Col>
                                 </div>
