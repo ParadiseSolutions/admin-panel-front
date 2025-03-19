@@ -263,7 +263,7 @@ const OthersComponent = ({
                       placement="top"
                       target="vehicle_location"
                     >
-                      Where are these vehicles located?
+                      Where are these assets located?
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -308,7 +308,7 @@ const OthersComponent = ({
                         placement="top"
                         target="vehicle_qty"
                       >
-                        How many of this type of vehicle does the operator have?
+                        How many of this type of assets does the operator have?
                       </UncontrolledTooltip>
                     </div>
                   </div>

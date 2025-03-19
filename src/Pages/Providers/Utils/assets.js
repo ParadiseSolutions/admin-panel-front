@@ -605,6 +605,11 @@ const Assets = ({ contacts, id }) => {
                                       {selectedAsset.ac}
                                     </p>
                                   </Col>
+                                  <Row>
+                                    <h1 className="text-paradise fw-bold fs-1 my-5">
+                                      Current Tour
+                                    </h1>
+                                  </Row>
                                 </div>
                               ) : null}
                               <Row>
