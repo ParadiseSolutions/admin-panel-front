@@ -614,12 +614,12 @@ const BoatComponent = ({
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
-                        id="boat_sailing"
+                        id="boat_bathroom"
                       />
                       <UncontrolledTooltip
                         autohide={true}
                         placement="top"
-                        target="boat_sailing"
+                        target="boat_bathroom"
                       >
                         Select how many bathrooms are available on board the
                         boat.
