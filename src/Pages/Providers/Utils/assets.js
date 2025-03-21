@@ -98,35 +98,32 @@ const Assets = ({ contacts, id }) => {
   };
 
   const deleteAssetSelected = (id) => {
-
     Swal.fire({
-          title: "Delete Asset?",
-          icon: "question",
-          // text: `Do you want delete ${depData.first_name}`,
-          showCancelButton: true,
-          confirmButtonText: "Yes",
-          confirmButtonColor: "#F38430",
-          cancelButtonText: "Cancel",
-        }).then((resp) => {
-          deleteAsset(id)
-          .then((res) => {
-            resetTable();
-            Swal.fire({
-              icon: "success",
-              title: "Deleted!",
-              text: "Asset has been deleted.",
-            });
-          })
-          .catch((err) => {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Something went wrong!",
-            });
+      title: "Delete Asset?",
+      icon: "question",
+      // text: `Do you want delete ${depData.first_name}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      deleteAsset(id)
+        .then((res) => {
+          resetTable();
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "Asset has been deleted.",
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
           });
         });
-
-    
+    });
   };
   return (
     <div className="accordion-item">
@@ -324,9 +321,9 @@ const Assets = ({ contacts, id }) => {
                                             </div>
                                             <div
                                               className="text-danger"
-                                             onClick={() => {
-                                              deleteAssetSelected(boat.id);
-                                            }}
+                                              onClick={() => {
+                                                deleteAssetSelected(boat.id);
+                                              }}
                                             >
                                               <i
                                                 className="mdi mdi-delete-outline font-size-18"
@@ -491,10 +488,7 @@ const Assets = ({ contacts, id }) => {
                                               <VscEye
                                                 size={30}
                                                 onClick={() =>
-                                                  toggleDetails(
-                                                    index,
-                                                    "other"
-                                                  )
+                                                  toggleDetails(index, "other")
                                                 }
                                                 style={{ cursor: "pointer" }}
                                               />
@@ -592,7 +586,7 @@ const Assets = ({ contacts, id }) => {
                                   <Col className="col-12 flex">
                                     <p className="d-inline-block mx-4">
                                       <span className="fw-bold">Sub-Type:</span>{" "}
-                                      { selectedAsset.asset_vehicle_subtype }
+                                      {selectedAsset.asset_vehicle_subtype}
                                     </p>
                                     <p className="d-inline-block mx-4">
                                       <span className="fw-bold">
@@ -605,15 +599,15 @@ const Assets = ({ contacts, id }) => {
                                       {selectedAsset.ac}
                                     </p>
                                   </Col>
+                                </div>
+                              ) : null}
+                              <Row>
+                                <div className="table-responsive overflow-hidden">
                                   <Row>
                                     <h1 className="text-paradise fw-bold fs-1 my-5">
                                       Current Tour
                                     </h1>
                                   </Row>
-                                </div>
-                              ) : null}
-                              <Row>
-                                <div className="table-responsive overflow-hidden">
                                   <Table className="react_table">
                                     <thead className="table-nowrap">
                                       <tr>
