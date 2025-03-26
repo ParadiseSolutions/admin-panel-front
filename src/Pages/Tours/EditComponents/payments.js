@@ -46,7 +46,7 @@ import {
   setRateFormat,
 } from "../../../Utils/CommonFunctions";
 import { switchTourTab } from "../../../Utils/API";
-
+import Switch from "react-switch";
 const Payments = ({ history, tourSettings, id, toggle }) => {
   const [paymentData, setPaymentData] = useState([]);
   const [taxData, setTaxData] = useState([]);
@@ -73,11 +73,11 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
 
   const [advanceSettings, setAdvanceSettings] = useState(false);
   const [taxesBasedOnData, setTaxesBasedOnData] = useState([]);
-  const [taxesBasedOnSelected, setTaxesBasedOnSelected] = useState([]);
+  const [taxesBasedOnSelected, setTaxesBasedOnSelected] = useState(null);
   const [commissionBasedOnData, setCommissionBasedOnData] = useState([]);
-  const [commissionBasedOnSelected, setCommissionBasedOnSelected] = useState([]);
+  const [commissionBasedOnSelected, setCommissionBasedOnSelected] = useState(null);
   const [applyCommissionData, setApplyCommissionData] = useState([]);
-  const [applyCommissionSelected, setApplyCommissionSelected] = useState([]);
+  const [applyCommissionSelected, setApplyCommissionSelected] = useState(null);
 
 
   //tooltips
@@ -520,11 +520,12 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     </Tooltip>
                   </div>
                 </div>
-                <div className="d-flex mt-2">
+                <div className="d-flex mt-2 form-check form-switch">
                   <Label className="mx-2">Advanced Settings</Label>
                   <input
-                    type="checkbox"
-                    className="form-check-input"
+                     type="checkbox"
+                     className="form-check-input mx-1"
+                     id="customSwitchsizesm"
                     checked={advanceSettings}
                     onChange={(e) => setAdvanceSettings(e.target.checked)}
                   />
@@ -1070,7 +1071,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         className="uil-question-circle font-size-15 mx-2"
                         id="taxtooltip"
                       />
-                      <Tooltip
+                      {/* <Tooltip
                         placement="right"
                         isOpen={taxTooltip}
                         target="taxtooltip"
@@ -1082,7 +1083,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         before taxes are included? If the operator will not
                         charge tax, such as when paying in cash on the day of
                         the tour, then select "Not Applicable".
-                      </Tooltip>
+                      </Tooltip> */}
                     </div>
                   </div>
                   <div className="input-group">
@@ -1124,7 +1125,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         className="uil-question-circle font-size-15 mx-2"
                         id="gratuitiestooltip"
                       />
-                      <Tooltip
+                      {/* <Tooltip
                         placement="right"
                         isOpen={gratuitiesTooltip}
                         target="gratuitiestooltip"
@@ -1133,7 +1134,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         }}
                       >
                         Does the price include gratuity or are gratuities extra?
-                      </Tooltip>
+                      </Tooltip> */}
                     </div>
                   </div>
                   <div className="input-group">
@@ -1176,7 +1177,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         className="uil-question-circle font-size-15 mx-2"
                         id="gratuitiestooltip"
                       />
-                      <Tooltip
+                      {/* <Tooltip
                         placement="right"
                         isOpen={gratuitiesTooltip}
                         target="gratuitiestooltip"
@@ -1185,7 +1186,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         }}
                       >
                         Does the price include gratuity or are gratuities extra?
-                      </Tooltip>
+                      </Tooltip> */}
                     </div>
                   </div>
                   <div className="input-group">
