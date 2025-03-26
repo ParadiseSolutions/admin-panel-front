@@ -307,6 +307,24 @@ export const paymentsEventGet = () => {
     headers: options,
   });
 };
+export const paymentsTaxesBaseOnGet = () => {
+  const url = `${API_URL}/payments/tab/payment-taxes`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsCommissionBaseOnGet = () => {
+  const url = `${API_URL}/payments/tab/payment-commissions`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsCommissionApplyGet = () => {
+  const url = `${API_URL}/payments/tab/payment-commissions-apply`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 
 export const postPaymentsAPI = (body) => {
   const url = `${API_URL}/payments`;
