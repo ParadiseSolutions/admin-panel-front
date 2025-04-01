@@ -569,11 +569,7 @@ const Assets = ({ contacts, id }) => {
                                       {selectedAsset.shade}
                                     </p>
                                   </Col>
-                                  <Row>
-                                    <h1 className="text-paradise fw-bold fs-1 my-5">
-                                      Current Tour
-                                    </h1>
-                                  </Row>
+                                  
                                 </div>
                               )}
                               {selectedAsset.asset_id === 2 ||
