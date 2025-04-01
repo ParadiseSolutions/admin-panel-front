@@ -11,6 +11,7 @@ import { Container } from "reactstrap";
 import { useParams } from "react-router-dom";
 import PaymentMethods from "./Utils/PaymentMethods";
 import Assets from "./Utils/assets";
+import OperationalInfo from "./Utils/operationalInfo";
 const EditProvider = () => {
   const { id } = useParams();
   const [data, setData] = useState();
@@ -46,6 +47,7 @@ const EditProvider = () => {
             <Contacts contacts={contacts} />
             <PaymentMethods contacts={contacts} id={id} />
             <Assets contacts={contacts} id={id} />
+            <OperationalInfo socialData={socialData} id={id} />
             <SocialMedia socialData={socialData} id={id} />
           </div>
         </Container>
