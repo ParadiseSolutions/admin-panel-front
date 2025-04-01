@@ -64,6 +64,9 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
           <button
             onClick={() => {
               setAssetModal(false);
+              setAssetModal(false);
+              setDataEdit(null);
+              setMenu(0);
             }}
             type="button"
             className="close"
