@@ -396,7 +396,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
   };
   return (
     <TabPane tabId="1" className="">
-      <Row xl={12}>
+      <Row>
       <Col
           className="col-12 p-1 d-flex"
           style={{ backgroundColor: "#EBF9FE" }}
@@ -404,7 +404,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           <p
             className="p-2"
             style={{
-              fontSize: "24px",
+              fontSize: "20px",
               fontWeight: "bold",
               color: "#495057",
               marginBottom: "0px",
@@ -414,7 +414,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           </p>
           <span
             style={{
-              fontSize: "20px",
+              fontSize: "16px",
               marginTop: "10px",
               fontWeight: "lighter",
               color: "#495057",
@@ -423,7 +423,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           >
             {" "}
             Identify tour that are either backups (direct replacement, no customer approval required), or alternatives (not quite the same, customer approval required)
-            <br /> to the current tour.
+            to the current tour.
           </span>
         </Col>
         {relatedData ? (
@@ -445,7 +445,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           <p
             className="p-2"
             style={{
-              fontSize: "24px",
+              fontSize: "20px",
               fontWeight: "bold",
               color: "#495057",
               marginBottom: "0px",
@@ -455,7 +455,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           </p>
           <span
             style={{
-              fontSize: "20px",
+              fontSize: "16px",
               marginTop: "10px",
               fontWeight: "lighter",
               color: "#495057",
@@ -471,7 +471,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         <p
             className="p-2"
             style={{
-              fontSize: "24px",
+              fontSize: "20px",
               fontWeight: "bold",
               color: "#495057",
               marginBottom: "0px",
@@ -481,7 +481,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           </p>
           <span
             style={{
-              fontSize: "20px",
+              fontSize: "16px",
               marginTop: "10px",
               marginLeft: "10px",
               fontWeight: "lighter",
@@ -500,7 +500,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         <p
             className="p-2"
             style={{
-              fontSize: "24px",
+              fontSize: "20px",
               fontWeight: "bold",
               color: "#495057",
               marginBottom: "0px",
@@ -510,7 +510,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           </p>
           <span
             style={{
-              fontSize: "20px",
+              fontSize: "16px",
               marginTop: "10px",
               marginLeft: "10px",
               fontWeight: "lighter",
