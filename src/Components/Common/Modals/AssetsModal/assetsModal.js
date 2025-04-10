@@ -57,7 +57,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
               : menu === 2
               ? "+ New Vehicle"
               : menu === 3
-              ? "+ New Other"
+              ? "+ New Asset"
               : ""}
             {}
           </h1>
