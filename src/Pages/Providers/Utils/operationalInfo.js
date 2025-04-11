@@ -13,9 +13,11 @@ import {
   CardBody,
 } from "reactstrap";
 import classnames from "classnames";
-import CancellationPolicy from "./operationalComponents/cancellationPolicy";
-import ChangePolicy from "./operationalComponents/changePolicy";
-import NoShowPolicy from "./operationalComponents/noShowPolicy";
+import CancellationPolicyGeneral from "./operationalComponents/cancellationPolicyGeneral";
+import ChangePolicyGeneral from "./operationalComponents/changePolicyGeneral";
+import NoShowPolicyGeneral from "./operationalComponents/noShowPolicyGeneral";
+import LastMinuteBookingGeneral from "./operationalComponents/lastMinuteBookingGeneral";
+import HolidaysGeneral from "./operationalComponents/HolidaysGeneral";
 
 const OperationalInfo = () => {
   // console.log('social media',initialData)
@@ -59,11 +61,11 @@ const OperationalInfo = () => {
                     className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
                     style={{ width: "32px", height: "32px" }}
                   ></i>{" "}
-                  To create a new tour please fill out the following
-                  information. Once you've completed this first screen, you can
-                  through the tabs and complete the information. Once you're
-                  done with a section, press "Continue" to save your changes.
-                  navigate
+                  These sections specify how we work with this provider on a
+                  business level, not related to specific tours or
+                  customer-facing policies. For example, if it specifies "Pay"
+                  that means we need to pay the provider, not that the customer
+                  needs to pay us.
                 </p>
               </div>
             </Row>
@@ -81,7 +83,7 @@ const OperationalInfo = () => {
                             Cancellation Policy
                           </p>
                         </div>
-                        <CancellationPolicy />
+                        <CancellationPolicyGeneral />
                       </Col>
                       <Col className="col-4">
                         <div
@@ -92,7 +94,7 @@ const OperationalInfo = () => {
                             Change Policy
                           </p>
                         </div>
-                        <ChangePolicy />
+                        <ChangePolicyGeneral />
                       </Col>
                       <Col className="col-4">
                         <div
@@ -103,7 +105,33 @@ const OperationalInfo = () => {
                             No Show Policy
                           </p>
                         </div>
-                        <NoShowPolicy />
+                        <NoShowPolicyGeneral />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Last Minute Bookings
+                          </p>
+                        </div>
+                        <LastMinuteBookingGeneral />
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Holidays
+                          </p>
+                        </div>
+                        <HolidaysGeneral />
                       </Col>
                     </Row>
                   </CardBody>
