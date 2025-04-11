@@ -93,7 +93,7 @@ const LastMinuteBooking = () => {
               return (
                 <tr key={index}>
                   <td>{item.tour_id}</td>
-                  <td>pending</td>
+                  <td>{item.tour_name}</td>
                   <td>{item.same_day}</td>
                   <td>{item.next_day}</td>
                   <td>{item.notice_label}</td>
