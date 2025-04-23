@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
-import CancellationBanner from "../../../../../Components/Assets/images/CancellationBanner.png";
+import CancellationBanner from "../../../../../../Components/Assets/images/CancellationBanner.png";
 import {
   createHolidayPolicy,
   createLastMinutePolicy,
@@ -27,7 +27,7 @@ import {
   getPolicyToEditAPI,
   getTourStatusOptionsAPI,
   updateHoliday,
-} from "../../../../../Utils/API/Providers";
+} from "../../../../../../Utils/API/Providers";
 
 const HolidaysModal = ({
   holidaysModalCreate,

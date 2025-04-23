@@ -16,18 +16,19 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
-import CancellationBanner from "../../../../../Components/Assets/images/CancellationBanner.png";
+import CancellationBanner from "../../../../../../Components/Assets/images/CancellationBanner.png";
 import {
-  createNoShowPolicy,
-  getBaseOnOptionsAPI,
-  getPaymentOptionsAPI,
+  createCancellationPolicy,
+  getActionOptionsGroupsAPI,
+  getCancelledOptionsGroupsAPI,
   getPolicyToEditAPI,
+  getPolicyToEditGroupsAPI,
   updateCancellationPolicy,
-} from "../../../../../Utils/API/Providers";
+} from "../../../../../../Utils/API/Providers";
 
-const NoShowPolicyModal = ({
-  noShowPolicyModalAction,
-  setNoShowPolicyModalAction,
+const CancellationPolicyModal = ({
+  cancellationPolicyModalAction,
+  setCancellationPolicyModalAction,
   refresh,
   idEdit,
   setIdEdit,
@@ -35,17 +36,18 @@ const NoShowPolicyModal = ({
   const { id } = useParams();
 
   //initial request
-  const [baseOnData, setBaseOnData] = useState([]);
-  const [paymentOptionData, setPaymentOptionData] = useState([]);
-  const [baseOnSelected, setBaseOnSelected] = useState(null);
-  const [paymentOptionSelected, setPaymentOptionSelected] = useState(null);
+  const [cancelledData, setCancelledData] = useState([]);
+  const [actionData, setActionData] = useState([]);
+  const [cancelledSelected, setCancelledSelected] = useState(null);
+  const [actionSelected, setActionSelected] = useState(null);
   const [dataEdit, setDataEdit] = useState(null);
+
   useEffect(() => {
-    getBaseOnOptionsAPI().then((res) => {
-      setBaseOnData(res.data.data);
+    getCancelledOptionsGroupsAPI().then((res) => {
+      setCancelledData(res.data.data);
     });
-    getPaymentOptionsAPI().then((res) => {
-      setPaymentOptionData(res.data.data);
+    getActionOptionsGroupsAPI().then((res) => {
+      setActionData(res.data.data);
     });
   }, []);
 
@@ -53,16 +55,16 @@ const NoShowPolicyModal = ({
   useEffect(() => {
     if (idEdit) {
       getPolicyToEditAPI(idEdit).then((res) => {
-        setPaymentOptionSelected(res.data.data.payment_option_id);
-        setBaseOnSelected(res.data.data.based_on_id);
+        setCancelledSelected(res.data.data.ifcancel_id);
+        setActionSelected(res.data.data.action_id);
         setDataEdit(res.data.data);
       });
     }
   }, [idEdit]);
 
   const clearData = () => {
-    setPaymentOptionSelected(null);
-    setBaseOnSelected(null);
+    setCancelledSelected(null);
+    setActionSelected(null);
     setDataEdit(null);
     setIdEdit(null);
   };
@@ -70,9 +72,7 @@ const NoShowPolicyModal = ({
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-    initialValues: {
-      amount: dataEdit ? dataEdit.amount : "",
-    },
+    initialValues: {},
     // validationSchema: Yup.object().shape({
     //   name: Yup.string().required("Name is required"),
     //   default_label: Yup.string().required("Default Label is required"),
@@ -80,24 +80,22 @@ const NoShowPolicyModal = ({
     onSubmit: (values) => {
       let data = {
         provider_id: id,
-        payment_option_id: paymentOptionSelected,
-        amount: values.amount,
-        based_on_id: baseOnSelected,
+        ifcancel_id: cancelledSelected,
+        action_id: actionSelected,
+        groups: 1,
       };
-
       if (idEdit) {
-        updateCancellationPolicy(id, data)
+        updateCancellationPolicy(idEdit, data)
           .then((res) => {
             if (res.data.status === 200) {
               Swal.fire({
                 icon: "success",
                 title: "Success",
-                text: "No Show Policy Edited Successfully",
+                text: "Cancellation Policy Edited Successfully",
               });
               refresh();
               clearData();
-              setNoShowPolicyModalAction(false);
-              setIdEdit(null);
+              setCancellationPolicyModalAction(false);
             } else {
               Swal.fire({
                 icon: "error",
@@ -115,7 +113,7 @@ const NoShowPolicyModal = ({
             });
           });
       } else {
-        createNoShowPolicy(data)
+        createCancellationPolicy(data)
           .then((res) => {
             if (res.data.status === 201) {
               Swal.fire({
@@ -125,8 +123,7 @@ const NoShowPolicyModal = ({
               });
               refresh();
               clearData();
-              setNoShowPolicyModalAction(false);
-              setIdEdit(null);
+              setCancellationPolicyModalAction(false);
             } else {
               Swal.fire({
                 icon: "error",
@@ -150,9 +147,9 @@ const NoShowPolicyModal = ({
     <Modal
       centered
       size="lg"
-      isOpen={noShowPolicyModalAction}
+      isOpen={cancellationPolicyModalAction}
       toggle={() => {
-        setNoShowPolicyModalAction();
+        setCancellationPolicyModalAction(!cancellationPolicyModalAction);
         clearData();
       }}
     >
@@ -160,14 +157,19 @@ const NoShowPolicyModal = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ No Show Policy</h1>
+        <h1 className="modal-title mt-0 text-white">
+          + Add Cancellation Policy
+        </h1>
         {/* {
           contactID === false ? (
             <h1 className="modal-title mt-0 text-white">+ Add Cancellation Policy</h1>
           ):(<h1 className="modal-title mt-0 text-white">Edit Cancellation Policy</h1>)
         } */}
         <button
-          onClick={() => { clearData(); setNoShowPolicyModalAction(false); }}
+          onClick={() => {
+            setCancellationPolicyModalAction(!cancellationPolicyModalAction);
+            clearData();
+          }}
           type="button"
           className="close"
           data-dismiss="modal"
@@ -192,9 +194,9 @@ const NoShowPolicyModal = ({
             </Col>
           </Row>
           <Row>
-            <Col className="col-5">
+            <Col className="col-6">
               <div className="d-flex justify-content-between">
-                <Label className="form-label">Payment Option</Label>
+                <Label className="form-label">If Cancelled</Label>
                 <div>
                   <i
                     className="uil-question-circle font-size-15"
@@ -213,91 +215,30 @@ const NoShowPolicyModal = ({
                 type="select"
                 name=""
                 onChange={(e) => {
-                  setPaymentOptionSelected(+e.target.value);
+                  setCancelledSelected(+e.target.value);
                 }}
                 onBlur={validationType.handleBlur}
                 //   value={validationType.values.department || ""}
               >
                 <option value={null}>Select....</option>
-                {map(paymentOptionData, (item, index) => {
+                {map(cancelledData, (item, index) => {
                   return (
                     <option
                       key={index}
                       value={item.id}
                       selected={
-                        dataEdit
-                          ? item.id === dataEdit.payment_option_id
-                          : false
+                        dataEdit ? item.id === dataEdit.ifcancel_id : false
                       }
                     >
-                      {item.name}
+                      {item.label}
                     </option>
                   );
                 })}
               </Input>
             </Col>
-            <Col className="col-2">
-              <div className="form-outline mb-2" id="eff_rate">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-label">Amount</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15"
-                      id="boat_type"
-                    />
-                    <UncontrolledTooltip
-                      autohide={true}
-                      placement="top"
-                      target="boat_type"
-                    >
-                      Choose the type of boat you are defining.
-                    </UncontrolledTooltip>
-                  </div>
-                </div>
-                <div className="input-group">
-                  {paymentOptionSelected === 2 ? (
-                    <span
-                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                      id="basic-addon1"
-                      style={{ fontSize: "0.85em" }}
-                    >
-                      $
-                    </span>
-                  ) : null}
-                  <Input
-                    name="amount"
-                    placeholder=""
-                    type="text"
-                    onChange={validationType.handleChange}
-                    value={validationType.values.amount || ""}
-                    invalid={
-                      validationType.touched.amount &&
-                      validationType.errors.amount
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.amount &&
-                  validationType.errors.amount ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.amount}
-                    </FormFeedback>
-                  ) : null}
-                  {paymentOptionSelected === 1 ? (
-                    <span
-                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                      id="basic-addon1"
-                      style={{ fontSize: "0.85em" }}
-                    >
-                      %
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            </Col>
-            <Col className="col-5">
+            <Col className="col-6">
               <div className="d-flex justify-content-between">
-                <Label className="form-label">Base on</Label>
+                <Label className="form-label">Action</Label>
                 <div>
                   <i
                     className="uil-question-circle font-size-15"
@@ -316,22 +257,22 @@ const NoShowPolicyModal = ({
                 type="select"
                 name=""
                 onChange={(e) => {
-                  setBaseOnSelected(+e.target.value);
+                  setActionSelected(+e.target.value);
                 }}
                 onBlur={validationType.handleBlur}
                 //   value={validationType.values.department || ""}
               >
                 <option value={null}>Select....</option>
-                {map(baseOnData, (item, index) => {
+                {map(actionData, (item, index) => {
                   return (
                     <option
                       key={index}
                       value={item.id}
                       selected={
-                        dataEdit ? item.id === dataEdit.based_on_id : false
+                        dataEdit ? item.id === dataEdit.action_id : false
                       }
                     >
-                      {item.name}
+                      {item.label}
                     </option>
                   );
                 })}
@@ -346,7 +287,8 @@ const NoShowPolicyModal = ({
                 className="waves-effect waves-light mb-3 btn col-2 mx-2"
                 type="button"
                 onClick={() => {
-                  setNoShowPolicyModalAction(false);
+                  setCancellationPolicyModalAction(false);
+                  setIdEdit(null);
                   clearData();
                 }}
               >
@@ -367,4 +309,4 @@ const NoShowPolicyModal = ({
   );
 };
 
-export default NoShowPolicyModal;
+export default CancellationPolicyModal;

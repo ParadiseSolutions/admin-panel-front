@@ -162,6 +162,12 @@ export const getTourStatusOptionsAPI = () => {
     headers: options,
   });
 };
+export const getToursOptionsAPI = (id) => {
+  const url = `${API_URL}/operational-info/provider-tour-list/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 export const getPolicyToEditAPI = (id) => {
   const url = `${API_URL}/operational-info/policy/${id}`;
   return axios.get (url, {
@@ -225,6 +231,77 @@ export const deletePolicyAPI = (id) => {
 export const deleteHolidayAPI = (id) => {
   const url = `${API_URL}/operational-info/holidays/${id}`;
   return axios.delete (url, {
+    headers: options,
+  });
+};
+
+// groups tab
+export const getCancellationPolicyGroupsAPI = (id) => {
+  const url = `${API_URL}/operational-info/policies/groups/cancellation/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getChangePolicyGroupsAPI = (id) => {
+  const url = `${API_URL}/operational-info/policies/groups/change/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getNoShowPolicyGroupsAPI = (id) => {
+  const url = `${API_URL}/operational-info/policies/groups/noshow/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const getCancelledOptionsGroupsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/cancellation-instructions?groups=1`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getActionOptionsGroupsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/cancellation-actions?groups=1`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getCancelledGroupsOptionsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/change-instructions?groups=1`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getActionGroupsOptionsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/cancellation-actions?groups=1`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getBaseOnGroupsOptionsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/noshow-based-on?groups=1`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getPaymentGroupsOptionsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/noshow-payment-options?groups=1`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const getPolicyToEditGroupsAPI = (id) => {
+  const url = `${API_URL}/operational-info/policies/groups/cancellation/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const updateNoShowGroupPolicy = (id, body) => {
+  const url = `${API_URL}/operational-info/policies/noshow/${id}`;
+  return axios.put (url, body, {
     headers: options,
   });
 };

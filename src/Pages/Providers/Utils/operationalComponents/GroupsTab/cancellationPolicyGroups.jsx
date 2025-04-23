@@ -3,12 +3,12 @@ import { Row, Table, UncontrolledTooltip } from "reactstrap";
 import { useParams } from "react-router-dom";
 import {
   deletePolicyAPI,
-  getCancellationPolicyAPI,
-} from "../../../../Utils/API/Providers/index.js";
+  getCancellationPolicyGroupsAPI,
+} from "../../../../../Utils/API/Providers/index.js";
 import CancellationPolicyModal from "./Modals/cancellationPolicyModal.jsx";
 import Swal from "sweetalert2";
 
-const CancellationPolicy = () => {
+const CancellationPolicyGroups = () => {
   const { id } = useParams();
   const [initialData, setInitialData] = useState([]);
   const [idEdit, setIdEdit] = useState(null);
@@ -16,13 +16,13 @@ const CancellationPolicy = () => {
     useState(false);
   //initial request
   useEffect(() => {
-    getCancellationPolicyAPI(id).then((res) => {
+    getCancellationPolicyGroupsAPI(id).then((res) => {
       setInitialData(res.data.data);
     });
   }, [id]);
 
   const refresh = () => {
-    getCancellationPolicyAPI(id).then((res) => {
+    getCancellationPolicyGroupsAPI(id).then((res) => {
       setInitialData(res.data.data);
     });
   };
@@ -142,4 +142,4 @@ const CancellationPolicy = () => {
   );
 };
 
-export default CancellationPolicy;
+export default CancellationPolicyGroups;

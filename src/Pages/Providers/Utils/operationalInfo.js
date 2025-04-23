@@ -13,11 +13,14 @@ import {
   CardBody,
 } from "reactstrap";
 import classnames from "classnames";
-import CancellationPolicyGeneral from "./operationalComponents/cancellationPolicyGeneral";
-import ChangePolicyGeneral from "./operationalComponents/changePolicyGeneral";
-import NoShowPolicyGeneral from "./operationalComponents/noShowPolicyGeneral";
-import LastMinuteBookingGeneral from "./operationalComponents/lastMinuteBookingGeneral";
-import HolidaysGeneral from "./operationalComponents/HolidaysGeneral";
+import CancellationPolicyGeneral from "./operationalComponents/GeneralTab/cancellationPolicyGeneral";
+import ChangePolicyGeneral from "./operationalComponents/GeneralTab/changePolicyGeneral";
+import NoShowPolicyGeneral from "./operationalComponents/GeneralTab/noShowPolicyGeneral";
+import LastMinuteBookingGeneral from "./operationalComponents/GeneralTab/lastMinuteBookingGeneral";
+import HolidaysGeneral from "./operationalComponents/GeneralTab/HolidaysGeneral";
+import CancellationPolicyGroups from "./operationalComponents/GroupsTab/cancellationPolicyGroups";
+import ChangePolicyGroups from "./operationalComponents/GroupsTab/changePolicyGroups";
+import NoShowPolicyGroups from "./operationalComponents/GroupsTab/noShowPolicyGroups";
 
 const OperationalInfo = () => {
   // console.log('social media',initialData)
@@ -59,7 +62,7 @@ const OperationalInfo = () => {
                 <p className="mb-0 lh-2" style={{ fontSize: "16px" }}>
                   <i
                     className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
-                    style={{ width: "32px", height: "32px" }}
+                    style={{ width: "32px", height: "32px", marginRight: "10px" }}
                   ></i>{" "}
                   These sections specify how we work with this provider on a
                   business level, not related to specific tours or
@@ -134,6 +137,68 @@ const OperationalInfo = () => {
                         <HolidaysGeneral />
                       </Col>
                     </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row className="col-12 m-1 d-flex flex-col">
+              <h1
+                className="fw-bold cursor-pointer"
+                style={{ color: "#3DC7F4", fontSize: "3.5rem" }}
+              >
+                + GROUPS
+              </h1>
+              <div className="col-12 d-flex flex-col">
+                <p className="mb-0 lh-2" style={{ fontSize: "16px" }}>
+                  <i
+                    className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
+                    style={{ width: "32px", height: "32px", marginRight: "10px" }}
+                  ></i>{" "}
+                  These policies apply only to Groups and/or Private Tours. They do not apply to basic public tours.
+                </p>
+              </div>
+            </Row>
+            <Row>
+              <Col xs="12" className="mt-4">
+                <Card>
+                  <CardBody>
+                    <Row>
+                      <Col className="col-4">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Cancellation Policy
+                          </p>
+                        </div>
+                        <CancellationPolicyGroups />
+                      </Col>
+                      <Col className="col-4">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Change Policy
+                          </p>
+                        </div>
+                        <ChangePolicyGroups />
+                      </Col>
+                      <Col className="col-4">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            No Show Policy
+                          </p>
+                        </div>
+                        <NoShowPolicyGroups />
+                      </Col>
+                    </Row>
+                   
+                  
                   </CardBody>
                 </Card>
               </Col>
