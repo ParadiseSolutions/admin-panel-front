@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom";
 import { Row, Table, UncontrolledTooltip } from "reactstrap";
-import { deletePolicyAPI, getNoShowPolicyAPI } from "../../../../Utils/API/Providers";
+import { deletePolicyAPI, getNoShowPolicyAPI } from "../../../../../Utils/API/Providers";
 import NoShowPolicyModal from "./Modals/NoShowPolicyModal";
 import Swal from "sweetalert2";
 

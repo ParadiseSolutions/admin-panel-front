@@ -1,64 +1,69 @@
 import React, { useEffect, useState } from "react";
 import { Row, Table, UncontrolledTooltip } from "reactstrap";
 import { useParams } from "react-router-dom";
-import { deleteHolidayAPI, deletePolicyAPI, getHolidaysAPI } from "../../../../Utils/API/Providers/index.js";
-import HolidaysModal from "./Modals/holidaysModal.jsx";
+import {
+  deletePolicyAPI,
+  getCancellationPolicyAPI,
+} from "../../../../../Utils/API/Providers/index.js";
+import CancellationPolicyModal from "./Modals/cancellationPolicyModal.jsx";
 import Swal from "sweetalert2";
 
-const HolidaysGeneral = () => {
+const CancellationPolicy = () => {
   const { id } = useParams();
   const [initialData, setInitialData] = useState([]);
   const [idEdit, setIdEdit] = useState(null);
-  const [holidaysModalCreate, setHolidaysModalCreate] = useState(false);
+  const [cancellationPolicyModalAction, setCancellationPolicyModalAction] =
+    useState(false);
   //initial request
   useEffect(() => {
-    getHolidaysAPI(id).then((res) => {
+    getCancellationPolicyAPI(id).then((res) => {
       setInitialData(res.data.data);
     });
   }, [id]);
 
   const refresh = () => {
-    getHolidaysAPI(id).then((res) => {
+    getCancellationPolicyAPI(id).then((res) => {
       setInitialData(res.data.data);
     });
   };
 
-    //delete
-    const deletePolicy = (id) => {
-      Swal.fire({
-        title: "Delete Policy?",
-        icon: "question",
-        // text: `Do you want delete ${depData.first_name}`,
-        showCancelButton: true,
-        confirmButtonText: "Yes",
-        confirmButtonColor: "#F38430",
-        cancelButtonText: "Cancel",
-      }).then((resp) => {
-        deleteHolidayAPI(id)
-          .then((res) => {
-            refresh();
-            Swal.fire({
-              icon: "success",
-              title: "Deleted!",
-              text: "Policy has been deleted.",
-            });
-          })
-          .catch((err) => {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Something went wrong!",
-            });
+  //delete
+  const deletePolicy = (id) => {
+    Swal.fire({
+      title: "Delete Policy?",
+      icon: "question",
+      // text: `Do you want delete ${depData.first_name}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      deletePolicyAPI(id)
+        .then((res) => {
+          refresh();
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "Policy has been deleted.",
           });
-      });
-    };
-
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+        });
+    });
+  };
   return (
     <Row className="col-12 m-1 d-flex flex-col">
       <div className="col-12 m-1 d-flex flex-col align-items-end justify-content-end">
         <p
           className="cursor-pointer text-paradise"
-          onClick={() => setHolidaysModalCreate(!holidaysModalCreate)}
+          onClick={() =>
+            setCancellationPolicyModalAction(!cancellationPolicyModalAction)
+          }
         >
           + Add Policy
         </p>
@@ -70,38 +75,31 @@ const HolidaysGeneral = () => {
         <Table>
           <thead>
             <tr>
-              <th>Holiday</th>
-              <th>Office</th>
-              <th>Schedule</th>
-              <th>Tour</th>
-              <th>Actions</th>
+              <th>If Cancelled</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {initialData.map((item, index) => {
               return (
                 <tr key={index}>
-                  <td>{item.holiday_name}</td>
-                  <td>{item.office_status_label}</td>
-                  <td>
-                    {item.from} - {item.to}
-                  </td>
-                  <td>{item.tour_status_label}</td>
+                  <td>{item.ifcancel_label}</td>
+                  <td>{item.action_label}</td>
                   <td>
                     <div className="d-flex gap-3">
                       <div className="text-success">
                         <i
                           className="mdi mdi-pencil-outline font-size-18 text-paradise"
-                          id="edittooltip"
+                          id="edittooltipCancellation"
                           style={{ cursor: "pointer" }}
                           onClick={() => {
                             setIdEdit(item.id);
-                            setHolidaysModalCreate(true);
+                            setCancellationPolicyModalAction(true);
                           }}
                         />
                         <UncontrolledTooltip
                           placement="top"
-                          target="edittooltip"
+                          target="edittooltipCancellation"
                         >
                           Edit
                         </UncontrolledTooltip>
@@ -115,12 +113,12 @@ const HolidaysGeneral = () => {
                       >
                         <i
                           className="mdi mdi-delete-outline font-size-18"
-                          id="deletetooltip"
+                          id="deletetooltipCancellation"
                           style={{ cursor: "pointer" }}
                         />
                         <UncontrolledTooltip
                           placement="top"
-                          target="deletetooltip"
+                          target="deletetooltipCancellation"
                         >
                           Delete
                         </UncontrolledTooltip>
@@ -133,9 +131,9 @@ const HolidaysGeneral = () => {
           </tbody>
         </Table>
       </div>
-      <HolidaysModal
-        holidaysModalCreate={holidaysModalCreate}
-        setHolidaysModalCreate={setHolidaysModalCreate}
+      <CancellationPolicyModal
+        cancellationPolicyModalAction={cancellationPolicyModalAction}
+        setCancellationPolicyModalAction={setCancellationPolicyModalAction}
         refresh={refresh}
         idEdit={idEdit}
         setIdEdit={setIdEdit}
@@ -144,4 +142,4 @@ const HolidaysGeneral = () => {
   );
 };
 
-export default HolidaysGeneral;
+export default CancellationPolicy;

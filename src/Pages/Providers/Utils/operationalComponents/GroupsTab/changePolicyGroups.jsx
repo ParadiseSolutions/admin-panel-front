@@ -1,74 +1,62 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom/cjs/react-router-dom";
 import { Row, Table, UncontrolledTooltip } from "reactstrap";
-import { useParams } from "react-router-dom";
-import {
-  deletePolicyAPI,
-  getLastMinuteAPI,
-} from "../../../../Utils/API/Providers/index.js";
-import LastMinutePolicyModal from "./Modals/lastMinutePolicyModal.jsx";
+import { deletePolicyAPI, getChangePolicyGroupsAPI } from "../../../../../Utils/API/Providers";
+import ChangePolicyModal from "./Modals/changePolicyModal";
 import Swal from "sweetalert2";
 
-const LastMinuteBooking = () => {
+const ChangePolicyGroups = () => {
   const { id } = useParams();
   const [initialData, setInitialData] = useState([]);
-  const [
-    createLastMinutePolicyModalAction,
-    setCreateLastMinutePolicyModalAction,
-  ] = useState(false);
+  const [changePolicyModalAction, setChangePolicyModalAction] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
   //initial request
   useEffect(() => {
-    getLastMinuteAPI(id).then((res) => {
+    getChangePolicyGroupsAPI(id).then((res) => {
       setInitialData(res.data.data);
     });
   }, [id]);
 
   const refresh = () => {
-    getLastMinuteAPI(id).then((res) => {
+    getChangePolicyGroupsAPI(id).then((res) => {
       setInitialData(res.data.data);
     });
   };
-
-  //delete
-  const deletePolicy = (id) => {
-    Swal.fire({
-      title: "Delete Policy?",
-      icon: "question",
-      // text: `Do you want delete ${depData.first_name}`,
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      confirmButtonColor: "#F38430",
-      cancelButtonText: "Cancel",
-    }).then((resp) => {
-      deletePolicyAPI(id)
-        .then((res) => {
-          refresh();
-          Swal.fire({
-            icon: "success",
-            title: "Deleted!",
-            text: "Policy has been deleted.",
-          });
-        })
-        .catch((err) => {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Something went wrong!",
-          });
+    //delete
+    const deletePolicy = (id) => {
+      Swal.fire({
+          title: "Delete Policy?",
+          icon: "question",
+          // text: `Do you want delete ${depData.first_name}`,
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          confirmButtonColor: "#F38430",
+          cancelButtonText: "Cancel",
+        }).then((resp) => {
+          deletePolicyAPI(id)
+            .then((res) => {
+              refresh();
+              Swal.fire({
+                icon: "success",
+                title: "Deleted!",
+                text: "Policy has been deleted.",
+              });
+            })
+            .catch((err) => {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+              });
+            });
         });
-    });
-  };
-
+    };
   return (
     <Row className="col-12 m-1 d-flex flex-col">
       <div className="col-12 m-1 d-flex flex-col align-items-end justify-content-end">
         <p
           className="cursor-pointer text-paradise"
-          onClick={() =>
-            setCreateLastMinutePolicyModalAction(
-              !createLastMinutePolicyModalAction
-            )
-          }
+          onClick={() => setChangePolicyModalAction(!changePolicyModalAction)}
         >
           + Add Policy
         </p>
@@ -80,38 +68,31 @@ const LastMinuteBooking = () => {
         <Table>
           <thead>
             <tr>
-              <th>Tour ID</th>
-              <th>Tour</th>
-              <th>Same Day</th>
-              <th>Next Day</th>
-              <th>Notice</th>
-              <th>Actions</th>
+              <th>If Cancelled</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {initialData.map((item, index) => {
               return (
                 <tr key={index}>
-                  <td>{item.tour_id}</td>
-                  <td>{item.tour_name}</td>
-                  <td>{item.same_day}</td>
-                  <td>{item.next_day}</td>
-                  <td>{item.notice_label}</td>
+                  <td>{item.ifcancel_label}</td>
+                  <td>{item.action_label}</td>
                   <td>
                     <div className="d-flex gap-3">
                       <div className="text-success">
                         <i
                           className="mdi mdi-pencil-outline font-size-18 text-paradise"
-                          id="edittooltipLM"
+                          id="edittooltipChange"
                           style={{ cursor: "pointer" }}
                           onClick={() => {
                             setIdEdit(item.id);
-                            setCreateLastMinutePolicyModalAction(true);
+                            setChangePolicyModalAction(true);
                           }}
                         />
                         <UncontrolledTooltip
                           placement="top"
-                          target="edittooltipLM"
+                          target="edittooltipChange"
                         >
                           Edit
                         </UncontrolledTooltip>
@@ -125,12 +106,12 @@ const LastMinuteBooking = () => {
                       >
                         <i
                           className="mdi mdi-delete-outline font-size-18"
-                          id="deletetooltipLM"
+                          id="deletetooltipChange"
                           style={{ cursor: "pointer" }}
                         />
                         <UncontrolledTooltip
                           placement="top"
-                          target="deletetooltipLM"
+                          target="deletetooltipChange"
                         >
                           Delete
                         </UncontrolledTooltip>
@@ -143,11 +124,9 @@ const LastMinuteBooking = () => {
           </tbody>
         </Table>
       </div>
-      <LastMinutePolicyModal
-        setCreateLastMinutePolicyModalAction={
-          setCreateLastMinutePolicyModalAction
-        }
-        createLastMinutePolicyModalAction={createLastMinutePolicyModalAction}
+      <ChangePolicyModal
+        changePolicyModalAction={changePolicyModalAction}
+        setChangePolicyModalAction={setChangePolicyModalAction}
         refresh={refresh}
         idEdit={idEdit}
         setIdEdit={setIdEdit}
@@ -156,4 +135,4 @@ const LastMinuteBooking = () => {
   );
 };
 
-export default LastMinuteBooking;
+export default ChangePolicyGroups;
