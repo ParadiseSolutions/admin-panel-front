@@ -16,21 +16,21 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
-import CancellationBanner from "../../../../../Components/Assets/images/CancellationBanner.png";
+import CancellationBanner from "../../../../../../Components/Assets/images/CancellationBanner.png";
 import {
-  createCancellationPolicy,
+  createChangePolicy,
   getActionOptionsAPI,
   getCancelledOptionsAPI,
   getPolicyToEditAPI,
   updateCancellationPolicy,
-} from "../../../../../Utils/API/Providers";
+} from "../../../../../../Utils/API/Providers";
 
-const CancellationPolicyModal = ({
-  cancellationPolicyModalAction,
-  setCancellationPolicyModalAction,
+const ChangePolicyModal = ({
+  changePolicyModalAction,
+  setChangePolicyModalAction,
   refresh,
   idEdit,
-  setIdEdit
+  setIdEdit,
 }) => {
   const { id } = useParams();
 
@@ -40,7 +40,6 @@ const CancellationPolicyModal = ({
   const [cancelledSelected, setCancelledSelected] = useState(null);
   const [actionSelected, setActionSelected] = useState(null);
   const [dataEdit, setDataEdit] = useState(null);
-
   useEffect(() => {
     getCancelledOptionsAPI().then((res) => {
       setCancelledData(res.data.data);
@@ -60,7 +59,7 @@ const CancellationPolicyModal = ({
       });
     }
   }, [idEdit]);
-  
+
   const clearData = () => {
     setCancelledSelected(null);
     setActionSelected(null);
@@ -84,74 +83,72 @@ const CancellationPolicyModal = ({
       };
       if (idEdit) {
         updateCancellationPolicy(idEdit, data)
-        .then((res) => {
-          if (res.data.status === 200) {
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Cancellation Policy Edited Successfully",
-            });
-            refresh();
-            clearData();
-            setCancellationPolicyModalAction(false);
-            
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: res.data.message,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: err.response.data.message,
-          });
-        });
-      }else{
-        createCancellationPolicy(data)
-        .then((res) => {
-          if (res.data.status === 201) {
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Cancellation Policy Created Successfully",
-            });
-            refresh();
-            clearData();
-            setCancellationPolicyModalAction(false);
-          } else {
+          .then((res) => {
+            if (res.data.status === 200) {
+              Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Change Policy Edited Successfully",
+              });
+              refresh();
+              clearData()
+              setChangePolicyModalAction(false);
+              setIdEdit(null);
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: res.data.message,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
             Swal.fire({
               icon: "error",
               title: "Error",
-              text: res.data.message,
+              text: err.response.data.message,
             });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: err.response.data.message,
           });
-        });
+      } else {
+        createChangePolicy(data)
+          .then((res) => {
+            if (res.data.status === 201) {
+              Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Change Policy Created Successfully",
+              });
+              refresh();
+              clearData()
+              setChangePolicyModalAction(false);
+              setIdEdit(null);
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: res.data.message,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: err.response.data.message,
+            });
+          });
       }
-
-
-     
     },
   });
   return (
     <Modal
       centered
       size="lg"
-      isOpen={cancellationPolicyModalAction}
+      isOpen={changePolicyModalAction}
       toggle={() => {
-        setCancellationPolicyModalAction(!cancellationPolicyModalAction);
+        setChangePolicyModalAction(!changePolicyModalAction);
         clearData();
       }}
     >
@@ -159,16 +156,14 @@ const CancellationPolicyModal = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">
-          + Add Cancellation Policy
-        </h1>
+        <h1 className="modal-title mt-0 text-white">+ Add Change Policy</h1>
         {/* {
           contactID === false ? (
             <h1 className="modal-title mt-0 text-white">+ Add Cancellation Policy</h1>
           ):(<h1 className="modal-title mt-0 text-white">Edit Cancellation Policy</h1>)
         } */}
         <button
-          onClick={() => { setCancellationPolicyModalAction(!cancellationPolicyModalAction); clearData(); }}
+          onClick={() => { clearData(); setChangePolicyModalAction(!changePolicyModalAction); }}
           type="button"
           className="close"
           data-dismiss="modal"
@@ -286,7 +281,7 @@ const CancellationPolicyModal = ({
                 className="waves-effect waves-light mb-3 btn col-2 mx-2"
                 type="button"
                 onClick={() => {
-                  setCancellationPolicyModalAction(false);
+                  setChangePolicyModalAction(false);
                   setIdEdit(null);
                   clearData();
                 }}
@@ -308,4 +303,4 @@ const CancellationPolicyModal = ({
   );
 };
 
-export default CancellationPolicyModal;
+export default ChangePolicyModal;

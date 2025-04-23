@@ -15,15 +15,16 @@ import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
-import CancellationBanner from "../../../../../Components/Assets/images/CancellationBanner.png";
+import CancellationBanner from "../../../../../../Components/Assets/images/CancellationBanner.png";
 import {
   createLastMinutePolicy,
   getApplytoOptionsAPI,
   getNoticeOptionsAPI,
   getPolicyToEditAPI,
+  getToursOptionsAPI,
   getTourStatusOptionsAPI,
   updateCancellationPolicy
-} from "../../../../../Utils/API/Providers";
+} from "../../../../../../Utils/API/Providers";
 
 const LastMinutePolicyModal = ({
   createLastMinutePolicyModalAction,
@@ -52,7 +53,7 @@ const LastMinutePolicyModal = ({
     getNoticeOptionsAPI().then((res) => {
       setNoticeData(res.data.data);
     });
-    getTourStatusOptionsAPI(id).then((res) => {
+    getToursOptionsAPI(id).then((res) => {
       setTourData(res.data.data);
     } );
   }, []);
