@@ -254,7 +254,12 @@ export const getNoShowPolicyGroupsAPI = (id) => {
     headers: options,
   });
 };
-
+export const getPaymentPolicyGroupsAPI = (id) => {
+  const url = `${API_URL}/operational-info/payments/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 export const getCancelledOptionsGroupsAPI = () => {
   const url = `${API_URL}/operational-info/policies/cancellation-instructions?groups=1`;
   return axios.get (url, {
@@ -291,6 +296,24 @@ export const getPaymentGroupsOptionsAPI = () => {
     headers: options,
   });
 };
+export const getPaymentGroupSizeOptionsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/payment-group-size-options`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getPaymentCollectOptionsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/payment-collect-options`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getPaymentPayOptionsAPI = () => {
+  const url = `${API_URL}/operational-info/policies/payment-pay-options`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 
 export const getPolicyToEditGroupsAPI = (id) => {
   const url = `${API_URL}/operational-info/policies/groups/cancellation/${id}`;
@@ -302,6 +325,34 @@ export const getPolicyToEditGroupsAPI = (id) => {
 export const updateNoShowGroupPolicy = (id, body) => {
   const url = `${API_URL}/operational-info/policies/noshow/${id}`;
   return axios.put (url, body, {
+    headers: options,
+  });
+};
+
+export const createPaymentGroupPolicy = (body) => {
+  const url = `${API_URL}/operational-info/payments`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
+export const getPaymentPolicyToEditAPI = (id) => {
+  const url = `${API_URL}/operational-info/payment/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const updatePaymentGroupPolicy = (id, body) => {
+  const url = `${API_URL}/operational-info/payments/${id}`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
+export const deletePaymentPolicyAPI = (id) => {
+  const url = `${API_URL}/operational-info/payments/${id}`;
+  return axios.delete (url, {
     headers: options,
   });
 };
