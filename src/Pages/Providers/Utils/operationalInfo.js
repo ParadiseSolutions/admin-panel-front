@@ -21,6 +21,7 @@ import HolidaysGeneral from "./operationalComponents/GeneralTab/HolidaysGeneral"
 import CancellationPolicyGroups from "./operationalComponents/GroupsTab/cancellationPolicyGroups";
 import ChangePolicyGroups from "./operationalComponents/GroupsTab/changePolicyGroups";
 import NoShowPolicyGroups from "./operationalComponents/GroupsTab/noShowPolicyGroups";
+import PaymentPolicyGroups from "./operationalComponents/GroupsTab/PaymentPolicyGroups";
 
 const OperationalInfo = () => {
   // console.log('social media',initialData)
@@ -196,6 +197,20 @@ const OperationalInfo = () => {
                         </div>
                         <NoShowPolicyGroups />
                       </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Payment Policy
+                          </p>
+                        </div>
+                        <PaymentPolicyGroups />
+                      </Col>
+                      
                     </Row>
                    
                   
