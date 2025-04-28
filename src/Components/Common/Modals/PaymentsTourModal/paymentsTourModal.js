@@ -542,6 +542,11 @@ const PaymentsToursModal = ({
                         </div>
                       </div>
                     </Col>
+                  </>
+                  ):null
+                }
+                { !(gratuitesTypeSelected === 1 && (+paymentOptionSelected === 1 || +paymentOptionSelected === 4)) || gratuitesTypeSelected === 4 ? (
+                  <>
                     <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
                       <div className="form-outline mb-2" id="voucher_currency">
                         <div className="d-flex justify-content-between">
