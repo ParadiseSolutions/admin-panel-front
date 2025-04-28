@@ -88,7 +88,7 @@ const PaymentsToursModal = ({
   function handleMulti(selected) {
     setMethodSelected(selected);
   }
-  
+
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -180,8 +180,8 @@ const PaymentsToursModal = ({
       >
         {
           (!dataEdit) ? (
-          <h1 className="modal-title mt-0 text-white">+ New Payment</h1>
-          ):<h1 className="modal-title mt-0 text-white">Edit Payment</h1>
+            <h1 className="modal-title mt-0 text-white">+ New Payment</h1>
+          ) : <h1 className="modal-title mt-0 text-white">Edit Payment</h1>
         }
 
         <button
@@ -290,7 +290,7 @@ const PaymentsToursModal = ({
                       // console.log(e.target.value);
                     }}
 
-                    //   value={validationType.values.department || ""}
+                  //   value={validationType.values.department || ""}
                   >
                     <option value="">Select....</option>
                     {map(paymentsTypeData, (type, index) => {
@@ -365,7 +365,7 @@ const PaymentsToursModal = ({
                       // console.log(e.target.value);
                     }}
 
-                    //   value={validationType.values.department || ""}
+                  //   value={validationType.values.department || ""}
                   >
                     <option value="">Select....</option>
                     {map(paymentsOptionsData, (type, index) => {
@@ -415,7 +415,7 @@ const PaymentsToursModal = ({
                     </div>
                     <div className="input-group">
                       {paymentOptionSelected != 2 &&
-                      paymentOptionSelected != 5 ? (
+                        paymentOptionSelected != 5 ? (
                         <span
                           className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                           id="basic-addon1"
@@ -432,13 +432,13 @@ const PaymentsToursModal = ({
                         value={validationType.values.gratuity_percentage || ""}
                         invalid={
                           validationType.touched.gratuity_percentage &&
-                          validationType.errors.gratuity_percentage
+                            validationType.errors.gratuity_percentage
                             ? true
                             : false
                         }
                       />
                       {paymentOptionSelected == "2" ||
-                      paymentOptionSelected == "5" ? (
+                        paymentOptionSelected == "5" ? (
                         <span
                           className="input-group-text form-label fw-bold bg-paradise text-white border-0"
                           id="basic-addon1"
@@ -450,7 +450,7 @@ const PaymentsToursModal = ({
                     </div>
                   </div>
                 </Col>
-                { +paymentOptionSelected !== 1 && +paymentOptionSelected !== 4 ? (
+                {+paymentOptionSelected !== 1 && +paymentOptionSelected !== 4 ? (
                   <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
                     <div className="form-outline mb-2" id="voucher_currency">
                       <Label className="form-label">Based on</Label>
@@ -462,7 +462,7 @@ const PaymentsToursModal = ({
                             setBasedOnSelected(e.target.value);
                           }}
                           onBlur={validationType.handleBlur}
-                          //   value={validationType.values.department || ""}
+                        //   value={validationType.values.department || ""}
                         >
                           <option value="">Select....</option>
                           {map(basedOnData, (based, index) => {
@@ -485,7 +485,7 @@ const PaymentsToursModal = ({
                     </div>
                   </Col>
                 ) : null}
-                { !(gratuitesTypeSelected === 1 && (+paymentOptionSelected === 1 || +paymentOptionSelected === 4)) ? (
+                {!(gratuitesTypeSelected === 1 && (+paymentOptionSelected === 1 || +paymentOptionSelected === 4)) ? (
                   <>
                     <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
                       <div className="form-outline mb-2" id="voucher_currency">
@@ -520,7 +520,7 @@ const PaymentsToursModal = ({
                               setTaxSelected(e.target.value);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                           >
                             <option value="">Select....</option>
                             {map(taxData, (tax, index) => {
@@ -543,79 +543,79 @@ const PaymentsToursModal = ({
                       </div>
                     </Col>
                   </>
-                  ):null
-                }
-                { !(gratuitesTypeSelected === 1 && (+paymentOptionSelected === 1 || +paymentOptionSelected === 4)) || gratuitesTypeSelected === 4 ? (
-                  <>
-                    <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                      <div className="form-outline mb-2" id="voucher_currency">
-                        <div className="d-flex justify-content-between">
-                          <Label className="form-labe">Gratuity</Label>
-                          <div>
-                            <i
-                              className="uil-question-circle font-size-15 mx-2"
-                              id="gratuityTooltip"
-                            />
-                            <Tooltip
-                              placement="right"
-                              isOpen={gratuityTooltip}
-                              style={{ textAlign: "left" }}
-                              target="gratuityTooltip"
-                              toggle={() => {
-                                setGratuityTooltip(!gratuityTooltip);
-                              }}
-                            >
-                              Does this amount include a mandatory gratuity amount?
-                              <br />
-                              Included - The amount includes the mandatory gratuity.
-                              <br />
-                              <br />
-                              Not Included - The mount does not include the
-                              mandatory gratuity.
-                              <br />
-                              <br />
-                              Unspecified - The gratuity is not collected in advance
-                              and no specific requirement of the amount is set. It
-                              is up to the customer's discretion on the day of the
-                              tour.
-                            </Tooltip>
-                          </div>
-                        </div>
-                        <div className="input-group">
-                          <Input
-                            type="select"
-                            name=""
-                            onChange={(e) => {
-                              setGratuitesSelected(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
-                          >
-                            <option value="">Select....</option>
-                            {map(gratuitesData, (gratuites, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={gratuites.id}
-                                  selected={
-                                    dataEdit && dataEdit.gratuity_id
-                                      ? gratuites.id === dataEdit.gratuity_id
-                                      : false
-                                  }
-                                >
-                                  {gratuites.name}
-                                </option>
-                              );
-                            })}
-                          </Input>
-                        </div>
-                      </div>
-                    </Col>
-                  </>
-                  ):null
+                ) : null
                 }
               </>
             ) : null}
+            {!(gratuitesTypeSelected === 1 && (+paymentOptionSelected === 1 || +paymentOptionSelected === 4)) || gratuitesTypeSelected === 4 ? (
+              <>
+                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-labe">Gratuity</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="gratuityTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={gratuityTooltip}
+                          style={{ textAlign: "left" }}
+                          target="gratuityTooltip"
+                          toggle={() => {
+                            setGratuityTooltip(!gratuityTooltip);
+                          }}
+                        >
+                          Does this amount include a mandatory gratuity amount?
+                          <br />
+                          Included - The amount includes the mandatory gratuity.
+                          <br />
+                          <br />
+                          Not Included - The mount does not include the
+                          mandatory gratuity.
+                          <br />
+                          <br />
+                          Unspecified - The gratuity is not collected in advance
+                          and no specific requirement of the amount is set. It
+                          is up to the customer's discretion on the day of the
+                          tour.
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setGratuitesSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                      >
+                        <option value="">Select....</option>
+                        {map(gratuitesData, (gratuites, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={gratuites.id}
+                              selected={
+                                dataEdit && dataEdit.gratuity_id
+                                  ? gratuites.id === dataEdit.gratuity_id
+                                  : false
+                              }
+                            >
+                              {gratuites.name}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </div>
+                </Col>
+              </>
+            ) : null
+            }
           </Row>
           <Row>
             <Col
@@ -669,7 +669,7 @@ const PaymentsToursModal = ({
                       // console.log(e.target.value);
                     }}
 
-                    //   value={validationType.values.department || ""}
+                  //   value={validationType.values.department || ""}
                   >
                     <option value="">Select....</option>
                     {map(paidByData, (type, index) => {
@@ -721,19 +721,19 @@ const PaymentsToursModal = ({
                     style={{ width: "100%", paddingTop: "5px" }}
                     onChange={handleMulti}
                     defaultValue={methodSelected}
-                    //   value={validationType.values.department || ""}
+                  //   value={validationType.values.department || ""}
                   >
-                    
+
                     {map(methodData, (type, index) => {
                       return (
                         <option
                           key={index}
                           value={type.id}
-                          // selected={
-                          //   dataEdit && dataEdit.payment_method_id
-                          //     ? type.id === dataEdit.payment_method_id
-                          //     : false
-                          // }
+                        // selected={
+                        //   dataEdit && dataEdit.payment_method_id
+                        //     ? type.id === dataEdit.payment_method_id
+                        //     : false
+                        // }
                         >
                           {type.name}
                         </option>
@@ -774,7 +774,7 @@ const PaymentsToursModal = ({
                       // console.log(e.target.value);
                     }}
 
-                    //   value={validationType.values.department || ""}
+                  //   value={validationType.values.department || ""}
                   >
                     <option value="">Select....</option>
                     {map(dueData, (type, index) => {
@@ -830,7 +830,7 @@ const PaymentsToursModal = ({
                           setWhenSelected(e.target.value);
                         }}
 
-                        //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                       >
                         <option value="">Select....</option>
                         {map(whenData, (type, index) => {
@@ -884,7 +884,7 @@ const PaymentsToursModal = ({
                           setEventSelected(e.target.value);
                         }}
 
-                        //   value={validationType.values.department || ""}
+                      //   value={validationType.values.department || ""}
                       >
                         <option value="">Select....</option>
                         {map(eventData, (type, index) => {
