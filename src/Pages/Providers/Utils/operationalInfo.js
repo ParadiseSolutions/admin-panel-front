@@ -2,12 +2,8 @@ import { useEffect, useState } from "react";
 
 import {
   Collapse,
-  Form,
   Row,
-  Input,
-  Label,
   Col,
-  FormFeedback,
   Button,
   Card,
   CardBody,
@@ -22,14 +18,38 @@ import CancellationPolicyGroups from "./operationalComponents/GroupsTab/cancella
 import ChangePolicyGroups from "./operationalComponents/GroupsTab/changePolicyGroups";
 import NoShowPolicyGroups from "./operationalComponents/GroupsTab/noShowPolicyGroups";
 import PaymentPolicyGroups from "./operationalComponents/GroupsTab/PaymentPolicyGroups";
+import DocumentsGroup from "./operationalComponents/GroupsTab/DocumentsGroup";
+import AvailabilityContacts from "./operationalComponents/OperationalContactsTab/AvailabilityContacts";
+import { getOperationalContactsAPI } from "../../../Utils/API/Providers";
+import { useParams } from "react-router-dom";
 
 const OperationalInfo = () => {
-  // console.log('social media',initialData)
+  const { id } = useParams();
   const [col1, setcol1] = useState(false);
-
+  const [operationalInfoData, setOperationalInfoData] = useState([]);
   function togglecol1() {
     setcol1(!col1);
   }
+useEffect(() => {
+  getOperationalContactsAPI(id)
+    .then((res) => {
+      setOperationalInfoData(res.data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}, [id])
+
+const refreshData = () => {
+  getOperationalContactsAPI(id)
+    .then((res) => {
+      setOperationalInfoData(res.data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+console.log(operationalInfoData, "operationalInfoData")
 
   return (
     <div className="accordion" id="accordionExample">
@@ -63,7 +83,11 @@ const OperationalInfo = () => {
                 <p className="mb-0 lh-2" style={{ fontSize: "16px" }}>
                   <i
                     className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
-                    style={{ width: "32px", height: "32px", marginRight: "10px" }}
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      marginRight: "10px",
+                    }}
                   ></i>{" "}
                   These sections specify how we work with this provider on a
                   business level, not related to specific tours or
@@ -153,9 +177,14 @@ const OperationalInfo = () => {
                 <p className="mb-0 lh-2" style={{ fontSize: "16px" }}>
                   <i
                     className="far fa-lightbulb bg-paradise text-white p-2 rounded-circle text-center"
-                    style={{ width: "32px", height: "32px", marginRight: "10px" }}
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      marginRight: "10px",
+                    }}
                   ></i>{" "}
-                  These policies apply only to Groups and/or Private Tours. They do not apply to basic public tours.
+                  These policies apply only to Groups and/or Private Tours. They
+                  do not apply to basic public tours.
                 </p>
               </div>
             </Row>
@@ -210,10 +239,138 @@ const OperationalInfo = () => {
                         </div>
                         <PaymentPolicyGroups />
                       </Col>
-                      
                     </Row>
-                   
-                  
+                    <Row>
+                      <Col className="col-12 mt-5">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Documents
+                          </p>
+                        </div>
+                        <DocumentsGroup />
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row className="col-12 m-1 mt-5 d-flex flex-col">
+              <h1
+                className="fw-bold cursor-pointer"
+                style={{ color: "#3DC7F4", fontSize: "3.5rem" }}
+              >
+                + Operational Contacts
+              </h1>
+            </Row>
+            <Row>
+              <Col xs="12">
+                <Card>
+                  <CardBody>
+                    <Row className="col-12 m-1 d-flex flex-col justify-content-endW">
+                      <Col className=" d-flex justify-content-end">
+                        <Button
+                          type="submit"
+                          className="waves-effect waves-light mb-3 btn btn-orange"
+                        >
+                          <i className="mdi mdi-plus me-1" />
+                          Save Changes
+                        </Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Availability
+                          </p>
+                        </div>
+                        <AvailabilityContacts />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Place Reservations
+                          </p>
+                        </div>
+                        <AvailabilityContacts />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Groups
+                          </p>
+                        </div>
+                        <AvailabilityContacts />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Invoicing
+                          </p>
+                        </div>
+                        <AvailabilityContacts />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Sales & Contracting
+                          </p>
+                        </div>
+                        <AvailabilityContacts />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Upper Management
+                          </p>
+                        </div>
+                        <AvailabilityContacts />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="col-12">
+                        <div
+                          className=""
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 p-2 fw-bold text-dark mb-0">
+                            Marketing
+                          </p>
+                        </div>
+                        <AvailabilityContacts />
+                      </Col>
+                    </Row>
                   </CardBody>
                 </Card>
               </Col>
