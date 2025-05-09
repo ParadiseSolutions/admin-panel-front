@@ -356,3 +356,49 @@ export const deletePaymentPolicyAPI = (id) => {
     headers: options,
   });
 };
+
+export const getDocumentsGroupsAPI = (id) => {
+  const url = `${API_URL}/operational-info/documents/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getDocumentEditGroupsAPI = (id) => {
+  const url = `${API_URL}/operational-info/document/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getDocumentTypeGroupsAPI = () => {
+  const url = `${API_URL}/operational-info/document-types`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getOperationalContactsAPI = (id) => {
+  const url = `${API_URL}/operational-info/contact-names/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const updatedocumentGroup = (id, body) => {
+  const url = `${API_URL}/operational-info/documents/${id}`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
+export const deleteDocumentAPI = (id) => {
+  const url = `${API_URL}/operational-info/documents/${id}`;
+  return axios.delete (url, {
+    headers: options,
+  });
+};
+export const downloadDocumentAPI = (id) => {
+  const url = `${API_URL}/operational-info/documents/download/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+

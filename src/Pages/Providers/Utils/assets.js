@@ -46,17 +46,13 @@ const Assets = ({ contacts, id }) => {
       setvehicleData(
         res.data.data.filter(
           (data) =>
-            data.asset_id === 2 || data.asset_id === 3 || data.asset_id === 4
+            data.assets.asset_type === "Vehicles"
         )
       );
       setothersData(
         res.data.data.filter(
           (data) =>
-            data.asset_id === 5 ||
-            data.asset_id === 6 ||
-            data.asset_id === 7 ||
-            data.asset_id === 8 ||
-            data.asset_id === 9
+            data.assets.asset_type === "Others"
         )
       );
     });
@@ -81,17 +77,13 @@ const Assets = ({ contacts, id }) => {
       setvehicleData(
         res.data.data.filter(
           (data) =>
-            data.asset_id === 2 || data.asset_id === 3 || data.asset_id === 4
+            data.assets.asset_type === "Vehicles"
         )
       );
       setothersData(
         res.data.data.filter(
           (data) =>
-            data.asset_id === 5 ||
-            data.asset_id === 6 ||
-            data.asset_id === 7 ||
-            data.asset_id === 8 ||
-            data.asset_id === 9
+            data.assets.asset_type === "Others"
         )
       );
     });
@@ -172,7 +164,7 @@ const Assets = ({ contacts, id }) => {
                             style={{
                               cursor: "pointer",
                               backgroundColor: `${
-                                activeTab === "1" ? "#3DC7F4" : "white"
+                                activeTab === "1" ? "#3DC7F4" : "transparent"
                               }`,
                               borderColor: "transparent",
                               color: `${
@@ -199,7 +191,7 @@ const Assets = ({ contacts, id }) => {
                             style={{
                               cursor: "pointer",
                               backgroundColor: `${
-                                activeTab === "2" ? "#3DC7F4" : "white"
+                                activeTab === "2" ? "#3DC7F4" : "transparent"
                               }`,
                               borderColor: "transparent",
                               color: `${
@@ -226,7 +218,7 @@ const Assets = ({ contacts, id }) => {
                             style={{
                               cursor: "pointer",
                               backgroundColor: `${
-                                activeTab === "3" ? "#3DC7F4" : "white"
+                                activeTab === "3" ? "#3DC7F4" : "transparent"
                               }`,
                               borderColor: "transparent",
                               color: `${
@@ -357,7 +349,7 @@ const Assets = ({ contacts, id }) => {
                                   <th>Model</th>
                                   <th>Location</th>
                                   <th>Qty</th>
-                                  <th>Max Capacity</th>
+                                  <th>Capacity</th>
                                   <th>Actions</th>
                                 </tr>
                               </thead>
