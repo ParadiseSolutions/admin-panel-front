@@ -59,15 +59,22 @@ useEffect(() => {
 }, [id])
 
 const refreshData = () => {
-  getOperationalContactsAPI(id)
+  console.log('se reseteo');
+ getOperationalContactsAPI(id)
     .then((res) => {
       setOperationalInfoData(res.data.data);
+      setAvailabilityData(res.data.data.filter((item) => item.contact_type_id === 1));
+      setPlaceReservationData(res.data.data.filter((item) => item.contact_type_id === 2));
+      setGroupsData(res.data.data.filter((item) => item.contact_type_id === 3));
+      setInvoicingData(res.data.data.filter((item) => item.contact_type_id === 4));
+      setSalesData(res.data.data.filter((item) => item.contact_type_id === 5));
+      setUpperManagementData(res.data.data.filter((item) => item.contact_type_id === 6));
+      setMarketingData(res.data.data.filter((item) => item.contact_type_id === 7));
     })
     .catch((err) => {
       console.log(err);
     });
 }
-console.log(operationalInfoData, "operationalInfoData")
 
   return (
     <div className="accordion" id="accordionExample">
@@ -312,7 +319,7 @@ console.log(operationalInfoData, "operationalInfoData")
                             Availability
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <AvailabilityContacts availabilityData={availabilityData} refreshData={refreshData} />
                       </Col>
                     </Row>
                     <Row>
@@ -325,7 +332,7 @@ console.log(operationalInfoData, "operationalInfoData")
                             Place Reservations
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        
                       </Col>
                     </Row>
                     <Row>
@@ -338,7 +345,7 @@ console.log(operationalInfoData, "operationalInfoData")
                             Groups
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        
                       </Col>
                     </Row>
                     <Row>
@@ -351,7 +358,7 @@ console.log(operationalInfoData, "operationalInfoData")
                             Invoicing
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        
                       </Col>
                     </Row>
                     <Row>
@@ -364,7 +371,7 @@ console.log(operationalInfoData, "operationalInfoData")
                             Sales & Contracting
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        
                       </Col>
                     </Row>
                     <Row>
@@ -377,7 +384,7 @@ console.log(operationalInfoData, "operationalInfoData")
                             Upper Management
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        
                       </Col>
                     </Row>
                     <Row>
@@ -390,7 +397,7 @@ console.log(operationalInfoData, "operationalInfoData")
                             Marketing
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        
                       </Col>
                     </Row>
                   </CardBody>

@@ -52,7 +52,6 @@ const DocumentsModal = ({
 
   let userInfo = localStorage.getItem("token");
   userInfo = JSON.parse(userInfo);
-  console.log(userInfo, "userInfo");
   //edit request
   useEffect(() => {
     if (idEdit) {
@@ -63,7 +62,7 @@ const DocumentsModal = ({
           setFileId(res.data.data.id);
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
         });
     }
   }, [idEdit]);

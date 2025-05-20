@@ -440,3 +440,10 @@ export const putContacts = (id, body) => {
     headers: options,
   });
 };
+
+export const getContactAPI = (id) => {
+  const url = `${API_URL}/operational-info/contact/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};

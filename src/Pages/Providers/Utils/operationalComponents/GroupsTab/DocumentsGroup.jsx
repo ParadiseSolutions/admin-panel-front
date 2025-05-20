@@ -60,8 +60,6 @@ const DocumentsGroup = () => {
     });
   };
 
-
-  console.log(initialData, "initialData");
   return (
     <Row className="col-12 m-1 d-flex flex-col">
       <div className="col-12 m-1 d-flex flex-col align-items-end justify-content-end">

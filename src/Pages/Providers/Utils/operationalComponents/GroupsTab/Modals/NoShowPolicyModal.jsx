@@ -51,8 +51,6 @@ const NoShowPolicyModal = ({
       setPaymentOptionData(res.data.data);
     });
   }, []);
-console.log(baseOnData, "baseOnData");
-  console.log(paymentOptionData, "paymentOptionData");
   //edit request
   useEffect(() => {
     if (idEdit) {

@@ -3,32 +3,19 @@ import { Row, Table, UncontrolledTooltip } from "reactstrap";
 import { useParams } from "react-router-dom";
 import {
   deletePaymentPolicyAPI,
-  deletePolicyAPI,
-  getCancellationPolicyGroupsAPI,
-  getPaymentPolicyGroupsAPI,
+  getOperationalContactsAPI,
 } from "../../../../../Utils/API/Providers/index.js";
-import CancellationPolicyModal from "./Modals/cancellationPolicyModal.jsx";
 import Swal from "sweetalert2";
-import PaymentPolicyModal from "./Modals/PaymentPolicyModal.jsx";
+import OperationalContactModal from "../../modals/OperationalContactModal.jsx";
 
-const AvailabilityContacts = () => {
+const AvailabilityContacts = ({ availabilityData, refreshData }) => {
   const { id } = useParams();
-  const [initialData, setInitialData] = useState([]);
-  const [idEdit, setIdEdit] = useState(null);
-  const [paymentPolicyModalAction, setPaymentPolicyModalAction] =
-    useState(false);
-  //initial request
-  useEffect(() => {
-    getPaymentPolicyGroupsAPI(id).then((res) => {
-      setInitialData(res.data.data);
-    });
-  }, [id]);
 
-  const refresh = () => {
-    getPaymentPolicyGroupsAPI(id).then((res) => {
-      setInitialData(res.data.data);
-    });
-  };
+  const [operationalContactAction, setOperationalContactAction] =
+    useState(false);
+  const [idEdit, setIdEdit] = useState(null);
+  const [editData, setEditData] = useState(null);
+  
 
   //delete
   const deletePolicy = (id) => {
@@ -43,7 +30,7 @@ const AvailabilityContacts = () => {
     }).then((resp) => {
       deletePaymentPolicyAPI(id)
         .then((res) => {
-          refresh();
+          // refresh();
           Swal.fire({
             icon: "success",
             title: "Deleted!",
@@ -61,7 +48,6 @@ const AvailabilityContacts = () => {
   };
   return (
     <Row className="col-12 m-1 d-flex flex-col">
-     
       <div
         className="col-12 d-flex flex-col table-responsive"
         style={{ height: "127px" }}
@@ -79,12 +65,19 @@ const AvailabilityContacts = () => {
             </tr>
           </thead>
           <tbody>
-            {initialData.map((item, index) => {
+            {availabilityData?.map((item, index) => {
               return (
                 <tr key={index}>
-                  <td>{item.group_size_name}</td>
-                  <td>{item.collect_name}</td>
-                  <td>{item.pay_name}</td>
+                  <td>{item.contact_name}</td>
+                  <td>{item.channel_name}</td>
+                  <td>{item.contact}</td>
+                  <td>
+                    {item.available_from} - {item.available_to}
+                  </td>
+                  <td> {item.urgent_assistance_label}</td>
+                  <td>
+                    {item.urgent_from} - {item.urgent_to}
+                  </td>
                   <td>
                     <div className="d-flex gap-3">
                       <div className="text-success">
@@ -93,8 +86,8 @@ const AvailabilityContacts = () => {
                           id="edittooltipCancellation"
                           style={{ cursor: "pointer" }}
                           onClick={() => {
-                            setIdEdit(item.id);
-                            setPaymentPolicyModalAction(true);
+                            setEditData(item.id);
+                            setOperationalContactAction(true);
                           }}
                         />
                         <UncontrolledTooltip
@@ -131,12 +124,12 @@ const AvailabilityContacts = () => {
           </tbody>
         </Table>
       </div>
-      <PaymentPolicyModal
-        paymentPolicyModalAction={paymentPolicyModalAction}
-        setPaymentPolicyModalAction={setPaymentPolicyModalAction}
-        refresh={refresh}
-        idEdit={idEdit}
-        setIdEdit={setIdEdit}
+      <OperationalContactModal
+        operationalContactAction={operationalContactAction}
+        setOperationalContactAction={setOperationalContactAction}
+        refreshData={refreshData}
+        editData={editData}
+        // setIdEdit={setIdEdit}
       />
     </Row>
   );
