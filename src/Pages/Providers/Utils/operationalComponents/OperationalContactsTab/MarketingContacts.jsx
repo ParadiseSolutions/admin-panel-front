@@ -9,7 +9,7 @@ import {
 import Swal from "sweetalert2";
 import OperationalContactModal from "../../modals/OperationalContactModal.jsx";
 
-const AvailabilityContacts = ({ availabilityData, refreshData }) => {
+const MarketingContacts = ({ availabilityData, refreshData }) => {
   const { id } = useParams();
 
   const [operationalContactAction, setOperationalContactAction] =
@@ -136,4 +136,4 @@ const AvailabilityContacts = ({ availabilityData, refreshData }) => {
   );
 };
 
-export default AvailabilityContacts;
+export default MarketingContacts;

@@ -447,3 +447,10 @@ export const getContactAPI = (id) => {
     headers: options,
   });
 };
+
+export const deleteContactAPI = (id) => {
+  const url = `${API_URL}/operational-info/contacts/${id}`;
+  return axios.delete (url, {
+    headers: options,
+  });
+};
