@@ -22,11 +22,22 @@ import DocumentsGroup from "./operationalComponents/GroupsTab/DocumentsGroup";
 import AvailabilityContacts from "./operationalComponents/OperationalContactsTab/AvailabilityContacts";
 import { getOperationalContactsAPI } from "../../../Utils/API/Providers";
 import { useParams } from "react-router-dom";
+import OperationalContactModal from "./modals/OperationalContactModal";
 
 const OperationalInfo = () => {
   const { id } = useParams();
   const [col1, setcol1] = useState(false);
   const [operationalInfoData, setOperationalInfoData] = useState([]);
+  const [availabilityData, setAvailabilityData] = useState([]);
+  const [placeReservationData, setPlaceReservationData] = useState([]);
+  const [groupsData, setGroupsData] = useState([]);
+  const [invoicingData, setInvoicingData] = useState([]);
+  const [salesData, setSalesData] = useState([]);
+  const [upperManagementData, setUpperManagementData] = useState([]);
+  const [marketingData, setMarketingData] = useState([]);
+  const [operationalContactAction, setOperationalContactAction] = useState(false);
+  const [idEdit, setIdEdit] = useState(null);
+
   function togglecol1() {
     setcol1(!col1);
   }
@@ -34,6 +45,13 @@ useEffect(() => {
   getOperationalContactsAPI(id)
     .then((res) => {
       setOperationalInfoData(res.data.data);
+      setAvailabilityData(res.data.data.filter((item) => item.contact_type_id === 1));
+      setPlaceReservationData(res.data.data.filter((item) => item.contact_type_id === 2));
+      setGroupsData(res.data.data.filter((item) => item.contact_type_id === 3));
+      setInvoicingData(res.data.data.filter((item) => item.contact_type_id === 4));
+      setSalesData(res.data.data.filter((item) => item.contact_type_id === 5));
+      setUpperManagementData(res.data.data.filter((item) => item.contact_type_id === 6));
+      setMarketingData(res.data.data.filter((item) => item.contact_type_id === 7));
     })
     .catch((err) => {
       console.log(err);
@@ -274,9 +292,13 @@ console.log(operationalInfoData, "operationalInfoData")
                         <Button
                           type="submit"
                           className="waves-effect waves-light mb-3 btn btn-orange"
+                          onClick={() => {
+                            setOperationalContactAction(true);
+                            setIdEdit(null);
+                          }}
                         >
                           <i className="mdi mdi-plus me-1" />
-                          Save Changes
+                           Add Contact
                         </Button>
                       </Col>
                     </Row>
@@ -378,6 +400,13 @@ console.log(operationalInfoData, "operationalInfoData")
           </div>
         </Collapse>
       </div>
+      <OperationalContactModal
+        operationalContactAction={operationalContactAction}
+        setOperationalContactAction={setOperationalContactAction}
+        refreshData={refreshData}
+        idEdit={idEdit}
+        setIdEdit={setIdEdit}
+      />
     </div>
   );
 };
