@@ -20,9 +20,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
         setMenu(
           res.data.data.asset_id === 1
             ? 1
-            : res.data.data.asset_id === 2 ||
-              res.data.data.asset_id === 3 ||
-              res.data.data.asset_id === 4 
+            : res.data.data.assets.asset_type === "Vehicles"
             ? 2
             : 3
         );
@@ -57,7 +55,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
               : menu === 2
               ? "+ New Vehicle"
               : menu === 3
-              ? "+ New Other"
+              ? "+ New Asset"
               : ""}
             {}
           </h1>

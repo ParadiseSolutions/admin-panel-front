@@ -29,15 +29,11 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
       );
       const vehicle = relatedAssetsActiveData.filter(
         (item) =>
-          item.asset_id === 2 || item.asset_id === 3 || item.asset_id === 4
+          item.assets.asset_type === "Vehicles"
       );
       const others = relatedAssetsActiveData.filter(
         (item) =>
-          item.asset_id === 5 ||
-          item.asset_id === 6 ||
-          item.asset_id === 7 ||
-          item.asset_id === 8 ||
-          item.asset_id === 9
+          item.assets.asset_type === "Others"
       );
       setboatData(boat);
       setvehicleData(vehicle);
@@ -53,7 +49,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
             <NavLink
               style={{
                 cursor: "pointer",
-                backgroundColor: `${activeTab === "1" ? "#3DC7F4" : "white"}`,
+                backgroundColor: `${activeTab === "1" ? "#3DC7F4" : "transparent"}`,
                 borderColor: "transparent",
                 color: `${activeTab === "1" ? "white" : "#3DC7F4"}`,
                 padding: "10px 40px",
@@ -75,7 +71,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
             <NavLink
               style={{
                 cursor: "pointer",
-                backgroundColor: `${activeTab === "2" ? "#3DC7F4" : "white"}`,
+                backgroundColor: `${activeTab === "2" ? "#3DC7F4" : "transparent"}`,
                 borderColor: "transparent",
                 color: `${activeTab === "2" ? "white" : "#3DC7F4"}`,
                 padding: "10px 40px",
@@ -97,7 +93,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
             <NavLink
               style={{
                 cursor: "pointer",
-                backgroundColor: `${activeTab === "3" ? "#3DC7F4" : "white"}`,
+                backgroundColor: `${activeTab === "3" ? "#3DC7F4" : "transparent"}`,
                 borderColor: "transparent",
                 color: `${activeTab === "3" ? "white" : "#3DC7F4"}`,
                 padding: "10px 40px",
@@ -169,7 +165,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                   <th>Model</th>
                   <th>Location</th>
                   <th>Qty</th>
-                  <th>Max Capacity</th>
+                  <th>Capacity</th>
                   <th>Actions</th>
                 </tr>
               </thead>

@@ -254,7 +254,7 @@ const WireTransferForm = ({
                   </div>
                 </div>
                 <Input
-                  type="number"
+                  type="text"
                   name="aba_routing_WT"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
@@ -293,7 +293,7 @@ const WireTransferForm = ({
                   </div>
                 </div>
                 <Input
-                  type="number"
+                  type="text"
                   name="account_number_WT"
                   onChange={validationType.handleChange}
                   onBlur={validationType.handleBlur}
