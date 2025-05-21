@@ -43,16 +43,16 @@ const OperationalContactModal = ({
   const [channelsSelected, setChannelsSelected] = useState(null);
   const [urgentAssistanceData, setUrgentAssistanceData] = useState([]);
   const [urgentAssistanceSelected, setUrgentAssistanceSelected] =
-  useState(null);
+    useState(null);
   const [contactInfo, setContactInfo] = useState(null);
 
-  const [asStart, setAsStart] = useState('');
+  const [asStart, setAsStart] = useState("");
   const [availableTimeFrameStart, setAvailableTimeFrameStart] = useState("AM");
-  const [asEnd, setAsEnd] = useState('');
+  const [asEnd, setAsEnd] = useState("");
   const [availableTimeFrameEnd, setAvailableTimeFrameEnd] = useState("AM");
-  const [usStart, setUsStart] = useState('');
+  const [usStart, setUsStart] = useState("");
   const [urgentTimeFrameStart, setUrgentTimeFrameStart] = useState("AM");
-  const [usEnd, setUsEnd] = useState('');
+  const [usEnd, setUsEnd] = useState("");
   const [urgentTimeFrameEnd, setUrgentTimeFrameEnd] = useState("AM");
 
   useEffect(() => {
@@ -79,21 +79,26 @@ const OperationalContactModal = ({
 
   useEffect(() => {
     if (dataEdit) {
-
-      let available_from_time = dataEdit.available_from.split(" ");
-      let available_to_time = dataEdit.available_to.split(" ");
-      setAsStart(available_from_time[0]);
-      setAvailableTimeFrameStart(available_from_time[1]);
-      setAsEnd(available_to_time[0]);
-      setAvailableTimeFrameEnd(available_to_time[1])
-
-      let urgent_from_time = dataEdit.urgent_from.split(" ");
-      let urgent_to_time = dataEdit.urgent_to.split(" ");
-      setUsStart(urgent_from_time[0]);
-      setUrgentTimeFrameStart(urgent_from_time[1]);
-      setUsEnd(urgent_to_time[0])
-      setUrgentTimeFrameEnd(urgent_to_time[1])
-
+      if (dataEdit.available_from) {
+        let available_from_time = dataEdit.available_from.split(" ");
+        setAsStart(available_from_time[0]);
+        setAvailableTimeFrameStart(available_from_time[1]);
+      }
+      if (dataEdit.available_to) {
+        let available_to_time = dataEdit.available_to.split(" ");
+        setAsEnd(available_to_time[0]);
+        setAvailableTimeFrameEnd(available_to_time[1]);
+      }
+      if (dataEdit.urgent_from) {
+        let urgent_from_time = dataEdit.urgent_from.split(" ");
+        setUsStart(urgent_from_time[0]);
+        setUrgentTimeFrameStart(urgent_from_time[1]);
+      }
+      if (dataEdit.urgent_to) {
+        let urgent_to_time = dataEdit.urgent_to.split(" ");
+        setUsEnd(urgent_to_time[0]);
+        setUrgentTimeFrameEnd(urgent_to_time[1]);
+      }
       setContactTypeSelected(dataEdit.contact_type_id);
       setContactNameSelected(dataEdit.contact_id);
       setChannelsSelected(dataEdit.channel_id);
@@ -120,7 +125,19 @@ const OperationalContactModal = ({
 
   const clearData = () => {
     setDataEdit(null);
-    // setIdEdit(null);
+    setContactTypeSelected(null);
+    setContactNameSelected(null);
+    setChannelsSelected(null);
+    setUrgentAssistanceSelected(null);
+    setContactInfo(null);
+    setAsStart(null);
+    setAvailableTimeFrameStart(null);
+    setAsEnd(null);
+    setAvailableTimeFrameEnd(null);
+    setUsStart(null);
+    setUrgentTimeFrameStart(null);
+    setUsEnd(null);
+    setUrgentTimeFrameEnd(null);
   };
 
   const validationType = useFormik({
@@ -143,11 +160,18 @@ const OperationalContactModal = ({
         channel_id: channelsSelected,
         contact: contactInfo,
         contact_type_id: contactTypeSelected,
-        available_from: `${asStart} ${availableTimeFrameStart}`,
-        available_to: `${asEnd} ${availableTimeFrameEnd} `,
+        available_from:
+          asStart !== "" ? `${asStart} ${availableTimeFrameStart}` : "",
+        available_to: asEnd !== "" ? `${asEnd} ${availableTimeFrameEnd}` : "",
         urgent_assistance: urgentAssistanceSelected === 1 ? true : false,
-        urgent_from: urgentAssistanceSelected === 1 ? `${usStart} ${urgentTimeFrameStart}` : "",
-        urgent_to: urgentAssistanceSelected === 1 ? `${usEnd} ${urgentTimeFrameEnd}` : "",
+        urgent_from:
+          urgentAssistanceSelected === 1
+            ? `${usStart} ${urgentTimeFrameStart}`
+            : "",
+        urgent_to:
+          urgentAssistanceSelected === 1
+            ? `${usEnd} ${urgentTimeFrameEnd}`
+            : "",
       };
 
       if (editData) {
@@ -210,7 +234,6 @@ const OperationalContactModal = ({
     },
   });
 
-
   return (
     <Modal
       centered
@@ -225,12 +248,12 @@ const OperationalContactModal = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        <h1 className="modal-title mt-0 text-white">+ Add Document</h1>
-        {/* {
-          contactID === false ? (
-            <h1 className="modal-title mt-0 text-white">+ Add Cancellation Policy</h1>
-          ):(<h1 className="modal-title mt-0 text-white">Edit Cancellation Policy</h1>)
-        } */}
+        {editData ? (
+          <h1 className="modal-title mt-0 text-white">+ Edit Document</h1>
+        ) : (
+          <h1 className="modal-title mt-0 text-white">+ Add Document</h1>
+        )}
+
         <button
           onClick={() => {
             setOperationalContactAction(!operationalContactAction);
@@ -437,9 +460,8 @@ const OperationalContactModal = ({
                   name="available_schedule_start"
                   className="form-control"
                   type="text"
-                  onChange={ (e) => setAsStart(e.target.value) }
-                  value={ asStart || ""}
-                
+                  onChange={(e) => setAsStart(e.target.value)}
+                  value={asStart || ""}
                 />
 
                 <Input
@@ -471,9 +493,8 @@ const OperationalContactModal = ({
                   name="available_schedule_end"
                   className="form-control"
                   type="text"
-                  onChange={ (e) => setAsEnd(e.target.value) }
-                  value={ asEnd || ""}
-                
+                  onChange={(e) => setAsEnd(e.target.value)}
+                  value={asEnd || ""}
                 />
                 <Input
                   type="select"
@@ -565,10 +586,9 @@ const OperationalContactModal = ({
                   name="urgent_start_time"
                   className="form-control"
                   type="text"
-                  onChange={ (e) => setUsStart(e.target.value) }
-                  value={ usStart || ""}
+                  onChange={(e) => setUsStart(e.target.value)}
+                  value={usStart || ""}
                   disabled={urgentAssistanceSelected === 0 ? true : false}
-                 
                 />
 
                 <Input
@@ -604,7 +624,6 @@ const OperationalContactModal = ({
                   onChange={(e) => setUsEnd(e.target.value)}
                   value={usEnd || ""}
                   disabled={urgentAssistanceSelected === 0 ? true : false}
-                 
                 />
                 <Input
                   type="select"

@@ -45,25 +45,25 @@ const OperationalInfo = () => {
       .then((res) => {
         setOperationalInfoData(res.data.data);
         setAvailabilityData(
-          res.data.data.filter((item) => item.contact_type_id === 1)
+          res.data.data.filter((item) => item.contact_type_id === 1 || item.contact_type_id === 8)
         );
         setPlaceReservationData(
-          res.data.data.filter((item) => item.contact_type_id === 2)
+          res.data.data.filter((item) => item.contact_type_id === 2 || item.contact_type_id === 8)
         );
         setGroupsData(
-          res.data.data.filter((item) => item.contact_type_id === 3)
+          res.data.data.filter((item) => item.contact_type_id === 3 || item.contact_type_id === 8)
         );
         setInvoicingData(
-          res.data.data.filter((item) => item.contact_type_id === 4)
+          res.data.data.filter((item) => item.contact_type_id === 4 || item.contact_type_id === 8)
         );
         setSalesData(
-          res.data.data.filter((item) => item.contact_type_id === 5)
+          res.data.data.filter((item) => item.contact_type_id === 5 || item.contact_type_id === 8)
         );
         setUpperManagementData(
-          res.data.data.filter((item) => item.contact_type_id === 6)
+          res.data.data.filter((item) => item.contact_type_id === 6 || item.contact_type_id === 8)
         );
         setMarketingData(
-          res.data.data.filter((item) => item.contact_type_id === 7)
+          res.data.data.filter((item) => item.contact_type_id === 7 || item.contact_type_id === 8)
         );
       })
       .catch((err) => {
@@ -72,30 +72,29 @@ const OperationalInfo = () => {
   }, [id]);
 
   const refreshData = () => {
-    console.log("se reseteo");
     getOperationalContactsAPI(id)
       .then((res) => {
         setOperationalInfoData(res.data.data);
         setAvailabilityData(
-          res.data.data.filter((item) => item.contact_type_id === 1)
+          res.data.data.filter((item) => item.contact_type_id === 1 || item.contact_type_id === 8)
         );
         setPlaceReservationData(
-          res.data.data.filter((item) => item.contact_type_id === 2)
+          res.data.data.filter((item) => item.contact_type_id === 2 || item.contact_type_id === 8)
         );
         setGroupsData(
-          res.data.data.filter((item) => item.contact_type_id === 3)
+          res.data.data.filter((item) => item.contact_type_id === 3 || item.contact_type_id === 8)
         );
         setInvoicingData(
-          res.data.data.filter((item) => item.contact_type_id === 4)
+          res.data.data.filter((item) => item.contact_type_id === 4 || item.contact_type_id === 8)
         );
         setSalesData(
-          res.data.data.filter((item) => item.contact_type_id === 5)
+          res.data.data.filter((item) => item.contact_type_id === 5 || item.contact_type_id === 8)
         );
         setUpperManagementData(
-          res.data.data.filter((item) => item.contact_type_id === 6)
+          res.data.data.filter((item) => item.contact_type_id === 6 || item.contact_type_id === 8)
         );
         setMarketingData(
-          res.data.data.filter((item) => item.contact_type_id === 7)
+          res.data.data.filter((item) => item.contact_type_id === 7 || item.contact_type_id === 8)
         );
       })
       .catch((err) => {
