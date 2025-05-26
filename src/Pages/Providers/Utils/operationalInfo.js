@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 
-import {
-  Collapse,
-  Row,
-  Col,
-  Button,
-  Card,
-  CardBody,
-} from "reactstrap";
+import { Collapse, Row, Col, Button, Card, CardBody } from "reactstrap";
 import classnames from "classnames";
 import CancellationPolicyGeneral from "./operationalComponents/GeneralTab/cancellationPolicyGeneral";
 import ChangePolicyGeneral from "./operationalComponents/GeneralTab/changePolicyGeneral";
@@ -22,34 +15,92 @@ import DocumentsGroup from "./operationalComponents/GroupsTab/DocumentsGroup";
 import AvailabilityContacts from "./operationalComponents/OperationalContactsTab/AvailabilityContacts";
 import { getOperationalContactsAPI } from "../../../Utils/API/Providers";
 import { useParams } from "react-router-dom";
+import OperationalContactModal from "./modals/OperationalContactModal";
+import ReservationsContacts from "./operationalComponents/OperationalContactsTab/ReservationsContacts";
+import GroupsContacts from "./operationalComponents/OperationalContactsTab/GroupsContacts";
+import InvoicingContacts from "./operationalComponents/OperationalContactsTab/InvoicingContacts";
+import SalesContacts from "./operationalComponents/OperationalContactsTab/SalesContacts";
+import ManagementContacts from "./operationalComponents/OperationalContactsTab/ManagementContacts";
 
 const OperationalInfo = () => {
   const { id } = useParams();
   const [col1, setcol1] = useState(false);
   const [operationalInfoData, setOperationalInfoData] = useState([]);
+  const [availabilityData, setAvailabilityData] = useState([]);
+  const [placeReservationData, setPlaceReservationData] = useState([]);
+  const [groupsData, setGroupsData] = useState([]);
+  const [invoicingData, setInvoicingData] = useState([]);
+  const [salesData, setSalesData] = useState([]);
+  const [upperManagementData, setUpperManagementData] = useState([]);
+  const [marketingData, setMarketingData] = useState([]);
+  const [operationalContactAction, setOperationalContactAction] =
+    useState(false);
+  const [idEdit, setIdEdit] = useState(null);
+
   function togglecol1() {
     setcol1(!col1);
   }
-useEffect(() => {
-  getOperationalContactsAPI(id)
-    .then((res) => {
-      setOperationalInfoData(res.data.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}, [id])
+  useEffect(() => {
+    getOperationalContactsAPI(id)
+      .then((res) => {
+        setOperationalInfoData(res.data.data);
+        setAvailabilityData(
+          res.data.data.filter((item) => item.contact_type_id === 1 || item.contact_type_id === 8)
+        );
+        setPlaceReservationData(
+          res.data.data.filter((item) => item.contact_type_id === 2 || item.contact_type_id === 8)
+        );
+        setGroupsData(
+          res.data.data.filter((item) => item.contact_type_id === 3 || item.contact_type_id === 8)
+        );
+        setInvoicingData(
+          res.data.data.filter((item) => item.contact_type_id === 4 || item.contact_type_id === 8)
+        );
+        setSalesData(
+          res.data.data.filter((item) => item.contact_type_id === 5 || item.contact_type_id === 8)
+        );
+        setUpperManagementData(
+          res.data.data.filter((item) => item.contact_type_id === 6 || item.contact_type_id === 8)
+        );
+        setMarketingData(
+          res.data.data.filter((item) => item.contact_type_id === 7 || item.contact_type_id === 8)
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
 
-const refreshData = () => {
-  getOperationalContactsAPI(id)
-    .then((res) => {
-      setOperationalInfoData(res.data.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
-console.log(operationalInfoData, "operationalInfoData")
+  const refreshData = () => {
+    getOperationalContactsAPI(id)
+      .then((res) => {
+        setOperationalInfoData(res.data.data);
+        setAvailabilityData(
+          res.data.data.filter((item) => item.contact_type_id === 1 || item.contact_type_id === 8)
+        );
+        setPlaceReservationData(
+          res.data.data.filter((item) => item.contact_type_id === 2 || item.contact_type_id === 8)
+        );
+        setGroupsData(
+          res.data.data.filter((item) => item.contact_type_id === 3 || item.contact_type_id === 8)
+        );
+        setInvoicingData(
+          res.data.data.filter((item) => item.contact_type_id === 4 || item.contact_type_id === 8)
+        );
+        setSalesData(
+          res.data.data.filter((item) => item.contact_type_id === 5 || item.contact_type_id === 8)
+        );
+        setUpperManagementData(
+          res.data.data.filter((item) => item.contact_type_id === 6 || item.contact_type_id === 8)
+        );
+        setMarketingData(
+          res.data.data.filter((item) => item.contact_type_id === 7 || item.contact_type_id === 8)
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="accordion" id="accordionExample">
@@ -274,9 +325,13 @@ console.log(operationalInfoData, "operationalInfoData")
                         <Button
                           type="submit"
                           className="waves-effect waves-light mb-3 btn btn-orange"
+                          onClick={() => {
+                            setOperationalContactAction(true);
+                            setIdEdit(null);
+                          }}
                         >
                           <i className="mdi mdi-plus me-1" />
-                          Save Changes
+                          Add Contact
                         </Button>
                       </Col>
                     </Row>
@@ -290,7 +345,10 @@ console.log(operationalInfoData, "operationalInfoData")
                             Availability
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <AvailabilityContacts
+                          availabilityData={availabilityData}
+                          refreshData={refreshData}
+                        />
                       </Col>
                     </Row>
                     <Row>
@@ -303,7 +361,10 @@ console.log(operationalInfoData, "operationalInfoData")
                             Place Reservations
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <ReservationsContacts
+                          availabilityData={placeReservationData}
+                          refreshData={refreshData}
+                        />
                       </Col>
                     </Row>
                     <Row>
@@ -316,7 +377,10 @@ console.log(operationalInfoData, "operationalInfoData")
                             Groups
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <GroupsContacts
+                        availabilityData={groupsData}
+                          refreshData={refreshData}
+                        />
                       </Col>
                     </Row>
                     <Row>
@@ -329,7 +393,10 @@ console.log(operationalInfoData, "operationalInfoData")
                             Invoicing
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <InvoicingContacts 
+                        availabilityData={invoicingData}
+                          refreshData={refreshData}
+                        />
                       </Col>
                     </Row>
                     <Row>
@@ -342,7 +409,10 @@ console.log(operationalInfoData, "operationalInfoData")
                             Sales & Contracting
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <SalesContacts 
+                         availabilityData={salesData}
+                          refreshData={refreshData}
+                        />
                       </Col>
                     </Row>
                     <Row>
@@ -355,7 +425,10 @@ console.log(operationalInfoData, "operationalInfoData")
                             Upper Management
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <ManagementContacts 
+                         availabilityData={upperManagementData}
+                          refreshData={refreshData}
+                        />
                       </Col>
                     </Row>
                     <Row>
@@ -368,7 +441,10 @@ console.log(operationalInfoData, "operationalInfoData")
                             Marketing
                           </p>
                         </div>
-                        <AvailabilityContacts />
+                        <ManagementContacts 
+                        availabilityData={marketingData}
+                          refreshData={refreshData}
+                        />
                       </Col>
                     </Row>
                   </CardBody>
@@ -378,6 +454,13 @@ console.log(operationalInfoData, "operationalInfoData")
           </div>
         </Collapse>
       </div>
+      <OperationalContactModal
+        operationalContactAction={operationalContactAction}
+        setOperationalContactAction={setOperationalContactAction}
+        refreshData={refreshData}
+        idEdit={idEdit}
+        setIdEdit={setIdEdit}
+      />
     </div>
   );
 };

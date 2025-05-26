@@ -46,8 +46,8 @@ const HolidaysModal = ({
   const [tourStatusData, setTourStatusData] = useState([]);
   const [tourStatusSelected, setTourStatusSelected] = useState(null);
   const [dataEdit, setDataEdit] = useState(null);
-  const [timeFrameStart, setTimeFrameStart] = useState('AM');
-  const [timeFrameEnd, setTimeFrameEnd] = useState('AM');
+  const [timeFrameStart, setTimeFrameStart] = useState("AM");
+  const [timeFrameEnd, setTimeFrameEnd] = useState("AM");
 
   useEffect(() => {
     getHolidayOptionsAPI().then((res) => {
@@ -67,34 +67,47 @@ const HolidaysModal = ({
         setHolidaySelected(res.data.data.holiday_id);
         setOfficeStatusSelected(res.data.data.office_status);
         setTourStatusSelected(res.data.data.tour_status);
-        setTimeFrameStart(res.data.data.from.split(' ')[1]);
-        setTimeFrameEnd(res.data.data.to.split(' ')[1]);
+
+        const from = res.data.data.from;
+        const to = res.data.data.to;
+
+        if (from && typeof from === "string" && from.includes(" ")) {
+          setTimeFrameStart(from.split(" ")[1]);
+        } else {
+          setTimeFrameStart("AM");
+        }
+
+        if (to && typeof to === "string" && to.includes(" ")) {
+          setTimeFrameEnd(to.split(" ")[1]);
+        } else {
+          setTimeFrameEnd("AM");
+        }
+
         setDataEdit(res.data.data);
       });
-
     }
   }, [idEdit]);
 
   useEffect(() => {
-    if(dataEdit){
-      const startTime = dataEdit.from.split(' ')[0]
-      const endTime = dataEdit.to.split(' ')[0]
-      setTimeFrameStart(dataEdit.from.split(' ')[1])
-      setTimeFrameEnd(dataEdit.to.split(' ')[1])
+    if (dataEdit && dataEdit.from && dataEdit.to) {
+      const startTime = dataEdit.from.split(" ")[0];
+      const endTime = dataEdit.to.split(" ")[0];
+      setTimeFrameStart(dataEdit.from.split(" ")[1]);
+      setTimeFrameEnd(dataEdit.to.split(" ")[1]);
       validationType.setFieldValue("start_time", startTime);
       validationType.setFieldValue("end_time", endTime);
     }
-  },[dataEdit])
+  }, [dataEdit]);
 
   const clearData = () => {
-  setHolidaySelected(null);
-  setOfficeStatusSelected(null);
-  setTourStatusSelected(null);
+    setHolidaySelected(null);
+    setOfficeStatusSelected(null);
+    setTourStatusSelected(null);
     setIdEdit(null);
-  setTimeFrameStart('AM');
-  setTimeFrameEnd('AM');
-
-  }
+    setTimeFrameStart("AM");
+    setTimeFrameEnd("AM");
+    setDataEdit(null);
+  };
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -119,63 +132,61 @@ const HolidaysModal = ({
 
       if (idEdit) {
         updateHoliday(idEdit, data)
-        .then((res) => {
-          if (res.data.status === 200) {
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Holiday Edited Successfully",
-            });
-            refresh();
-            clearData();
-            setHolidaysModalCreate(false);
-          } else {
+          .then((res) => {
+            if (res.data.status === 200) {
+              Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Holiday Edited Successfully",
+              });
+              refresh();
+              clearData();
+              setHolidaysModalCreate(false);
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: res.data.message,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
             Swal.fire({
               icon: "error",
               title: "Error",
-              text: res.data.message,
+              text: err.response.data.message,
             });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: err.response.data.message,
           });
-        });
-      }else{
+      } else {
         createHolidayPolicy(data)
-        .then((res) => {
-          if (res.data.status === 201) {
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Holiday Created Successfully",
-            });
-            refresh();
-            clearData();
-            setHolidaysModalCreate(false);
-          } else {
+          .then((res) => {
+            if (res.data.status === 201) {
+              Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Holiday Created Successfully",
+              });
+              refresh();
+              clearData();
+              setHolidaysModalCreate(false);
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: res.data.message,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
             Swal.fire({
               icon: "error",
               title: "Error",
-              text: res.data.message,
+              text: err.response.data.message,
             });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: err.response.data.message,
           });
-        });
       }
-
-      
     },
   });
   return (
@@ -250,7 +261,6 @@ const HolidaysModal = ({
                 onChange={(e) => {
                   setHolidaySelected(+e.target.value);
                 }}
-                onBlur={validationType.handleBlur}
                 //   value={validationType.values.department || ""}
               >
                 <option value={null}>Select....</option>
@@ -292,7 +302,6 @@ const HolidaysModal = ({
                 onChange={(e) => {
                   setTourStatusSelected(+e.target.value);
                 }}
-                onBlur={validationType.handleBlur}
                 //   value={validationType.values.department || ""}
               >
                 <option value={null}>Select....</option>
@@ -334,7 +343,6 @@ const HolidaysModal = ({
                 onChange={(e) => {
                   setOfficeStatusSelected(+e.target.value);
                 }}
-                onBlur={validationType.handleBlur}
                 //   value={validationType.values.department || ""}
               >
                 <option value={null}>Select....</option>
@@ -396,8 +404,18 @@ const HolidaysModal = ({
                       }}
                       onBlur={validationType.handleBlur}
                     >
-                      <option value={"AM"} selected={timeFrameStart === "AM" ? true : false} >AM</option>
-                      <option value={"PM"} selected={timeFrameStart === "PM" ? true : false} >PM</option>
+                      <option
+                        value={"AM"}
+                        selected={timeFrameStart === "AM" ? true : false}
+                      >
+                        AM
+                      </option>
+                      <option
+                        value={"PM"}
+                        selected={timeFrameStart === "PM" ? true : false}
+                      >
+                        PM
+                      </option>
                     </Input>
                   </div>
                 </Col>
@@ -425,8 +443,18 @@ const HolidaysModal = ({
                       }}
                       onBlur={validationType.handleBlur}
                     >
-                      <option value={"AM"} selected={timeFrameEnd === "AM" ? true : false} >AM</option>
-                      <option value={"PM"} selected={ timeFrameEnd === "PM" ? true : false} >PM</option>
+                      <option
+                        value={"AM"}
+                        selected={timeFrameEnd === "AM" ? true : false}
+                      >
+                        AM
+                      </option>
+                      <option
+                        value={"PM"}
+                        selected={timeFrameEnd === "PM" ? true : false}
+                      >
+                        PM
+                      </option>
                     </Input>
                   </div>
                 </Col>
@@ -441,8 +469,8 @@ const HolidaysModal = ({
                 className="waves-effect waves-light mb-3 btn col-2 mx-2"
                 type="button"
                 onClick={() => {
-                  setHolidaysModalCreate(false);
                   clearData();
+                  setHolidaysModalCreate(false);
                 }}
               >
                 Cancel

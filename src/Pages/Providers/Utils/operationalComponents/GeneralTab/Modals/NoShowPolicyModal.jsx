@@ -86,7 +86,7 @@ const NoShowPolicyModal = ({
       };
 
       if (idEdit) {
-        updateCancellationPolicy(id, data)
+        updateCancellationPolicy(idEdit, data)
           .then((res) => {
             if (res.data.status === 200) {
               Swal.fire({
@@ -167,7 +167,10 @@ const NoShowPolicyModal = ({
           ):(<h1 className="modal-title mt-0 text-white">Edit Cancellation Policy</h1>)
         } */}
         <button
-          onClick={() => { clearData(); setNoShowPolicyModalAction(false); }}
+          onClick={() => {
+            clearData();
+            setNoShowPolicyModalAction(false);
+          }}
           type="button"
           className="close"
           data-dismiss="modal"
@@ -295,48 +298,50 @@ const NoShowPolicyModal = ({
                 </div>
               </div>
             </Col>
-            <Col className="col-5">
-              <div className="d-flex justify-content-between">
-                <Label className="form-label">Base on</Label>
-                <div>
-                  <i
-                    className="uil-question-circle font-size-15"
-                    id="boat_type"
-                  />
-                  <UncontrolledTooltip
-                    autohide={true}
-                    placement="top"
-                    target="boat_type"
-                  >
-                    Choose the type of boat you are defining.
-                  </UncontrolledTooltip>
-                </div>
-              </div>
-              <Input
-                type="select"
-                name=""
-                onChange={(e) => {
-                  setBaseOnSelected(+e.target.value);
-                }}
-                onBlur={validationType.handleBlur}
-                //   value={validationType.values.department || ""}
-              >
-                <option value={null}>Select....</option>
-                {map(baseOnData, (item, index) => {
-                  return (
-                    <option
-                      key={index}
-                      value={item.id}
-                      selected={
-                        dataEdit ? item.id === dataEdit.based_on_id : false
-                      }
+            {paymentOptionSelected !== 2 ? (
+              <Col className="col-5">
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Base on</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_type"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_type"
                     >
-                      {item.name}
-                    </option>
-                  );
-                })}
-              </Input>
-            </Col>
+                      Choose the type of boat you are defining.
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
+                <Input
+                  type="select"
+                  name=""
+                  onChange={(e) => {
+                    setBaseOnSelected(+e.target.value);
+                  }}
+                  onBlur={validationType.handleBlur}
+                  //   value={validationType.values.department || ""}
+                >
+                  <option value={null}>Select....</option>
+                  {map(baseOnData, (item, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={item.id}
+                        selected={
+                          dataEdit ? item.id === dataEdit.based_on_id : false
+                        }
+                      >
+                        {item.name}
+                      </option>
+                    );
+                  })}
+                </Input>
+              </Col>
+            ) : null}
           </Row>
           <Row className="mt-2">
             <Col className="col-12 mt-4 d-flex justify-content-end">

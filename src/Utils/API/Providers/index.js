@@ -376,7 +376,7 @@ export const getDocumentTypeGroupsAPI = () => {
   });
 };
 export const getOperationalContactsAPI = (id) => {
-  const url = `${API_URL}/operational-info/contact-names/${id}`;
+  const url = `${API_URL}/operational-info/contacts/${id}`;
   return axios.get (url, {
     headers: options,
   });
@@ -402,3 +402,55 @@ export const downloadDocumentAPI = (id) => {
   });
 };
 
+
+export const getContactTypeOCAPI = () => {
+  const url = `${API_URL}/operational-info/contact-types`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getContactNameOCAPI = (id) => {
+  const url = `${API_URL}/operational-info/contact-names/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getChannelOCAPI = () => {
+  const url = `${API_URL}/operational-info/contact-channels`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getUrgentAssistanceOCAPI = () => {
+  const url = `${API_URL}/operational-info/urgent-assistance-options`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const postContacts = ( body) => {
+  const url = `${API_URL}/operational-info/contacts`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const putContacts = (id, body) => {
+  const url = `${API_URL}/operational-info/contacts/${id}`;
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
+export const getContactAPI = (id) => {
+  const url = `${API_URL}/operational-info/contact/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+
+export const deleteContactAPI = (id) => {
+  const url = `${API_URL}/operational-info/contacts/${id}`;
+  return axios.delete (url, {
+    headers: options,
+  });
+};

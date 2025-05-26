@@ -2,38 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Row, Table, UncontrolledTooltip } from "reactstrap";
 import { useParams } from "react-router-dom";
 import {
-  deleteDocumentAPI,
+  deleteContactAPI,
   deletePaymentPolicyAPI,
-  downloadDocumentAPI,
-  getDocumentsGroupsAPI,
+  getOperationalContactsAPI,
 } from "../../../../../Utils/API/Providers/index.js";
 import Swal from "sweetalert2";
-import DocumentsModal from "./Modals/DocumentsModal.jsx";
-import { API_URL } from "../../../../../Utils/API/index.js";
+import OperationalContactModal from "../../modals/OperationalContactModal.jsx";
 
-const DocumentsGroup = () => {
+const MarketingContacts = ({ availabilityData, refreshData }) => {
   const { id } = useParams();
-  const [initialData, setInitialData] = useState([]);
-  const [idEdit, setIdEdit] = useState(null);
-  const [documentsModalAction, setDocumentsModalAction] =
-    useState(false);
-  //initial request
-  useEffect(() => {
-    getDocumentsGroupsAPI(id).then((res) => {
-      setInitialData(res.data.data);
-    });
-  }, [id]);
 
-  const refresh = () => {
-    getDocumentsGroupsAPI(id).then((res) => {
-      setInitialData(res.data.data);
-    });
-  };
+  const [operationalContactAction, setOperationalContactAction] =
+    useState(false);
+  const [idEdit, setIdEdit] = useState(null);
+  const [editData, setEditData] = useState(null);
+  
 
   //delete
   const deletePolicy = (id) => {
     Swal.fire({
-      title: "Delete Document?",
+      title: "Delete Contact?",
       icon: "question",
       // text: `Do you want delete ${depData.first_name}`,
       showCancelButton: true,
@@ -41,13 +29,13 @@ const DocumentsGroup = () => {
       confirmButtonColor: "#F38430",
       cancelButtonText: "Cancel",
     }).then((resp) => {
-      deleteDocumentAPI(id)
+      deleteContactAPI(id)
         .then((res) => {
-          refresh();
+           refreshData();
           Swal.fire({
             icon: "success",
             title: "Deleted!",
-            text: "Document has been deleted.",
+            text: "Policy has been deleted.",
           });
         })
         .catch((err) => {
@@ -59,17 +47,8 @@ const DocumentsGroup = () => {
         });
     });
   };
-
   return (
     <Row className="col-12 m-1 d-flex flex-col">
-      <div className="col-12 m-1 d-flex flex-col align-items-end justify-content-end">
-        <p
-          className="cursor-pointer text-paradise"
-          onClick={() => setDocumentsModalAction(!documentsModalAction)}
-        >
-          + Add Document
-        </p>
-      </div>
       <div
         className="col-12 d-flex flex-col table-responsive"
         style={{ height: "127px" }}
@@ -77,32 +56,28 @@ const DocumentsGroup = () => {
         <Table>
           <thead>
             <tr>
-              <th>Document</th>
-              <th>Type</th>
-              <th>Date</th>
-              <th>Uploaded By</th>
-              <th>Format</th>
+              <th>Name</th>
+              <th>Channel</th>
+              <th>Contact</th>
+              <th>Schedule</th>
+              <th>Urgent Assistance</th>
+              <th>Urgent Schedule</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {initialData.map((item, index) => {
+            {availabilityData?.map((item, index) => {
               return (
                 <tr key={index}>
+                  <td>{item.contact_name}</td>
+                  <td>{item.channel_name}</td>
+                  <td>{item.contact}</td>
                   <td>
-                    <a href={`${API_URL}/documents/download/${item.id}`} target="_blank" rel="noreferrer">
-                    {item.file_name} 
-                    </a>
-                    </td>
-                  <td>{item.type_name}</td>
-                  <td>{item.date}</td>
-                  <td>{item.created_by_name}</td>
+                    {item.available_from} - {item.available_to}
+                  </td>
+                  <td> {item.urgent_assistance_label}</td>
                   <td>
-                    <img
-                      src={item.url_icon}
-                      alt={item.extension}
-                      style={{  height: 20 }}
-                    />
+                    {item.urgent_from} - {item.urgent_to}
                   </td>
                   <td>
                     <div className="d-flex gap-3">
@@ -112,8 +87,8 @@ const DocumentsGroup = () => {
                           id="edittooltipCancellation"
                           style={{ cursor: "pointer" }}
                           onClick={() => {
-                            setIdEdit(item.id);
-                            setDocumentsModalAction(true);
+                            setEditData(item.id);
+                            setOperationalContactAction(true);
                           }}
                         />
                         <UncontrolledTooltip
@@ -150,15 +125,15 @@ const DocumentsGroup = () => {
           </tbody>
         </Table>
       </div>
-      <DocumentsModal
-        documentsModalAction={documentsModalAction}
-        setDocumentsModalAction={setDocumentsModalAction}
-        refresh={refresh}
-        idEdit={idEdit}
-        setIdEdit={setIdEdit}
+      <OperationalContactModal
+        operationalContactAction={operationalContactAction}
+        setOperationalContactAction={setOperationalContactAction}
+        refreshData={refreshData}
+        editData={editData}
+        // setIdEdit={setIdEdit}
       />
     </Row>
   );
 };
 
-export default DocumentsGroup;
+export default MarketingContacts;
