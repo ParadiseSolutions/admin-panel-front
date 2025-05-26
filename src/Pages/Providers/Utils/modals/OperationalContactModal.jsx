@@ -249,9 +249,9 @@ const OperationalContactModal = ({
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
         {editData ? (
-          <h1 className="modal-title mt-0 text-white">+ Edit Document</h1>
+          <h1 className="modal-title mt-0 text-white">+ Edit Conttact</h1>
         ) : (
-          <h1 className="modal-title mt-0 text-white">+ Add Document</h1>
+          <h1 className="modal-title mt-0 text-white">+ Add Conttact</h1>
         )}
 
         <button
