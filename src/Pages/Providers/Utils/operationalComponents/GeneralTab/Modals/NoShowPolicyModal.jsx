@@ -301,7 +301,7 @@ const NoShowPolicyModal = ({
             {paymentOptionSelected !== 2 ? (
               <Col className="col-5">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Base on</Label>
+                  <Label className="form-label">Based on</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
