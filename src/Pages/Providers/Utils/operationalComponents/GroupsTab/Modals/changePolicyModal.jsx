@@ -20,9 +20,7 @@ import CancellationBanner from "../../../../../../Components/Assets/images/Cance
 import {
   createChangePolicy,
   getActionGroupsOptionsAPI,
-  getActionOptionsAPI,
   getCancelledGroupsOptionsAPI,
-  getCancelledOptionsAPI,
   getPolicyToEditAPI,
   updateCancellationPolicy,
 } from "../../../../../../Utils/API/Providers";
@@ -82,6 +80,7 @@ const ChangePolicyModal = ({
         provider_id: id,
         ifcancel_id: cancelledSelected,
         action_id: actionSelected,
+        groups: 1
       };
       if (idEdit) {
         updateCancellationPolicy(idEdit, data)
