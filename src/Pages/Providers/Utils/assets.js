@@ -259,6 +259,7 @@ const Assets = ({ contacts, id }) => {
                                   <th>Make</th>
                                   <th>Model</th>
                                   <th>Location</th>
+                                  <th>Marina Location</th>
 
                                   <th>Actions</th>
                                 </tr>
@@ -275,6 +276,7 @@ const Assets = ({ contacts, id }) => {
                                         <td>{boat.make}</td>
                                         <td>{boat.model}</td>
                                         <td>{boat.location_name}</td>
+                                        <td>{boat.asset_marina_location}</td>
 
                                         <td>
                                           {" "}
@@ -559,6 +561,10 @@ const Assets = ({ contacts, id }) => {
                                     <p className="d-inline-block mx-4">
                                       <span className="fw-bold">Shade:</span>{" "}
                                       {selectedAsset.shade}
+                                    </p>
+                                    <p className="d-inline-block mx-4">
+                                      <span className="fw-bold">A/C:</span>{" "}
+                                      {selectedAsset.ac}
                                     </p>
                                   </Col>
                                   

@@ -126,6 +126,7 @@ const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
                   <th>Make</th>
                   <th>Model</th>
                   <th>Location</th>
+                  <th>Boat / Marina Location</th>
 
                   <th>Actions</th>
                 </tr>
@@ -142,6 +143,7 @@ const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
                         <td>{boat.make}</td>
                         <td>{boat.model}</td>
                         <td>{boat.location_name}</td>
+                        <td>{boat.asset_marina_location}</td>
 
                         <td>
                           {" "}
