@@ -41,6 +41,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
     }
   }, [relatedAssetsActiveData]);
 
+
   return (
     <>
       <div className="p-0 card-header mt-4 bg-transparent">
@@ -126,6 +127,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                   <th>Make</th>
                   <th>Model</th>
                   <th>Location</th>
+                  <th>Boat / Marina Location</th>
 
                   <th>Actions</th>
                 </tr>
@@ -142,6 +144,7 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                         <td>{boat.make}</td>
                         <td>{boat.model}</td>
                         <td>{boat.location_name}</td>
+                        <td>{boat.asset_marina_location}</td>
 
                         <td>
                           {" "}
