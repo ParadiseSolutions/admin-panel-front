@@ -6,7 +6,7 @@ import Pricing from "./EditComponents/pricing";
 import AddonsComponent from "./EditComponents/addons";
 import URL from "./EditComponents/url";
 import Schedules from "./EditComponents/schedules";
-import { getTourAPI, getTourSettingsAPI } from "../../Utils/API/Tours";
+import { getTourAPI, getTourSettingsAPI, postPendingPublishAPI } from "../../Utils/API/Tours";
 import {
   TabContent,
   NavLink,
@@ -21,6 +21,7 @@ import {
   CardHeader,
   Button,
 } from "reactstrap";
+import Swal from "sweetalert2";
 import classnames from "classnames";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -40,11 +41,11 @@ const EditTour = ({ history }) => {
   //get tour data
   const [tourData, setTourData] = useState();
   useEffect(() => {
-    let paramString = window.location.search
-    const parameter = new URLSearchParams(paramString)
-    let tab = parameter.get('t')
+    let paramString = window.location.search;
+    const parameter = new URLSearchParams(paramString);
+    let tab = parameter.get("t");
     if (tab) {
-      toggle(tab)
+      toggle(tab);
     }
     getTourAPI(id).then((resp) => {
       setTourData(resp.data.data);
@@ -62,7 +63,48 @@ const EditTour = ({ history }) => {
     });
   }, [id]);
 
-  // console.log("tourData", tourData);
+  // publish pending message
+  const [publishPending, setPublishPending] = useState(false);
+  useEffect(() => {
+    getTourAPI(id).then((resp) => {
+      setTourData(resp.data.data);
+      setPublishPending(resp.data.data.html_needs_update === 1 ? true : false);
+      if (resp.data.data) {
+        if (resp.data.data.html_needs_update === 1) {
+          setPublishPending(true);
+          Swal.fire("Changes Pending!", "There are pending changes to be published.", "alert");
+        } else {
+          setPublishPending(false);
+        }
+      }
+    });
+    console.log(activeTab, "activeTab");
+  }, [activeTab, id]);
+
+  const publishTour = () => {
+    if (tourData?.html_needs_update === 1) {
+      Swal.fire({
+        title: "Publish Tour",
+        text: "Are you sure you want to publish the tour?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, publish it!",
+        cancelButtonText: "No, cancel!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setPublishPending(true);
+          postPendingPublishAPI(id).then(() => {
+            Swal.fire("Published!", "The tour has been published successfully.", "success");
+            setPublishPending(false);
+          });
+        }
+      });
+    } else {
+      Swal.fire("No Changes", "There are no changes to publish.", "info");
+    }
+  }
+
+    console.log("tourData", tourData);
 
   return (
     <div className="page-content pb-0">
@@ -73,14 +115,23 @@ const EditTour = ({ history }) => {
           </h1>
         </div>
         <div className="col-7 d-flex justify-content-end">
+          <Button
+            color={`${publishPending ? "danger" : "paradise"}`}
+            className={`waves-effect waves-light col-2 mx-4 blue-outlined-hover`}
+            style={{ height: "45px", minWidth: "fit-content" }}
+            type="button"
+            onClick={publishTour}
+          >
+            Publish
+          </Button>
+
           <Link to={"/tours"}>
             <Button
               color="paradiseGray"
               outline
               className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
-              style={{ height: '45px', minWidth: 'fit-content' }}
+              style={{ height: "45px", minWidth: "fit-content" }}
               type="button"
-
             >
               <i className="uil-angle-double-left" />
               Back to Results
@@ -96,7 +147,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "1" ? "#F6851F" : ""}`,
                       color: `${activeTab === "1" ? "white" : ""}`,
                       border: "none",
@@ -124,7 +177,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "2" ? "#F6851F" : ""}`,
                       color: `${activeTab === "2" ? "white" : ""}`,
                       border: "none",
@@ -150,7 +205,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "3" ? "#F6851F" : ""}`,
                       color: `${activeTab === "3" ? "white" : ""}`,
                       border: "none",
@@ -176,7 +233,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "4" ? "#F6851F" : ""}`,
                       color: `${activeTab === "4" ? "white" : ""}`,
                       border: "none",
@@ -205,7 +264,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "5" ? "#F6851F" : ""}`,
                       color: `${activeTab === "5" ? "white" : ""}`,
                       border: "none",
@@ -232,7 +293,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "6" ? "#F6851F" : ""}`,
                       color: `${activeTab === "6" ? "white" : ""}`,
                       border: "none",
@@ -258,7 +321,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "7" ? "#F6861F" : ""}`,
                       color: `${activeTab === "7" ? "white" : ""}`,
                       border: "none",
@@ -284,7 +349,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "8" ? "#F6851F" : ""}`,
                       color: `${activeTab === "8" ? "white" : ""}`,
                       border: "none",
@@ -310,7 +377,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "9" ? "#F6851F" : ""}`,
                       color: `${activeTab === "9" ? "white" : ""}`,
                       border: "none",
@@ -336,7 +405,9 @@ const EditTour = ({ history }) => {
                 <NavItem className="d-flex">
                   <NavLink
                     style={{
-                      cursor: `${tourData?.edit_mode === 0 ? "pointer" : "default"}`,
+                      cursor: `${
+                        tourData?.edit_mode === 0 ? "pointer" : "default"
+                      }`,
                       backgroundColor: `${activeTab === "10" ? "#F6851F" : ""}`,
                       color: `${activeTab === "10" ? "white" : ""}`,
                       border: "none",
@@ -382,11 +453,7 @@ const EditTour = ({ history }) => {
                 </TabPane>
                 <TabPane tabId="3">
                   {tourData ? (
-                    <Payments
-                      tourSettings={tourData}
-                      id={id}
-                      toggle={toggle}
-                    />
+                    <Payments tourSettings={tourData} id={id} toggle={toggle} />
                   ) : null}
                 </TabPane>
                 <TabPane tabId="4">
@@ -411,10 +478,18 @@ const EditTour = ({ history }) => {
                   <Schedules id={id} tourData={tourData} toggle={toggle} />
                 </TabPane>
                 <TabPane tabId="9">
-                  <AutomatedConfirmationTab id={id} tourData={tourData} toggle={toggle} />
+                  <AutomatedConfirmationTab
+                    id={id}
+                    tourData={tourData}
+                    toggle={toggle}
+                  />
                 </TabPane>
                 <TabPane tabId="10">
-                  <RelatedComponent id={id} tourData={tourData} toggle={toggle} />
+                  <RelatedComponent
+                    id={id}
+                    tourData={tourData}
+                    toggle={toggle}
+                  />
                 </TabPane>
               </TabContent>
             </CardBody>
