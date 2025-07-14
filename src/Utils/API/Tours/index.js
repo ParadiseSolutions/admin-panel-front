@@ -128,6 +128,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const postPendingPublishAPI = (id) => {
+    const url = `${API_URL}/setup/update-html?key=hsvlrwvoisfbsbñ&tour_id=${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
   export const getSeasonsAPI = () => {
     const url = `${API_URL}/seasons`;
     return axios.get (url, {
