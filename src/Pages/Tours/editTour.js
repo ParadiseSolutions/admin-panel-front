@@ -82,7 +82,6 @@ const EditTour = ({ history }) => {
   }, [activeTab, id]);
 
   const publishTour = () => {
-    if (tourData?.html_needs_update === 1) {
       Swal.fire({
         title: "Publish Tour",
         text: "Are you sure you want to publish the tour?",
@@ -99,9 +98,6 @@ const EditTour = ({ history }) => {
           });
         }
       });
-    } else {
-      Swal.fire("No Changes", "There are no changes to publish.", "info");
-    }
   }
 
     console.log("tourData", tourData);
