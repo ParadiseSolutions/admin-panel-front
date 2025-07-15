@@ -82,7 +82,13 @@ const AddNewPrivateTour = ({
       eff_rate: dataEdit ? setRateFormat(dataEdit.eff_rate) : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      voucher_balance: dataEdit ? (dataEdit.voucher_balance ? setDecimalFormatVBalance(dataEdit.voucher_balance, dataEdit.voucher_currency) : setDecimalFormatVBalance(dataEdit.price - dataEdit.deposit)) : ""
+      voucher_balance: dataEdit
+        && dataEdit.voucher_balance ?
+           setDecimalFormatVBalance(
+              dataEdit.voucher_balance,
+              dataEdit.voucher_currency
+            )
+        : "",
     },
     validationSchema: Yup.object().shape({
       public_price: Yup.number().required("Field Required"),
@@ -468,7 +474,7 @@ const AddNewPrivateTour = ({
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.our_price !== "" && validationType.values.deposit !== "" && currencySelected != "MXN") {
+      if (validationType.values.our_price !== "" && validationType.values.deposit !== "" && currencySelected === "USD") {
         validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((validationType.values.our_price - validationType.values.deposit), currencySelected))
       }
     }
