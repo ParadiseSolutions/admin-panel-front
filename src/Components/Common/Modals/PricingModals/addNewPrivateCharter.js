@@ -60,6 +60,7 @@ const AddNewPrivateCharter = ({
     }
   }, [id, addNewPrivateCharter]);
 
+  
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -91,12 +92,11 @@ const AddNewPrivateCharter = ({
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
       voucher_balance: dataEdit
-        ? dataEdit.voucher_balance
-          ? setDecimalFormatVBalance(
+        && dataEdit.voucher_balance ?
+           setDecimalFormatVBalance(
               dataEdit.voucher_balance,
               dataEdit.voucher_currency
             )
-          : setDecimalFormatVBalance(dataEdit.price - dataEdit.deposit)
         : "",
 
       p_est_rate: dataEdit ? setDecimalFormat(dataEdit.p_est_rate) : "",
@@ -1420,7 +1420,7 @@ const AddNewPrivateCharter = ({
     if (
       ourPriceInput !== "" &&
       depositInput !== "" &&
-      currencySelected !== "MXN"
+      currencySelected === "USD"
     ) {
       validationType.setFieldValue(
         "voucher_balance",
