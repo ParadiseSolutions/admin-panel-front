@@ -42,7 +42,7 @@ import AddLocationModal from "../../../Components/Common/Modals/OperatorsModals/
 import AddBoatModal from "../../../Components/Common/Modals/OperatorsModals/addBoatModal";
 import AddRestrictionModal from "../../../Components/Common/Modals/OperatorsModals/addRestrictionModal";
 
-const AutomatedConfirmation = ({ tourData, id }) => {
+const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const tourID = tourData?.id;
   const [extraFeeInitialData, setExtraFeeInitialData] = useState({});
   const [bringListInitialData, setBringListInitialData] = useState([]);
@@ -383,7 +383,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
         });
     },
   });
-  console.log("data inicial", meetingLocationTable);
   const onDelete = (feeID) => {
     Swal.fire({
       title: "Are you sure?",
@@ -1200,269 +1199,6 @@ const AutomatedConfirmation = ({ tourData, id }) => {
               </div>
             </Col>
           </Row>
-          {/* 
-          <Row className="mt-3">
-            <Col className="col-4">
-              <label>Meeting Location</label>
-              <i
-                className="uil-question-circle font-size-15 mx-2"
-                id="meeting_location"
-              />
-              <Tooltip
-                placement="right"
-                isOpen={ttml}
-                target="meeting_location"
-                toggle={() => {
-                  setml(!ttml);
-                }}
-              >
-                The exact meeting location of the tour.
-                <br />
-                <br />
-                Examples:
-                <br />
-                <br />
-                "Your Hotel's Front Door"
-                <br />
-                "Meet at the Security Gate at your Hotel"
-                <br />
-                "Aquaworld Marina at Km 15.2 of the Hotel Zone."
-              </Tooltip>
-              <div className="">
-                <Input
-                  name="meeting_location"
-                  placeholder=""
-                  type="text"
-                  onChange={validationType.handleChange}
-                  onBlur={validationType.handleBlur}
-                  disabled={
-                    voucherInitialData?.meeting_location_read_only === 0
-                      ? false
-                      : true
-                  }
-                  value={validationType.values.meeting_location || ""}
-                  invalid={
-                    validationType.touched.meeting_location &&
-                    validationType.errors.meeting_location
-                      ? true
-                      : false
-                  }
-                />
-                {validationType.touched.meeting_location &&
-                validationType.errors.meeting_location ? (
-                  <FormFeedback type="invalid">
-                    {validationType.errors.meeting_location}
-                  </FormFeedback>
-                ) : null}
-              </div>
-            </Col>
-            <Col className="col-4 ">
-              <label>Meeting Instructions</label>
-              <i
-                className="uil-question-circle font-size-15 mx-2"
-                id="meeting_instructions"
-              />
-              <Tooltip
-                placement="right"
-                isOpen={ttmi}
-                target="meeting_instructions"
-                toggle={() => {
-                  setmi(!ttmi);
-                }}
-              >
-                Specific Instructions of how to meet the tour or transfer.
-              </Tooltip>
-              <div className="">
-                <Input
-                  name="meeting_instructions"
-                  placeholder=""
-                  type="text"
-                  onChange={validationType.handleChange}
-                  maxLength={80}
-                  onBlur={validationType.handleBlur}
-                  disabled={
-                    tourData?.type_id === 3 ||
-                    voucherInitialData?.meeting_instructions_read_only !== 0
-                      ? true
-                      : false
-                  }
-                  value={validationType.values.meeting_instructions || ""}
-                  invalid={
-                    validationType.touched.meeting_instructions &&
-                    validationType.errors.meeting_instructions
-                      ? true
-                      : false
-                  }
-                />
-                <p
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: "lighter",
-                    textAlign: "right",
-                    marginBottom: 0,
-                  }}
-                >
-                  80 characters max
-                </p>
-                {validationType.touched.meeting_instructions &&
-                validationType.errors.meeting_instructions ? (
-                  <FormFeedback type="invalid">
-                    {validationType.errors.meeting_instructions}
-                  </FormFeedback>
-                ) : null}
-              </div>
-            </Col>
-            <Col className="col-4 ">
-              <label>Restrictions</label>
-              <i
-                className="uil-question-circle font-size-15 mx-2"
-                id="restrictions"
-              />
-              <Tooltip
-                placement="right"
-                isOpen={ttop4}
-                target="restrictions"
-                toggle={() => {
-                  setttop4(!ttop4);
-                }}
-              >
-                If the tour has any restrictions specify them one line at a
-                time. They will be shown on the voucher and on the website in
-                the order displayed.
-              </Tooltip>
-              <div className="col-12">
-                <Input
-                  name="rest_one"
-                  placeholder="Add Restriction #1"
-                  type="text"
-                  className=""
-                  disabled={
-                    voucherInitialData?.restrictions[0]
-                      ?.restriction_read_only_1 === 1
-                      ? true
-                      : false
-                  }
-                  onChange={(e) => setRest1(e.target.value)}
-                  value={rest1}
-                />
-              </div>
-            </Col>
-          </Row> */}
-          {/* <Row>
-            <Col className="col-4">
-              <label>Google Maps URL</label>
-              <i
-                className="uil-question-circle font-size-15 mx-2"
-                id="google_maps_url"
-              />
-              <Tooltip
-                placement="right"
-                isOpen={ttGM}
-                target="google_maps_url"
-                toggle={() => {
-                  settGm(!ttGM);
-                }}
-              >
-                Paste the URL from Google Maps of the exact meeting location, so
-                the customer can view exact directions of how to get there.
-                <br />
-                <br />
-                Be very specific, zoom in and make certain that the pin is
-                exactly where the customer should stand.
-              </Tooltip>
-              <div className="">
-                <Input
-                  name="google_maps_url"
-                  placeholder=""
-                  type="text"
-                  onChange={validationType.handleChange}
-                  onBlur={validationType.handleBlur}
-                  disabled={
-                    voucherInitialData?.google_maps_url_read_only !== 0
-                      ? true
-                      : false
-                  }
-                  value={validationType.values.google_maps_url || ""}
-                  invalid={
-                    validationType.touched.google_maps_url &&
-                    validationType.errors.google_maps_url
-                      ? true
-                      : false
-                  }
-                />
-                {validationType.touched.google_maps_url &&
-                validationType.errors.google_maps_url ? (
-                  <FormFeedback type="invalid">
-                    {validationType.errors.google_maps_url}
-                  </FormFeedback>
-                ) : null}
-              </div>
-            </Col>
-            <Col className="col-4 ">
-              <label>Images URL</label>
-              <i
-                className="uil-question-circle font-size-15 mx-2"
-                id="images_url"
-              />
-              <Tooltip
-                placement="right"
-                isOpen={ttimg}
-                target="images_url"
-                toggle={() => {
-                  setimg(!ttimg);
-                }}
-              >
-                Paste the URL of an image or a gallery where the customer can
-                see photos of the exact meeting location, or of a map showing
-                how to get to the location.
-              </Tooltip>
-              <div className="">
-                <Input
-                  name="images_url"
-                  placeholder=""
-                  type="text"
-                  onChange={validationType.handleChange}
-                  onBlur={validationType.handleBlur}
-                  disabled={
-                    voucherInitialData?.images_url_read_only !== 0
-                      ? true
-                      : false
-                  }
-                  value={validationType.values.images_url || ""}
-                  invalid={
-                    validationType.touched.images_url &&
-                    validationType.errors.images_url
-                      ? true
-                      : false
-                  }
-                />
-                {validationType.touched.images_url &&
-                validationType.errors.images_url ? (
-                  <FormFeedback type="invalid">
-                    {validationType.errors.images_url}
-                  </FormFeedback>
-                ) : null}
-              </div>
-            </Col>
-            <Col className="col-4">
-              <div className="col-12 d-flex mt-4">
-                <Input
-                  name="rest_two"
-                  placeholder="Add Restriction #2"
-                  className="my-2"
-                  type="text"
-                  disabled={
-                    voucherInitialData?.restrictions[1]
-                      ?.restriction_read_only_2 === 1
-                      ? true
-                      : false
-                  }
-                  onChange={(e) => setRest2(e.target.value)}
-                  value={rest2}
-                />
-              </div>
-            </Col>
-          </Row> */}
           <Row className="mt-2">
             {tourData?.type_id === 5 || tourData?.type_id === 6 ? (
               <>
@@ -2051,7 +1787,7 @@ const AutomatedConfirmation = ({ tourData, id }) => {
           <Row className="mt-4"></Row>
 
           <Row>
-            <Col className=" d-flex justify-content-end">
+            <Col className="col-12 d-flex justify-content-end mt-5">
               <Button
                 type="submit"
                 style={{ backgroundColor: "#F6851F", border: "none" }}

@@ -32,6 +32,7 @@ const URL = ({ tourData, toggle }) => {
   const [urlTypeSelected, setUrlTypeSelected] = useState(null);
   const [locationData, setLocationData] = useState();
   const [locationSelected, setLocationSelected] = useState(0);
+  const [pathData, setPathData] = useState();
   const [basePath, setBasePath] = useState(null);
   const [complementURL, setComplementURL] = useState(null);
   const [editURLID, setEditURLID] = useState(null);
@@ -52,22 +53,23 @@ const URL = ({ tourData, toggle }) => {
   useEffect(() => {
     getURLAvailableFromAPI(tourData.id, urlTypeSelected).then((resp) => {
       setLocationData(resp.data.data);
-      if (resp.data.data.length === 1) {
-        setLocationSelected(resp.data.data[0].available_from_id);
-      } else {
-        setLocationSelected(null);
-      }
+      // if (resp.data.data.length === 1) {
+      //   setLocationSelected(resp.data.data[0].available_from_id);
+      // } else {
+      //   setLocationSelected(null);
+      // }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlTypeSelected]);
 
   useEffect(() => {
-    
-    getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
-      setBasePath(resp.data.data.base_path)
-      setComplementURL(resp.data.data.filename);
-     
-    });
+    if (urlTypeSelected !== null && locationSelected !== null) {
+      getPathAPI(tourData.id, urlTypeSelected, locationSelected).then((resp) => {
+        setBasePath(resp.data.data.base_path)
+        // setComplementURL(resp.data.data.filename);
+        // setPathData(resp.data.data);
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlTypeSelected, locationSelected]);
 
@@ -89,6 +91,7 @@ const URL = ({ tourData, toggle }) => {
     setLocationSelected(null);
     setComplementURL(null);
     setEditURLID(null);
+    setPathData(null);
   };
 
   const onDeleteURL = (urlData) => {
@@ -448,7 +451,7 @@ const URL = ({ tourData, toggle }) => {
           outline
           className="waves-effect waves-light me-3"
           type="button"
-          onClick={() => toggle("3")}
+          onClick={() => toggle("4")}
         >
           <i className="uil-angle-double-left" />
           Previous
@@ -456,7 +459,7 @@ const URL = ({ tourData, toggle }) => {
         <Button
           type="button"
           className="font-16 btn-block btn-orange"
-          onClick={() => toggle("5")}
+          onClick={() => toggle("6")}
         >
           Continue
           <i className="uil-angle-double-right mx-1 " />

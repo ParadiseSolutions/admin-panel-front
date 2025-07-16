@@ -574,7 +574,7 @@ const Schedules = ({ tourData, toggle }) => {
                 outline
                 className="waves-effect waves-light me-3"
                 type="button"
-                onClick={() => toggle("6")}
+                onClick={() => toggle("7")}
               >
                 <i className="uil-angle-double-left" />
                 Previous

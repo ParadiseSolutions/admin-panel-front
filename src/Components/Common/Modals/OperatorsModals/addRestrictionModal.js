@@ -73,7 +73,7 @@ const AddRestrictionModal = ({
     }
   }, [dataEdit]);
 
-  console.log(dataEdit);
+  // console.log(dataEdit);
 
   // console.log(dataEdit.length);
   const validationType = useFormik({
@@ -82,7 +82,6 @@ const AddRestrictionModal = ({
 
     initialValues: {
       restriction: dataEdit?.restriction ? dataEdit.restriction : "",
-      
     },
     // validationSchema: Yup.object().shape({
     //   // cpanel_account: Yup.string().required("cPanel Account Name is required"),
@@ -97,17 +96,16 @@ const AddRestrictionModal = ({
         section: section,
         id: id,
         restriction: values.restriction,
-        
       };
-      console.log(data);
+      // console.log(data);
       if (dataEdit.length === 0) {
         postRestriction(data)
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 201) {
-              Swal.fire("Success!", "Location Added.", "success").then(() => {
+              Swal.fire("Success!", "Restriction Added.", "success").then(() => {
                 setLocationModal(false);
-                //history.goBack()
+                validationType.resetForm();
                 setDataEdit([]);
                 refreshTable();
               });
@@ -201,7 +199,7 @@ const AddRestrictionModal = ({
               return false;
             }}
             className="custom-validation"
-          >
+          > 
             <Row>
               <Col className="col-12">
                 <Row>
@@ -220,9 +218,7 @@ const AddRestrictionModal = ({
                         <Input
                           name="restriction"
                           placeholder=""
-                          
                           onChange={validationType.handleChange}
-                          
                           value={validationType.values.restriction || ""}
                           invalid={
                             validationType.touched.restriction &&
@@ -240,9 +236,8 @@ const AddRestrictionModal = ({
                       </div>
                     </div>
                   </Col>
-                 
                 </Row>
-                
+
                 <Row>
                   <Col className="col-12 mt-4 d-flex justify-content-end">
                     <Button

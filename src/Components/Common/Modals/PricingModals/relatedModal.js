@@ -38,6 +38,7 @@ const RelatedModal = ({
   tourData,
   copyProduct,
   setCopyProduct,
+  refreshTable,
   id,
 }) => {
   // initial request
@@ -357,6 +358,7 @@ const RelatedModal = ({
             .classList.add("selected-row");
 
           setCounter((counter) => counter + 1);
+          refreshTable()
         }
       })
       .catch((error) => {
@@ -394,6 +396,7 @@ const RelatedModal = ({
           .classList.remove("selected-row");
 
         setCounter((counter) => counter - 1);
+        refreshTable()
       }
     });
   };
@@ -673,6 +676,7 @@ const RelatedModal = ({
               type="button"
               onClick={() => {
                 refreshFilters();
+                refreshTable()
               }}
             >
               Refresh
@@ -683,6 +687,7 @@ const RelatedModal = ({
               className="font-16 btn-block col-2 btn-orange"
               onClick={() => {
                 setRelatedFilter(false);
+                refreshTable()
               }}
             >
               Close

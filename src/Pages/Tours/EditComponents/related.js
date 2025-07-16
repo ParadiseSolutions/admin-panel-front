@@ -3,7 +3,11 @@ import {
   getAddonsPricingAPI,
   getRelatedTourAPI,
   priorityRelatedAPI,
-  deleteRelatedAPI
+  deleteRelatedAPI,
+  getActiveRelatedAsset,
+  getOtherRelatedAsset,
+  assingAssetAPI,
+  removeAssetAPI,
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -13,7 +17,12 @@ import {
   Col,
   Tooltip,
 } from "reactstrap";
-import { Name, Price, ActiveAddon, ActiveRelated } from "./PricingTables/PricingCols";
+import {
+  Name,
+  Price,
+  ActiveAddon,
+  ActiveRelated,
+} from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 import RelatedTables from "./PricingTables/relatedTable";
 import RelatedModal from "../../../Components/Common/Modals/PricingModals/relatedModal";
@@ -21,14 +30,16 @@ import { TiArrowSortedUp, TiArrowSortedDown } from "react-icons/ti";
 import { FaPaperclip } from "react-icons/fa";
 import { FaLink } from "react-icons/fa6";
 import RelatedActionsModal from "../../../Components/Common/Modals/RelatedActionsModal/relatedModal";
+import ActiveAssetsTable from "./RelatedTables/ActiveAssetsTable";
+import ActiveAssetsOthersTable from "./RelatedTables/ActiveAssetsOthersTable";
 
 const RelatedComponent = ({ id, tourData, toggle }) => {
   const [relatedData, setRelatedData] = useState([]);
   const [relatedFilter, setRelatedFilter] = useState(false);
   const [relatedEdit, setRelatedEdit] = useState(false);
   const [editRelatedData, setEditRelatedData] = useState(null);
-
-    
+  const [relatedAssetsActiveData, setRelatedAssetsActiveData] = useState([]);
+  const [relatedAssetsOtherData, setRelatedAssetsOtherData] = useState([]);
   const columnsAddons = useMemo(
     () => [
       {
@@ -79,12 +90,19 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          console.log(cellProps.row)
+          // console.log(cellProps.row)
           return (
             <>
-            <a href={`${cellProps.row.original.admin_panel_link}`} target="_blank" className="text-paradise" rel="noreferrer">{cellProps.row.original.related_tour_id}</a>
+              <a
+                href={`${cellProps.row.original.admin_panel_link}`}
+                target="_blank"
+                className="text-paradise"
+                rel="noreferrer"
+              >
+                {cellProps.row.original.related_tour_id}
+              </a>
             </>
-          )
+          );
         },
       },
 
@@ -94,12 +112,17 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          
           return (
             <div>
-              <>{cellProps.row.original.name}</>
+              <a
+                href={`${cellProps.row.original.tour_link}`}
+                target="_blank"
+                className="text-paradise"
+                rel="noreferrer"
+              >
+                {cellProps.row.original.name}
+              </a>
               <>
-              
                 <FaLink
                   className="mx-2 cursor-pointer text-paradise"
                   id="copyTT"
@@ -108,7 +131,6 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
                     navigator.clipboard.writeText(
                       cellProps.row.original.tour_link
                     );
-                   
                   }}
                 />
                 <UncontrolledTooltip placement="top" target="copyTT">
@@ -184,7 +206,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
               <div
                 onClick={() => {
                   setRelatedEdit(true);
-                  setEditRelatedData(depData)
+                  setEditRelatedData(depData);
                 }}
                 className="text-success"
               >
@@ -202,8 +224,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
                 className="text-danger"
                 data-testid={`delete-addon-${depData.id}`}
                 onClick={() => {
-                   onDelete(cellProps);
-                  
+                  onDelete(cellProps);
                 }}
               >
                 <i
@@ -252,6 +273,74 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     });
   };
 
+  // request related assets
+
+  useEffect(() => {
+    getActiveRelatedAsset(id).then((resp) => {
+      setRelatedAssetsActiveData(resp.data.data);
+    });
+    getOtherRelatedAsset(id).then((resp) => {
+      setRelatedAssetsOtherData(resp.data.data);
+    });
+  }, [id]);
+
+  const refreshTableAssets = () => {
+    getActiveRelatedAsset(id).then((resp) => {
+      setRelatedAssetsActiveData(resp.data.data);
+    });
+    getOtherRelatedAsset(id).then((resp) => {
+      setRelatedAssetsOtherData(resp.data.data);
+    });
+  };
+
+
+  const assignAsset = (asset_id) => {
+    let data = {
+      tour_id: id,
+      asset_provider_id: asset_id,
+    };
+   
+    Swal.fire({
+      title: "Assign Related Asset?",
+      icon: "question",
+      text: `Do you want assign this asset to this tour`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        assingAssetAPI(data).then((resp) => {
+          refreshTableAssets();
+        });
+      }
+    });
+  };
+  const removeAsset = (asset_id) => {
+    let data = {
+      tour_id: id,
+      asset_provider_id: asset_id,
+    };
+   
+    Swal.fire({
+      title: "Remove Related Asset?",
+      icon: "question",
+      text: `Do you want remove this asset to this tour`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        removeAssetAPI(data).then((resp) => {
+          refreshTableAssets();
+        });
+      }
+    });
+  };
+  
+  console.log(relatedAssetsActiveData)
+
   const indexSubmit = (row, position) => {
     let data = {
       current_tour_id: id,
@@ -265,7 +354,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     });
   };
 
-  const onDelete = (related) =>{
+  const onDelete = (related) => {
     Swal.fire({
       title: "Delete Related Tour?",
       icon: "question",
@@ -277,35 +366,66 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     }).then((resp) => {
       if (resp.isConfirmed) {
         deleteRelatedAPI(related.row.original.id)
-        .then((response) => {
-          refreshTable()
-        }).catch((error) => {
-          let errorMessages = [];
-          if (error.response && error.response.data && error.response.data.data) {
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-              return true;
+          .then((response) => {
+            refreshTable();
+          })
+          .catch((error) => {
+            let errorMessages = [];
+            if (
+              error.response &&
+              error.response.data &&
+              error.response.data.data
+            ) {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+            } else {
+              errorMessages.push("An unexpected error occurred");
+            }
+
+            // Mostrar el error
+            Swal.fire({
+              title: "Error!",
+              text: errorMessages.join(", "),
+              icon: "error",
             });
-          } else {
-            errorMessages.push('An unexpected error occurred');
-          }
-          
-          // Mostrar el error
-          Swal.fire({
-            title: "Error!",
-            text: errorMessages.join(', '),
-            icon: "error",
           });
-        });
       }
     });
-  }
-
-
-
+  };
   return (
     <TabPane tabId="1" className="">
-      <Row xl={12}>
+      <Row>
+      <Col
+          className="col-12 p-1 d-flex"
+          style={{ backgroundColor: "#EBF9FE" }}
+        >
+          <p
+            className="p-2"
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            Related Tours
+          </p>
+          <span
+            style={{
+              fontSize: "16px",
+              marginTop: "10px",
+              fontWeight: "lighter",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            {" "}
+            Identify tour that are either backups (direct replacement, no customer approval required), or alternatives (not quite the same, customer approval required)
+            to the current tour.
+          </span>
+        </Col>
         {relatedData ? (
           <RelatedTables
             columns={columnsAddons}
@@ -318,25 +438,114 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         ) : null}
       </Row>
       <Row>
+        <Col
+          className="col-12 p-1 my-4 d-flex"
+          style={{ backgroundColor: "#FFEFDE" }}
+        >
+          <p
+            className="p-2"
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            Related Assets
+          </p>
+          <span
+            style={{
+              fontSize: "16px",
+              marginTop: "10px",
+              fontWeight: "lighter",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            {" "}
+            The assets that are used on this tour by the operator, such as
+            boats, vehicles or horses.
+          </span>
+        </Col>
+        <Col className="col-12">
+        <p
+            className="p-2"
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+           Active Assets
+          </p>
+          <span
+            style={{
+              fontSize: "16px",
+              marginTop: "10px",
+              marginLeft: "10px",
+              fontWeight: "lighter",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            {" "}
+            These are the assets currently used on this tour. To add more, see "Other Assets" below.
+          </span>
+        </Col>
+        <Col className="col-12">
+        <ActiveAssetsTable relatedAssetsActiveData={relatedAssetsActiveData} removeAsset={removeAsset}/>
+        </Col>
+        <Col className="col-12 mt-5">
+        <p
+            className="p-2"
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+           Other Assets from This Operator
+          </p>
+          <span
+            style={{
+              fontSize: "16px",
+              marginTop: "10px",
+              marginLeft: "10px",
+              fontWeight: "lighter",
+              color: "#495057",
+              marginBottom: "0px",
+            }}
+          >
+            {" "}
+            If any of the below assets are used on this tour, click "Add" to move that asset to the "Active Assets" list.
+          </span>
+        </Col>
+        <Col className="col-12">
+        <ActiveAssetsOthersTable relatedAssetsOtherData={relatedAssetsOtherData} assignAsset={assignAsset} />
+        </Col>
+      </Row>
+      <Row>
         <Col className="col-12 d-flex justify-content-end mt-5">
           <Button
             color="paradise"
             outline
             className="waves-effect waves-light mx-4"
             type="button"
-            onClick={() => toggle("5")}
+            onClick={() => toggle("9")}
           >
             <i className="uil-angle-double-left" />
             Previous
           </Button>
-          <Button
+          {/* <Button
             type="submit"
             className="font-16 btn-block btn-orange"
             onClick={() => toggle("7")}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />
-          </Button>
+          </Button> */}
         </Col>
       </Row>
 
@@ -347,12 +556,12 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         refreshTable={refreshTable}
         id={id}
       />
-      <RelatedActionsModal 
-       relatedEdit={relatedEdit}
-       setRelatedEdit={setRelatedEdit}
-       editRelatedData={editRelatedData}
-       refreshTable={refreshTable}
-       id={id}
+      <RelatedActionsModal
+        relatedEdit={relatedEdit}
+        setRelatedEdit={setRelatedEdit}
+        editRelatedData={editRelatedData}
+        refreshTable={refreshTable}
+        id={id}
       />
     </TabPane>
   );

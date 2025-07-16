@@ -41,7 +41,7 @@ useEffect(() => {
 
 const onClickDay = (day) =>{
   onAddDay(day)
-  //   console.log(day)
+  //console.log(day)
   //  if (day === 1) {
   //   setMondayChecked(!mondayChecked)
   //   onAddDay('monday')

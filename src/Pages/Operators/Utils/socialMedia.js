@@ -61,7 +61,7 @@ const SocialMedia = ({socialData, id}) => {
         others: values.others ? values.others : '',
         foreign_key: id
         };
-    //  console.log(data)
+    //console.log(data)
         updateSocialProviderAPI(initialData.id, data)
           .then((resp) => {
             // console.log(resp.data);

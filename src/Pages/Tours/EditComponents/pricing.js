@@ -240,10 +240,10 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-pencil font-size-18"
-                id="edittooltip"
+                id="edit_tooltip"
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="edittooltip">
+              <UncontrolledTooltip placement="top" target="edit_tooltip">
                 Edit
               </UncontrolledTooltip>
             </div>
@@ -435,7 +435,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             outline
             className="waves-effect waves-light me-3"
             type="button"
-            onClick={() => toggle("4")}
+            onClick={() => toggle("5")}
           >
             <i className="uil-angle-double-left" />
             Previous
@@ -443,7 +443,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           <Button
             type="submit"
             className="font-16 btn-block btn-orange"
-            onClick={() => toggle("6")}
+            onClick={() => toggle("7")}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />

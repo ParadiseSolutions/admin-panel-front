@@ -128,6 +128,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const postPendingPublishAPI = (id) => {
+    const url = `${API_URL}/setup/update-html?key=hsvlrwvoisfbsbñ&tour_id=${id}`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
   export const getSeasonsAPI = () => {
     const url = `${API_URL}/seasons`;
     return axios.get (url, {
@@ -307,6 +313,24 @@ export const paymentsEventGet = () => {
     headers: options,
   });
 };
+export const paymentsTaxesBaseOnGet = () => {
+  const url = `${API_URL}/payments/tab/payment-taxes`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsCommissionBaseOnGet = () => {
+  const url = `${API_URL}/payments/tab/payment-commissions`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const paymentsCommissionApplyGet = () => {
+  const url = `${API_URL}/payments/tab/payment-commissions-apply`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
 
 export const postPaymentsAPI = (body) => {
   const url = `${API_URL}/payments`;
@@ -323,6 +347,12 @@ export const postPaymentsNewAPI = (body) => {
 export const putPaymentsAPI = (id,body) => {
   const url = `${API_URL}/payments/${id}`;
   return axios.put (url, body, {
+    headers: options,
+  });
+};
+export const deletePaymentsAPI = (id) => {
+  const url = `${API_URL}/payments/${id}`;
+  return axios.delete (url, {
     headers: options,
   });
 };
@@ -447,6 +477,32 @@ export const putPriceRangesAPI = (tour_id, body) => {
     headers: options,
   });
 };
+
+export const getActiveRelatedAsset = (id) => {
+  const url = `${API_URL}/asset-provider-tour/tour/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const getOtherRelatedAsset = (id) => {
+  const url = `${API_URL}/asset-provider-tour/other/${id}`;
+  return axios.get (url, {
+    headers: options,
+  });
+};
+export const assingAssetAPI = (body) => {
+  const url = `${API_URL}/asset-provider-tour/assign`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+export const removeAssetAPI = (body) => {
+  const url = `${API_URL}/asset-provider-tour/remove`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
+
 
 //pricing options select
 

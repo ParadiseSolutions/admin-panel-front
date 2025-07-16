@@ -248,7 +248,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
             outline
             className="waves-effect waves-light mx-4"
             type="button"
-            onClick={() => toggle("5")}
+            onClick={() => toggle("6")}
           >
             <i className="uil-angle-double-left" />
             Previous
@@ -256,7 +256,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
           <Button
             type="submit"
             className="font-16 btn-block btn-orange"
-            onClick={() => toggle("7")}
+            onClick={() => toggle("8")}
           >
             Continue
             <i className="uil-angle-double-right mx-1 " />

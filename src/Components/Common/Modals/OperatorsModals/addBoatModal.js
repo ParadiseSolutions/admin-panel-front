@@ -71,7 +71,7 @@ const AddBoatModal = ({
     }
   }, [dataEdit]);
 
-  console.log(dataEdit);
+  // console.log(dataEdit);
 
   // console.log(dataEdit.length);
   const validationType = useFormik({
@@ -101,7 +101,7 @@ const AddBoatModal = ({
         google_maps_url:values.google_maps_url ? values.google_maps_url : '',
         image_url:values.image_url ? values.image_url : '',
       };
-      console.log(data);
+      // console.log(data);
       if (dataEdit.length === 0) {
         postLocationBoat(data)
           .then((resp) => {

@@ -14,11 +14,15 @@ import {
   paymentsDueGet,
   paymentsWhenGet,
   paymentsEventGet,
+  deletePaymentsAPI,
+  paymentsTaxesBaseOnGet,
+  paymentsCommissionBaseOnGet,
+  paymentsCommissionApplyGet,
 } from "../../../Utils/API/Tours";
 import { getCurrency } from "../../../Utils/API/Operators";
-import SettingsImageOne from "../../../Components/Assets/images/settings1.png";
-import SettingsImageTwo from "../../../Components/Assets/images/settings2.png";
-import SettingsImageThree from "../../../Components/Assets/images/settings3.png";
+import SettingsImageOne from "../../../Components/Assets/images/header-one.png";
+import SettingsImageTwo from "../../../Components/Assets/images/header-two.png";
+import SettingsImageThree from "../../../Components/Assets/images/header-three.png";
 import {
   TabPane,
   Row,
@@ -29,6 +33,7 @@ import {
   FormFeedback,
   Button,
   UncontrolledTooltip,
+  Tooltip,
 } from "reactstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
@@ -36,7 +41,12 @@ import { map } from "lodash";
 import PricingTables from "./PricingTables/pricingTables";
 import { Name } from "./PricingTables/PricingCols";
 import PaymentsToursModal from "../../../Components/Common/Modals/PaymentsTourModal/paymentsTourModal";
-
+import {
+  setDecimalFormat,
+  setRateFormat,
+} from "../../../Utils/CommonFunctions";
+import { switchTourTab } from "../../../Utils/API";
+import Switch from "react-switch";
 const Payments = ({ history, tourSettings, id, toggle }) => {
   const [paymentData, setPaymentData] = useState([]);
   const [taxData, setTaxData] = useState([]);
@@ -59,13 +69,34 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [applySelected, setApplySelected] = useState([]);
   const [currencySelected, setCurrencySelected] = useState([]);
   const [paymentsAdd, setPaymentsAdd] = useState(false);
-  const [dataEdit, setDataEdit] = useState([])
-  
-  const initialRequest = () =>{
+  const [dataEdit, setDataEdit] = useState([]);
+
+  const [advanceSettings, setAdvanceSettings] = useState(false);
+  const [taxesBasedOnData, setTaxesBasedOnData] = useState([]);
+  const [taxesBasedOnSelected, setTaxesBasedOnSelected] = useState(null);
+  const [commissionBasedOnData, setCommissionBasedOnData] = useState([]);
+  const [commissionBasedOnSelected, setCommissionBasedOnSelected] = useState(null);
+  const [applyCommissionData, setApplyCommissionData] = useState([]);
+  const [applyCommissionSelected, setApplyCommissionSelected] = useState(null);
+
+
+  //tooltips
+  const [taxTooltip, setTaxTooltip] = useState(false);
+  const [gratuitiesTooltip, setGratuitiesTooltip] = useState(false);
+  const [gratuityTypeTooltip, setGratuityTypeTooltip] = useState(false);
+  const [amountTooltip, setAmountTooltip] = useState(false);
+  const [basedOnTooltip, setBasedOnTooltip] = useState(false);
+  const [applyTooltip, setApplyTooltip] = useState(false);
+  const [currencyTooltip, setCurrencyTooltip] = useState(false);
+  const [exchangeTooltip, setExchangeTooltip] = useState(false);
+  const [gratPercentageTooltip, setgratPercentageTooltip] = useState(false);
+  const [headerTT, setheaderTT] = useState(false);
+
+  const initialRequest = () => {
     paymentsIndexGet(id).then((resp) => {
       setPaymentData(resp.data.data);
     });
-  }
+  };
 
   //initial Data
   useEffect(() => {
@@ -111,6 +142,18 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     paymentsEventGet().then((resp) => {
       setEventData(resp.data.data);
     });
+    
+    paymentsTaxesBaseOnGet().then((resp) => {
+      setTaxesBasedOnData(resp.data.data);
+    });
+    paymentsCommissionBaseOnGet().then((resp) => {
+      setCommissionBasedOnData(resp.data.data);
+    });
+    paymentsCommissionApplyGet().then((resp) => {
+      setApplyCommissionData(resp.data.data);
+    });
+
+
   }, [id]);
 
   useEffect(() => {
@@ -122,13 +165,66 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
       setApplySelected(tourSettings.payment_apply_id);
       setCurrencySelected(tourSettings.payment_currency);
     }
+    if (tourSettings.gratuity_type_id) {
+      setGratuitesTypeSelected(tourSettings.gratuity_type_id.toString());
+    }
   }, [tourSettings]);
+
+  const onDelete = (depData) => {
+    Swal.fire({
+      title: "Delete Payment?",
+      icon: "question",
+      text: `Do you want delete ${depData.payment_option}`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#F38430",
+      cancelButtonText: "Cancel",
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        deletePaymentsAPI(depData.id)
+          .then((resp) => {
+            initialRequest();
+            Swal.fire("Deleted!", "The Payment has been deleted.", "success");
+          })
+          .catch((error) => {
+            if (error.response.data.data === null) {
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(error.response.data.message)
+              );
+            } else {
+              let errorMessages = [];
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+
+              Swal.fire(
+                "Error!",
+                // {error.response.},
+                String(errorMessages[0])
+              );
+            }
+          });
+      }
+    });
+  };
 
   const columnsProducts = useMemo(
     () => [
       {
         Header: "Type",
         accessor: "payment_type",
+        disableFilters: false,
+        filterable: true,
+        Cell: (cellProps) => {
+          return <Name {...cellProps} />;
+        },
+      },
+      {
+        Header: "Paid By",
+        accessor: "payment_paid_by",
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
@@ -150,7 +246,23 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          return <Name {...cellProps} />;
+          let rowData = cellProps.row.original;
+          return (
+            <>
+              {rowData.payment_option_id === 3 ||
+              rowData.payment_option_id === 6
+                ? ``
+                : null}
+              {rowData.payment_option_id === 1 ||
+              rowData.payment_option_id === 4
+                ? `$ ${setDecimalFormat(rowData.amount)}`
+                : null}
+              {rowData.payment_option_id === 2 ||
+              rowData.payment_option_id === 5
+                ? `${setRateFormat(rowData.amount)}%`
+                : null}
+            </>
+          );
         },
       },
       {
@@ -181,21 +293,27 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         },
       },
       {
-        Header: "Paid By",
-        accessor: "payment_paid_by",
-        disableFilters: false,
-        filterable: true,
-        Cell: (cellProps) => {
-          return <Name {...cellProps} />;
-        },
-      },
-      {
         Header: "Method",
         accessor: "payment_method",
         disableFilters: false,
         filterable: true,
         Cell: (cellProps) => {
-          return <Name {...cellProps} />;
+          const methodData = cellProps.row.original;
+          return cellProps.cell.value ? (
+            <>
+              <span id={`payment_method_tooltip-${methodData.id}`}>
+                {cellProps.cell.value.substring(0, 25)}...
+              </span>
+              <UncontrolledTooltip
+                placement="top"
+                target={`payment_method_tooltip-${methodData.id}`}
+              >
+                {cellProps.cell.value}
+              </UncontrolledTooltip>
+            </>
+          ) : (
+            <>{cellProps.cell.value}</>
+          );
         },
       },
       {
@@ -237,7 +355,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 onClick={() => {
                   const prodData = cellProps.row.original;
                   setPaymentsAdd(true);
-                  setDataEdit(prodData)
+                  setDataEdit(prodData);
                   // console.log("data del producto", prodData);
                 }}
               >
@@ -250,13 +368,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   Edit
                 </UncontrolledTooltip>
               </div>
-              
+
               <div
                 className="text-danger"
                 onClick={() => {
                   const depData = cellProps.row.original;
                   // setconfirm_alert(true);
-                  /* onDelete(depData); */
+                  onDelete(depData);
                 }}
               >
                 <i
@@ -275,8 +393,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     ],
     []
   );
-
-  console.log("data ---->", paymentData);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -305,6 +421,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         payment_currency: currencySelected,
         exchange_rate: values.exchange_rate,
         tour_id: id,
+        tax_based_on: +taxesBasedOnSelected,
+        commission_based_on: +commissionBasedOnSelected,
+        apply_commission: +applyCommissionSelected,
       };
 
       postPaymentsAPI(data)
@@ -313,7 +432,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           if (resp.data.status === 200) {
             // triggerUpdate();
             Swal.fire("Edited!", "Payments has been edited.", "success");
-            toggle("3");
+            window.location.href = switchTourTab(4);
           }
         })
         .catch((error) => {
@@ -364,28 +483,85 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
 
           <Row>
             <Col className="col-12">
-              <div className="mb-2 p-2" style={{ backgroundColor: "#E9F4FF" }}>
-                <p
-                  className="px-2 fs-5"
-                  style={{
-                    fontWeight: "bold",
-                    color: "#495057",
-                    marginBottom: "0px",
-                  }}
-                >
-                  TAXES & GRATUITIES
-                </p>
+              <div
+                className="mb-2 p-2 d-flex justify-content-between"
+                style={{ backgroundColor: "#E9F4FF" }}
+              >
+                <div className="d-flex">
+                  <p
+                    className="px-2 fs-5"
+                    style={{
+                      fontWeight: "bold",
+                      color: "#495057",
+                      marginBottom: "0px",
+                    }}
+                  >
+                    TAXES & GRATUITIES
+                  </p>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="headerTT"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={headerTT}
+                      target="headerTT"
+                      toggle={() => {
+                        setheaderTT(!headerTT);
+                      }}
+                    >
+                      Use this section to define how the provider prices the
+                      tour on the service agreement.
+                      <br />
+                      <br />
+                      These settings will be applied to your entries in the
+                      price modal when adding a product.
+                    </Tooltip>
+                  </div>
+                </div>
+                <div className="d-flex mt-2 form-check form-switch">
+                  <Label className="mx-2">Advanced Settings</Label>
+                  <input
+                     type="checkbox"
+                     className="form-check-input mx-1"
+                     id="customSwitchsizesm"
+                    checked={advanceSettings}
+                    onChange={(e) => setAdvanceSettings(e.target.checked)}
+                  />
+                </div>
               </div>
             </Col>
           </Row>
           <Row>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Taxes</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Taxes</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="taxtooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={taxTooltip}
+                      target="taxtooltip"
+                      toggle={() => {
+                        setTaxTooltip(!taxTooltip);
+                      }}
+                    >
+                      Does the price include tax (16% IVA) or is it priced
+                      before taxes are included? If the operator will not charge
+                      tax, such as when paying in cash on the day of the tour,
+                      then select "Not Applicable".
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="tax_select_1"
                     onChange={(e) => {
                       setTaxSelected(e.target.value);
                     }}
@@ -414,13 +590,32 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Gratuities</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Gratuities</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="gratuitiestooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={gratuitiesTooltip}
+                      target="gratuitiestooltip"
+                      toggle={() => {
+                        setGratuitiesTooltip(!gratuitiesTooltip);
+                      }}
+                    >
+                      Does the price include gratuity or are gratuities extra?
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    name="gratuity_select_1"
                     onChange={(e) => {
                       setGratuitesSelected(e.target.value);
+                      // console.log(e.target.value);
                     }}
                     onBlur={validationType.handleBlur}
                     //   value={validationType.values.department || ""}
@@ -445,147 +640,336 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </div>
               </div>
             </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Gratuity Type</Label>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setGratuitesTypeSelected(e.target.value);
-                    }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(gratuitesTypeData, (type, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={type.id}
-                          selected={
-                            tourSettings && tourSettings.gratuity_type_id
-                              ? type.id === tourSettings.gratuity_type_id
+            {+gratuitesSelected !== 3 ? (
+              <>
+                <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                  <div className="form-outline mb-2" id="voucher_currency">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Gratuity Type</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15 mx-2"
+                          id="gratuityTypeTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={gratuityTypeTooltip}
+                          target="gratuityTypeTooltip"
+                          toggle={() => {
+                            setGratuityTypeTooltip(!gratuityTypeTooltip);
+                          }}
+                        >
+                          How does the provider price the gratuity?
+                          <br />
+                          <br />
+                          Unspecified - The provider doesn't require a certain
+                          gratuity. It is up to the customer to decide how much
+                          to pay on the day of the tour.
+                          <br />
+                          <br />
+                          % Percent - The provider requires a certain percentage
+                          of the price as gratuity, such as a 15% gratuity.
+                          <br />
+                          <br />
+                          Fixed Amount - The provider requires a set amount,
+                          like $500.00, as a gratuity.
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <Input
+                        type="select"
+                        name="gratuity_type_select_1"
+                        onChange={(e) => {
+                          setGratuitesTypeSelected(+e.target.value);
+                          console.log(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        value={
+                          gratuitesSelected == 3 ? "" : gratuitesTypeSelected
+                        }
+                        disabled={gratuitesSelected == 3 ? true : false}
+                      >
+                        <option value="">Select....</option>
+                        {map(gratuitesTypeData, (type, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={type.id}
+                              selected={
+                                tourSettings && tourSettings.gratuity_type_id
+                                  ? type.id === tourSettings.gratuity_type_id
+                                  : false
+                              }
+                            >
+                              {type.name}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                    </div>
+                  </div>
+                </Col>
+                {gratuitesTypeSelected != "6" ? (
+                  <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
+                    <div className="form-outline mb-2">
+                      <div className="">
+                        {gratuitesTypeSelected === "3" ? (
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Amount</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15 mx-2"
+                                id="amountTooltip"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={amountTooltip}
+                                target="amountTooltip"
+                                toggle={() => {
+                                  setAmountTooltip(!amountTooltip);
+                                }}
+                              >
+                                The amount of gratuity required by the provider.
+                              </Tooltip>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">% Gratuity</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="gratPercentageTooltip"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={gratPercentageTooltip}
+                                target="gratPercentageTooltip"
+                                toggle={() => {
+                                  setgratPercentageTooltip(
+                                    !gratPercentageTooltip
+                                  );
+                                }}
+                              >
+                                The percentage of gratuity required by the
+                                provider.
+                              </Tooltip>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="input-group">
+                        {gratuitesTypeSelected === "3" ? (
+                          <span
+                            className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                            id="basic-addon1"
+                            style={{ fontSize: "0.85em" }}
+                          >
+                            $
+                          </span>
+                        ) : null}
+                        <Input
+                          name="gratuity_percentage"
+                          placeholder=""
+                          type="number"
+                          onChange={validationType.handleChange}
+                          onBlur={(e) => {
+                            const value = e.target.value || "";
+                            validationType.setFieldValue(
+                              "gratuity_percentage",
+                              setDecimalFormat(value)
+                            );
+                          }}
+                          value={
+                            validationType.values.gratuity_percentage || ""
+                          }
+                          disabled={
+                            gratuitesTypeSelected === "6" ||
+                            gratuitesSelected == 3
+                              ? true
                               : false
                           }
-                        >
-                          {type.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
-              </div>
-            </Col>
+                          invalid={
+                            validationType.touched.gratuity_percentage &&
+                            validationType.errors.gratuity_percentage
+                              ? true
+                              : false
+                          }
+                        />
+                        {gratuitesTypeSelected !== "3" ? (
+                          <span
+                            className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                            id="basic-addon1"
+                            style={{ fontSize: "0.85em" }}
+                          >
+                            %
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  </Col>
+                ) : null}
+
+                {gratuitesTypeSelected == "3" ||
+                gratuitesTypeSelected == "6" ||
+                gratuitesSelected == 3 ? null : (
+                  <>
+                    <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
+                      <div className="form-outline mb-2" id="voucher_currency">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Based On</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15 mx-2"
+                              id="basedOnTooltip"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={basedOnTooltip}
+                              target="basedOnTooltip"
+                              toggle={() => {
+                                setBasedOnTooltip(!basedOnTooltip);
+                              }}
+                            >
+                              If the gratuity is a percentage, specify what it
+                              is a percentage of - for example 15% of the Net
+                              Price Before Taxes, or 15% of the Total Price
+                              Including Taxes.
+                            </Tooltip>
+                          </div>
+                        </div>
+                        <div className="input-group">
+                          <Input
+                            type="select"
+                            name="based_on_select_1"
+                            onChange={(e) => {
+                              setBasedOnSelected(e.target.value);
+                            }}
+                            disabled={
+                              gratuitesTypeSelected == "3" ||
+                              gratuitesTypeSelected == "6" ||
+                              gratuitesSelected == 3
+                                ? true
+                                : false
+                            }
+                            onBlur={validationType.handleBlur}
+                            value={
+                              gratuitesSelected == 3 ? "" : basedOnSelected
+                            }
+                          >
+                            <option value="">Select....</option>
+                            {map(basedOnData, (based, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={based.id}
+                                  selected={
+                                    tourSettings && tourSettings.based_on_id
+                                      ? based.id === tourSettings.based_on_id
+                                      : false
+                                  }
+                                >
+                                  {based.name}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
+                      <div className="form-outline mb-2" id="voucher_currency">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Apply</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15 mx-2"
+                              id="applyTooltip"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={applyTooltip}
+                              target="applyTooltip"
+                              toggle={() => {
+                                setApplyTooltip(!applyTooltip);
+                              }}
+                            >
+                              Is the amount of gratuity calculated on the net
+                              price of the tour before taxes, or on the total
+                              price of the tour including taxes?.
+                            </Tooltip>
+                          </div>
+                        </div>
+                        <div className="input-group">
+                          <Input
+                            type="select"
+                            name="apply_select_1"
+                            onChange={(e) => {
+                              setApplySelected(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            disabled={
+                              gratuitesTypeSelected == "3" ||
+                              gratuitesTypeSelected == "6" ||
+                              gratuitesSelected == 3
+                                ? true
+                                : false
+                            }
+                            value={gratuitesSelected == 3 ? "" : applySelected}
+                          >
+                            <option value="">Select....</option>
+                            {map(applyData, (apply, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  value={apply.id}
+                                  selected={
+                                    tourSettings &&
+                                    tourSettings.payment_apply_id
+                                      ? apply.id ===
+                                        tourSettings.payment_apply_id
+                                      : false
+                                  }
+                                >
+                                  {apply.name}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        </div>
+                      </div>
+                    </Col>
+                  </>
+                )}
+              </>
+            ) : null}
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2">
+              <div className="form-outline mb-2" id="voucher_currency">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">% Gratuity</Label>
+                  <Label className="form-label text-paradise">Currency</Label>
                   <div>
                     <i
-                      className="uil-question-circle font-size-15"
-                      id="publicPrice"
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="currencyTooltip"
                     />
+                    <Tooltip
+                      placement="right"
+                      isOpen={currencyTooltip}
+                      target="currencyTooltip"
+                      toggle={() => {
+                        setCurrencyTooltip(!currencyTooltip);
+                      }}
+                    >
+                      Specify the currency that the provider is quoting the
+                      price in.
+                    </Tooltip>
                   </div>
                 </div>
                 <div className="input-group">
                   <Input
-                    name="gratuity_percentage"
-                    placeholder=""
-                    type="number"
-                    onChange={validationType.handleChange}
-                    value={validationType.values.gratuity_percentage || ""}
-                    invalid={
-                      validationType.touched.gratuity_percentage &&
-                      validationType.errors.gratuity_percentage
-                        ? true
-                        : false
-                    }
-                  />
-                  <span
-                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                    id="basic-addon1"
-                    style={{ fontSize: "0.85em" }}
-                  >
-                    %
-                  </span>
-                </div>
-              </div>
-            </Col>
-            <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Based on</Label>
-                <div className="input-group">
-                  <Input
                     type="select"
-                    name=""
-                    onChange={(e) => {
-                      setBasedOnSelected(e.target.value);
-                    }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(basedOnData, (based, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={based.id}
-                          selected={
-                            tourSettings && tourSettings.based_on_id
-                              ? based.id === tourSettings.based_on_id
-                              : false
-                          }
-                        >
-                          {based.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
-              </div>
-            </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Apply</Label>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setApplySelected(e.target.value);
-                    }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(applyData, (apply, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={apply.id}
-                          selected={
-                            tourSettings && tourSettings.payment_apply_id
-                              ? apply.id === tourSettings.payment_apply_id
-                              : false
-                          }
-                        >
-                          {apply.name}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
-              </div>
-            </Col>
-            <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Currency</Label>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
+                    name="currency_select_1"
                     onChange={(e) => {
                       setCurrencySelected(e.target.value);
                     }}
@@ -613,39 +997,237 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </div>
               </div>
             </Col>
-            <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
+            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline">
-                <Label className="form-label">Exchange Rate</Label>
-                <Input
-                  name="exchange_rate"
-                  placeholder="$0.00"
-                  type="number"
-                  onChange={validationType.handleChange}
-                  onBlur={validationType.handleBlur}
-                  value={validationType.values.exchange_rate || ""}
-                  invalid={
-                    validationType.touched.exchange_rate &&
-                    validationType.errors.exchange_rate
-                      ? true
-                      : false
-                  }
-                />
-                {validationType.touched.exchange_rate &&
-                validationType.errors.exchange_rate ? (
-                  <FormFeedback type="invalid">
-                    {validationType.errors.exchange_rate}
-                  </FormFeedback>
-                ) : null}
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label text-paradise">
+                    Exchange Rate
+                  </Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="exchangeTooltip"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={exchangeTooltip}
+                      target="exchangeTooltip"
+                      toggle={() => {
+                        setExchangeTooltip(!exchangeTooltip);
+                      }}
+                    >
+                      Specify the exchange rate that we will use if the price is
+                      in MXN.
+                    </Tooltip>
+                  </div>
+                </div>
+                <div className="input-group">
+                  <span
+                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                    id="basic-addon1"
+                    style={{ fontSize: "0.85em" }}
+                  >
+                    $
+                  </span>
+                  <Input
+                    name="exchange_rate"
+                    placeholder=""
+                    type="number"
+                    disabled={currencySelected === "USD"}
+                    onChange={validationType.handleChange}
+                    onBlur={(e) => {
+                      const value = e.target.value || "";
+                      validationType.setFieldValue(
+                        "exchange_rate",
+                        setDecimalFormat(value)
+                      );
+                    }}
+                    value={validationType.values.exchange_rate || ""}
+                    invalid={
+                      validationType.touched.exchange_rate &&
+                      validationType.errors.exchange_rate
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.exchange_rate &&
+                  validationType.errors.exchange_rate ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.exchange_rate}
+                    </FormFeedback>
+                  ) : null}
+                </div>
               </div>
             </Col>
           </Row>
-
+          {advanceSettings ? (
+            <Row>
+              <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                <div className="form-outline mb-2" id="voucher_currency">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Taxes Based On</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="taxtooltip"
+                      />
+                      {/* <Tooltip
+                        placement="right"
+                        isOpen={taxTooltip}
+                        target="taxtooltip"
+                        toggle={() => {
+                          setTaxTooltip(!taxTooltip);
+                        }}
+                      >
+                        Does the price include tax (16% IVA) or is it priced
+                        before taxes are included? If the operator will not
+                        charge tax, such as when paying in cash on the day of
+                        the tour, then select "Not Applicable".
+                      </Tooltip> */}
+                    </div>
+                  </div>
+                  <div className="input-group">
+                    <Input
+                      type="select"
+                      name="tax_select_1"
+                      onChange={(e) => {
+                        setTaxesBasedOnSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value="">Select....</option>
+                      {map(taxesBasedOnData, (tax, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={tax.id}
+                            selected={
+                              tourSettings && tourSettings.tax_based_on
+                                ? tax.id === tourSettings.tax_based_on
+                                : false
+                            }
+                          >
+                            {tax.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </div>
+              </Col>
+              <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                <div className="form-outline mb-2" id="voucher_currency">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Commission Based On</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="gratuitiestooltip"
+                      />
+                      {/* <Tooltip
+                        placement="right"
+                        isOpen={gratuitiesTooltip}
+                        target="gratuitiestooltip"
+                        toggle={() => {
+                          setGratuitiesTooltip(!gratuitiesTooltip);
+                        }}
+                      >
+                        Does the price include gratuity or are gratuities extra?
+                      </Tooltip> */}
+                    </div>
+                  </div>
+                  <div className="input-group">
+                    <Input
+                      type="select"
+                      name="gratuity_select_1"
+                      onChange={(e) => {
+                        setCommissionBasedOnSelected(e.target.value);
+                        // console.log(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value="">Select....</option>
+                      {map(commissionBasedOnData, (gratuites, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={gratuites.id}
+                            selected={
+                              tourSettings && tourSettings.commission_based_on
+                                ? gratuites.id === tourSettings.commission_based_on
+                                : false
+                            }
+                          >
+                            {gratuites.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </div>
+              </Col>
+              <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
+                <div className="form-outline mb-2" id="voucher_currency">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Apply Commission</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="gratuitiestooltip"
+                      />
+                      {/* <Tooltip
+                        placement="right"
+                        isOpen={gratuitiesTooltip}
+                        target="gratuitiestooltip"
+                        toggle={() => {
+                          setGratuitiesTooltip(!gratuitiesTooltip);
+                        }}
+                      >
+                        Does the price include gratuity or are gratuities extra?
+                      </Tooltip> */}
+                    </div>
+                  </div>
+                  <div className="input-group">
+                    <Input
+                      type="select"
+                      name="gratuity_select_1"
+                      onChange={(e) => {
+                        setApplyCommissionSelected(e.target.value);
+                        // console.log(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value="">Select....</option>
+                      {map(applyCommissionData, (gratuites, index) => {
+                        return (
+                          <option
+                            key={index}
+                            value={gratuites.id}
+                            selected={
+                              tourSettings && tourSettings.apply_commission
+                                ? gratuites.id === tourSettings.apply_commission
+                                : false
+                            }
+                          >
+                            {gratuites.name}
+                          </option>
+                        );
+                      })}
+                    </Input>
+                  </div>
+                </div>
+              </Col>
+              
+            </Row>
+          ) : null}
           <Row>
             <Col className="col-xl">
               <div
                 className="mb-4 py-2 px-3"
-                style={{ backgroundColor: "#FFEFDE"}}
-                
+                style={{ backgroundColor: "#FFEFDE" }}
               >
                 <p
                   className="fs-5"
@@ -659,14 +1241,17 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </p>
               </div>
             </Col>
-            <Col className='col-1'>
-            <Button
+            <Col className="col-1">
+              <Button
                 type="button"
                 className="btn-orange"
-                onClick={() =>  setPaymentsAdd(true)}
-                style={{fontSize:'12px', padding:'11px'}}
+                onClick={() => {
+                  setPaymentsAdd(true);
+                  setDataEdit(null);
+                }}
+                style={{ fontSize: "12px", padding: "11px" }}
               >
-               + Add Payment                
+                + Add Payment
               </Button>
             </Col>
           </Row>
@@ -689,7 +1274,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 outline
                 className="waves-effect waves-light me-2"
                 type="button"
-                onClick={() => toggle("1")}
+                onClick={() => toggle("2")}
               >
                 <i className="uil-angle-double-left" />
                 Previous

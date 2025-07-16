@@ -48,7 +48,7 @@ const AddNewProductPricing = ({
   //edit data
   const [dataEdit, setDataEdit] = useState();
   const [loadingData, setLoadingData] = useState(true);
-  console.log('check', dataEdit)
+  // console.log('check', dataEdit)
   useEffect(() => {
     if (id) {
       getPriceAPI(id).then((resp) => {
@@ -80,7 +80,13 @@ const AddNewProductPricing = ({
       eff_rate: dataEdit ? setRateFormat(dataEdit.eff_rate) : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      voucher_balance: dataEdit ? (dataEdit.voucher_balance ? setDecimalFormatVBalance(dataEdit.voucher_balance, dataEdit.voucher_currency) : setDecimalFormatVBalance(dataEdit.price - dataEdit.deposit)) : "",
+      voucher_balance: dataEdit
+        && dataEdit.voucher_balance ?
+           setDecimalFormatVBalance(
+              dataEdit.voucher_balance,
+              dataEdit.voucher_currency
+            )
+        : "",
       //------- esto es de capacity
       min_qty: dataEdit ? dataEdit.min_qty : '' ,
       max_qty: dataEdit ? dataEdit.max_qty : '' ,
@@ -459,7 +465,7 @@ const AddNewProductPricing = ({
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.our_price !== "" && validationType.values.deposit !== "" && currencySelected != "MXN") {
+      if (validationType.values.our_price !== "" && validationType.values.deposit !== "" && currencySelected === "USD") {
         validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((validationType.values.our_price - validationType.values.deposit), currencySelected))
       }
     }
