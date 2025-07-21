@@ -1044,6 +1044,7 @@ const Addons = ({
                     </Col>
                   </Col>
                   {displayOptionSelected === 13 ||
+                  displayOptionSelected === 15 ||
                   displayOptionSelected === 5 ||
                   displayOptionSelected === 4 ? (
                     <Col className="col-3 d-flex justify-content-between">
@@ -1143,6 +1144,7 @@ const Addons = ({
                       </div>
                     </Col>
                     {displayOptionSelected === 13 ||
+                    displayOptionSelected === 15 ||
                     displayOptionSelected === 2 ||
                     displayOptionSelected === 5 ? (
                       <>
