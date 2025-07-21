@@ -385,7 +385,7 @@ const AddNewProductPricing = ({
       }
     } else {
       setRecalc(true)
-      setCurrencySelected("")
+      setCurrencySelected("USD")
       setPriceTypeSelected("");
       setPriceOptionSelected("");
       setPriceCollectSelected("");

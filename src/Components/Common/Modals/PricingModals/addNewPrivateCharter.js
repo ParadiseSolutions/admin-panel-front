@@ -542,7 +542,7 @@ const AddNewPrivateCharter = ({
       }
     } else {
       setRecalc(true);
-      setCurrencySelected("");
+      setCurrencySelected("USD");
       setPriceTypeSelected("");
       setPriceOptionSelected("");
       setPriceCollectSelected("");

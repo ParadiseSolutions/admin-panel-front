@@ -171,7 +171,7 @@ const AddNewAirportTransfer = ({
       }
     } else {
       setRecalc(true)
-      setCurrencySelected("")
+      setCurrencySelected("USD")
       setPriceTypeSelected("");
       setPriceOptionSelected("");
       setPriceCollectSelected("");

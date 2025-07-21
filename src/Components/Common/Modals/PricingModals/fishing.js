@@ -5,7 +5,7 @@ import {
   getPricingOptionsAPI,
   postPricesAPI,
   updatePriceAPI,
-  triggerUpdate
+  triggerUpdate,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -39,7 +39,7 @@ const Fishing = ({
   editProductID,
   tourData,
   copyProduct,
-  setCopyProduct
+  setCopyProduct,
 }) => {
   let id = "";
   id = editProductID;
@@ -52,7 +52,7 @@ const Fishing = ({
         setDataEdit(resp.data.data[0]);
       });
     } else {
-      setDataEdit(null)
+      setDataEdit(null);
     }
   }, [id, addNewFishing]);
 
@@ -66,8 +66,8 @@ const Fishing = ({
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
-  const [currency, setCurrency] = useState([])
-  const [currencySelected, setCurrencySelected] = useState('')
+  const [currency, setCurrency] = useState([]);
+  const [currencySelected, setCurrencySelected] = useState("USD");
   const [priceCharterType, setPriceCharterType] = useState([]);
   const [priceDuration, setPriceDuration] = useState([]);
   const [priceLocation, setPriceLocation] = useState([]);
@@ -77,7 +77,7 @@ const Fishing = ({
 
   useEffect(() => {
     if (addNewFishing) {
-      setLoadingData(true)
+      setLoadingData(true);
       getPricingOptionsAPI(33).then((resp) => {
         setPriceTypeData(resp.data.data);
       });
@@ -100,8 +100,8 @@ const Fishing = ({
         setPriceLocation(resp.data.data);
       });
       getCurrency().then((resp) => {
-        setCurrency(resp.data.data)
-      })
+        setCurrency(resp.data.data);
+      });
     }
   }, [addNewFishing]);
 
@@ -125,78 +125,89 @@ const Fishing = ({
   const [ttop15, setttop15] = useState(false);
   const [ttop16, setttop16] = useState(false);
   const [ttop17, setttop17] = useState(false);
-  const [ttop18, setttop18] = useState(false);
-  const [ttop19, setttop19] = useState(false);
   const [ttop20, setttop20] = useState(false);
   const [ttop21, setttop21] = useState(false);
   const [ttop22, setttop22] = useState(false);
 
-  const [providerCommission, setProviderCommission] = useState('')
-  const [ourCommission, setOurCommission] = useState('')
-  const [recalc, setRecalc] = useState(false)
-  let changing = false
+  const [providerCommission, setProviderCommission] = useState("");
+  const [ourCommission, setOurCommission] = useState("");
+  const [recalc, setRecalc] = useState(false);
+  let changing = false;
 
   useEffect(() => {
     if (dataEdit && addNewFishing && priceCollect) {
       if (copyProduct) {
-        setRecalc(true)
+        setRecalc(true);
       } else {
-        setRecalc(false)
+        setRecalc(false);
       }
-      setCurrencySelected(dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD")
-      setPriceCollectSelected(dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
-        ?.source_id)
-      let priceCollectSe = priceCollect.filter(x => x.id === dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
-        ?.source_id)
+      setCurrencySelected(
+        dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD"
+      );
+      setPriceCollectSelected(
+        dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
+          ?.source_id
+      );
+      let priceCollectSe = priceCollect.filter(
+        (x) =>
+          x.id ===
+          dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
+            ?.source_id
+      );
       if (priceCollectSe.length > 0) {
-        setPriceCollectNameSelected(priceCollectSe[0].text)
+        setPriceCollectNameSelected(priceCollectSe[0].text);
       }
       setActiveCheckbox(dataEdit?.active === 1 ? true : false);
       setBalanceDueCheckbox(dataEdit?.show_balance_due === 1 ? true : false);
       setProviderCommission((dataEdit.public - dataEdit.net_rate).toFixed(2));
       setOurCommission((dataEdit.price - dataEdit.net_rate).toFixed(2));
       if (!changing) {
-        changing = true
+        changing = true;
         setTimeout(() => {
-          setLoadingData(false)
-          changing = false
+          setLoadingData(false);
+          changing = false;
         }, 1000);
       }
     } else {
-      setRecalc(true)
-      setCurrencySelected("")
-      setPriceTypeSelected("")
-      setPriceOptionSelected("")
-      setPriceCollectSelected("")
-      setPriceCollectNameSelected("")
-      setPriceSeasonSelected("")
-      setPriceCharterTypeSelected("")
-      setPriceDurationSelected("")
-      setPriceLocationSelected("")
-      setActiveCheckbox(false)
-      setBalanceDueCheckbox(false)
-      setProviderCommission("")
-      setOurCommission("")
+      setRecalc(true);
+      setCurrencySelected("USD");
+      setPriceTypeSelected("");
+      setPriceOptionSelected("");
+      setPriceCollectSelected("");
+      setPriceCollectNameSelected("");
+      setPriceSeasonSelected("");
+      setPriceCharterTypeSelected("");
+      setPriceDurationSelected("");
+      setPriceLocationSelected("");
+      setActiveCheckbox(false);
+      setBalanceDueCheckbox(false);
+      setProviderCommission("");
+      setOurCommission("");
       if (validationType) {
-        validationType.resetForm()
+        validationType.resetForm();
       }
       if (!changing) {
-        changing = true
+        changing = true;
         setTimeout(() => {
-          setLoadingData(false)
-          changing = false
+          setLoadingData(false);
+          changing = false;
         }, 1000);
       }
     }
   }, [dataEdit, priceCollect]);
 
-
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      min: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]?.min : "",
-      max: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]?.max : "",
+      min: dataEdit
+        ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
+            ?.min
+        : "",
+      max: dataEdit
+        ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
+            ?.max
+        : "",
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
       active: dataEdit?.active ? 1 : 0,
@@ -213,13 +224,13 @@ const Fishing = ({
       eff_rate: dataEdit ? setRateFormat(dataEdit.eff_rate) : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
-      voucher_balance: dataEdit
-        && dataEdit.voucher_balance ?
-           setDecimalFormatVBalance(
+      voucher_balance:
+        dataEdit && dataEdit.voucher_balance
+          ? setDecimalFormatVBalance(
               dataEdit.voucher_balance,
               dataEdit.voucher_currency
             )
-        : "",
+          : "",
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -236,33 +247,78 @@ const Fishing = ({
       balance_due: Yup.number(),
     }),
     onSubmit: (values, { resetForm }) => {
-      let price_type = (priceTypeSelected === '' || priceTypeSelected === undefined) ? (dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails.filter(x => x.pricing_option_id === 33)[0]?.source_id
-        : null) : priceTypeSelected
+      let price_type =
+        priceTypeSelected === "" || priceTypeSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 33)[0]
+                ?.source_id
+            : null
+          : priceTypeSelected;
 
-      let price_option = (priceOptionSelected === '' || priceOptionSelected === undefined) ? (dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails.filter(x => x.pricing_option_id === 34)[0]?.source_id
-        : null) : priceOptionSelected
+      let price_option =
+        priceOptionSelected === "" || priceOptionSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 34)[0]
+                ?.source_id
+            : null
+          : priceOptionSelected;
 
-      let price_collect = (priceCollectSelected === '' || priceCollectSelected === undefined) ? (dataEdit && dataEdit.pricedetails
-        ? dataEdit.pricedetails.filter(x => x.pricing_option_id === 36)[0]?.source_id
-        : null) : priceCollectSelected
+      let price_collect =
+        priceCollectSelected === "" || priceCollectSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
+                ?.source_id
+            : null
+          : priceCollectSelected;
 
-      let price_season = (priceSeasonSelected === '' || priceSeasonSelected === undefined) ? (dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id)
-        : null) : priceSeasonSelected
+      let price_season =
+        priceSeasonSelected === "" || priceSeasonSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 32)[0]
+                ?.source_id === undefined
+              ? null
+              : dataEdit.pricedetails.filter(
+                  (x) => x.pricing_option_id === 32
+                )[0]?.source_id
+            : null
+          : priceSeasonSelected;
 
-      let charter_type = (priceCharterTypeSelected === '' || priceCharterTypeSelected === undefined) ? (dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id)
-        : null) : priceCharterTypeSelected
+      let charter_type =
+        priceCharterTypeSelected === "" ||
+        priceCharterTypeSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 47)[0]
+                ?.source_id === undefined
+              ? null
+              : dataEdit.pricedetails.filter(
+                  (x) => x.pricing_option_id === 47
+                )[0]?.source_id
+            : null
+          : priceCharterTypeSelected;
 
-      let price_duration = (priceDurationSelected === '' || priceDurationSelected === undefined) ? (dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id)
-        : null) : priceDurationSelected
+      let price_duration =
+        priceDurationSelected === "" || priceDurationSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 35)[0]
+                ?.source_id === undefined
+              ? null
+              : dataEdit.pricedetails.filter(
+                  (x) => x.pricing_option_id === 35
+                )[0]?.source_id
+            : null
+          : priceDurationSelected;
 
-      let price_location = (priceLocationSelected === '' || priceLocationSelected === undefined) ? (dataEdit && dataEdit.pricedetails
-        ? (dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id === undefined ? null : dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id)
-        : null) : priceLocationSelected
+      let price_location =
+        priceLocationSelected === "" || priceLocationSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 37)[0]
+                ?.source_id === undefined
+              ? null
+              : dataEdit.pricedetails.filter(
+                  (x) => x.pricing_option_id === 37
+                )[0]?.source_id
+            : null
+          : priceLocationSelected;
 
       if (price_type && price_option && price_collect) {
         let data = {
@@ -271,9 +327,9 @@ const Fishing = ({
           provider_price: values.provider_price,
           rate:
             values.rate !== ""
-              ? (values.rate > 1
+              ? values.rate > 1
                 ? values.rate / 100
-                : values.rate)
+                : values.rate
               : null,
           net_rate: values.net_rate,
           compare_at_url: values.compare_at_url,
@@ -331,8 +387,8 @@ const Fishing = ({
             {
               pricing_option_id: 35,
               source_id: price_duration === "-1" ? null : price_duration,
-              min: (values.min === "") ? null : values.min,
-              max: (values.max === "") ? null : values.max,
+              min: values.min === "" ? null : values.min,
+              max: values.max === "" ? null : values.max,
               label: null,
             },
             {
@@ -347,65 +403,57 @@ const Fishing = ({
 
         document.getElementById("save-button").disabled = true;
         if (dataEdit && copyProduct === false) {
-          updatePriceAPI(editProductID, data).then((resp) => {
-            // console.log(resp);
-            triggerUpdate()
-            setAddNewFishing(false);
-            refreshTable();
-            setCopyProduct(false)
-            resetForm({ values: "" });
-            document.getElementById("save-button").disabled = false;
-          }).catch((error) => {
-            if (error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                String(error.response.data.message)
-              );
-            } else {
-              let errorMessages = [];
-              Object.entries(error.response.data.data).map((item) => {
-                errorMessages.push(item[1]);
-                return true
-              });
+          updatePriceAPI(editProductID, data)
+            .then((resp) => {
+              // console.log(resp);
+              triggerUpdate();
+              setAddNewFishing(false);
+              refreshTable();
+              setCopyProduct(false);
+              resetForm({ values: "" });
+              document.getElementById("save-button").disabled = false;
+            })
+            .catch((error) => {
+              if (error.response.data.data === null) {
+                Swal.fire("Error!", String(error.response.data.message));
+              } else {
+                let errorMessages = [];
+                Object.entries(error.response.data.data).map((item) => {
+                  errorMessages.push(item[1]);
+                  return true;
+                });
 
-              Swal.fire(
-                "Error!",
-                String(errorMessages[0])
-              );
-            }
-            document.getElementById("save-button").disabled = false;
-          });
+                Swal.fire("Error!", String(errorMessages[0]));
+              }
+              document.getElementById("save-button").disabled = false;
+            });
         } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
-          postPricesAPI(data).then((resp) => {
-            triggerUpdate()
-            setAddNewFishing(false);
-            refreshTable();
-            setCopyProduct(false)
-            resetForm({ values: "" });
-            document.getElementById("save-button").disabled = false;
-          }).catch((error) => {
-            if (error.response.data.data === null) {
-              Swal.fire(
-                "Error!",
-                String(error.response.data.message)
-              );
-            } else {
-              let errorMessages = [];
-              Object.entries(error.response.data.data).map((item) => {
-                errorMessages.push(item[1]);
-                return true
-              });
+          postPricesAPI(data)
+            .then((resp) => {
+              triggerUpdate();
+              setAddNewFishing(false);
+              refreshTable();
+              setCopyProduct(false);
+              resetForm({ values: "" });
+              document.getElementById("save-button").disabled = false;
+            })
+            .catch((error) => {
+              if (error.response.data.data === null) {
+                Swal.fire("Error!", String(error.response.data.message));
+              } else {
+                let errorMessages = [];
+                Object.entries(error.response.data.data).map((item) => {
+                  errorMessages.push(item[1]);
+                  return true;
+                });
 
-              Swal.fire(
-                "Error!",
-                String(errorMessages[0])
-              );
-            }
-            document.getElementById("save-button").disabled = false;
-          });
+                Swal.fire("Error!", String(errorMessages[0]));
+              }
+              document.getElementById("save-button").disabled = false;
+            });
         }
       } else {
-        Swal.fire('Complete Required Fields')
+        Swal.fire("Complete Required Fields");
         document.getElementById("save-button").disabled = false;
       }
       refreshTable();
@@ -422,62 +470,145 @@ const Fishing = ({
   //Pricing Validations
   useEffect(() => {
     if (validationType && recalc) {
-      if (validationType.values.public_price !== "" && validationType.values.public_price !== 0) {
-        if (validationType.values.rate !== "" && validationType.values.rate !== 0) {
-          let net_rate = calcNetRate(validationType.values.public_price, validationType.values.rate, validationType.values.net_rate)
-          validationType.setFieldValue("net_rate", net_rate)
+      if (
+        validationType.values.public_price !== "" &&
+        validationType.values.public_price !== 0
+      ) {
+        if (
+          validationType.values.rate !== "" &&
+          validationType.values.rate !== 0
+        ) {
+          let net_rate = calcNetRate(
+            validationType.values.public_price,
+            validationType.values.rate,
+            validationType.values.net_rate
+          );
+          validationType.setFieldValue("net_rate", net_rate);
         }
       }
     }
-  }, [validationType?.values.public_price, validationType?.values.rate])
+  }, [validationType?.values.public_price, validationType?.values.rate]);
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
-        if (validationType.values.public_price !== "" && validationType.values.public_price !== 0 && validationType.values.public_price !== null) {
-          setProviderCommission((validationType.values.public_price - validationType.values.net_rate).toFixed(2))
+      if (
+        validationType.values.net_rate !== "" &&
+        validationType.values.net_rate !== 0
+      ) {
+        if (
+          validationType.values.public_price !== "" &&
+          validationType.values.public_price !== 0 &&
+          validationType.values.public_price !== null
+        ) {
+          setProviderCommission(
+            (
+              validationType.values.public_price -
+              validationType.values.net_rate
+            ).toFixed(2)
+          );
         } else {
-          setProviderCommission("")
+          setProviderCommission("");
         }
         if (recalc) {
-          if (validationType.values.our_price !== "" && validationType.values.our_price !== 0 && validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
-            setOurCommission((validationType.values.our_price - validationType.values.net_rate).toFixed(2))
+          if (
+            validationType.values.our_price !== "" &&
+            validationType.values.our_price !== 0 &&
+            validationType.values.net_rate !== "" &&
+            validationType.values.net_rate !== 0
+          ) {
+            setOurCommission(
+              (
+                validationType.values.our_price - validationType.values.net_rate
+              ).toFixed(2)
+            );
           }
         }
       }
     }
-  }, [validationType.values.public_price, validationType?.values.net_rate, validationType?.values.our_price])
+  }, [
+    validationType.values.public_price,
+    validationType?.values.net_rate,
+    validationType?.values.our_price,
+  ]);
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.public_price !== null && validationType.values.public_price !== "" && validationType.values.public_price !== 0) {
-        validationType.setFieldValue("eff_rate", setRateFormat(ourCommission / validationType.values.public_price, 1))
-      } else if (validationType.values.net_rate !== null && validationType.values.net_rate !== "" && validationType.values.net_rate !== 0) {
-        validationType.setFieldValue("eff_rate", setRateFormat(ourCommission / (+validationType.values.net_rate + +ourCommission), 1))
+      if (
+        validationType.values.public_price !== null &&
+        validationType.values.public_price !== "" &&
+        validationType.values.public_price !== 0
+      ) {
+        validationType.setFieldValue(
+          "eff_rate",
+          setRateFormat(ourCommission / validationType.values.public_price, 1)
+        );
+      } else if (
+        validationType.values.net_rate !== null &&
+        validationType.values.net_rate !== "" &&
+        validationType.values.net_rate !== 0
+      ) {
+        validationType.setFieldValue(
+          "eff_rate",
+          setRateFormat(
+            ourCommission / (+validationType.values.net_rate + +ourCommission),
+            1
+          )
+        );
       }
-      if (validationType.values.deposit !== null && validationType.values.deposit !== "" && validationType.values.deposit !== 0) {
-        validationType.setFieldValue("balance_due", (validationType.values.deposit - ourCommission).toFixed(2))
+      if (
+        validationType.values.deposit !== null &&
+        validationType.values.deposit !== "" &&
+        validationType.values.deposit !== 0
+      ) {
+        validationType.setFieldValue(
+          "balance_due",
+          (validationType.values.deposit - ourCommission).toFixed(2)
+        );
       }
     }
-  }, [validationType?.values.public_price, validationType?.values.net_rate, validationType?.values.deposit, ourCommission])
+  }, [
+    validationType?.values.public_price,
+    validationType?.values.net_rate,
+    validationType?.values.deposit,
+    ourCommission,
+  ]);
 
   useEffect(() => {
     if (currencySelected && validationType) {
-      validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance(validationType.values.voucher_balance, currencySelected))
+      validationType.setFieldValue(
+        "voucher_balance",
+        setDecimalFormatVBalance(
+          validationType.values.voucher_balance,
+          currencySelected
+        )
+      );
     }
-  }, [currencySelected])
+  }, [currencySelected]);
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.our_price !== "" && validationType.values.deposit !== "" && currencySelected === "USD") {
-        validationType.setFieldValue("voucher_balance", setDecimalFormatVBalance((validationType.values.our_price - validationType.values.deposit), currencySelected))
+      if (
+        validationType.values.our_price !== "" &&
+        validationType.values.deposit !== "" &&
+        currencySelected === "USD"
+      ) {
+        validationType.setFieldValue(
+          "voucher_balance",
+          setDecimalFormatVBalance(
+            validationType.values.our_price - validationType.values.deposit,
+            currencySelected
+          )
+        );
       }
     }
-  }, [validationType?.values.our_price, validationType?.values.deposit])
+  }, [validationType?.values.our_price, validationType?.values.deposit]);
 
   useEffect(() => {
     if (validationType) {
-      if (validationType.values.our_price !== "" && priceCollectNameSelected !== "") {
+      if (
+        validationType.values.our_price !== "" &&
+        priceCollectNameSelected !== ""
+      ) {
         validationType.setFieldValue(
           "deposit",
           calcDeposit(
@@ -486,20 +617,50 @@ const Fishing = ({
             ourCommission,
             validationType.values.deposit
           )
-        )
+        );
       }
     }
-  }, [validationType?.values.our_price, priceCollectNameSelected, ourCommission])
+  }, [
+    validationType?.values.our_price,
+    priceCollectNameSelected,
+    ourCommission,
+  ]);
 
   useEffect(() => {
     if (recalc && validationType) {
-      if (validationType.values.our_price !== "" && validationType.values.ship_price && validationType.values.ship_price !== null && validationType.values.ship_price !== "0.00") {
-        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.ship_price)))
-      } else if (validationType.values.our_price !== "" && validationType.values.compare_at !== "" && validationType.values.compare_at !== null && validationType.values.compare_at !== "0.00") {
-        validationType.setFieldValue("you_save", 100 - setYouSaveFormat((validationType.values.our_price / validationType.values.compare_at)))
+      if (
+        validationType.values.our_price !== "" &&
+        validationType.values.ship_price &&
+        validationType.values.ship_price !== null &&
+        validationType.values.ship_price !== "0.00"
+      ) {
+        validationType.setFieldValue(
+          "you_save",
+          100 -
+            setYouSaveFormat(
+              validationType.values.our_price / validationType.values.ship_price
+            )
+        );
+      } else if (
+        validationType.values.our_price !== "" &&
+        validationType.values.compare_at !== "" &&
+        validationType.values.compare_at !== null &&
+        validationType.values.compare_at !== "0.00"
+      ) {
+        validationType.setFieldValue(
+          "you_save",
+          100 -
+            setYouSaveFormat(
+              validationType.values.our_price / validationType.values.compare_at
+            )
+        );
       }
     }
-  }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
+  }, [
+    validationType?.values.our_price,
+    validationType?.values.ship_price,
+    validationType?.values.compare_at,
+  ]);
 
   return (
     <Modal
@@ -514,24 +675,21 @@ const Fishing = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        {
-          copyProduct ?
-            (
-              <h1 className="modal-title mt-0 text-white">+ Copy Product - Fishing</h1>
-            ) : null
-        }
-        {
-          copyProduct === false && dataEdit ?
-            (
-              <h1 className="modal-title mt-0 text-white">+ Edit Product - Fishing</h1>
-            ) : null
-        }
-        {
-          copyProduct === false && !dataEdit ?
-            (
-              <h1 className="modal-title mt-0 text-white">+ New Product - Fishing</h1>
-            ) : null
-        }
+        {copyProduct ? (
+          <h1 className="modal-title mt-0 text-white">
+            + Copy Product - Fishing
+          </h1>
+        ) : null}
+        {copyProduct === false && dataEdit ? (
+          <h1 className="modal-title mt-0 text-white">
+            + Edit Product - Fishing
+          </h1>
+        ) : null}
+        {copyProduct === false && !dataEdit ? (
+          <h1 className="modal-title mt-0 text-white">
+            + New Product - Fishing
+          </h1>
+        ) : null}
         <button
           onClick={() => {
             setAddNewFishing(false);
@@ -566,43 +724,37 @@ const Fishing = ({
           >
             <Row className="g-4">
               <Col className="col-3">
-                <img
-                  src={FishingImage}
-                  alt="new-product"
-                  className="w-100"
-                />
+                <img src={FishingImage} alt="new-product" className="w-100" />
               </Col>
               <Col className="col-9">
-                {
-                  dataEdit ? (
-                    <Row>
-                      <Col className="col-9">
-                        <div className="form-outline mb-4">
-                          <Label className="form-label">Product Name</Label>
-                          <Input
-                            name="product_name"
-                            placeholder=""
-                            type="text"
-                            disabled
-                            value={validationType.values.product_name || ""}
-                          />
-                        </div>
-                      </Col>
-                      <Col className="col-3">
-                        <div className="form-outline mb-4">
-                          <Label className="form-label">SKU</Label>
-                          <Input
-                            name="sku"
-                            placeholder=""
-                            type="text"
-                            disabled
-                            value={validationType.values.sku || ""}
-                          />
-                        </div>
-                      </Col>
-                    </Row>
-                  ) : null
-                }
+                {dataEdit ? (
+                  <Row>
+                    <Col className="col-9">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">Product Name</Label>
+                        <Input
+                          name="product_name"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.product_name || ""}
+                        />
+                      </div>
+                    </Col>
+                    <Col className="col-3">
+                      <div className="form-outline mb-4">
+                        <Label className="form-label">SKU</Label>
+                        <Input
+                          name="sku"
+                          placeholder=""
+                          type="text"
+                          disabled
+                          value={validationType.values.sku || ""}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                ) : null}
                 <Row>
                   <Col className="col">
                     <div className="form-outline">
@@ -644,7 +796,9 @@ const Fishing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? type.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 33)[0]?.source_id
+                                    dataEdit.pricedetails.filter(
+                                      (x) => x.pricing_option_id === 33
+                                    )[0]?.source_id
                                   : false
                               }
                             >
@@ -673,11 +827,12 @@ const Fishing = ({
                             }}
                           >
                             This option will display in the product name in
-                            parenthesis, it will also show on the booking form as
-                            the label for the Quantity drop-down or as an option
-                            in the Choose Activity drop-down, depending on the
-                            reserve page template chosen. The option chosen here
-                            will automatically assign the last digit of the SKU.
+                            parenthesis, it will also show on the booking form
+                            as the label for the Quantity drop-down or as an
+                            option in the Choose Activity drop-down, depending
+                            on the reserve page template chosen. The option
+                            chosen here will automatically assign the last digit
+                            of the SKU.
                           </Tooltip>
                         </div>
                       </div>
@@ -688,7 +843,7 @@ const Fishing = ({
                           setPriceOptionSelected(e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                        //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
                         {map(priceOptions, (option, index) => {
@@ -699,7 +854,9 @@ const Fishing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? option.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 34)[0]?.source_id
+                                    dataEdit.pricedetails.filter(
+                                      (x) => x.pricing_option_id === 34
+                                    )[0]?.source_id
                                   : false
                               }
                             >
@@ -727,14 +884,21 @@ const Fishing = ({
                               setttop3(!ttop3);
                             }}
                           >
-                            <p>Select the amount of deposit that will be collected at
-                              the time of booking.</p>
-                            <p>Commission = The deposit is equal
-                              to the amount of commission we earn for the tour.</p>
-                            <p>Afilliate = The payment is made directly through the
-                              provider's website, such as the case of dTraveller or
-                              Viator.</p>
-                            Deposit = Manually type the amount of deposit we will collect in the "Deposit" field below.
+                            <p>
+                              Select the amount of deposit that will be
+                              collected at the time of booking.
+                            </p>
+                            <p>
+                              Commission = The deposit is equal to the amount of
+                              commission we earn for the tour.
+                            </p>
+                            <p>
+                              Afilliate = The payment is made directly through
+                              the provider's website, such as the case of
+                              dTraveller or Viator.
+                            </p>
+                            Deposit = Manually type the amount of deposit we
+                            will collect in the "Deposit" field below.
                           </Tooltip>
                         </div>
                       </div>
@@ -742,7 +906,7 @@ const Fishing = ({
                         type="select"
                         name="collect"
                         onChange={(e) => {
-                          setRecalc(true)
+                          setRecalc(true);
                           setPriceCollectSelected(e.target.value);
                           setPriceCollectNameSelected(
                             e.target.selectedOptions[0].label
@@ -758,7 +922,9 @@ const Fishing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? collect.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 36)[0]?.source_id
+                                    dataEdit.pricedetails.filter(
+                                      (x) => x.pricing_option_id === 36
+                                    )[0]?.source_id
                                   : false
                               }
                             >
@@ -771,11 +937,7 @@ const Fishing = ({
                   </Col>
                   {tourData?.seasonality === 1 ? (
                     <Col className="col">
-
-                      <div
-                        className="form-outline"
-
-                      >
+                      <div className="form-outline">
                         <Label className="form-label">Season*</Label>
                         <Input
                           type="select"
@@ -784,7 +946,7 @@ const Fishing = ({
                             setPriceSeasonSelected(e.target.value);
                           }}
                           onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                         >
                           <option value="-1">Select....</option>
                           {map(priceSeason, (season, index) => {
@@ -795,7 +957,9 @@ const Fishing = ({
                                 selected={
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
-                                    dataEdit.pricedetails.filter(x => x.pricing_option_id === 32)[0]?.source_id
+                                      dataEdit.pricedetails.filter(
+                                        (x) => x.pricing_option_id === 32
+                                      )[0]?.source_id
                                     : false
                                 }
                               >
@@ -835,7 +999,7 @@ const Fishing = ({
                           setPriceCharterTypeSelected(e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                        //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
                         {map(priceCharterType, (charterType, index) => {
@@ -846,7 +1010,9 @@ const Fishing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? charterType.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 47)[0]?.source_id
+                                    dataEdit.pricedetails.filter(
+                                      (x) => x.pricing_option_id === 47
+                                    )[0]?.source_id
                                   : false
                               }
                             >
@@ -867,7 +1033,7 @@ const Fishing = ({
                           setPriceDurationSelected(e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                        //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
                         {map(priceDuration, (duration, index) => {
@@ -878,7 +1044,9 @@ const Fishing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? duration.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 35)[0]?.source_id
+                                    dataEdit.pricedetails.filter(
+                                      (x) => x.pricing_option_id === 35
+                                    )[0]?.source_id
                                   : false
                               }
                             >
@@ -902,12 +1070,14 @@ const Fishing = ({
                         onBlur={validationType.handleBlur}
                         value={validationType.values.min || ""}
                         invalid={
-                          validationType.touched.min && validationType.errors.min
+                          validationType.touched.min &&
+                          validationType.errors.min
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.min && validationType.errors.min ? (
+                      {validationType.touched.min &&
+                      validationType.errors.min ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.min}
                         </FormFeedback>
@@ -927,12 +1097,14 @@ const Fishing = ({
                         onBlur={validationType.handleBlur}
                         value={validationType.values.max || ""}
                         invalid={
-                          validationType.touched.max && validationType.errors.max
+                          validationType.touched.max &&
+                          validationType.errors.max
                             ? true
                             : false
                         }
                       />
-                      {validationType.touched.max && validationType.errors.max ? (
+                      {validationType.touched.max &&
+                      validationType.errors.max ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.max}
                         </FormFeedback>
@@ -949,7 +1121,7 @@ const Fishing = ({
                           setPriceLocationSelected(e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
+                        //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
                         {map(priceLocation, (location, index) => {
@@ -960,7 +1132,9 @@ const Fishing = ({
                               selected={
                                 dataEdit && dataEdit.pricedetails
                                   ? location.id ===
-                                  dataEdit.pricedetails.filter(x => x.pricing_option_id === 37)[0]?.source_id
+                                    dataEdit.pricedetails.filter(
+                                      (x) => x.pricing_option_id === 37
+                                    )[0]?.source_id
                                   : false
                               }
                             >
@@ -1006,8 +1180,16 @@ const Fishing = ({
                               setttop5(!ttop5);
                             }}
                           >
-                            <p>The price the provider refers to in our service agreement as the "Public Price" or "Regular Price".</p>
-                            <p>If Provider only shows a net price on the agreement, and the tour or a comparable tour is not found anywhere on the internet, leave blank.</p>
+                            <p>
+                              The price the provider refers to in our service
+                              agreement as the "Public Price" or "Regular
+                              Price".
+                            </p>
+                            <p>
+                              If Provider only shows a net price on the
+                              agreement, and the tour or a comparable tour is
+                              not found anywhere on the internet, leave blank.
+                            </p>
                           </Tooltip>
                         </div>
                       </div>
@@ -1034,12 +1216,11 @@ const Fishing = ({
                           value={validationType.values.public_price || ""}
                           invalid={
                             validationType.touched.public_price &&
-                              validationType.errors.public_price
+                            validationType.errors.public_price
                               ? true
                               : false
                           }
                         />
-
                       </div>
                     </div>
                   </Col>
@@ -1060,8 +1241,8 @@ const Fishing = ({
                               setttop6(!ttop6);
                             }}
                           >
-                            The price the provider sells the tour for on their own
-                            website.
+                            The price the provider sells the tour for on their
+                            own website.
                           </Tooltip>
                         </div>
                       </div>
@@ -1090,14 +1271,12 @@ const Fishing = ({
                           value={validationType.values.provider_price || ""}
                           invalid={
                             validationType.touched.provider_price &&
-                              validationType.errors.provider_price
+                            validationType.errors.provider_price
                               ? true
                               : false
                           }
                         />
-
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1117,8 +1296,8 @@ const Fishing = ({
                               setttop7(!ttop7);
                             }}
                           >
-                            The commission rate for the tour that is specified in
-                            our service agreement. If only a Net Price is
+                            The commission rate for the tour that is specified
+                            in our service agreement. If only a Net Price is
                             specified then leave blank.
                           </Tooltip>
                         </div>
@@ -1129,16 +1308,17 @@ const Fishing = ({
                           placeholder=""
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
-                            setRecalc(true)
+                            setRecalc(true);
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "rate",
-                              setRateFormat(value));
+                              setRateFormat(value)
+                            );
                           }}
                           value={validationType.values.rate || ""}
                           invalid={
                             validationType.touched.rate &&
-                              validationType.errors.rate
+                            validationType.errors.rate
                               ? true
                               : false
                           }
@@ -1152,7 +1332,6 @@ const Fishing = ({
                           %
                         </span>
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1195,7 +1374,7 @@ const Fishing = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
-                            setRecalc(true)
+                            setRecalc(true);
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "net_rate",
@@ -1205,14 +1384,12 @@ const Fishing = ({
                           value={validationType.values.net_rate || ""}
                           invalid={
                             validationType.touched.net_rate &&
-                              validationType.errors.net_rate
+                            validationType.errors.net_rate
                               ? true
                               : false
                           }
                         />
-
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1232,7 +1409,10 @@ const Fishing = ({
                               setttop20(!ttop20);
                             }}
                           >
-                            The agreed commission based on the service agreement before any discounts are applied. This is automatically calculated based on the Net Price so no entry is required.
+                            The agreed commission based on the service agreement
+                            before any discounts are applied. This is
+                            automatically calculated based on the Net Price so
+                            no entry is required.
                           </Tooltip>
                         </div>
                       </div>
@@ -1271,7 +1451,9 @@ const Fishing = ({
                               setttop17(!ttop17);
                             }}
                           >
-                            The amount due to the provider on the invoice.<br />Our Deposit - Our Commission.
+                            The amount due to the provider on the invoice.
+                            <br />
+                            Our Deposit - Our Commission.
                           </Tooltip>
                         </div>
                       </div>
@@ -1299,23 +1481,20 @@ const Fishing = ({
                           value={validationType.values.balance_due || ""}
                           invalid={
                             validationType.touched.balance_due &&
-                              validationType.errors.balance_due
+                            validationType.errors.balance_due
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.balance_due &&
-                          validationType.errors.balance_due ? (
+                        validationType.errors.balance_due ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.balance_due}
                           </FormFeedback>
                         ) : null}
                       </div>
-
                     </div>
                   </Col>
-
-
                 </Row>
                 <Col
                   className="col-12 p-1 my-2"
@@ -1334,7 +1513,6 @@ const Fishing = ({
                   </p>
                 </Col>
                 <Row className="d-flex">
-
                   <Col className="col-2">
                     <div className="form-outline mb-2" id="our_price">
                       <div className="d-flex justify-content-between">
@@ -1372,7 +1550,7 @@ const Fishing = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
-                            setRecalc(true)
+                            setRecalc(true);
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "our_price",
@@ -1382,19 +1560,18 @@ const Fishing = ({
                           value={validationType.values.our_price || ""}
                           invalid={
                             validationType.touched.our_price &&
-                              validationType.errors.our_price
+                            validationType.errors.our_price
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.our_price &&
-                          validationType.errors.our_price ? (
+                        validationType.errors.our_price ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.our_price}
                           </FormFeedback>
                         ) : null}
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1414,8 +1591,13 @@ const Fishing = ({
                               setttop15(!ttop15);
                             }}
                           >
-                            <p>The $$ amount we earn from the sale after discount.</p>
-                            Calculated automatically:<br />Our Price - Net Price = Commission.
+                            <p>
+                              The $$ amount we earn from the sale after
+                              discount.
+                            </p>
+                            Calculated automatically:
+                            <br />
+                            Our Price - Net Price = Commission.
                           </Tooltip>
                         </div>
                       </div>
@@ -1454,11 +1636,15 @@ const Fishing = ({
                               setttop14(!ttop14);
                             }}
                           >
-                            <p>After discounting the tour, what our effective
-                            commission rate is (what we have left after the
-                            discount). This is calculated based on (Commission /
-                            Our Price = Eff. Rate).</p>
-                            If there is no public price specified, then it is calculated based on (Commission / (Net Price + Commission))
+                            <p>
+                              After discounting the tour, what our effective
+                              commission rate is (what we have left after the
+                              discount). This is calculated based on (Commission
+                              / Our Price = Eff. Rate).
+                            </p>
+                            If there is no public price specified, then it is
+                            calculated based on (Commission / (Net Price +
+                            Commission))
                           </Tooltip>
                         </div>
                       </div>
@@ -1479,13 +1665,13 @@ const Fishing = ({
                           value={validationType.values.eff_rate || ""}
                           invalid={
                             validationType.touched.eff_rate &&
-                              validationType.errors.eff_rate
+                            validationType.errors.eff_rate
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.eff_rate &&
-                          validationType.errors.eff_rate ? (
+                        validationType.errors.eff_rate ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.eff_rate}
                           </FormFeedback>
@@ -1498,7 +1684,6 @@ const Fishing = ({
                           %
                         </span>
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1518,10 +1703,13 @@ const Fishing = ({
                               setttop16(!ttop16);
                             }}
                           >
-                            <p>The amount we collect at the time of booking. This is
-                            calculated based on the option chosen in "Collect"
-                            above.</p>
-                            If "Deposit" is the Collect type then you will type in the amount of Deposit you will collect.
+                            <p>
+                              The amount we collect at the time of booking. This
+                              is calculated based on the option chosen in
+                              "Collect" above.
+                            </p>
+                            If "Deposit" is the Collect type then you will type
+                            in the amount of Deposit you will collect.
                           </Tooltip>
                         </div>
                       </div>
@@ -1549,19 +1737,18 @@ const Fishing = ({
                           value={validationType.values.deposit || ""}
                           invalid={
                             validationType.touched.deposit &&
-                              validationType.errors.deposit
+                            validationType.errors.deposit
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.deposit &&
-                          validationType.errors.deposit ? (
+                        validationType.errors.deposit ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.deposit}
                           </FormFeedback>
                         ) : null}
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1581,7 +1768,9 @@ const Fishing = ({
                               setttop21(!ttop21);
                             }}
                           >
-                            Choose the currency that the Balance Due on the confirmation voucher will be shown in (USD or MXN Pesos).
+                            Choose the currency that the Balance Due on the
+                            confirmation voucher will be shown in (USD or MXN
+                            Pesos).
                           </Tooltip>
                         </div>
                       </div>
@@ -1593,7 +1782,7 @@ const Fishing = ({
                             setCurrencySelected(e.target.value);
                           }}
                           onBlur={validationType.handleBlur}
-                        //   value={validationType.values.department || ""}
+                          //   value={validationType.values.department || ""}
                         >
                           <option value="-1">Select....</option>
                           {map(currency, (curr, index) => {
@@ -1603,8 +1792,10 @@ const Fishing = ({
                                 value={curr.currency_id}
                                 selected={
                                   dataEdit && dataEdit.voucher_currency
-                                    ? curr.currency_id === dataEdit.voucher_currency
-                                    : (curr.currency_id === "USD" || curr.currency_id === "USD")
+                                    ? curr.currency_id ===
+                                      dataEdit.voucher_currency
+                                    : curr.currency_id === "USD" ||
+                                      curr.currency_id === "USD"
                                 }
                               >
                                 {curr.currency}
@@ -1612,15 +1803,18 @@ const Fishing = ({
                             );
                           })}
                         </Input>
-
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline mb-2" id="voucher_balance">
                       <div className="d-flex justify-content-between">
-                        <Label style={{ "fontSize": "13px" }} className="form-label">Voucher Balance</Label>
+                        <Label
+                          style={{ fontSize: "13px" }}
+                          className="form-label"
+                        >
+                          Voucher Balance
+                        </Label>
                         <div>
                           <i
                             className="uil-question-circle font-size-15"
@@ -1634,7 +1828,14 @@ const Fishing = ({
                               setttop22(!ttop22);
                             }}
                           >
-                            The Balance Due shown on the confirmation voucher sent to the client, in either USD or MXN Pesos, depending on the currency selected. If USD is chosen then this is automatically calculated based on  (Our Price - Deposit = Voucher Balance). If MXN is chosen then manually enter the amount in pesos that the customer will pay at check-in on the day of the tour.
+                            The Balance Due shown on the confirmation voucher
+                            sent to the client, in either USD or MXN Pesos,
+                            depending on the currency selected. If USD is chosen
+                            then this is automatically calculated based on (Our
+                            Price - Deposit = Voucher Balance). If MXN is chosen
+                            then manually enter the amount in pesos that the
+                            customer will pay at check-in on the day of the
+                            tour.
                           </Tooltip>
                         </div>
                       </div>
@@ -1643,7 +1844,10 @@ const Fishing = ({
                           name="voucher_balance"
                           placeholder=""
                           type="text"
-                          readOnly={currencySelected !== "MXN $" && currencySelected !== "MXN"}
+                          readOnly={
+                            currencySelected !== "MXN $" &&
+                            currencySelected !== "MXN"
+                          }
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";
@@ -1655,13 +1859,13 @@ const Fishing = ({
                           value={validationType.values.voucher_balance || ""}
                           invalid={
                             validationType.touched.voucher_balance &&
-                              validationType.errors.voucher_balance
+                            validationType.errors.voucher_balance
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.voucher_balance &&
-                          validationType.errors.voucher_balance ? (
+                        validationType.errors.voucher_balance ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.voucher_balance}
                           </FormFeedback>
@@ -1674,7 +1878,6 @@ const Fishing = ({
                           $
                         </span>
                       </div>
-
                     </div>
                   </Col>
                 </Row>
@@ -1701,8 +1904,8 @@ const Fishing = ({
                             with the "From" price shown on cruise ship websites.
                             It is always higher. Compare all cruise websites. If
                             the tour is not available for cruise ship passengers
-                            or the ship price won't shown on the website (as with
-                            Cancun Discounts) then leave this blank.
+                            or the ship price won't shown on the website (as
+                            with Cancun Discounts) then leave this blank.
                           </Tooltip>
                         </div>
                       </div>
@@ -1722,7 +1925,7 @@ const Fishing = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
-                            setRecalc(true)
+                            setRecalc(true);
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "ship_price",
@@ -1732,19 +1935,18 @@ const Fishing = ({
                           value={validationType.values.ship_price || ""}
                           invalid={
                             validationType.touched.ship_price &&
-                              validationType.errors.ship_price
+                            validationType.errors.ship_price
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.ship_price &&
-                          validationType.errors.ship_price ? (
+                        validationType.errors.ship_price ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.ship_price}
                           </FormFeedback>
                         ) : null}
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1765,12 +1967,12 @@ const Fishing = ({
                             }}
                           >
                             The price that shows as the "reg price" on our
-                            websites. This should generally be the most expensive
-                            price for a comparable tour you can commonly find on
-                            the web. Typically avoid outliers where one website is
-                            far above from the rest. We want the customers to be
-                            able to see that they're saving money compared to
-                            other options.
+                            websites. This should generally be the most
+                            expensive price for a comparable tour you can
+                            commonly find on the web. Typically avoid outliers
+                            where one website is far above from the rest. We
+                            want the customers to be able to see that they're
+                            saving money compared to other options.
                           </Tooltip>
                         </div>
                       </div>
@@ -1790,7 +1992,7 @@ const Fishing = ({
                           step="any"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
-                            setRecalc(true)
+                            setRecalc(true);
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "compare_at",
@@ -1800,19 +2002,18 @@ const Fishing = ({
                           value={validationType.values.compare_at || ""}
                           invalid={
                             validationType.touched.compare_at &&
-                              validationType.errors.compare_at
+                            validationType.errors.compare_at
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.compare_at &&
-                          validationType.errors.compare_at ? (
+                        validationType.errors.compare_at ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.compare_at}
                           </FormFeedback>
                         ) : null}
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-2">
@@ -1856,13 +2057,13 @@ const Fishing = ({
                           value={validationType.values.you_save || ""}
                           invalid={
                             validationType.touched.you_save &&
-                              validationType.errors.you_save
+                            validationType.errors.you_save
                               ? true
                               : false
                           }
                         />
                         {validationType.touched.you_save &&
-                          validationType.errors.you_save ? (
+                        validationType.errors.you_save ? (
                           <FormFeedback type="invalid">
                             {validationType.errors.you_save}
                           </FormFeedback>
@@ -1875,7 +2076,6 @@ const Fishing = ({
                           %
                         </span>
                       </div>
-
                     </div>
                   </Col>
                   <Col className="col-6">
@@ -1910,13 +2110,13 @@ const Fishing = ({
                         value={validationType.values.compare_at_url || ""}
                         invalid={
                           validationType.touched.compare_at_url &&
-                            validationType.errors.compare_at_url
+                          validationType.errors.compare_at_url
                             ? true
                             : false
                         }
                       />
                       {validationType.touched.compare_at_url &&
-                        validationType.errors.compare_at_url ? (
+                      validationType.errors.compare_at_url ? (
                         <FormFeedback type="invalid">
                           {validationType.errors.compare_at_url}
                         </FormFeedback>
@@ -1925,17 +2125,15 @@ const Fishing = ({
                   </Col>
                 </Row>
                 <Row>
-                  <Col
-                    className="col-12 d-flex justify-content-end mt-4"
-
-                  >
+                  <Col className="col-12 d-flex justify-content-end mt-4">
                     <Button
                       color="paradise"
                       outline
                       className="waves-effect waves-light col-2 mx-4"
                       type="button"
-                      onClick={() => {setAddNewFishing(false)
-                        setCopyProduct(false)
+                      onClick={() => {
+                        setAddNewFishing(false);
+                        setCopyProduct(false);
                       }}
                     >
                       Close
