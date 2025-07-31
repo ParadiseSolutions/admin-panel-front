@@ -6,7 +6,11 @@ import Pricing from "./EditComponents/pricing";
 import AddonsComponent from "./EditComponents/addons";
 import URL from "./EditComponents/url";
 import Schedules from "./EditComponents/schedules";
-import { getTourAPI, getTourSettingsAPI, postPendingPublishAPI } from "../../Utils/API/Tours";
+import {
+  getTourAPI,
+  getTourSettingsAPI,
+  postPendingPublishAPI,
+} from "../../Utils/API/Tours";
 import {
   TabContent,
   NavLink,
@@ -69,39 +73,22 @@ const EditTour = ({ history }) => {
     getTourAPI(id).then((resp) => {
       setTourData(resp.data.data);
       setPublishPending(resp.data.data.html_needs_update === 1 ? true : false);
-      if (resp.data.data) {
-        if (resp.data.data.html_needs_update === 1) {
-          setPublishPending(true);
-          Swal.fire("Changes Pending!", "There are pending changes to be published.", "alert");
-        } else {
-          setPublishPending(false);
-        }
-      }
     });
     console.log(activeTab, "activeTab");
   }, [activeTab, id]);
 
   const publishTour = () => {
-      Swal.fire({
-        title: "Publish Tour",
-        text: "Are you sure you want to publish the tour?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, publish it!",
-        cancelButtonText: "No, cancel!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setPublishPending(true);
-          postPendingPublishAPI(id).then(() => {
-            Swal.fire("Published!", "The tour has been published successfully.", "success");
-            setPublishPending(false);
-          });
-        }
-      });
-  }
+    postPendingPublishAPI(id).then(() => {
+      Swal.fire(
+        "Published!",
+        "The tour has been published successfully.",
+        "success"
+      );
+      setPublishPending(false);
+    });
+  };
 
-    console.log("tourData", tourData);
-
+  console.log(tourData, "tourData");
   return (
     <div className="page-content pb-0">
       <Container fluid className="d-flex justify-content-between">
@@ -111,15 +98,21 @@ const EditTour = ({ history }) => {
           </h1>
         </div>
         <div className="col-7 d-flex justify-content-end">
-          <Button
-            color={`${publishPending ? "danger" : "paradise"}`}
-            className={`waves-effect waves-light col-2 mx-4 blue-outlined-hover`}
-            style={{ height: "45px", minWidth: "fit-content" }}
-            type="button"
-            onClick={publishTour}
-          >
-            Publish
-          </Button>
+          <div className="d-flex flex-column align-items-center">
+            <Button
+              color={`${publishPending ? "danger" : "paradise"}`}
+              className={`waves-effect waves-light col-10 mx-4 blue-outlined-hover`}
+              style={{ height: "45px", minWidth: "fit-content" }}
+              type="button"
+              onClick={publishTour}
+            >
+              Publish
+            </Button>
+            {publishPending && (
+
+            <p className="fs-6 fw-lighter py-2 text-danger">Pending changes to publish</p>
+            )}
+          </div>
 
           <Link to={"/tours"}>
             <Button
