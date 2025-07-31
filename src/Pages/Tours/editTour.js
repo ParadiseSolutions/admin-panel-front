@@ -108,7 +108,10 @@ const EditTour = ({ history }) => {
             >
               Publish
             </Button>
+            {publishPending && (
+
             <p className="fs-6 fw-lighter py-2 text-danger">Pending changes to publish</p>
+            )}
           </div>
 
           <Link to={"/tours"}>
