@@ -42,7 +42,7 @@ const Login = () => {
           const respuesta = resp.data.data;
           if (resp.data.status === 200) {
             createStorageSync("token", JSON.stringify(respuesta));
-            history.push("/tours/new");
+            history.push("/tours");
           }
         })
         .catch((error) => {
