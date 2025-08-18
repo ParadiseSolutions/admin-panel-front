@@ -39,7 +39,7 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
             <PrivateRoutes path="/providers" component={ProvidersRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/shoppingcarts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/tours" component={TourRoutes} isAuthenticated={isLogged} />
-            <Redirect to="/tours/new" />
+            <Redirect to="/tours" />
           </Switch>
         </Suspense>
       </Layout>
