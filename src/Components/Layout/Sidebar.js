@@ -112,7 +112,7 @@ const Sidebar = () => {
           className="navbar-brand-box"
           style={{ backgroundColor: "#3DC7F4" }}
         >
-          <Link to="/tours/new" className="logo logo-dark">
+          <Link to="/tours" className="logo logo-dark">
             <span className="logo-sm">
               <img src={logoSm} alt="" height="42" />
             </span>
@@ -136,7 +136,7 @@ const Sidebar = () => {
               <ul className="metismenu list-unstyled" id="side-menu">
                 <li className="menu-title" style={{ borderBottom: "solid 1px white", margin: "0 10px 15px 10px", width: "auto" }}>{"Menu"} </li>
                 <li style={{ borderBottom: "solid 1px white", margin: "0 10px 15px 10px", width: "auto", paddingBottom: "5px" }}>
-                  <Link to="/tours/new" className="waves-effect">
+                  <Link to="/tours" className="waves-effect">
                     <i className="uil-home-alt"></i>
                     {/* <span className="badge rounded-pill bg-primary float-end">
                       01
