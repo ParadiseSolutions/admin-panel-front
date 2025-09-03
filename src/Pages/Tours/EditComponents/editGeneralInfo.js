@@ -24,6 +24,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  Tooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -40,13 +41,10 @@ import { getCookie, setCookie, switchTourTab } from "../../../Utils/API";
 const EditGeneralInformation = ({ tourData, toggle }) => {
   //get initial data tour types
   const dispatch = useDispatch();
-  const [editMode] = useState(
-    tourData.edit_mode === 1 ? false : true
-  );
+  const [editMode] = useState(tourData.edit_mode === 1 ? false : true);
   useEffect(() => {
     const tourTypesRequest = () => dispatch(tourTypesData());
     tourTypesRequest();
-   
   }, [dispatch]);
   const dataTourType = useSelector((state) => state.tourTypes.tourTypes.data);
 
@@ -79,6 +77,17 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
   const [mainCatID, setMainCatID] = useState(null);
   const [categoryId, setCategoryId] = useState(tourData.category_id);
   const [secondCatID, setSecondCatID] = useState(null);
+  const [tourTypeTT, setTourTypeTT] = useState(false);
+  const [websiteTT, setWebsiteTT] = useState(false);
+  const [shoppingCartTT, setShoppingCartTT] = useState(false);
+  const [providerTT, setProviderTT] = useState(false);
+  const [operatorTT, setOperatorTT] = useState(false);
+  const [locationTT, setLocationTT] = useState(false);
+  const [mainCatTT, setMainCatTT] = useState(false);
+  const [subCatTT, setSubCatTT] = useState(false);
+  const [codeTT, setCodeTT] = useState(false);
+  const [tourNameTT, setTourNameTT] = useState(false);
+  //subcategory request based on main category
 
   const [subCategoriesData, setSubCategoriesData] = useState(null);
 
@@ -149,7 +158,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
 
   useEffect(() => {
     if (dataWebsite) {
-      onChangeWebsite(tourData.website_id)
+      onChangeWebsite(tourData.website_id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataWebsite]);
@@ -174,7 +183,11 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
           cart_id: shoppingCartID ? shoppingCartID : tourData.cart_id,
           website_id: websiteID ? websiteID : tourData.website_id,
           type_id: tourData.type_id,
-          category_id: secondCatID ? secondCatID : (categoryId ? categoryId : tourData.category_id),
+          category_id: secondCatID
+            ? secondCatID
+            : categoryId
+            ? categoryId
+            : tourData.category_id,
           location_id: locationID ? locationID : tourData.location_id,
           provider_id: providerID ? providerID : tourData.provider_id,
           operator_id: operatorID ? operatorID : tourData.operator_id,
@@ -188,15 +201,13 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
           .then((resp) => {
             if (resp.data.status === 200) {
               triggerUpdate();
-              Swal.fire(
-                "Edited!",
-                "Tour has been edited.",
-                "success"
-              ).then(() => {
-                onChangeWebsite();
-                updateLocalStorageStatus(resp.data.data)
-                window.location.href = switchTourTab(2)
-              });
+              Swal.fire("Edited!", "Tour has been edited.", "success").then(
+                () => {
+                  onChangeWebsite();
+                  updateLocalStorageStatus(resp.data.data);
+                  window.location.href = switchTourTab(2);
+                }
+              );
             }
           })
           .catch((error) => {
@@ -210,7 +221,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
-                return true
+                return true;
               });
 
               Swal.fire(
@@ -234,8 +245,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                 "success"
               ).then(() => {
                 onChangeWebsite();
-                updateLocalStorageStatus(resp.data.data)
-                window.location.href = switchTourTab(2)
+                updateLocalStorageStatus(resp.data.data);
+                window.location.href = switchTourTab(2);
               });
             }
           })
@@ -250,7 +261,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               let errorMessages = [];
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
-                return true
+                return true;
               });
 
               Swal.fire(
@@ -266,14 +277,14 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
 
   const updateLocalStorageStatus = (newInfo) => {
     let tourInfo = getCookie("tour_data", true);
-    if(tourInfo && newInfo?.id) {
-      let indexToUpdate = tourInfo.findIndex(x => x.id === newInfo?.id)
-      if(indexToUpdate >= 0) {
-        tourInfo[indexToUpdate] = newInfo
+    if (tourInfo && newInfo?.id) {
+      let indexToUpdate = tourInfo.findIndex((x) => x.id === newInfo?.id);
+      if (indexToUpdate >= 0) {
+        tourInfo[indexToUpdate] = newInfo;
       }
-      setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60)
+      setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60);
     }
-  }
+  };
   return (
     <Form
       onSubmit={(e) => {
@@ -320,7 +331,25 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline mt-2">
-                  <Label className="form-label">Tour Type</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Tour Type</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="TourType"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={tourTypeTT}
+                        target="TourType"
+                        toggle={() => {
+                          setTourTypeTT(!tourTypeTT);
+                        }}
+                      >
+                        Choose the pricing modal to be used to define the tour.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="tour_type"
@@ -347,7 +376,28 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline mt-2">
-                  <Label className="form-label">Website</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Website</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Website"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={websiteTT}
+                        target="Website"
+                        toggle={() => {
+                          setWebsiteTT(!websiteTT);
+                        }}
+                      >
+                        Choose the website the tour will be shown on. If there
+                        are multiple websites that will show the tour, you will
+                        make a different tour for each website. This will be
+                        used in the SKU.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="website"
@@ -378,7 +428,27 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline mt-2">
-                  <Label className="form-label">Shopping Cart</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Shopping Cart</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Shopping"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={shoppingCartTT}
+                        target="Shopping"
+                        toggle={() => {
+                          setShoppingCartTT(!shoppingCartTT);
+                        }}
+                      >
+                        Choose the shopping cart to be used with this tour. If
+                        the actual booking will take place on a third-party
+                        website, not ours, choose "Affiliate".
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="shopping_cart"
@@ -390,7 +460,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* {editMode ? <option>{tourData.cart_name}</option> : null} */}
-                    
+
                     {map(shoppingCartData, (shoppingCart, index) => {
                       return (
                         <option
@@ -409,7 +479,29 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline my-2">
-                  <Label className="form-label">Provider</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Provider</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Provider"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={providerTT}
+                        target="Provider"
+                        toggle={() => {
+                          setProviderTT(!providerTT);
+                        }}
+                      >
+                        The agency or operator who we are placing the booking
+                        through. This is usually the same as the operator, but
+                        in some cases we may book a tour through a third-party
+                        such as Viator, Cozumel Charters or Epic where they are
+                        the provider but not the operator of the tour.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="provider"
@@ -421,14 +513,16 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* { editMode ? <option>{tourData.provider_name}</option> : null } */}
-                    
+
                     {map(providerData, (provider, index) => {
                       return (
                         <option
                           key={index}
                           value={provider.provider_id}
                           selected={
-                            tourData.provider_id === provider.provider_id ? true : false
+                            tourData.provider_id === provider.provider_id
+                              ? true
+                              : false
                           }
                         >
                           {provider.provider_name}
@@ -440,7 +534,27 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline my-2">
-                  <Label className="form-label">Operator</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Operator</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Operator"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={operatorTT}
+                        target="Operator"
+                        toggle={() => {
+                          setOperatorTT(!operatorTT);
+                        }}
+                      >
+                        Select the actual operator of the tour. This may or may
+                        not be who we place the booking through or ask for
+                        availability, but is who actually runs the tour.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="operator"
@@ -452,14 +566,16 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* {editMode ? <option>{tourData.operator_name}</option> : null} */}
-                    
+
                     {map(operatorData, (operator, index) => {
                       return (
                         <option
                           key={index}
                           value={operator.operator_id}
                           selected={
-                            tourData.operator_id === operator.operator_id ? true : false
+                            tourData.operator_id === operator.operator_id
+                              ? true
+                              : false
                           }
                         >
                           {operator.operator_name}
@@ -483,7 +599,29 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
             <Row className="d-flex justify-content-start">
               <Col className="col-8">
                 <div className="form-outline mt-2">
-                  <Label className="form-label">Tour Name</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Tour Name</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="TourName"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={tourNameTT}
+                        target="TourName"
+                        toggle={() => {
+                          setTourNameTT(!tourNameTT);
+                        }}
+                      >
+                        The name the tour will be known by on the website.{" "}
+                        <br />
+                        <br /> This will be shown in H2 as well as the Price
+                        Box, Category Page and Reserve Page. (Validate this tour
+                        name isn't already being used)
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     name="tour_name"
                     placeholder="ATV Tour"
@@ -515,7 +653,28 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
 
               <Col className="col-4">
                 <div className="form-outline mt-2">
-                  <Label className="form-label">Location</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Location</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Location"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={locationTT}
+                        target="Location"
+                        toggle={() => {
+                          setLocationTT(!locationTT);
+                        }}
+                      >
+                        Where the tour actually takes place, not just the
+                        website. <br />
+                        <br /> This can be used to provide customers options
+                        that are close to their hotel.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="location"
@@ -545,7 +704,30 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline my-2">
-                  <Label className="form-label">Main Category</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Main Category</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Category"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={mainCatTT}
+                        target="Category"
+                        toggle={() => {
+                          setMainCatTT(!mainCatTT);
+                        }}
+                      >
+                        For example, Mayan Ruins would be the main category,
+                        Chichen Itza the subcategory. <br />
+                        <br /> Theme Parks would be the main category, Xcaret
+                        would be the subcategory. <br />
+                        <br /> Private Boats would be the main category, Yacht
+                        Charters would be the subcategory.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="main-category"
@@ -558,7 +740,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* {editMode ? <option>{tourData.category_name}</option> : null} */}
-                    
+
                     {map(categoryData, (category, index) => {
                       return (
                         <option
@@ -566,7 +748,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                           value={category.category_id}
                           selected={
                             /* index === 0 && categoryData.length === 1 */
-                            tourData.category_info.main_category_id === category.category_id
+                            tourData.category_info.main_category_id ===
+                            category.category_id
                               ? true
                               : false
                           }
@@ -580,7 +763,31 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline my-2">
-                  <Label className="form-label">Sub-Category</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Sub-Category</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Sub"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={subCatTT}
+                        target="Sub"
+                        toggle={() => {
+                          setSubCatTT(!subCatTT);
+                        }}
+                      >
+                        The subcategory of the tour. This may or may not be a
+                        category page. It will be used for the SKU. This field
+                        is populated by the main category selected. If you don't
+                        see the subcategory you are looking for, try choosing a
+                        different main category. If the tour only fits with the
+                        main category and there are no relevant subcategories
+                        then leave this blank.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     type="select"
                     name="sub-category"
@@ -598,7 +805,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                           key={index}
                           value={subCategory.category_id}
                           selected={
-                            tourData.category_info.sub_category_id === subCategory.category_id
+                            tourData.category_info.sub_category_id ===
+                            subCategory.category_id
                               ? true
                               : false
                           }
@@ -612,7 +820,26 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
               </Col>
               <Col className="col-4">
                 <div className="form-outline my-2">
-                  <Label className="form-label">2-Digit Code</Label>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">2-Digit Code</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Code"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={codeTT}
+                        target="Code"
+                        toggle={() => {
+                          setCodeTT(!codeTT);
+                        }}
+                      >
+                        A unique 2-letter code that will distinguish your tour
+                        from other tours in the subcategory.
+                      </Tooltip>
+                    </div>
+                  </div>
                   <Input
                     name="code"
                     placeholder=""

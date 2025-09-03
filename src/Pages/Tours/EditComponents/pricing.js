@@ -21,6 +21,7 @@ import {
   UncontrolledTooltip,
   Label,
   Input,
+  Tooltip,
 } from "reactstrap";
 import { Name, Code, Price, Rate, Active } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
@@ -44,14 +45,16 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   useEffect(() => {
     if (tourData !== undefined) {
-      tourData?.range_price === 0 ? setPriceRangeCheck(false) : setPriceRangeCheck(true)
+      tourData?.range_price === 0
+        ? setPriceRangeCheck(false)
+        : setPriceRangeCheck(true);
     }
   }, [tourData]);
 
   // console.log(tourData);
   const postPriceRange = () => {
     let data = { active: priceRangeCheck === false ? 1 : 0 };
-    putPriceRangesAPI(id, data).then((resp) => { });
+    putPriceRangesAPI(id, data).then((resp) => {});
   };
 
   //table actions
@@ -101,7 +104,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   const [editProductID, setEditProductID] = useState(null);
   const [copyProduct, setCopyProduct] = useState(false);
-
+  const [ttop4, setttop4] = useState(false);
   const columnsProducts = useMemo(() => [
     {
       Header: "Prod ID",
@@ -330,7 +333,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
   //price range
 
-
   const onClickNewProduct = () => {
     setEditProductID(null);
     setCopyProduct(false);
@@ -368,24 +370,52 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           <div className="text-sm-end">
             <div className="waves-effect waves-light mx-2">
               <div className="d-flex">
-                <Label
-                  className="form-label mt-2"
-                  style={{
-                    // fontWeight: "bold",
-                    color: "#495057",
-                    marginBottom: "0px",
-                  }}
-                >
-                  Price Ranges
-                </Label>
+                <div className="d-flex justify-content-between align-items-center">
+                  <Label
+                    className="form-label mt-2"
+                    style={{
+                      // fontWeight: "bold",
+                      color: "#495057",
+                      marginBottom: "0px",
+                    }}
+                  >
+                    Price Ranges
+                  </Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 p-2"
+                      id="ranges"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={ttop4}
+                      target="ranges"
+                      toggle={() => {
+                        setttop4(!ttop4);
+                      }}
+                    >
+                      Toggle to specify price ranges based on the number of
+                      <br />
+                      people. Applies only to "Fixed" price type.
+                      <br />
+                      
+                      Example:
+                      <br />
+                      <br />
+                      1-10 People is $100.00  
+                      <br />
+                      11-20 People is $200.00 
+                      <br />
+                      21-30 People is $300.00
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
                   <Input
                     name="seasonality"
                     placeholder=""
                     type="checkbox"
-                    checked={
-                      priceRangeCheck
-                    }
+                    checked={priceRangeCheck}
                     className="form-check-input"
                     onChange={() => {
                       setPriceRangeCheck(!priceRangeCheck);
