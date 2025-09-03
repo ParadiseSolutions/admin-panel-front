@@ -19,6 +19,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  Tooltip,
 } from "reactstrap";
 import Switch from "react-switch";
 // import classnames from "classnames";
@@ -73,6 +74,15 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   const [templatesData, setTemplatesData] = useState([]);
   const [templateSelected, setTemplateSelected] = useState("");
   const [activeDep, setActiveDep] = useState(false);
+  const [tourIDTT, setTourIDTT] = useState(false);
+  const [hashTT, setHashTT] = useState(false);
+  const [providerNameTT, setProviderNameTT] = useState(false);
+  const [providerURLTT, setProviderURLTT] = useState(false);
+  const [voucherTT, setVoucherTT] = useState(false);
+  const [paymentTT, setPaymentTT] = useState(false);
+  const [infantsTT, setInfantsTT] = useState(false);
+  const [kidsTT, setKidsTT] = useState(false);
+  const [teenagersTT, setTeenagersTT] = useState(false);
 
   useEffect(() => {
     getAvailableFromAPI().then((resp) => {
@@ -100,13 +110,13 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
     }
     if (tourSettings?.payment_request === 1) {
       setActiveDep(true);
-    }else{
-      setActiveDep(false)
+    } else {
+      setActiveDep(false);
     }
   }, [availableData, tourSettings]);
 
   const onChangeActive = () => {
-setActiveDep(!activeDep)
+    setActiveDep(!activeDep);
   };
 
   //available from
@@ -185,7 +195,7 @@ setActiveDep(!activeDep)
           ? values.teenagers_range_to
           : "",
         voucher_template_id: templateSelected,
-        payment_request: activeDep === true ? 1 : 0
+        payment_request: activeDep === true ? 1 : 0,
       };
 
       //console.log('data a enviar', data)
@@ -262,7 +272,25 @@ setActiveDep(!activeDep)
             </Col>
             <Col className="col-1 mb-3">
               <div className="form-outline mt-2">
-                <Label className="form-label">Tour ID</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Tour ID</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="Tour"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={tourIDTT}
+                      target="Tour"
+                      toggle={() => {
+                        setTourIDTT(!tourIDTT);
+                      }}
+                    >
+                      The unique id of the tour.  This is automatically assigned by the system to identify the tour record in the database.
+                    </Tooltip>
+                  </div>
+                </div>
                 <Input
                   name="tour_id"
                   placeholder=""
@@ -274,7 +302,25 @@ setActiveDep(!activeDep)
             </Col>
             <Col className="col-1 mb-3">
               <div className="form-outline mt-2">
-                <Label className="form-label">Tour Hash</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Tour Hash</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="Hash"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={hashTT}
+                      target="Hash"
+                      toggle={() => {
+                        setHashTT(!hashTT);
+                      }}
+                    >
+                      The unique hash of the tour.  This is automatically assigned by the system.  It is specified in the code of the page to identify the tour for loading elements from the database such as reviews or schema.
+                    </Tooltip>
+                  </div>
+                </div>
                 <Input
                   name="tour_hash"
                   placeholder=""
@@ -286,7 +332,25 @@ setActiveDep(!activeDep)
             </Col>
             <Col className="col-2">
               <div className="form-outline mt-2">
-                <Label className="form-label">Provider Tour Name</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Provider Tour Name</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="Provider"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={providerNameTT}
+                      target="Provider"
+                      toggle={() => {
+                        setProviderNameTT(!providerNameTT);
+                      }}
+                    >
+                      The name the provider calls the tour on their own website or service agreement.  This name is used on the please confirm emails to minimize confusion where we use a different marketing name for the tour than they do.
+                    </Tooltip>
+                  </div>
+                </div>
                 <Input
                   name="provider_tour_name"
                   placeholder=""
@@ -311,7 +375,25 @@ setActiveDep(!activeDep)
             </Col>
             <Col className="col-4">
               <div className="form-outline mt-2">
-                <Label className="form-label">Provider Tour URL</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Provider Tour URL</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="ProviderTour"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={providerURLTT}
+                      target="ProviderTour"
+                      toggle={() => {
+                        setProviderURLTT(!providerURLTT);
+                      }}
+                    >
+                      The link on the provider's website where we can view their description of the tour.  If the provider doesn't have a website, you can leave this blank.
+                    </Tooltip>
+                  </div>
+                </div>
                 <Input
                   name="provider_tour_url"
                   placeholder=""
@@ -336,7 +418,25 @@ setActiveDep(!activeDep)
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
               <div className="form-outline mb-2" id="voucher_currency">
-                <Label className="form-label">Voucher Template</Label>
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Voucher Template</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="Voucher"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={voucherTT}
+                      target="Voucher"
+                      toggle={() => {
+                        setVoucherTT(!voucherTT);
+                      }}
+                    >
+                      Select the type of voucher that the customer will receive.
+                    </Tooltip>
+                  </div>
+                </div>
                 <div className="input-group">
                   <Input
                     type="select"
@@ -369,7 +469,25 @@ setActiveDep(!activeDep)
               </div>
             </Col>
             <Col className="col-2">
-              <Label className="form-label mt-2 mx-3">Payment Request</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">Payment Request</Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="Payment"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={paymentTT}
+                    target="Payment"
+                    toggle={() => {
+                      setPaymentTT(!paymentTT);
+                    }}
+                  >
+                   If selected, this will notify CE that a Payment Request will need to be created in Ryver.
+                  </Tooltip>
+                </div>
+              </div>
               <div className="form-check form-switch form-switch-md mt-1">
                 <Switch
                   uncheckedIcon={<Offsymbol />}
@@ -434,7 +552,25 @@ setActiveDep(!activeDep)
           </Row>
           <Row className="row">
             <Col className="col-md-4 col-12 px-xxl-5">
-              <Label className="form-label">Infants</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">Infants</Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="Infants"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={infantsTT}
+                    target="Infants"
+                    toggle={() => {
+                      setInfantsTT(!infantsTT);
+                    }}
+                  >
+                   Use only if the tour specifies an infants price, or a different price for kids under a certain age than the normal kids price. <br/><br/> For example Kids 6 to 12 years are $50.00, but Kids under 6 years old are $5.00.
+                  </Tooltip>
+                </div>
+              </div>
               <div className="d-flex align-items-center">
                 <div className="input-group me-4">
                   <span className="input-group-text">From</span>
@@ -490,7 +626,25 @@ setActiveDep(!activeDep)
               </div>
             </Col>
             <Col className="col-md-4 col-12 px-xxl-5">
-              <Label className="form-label">Kids</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">Kids</Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="Kids"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={kidsTT}
+                    target="Kids"
+                    toggle={() => {
+                      setKidsTT(!kidsTT);
+                    }}
+                  >
+                    Specify what ages are defined to charge kids price to.  For example, Kids 6 to 12 years old pay kids price.  More than that is considered an Adult.  Less than that is either not specified (as in the case where only Kids 6 and up are allowed, an infants price, or free.).
+                  </Tooltip>
+                </div>
+              </div>
               <div className="d-flex align-items-center">
                 <div className="input-group me-4">
                   <span className="input-group-text">From</span>
@@ -546,7 +700,25 @@ setActiveDep(!activeDep)
               </div>
             </Col>
             <Col className="col-md-4 col-12 px-xxl-5">
-              <Label className="form-label">Teenagers</Label>
+              <div className="d-flex justify-content-between">
+                <Label className="form-label">Teenagers</Label>
+                <div>
+                  <i
+                    className="uil-question-circle font-size-15"
+                    id="Teenagers"
+                  />
+                  <Tooltip
+                    placement="right"
+                    isOpen={teenagersTT}
+                    target="Teenagers"
+                    toggle={() => {
+                      setTeenagersTT(!teenagersTT);
+                    }}
+                  >
+                    Specify only if the tour has a different price for teenagers as they do for young kids.
+                  </Tooltip>
+                </div>
+              </div>
               <div className="d-flex align-items-center">
                 <div className="input-group me-4">
                   <span className="input-group-text">From</span>

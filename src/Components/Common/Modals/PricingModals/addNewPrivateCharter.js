@@ -49,6 +49,10 @@ const AddNewPrivateCharter = ({
   //edit data
   const [dataEdit, setDataEdit] = useState();
   const [loadingData, setLoadingData] = useState(true);
+  const [charterTT, setCharterTT] = useState(false);
+  const [durationTT, setDurationTT] = useState(false);
+  const [capacityTT, setCapacityTT] = useState(false);
+  const [locationTT, setLocationTT] = useState(false);
   useEffect(() => {
     if (id) {
       getPriceAPI(id).then((resp) => {
@@ -2180,7 +2184,23 @@ const AddNewPrivateCharter = ({
                   <Row className="d-flex">
                     <Col className="col-3">
                       <div className="form-outline mb-2">
-                        <Label className="form-label">Charter Type</Label>
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Charter Type</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="CharterType"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={charterTT}
+                              target="CharterType"
+                              toggle={() => {
+                                setCharterTT(!charterTT);
+                              }}
+                            >Choose the type of charter you are defining.  For example, Snorkeling or Sunset.  This will show in the parentheses as (Snorkeling - 4 Hours - Deposit Only).  You will define Sunset as a separate product.</Tooltip>
+                          </div>
+                        </div>
                         <Input
                           type="select"
                           name="charterType"
@@ -2213,7 +2233,23 @@ const AddNewPrivateCharter = ({
                     </Col>
                     <Col className="col-2">
                       <div className="form-outline mb-2">
-                        <Label className="form-label">Duration</Label>
+                         <div className="d-flex justify-content-between">
+                          <Label className="form-label">Duration</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="Duration"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={durationTT}
+                              target="Duration"
+                              toggle={() => {
+                                setDurationTT(!durationTT);
+                              }}
+                            >Specify the duration of the charter, for example 4 Hours.</Tooltip>
+                          </div>
+                        </div>
                         <Input
                           type="select"
                           name="duration"
@@ -2247,7 +2283,23 @@ const AddNewPrivateCharter = ({
                     </Col>
                     <Col className="col-2">
                       <div className="form-outline mb-2">
-                        <Label className="form-label">Capacity.</Label>
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Capacity</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="Capacity"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={capacityTT}
+                              target="Capacity"
+                              toggle={() => {
+                                setCapacityTT(!capacityTT);
+                              }}
+                            >Specify the capacity of the boat.  If it is up to 50 people same price, then leave the first box empty and type 50 in the second box.  If it is a tiered pricing like 41 to 50 people for the specified price, then you'll type 41 in the first box and 50 in the second box.</Tooltip>
+                          </div>
+                        </div>
                         <Input
                           name="min_qty"
                           placeholder=""
@@ -2301,7 +2353,23 @@ const AddNewPrivateCharter = ({
                     </Col>
                     <Col className="col-3">
                       <div className="form-outline mb-2">
-                        <Label className="form-label">Location</Label>
+                       <div className="d-flex justify-content-between">
+                          <Label className="form-label">Location</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="Location"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={locationTT}
+                              target="Location"
+                              toggle={() => {
+                                setLocationTT(!locationTT);
+                              }}
+                            >Select the location of the boat.  For example, Puerto Morelos or Cancun.</Tooltip>
+                          </div>
+                        </div>
                         <Input
                           type="select"
                           name="priceLocation"
