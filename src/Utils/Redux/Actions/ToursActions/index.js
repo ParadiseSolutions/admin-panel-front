@@ -5,13 +5,13 @@ import { GET_TOURS_INIT,
 import axios from "axios";
 import { API_URL, options } from "../../../API";
 
-export const toursData = () => {
+export const toursData = (requestFlag) => {
   return async (dispatch) => {
     dispatch(getToursInit());
 
     try {
       const getData = () => {
-        return axios.get(`${API_URL}/tours`, {
+        return axios.get(`${API_URL}/tours/filter-status/${requestFlag}`, {
           headers: options,
         });
       };
