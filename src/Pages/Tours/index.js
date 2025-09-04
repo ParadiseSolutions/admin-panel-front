@@ -19,55 +19,109 @@ import Swal from "sweetalert2";
 
 const Tours = () => {
   const dispatch = useDispatch();
-  const [switch1, setswitch1] = useState(false);
+  // const [switch1, setswitch1] = useState(true);
+  const [switch1, setswitch1] = useState(() => {
+    const c = getCookie("switch1");
+    return c ? c === "true" : true;
+  });
+  const [switchSynced, setSwitchSynced] = useState(false);
+    useEffect(() => {
+    setSwitchSynced(true);
+  }, []);
   //loading
   const [loadingData, setLoadingData] = useState(true);
   const [restart, setRestart] = useState(false);
   const cookieLife = 24 * 60 * 60
 
   //cart request
-  useEffect(() => {
-    const toursRequest = () => dispatch(toursData());
-    toursRequest();
-  }, [dispatch]);
+  // useEffect(() => {
+  // const swicth2 = getCookie("switch1");
+  // if (swicth2 && switch1 !== (swicth2 === "true")) return; // Espera a que switch1 esté sincronizado
+
+  // // Solo ejecuta la petición si switch1 está listo
+  // let requestFlag = switch1 ? 1 : 0;
+  // if (typeof requestFlag === "number") {
+  //   dispatch(toursData(requestFlag));
+  // }
+  // }, [dispatch, switch1]);
+  
+   useEffect(() => {
+    // Espera a que la sincronización inicial esté lista
+    if (!switchSynced) return;
+
+    // Calcula requestFlag de manera segura
+    const requestFlag = switch1 ? 1 : 0;
+
+    // Evita enviar peticiones con valores inválidos y evita doble disparo
+    if (requestFlag === 0 || requestFlag === 1) {
+      console.log("Dispatching toursData with requestFlag:", requestFlag);
+      dispatch(toursData(requestFlag));
+    }
+  }, [dispatch, switch1, switchSynced]);
 
   //get info
   const data = useSelector((state) => state.tours.tours.data);
   const [toursDataInfo, setToursDataInfo] = useState([]);
-  useEffect(() => {
-    if (data) {
-      let tourInfo = getCookie("tour_data", true);
-      let swicth2 = getCookie("switch1");
+  // useEffect(() => {
+  //   if (data) {
+  //     let tourInfo = getCookie("tour_data", true);
+  //     let swicth2 = getCookie("switch1");
 
-      if (swicth2) {
-        if (swicth2 === "true") {
-          setswitch1(true)
-        } else {
-          setswitch1(false)
-        }
+  //     if (swicth2) {
+  //       const swicth2Bool = swicth2 === "true";
+  //     if (switch1 !== swicth2Bool) {
+  //       setswitch1(swicth2Bool);
+  //     }
+  //     }
+
+  //     if (tourInfo) {
+  //       if (switch1 || swicth2 === "true") {
+  //         tourInfo = tourInfo.filter(x => x.active === 1)
+  //       }
+  //       setToursDataInfo(tourInfo);
+  //       setLoadingData(false);
+  //       setIsFiltered(true)
+  //     } else {
+  //       if (switch1 || swicth2 === "true") {
+  //         tourInfo = data.filter(x => x.active === 1)
+  //       } else {
+  //         tourInfo = data
+  //       }
+  //       setToursDataInfo(tourInfo);
+  //       setLoadingData(false);
+  //     }
+
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [data, switch1]);
+
+   useEffect(() => {
+    if (!data) return;
+
+    let tourInfo = getCookie("tour_data", true);
+    const swicth2 = getCookie("switch1");
+
+    // No intentamos reasignar switch1 aquí porque ya lo inicializamos desde la cookie.
+    // Solo usamos swicth2 para la lógica de filtrado.
+
+    if (tourInfo) {
+      if (switch1 || swicth2 === "true") {
+        tourInfo = tourInfo.filter((x) => x.active === 1);
       }
-
-      if (tourInfo) {
-        if (switch1 || swicth2 === "true") {
-          tourInfo = tourInfo.filter(x => x.active === 1)
-        }
-        setToursDataInfo(tourInfo);
-        setLoadingData(false);
-        setIsFiltered(true)
+      setToursDataInfo(tourInfo);
+      setLoadingData(false);
+      setIsFiltered(true);
+    } else {
+      if (switch1 || swicth2 === "true") {
+        tourInfo = data.filter((x) => x.active === 1);
       } else {
-        if (switch1 || swicth2 === "true") {
-          tourInfo = data.filter(x => x.active === 1)
-        } else {
-          tourInfo = data
-        }
-        setToursDataInfo(tourInfo);
-        setLoadingData(false);
+        tourInfo = data;
       }
-
+      setToursDataInfo(tourInfo);
+      setLoadingData(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
+  }, [data, switch1]);
   // filters
   const [filters, setFilters] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);

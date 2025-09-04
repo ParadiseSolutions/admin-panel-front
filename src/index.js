@@ -6,16 +6,37 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import Store from "./Utils/Redux/Store";
 import { BrowserRouter as Router } from "react-router-dom";
-ReactDOM.render(
+
+// ReactDOM.render(
+//   <Suspense fallback={"Loading...."}>
+//     <Provider store={Store}>
+//       <Router>
+//         <App />
+//       </Router>
+//     </Provider>
+//   </Suspense>,
+//   document.getElementById("root")
+// );
+
+const Root = (
   <Suspense fallback={"Loading...."}>
     <Provider store={Store}>
       <Router>
         <App />
       </Router>
     </Provider>
-  </Suspense>,
+  </Suspense>
+);
+
+ReactDOM.render(
+  process.env.NODE_ENV === "development" ? (
+    <React.StrictMode>{Root}</React.StrictMode>
+  ) : (
+    Root
+  ),
   document.getElementById("root")
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
