@@ -64,6 +64,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const getToursFilterByStatus = (id) => {
+    const url = `${API_URL}/tours/filter-status/${id}`;
+    return axios.post (url, null, {
+      headers: options,
+    });
+  };
   export const copyTourAPI = (id) => {
     const url = `${API_URL}/tours/duplicate/${id}`;
     return axios.post (url, null, {
