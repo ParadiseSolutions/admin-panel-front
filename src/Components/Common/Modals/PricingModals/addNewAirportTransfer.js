@@ -227,7 +227,7 @@ const AddNewAirportTransfer = ({
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
       max: Yup.number().integer().nullable(),
-      public_price: Yup.number().required("Field Required"),
+      public_price: Yup.number().nullable(),
       provider_price: Yup.number().nullable(),
       rate: Yup.number().nullable(),
       net_rate: Yup.number().nullable(),
