@@ -91,7 +91,7 @@ const AddNewPrivateTour = ({
         : "",
     },
     validationSchema: Yup.object().shape({
-      public_price: Yup.number().required("Field Required"),
+      public_price: Yup.number().nullable(),
       provider_price: Yup.number().nullable(),
       rate: Yup.number().nullable(),
       net_rate: Yup.number().nullable(),

@@ -95,7 +95,7 @@ const AddNewProductPricing = ({
       max: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 2)[0]?.max : "",
     },
     validationSchema: Yup.object().shape({
-      public_price: Yup.number().required("Field Required"),
+      public_price: Yup.number().nullable(),
       provider_price: Yup.number().nullable(),
       rate: Yup.string().nullable(),
       net_rate: Yup.number().nullable(),
