@@ -33,6 +33,7 @@ const Tours = () => {
   const [restart, setRestart] = useState(false);
   const cookieLife = 24 * 60 * 60
 
+
   //cart request
   // useEffect(() => {
   // const swicth2 = getCookie("switch1");
@@ -62,6 +63,7 @@ const Tours = () => {
   //get info
   const data = useSelector((state) => state.tours.tours.data);
   const [toursDataInfo, setToursDataInfo] = useState([]);
+
   // useEffect(() => {
   //   if (data) {
   //     let tourInfo = getCookie("tour_data", true);
@@ -441,6 +443,8 @@ const Tours = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+
 
   return (
     <div className="page-content pb-0 px-3">
