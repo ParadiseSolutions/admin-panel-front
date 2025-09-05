@@ -469,11 +469,11 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               </div>
             </Col>
             <Col className="col-2">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-start">
                 <Label className="form-label">Payment Request</Label>
                 <div>
                   <i
-                    className="uil-question-circle font-size-15"
+                    className="uil-question-circle font-size-15 mx-2"
                     id="Payment"
                   />
                   <Tooltip
