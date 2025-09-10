@@ -3,12 +3,7 @@ import { operatorsData } from "../../Utils/Redux/Actions/OperatorsActions";
 import { deleteOperatorAPI } from "../../Utils/API/Operators";
 import TableContainer from "../../Components/Common/TableContainer";
 import { Name, Phone, Active, LastName, Email } from "./ProvidersCols";
-import {
-  Container,
-  Row,
-  Col,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Container, Row, Col, UncontrolledTooltip } from "reactstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
@@ -17,10 +12,12 @@ const Operators = () => {
   //data request
   const dispatch = useDispatch();
   const [loadingData, setLoadingData] = useState(true);
+  const [switch1, setswitch1] = useState(true);
   useEffect(() => {
-    var providersRequest = () => dispatch(operatorsData());
+    const active = switch1 ? 1 : 0;
+    var providersRequest = () => dispatch(operatorsData(active));
     providersRequest();
-  }, [dispatch]);
+  }, [dispatch, switch1]);
   const data = useSelector((state) => state.operators.operators.data);
   useEffect(() => {
     if (data) {
@@ -55,7 +52,7 @@ const Operators = () => {
             } else {
               Object.entries(error.response.data.data).map((item) => {
                 errorMessages.push(item[1]);
-                return true
+                return true;
               });
 
               Swal.fire(
@@ -96,7 +93,11 @@ const Operators = () => {
         filterable: false,
         Cell: (cellProps) => {
           const providersData = cellProps.row.original;
-          return <div className="custom-width-250">{providersData.current_service_area_name}</div>;
+          return (
+            <div className="custom-width-250">
+              {providersData.current_service_area_name}
+            </div>
+          );
         },
       },
       {
@@ -123,9 +124,11 @@ const Operators = () => {
         accessor: "websites",
         disableFilters: true,
         filterable: false,
-        Cell: (cellProps) => {          
+        Cell: (cellProps) => {
           const providersData = cellProps.row.original;
-          return <div className="custom-width-250">{providersData.websites}</div>;
+          return (
+            <div className="custom-width-250">{providersData.websites}</div>
+          );
         },
       },
 
@@ -146,7 +149,7 @@ const Operators = () => {
           const providersData = cellProps.row.original;
           return (
             <div className="d-flex gap-3">
-              <Link to={`/operators/${providersData.id}  ` } target="_blank" >
+              <Link to={`/operators/${providersData.id}  `} target="_blank">
                 <div className="text-success">
                   <i
                     className="mdi mdi-pencil-outline font-size-18 text-paradise"
@@ -180,8 +183,10 @@ const Operators = () => {
           );
         },
       },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    ],[]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],
+    []
+  );
   return (
     <>
       <div className="page-content pb-0 px-3">
@@ -189,7 +194,7 @@ const Operators = () => {
           <div className=" mx-1">
             <h1
               className="fw-bold cursor-pointer"
-              style={{ color: "#3DC7F4", fontSize:"3.5rem" }}
+              style={{ color: "#3DC7F4", fontSize: "3.5rem" }}
             >
               OPERATORS
             </h1>
@@ -198,15 +203,10 @@ const Operators = () => {
             <Col xs="12">
               {loadingData ? (
                 <div className="d-flex justify-content-center mt-5">
-                  <div
-                    className="spinner-border text-orange"
-                    role="status"
-                  >
+                  <div className="spinner-border text-orange" role="status">
                     <span className="sr-only">Loading...</span>
                   </div>
-                  <h2 className="mx-5 text-orange">
-                    Loading...
-                  </h2>
+                  <h2 className="mx-5 text-orange">Loading...</h2>
                 </div>
               ) : (
                 <>
@@ -217,7 +217,8 @@ const Operators = () => {
                       isGlobalFilter={true}
                       operatorsTable={true}
                       isAddOrder={true}
-
+                      switch1={switch1}
+                      setswitch1={setswitch1}
                       //  handleOrderClicks={() => onClickAddNew()}
                     />
                   ) : null}
