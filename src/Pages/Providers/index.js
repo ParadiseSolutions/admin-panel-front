@@ -26,12 +26,14 @@ const Providers = () => {
   const [editModal, setEditModal] = useState(false);
   const [userId] = useState({});
   const [loadingData, setLoadingData] = useState(true);
+  const [switch1, setswitch1] = useState(true);
   //data request
   const dispatch = useDispatch();
   useEffect(() => {
-    var providersRequest = () => dispatch(providersData());
+    const active = switch1 ? 1 : 0;
+    var providersRequest = () => dispatch(providersData(active));
     providersRequest();
-  }, [dispatch, addModal, editModal]);
+  }, [dispatch, addModal, editModal , switch1]);
 
   //get info
   const data = useSelector((state) => state.providers.providers.data);
@@ -241,6 +243,8 @@ const Providers = () => {
                     providersTable={true}
                     isAddOrder={true}
                     onClickNewProvider={onClickNewProvider}
+                    switch1={switch1}
+                      setswitch1={setswitch1}
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}

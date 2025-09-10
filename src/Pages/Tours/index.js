@@ -33,18 +33,6 @@ const Tours = () => {
   const [restart, setRestart] = useState(false);
   const cookieLife = 24 * 60 * 60
 
-
-  //cart request
-  // useEffect(() => {
-  // const swicth2 = getCookie("switch1");
-  // if (swicth2 && switch1 !== (swicth2 === "true")) return; // Espera a que switch1 esté sincronizado
-
-  // // Solo ejecuta la petición si switch1 está listo
-  // let requestFlag = switch1 ? 1 : 0;
-  // if (typeof requestFlag === "number") {
-  //   dispatch(toursData(requestFlag));
-  // }
-  // }, [dispatch, switch1]);
   
    useEffect(() => {
     // Espera a que la sincronización inicial esté lista
@@ -64,38 +52,7 @@ const Tours = () => {
   const data = useSelector((state) => state.tours.tours.data);
   const [toursDataInfo, setToursDataInfo] = useState([]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     let tourInfo = getCookie("tour_data", true);
-  //     let swicth2 = getCookie("switch1");
 
-  //     if (swicth2) {
-  //       const swicth2Bool = swicth2 === "true";
-  //     if (switch1 !== swicth2Bool) {
-  //       setswitch1(swicth2Bool);
-  //     }
-  //     }
-
-  //     if (tourInfo) {
-  //       if (switch1 || swicth2 === "true") {
-  //         tourInfo = tourInfo.filter(x => x.active === 1)
-  //       }
-  //       setToursDataInfo(tourInfo);
-  //       setLoadingData(false);
-  //       setIsFiltered(true)
-  //     } else {
-  //       if (switch1 || swicth2 === "true") {
-  //         tourInfo = data.filter(x => x.active === 1)
-  //       } else {
-  //         tourInfo = data
-  //       }
-  //       setToursDataInfo(tourInfo);
-  //       setLoadingData(false);
-  //     }
-
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [data, switch1]);
 
    useEffect(() => {
     if (!data) return;

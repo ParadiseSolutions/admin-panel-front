@@ -4,13 +4,14 @@ import { GET_PROVIDERS_INIT,
 import axios from "axios";
 import { API_URL, options } from "../../../API";
 
-export const providersData = () => {
+export const providersData = (active) => {
+ 
   return async (dispatch) => {
     dispatch(getProvidersInit());
 
     try {
       const getData = () => {
-        return axios.get(`${API_URL}/providers`, {
+        return axios.get(`${API_URL}/providers/filter-status/${active}`, {
           headers: options,
         });
       };
