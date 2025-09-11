@@ -11,6 +11,9 @@ export const providersData = (active) => {
 
     try {
       const getData = () => {
+        if (active === undefined || active === null) {
+          return
+        }
         return axios.get(`${API_URL}/providers/filter-status/${active}`, {
           headers: options,
         });

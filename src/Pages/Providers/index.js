@@ -31,8 +31,22 @@ const Providers = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const active = switch1 ? 1 : 0;
-    var providersRequest = () => dispatch(providersData(active));
-    providersRequest();
+    setLoadingData(true);
+    const providersRequest = async () => {
+          try {
+            // esperamos a que termine la acción (thunk) para controlar el loading
+            await dispatch(providersData(active));
+          } catch (err) {
+            // opcional: loguear o manejar error
+            console.error("operators request error:", err);
+          } finally {
+            // se asegura que el loading se desactive cuando termine la petición
+            setLoadingData(false);
+          }
+        };
+        providersRequest();
+    // var providersRequest = () => dispatch(providersData(active));
+    // providersRequest();
   }, [dispatch, addModal, editModal , switch1]);
 
   //get info
