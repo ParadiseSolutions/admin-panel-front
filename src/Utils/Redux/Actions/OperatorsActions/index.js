@@ -2,13 +2,16 @@ import { GET_OPERATORS_INIT, GET_OPERATORS_SUCCESS, GET_OPERATORS_ERROR} from ".
 import axios from "axios";
 import { API_URL, options } from "../../../API";
 
-export const operatorsData = () => {
+export const operatorsData = (active) => {
   return async (dispatch) => {
     dispatch(getOperatorsInit());
 
     try {
       const getData = () => {
-        return axios.get(`${API_URL}/operators`, {
+        if (active === undefined || active === null) {
+          return
+        }
+        return axios.get(`${API_URL}/operators/filter-status/${active}`, {
           headers: options,
         });
       };

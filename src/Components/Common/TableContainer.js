@@ -20,12 +20,59 @@ import {
   Pagination,
   PaginationItem,
   PaginationLink,
+  UncontrolledTooltip,
 } from "reactstrap";
 import { DefaultColumnFilter } from "./filters";
 import { Link } from "react-router-dom";
+import Switch from "react-switch";
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 14,
+        color: "#ced4da",
+        // width: "200px",
+        paddingRight: 13,
+        marginTop: "-2px",
+        fontWeight: 600,
+      }}
+    >
+      {" "}
+      All
+    </div>
+  );
+};
+
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 14,
+        color: "#3dc7f4",
+        paddingLeft: 15,
+        marginTop: "-2px",
+        fontWeight: 600,
+      }}
+    >
+      {" "}
+      Active
+    </div>
+  );
+};
 const TableContainer = ({
   columns,
   data,
+  switch1,
+  setswitch1,
+  activeTourToogle,
   isGlobalFilter,
   departmentTable,
   rolesTable,
@@ -55,7 +102,7 @@ const TableContainer = ({
   onClickAddLocation,
   onClickFilter,
   onClickRemoveFilter,
-  setBulkModal
+  setBulkModal,
 }) => {
   const {
     getTableProps,
@@ -243,8 +290,37 @@ const TableContainer = ({
               </Col>
             )}
             {providersTable && (
-              <Col sm="8">
-                <div className="text-sm-end">
+              <Col sm="10">
+                <div className="text-sm-end d-flex justify-content-between">
+                    <div
+                  id="active_tour"
+                  className="mx-5 mt-2"
+                  style={{  marginLeft: '10px', cursor: "pointer" }}
+                >
+                  <>
+                    <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={90}
+                      className={switch1 ? "blue-switch-outlined" : "gray-switch-outlined"}
+                      onChange={() => {
+                        setswitch1(!switch1);
+                        activeTourToogle(switch1)
+                      }}
+                      checked={switch1}
+                    />
+                    {switch1 ?
+                      <UncontrolledTooltip placement="top" target="active_tour">
+                        Show All Providers
+                      </UncontrolledTooltip> :
+                      <UncontrolledTooltip placement="top" target="active_tour">
+                        Show Active
+                      </UncontrolledTooltip>
+                    }
+
+                  </>
+                </div>
                   <Link to={"/providers/new"}>
                     <Button
                       type="button"
@@ -287,8 +363,37 @@ const TableContainer = ({
               </Col>
             )}
             {operatorsTable && (
-              <Col sm="8">
-                <div className="text-sm-end">
+              <Col sm="10">
+                <div className="text-sm-end d-flex justify-content-between">
+                 <div
+                  id="active_tour"
+                  className="mx-5 mt-2"
+                  style={{  marginLeft: '10px', cursor: "pointer" }}
+                >
+                  <>
+                    <Switch
+                      uncheckedIcon={<Offsymbol />}
+                      checkedIcon={<OnSymbol />}
+                      onColor="#3DC7F4"
+                      width={90}
+                      className={switch1 ? "blue-switch-outlined" : "gray-switch-outlined"}
+                      onChange={() => {
+                        setswitch1(!switch1);
+                        activeTourToogle(switch1)
+                      }}
+                      checked={switch1}
+                    />
+                    {switch1 ?
+                      <UncontrolledTooltip placement="top" target="active_tour">
+                        Show All Operators
+                      </UncontrolledTooltip> :
+                      <UncontrolledTooltip placement="top" target="active_tour">
+                        Show Active
+                      </UncontrolledTooltip>
+                    }
+
+                  </>
+                </div>
                   <Link to={"/operators/new"}>
                     <Button
                       type="button"
@@ -299,13 +404,13 @@ const TableContainer = ({
                       Add New Operator
                     </Button>
                   </Link>
+                     
                 </div>
               </Col>
             )}
             {toursTable && (
               <Col sm="8">
                 <div className="text-sm-end">
-                 
                   <Button
                     type="button"
                     color="paradiseOrange"
@@ -916,25 +1021,32 @@ const TableContainer = ({
               <Table hover {...getTableProps()} className="react_table">
                 <thead className="table-nowrap">
                   {headerGroups.map((headerGroup) => (
-                    <tr
-                      key={headerGroup.id}
-                      {...headerGroup.getHeaderGroupProps()}
-                    >
-                      {headerGroup.headers.map((column) => (
-                        <th
-                          key={column.id}
-                          /*{...document.write(column.Header)}*/
+                    <>
+                      <tr
+                        key={headerGroup.id}
+                        {...headerGroup.getHeaderGroupProps()}
+                      >
+                        {headerGroup.headers.map((column) => (
+                          <>
+                          <th
+                            key={column.id}
+                            /*{...document.write(column.Header)}*/
 
-                          className={`table-column-operator-${column.Header}`}
-                        >
-                          <div {...column.getSortByToggleProps()}>
-                            {column.render("Header")}
-                            {generateSortingIndicator(column)}
-                          </div>
-                          {/* <Filter column={column} /> */}
-                        </th>
-                      ))}
-                    </tr>
+                            className={`table-column-operator-${column.Header}`}
+                          >
+                            <div {...column.getSortByToggleProps()}>
+                              {column.render("Header")}
+                              {generateSortingIndicator(column)}
+                            </div>
+                            
+                            {/* <Filter column={column} /> */}
+                          </th>
+                          
+                          </>
+                        ))}
+                      </tr>
+                      
+                    </>
                   ))}
                 </thead>
 
@@ -1049,7 +1161,6 @@ const TableContainer = ({
             <div className="table-responsive" style={{ minHeight: "503px" }}>
               <Table hover {...getTableProps()} className="react_table">
                 <thead className="table-nowrap">
-                  
                   {headerGroups.map((headerGroup) => (
                     <tr
                       key={headerGroup.id}
@@ -1124,7 +1235,8 @@ const TableContainer = ({
               ) : null}
               {pageOptions.map((item, index) => {
                 return (
-                  <PaginationItem key={index}
+                  <PaginationItem
+                    key={index}
                     hidden={
                       pageOptions.length < 4 ||
                       (index >= pageIndex - 2 && index <= pageIndex + 2)
@@ -1182,7 +1294,7 @@ function GlobalFilter({
 
   return (
     <React.Fragment>
-      <Col sm={4}>
+      <Col sm={2}>
         <div
           className="search-box me-2 mb-2 d-inline-block"
           style={{ minWidth: "342px" }}

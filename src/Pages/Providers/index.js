@@ -26,12 +26,28 @@ const Providers = () => {
   const [editModal, setEditModal] = useState(false);
   const [userId] = useState({});
   const [loadingData, setLoadingData] = useState(true);
+  const [switch1, setswitch1] = useState(true);
   //data request
   const dispatch = useDispatch();
   useEffect(() => {
-    var providersRequest = () => dispatch(providersData());
-    providersRequest();
-  }, [dispatch, addModal, editModal]);
+    const active = switch1 ? 1 : 0;
+    setLoadingData(true);
+    const providersRequest = async () => {
+          try {
+            // esperamos a que termine la acción (thunk) para controlar el loading
+            await dispatch(providersData(active));
+          } catch (err) {
+            // opcional: loguear o manejar error
+            console.error("operators request error:", err);
+          } finally {
+            // se asegura que el loading se desactive cuando termine la petición
+            setLoadingData(false);
+          }
+        };
+        providersRequest();
+    // var providersRequest = () => dispatch(providersData(active));
+    // providersRequest();
+  }, [dispatch, addModal, editModal , switch1]);
 
   //get info
   const data = useSelector((state) => state.providers.providers.data);
@@ -241,6 +257,8 @@ const Providers = () => {
                     providersTable={true}
                     isAddOrder={true}
                     onClickNewProvider={onClickNewProvider}
+                    switch1={switch1}
+                      setswitch1={setswitch1}
                     //  handleOrderClicks={() => onClickAddNew()}
                   />
                 ) : null}
