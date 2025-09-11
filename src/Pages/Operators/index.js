@@ -15,7 +15,20 @@ const Operators = () => {
   const [switch1, setswitch1] = useState(true);
   useEffect(() => {
     const active = switch1 ? 1 : 0;
-    var providersRequest = () => dispatch(operatorsData(active));
+    // Mostrar loader y quitar tabla antes de hacer la petición
+    setLoadingData(true);
+    const providersRequest = async () => {
+      try {
+        // esperamos a que termine la acción (thunk) para controlar el loading
+        await dispatch(operatorsData(active));
+      } catch (err) {
+        // opcional: loguear o manejar error
+        console.error("operators request error:", err);
+      } finally {
+        // se asegura que el loading se desactive cuando termine la petición
+        setLoadingData(false);
+      }
+    };
     providersRequest();
   }, [dispatch, switch1]);
   const data = useSelector((state) => state.operators.operators.data);
@@ -187,6 +200,26 @@ const Operators = () => {
     ],
     []
   );
+
+  // const activeTourToogle = (isActive) => {
+  //   console.log("rendering",isActive);
+  //  if (isActive === true) {
+  //   console.log("true");
+  //    setLoadingData(true);
+  //    var providersRequest = () => dispatch(operatorsData(1));
+  //   providersRequest();
+  //   setLoadingData(false);
+  //  }
+  //  if (isActive === false) {
+  //   console.log("false");
+  //    setLoadingData(true);
+  //    var providersRequest = () => dispatch(operatorsData(0));
+  //   providersRequest();
+  //   setLoadingData(false);
+  //   }
+  // }
+
+  
   return (
     <>
       <div className="page-content pb-0 px-3">
@@ -219,6 +252,7 @@ const Operators = () => {
                       isAddOrder={true}
                       switch1={switch1}
                       setswitch1={setswitch1}
+                      // activeTourToogle={activeTourToogle}
                       //  handleOrderClicks={() => onClickAddNew()}
                     />
                   ) : null}
