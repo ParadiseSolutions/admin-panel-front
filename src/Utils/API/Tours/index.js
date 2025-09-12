@@ -683,6 +683,13 @@ export const putOverriteDate = (id, body) => {
   });
 };
 
+export const putOpenTicket = (id, body) => {
+  const url = `${API_URL}/tours/${id}/openTicket/status`
+  return axios.put (url, body, {
+    headers: options,
+  });
+};
+
 
 export const deleteOverriteDate = (Tourid, dateID) => {
   const url = `${API_URL}/tours/${Tourid}/scheduleDate/${dateID}`

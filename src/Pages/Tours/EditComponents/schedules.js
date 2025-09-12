@@ -10,6 +10,7 @@ import {
   deleteOverriteDate,
   deleteSchedule,
   triggerUpdate,
+  putOpenTicket,
 } from "../../../Utils/API/Tours";
 import AddNewScheduleModal from "../../../Components/Common/Modals/ScheduleModals/newSchedule";
 import EditScheduleModal from "../../../Components/Common/Modals/ScheduleModals/editSchedule";
@@ -25,6 +26,8 @@ import {
   Button,
   Table,
   UncontrolledTooltip,
+  Tooltip,
+  Label,
 } from "reactstrap";
 import { useFormik } from "formik";
 import { map } from "lodash";
@@ -45,6 +48,8 @@ const Schedules = ({ tourData, toggle }) => {
   const [schedulesData, setSchedulesData] = useState([]);
   const [datesOverrideData, setDatesOverrideData] = useState([]);
   const [seasonalityData, setSeasonalityData] = useState([]);
+  const [openTicketCheck, setOpenTicketCheck] = useState(false);
+
   useEffect(() => {
     getScheduleTimeAPI(TourID).then((resp) => {
       setSchedulesData(resp.data.data);
@@ -55,11 +60,19 @@ const Schedules = ({ tourData, toggle }) => {
     getSeasonalityAPI(TourID).then((resp) => {
       // console.log(resp);
       setSeasonalityData(resp.data.data);
-      setSeasonSelected(resp.data.data[0]?.repeat_id)
+      setSeasonSelected(resp.data.data[0]?.repeat_id);
     });
   }, [TourID]);
+  useEffect(() => {
+    console.log("tourData?.open_tickets", tourData?.open_ticket);
+    if (tourData?.open_ticket === 1) {
+      setOpenTicketCheck(true);
+    } else {
+      setOpenTicketCheck(false);
+    }
+  }, [tourData]);
   const [seasonSelected, setSeasonSelected] = useState("");
-
+  console.log("schedulesData", tourData);
   //refresh tables
   const refresh = () => {
     getScheduleTimeAPI(TourID).then((resp) => {
@@ -70,7 +83,7 @@ const Schedules = ({ tourData, toggle }) => {
     });
     getSeasonalityAPI(TourID).then((resp) => {
       setSeasonalityData(resp.data.data);
-      setSeasonSelected(resp.data.data[0]?.repeat_id)
+      setSeasonSelected(resp.data.data[0]?.repeat_id);
     });
   };
 
@@ -82,6 +95,7 @@ const Schedules = ({ tourData, toggle }) => {
   const [newOverriteDate, setNewOverriteDate] = useState(false);
   const [editOverriteDate, setEditOverriteDate] = useState(false);
   const [editOverriteDateData, setEditOverriteDateData] = useState(null);
+  const [ttop4, setttop4] = useState(false);
 
   //edit season
   const [dateFromEdit, setDataFromEdit] = useState(null);
@@ -132,6 +146,17 @@ const Schedules = ({ tourData, toggle }) => {
     refresh();
   };
 
+  // open tickets functionality
+  const openTicketFunction = () => {
+    let body = {
+      active: openTicketCheck ? 0 : 1,
+    };
+    putOpenTicket(tourData.id, body).then((resp) => {
+      Swal.fire("Open Ticket!", "Open Ticket has been change.", "success");
+    });
+    refresh();
+  };
+
   // console.log('tiempos ----',schedulesData)
   //form creation
   const validationType = useFormik({
@@ -140,7 +165,9 @@ const Schedules = ({ tourData, toggle }) => {
     initialValues: {
       from: dateFromEdit ? dateFromEdit : "",
       to: dateToEdit ? dateToEdit : "",
-      repeat_id: seasonalityData[0]?.repeat_id ? seasonalityData[0]?.repeat_id : null
+      repeat_id: seasonalityData[0]?.repeat_id
+        ? seasonalityData[0]?.repeat_id
+        : null,
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -231,13 +258,62 @@ const Schedules = ({ tourData, toggle }) => {
             <Col className="col-8">
               <section className="d-flex justify-content-between mb-4">
                 <h2 className="text-paradise font-bold">Schedule</h2>
-                <Button
-                  type="button"
-                  className="font-16 btn-block btn-orange"
-                  onClick={() => setNewSchedule(true)}
-                >
-                  + New Schedule
-                </Button>
+                <div className="d-flex align-items-center gap-3">
+                  <div className="d-flex">
+                    <Label
+                      className="form-label mt-2"
+                      style={{
+                        // fontWeight: "bold",
+                        color: "#495057",
+                        marginBottom: "0px",
+                      }}
+                    >
+                      Open Ticket
+                    </Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15 p-2"
+                        id="openTicket"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={ttop4}
+                        target="openTicket"
+                        toggle={() => {
+                          setttop4(!ttop4);
+                        }}
+                      >
+                        Activating this will disable adding new tour schedules.
+                        Use when date and time aren't needed in the booking
+                        form.
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div className="form-check form-switch form-switch-md  mt-2 ">
+                    <Input
+                      name="seasonality"
+                      placeholder=""
+                      type="checkbox"
+                      checked={openTicketCheck}
+                      className="form-check-input"
+                      onChange={() => {
+                        setOpenTicketCheck(!openTicketCheck);
+                        openTicketFunction();
+                      }}
+                      // onBlur={validationType.handleBlur}
+                      value={openTicketCheck}
+                    />
+                  </div>
+
+                  <Button
+                    type="button"
+                    className="font-16 btn-block btn-orange"
+                    onClick={() => setNewSchedule(true)}
+                    disabled={openTicketCheck}
+                  >
+                    + New Schedule
+                  </Button>
+                </div>
               </section>
               <section className="table-responsive border-top mb-5">
                 <Table className="table mb-0">
@@ -262,10 +338,9 @@ const Schedules = ({ tourData, toggle }) => {
                                   ? "Single Schedule"
                                   : schedule.type_id === 3
                                   ? "Multiple Schedule"
-                                  : schedule.type_id === 6 
+                                  : schedule.type_id === 6
                                   ? "Intervals"
-                                  : "Custom"
-                                }
+                                  : "Custom"}
                               </td>
                               <td>
                                 {schedule.detail === ""
@@ -279,8 +354,20 @@ const Schedules = ({ tourData, toggle }) => {
                                   : `${schedule.duration} ${schedule.units}`}{" "}
                               </td>
                               <td>
-                                {schedule.runs === "7,1,5,2,6,3,0,4" || schedule.runs === "1,5,2,6,3,0,4" || schedule.runs === "1,2,3,4,5,6,0" ? 'Daily' : schedule.runs.replace("1"," Monday").replace("2"," Tuesday").replace("3"," Wednesday").replace("4"," Thursday").replace("5"," Friday").replace("6"," Saturday").replace("0"," Sunday").replace("7","Daily")}
-                                </td>
+                                {schedule.runs === "7,1,5,2,6,3,0,4" ||
+                                schedule.runs === "1,5,2,6,3,0,4" ||
+                                schedule.runs === "1,2,3,4,5,6,0"
+                                  ? "Daily"
+                                  : schedule.runs
+                                      .replace("1", " Monday")
+                                      .replace("2", " Tuesday")
+                                      .replace("3", " Wednesday")
+                                      .replace("4", " Thursday")
+                                      .replace("5", " Friday")
+                                      .replace("6", " Saturday")
+                                      .replace("0", " Sunday")
+                                      .replace("7", "Daily")}
+                              </td>
                               <td>
                                 <div
                                   style={{ cursor: "pointer" }}
@@ -333,7 +420,10 @@ const Schedules = ({ tourData, toggle }) => {
                   </tbody>
                 </Table>
               </section>
-              <section className="d-flex justify-content-between mb-5" hidden="true">
+              <section
+                className="d-flex justify-content-between mb-5"
+                hidden="true"
+              >
                 <h2 className="text-paradise font-bold">
                   Override Calendar Dates
                 </h2>
@@ -345,7 +435,10 @@ const Schedules = ({ tourData, toggle }) => {
                   + New Entry
                 </Button>
               </section>
-              <section className="table-responsive border-top mb-5" hidden="true">
+              <section
+                className="table-responsive border-top mb-5"
+                hidden="true"
+              >
                 <Table className="table mb-0">
                   <thead>
                     <tr>
@@ -434,7 +527,7 @@ const Schedules = ({ tourData, toggle }) => {
                 <div
                   style={{
                     backgroundColor: "rgba(0, 157, 255, 0.2)",
-                  }} 
+                  }}
                   className="p-3"
                 >
                   <p style={{ fontSize: "15px", color: "#495057" }}>
