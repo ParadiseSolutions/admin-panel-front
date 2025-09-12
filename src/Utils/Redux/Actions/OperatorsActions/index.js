@@ -9,7 +9,7 @@ export const operatorsData = (active) => {
     try {
       const getData = () => {
         if (active === undefined || active === null) {
-          return
+          return axios.get(`${API_URL}/operators`, { headers: options } );
         }
         return axios.get(`${API_URL}/operators/filter-status/${active}`, {
           headers: options,
