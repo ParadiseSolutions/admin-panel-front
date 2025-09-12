@@ -273,12 +273,12 @@ const Schedules = ({ tourData, toggle }) => {
                     <div>
                       <i
                         className="uil-question-circle font-size-15 p-2"
-                        id="ranges"
+                        id="openTicket"
                       />
                       <Tooltip
                         placement="right"
                         isOpen={ttop4}
-                        target="ranges"
+                        target="openTicket"
                         toggle={() => {
                           setttop4(!ttop4);
                         }}
