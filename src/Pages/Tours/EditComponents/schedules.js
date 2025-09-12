@@ -269,7 +269,7 @@ const Schedules = ({ tourData, toggle }) => {
                         marginBottom: "0px",
                       }}
                     >
-                      Price Ranges
+                      Open Ticket
                     </Label>
                     <div>
                       <i
