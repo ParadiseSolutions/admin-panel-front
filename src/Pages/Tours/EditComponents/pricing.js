@@ -398,13 +398,12 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                       <br />
                       people. Applies only to "Fixed" price type.
                       <br />
-                      
                       Example:
                       <br />
                       <br />
-                      1-10 People is $100.00  
+                      1-10 People is $100.00
                       <br />
-                      11-20 People is $200.00 
+                      11-20 People is $200.00
                       <br />
                       21-30 People is $300.00
                     </Tooltip>
