@@ -384,12 +384,12 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                   <div>
                     <i
                       className="uil-question-circle font-size-15 p-2"
-                      id="ranges"
+                      id="priceRanges"
                     />
                     <Tooltip
                       placement="right"
                       isOpen={ttop4}
-                      target="ranges"
+                      target="priceRanges"
                       toggle={() => {
                         setttop4(!ttop4);
                       }}
