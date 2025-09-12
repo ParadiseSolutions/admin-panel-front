@@ -49,7 +49,7 @@ const Schedules = ({ tourData, toggle }) => {
   const [datesOverrideData, setDatesOverrideData] = useState([]);
   const [seasonalityData, setSeasonalityData] = useState([]);
   const [openTicketCheck, setOpenTicketCheck] = useState(false);
-  
+
   useEffect(() => {
     getScheduleTimeAPI(TourID).then((resp) => {
       setSchedulesData(resp.data.data);
@@ -64,16 +64,15 @@ const Schedules = ({ tourData, toggle }) => {
     });
   }, [TourID]);
   useEffect(() => {
-    console.log('tourData?.open_tickets', tourData?.open_ticket)
-  if(tourData?.open_ticket === 1){
-     setOpenTicketCheck(true) 
+    console.log("tourData?.open_tickets", tourData?.open_ticket);
+    if (tourData?.open_ticket === 1) {
+      setOpenTicketCheck(true);
+    } else {
+      setOpenTicketCheck(false);
     }
-    else{
-      setOpenTicketCheck(false) 
-    } 
   }, [tourData]);
   const [seasonSelected, setSeasonSelected] = useState("");
-  console.log('schedulesData', tourData)
+  console.log("schedulesData", tourData);
   //refresh tables
   const refresh = () => {
     getScheduleTimeAPI(TourID).then((resp) => {
@@ -96,7 +95,7 @@ const Schedules = ({ tourData, toggle }) => {
   const [newOverriteDate, setNewOverriteDate] = useState(false);
   const [editOverriteDate, setEditOverriteDate] = useState(false);
   const [editOverriteDateData, setEditOverriteDateData] = useState(null);
-   const [ttop4, setttop4] = useState(false);
+  const [ttop4, setttop4] = useState(false);
 
   //edit season
   const [dateFromEdit, setDataFromEdit] = useState(null);
@@ -148,15 +147,15 @@ const Schedules = ({ tourData, toggle }) => {
   };
 
   // open tickets functionality
- const openTicketFunction = () => {
+  const openTicketFunction = () => {
     let body = {
-      active: openTicketCheck ? 0 : 1
-    }
-     putOpenTicket(tourData.id, body).then((resp) => {
+      active: openTicketCheck ? 0 : 1,
+    };
+    putOpenTicket(tourData.id, body).then((resp) => {
       Swal.fire("Open Ticket!", "Open Ticket has been change.", "success");
     });
     refresh();
-  }
+  };
 
   // console.log('tiempos ----',schedulesData)
   //form creation
@@ -284,7 +283,9 @@ const Schedules = ({ tourData, toggle }) => {
                           setttop4(!ttop4);
                         }}
                       >
-                     Activating the open ticket toggle will disable the New Schedule button to the right. It will also make it so that entering the time and date on the booking form is not required. On the booking form the date will say Open as the only option the customer can select (no calendar will be displayed) and the time will also say Open with no other options in the drop down.
+                        Activating this will disable adding new tour schedules.
+                        Use when date and time aren't needed in the booking
+                        form.
                       </Tooltip>
                     </div>
                   </div>
