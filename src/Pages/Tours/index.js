@@ -91,7 +91,7 @@ const Tours = () => {
     setLoadingData(true);
     if (data) {
       removeCookie("tour_data")
-      const toursRequest = () => dispatch(toursData(1));
+      const toursRequest = () => dispatch(toursData());
       toursRequest();
       //setToursDataInfo(data);
       setIsFiltered(false);
