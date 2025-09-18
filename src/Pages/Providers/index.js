@@ -51,11 +51,11 @@ const Providers = () => {
 
   //get info
   const data = useSelector((state) => state.providers.providers.data);
-  useEffect(() => {
-    if (data) {
-      setLoadingData(false);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setLoadingData(false);
+  //   }
+  // }, [data]);
 
   const onDelete = (providerInfo) => {
     Swal.fire({
