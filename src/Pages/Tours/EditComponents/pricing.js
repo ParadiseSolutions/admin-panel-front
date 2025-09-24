@@ -545,7 +545,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setPriceRangeCheck={setPriceRangeCheck}
         />
       ) : null}
-      {tourData?.type_id === 6 ? (
+      {tourData?.type_id === 6 && tourData?.provider_id != 147? (
         <AddNewPrivateCharter
           addNewPrivateCharter={addNewPrivateCharter}
           setAddNewPrivateCharter={setAddNewPrivateCharter}
@@ -558,7 +558,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setPriceRangeCheck={setPriceRangeCheck}
         />
       ) : null}
-      {tourData?.type_id === 6 ? (
+      {tourData?.type_id === 6 && tourData?.provider_id === 147 ? (
         <AddPezGato
           addNewPrivateCharter={addNewPrivateCharter}
           setAddNewPrivateCharter={setAddNewPrivateCharter}
