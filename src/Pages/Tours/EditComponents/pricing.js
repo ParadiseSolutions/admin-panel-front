@@ -25,6 +25,7 @@ import {
 } from "reactstrap";
 import { Name, Code, Price, Rate, Active } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
+import AddPezGato from "../../../Components/Common/Modals/PricingModals/addPezGato";
 
 const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
@@ -546,6 +547,19 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       ) : null}
       {tourData?.type_id === 6 ? (
         <AddNewPrivateCharter
+          addNewPrivateCharter={addNewPrivateCharter}
+          setAddNewPrivateCharter={setAddNewPrivateCharter}
+          editProductID={editProductID}
+          tourData={tourData}
+          refreshTable={refreshTable}
+          copyProduct={copyProduct}
+          setCopyProduct={setCopyProduct}
+          priceRangeCheck={priceRangeCheck}
+          setPriceRangeCheck={setPriceRangeCheck}
+        />
+      ) : null}
+      {tourData?.type_id === 6 ? (
+        <AddPezGato
           addNewPrivateCharter={addNewPrivateCharter}
           setAddNewPrivateCharter={setAddNewPrivateCharter}
           editProductID={editProductID}
