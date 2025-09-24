@@ -1599,17 +1599,17 @@ const AddPezGato = ({
       >
         {copyProduct ? (
           <h1 className="modal-title mt-0 text-white">
-            + Copy Product - Pez Gato
+            + Copy Product - Private Charter.
           </h1>
         ) : null}
         {copyProduct === false && dataEdit ? (
           <h1 className="modal-title mt-0 text-white">
-            + Edit Product - Pez Gato
+            + Edit Product - Private Charter.
           </h1>
         ) : null}
         {copyProduct === false && !dataEdit ? (
           <h1 className="modal-title mt-0 text-white">
-            + New Product - Pez Gato
+            + New Product - Private Charter.
           </h1>
         ) : null}
         <button

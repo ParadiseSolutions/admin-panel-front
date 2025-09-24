@@ -108,6 +108,7 @@ const EditTour = ({ history }) => {
               style={{ height: "45px", minWidth: "fit-content" }}
               type="button"
               onClick={publishTour}
+              disabled={publishing}
             >
               Publish
             </Button>
