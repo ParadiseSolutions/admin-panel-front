@@ -91,8 +91,13 @@ const Tours = () => {
     setLoadingData(true);
     if (data) {
       removeCookie("tour_data")
-      const toursRequest = () => dispatch(toursData());
-      toursRequest();
+      const requestFlag = switch1 ? 1 : 0;
+
+      // Evita enviar peticiones con valores inválidos y evita doble disparo
+      if (requestFlag === 0 || requestFlag === 1) {
+        const toursRequest = () => dispatch(toursData(requestFlag));
+        toursRequest();
+      }
       //setToursDataInfo(data);
       setIsFiltered(false);
     }
