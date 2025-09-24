@@ -32,11 +32,11 @@ const Operators = () => {
     providersRequest();
   }, [dispatch, switch1]);
   const data = useSelector((state) => state.operators.operators.data);
-  useEffect(() => {
-    if (data) {
-      setLoadingData(false);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setLoadingData(false);
+  //   }
+  // }, [data]);
   const onDelete = (operatorInfo) => {
     Swal.fire({
       title: "Delete Operator?",

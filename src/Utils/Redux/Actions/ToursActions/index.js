@@ -11,8 +11,8 @@ export const toursData = (requestFlag) => {
 
     try {
       const getData = () => {
-        if (!requestFlag) {
-          return
+        if (requestFlag  === undefined || requestFlag === null) {
+          return 
         }
         return axios.get(`${API_URL}/tours/filter-status/${requestFlag}`, {
           headers: options,

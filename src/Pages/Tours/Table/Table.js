@@ -152,7 +152,7 @@ const TableContainer = ({
               </UncontrolledTooltip>
               <div
                 className="search-box  d-flex"
-                style={{ minWidth: "342px", marginTop: "-5px" }}
+                style={{ marginTop: "-5px" }}
               >
                 {isFiltered ? (
                   <>

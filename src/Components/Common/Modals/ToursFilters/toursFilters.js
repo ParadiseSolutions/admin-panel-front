@@ -48,11 +48,11 @@ const ToursFilters = ({ filters, setFilters, onSubmitFilters }) => {
   useEffect(() => {
     const websitesRequest = () => dispatch(websitesData());
     websitesRequest();
-    const providersRequest = () => dispatch(providersData());
+    const providersRequest = () => dispatch(providersData(0));
     providersRequest();
     const categoriesRequest = () => dispatch(categoriesData());
     categoriesRequest();
-    const operatorsRequest = () => dispatch(operatorsData());
+    const operatorsRequest = () => dispatch(operatorsData(0));
     operatorsRequest();
     const locationsRequest = () => dispatch(locationsData());
     locationsRequest();

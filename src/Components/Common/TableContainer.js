@@ -154,7 +154,7 @@ const TableContainer = ({
             )}
 
             {departmentTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Link to="/departments/new">
                     <Button
@@ -171,7 +171,7 @@ const TableContainer = ({
             )}
 
             {categoriesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -186,7 +186,7 @@ const TableContainer = ({
             )}
 
             {locationsTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -201,7 +201,7 @@ const TableContainer = ({
             )}
 
             {websitesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -214,7 +214,7 @@ const TableContainer = ({
               </Col>
             )}
             {rolesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Link to="/roles/new">
                     <Button
@@ -231,7 +231,7 @@ const TableContainer = ({
             )}
 
             {usersTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -246,7 +246,7 @@ const TableContainer = ({
             )}
 
             {paymentsTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -261,7 +261,7 @@ const TableContainer = ({
             )}
 
             {tourTypesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -276,7 +276,7 @@ const TableContainer = ({
             )}
 
             {cartsTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -294,7 +294,7 @@ const TableContainer = ({
                 <div className="text-sm-end d-flex justify-content-between">
                     <div
                   id="active_tour"
-                  className="mx-5 mt-2"
+                  className="mt-2"
                   style={{  marginLeft: '10px', cursor: "pointer" }}
                 >
                   <>
@@ -335,7 +335,7 @@ const TableContainer = ({
               </Col>
             )}
             {contactsProvidersTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -367,7 +367,7 @@ const TableContainer = ({
                 <div className="text-sm-end d-flex justify-content-between">
                  <div
                   id="active_tour"
-                  className="mx-5 mt-2"
+                  className="mt-2"
                   style={{  marginLeft: '10px', cursor: "pointer" }}
                 >
                   <>
@@ -1296,10 +1296,9 @@ function GlobalFilter({
     <React.Fragment>
       <Col sm={2}>
         <div
-          className="search-box me-2 mb-2 d-inline-block"
-          style={{ minWidth: "342px" }}
+          className="search-box col-12 me-2 mb-2 d-inline-block"
         >
-          <div className="position-relative col-10">
+          <div className="position-relative col-12">
             <label
               htmlFor="search-bar-0"
               className="search-label"
