@@ -69,6 +69,7 @@ const EditTour = ({ history }) => {
 
   // publish pending message
   const [publishPending, setPublishPending] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   useEffect(() => {
     getTourAPI(id).then((resp) => {
       setTourData(resp.data.data);
@@ -78,6 +79,7 @@ const EditTour = ({ history }) => {
   }, [activeTab, id]);
 
   const publishTour = () => {
+    setPublishing(true);
     postPendingPublishAPI(id).then(() => {
       Swal.fire(
         "Published!",
@@ -85,6 +87,7 @@ const EditTour = ({ history }) => {
         "success"
       );
       setPublishPending(false);
+      setPublishing(false);
     });
   };
 
@@ -108,9 +111,13 @@ const EditTour = ({ history }) => {
             >
               Publish
             </Button>
-            {publishPending && (
+            {publishPending && !publishing && (
 
             <p className="fs-6 fw-lighter py-2 text-danger">Pending changes to publish</p>
+            )}
+            {publishing && (
+
+            <p className="fs-6 fw-lighter py-2 paradise">Publishing...</p>
             )}
           </div>
 
