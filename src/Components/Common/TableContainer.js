@@ -154,7 +154,7 @@ const TableContainer = ({
             )}
 
             {departmentTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Link to="/departments/new">
                     <Button
@@ -171,7 +171,7 @@ const TableContainer = ({
             )}
 
             {categoriesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -186,7 +186,7 @@ const TableContainer = ({
             )}
 
             {locationsTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -201,7 +201,7 @@ const TableContainer = ({
             )}
 
             {websitesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -214,7 +214,7 @@ const TableContainer = ({
               </Col>
             )}
             {rolesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Link to="/roles/new">
                     <Button
@@ -231,7 +231,7 @@ const TableContainer = ({
             )}
 
             {usersTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -246,7 +246,7 @@ const TableContainer = ({
             )}
 
             {paymentsTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -261,7 +261,7 @@ const TableContainer = ({
             )}
 
             {tourTypesTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -276,7 +276,7 @@ const TableContainer = ({
             )}
 
             {cartsTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
@@ -335,7 +335,7 @@ const TableContainer = ({
               </Col>
             )}
             {contactsProvidersTable && (
-              <Col sm="8">
+              <Col sm="10">
                 <div className="text-sm-end">
                   <Button
                     type="button"
