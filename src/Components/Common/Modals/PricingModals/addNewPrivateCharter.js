@@ -2202,7 +2202,7 @@ const AddNewPrivateCharter = ({
                         <option value="-1">Select....</option>
                         <option value="11">Yes</option>
                         <option value="13">No</option>
-                        <option value="12">available</option>
+                        <option value="12">Available</option>
                       </Input>
                     </div>
                   </Col>
@@ -2938,67 +2938,7 @@ const AddNewPrivateCharter = ({
                             </div>
                           </div>
                         </Col>
-                        <Col className="col-2">
-                          <div className="form-outline mb-2" id="balance_due">
-                            <div className="d-flex justify-content-between">
-                              <Label className="form-label">Invoice Amt</Label>
-                              <div>
-                                <i
-                                  className="uil-question-circle font-size-15"
-                                  id="balanceDue"
-                                />
-                                <Tooltip
-                                  placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  toggle={() => {
-                                    setttop17(!ttop17);
-                                  }}
-                                >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
-                                </Tooltip>
-                              </div>
-                            </div>
-                            <div className="input-group">
-                              <span
-                                className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                                id="basic-addon1"
-                                style={{ fontSize: "0.85em" }}
-                              >
-                                $
-                              </span>
-                              <Input
-                                name="net_price"
-                                placeholder=""
-                                type="text"
-                                readOnly
-                                onChange={validationType.handleChange}
-                                onBlur={(e) => {
-                                  const value = e.target.value || "";
-                                  validationType.setFieldValue(
-                                    "net_price",
-                                    setDecimalFormat(value)
-                                  );
-                                }}
-                                value={validationType.values.net_price || ""}
-                                invalid={
-                                  validationType.touched.net_price &&
-                                  validationType.errors.net_price
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {validationType.touched.net_price &&
-                              validationType.errors.net_price ? (
-                                <FormFeedback type="invalid">
-                                  {validationType.errors.net_price}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
+                        
                         <div
                           onClick={() => setPriceBreakdown(!priceBrakedown)}
                           style={{ cursor: "pointer" }}
@@ -3009,7 +2949,7 @@ const AddNewPrivateCharter = ({
 
                         {priceBrakedown ? (
                           <>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3076,7 +3016,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3139,7 +3079,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3209,7 +3149,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3283,7 +3223,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3352,6 +3292,67 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
+                            <Col className="col-2">
+                          <div className="form-outline mb-2" id="balance_due">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">Invoice Amt</Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="balanceDue"
+                                />
+                                <Tooltip
+                                  placement="right"
+                                  isOpen={ttop17}
+                                  target="balanceDue"
+                                  toggle={() => {
+                                    setttop17(!ttop17);
+                                  }}
+                                >
+                                  The amount due to the provider on the invoice.
+                                  <br />
+                                  Our Deposit - Our Commission.
+                                </Tooltip>
+                              </div>
+                            </div>
+                            <div className="input-group">
+                              <span
+                                className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                id="basic-addon1"
+                                style={{ fontSize: "0.85em" }}
+                              >
+                                $
+                              </span>
+                              <Input
+                                name="net_price"
+                                placeholder=""
+                                type="text"
+                                readOnly
+                                onChange={validationType.handleChange}
+                                onBlur={(e) => {
+                                  const value = e.target.value || "";
+                                  validationType.setFieldValue(
+                                    "net_price",
+                                    setDecimalFormat(value)
+                                  );
+                                }}
+                                value={validationType.values.net_price || ""}
+                                invalid={
+                                  validationType.touched.net_price &&
+                                  validationType.errors.net_price
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validationType.touched.net_price &&
+                              validationType.errors.net_price ? (
+                                <FormFeedback type="invalid">
+                                  {validationType.errors.net_price}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+                          </div>
+                        </Col>
                           </>
                         ) : null}
                       </>
@@ -3666,7 +3667,7 @@ const AddNewPrivateCharter = ({
 
                         {priceBrakedown ? (
                           <>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3733,7 +3734,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3796,7 +3797,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3866,7 +3867,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3940,7 +3941,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4400,7 +4401,7 @@ const AddNewPrivateCharter = ({
 
                         {priceBrakedown ? (
                           <>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4467,7 +4468,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4530,7 +4531,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4600,7 +4601,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2 ">
+                            <Col className="col-2 " style={{ backgroundColor: "#E9F4FFBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4674,7 +4675,7 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2">
+                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -5259,7 +5260,7 @@ const AddNewPrivateCharter = ({
                       <Col className="col-2">
                         <div className="form-outline mb-2" id="">
                           <div className="d-flex justify-content-between">
-                            <Label className="form-label">Base</Label>
+                            <Label className="form-label">Before Tax</Label>
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
