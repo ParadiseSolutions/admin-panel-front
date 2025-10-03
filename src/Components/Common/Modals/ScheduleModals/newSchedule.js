@@ -124,6 +124,7 @@ const AddNewScheduleModal = ({
   const onChangeActive = (data) => {
     setActiveDep(!activeDep);
   };
+  console.log(typeSelected)
 
   //ids selected
   const [productSelected, setProductSelected] = useState(null);
@@ -430,7 +431,7 @@ const AddNewScheduleModal = ({
                       </div>
                     </Col>
                     <Col className="col">
-                      <Label className="form-label">Duration</Label>
+                      <Label className="form-label">Interval</Label>
                       <div className="form-outline">
                         <Input
                           name="duration"

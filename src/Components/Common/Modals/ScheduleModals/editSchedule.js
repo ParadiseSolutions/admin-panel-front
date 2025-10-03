@@ -580,7 +580,7 @@ const EditScheduleModal = ({
                           </div>
                         </Col>
                         <Col className="col-4 ">
-                          <Label className="form-label">Duration</Label>
+                          <Label className="form-label">Interval</Label>
                           <div className="form-outline">
                             <Input
                               name="duration"
