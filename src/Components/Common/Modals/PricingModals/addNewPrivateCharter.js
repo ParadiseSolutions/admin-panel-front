@@ -1946,8 +1946,8 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
+                        <option value="Yes" selected={ dataEdit && dataEdit.cruise_pax === "Yes" ? true : false } >Yes</option>
+                        <option value="No" selected={ dataEdit && dataEdit.cruise_pax === "No" ? true : false }>No</option>
                       </Input>
                     </div>
                   </Col>
@@ -2155,9 +2155,9 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="1">Basic</option>
-                        <option value="3">Moderate</option>
-                        <option value="2">Luxury</option>
+                        <option value="1" selected={ dataEdit && dataEdit.budget_id === "1" ? true : false }>Basic</option>
+                        <option value="3" selected={ dataEdit && dataEdit.budget_id === "3" ? true : false }>Moderate</option>
+                        <option value="2" selected={ dataEdit && dataEdit.budget_id === "2" ? true : false }>Luxury</option>
                       </Input>
                     </div>
                   </Col>
@@ -2177,10 +2177,10 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="4">Casual</option>
-                        <option value="5">Luxury</option>
-                        <option value="6">Party</option>
-                        <option value="7">Relaxed</option>
+                        <option value="4" selected={ dataEdit && dataEdit.vibe_id === "4" ? true : false }>Casual</option>
+                        <option value="5" selected={ dataEdit && dataEdit.vibe_id === "5" ? true : false }>Luxury</option>
+                        <option value="6" selected={ dataEdit && dataEdit.vibe_id === "6" ? true : false }>Party</option>
+                        <option value="7" selected={ dataEdit && dataEdit.vibe_id === "7" ? true : false }>Relaxed</option>
                       </Input>
                     </div>
                   </Col>
@@ -2200,9 +2200,9 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="11">Yes</option>
-                        <option value="13">No</option>
-                        <option value="12">Available</option>
+                        <option value="11" selected={ dataEdit && dataEdit.meal_id === "11" ? true : false }>Yes</option>
+                        <option value="13" selected={ dataEdit && dataEdit.meal_id === "13" ? true : false }>No</option>
+                        <option value="12" selected={ dataEdit && dataEdit.meal_id === "12" ? true : false }>Available</option>
                       </Input>
                     </div>
                   </Col>
@@ -2222,9 +2222,9 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="8">Yes</option>
-                        <option value="10">No</option>
-                        <option value="9">Available</option>
+                        <option value="8" selected={ dataEdit && dataEdit.snack_id === "8" ? true : false } >Yes</option>
+                        <option value="10" selected={ dataEdit && dataEdit.snack_id === "10" ? true : false } >No</option>
+                        <option value="9" selected={ dataEdit && dataEdit.snack_id === "9" ? true : false } >Available</option>
                       </Input>
                     </div>
                   </Col>
@@ -2244,9 +2244,9 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="14">Yes</option>
-                        <option value="16">No</option>
-                        <option value="15">Available</option>
+                        <option value="14" selected={ dataEdit && dataEdit.open_bar_id === "14" ? true : false }>Yes</option>
+                        <option value="16" selected={ dataEdit && dataEdit.open_bar_id === "16" ? true : false }>No</option>
+                        <option value="15" selected={ dataEdit && dataEdit.open_bar_id === "15" ? true : false }>Available</option>
                       </Input>
                     </div>
                   </Col>
@@ -2266,9 +2266,9 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="17">Yes</option>
-                        <option value="19">No</option>
-                        <option value="18">Available</option>
+                        <option value="17" selected={ dataEdit && dataEdit.soft_drink_id === "17" ? true : false }>Yes</option>
+                        <option value="19" selected={ dataEdit && dataEdit.soft_drink_id === "19" ? true : false }>No</option>
+                        <option value="18" selected={ dataEdit && dataEdit.soft_drink_id === "18" ? true : false }>Available</option>
                       </Input>
                     </div>
                   </Col>
@@ -5549,7 +5549,7 @@ const AddNewPrivateCharter = ({
                 ) : null}
                 <Col
                   className="col-12 p-1 my-2  d-flex justify-content-between"
-                  style={{ backgroundColor: "#FFFBC8", cursor: "pointer" }}
+                  style={{ backgroundColor: "#e7ffdc", cursor: "pointer" }}
                   onClick={() => setComparisonPricingTab(!comparisonPricingTab)}
                 >
                   <div className="d-flex">
