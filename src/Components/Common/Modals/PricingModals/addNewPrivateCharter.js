@@ -33,6 +33,8 @@ import {
 } from "../../../../Utils/CommonFunctions";
 import { getCurrency } from "../../../../Utils/API/Operators";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import eyeIcon from "../../../Assets/images/eye-icon.svg";
+import eyeIconSlash from "../../../Assets/images/eye-slash-icon.svg";
 
 const AddNewPrivateCharter = ({
   addNewPrivateCharter,
@@ -1946,8 +1948,26 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="Yes" selected={ dataEdit && dataEdit.cruise_pax === "Yes" ? true : false } >Yes</option>
-                        <option value="No" selected={ dataEdit && dataEdit.cruise_pax === "No" ? true : false }>No</option>
+                        <option
+                          value="Yes"
+                          selected={
+                            dataEdit && dataEdit.cruise_pax === "Yes"
+                              ? true
+                              : false
+                          }
+                        >
+                          Yes
+                        </option>
+                        <option
+                          value="No"
+                          selected={
+                            dataEdit && dataEdit.cruise_pax === "No"
+                              ? true
+                              : false
+                          }
+                        >
+                          No
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -2155,9 +2175,36 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="1" selected={ dataEdit && dataEdit.budget_id === "1" ? true : false }>Basic</option>
-                        <option value="3" selected={ dataEdit && dataEdit.budget_id === "3" ? true : false }>Moderate</option>
-                        <option value="2" selected={ dataEdit && dataEdit.budget_id === "2" ? true : false }>Luxury</option>
+                        <option
+                          value="1"
+                          selected={
+                            dataEdit && dataEdit.budget_id === "1"
+                              ? true
+                              : false
+                          }
+                        >
+                          Basic
+                        </option>
+                        <option
+                          value="3"
+                          selected={
+                            dataEdit && dataEdit.budget_id === "3"
+                              ? true
+                              : false
+                          }
+                        >
+                          Moderate
+                        </option>
+                        <option
+                          value="2"
+                          selected={
+                            dataEdit && dataEdit.budget_id === "2"
+                              ? true
+                              : false
+                          }
+                        >
+                          Luxury
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -2177,10 +2224,38 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="4" selected={ dataEdit && dataEdit.vibe_id === "4" ? true : false }>Casual</option>
-                        <option value="5" selected={ dataEdit && dataEdit.vibe_id === "5" ? true : false }>Luxury</option>
-                        <option value="6" selected={ dataEdit && dataEdit.vibe_id === "6" ? true : false }>Party</option>
-                        <option value="7" selected={ dataEdit && dataEdit.vibe_id === "7" ? true : false }>Relaxed</option>
+                        <option
+                          value="4"
+                          selected={
+                            dataEdit && dataEdit.vibe_id === "4" ? true : false
+                          }
+                        >
+                          Casual
+                        </option>
+                        <option
+                          value="5"
+                          selected={
+                            dataEdit && dataEdit.vibe_id === "5" ? true : false
+                          }
+                        >
+                          Luxury
+                        </option>
+                        <option
+                          value="6"
+                          selected={
+                            dataEdit && dataEdit.vibe_id === "6" ? true : false
+                          }
+                        >
+                          Party
+                        </option>
+                        <option
+                          value="7"
+                          selected={
+                            dataEdit && dataEdit.vibe_id === "7" ? true : false
+                          }
+                        >
+                          Relaxed
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -2200,9 +2275,30 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="11" selected={ dataEdit && dataEdit.meal_id === "11" ? true : false }>Yes</option>
-                        <option value="13" selected={ dataEdit && dataEdit.meal_id === "13" ? true : false }>No</option>
-                        <option value="12" selected={ dataEdit && dataEdit.meal_id === "12" ? true : false }>Available</option>
+                        <option
+                          value="11"
+                          selected={
+                            dataEdit && dataEdit.meal_id === "11" ? true : false
+                          }
+                        >
+                          Yes
+                        </option>
+                        <option
+                          value="13"
+                          selected={
+                            dataEdit && dataEdit.meal_id === "13" ? true : false
+                          }
+                        >
+                          No
+                        </option>
+                        <option
+                          value="12"
+                          selected={
+                            dataEdit && dataEdit.meal_id === "12" ? true : false
+                          }
+                        >
+                          Available
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -2222,9 +2318,32 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="8" selected={ dataEdit && dataEdit.snack_id === "8" ? true : false } >Yes</option>
-                        <option value="10" selected={ dataEdit && dataEdit.snack_id === "10" ? true : false } >No</option>
-                        <option value="9" selected={ dataEdit && dataEdit.snack_id === "9" ? true : false } >Available</option>
+                        <option
+                          value="8"
+                          selected={
+                            dataEdit && dataEdit.snack_id === "8" ? true : false
+                          }
+                        >
+                          Yes
+                        </option>
+                        <option
+                          value="10"
+                          selected={
+                            dataEdit && dataEdit.snack_id === "10"
+                              ? true
+                              : false
+                          }
+                        >
+                          No
+                        </option>
+                        <option
+                          value="9"
+                          selected={
+                            dataEdit && dataEdit.snack_id === "9" ? true : false
+                          }
+                        >
+                          Available
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -2244,9 +2363,36 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="14" selected={ dataEdit && dataEdit.open_bar_id === "14" ? true : false }>Yes</option>
-                        <option value="16" selected={ dataEdit && dataEdit.open_bar_id === "16" ? true : false }>No</option>
-                        <option value="15" selected={ dataEdit && dataEdit.open_bar_id === "15" ? true : false }>Available</option>
+                        <option
+                          value="14"
+                          selected={
+                            dataEdit && dataEdit.open_bar_id === "14"
+                              ? true
+                              : false
+                          }
+                        >
+                          Yes
+                        </option>
+                        <option
+                          value="16"
+                          selected={
+                            dataEdit && dataEdit.open_bar_id === "16"
+                              ? true
+                              : false
+                          }
+                        >
+                          No
+                        </option>
+                        <option
+                          value="15"
+                          selected={
+                            dataEdit && dataEdit.open_bar_id === "15"
+                              ? true
+                              : false
+                          }
+                        >
+                          Available
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -2266,9 +2412,36 @@ const AddNewPrivateCharter = ({
                         //   value={validationType.values.department || ""}
                       >
                         <option value="-1">Select....</option>
-                        <option value="17" selected={ dataEdit && dataEdit.soft_drink_id === "17" ? true : false }>Yes</option>
-                        <option value="19" selected={ dataEdit && dataEdit.soft_drink_id === "19" ? true : false }>No</option>
-                        <option value="18" selected={ dataEdit && dataEdit.soft_drink_id === "18" ? true : false }>Available</option>
+                        <option
+                          value="17"
+                          selected={
+                            dataEdit && dataEdit.soft_drink_id === "17"
+                              ? true
+                              : false
+                          }
+                        >
+                          Yes
+                        </option>
+                        <option
+                          value="19"
+                          selected={
+                            dataEdit && dataEdit.soft_drink_id === "19"
+                              ? true
+                              : false
+                          }
+                        >
+                          No
+                        </option>
+                        <option
+                          value="18"
+                          selected={
+                            dataEdit && dataEdit.soft_drink_id === "18"
+                              ? true
+                              : false
+                          }
+                        >
+                          Available
+                        </option>
                       </Input>
                     </div>
                   </Col>
@@ -2938,18 +3111,42 @@ const AddNewPrivateCharter = ({
                             </div>
                           </div>
                         </Col>
-                        
+
                         <div
                           onClick={() => setPriceBreakdown(!priceBrakedown)}
                           style={{ cursor: "pointer" }}
                           className="d-flex align-items-center mt-2"
                         >
                           <p>Price Breakdown</p>
+                          {priceBrakedown ? (
+                            <img
+                              src={eyeIconSlash}
+                              alt="Hide Price Breakdown"
+                              style={{
+                                width: "20px",
+                                marginLeft: "10px",
+                                marginTop: "-10px",
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={eyeIcon}
+                              alt="Show Price Breakdown"
+                              style={{
+                                width: "20px",
+                                marginLeft: "10px",
+                                marginTop: "-10px",
+                              }}
+                            />
+                          )}
                         </div>
 
                         {priceBrakedown ? (
                           <>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3016,7 +3213,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3079,7 +3279,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3149,7 +3352,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#E9F4FFBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3223,7 +3429,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#E9F4FFBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3293,66 +3502,74 @@ const AddNewPrivateCharter = ({
                               </div>
                             </Col>
                             <Col className="col-2">
-                          <div className="form-outline mb-2" id="balance_due">
-                            <div className="d-flex justify-content-between">
-                              <Label className="form-label">Invoice Amt</Label>
-                              <div>
-                                <i
-                                  className="uil-question-circle font-size-15"
-                                  id="balanceDue"
-                                />
-                                <Tooltip
-                                  placement="right"
-                                  isOpen={ttop17}
-                                  target="balanceDue"
-                                  toggle={() => {
-                                    setttop17(!ttop17);
-                                  }}
-                                >
-                                  The amount due to the provider on the invoice.
-                                  <br />
-                                  Our Deposit - Our Commission.
-                                </Tooltip>
-                              </div>
-                            </div>
-                            <div className="input-group">
-                              <span
-                                className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                                id="basic-addon1"
-                                style={{ fontSize: "0.85em" }}
+                              <div
+                                className="form-outline mb-2"
+                                id="balance_due"
                               >
-                                $
-                              </span>
-                              <Input
-                                name="net_price"
-                                placeholder=""
-                                type="text"
-                                readOnly
-                                onChange={validationType.handleChange}
-                                onBlur={(e) => {
-                                  const value = e.target.value || "";
-                                  validationType.setFieldValue(
-                                    "net_price",
-                                    setDecimalFormat(value)
-                                  );
-                                }}
-                                value={validationType.values.net_price || ""}
-                                invalid={
-                                  validationType.touched.net_price &&
-                                  validationType.errors.net_price
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {validationType.touched.net_price &&
-                              validationType.errors.net_price ? (
-                                <FormFeedback type="invalid">
-                                  {validationType.errors.net_price}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
+                                <div className="d-flex justify-content-between">
+                                  <Label className="form-label">
+                                    Invoice Amt
+                                  </Label>
+                                  <div>
+                                    <i
+                                      className="uil-question-circle font-size-15"
+                                      id="balanceDue"
+                                    />
+                                    <Tooltip
+                                      placement="right"
+                                      isOpen={ttop17}
+                                      target="balanceDue"
+                                      toggle={() => {
+                                        setttop17(!ttop17);
+                                      }}
+                                    >
+                                      The amount due to the provider on the
+                                      invoice.
+                                      <br />
+                                      Our Deposit - Our Commission.
+                                    </Tooltip>
+                                  </div>
+                                </div>
+                                <div className="input-group">
+                                  <span
+                                    className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                    id="basic-addon1"
+                                    style={{ fontSize: "0.85em" }}
+                                  >
+                                    $
+                                  </span>
+                                  <Input
+                                    name="net_price"
+                                    placeholder=""
+                                    type="text"
+                                    readOnly
+                                    onChange={validationType.handleChange}
+                                    onBlur={(e) => {
+                                      const value = e.target.value || "";
+                                      validationType.setFieldValue(
+                                        "net_price",
+                                        setDecimalFormat(value)
+                                      );
+                                    }}
+                                    value={
+                                      validationType.values.net_price || ""
+                                    }
+                                    invalid={
+                                      validationType.touched.net_price &&
+                                      validationType.errors.net_price
+                                        ? true
+                                        : false
+                                    }
+                                  />
+                                  {validationType.touched.net_price &&
+                                  validationType.errors.net_price ? (
+                                    <FormFeedback type="invalid">
+                                      {validationType.errors.net_price}
+                                    </FormFeedback>
+                                  ) : null}
+                                </div>
+                              </div>
+                            </Col>
                           </>
                         ) : null}
                       </>
@@ -3663,11 +3880,35 @@ const AddNewPrivateCharter = ({
                           className="d-flex align-items-center mt-2"
                         >
                           <p>Price Breakdown</p>
+                          {priceBrakedown ? (
+                            <img
+                              src={eyeIconSlash}
+                              alt="Hide Price Breakdown"
+                              style={{
+                                width: "20px",
+                                marginLeft: "10px",
+                                marginTop: "-10px",
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={eyeIcon}
+                              alt="Show Price Breakdown"
+                              style={{
+                                width: "20px",
+                                marginLeft: "10px",
+                                marginTop: "-10px",
+                              }}
+                            />
+                          )}
                         </div>
 
                         {priceBrakedown ? (
                           <>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3734,7 +3975,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3797,7 +4041,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3867,7 +4114,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#E9F4FFBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -3941,7 +4191,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#E9F4FFBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4397,11 +4650,35 @@ const AddNewPrivateCharter = ({
                           className="d-flex align-items-center mt-2"
                         >
                           <p>Price Breakdown</p>
+                          {priceBrakedown ? (
+                            <img
+                              src={eyeIconSlash}
+                              alt="Hide Price Breakdown"
+                              style={{
+                                width: "20px",
+                                marginLeft: "10px",
+                                marginTop: "-10px",
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={eyeIcon}
+                              alt="Show Price Breakdown"
+                              style={{
+                                width: "20px",
+                                marginLeft: "10px",
+                                marginTop: "-10px",
+                              }}
+                            />
+                          )}
                         </div>
 
                         {priceBrakedown ? (
                           <>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4468,7 +4745,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4531,7 +4811,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#FFEFDEBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#FFEFDEBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4601,7 +4884,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2 " style={{ backgroundColor: "#E9F4FFBF"}}>
+                            <Col
+                              className="col-2 "
+                              style={{ backgroundColor: "#E9F4FFBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
@@ -4675,7 +4961,10 @@ const AddNewPrivateCharter = ({
                                 </div>
                               </div>
                             </Col>
-                            <Col className="col-2" style={{ backgroundColor: "#E9F4FFBF"}}>
+                            <Col
+                              className="col-2"
+                              style={{ backgroundColor: "#E9F4FFBF" }}
+                            >
                               <div
                                 className="form-outline mb-2"
                                 id="balance_due"
