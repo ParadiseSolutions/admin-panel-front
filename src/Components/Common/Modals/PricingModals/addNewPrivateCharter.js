@@ -123,13 +123,13 @@ const AddNewPrivateCharter = ({
       net_price: dataEdit ? dataEdit.net_price : "",
       net_price_percentage: dataEdit ? dataEdit.net_price : "",
       net_price_fixed: dataEdit ? dataEdit.net_price : "",
-      cruise_pax   : dataEdit & dataEdit?.asset_details ? dataEdit.asset_details.cruise_pax : null,
-      budget_id    : dataEdit & dataEdit?.asset_details ? dataEdit.asset_details.budget_id : null,
-      vibe_id      : dataEdit & dataEdit?.asset_details ? dataEdit.asset_details.vibe_id : null,
-      meal_id      : dataEdit & dataEdit?.asset_details ? dataEdit.asset_details.meal_id : null,
-      snack_id     : dataEdit & dataEdit?.asset_details ? dataEdit.asset_details.snack_id : null,
-      open_bar_id  : dataEdit & dataEdit?.asset_details ? dataEdit.asset_details.open_bar_id : null,
-      soft_drink_id: dataEdit & dataEdit?.asset_details ? dataEdit.asset_details.soft_drink_id : null,
+      cruise_pax   : dataEdit && dataEdit?.asset_details ? dataEdit.asset_details?.cruise_pax : null,
+      budget_id    : dataEdit && dataEdit?.asset_details ? dataEdit.asset_details?.budget_id : null,
+      vibe_id      : dataEdit && dataEdit?.asset_details ? dataEdit.asset_details?.vibe_id : null,
+      meal_id      : dataEdit && dataEdit?.asset_details ? dataEdit.asset_details?.meal_id : null,
+      snack_id     : dataEdit && dataEdit?.asset_details ? dataEdit.asset_details?.snack_id : null,
+      open_bar_id  : dataEdit && dataEdit?.asset_details ? dataEdit.asset_details?.open_bar_id : null,
+      soft_drink_id: dataEdit && dataEdit?.asset_details ? dataEdit.asset_details?.soft_drink_id : null,
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -1950,7 +1950,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="Yes"
                           selected={
-                            dataEdit && dataEdit.asset_details.cruise_pax === "Yes"
+                            dataEdit && dataEdit.asset_details?.cruise_pax === "Yes"
                               ? true
                               : false
                           }
@@ -1960,7 +1960,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="No"
                           selected={
-                            dataEdit && dataEdit.asset_details.cruise_pax === "No"
+                            dataEdit && dataEdit.asset_details?.cruise_pax === "No"
                               ? true
                               : false
                           }
@@ -2177,7 +2177,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="1"
                           selected={
-                            dataEdit && dataEdit.asset_details.budget_id === "1"
+                            dataEdit && dataEdit.asset_details?.budget_id === "1"
                               ? true
                               : false
                           }
@@ -2187,7 +2187,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="3"
                           selected={
-                            dataEdit && dataEdit.asset_details.budget_id === "3"
+                            dataEdit && dataEdit.asset_details?.budget_id === "3"
                               ? true
                               : false
                           }
@@ -2197,7 +2197,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="2"
                           selected={
-                            dataEdit && dataEdit.asset_details.budget_id === "2"
+                            dataEdit && dataEdit.asset_details?.budget_id === "2"
                               ? true
                               : false
                           }
@@ -2226,7 +2226,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="4"
                           selected={
-                            dataEdit && dataEdit.asset_details.vibe_id === "4" ? true : false
+                            dataEdit && dataEdit.asset_details?.vibe_id === "4" ? true : false
                           }
                         >
                           Casual
@@ -2234,7 +2234,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="5"
                           selected={
-                            dataEdit && dataEdit.asset_details.vibe_id === "5" ? true : false
+                            dataEdit && dataEdit.asset_details?.vibe_id === "5" ? true : false
                           }
                         >
                           Luxury
@@ -2242,7 +2242,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="6"
                           selected={
-                            dataEdit && dataEdit.asset_details.vibe_id === "6" ? true : false
+                            dataEdit && dataEdit.asset_details?.vibe_id === "6" ? true : false
                           }
                         >
                           Party
@@ -2250,7 +2250,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="7"
                           selected={
-                            dataEdit && dataEdit.asset_details.vibe_id === "7" ? true : false
+                            dataEdit && dataEdit.asset_details?.vibe_id === "7" ? true : false
                           }
                         >
                           Relaxed
@@ -2277,7 +2277,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="11"
                           selected={
-                            dataEdit && dataEdit.asset_details.meal_id === "11" ? true : false
+                            dataEdit && dataEdit.asset_details?.meal_id === "11" ? true : false
                           }
                         >
                           Yes
@@ -2285,7 +2285,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="13"
                           selected={
-                            dataEdit && dataEdit.asset_details.meal_id === "13" ? true : false
+                            dataEdit && dataEdit.asset_details?.meal_id === "13" ? true : false
                           }
                         >
                           No
@@ -2293,7 +2293,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="12"
                           selected={
-                            dataEdit && dataEdit.asset_details.meal_id === "12" ? true : false
+                            dataEdit && dataEdit.asset_details?.meal_id === "12" ? true : false
                           }
                         >
                           Available
@@ -2320,7 +2320,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="8"
                           selected={
-                            dataEdit && dataEdit.asset_details.snack_id === "8" ? true : false
+                            dataEdit && dataEdit.asset_details?.snack_id === "8" ? true : false
                           }
                         >
                           Yes
@@ -2328,7 +2328,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="10"
                           selected={
-                            dataEdit && dataEdit.asset_details.snack_id === "10"
+                            dataEdit && dataEdit.asset_details?.snack_id === "10"
                               ? true
                               : false
                           }
@@ -2338,7 +2338,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="9"
                           selected={
-                            dataEdit && dataEdit.asset_details.snack_id === "9" ? true : false
+                            dataEdit && dataEdit.asset_details?.snack_id === "9" ? true : false
                           }
                         >
                           Available
@@ -2365,7 +2365,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="14"
                           selected={
-                            dataEdit && dataEdit.asset_details.open_bar_id === "14"
+                            dataEdit && dataEdit.asset_details?.open_bar_id === "14"
                               ? true
                               : false
                           }
@@ -2375,7 +2375,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="16"
                           selected={
-                            dataEdit && dataEdit.asset_details.open_bar_id === "16"
+                            dataEdit && dataEdit.asset_details?.open_bar_id === "16"
                               ? true
                               : false
                           }
@@ -2385,7 +2385,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="15"
                           selected={
-                            dataEdit && dataEdit.asset_details.open_bar_id === "15"
+                            dataEdit && dataEdit.asset_details?.open_bar_id === "15"
                               ? true
                               : false
                           }
@@ -2414,7 +2414,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="17"
                           selected={
-                            dataEdit && dataEdit.asset_details.soft_drink_id === "17"
+                            dataEdit && dataEdit.asset_details?.soft_drink_id === "17"
                               ? true
                               : false
                           }
@@ -2424,7 +2424,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="19"
                           selected={
-                            dataEdit && dataEdit.asset_details.soft_drink_id === "19"
+                            dataEdit && dataEdit.asset_details?.soft_drink_id === "19"
                               ? true
                               : false
                           }
@@ -2434,7 +2434,7 @@ const AddNewPrivateCharter = ({
                         <option
                           value="18"
                           selected={
-                            dataEdit && dataEdit.asset_details.soft_drink_id === "18"
+                            dataEdit && dataEdit.asset_details?.soft_drink_id === "18"
                               ? true
                               : false
                           }
