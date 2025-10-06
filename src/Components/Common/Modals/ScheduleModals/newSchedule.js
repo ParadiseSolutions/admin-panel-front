@@ -124,7 +124,6 @@ const AddNewScheduleModal = ({
   const onChangeActive = (data) => {
     setActiveDep(!activeDep);
   };
-  console.log(typeSelected)
 
   //ids selected
   const [productSelected, setProductSelected] = useState(null);

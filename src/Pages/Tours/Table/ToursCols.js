@@ -80,7 +80,6 @@ const Active = (cell) => {
       statusUpdateTour(id, data).then((resp) => {
         triggerUpdate();
         updateLocalStorageStatus(resp.data.data, cell);
-        console.log(resp.data.data);
 
         if (resp.data.data.ask_disable_provider === 1) {
           Swal.fire({

@@ -64,7 +64,6 @@ const Schedules = ({ tourData, toggle }) => {
     });
   }, [TourID]);
   useEffect(() => {
-    console.log("tourData?.open_tickets", tourData?.open_ticket);
     if (tourData?.open_ticket === 1) {
       setOpenTicketCheck(true);
     } else {
@@ -72,7 +71,6 @@ const Schedules = ({ tourData, toggle }) => {
     }
   }, [tourData]);
   const [seasonSelected, setSeasonSelected] = useState("");
-  console.log("schedulesData", tourData);
   //refresh tables
   const refresh = () => {
     getScheduleTimeAPI(TourID).then((resp) => {

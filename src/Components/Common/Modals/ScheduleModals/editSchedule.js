@@ -109,6 +109,7 @@ const EditScheduleModal = ({
       setUnitSS(dataEdit.units);
       setStartTimeSS(from_time[0]);
       setTimeFrameSS(from_time[1]);
+      setTimeFrameIntervalFrom(from_time[1]);
       setDurationSS(dataEdit.duration);
     }
     if (dataEdit.type_id === 6) {
@@ -118,8 +119,10 @@ const EditScheduleModal = ({
       setDurationI(dataEdit.duration);
       setStartTimeI(from_time[0]);
       setStartFrameI(from_time[1]);
+      setTimeFrameIntervalFrom(from_time[1]);
       setEndTimeI(to_time[0]);
       setEndFrameI(to_time[1]);
+      setTimeFrameIntervalTo(to_time[1]);
     }
     if (dataEdit.type_id === 3) {
       let detailData = dataEdit.detail.split(",");

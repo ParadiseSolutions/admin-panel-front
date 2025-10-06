@@ -75,7 +75,6 @@ const EditTour = ({ history }) => {
       setTourData(resp.data.data);
       setPublishPending(resp.data.data.html_needs_update === 1 ? true : false);
     });
-    console.log(activeTab, "activeTab");
   }, [activeTab, id]);
 
   const publishTour = () => {
@@ -91,7 +90,6 @@ const EditTour = ({ history }) => {
     });
   };
 
-  console.log(tourData, "tourData");
   return (
     <div className="page-content pb-0">
       <Container fluid className="d-flex justify-content-between">

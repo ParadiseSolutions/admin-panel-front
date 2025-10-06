@@ -70,7 +70,6 @@ const VehicleComponent = ({
       setVehicleSubTypeSelected(dataEdit.type_id);
     }
   }, [dataEdit]);
-  console.log(dataEdit);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
