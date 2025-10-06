@@ -76,7 +76,6 @@ const ZelleForm = ({
             name="extra_fee_Zelle"
             onChange={(e) => {
               setExtraFeeSelected(+e.target.value);
-              console.log(+e.target.value);
             }}
             onBlur={validationType.handleBlur}
             value={extraFeeSelected || ""}

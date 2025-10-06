@@ -206,7 +206,6 @@ const WesternUnionForm = ({
                   type="select"
                   name="price_type"
                   onChange={(e) => {
-                    console.log(e.target.value);
                     setAccountTypeSelected(+e.target.value);
                   }}
                   onBlur={validationType.handleBlur}

@@ -76,7 +76,6 @@ const VenmoForm = ({
             name="extra_fee_venmo"
             onChange={(e) => {
               setExtraFeeSelected(+e.target.value);
-              console.log(+e.target.value);
             }}
             onBlur={validationType.handleBlur}
             value={extraFeeSelected || ""}

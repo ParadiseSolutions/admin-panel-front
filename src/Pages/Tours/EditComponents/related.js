@@ -339,7 +339,6 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     });
   };
   
-  console.log(relatedAssetsActiveData)
 
   const indexSubmit = (row, position) => {
     let data = {

@@ -176,7 +176,6 @@ const BoatComponent = ({
       }
     },
   });
-  console.log(dataEdit);
   return (
     <>
       <div className="modal-body">
