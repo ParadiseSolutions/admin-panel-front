@@ -43,7 +43,6 @@ const Tours = () => {
 
     // Evita enviar peticiones con valores inválidos y evita doble disparo
     if (requestFlag === 0 || requestFlag === 1) {
-      console.log("Dispatching toursData with requestFlag:", requestFlag);
       dispatch(toursData(requestFlag));
     }
   }, [dispatch, switch1, switchSynced]);

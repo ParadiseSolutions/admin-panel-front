@@ -75,7 +75,6 @@ const PaypalForm = ({
             name="extra_fee_PP"
             onChange={(e) => {
               setExtraFeeSelected(+e.target.value);
-              console.log(+e.target.value);
             }}
             onBlur={validationType.handleBlur}
             value={extraFeeSelected || ""}
