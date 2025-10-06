@@ -682,7 +682,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         name="gratuity_type_select_1"
                         onChange={(e) => {
                           setGratuitesTypeSelected(+e.target.value);
-                          console.log(e.target.value);
                         }}
                         onBlur={validationType.handleBlur}
                         value={
