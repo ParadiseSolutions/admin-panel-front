@@ -107,9 +107,11 @@ const OperationalContactModal = ({
     }
   }, [dataEdit]);
 
+  console.log("dataEdit", dataEdit);
+
   //contact info data
   useEffect(() => {
-    if (contactNameSelected) {
+    if (contactNameSelected && dataEdit === null) {
       const selectedContact = contactNameData.find(
         (contact) => contact.id === contactNameSelected
       );
@@ -124,7 +126,7 @@ const OperationalContactModal = ({
   }, [contactNameSelected, contactNameData, channelsSelected]);
 
   const clearData = () => {
-    setDataEdit(null);
+    //setDataEdit(null);
     setContactTypeSelected(null);
     setContactNameSelected(null);
     setChannelsSelected(null);
@@ -241,7 +243,7 @@ const OperationalContactModal = ({
       isOpen={operationalContactAction}
       toggle={() => {
         setOperationalContactAction(!operationalContactAction);
-        clearData();
+        // clearData();
       }}
     >
       <div
@@ -257,7 +259,7 @@ const OperationalContactModal = ({
         <button
           onClick={() => {
             setOperationalContactAction(!operationalContactAction);
-            clearData();
+            // clearData();
           }}
           type="button"
           className="close"
@@ -660,7 +662,7 @@ const OperationalContactModal = ({
                 onClick={() => {
                   setOperationalContactAction(false);
 
-                  clearData();
+                  // clearData();
                 }}
               >
                 Cancel
