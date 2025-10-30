@@ -460,7 +460,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* {editMode ? <option>{tourData.cart_name}</option> : null} */}
-
+                    <option value="">Select....</option>
                     {map(shoppingCartData, (shoppingCart, index) => {
                       return (
                         <option
@@ -513,6 +513,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* { editMode ? <option>{tourData.provider_name}</option> : null } */}
+                    <option value="">Select....</option>
 
                     {map(providerData, (provider, index) => {
                       return (
@@ -566,6 +567,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* {editMode ? <option>{tourData.operator_name}</option> : null} */}
+                    <option value="">Select....</option>
 
                     {map(operatorData, (operator, index) => {
                       return (
@@ -740,6 +742,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     //   value={validationType.values.department || ""}
                   >
                     {/* {editMode ? <option>{tourData.category_name}</option> : null} */}
+                    <option value="">Select....</option>
 
                     {map(categoryData, (category, index) => {
                       return (
