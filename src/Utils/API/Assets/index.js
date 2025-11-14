@@ -27,6 +27,18 @@ export const getAccesability = () => {
       headers: options,
     });
   };
+export const getActivities = (data) => {
+    const url = `${API_URL}/groups-tool/load-filter`;
+    return axios.post (url, data, {
+      headers: options,
+    });
+  };
+export const getDepatureLocations = (data) => {
+    const url = `${API_URL}/assets/departure-locations`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 export const getBoatEdit = (id) => {
     const url = `${API_URL}/assets/boats/${id}`;
     return axios.get (url, {
