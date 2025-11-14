@@ -10,19 +10,24 @@ import {
   Button,
   UncontrolledTooltip,
 } from "reactstrap";
-
+import { Select } from "antd";
+import { Option } from "antd/lib/mentions";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import {
   getAccesability,
+  getActivities,
   getBoatLocation,
   getBoatType,
+  getDepatureLocations,
   getMarinaLocation,
   postBoat,
   putBoat,
 } from "../../../../../Utils/API/Assets";
+import { API_URL, imagesOptions } from "../../../../../Utils/API";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const BoatComponent = ({
   setMenu,
@@ -36,6 +41,10 @@ const BoatComponent = ({
   const [locationData, setLocationData] = useState([]);
   const [boatLocationData, setBoatLocationData] = useState([]);
   const [accesData, setAccessData] = useState([]);
+  const [activityData, setActivityData] = useState([]);
+  const [depatureLocationData, setDepartureLocationData] = useState([]);
+  const [activitiesSelected, setActivitiesSelected] = useState([]);
+  const [initialOptionsArea, setInitialOptionsArea] = useState([]);
   const [boatTypeSelected, setBoatTypeSelected] = useState(0);
   const [locationSelected, setLocationSelected] = useState(0);
   const [boatLocationSelected, setBoatLocationSelected] = useState(0);
@@ -43,6 +52,27 @@ const BoatComponent = ({
   const [boatShadeSelected, setBoatShadeSelected] = useState(0);
   const [boatACSelected, setBoatACSelected] = useState(0);
   const [boatAccessSelected, setBoatAccessSelected] = useState(0);
+  const [pdfLink, setPdfLink] = useState("");
+  const [imageLink, setImageLink] = useState("");
+  const [mainClassSelected, setMainClassSelected] = useState(0);
+  const [fishingAditionalInputs, setFishingAditionalInputs] = useState(false);
+  const [flexiblePrice, setFlexiblePrice] = useState(false);
+  const [supportedClassRowTwo, setSupportedClassRowTwo] = useState(false);
+  const [supportedClassRowThree, setSupportedClassRowThree] = useState(false);
+  const [suportedClassSelectedOne, setSuportedClassSelectedOne] = useState("");
+  const [durationClassSelectedOne, setDurationClassSelectedOne] = useState("");
+  const [suportedClassSelectedTwo, setSuportedClassSelectedTwo] = useState("");
+  const [durationClassSelectedTwo, setDurationClassSelectedTwo] = useState("");
+  const [suportedClassSelectedThree, setSuportedClassSelectedThree] =
+    useState("");
+  const [durationClassSelectedThree, setDurationClassSelectedThree] =
+    useState("");
+  const [initialDepartureLocationsOne, setInitialDepartureLocationsOne] = useState([]);
+  const [initialDepartureLocationsTwo, setInitialDepartureLocationsTwo] = useState([]);
+  const [initialDepartureLocationsThree, setInitialDepartureLocationsThree] = useState([]);
+  const [dapatureLocationsSelectedOne, setDepartureLocationsSelectedOne] = useState([]);
+  const [dapatureLocationsSelectedTwo, setDepartureLocationsSelectedTwo] = useState([]);
+  const [dapatureLocationsSelectedThree, setDepartureLocationsSelectedThree] = useState([]);
 
   //initial request
   useEffect(() => {
@@ -58,7 +88,18 @@ const BoatComponent = ({
     getAccesability().then((resp) => {
       setAccessData(resp.data.data);
     });
+    getActivities({
+      search: "",
+      tipo: "boats",
+      list: "admin_cargarActivityCombo",
+    }).then((resp) => {
+      setActivityData(resp.data.results);
+    });
+    getDepatureLocations().then((resp) => {
+      setDepartureLocationData(resp.data.data);
+    });
   }, []);
+  console.log("dataEdit", dataEdit);
 
   //edit request
   useEffect(() => {
@@ -70,9 +111,67 @@ const BoatComponent = ({
       setBoatShadeSelected(dataEdit.shade);
       setBoatACSelected(dataEdit.ac);
       setBoatAccessSelected(dataEdit.access_id);
+      setMainClassSelected(dataEdit.main_class_id);
+      setFlexiblePrice(dataEdit.has_supported_classes === 1 ? true : false);
+      setInitialOptionsArea(dataEdit.activities);
+      setActivitiesSelected(dataEdit.activities);
+      setFishingAditionalInputs(
+        dataEdit.activities.includes(50) ? true : false
+      );
+      setSuportedClassSelectedOne(dataEdit.supported_classes?.class_id_1 || "");
+      setDurationClassSelectedOne(dataEdit.supported_classes?.duration_1 || "");
+      setSuportedClassSelectedTwo(dataEdit.supported_classes?.class_id_2 || "");
+      setDurationClassSelectedTwo(dataEdit.supported_classes?.duration_2 || "");
+      setSuportedClassSelectedThree(dataEdit.supported_classes?.class_id_3 || "");
+      setDurationClassSelectedThree(dataEdit.supported_classes?.duration_3 || "");
+      setInitialDepartureLocationsOne(dataEdit.supported_classes?.departure_locations_1 || []);
+      setInitialDepartureLocationsTwo(dataEdit.supported_classes?.departure_locations_2 || []);
+      setInitialDepartureLocationsThree(dataEdit.supported_classes?.departure_locations_3 || []);
+      if (dataEdit.supported_classes?.class_id_2 && dataEdit.supported_classes?.class_id_2 !== "") {
+        setSupportedClassRowTwo(true);
+      }
+      if (dataEdit.supported_classes?.class_id_3 && dataEdit.supported_classes?.class_id_3 !== "") {
+        setSupportedClassRowThree(true);
+      }
     }
   }, [dataEdit]);
 
+  //multi select activities
+  function handleMulti(selected) {
+    console.log("selected activities", selected);
+    setActivitiesSelected(selected);
+    if (!selected || selected.length === 0) {
+      setFishingAditionalInputs(false);
+      return;
+    }
+
+    const containsFishing = selected.some((sel) => {
+      if (typeof sel === "string" || typeof sel === "number") {
+        if (String(sel).toLowerCase() === "fishing") return true;
+        return activityData.some(
+          (a) =>
+            String(a.id) === String(sel) &&
+            String(a.text).toLowerCase() === "fishing"
+        );
+      }
+      if (sel && typeof sel === "object") {
+        if (sel.label && String(sel.label).toLowerCase() === "fishing")
+          return true;
+        if (sel.value) {
+          return activityData.some(
+            (a) =>
+              String(a.id) === String(sel.value) &&
+              String(a.text).toLowerCase() === "fishing"
+          );
+        }
+      }
+      return false;
+    });
+
+    setFishingAditionalInputs(Boolean(containsFishing));
+    // setSelectionID(selected);
+  }
+console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -83,6 +182,9 @@ const BoatComponent = ({
       boat_model: dataEdit ? dataEdit.model : "",
       boat_capacity: dataEdit ? dataEdit.capacity : "",
       boat_bathroom: dataEdit ? dataEdit.bathrooms : "",
+      notes: dataEdit ? dataEdit.notes : "",
+      joint_fleet: dataEdit ? dataEdit.joined_fleet_at : "",
+      last_inspected: dataEdit ? dataEdit.last_inspected_at : "",
     },
     // validationSchema: Yup.object().shape({
     //   name: Yup.string().required("Name is required"),
@@ -105,6 +207,25 @@ const BoatComponent = ({
         shade: boatShadeSelected,
         ac: boatACSelected,
         access_id: boatAccessSelected,
+        activities: activitiesSelected,
+        main_class_id: mainClassSelected,
+        pdf_url: pdfLink,
+        image_url: imageLink,
+        notes: values.notes,
+        has_supported_classes: flexiblePrice ? 1 : 0,
+        joined_fleet_at: values.joint_fleet,
+        last_inspected_at: values.last_inspected,
+        supported_classes: {
+          class_id_1: suportedClassSelectedOne,
+          duration_1: durationClassSelectedOne,
+          departure_locations_1: dapatureLocationsSelectedOne.length > 0 ? dapatureLocationsSelectedOne : initialDepartureLocationsOne,
+          class_id_2: suportedClassSelectedTwo,
+          duration_2: durationClassSelectedTwo,
+          departure_locations_2: dapatureLocationsSelectedTwo.length > 0 ? dapatureLocationsSelectedTwo : initialDepartureLocationsTwo,
+          class_id_3: suportedClassSelectedThree,
+          duration_3: durationClassSelectedThree,
+          departure_locations_3: dapatureLocationsSelectedThree.length > 0 ? dapatureLocationsSelectedThree : initialDepartureLocationsThree,
+        },
       };
 
       if (dataEdit) {
@@ -472,7 +593,7 @@ const BoatComponent = ({
               </Col>
             </Row>
             <Row>
-              <Col className="col-4">
+              <Col className="col-2">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Marina Location</Label>
                   <div>
@@ -523,6 +644,48 @@ const BoatComponent = ({
                 </Input>
               </Col>
               <Col className="col-1">
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Access.</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_access"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_access"
+                    >
+                      Is your boat wheelchair accessible?
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
+                <Input
+                  type="select"
+                  name=""
+                  onChange={(e) => {
+                    setBoatAccessSelected(+e.target.value);
+                  }}
+                  onBlur={validationType.handleBlur}
+                  //   value={validationType.values.department || ""}
+                >
+                  <option value={null}>Select....</option>
+                  {map(accesData, (acces, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={acces.id}
+                        selected={
+                          dataEdit ? dataEdit.access_id === acces.id : false
+                        }
+                      >
+                        {acces.name}
+                      </option>
+                    );
+                  })}
+                </Input>
+              </Col>
+              <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
                     <Label className="form-label">Capacity</Label>
@@ -562,50 +725,7 @@ const BoatComponent = ({
                   ) : null}
                 </div>
               </Col>
-              <Col className="col-1">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-label">Sailing</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15"
-                      id="boat_sailing"
-                    />
-                    <UncontrolledTooltip
-                      autohide={true}
-                      placement="top"
-                      target="boat_sailing"
-                    >
-                      Does your boat have a sail? Or does it always use only
-                      motor power? This would generally apply only to Catamarans
-                      and Sailboats. Some Catamarans have sails and others just
-                      motor.
-                    </UncontrolledTooltip>
-                  </div>
-                </div>
-                <Input
-                  type="select"
-                  name=""
-                  onChange={(e) => {
-                    setBoatSailingSelected(e.target.value);
-                  }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  <option
-                    selected={dataEdit ? dataEdit.sailing === "Yes" : false}
-                    value={"Yes"}
-                  >
-                    Yes
-                  </option>
-                  <option
-                    selected={dataEdit ? dataEdit.sailing === "No" : false}
-                    value={"No"}
-                  >
-                    No
-                  </option>
-                </Input>
-              </Col>
+
               <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
@@ -730,49 +850,809 @@ const BoatComponent = ({
                   </option>
                 </Input>
               </Col>
-              <Col className="col-1">
+              <Col className="col">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Access.</Label>
+                  <Label className="form-label">Activities</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="boat_access"
+                      id="activities"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="boat_access"
+                      target="activities"
                     >
-                      Is your boat wheelchair accessible?
+                      Pending
+                    </UncontrolledTooltip>
+                  </div>
+                </div>
+                <Select
+                  mode="multiple"
+                  allowClear
+                  rows="5"
+                  style={{ width: "100%", paddingTop: "5px" }}
+                  placeholder="Please select"
+                  // defaultValue={initialOptionsArea}
+                  onChange={handleMulti}
+                  value={activitiesSelected}
+                >
+                  {map(activityData, (item, index) => {
+                    return (
+                      <Option key={index} value={item.id}>
+                        {item.text}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Col>
+            </Row>
+            <Row className="mb-5">
+              <Col className="col-6">
+                <div>
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Upload PDF</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="upload_pdf"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="upload_pdf"
+                      >
+                        Upload a PDF of photos for display in our CE Tool Chest
+                        and other tools.
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
+                  <Input
+                    type="file"
+                    id="fileInput"
+                    name="file"
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      const formData = new FormData();
+                      formData.append("document", file);
+                      formData.append("media_type_name", "boat_asset_pdf");
+
+                      axios
+                        .post(`${API_URL}/media-library/upload`, formData, {
+                          headers: imagesOptions,
+                        })
+                        .then((response) => {
+                          console.log("respuesta", response);
+                          setPdfLink(response.data.data.url);
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                        });
+                    }}
+                  />
+                </div>
+                <div className="mt-3">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Upload Image</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="upload_pdf"
+                      />
+                      <UncontrolledTooltip
+                        autohide={true}
+                        placement="top"
+                        target="upload_pdf"
+                      >
+                        Upload an image to be displayed in the CE Tool Chest and
+                        other tools. (Image size: 115 x 90 px).
+                      </UncontrolledTooltip>
+                    </div>
+                  </div>
+                  <Input
+                    type="file"
+                    id="fileInput"
+                    name="file"
+                    accept=".jpg, .jpeg, .png"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      const formData = new FormData();
+                      formData.append("document", file);
+                      formData.append("media_type_name", "boat_asset_image");
+
+                      axios
+                        .post(`${API_URL}/media-library/upload`, formData, {
+                          headers: imagesOptions,
+                        })
+                        .then((response) => {
+                          console.log("respuesta", response.data.data.url);
+                          setImageLink(response.data.data.url);
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                        });
+                    }}
+                  />
+                </div>
+              </Col>
+              <Col className="col-6">
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Notes</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="boat_location"
+                    />
+                    <UncontrolledTooltip
+                      autohide={true}
+                      placement="top"
+                      target="boat_location"
+                    >
+                      Include any notes about the boat such as its current
+                      status, maintenance, restrictions, etc. This may display
+                      in the CE Tool Chest, Fishing Dispatch or other internal
+                      tools.
                     </UncontrolledTooltip>
                   </div>
                 </div>
                 <Input
-                  type="select"
-                  name=""
-                  onChange={(e) => {
-                    setBoatAccessSelected(+e.target.value);
-                  }}
-                  onBlur={validationType.handleBlur}
-                  //   value={validationType.values.department || ""}
-                >
-                  <option value={null}>Select....</option>
-                  {map(accesData, (acces, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={acces.id}
-                        selected={
-                          dataEdit ? dataEdit.access_id === acces.id : false
-                        }
-                      >
-                        {acces.name}
-                      </option>
-                    );
-                  })}
-                </Input>
+                  name="notes"
+                  placeholder=""
+                  type="textarea"
+                  style={{ height: 124 }}
+                 onChange={validationType.handleChange}
+                onBlur={validationType.handleBlur}
+                
+                value={validationType.values.notes || ""}
+                invalid={
+                  validationType.touched.notes &&
+                  validationType.errors.notes
+                    ? true
+                    : false
+                }
+                />
               </Col>
             </Row>
+            {fishingAditionalInputs ? (
+              <>
+                <Row className="">
+                  <Col className="col-2">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Join Fleet</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="join_fleet"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="join_fleet"
+                        >
+                          Include any notes about the boat such as its current
+                          status, maintenance, restrictions, etc. This may
+                          display in the CE Tool Chest, Fishing Dispatch or
+                          other internal tools.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <Input
+                      name="joint_fleet"
+                      className="form-control"
+                      type="date"
+                      // defaultValue="2019-08-19"
+                      id="example-date-input"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.joint_fleet || ""}
+                      invalid={
+                        validationType.touched.joint_fleet &&
+                        validationType.errors.joint_fleet
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.joint_fleet &&
+                    validationType.errors.joint_fleet ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.joint_fleet}
+                      </FormFeedback>
+                    ) : null}
+                  </Col>
+                  <Col className="col-2">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Last Inspected</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="last_inspected"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="last_inspected"
+                        >
+                          Include any notes about the boat such as its current
+                          status, maintenance, restrictions, etc. This may
+                          display in the CE Tool Chest, Fishing Dispatch or
+                          other internal tools.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <Input
+                      name="last_inspected"
+                      className="form-control"
+                      type="date"
+                      // defaultValue="2019-08-19"
+                      id="example-date-input"
+                      onChange={validationType.handleChange}
+                      onBlur={validationType.handleBlur}
+                      value={validationType.values.last_inspected || ""}
+                      invalid={
+                        validationType.touched.last_inspected &&
+                        validationType.errors.last_inspected
+                          ? true
+                          : false
+                      }
+                    />
+                    {validationType.touched.last_inspected &&
+                    validationType.errors.last_inspected ? (
+                      <FormFeedback type="invalid">
+                        {validationType.errors.last_inspected}
+                      </FormFeedback>
+                    ) : null}
+                  </Col>
+                  <Col className="col-2">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Main Class</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="main_class"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="main_class"
+                        >
+                          Include any notes about the boat such as its current
+                          status, maintenance, restrictions, etc. This may
+                          display in the CE Tool Chest, Fishing Dispatch or
+                          other internal tools.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <Input
+                      type="select"
+                      name=""
+                      onChange={(e) => {
+                        setMainClassSelected(e.target.value);
+                      }}
+                      onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                    >
+                      <option value={null}>Select....</option>
+                      <option
+                        value={1}
+                        selected={dataEdit?.main_class_id === 1 ? true : false}
+                      >
+                        Economy
+                      </option>
+                      <option
+                        value={2}
+                        selected={dataEdit?.main_class_id === 2 ? true : false}
+                      >
+                        Full-Size
+                      </option>
+                      <option
+                        value={3}
+                        selected={dataEdit?.main_class_id === 3 ? true : false}
+                      >
+                        Premium
+                      </option>
+                      <option
+                        value={4}
+                        selected={dataEdit?.main_class_id === 4 ? true : false}
+                      >
+                        Premium Plus
+                      </option>
+                      <option
+                        value={5}
+                        selected={dataEdit?.main_class_id === 5 ? true : false}
+                      >
+                        Premium Max
+                      </option>
+                      <option
+                        value={6}
+                        selected={dataEdit?.main_class_id === 6 ? true : false}
+                      >
+                        Delux
+                      </option>
+                      <option
+                        value={7}
+                        selected={dataEdit?.main_class_id === 7 ? true : false}
+                      >
+                        Elite
+                      </option>
+                    </Input>
+                  </Col>
+                  <Col className="col-3 d-flex align-items-center mt-4">
+                    <div className="d-flex mt-1 ">
+                      <Label className="form-label">Flexible</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="main_class"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="main_class"
+                        >
+                          Include any notes about the boat such as its current
+                          status, maintenance, restrictions, etc. This may
+                          display in the CE Tool Chest, Fishing Dispatch or
+                          other internal tools.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <div className="form-check form-switch form-switch-md  mx-4">
+                      <Input
+                        name="seasonality"
+                        placeholder=""
+                        type="checkbox"
+                        checked={flexiblePrice}
+                        className="form-check-input"
+                        onChange={() => {
+                          setFlexiblePrice(!flexiblePrice);
+                        }}
+                        // onBlur={validationType.handleBlur}
+                        value={flexiblePrice}
+                      />
+                    </div>
+                  </Col>
+                  <Col className="col-3 d-flex align-items-center mt-4">
+                    <div className="d-flex mt-1 ">
+                      <Label className="form-label">Add Custom Prices</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="main_class"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="main_class"
+                        >
+                          Include any notes about the boat such as its current
+                          status, maintenance, restrictions, etc. This may
+                          display in the CE Tool Chest, Fishing Dispatch or
+                          other internal tools.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <div className="form-check form-switch form-switch-md  mx-4">
+                      <Input
+                        name="seasonality"
+                        placeholder=""
+                        type="checkbox"
+                        // checked={openTicketCheck}
+                        className="form-check-input"
+                        // onChange={() => {
+                        //   setOpenTicketCheck(!openTicketCheck);
+                        //   openTicketFunction();
+                        // }}
+                        // onBlur={validationType.handleBlur}
+                        // value={openTicketCheck}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="mt-4">
+                  {flexiblePrice ? (
+                    <>
+                      <Row className=" mb-2 d-flex ">
+                        <Col className="col-2">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">
+                              Supported Class
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Specifies the trip classifications this boat can
+                                support when marked as flexible. Select the
+                                classes the boat is allowed to operate in
+                                addition to its primary classification.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setSuportedClassSelectedOne(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option value={1} selected={ dataEdit?.supported_classes?.class_id_1 === 1 ? true : false } >Economy</option>
+                            <option value={2} selected={ dataEdit?.supported_classes?.class_id_1 === 2 ? true : false } >Full-Size</option>
+                            <option value={3} selected={ dataEdit?.supported_classes?.class_id_1 === 3 ? true : false } >Premium</option>
+                            <option value={4} selected={ dataEdit?.supported_classes?.class_id_1 === 4 ? true : false } >Premium Plus</option>
+                            <option value={5} selected={ dataEdit?.supported_classes?.class_id_1 === 5 ? true : false } >Premium Max</option>
+                            <option value={6} selected={ dataEdit?.supported_classes?.class_id_1 === 6 ? true : false } >Delux</option>
+                            <option value={7} selected={ dataEdit?.supported_classes?.class_id_1 === 7 ? true : false } >Elite</option>
+                          </Input>
+                        </Col>
+                        <Col className="col-2">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                                <br />
+                                <br />
+                                For example, the boat may take 4 hour trips from
+                                the marina, 6 hour trips it can also pick up
+                                from Northern hotels, and for 8 hour trips it
+                                can pick up at all hotels.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setDurationClassSelectedOne(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option value={"4 Hours"} selected={ dataEdit?.supported_classes?.duration_1 === '4 Hours' ? true : false } >4 Hours</option>
+                            <option value={"6 Hours"} selected={ dataEdit?.supported_classes?.duration_1 === '6 Hours' ? true : false }>6 Hours</option>
+                            <option value={"8 Hours"} selected={ dataEdit?.supported_classes?.duration_1 === '8 Hours' ? true : false }>8 Hours</option>
+                            <option value={"10 Hours"}selected={ dataEdit?.supported_classes?.duration_1 === '10 Hours' ? true : false }>10 Hours</option>
+                            <option value={"12 Hours"}selected={ dataEdit?.supported_classes?.duration_1 === '12 Hours' ? true : false }>12 Hours</option>
+                          </Input>
+                        </Col>
+                        <Col className="col">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">
+                              Depature Location
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="departure_location_one"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="departure_location_one"
+                              >
+                                Pending
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            rows="5"
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            defaultValue={initialDepartureLocationsOne}
+                            onChange={ (e) => setDepartureLocationsSelectedOne(e) }
+                          
+                          >
+                            {map(depatureLocationData, (item, index) => {
+                              return (
+                                <Option key={index} value={item.id}>
+                                  {item.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        </Col>
+                        <Col className="col-1 d-flex align-items-center mt-4">
+                          <i
+                            className="uil-plus-circle font-size-20"
+                            style={{ color: "#F6851F", cursor: "pointer" }}
+                            onClick={() => setSupportedClassRowTwo(true)}
+                          />
+                        </Col>
+                      </Row>
+                      {supportedClassRowTwo ? (
+                        <Row className=" mb-2 d-flex ">
+                          <Col className="col-2">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">
+                                Supported Class
+                              </Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="main_class"
+                                />
+                                <UncontrolledTooltip
+                                  autohide={true}
+                                  placement="top"
+                                  target="main_class"
+                                >
+                                  Specifies the trip classifications this boat
+                                  can support when marked as flexible. Select
+                                  the classes the boat is allowed to operate in
+                                  addition to its primary classification.
+                                </UncontrolledTooltip>
+                              </div>
+                            </div>
+                            <Input
+                              type="select"
+                              name=""
+                              onChange={(e) => {
+                                setSuportedClassSelectedTwo(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                              //   value={validationType.values.department || ""}
+                            >
+                              <option value={null}>Select....</option>
+                              <option value={1} selected={ dataEdit?.supported_classes?.class_id_2 === 1 ? true : false } >Economy</option>
+                              <option value={2} selected={ dataEdit?.supported_classes?.class_id_2 === 2 ? true : false } >Full-Size</option>
+                              <option value={3} selected={ dataEdit?.supported_classes?.class_id_2 === 3 ? true : false } >Premium</option>
+                              <option value={4} selected={ dataEdit?.supported_classes?.class_id_2 === 4 ? true : false } >Premium Plus</option>
+                              <option value={5} selected={ dataEdit?.supported_classes?.class_id_2 === 5 ? true : false } >Premium Max</option>
+                              <option value={6} selected={ dataEdit?.supported_classes?.class_id_2 === 6 ? true : false } >Delux</option>
+                              <option value={7} selected={ dataEdit?.supported_classes?.class_id_2 === 7 ? true : false } >Elite</option>
+                            </Input>
+                          </Col>
+                          <Col className="col-2">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">Duration</Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="main_class"
+                                />
+                                <UncontrolledTooltip
+                                  autohide={true}
+                                  placement="top"
+                                  target="main_class"
+                                >
+                                  Select the duration of the trip to define its
+                                  available pick-up locations.
+                                  <br />
+                                  <br />
+                                  For example, the boat may take 4 hour trips
+                                  from the marina, 6 hour trips it can also pick
+                                  up from Northern hotels, and for 8 hour trips
+                                  it can pick up at all hotels.
+                                </UncontrolledTooltip>
+                              </div>
+                            </div>
+                            <Input
+                              type="select"
+                              name=""
+                              onChange={(e) => {
+                                setDurationClassSelectedTwo(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                              //   value={validationType.values.department || ""}
+                            >
+                              <option value={null}>Select....</option>
+                              <option value={"4 Hours"} selected={ dataEdit?.supported_classes?.duration_2 === '4 Hours' ? true : false }>4 Hours</option>
+                              <option value={"6 Hours"} selected={ dataEdit?.supported_classes?.duration_2 === '6 Hours' ? true : false }>6 Hours</option>
+                              <option value={"8 Hours"} selected={ dataEdit?.supported_classes?.duration_2 === '8 Hours' ? true : false }>8 Hours</option>
+                              <option value={"10 Hours"}selected={ dataEdit?.supported_classes?.duration_2 === '10 Hours' ? true : false }>10 Hours</option>
+                              <option value={"12 Hours"}selected={ dataEdit?.supported_classes?.duration_2 === '12 Hours' ? true : false }>12 Hours</option>
+                            </Input>
+                          </Col>
+                          <Col className="col">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">
+                                Depature Location
+                              </Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="departure_location_two"
+                                />
+                                <UncontrolledTooltip
+                                  autohide={true}
+                                  placement="top"
+                                  target="departure_location_two"
+                                >
+                                  Pending
+                                </UncontrolledTooltip>
+                              </div>
+                            </div>
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              rows="5"
+                              style={{ width: "100%", paddingTop: "5px" }}
+                              placeholder="Please select"
+                              defaultValue={initialDepartureLocationsTwo}
+                              onChange={ (e) => setDepartureLocationsSelectedTwo(e) }
+                              // disabled={
+                              //   voucherInitialData?.brings_read_only === 1 ? true : false
+                              // }
+                            >
+                              {map(depatureLocationData, (item, index) => {
+                                return (
+                                  <Option key={index} value={item.id}>
+                                    {item.name}
+                                  </Option>
+                                );
+                              })}
+                            </Select>
+                          </Col>
+                          <Col className="col-1 d-flex align-items-center mt-4">
+                            <i
+                              className="uil-plus-circle font-size-20"
+                              style={{ color: "#F6851F", cursor: "pointer" }}
+                              onClick={() => setSupportedClassRowThree(true)}
+                            />
+                          </Col>
+                        </Row>
+                      ) : null}
+
+                      {supportedClassRowThree ? (
+                        <Row className=" mb-2 d-flex ">
+                          <Col className="col-2">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">
+                                Supported Class
+                              </Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="main_class"
+                                />
+                                <UncontrolledTooltip
+                                  autohide={true}
+                                  placement="top"
+                                  target="main_class"
+                                >
+                                  Specifies the trip classifications this boat
+                                  can support when marked as flexible. Select
+                                  the classes the boat is allowed to operate in
+                                  addition to its primary classification.
+                                </UncontrolledTooltip>
+                              </div>
+                            </div>
+                            <Input
+                              type="select"
+                              name=""
+                              onChange={(e) => {
+                                setSuportedClassSelectedThree(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                              //   value={validationType.values.department || ""}
+                            >
+                              <option value={null}>Select....</option>
+                              <option value={1} selected={ dataEdit?.supported_classes?.class_id_3 === 1 ? true : false }>Economy</option>
+                              <option value={2} selected={ dataEdit?.supported_classes?.class_id_3 === 2 ? true : false }>Full-Size</option>
+                              <option value={3} selected={ dataEdit?.supported_classes?.class_id_3 === 3 ? true : false }>Premium</option>
+                              <option value={4} selected={ dataEdit?.supported_classes?.class_id_3 === 4 ? true : false }>Premium Plus</option>
+                              <option value={5} selected={ dataEdit?.supported_classes?.class_id_3 === 5 ? true : false }>Premium Max</option>
+                              <option value={6} selected={ dataEdit?.supported_classes?.class_id_3 === 6 ? true : false }>Delux</option>
+                              <option value={7} selected={ dataEdit?.supported_classes?.class_id_3 === 7 ? true : false }>Elite</option>
+                            </Input>
+                          </Col>
+                          <Col className="col-2">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">Duration</Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="main_class"
+                                />
+                                <UncontrolledTooltip
+                                  autohide={true}
+                                  placement="top"
+                                  target="main_class"
+                                >
+                                  Select the duration of the trip to define its
+                                  available pick-up locations.
+                                  <br />
+                                  <br />
+                                  For example, the boat may take 4 hour trips
+                                  from the marina, 6 hour trips it can also pick
+                                  up from Northern hotels, and for 8 hour trips
+                                  it can pick up at all hotels.
+                                </UncontrolledTooltip>
+                              </div>
+                            </div>
+                            <Input
+                              type="select"
+                              name=""
+                              onChange={(e) => {
+                                setDurationClassSelectedThree(e.target.value);
+                              }}
+                              onBlur={validationType.handleBlur}
+                              //   value={validationType.values.department || ""}
+                            >
+                              <option value={null}>Select....</option>
+                              <option value={"4 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '4 Hours' ? true : false } >4 Hours</option>
+                              <option value={"6 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '6 Hours' ? true : false }>6 Hours</option>
+                              <option value={"8 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '8 Hours' ? true : false }>8 Hours</option>
+                              <option value={"10 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '10 Hours' ? true : false } >10 Hours</option>
+                              <option value={"12 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '12 Hours' ? true : false } >12 Hours</option>
+                            </Input>
+                          </Col>
+                          <Col className="col">
+                            <div className="d-flex justify-content-between">
+                              <Label className="form-label">
+                                Depature Location
+                              </Label>
+                              <div>
+                                <i
+                                  className="uil-question-circle font-size-15"
+                                  id="departure_location_three"
+                                />
+                                <UncontrolledTooltip
+                                  autohide={true}
+                                  placement="top"
+                                  target="departure_location_three"
+                                >
+                                  Pending
+                                </UncontrolledTooltip>
+                              </div>
+                            </div>
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              rows="5"
+                              style={{ width: "100%", paddingTop: "5px" }}
+                              placeholder="Please select"
+                              defaultValue={initialDepartureLocationsThree}
+                              onChange={ (e) => setDepartureLocationsSelectedThree(e) }
+                              // disabled={
+                              //   voucherInitialData?.brings_read_only === 1 ? true : false
+                              // }
+                            >
+                              {map(depatureLocationData, (item, index) => {
+                                return (
+                                  <Option key={index} value={item.id}>
+                                    {item.name}
+                                  </Option>
+                                );
+                              })}
+                            </Select>
+                          </Col>
+                          <Col className="col-1 d-flex align-items-center mt-4">
+                            <i
+                              className="uil-minus-circle font-size-20 text-danger"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => setSupportedClassRowThree(false)}
+                            />
+                          </Col>
+                        </Row>
+                      ) : null}
+                    </>
+                  ) : null}
+                </Row>
+              </>
+            ) : null}
             <Row>
               <Col className="col-6 mx-6 mt-2 d-flex justify-content-start">
                 {!dataEdit ? (
