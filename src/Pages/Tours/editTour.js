@@ -24,6 +24,7 @@ import {
   TabPane,
   CardHeader,
   Button,
+  UncontrolledTooltip,
 } from "reactstrap";
 import Swal from "sweetalert2";
 import classnames from "classnames";
@@ -100,11 +101,13 @@ const EditTour = ({ history }) => {
         </div>
         <div className="col-7 d-flex justify-content-end">
           <div className="d-flex flex-column align-items-center">
+            
             <Button
               color={`${publishPending ? "danger" : "paradise"}`}
               className={`waves-effect waves-light col-10 mx-4 blue-outlined-hover`}
               style={{ height: "45px", minWidth: "fit-content" }}
               type="button"
+              id="publish_tooltip"
               onClick={publishTour}
               disabled={publishing}
             >
@@ -119,10 +122,13 @@ const EditTour = ({ history }) => {
             <p className="fs-6 fw-lighter py-2 paradise">Publishing...</p>
             )}
           </div>
-
+<UncontrolledTooltip placement="top" target="publish_tooltip">
+              Click to update Reserve Page and Pages from the URLs tab with Schema and Prices
+            </UncontrolledTooltip>
           <Link to={"/tours"}>
             <Button
               color="paradiseGray"
+              
               outline
               className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
               style={{ height: "45px", minWidth: "fit-content" }}

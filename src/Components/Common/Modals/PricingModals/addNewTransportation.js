@@ -420,7 +420,7 @@ const AddNewTransportation = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewTransportation(false);
               refreshTable();
               setCopyProduct(false)
@@ -450,7 +450,7 @@ const AddNewTransportation = ({
         } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewTransportation(false);
               refreshTable();
               setCopyProduct(false)

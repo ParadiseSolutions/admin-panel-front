@@ -124,7 +124,7 @@ const Schedules = ({ tourData, toggle }) => {
         // history.goBack();
       });
       getSeasonsListAPI(tourData.id).then((resp) => {
-        triggerUpdate();
+        // triggerUpdate();
         // setSeasonsData(resp.data.data);
       });
     });
@@ -137,7 +137,7 @@ const Schedules = ({ tourData, toggle }) => {
       Swal.fire("Deleted!", "Time has been deleted.", "success");
 
       getScheduleDatesOverrideAPI(TourID).then((resp) => {
-        triggerUpdate();
+        // triggerUpdate();
         setDatesOverrideData(resp.data.data);
       });
     });
@@ -190,7 +190,7 @@ const Schedules = ({ tourData, toggle }) => {
         .then((resp) => {
           // console.log(resp.data);
           if (resp.data.status === 200) {
-            triggerUpdate();
+            // triggerUpdate();
             Swal.fire(
               "Created!",
               "Seasonality has been created.",
@@ -675,7 +675,7 @@ const Schedules = ({ tourData, toggle }) => {
                 className="font-16 btn-block btn-orange"
                 // onClick={toggleCategory}
               >
-                Continue
+               Save and Continue
                 <i className="uil-angle-double-right mx-1 " />
               </Button>
             </div>

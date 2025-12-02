@@ -74,7 +74,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           .then((resp) => {
             getPricesPricingAPI(id).then((resp) => {
               setPricesData(resp.data.data);
-              triggerUpdate();
+              // triggerUpdate();
             });
             Swal.fire("Deleted!", "The Price has been deleted.", "success");
           })

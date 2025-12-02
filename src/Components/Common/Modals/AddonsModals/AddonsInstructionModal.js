@@ -73,7 +73,7 @@ const AddonsInstructionModal = ({
       updateAddonsInstructions(id, data)
         .then((resp) => {
           if (resp.data.status === 200) {
-            triggerUpdate();
+            // triggerUpdate();
             Swal.fire(
               "Success!",
               "Addons Instructions has been edited",

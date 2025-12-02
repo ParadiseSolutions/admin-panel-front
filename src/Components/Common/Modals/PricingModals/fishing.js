@@ -406,7 +406,7 @@ const Fishing = ({
           updatePriceAPI(editProductID, data)
             .then((resp) => {
               // console.log(resp);
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewFishing(false);
               refreshTable();
               setCopyProduct(false);
@@ -430,7 +430,7 @@ const Fishing = ({
         } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewFishing(false);
               refreshTable();
               setCopyProduct(false);

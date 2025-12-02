@@ -110,7 +110,7 @@ const EdditOverriteDate = ({
       putOverriteDate(id, data)
         .then((resp) => {
           if (resp.data.status === 200) {
-            triggerUpdate();
+            // triggerUpdate();
             Swal.fire("Success!", "Schedule has been edited", "success").then(
               () => {
                 setEditOverriteDate(false);

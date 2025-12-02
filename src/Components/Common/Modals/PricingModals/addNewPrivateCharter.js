@@ -386,7 +386,7 @@ const AddNewPrivateCharter = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewPrivateCharter(false);
               refreshTable();
               setCopyProduct(false);
@@ -410,7 +410,7 @@ const AddNewPrivateCharter = ({
         } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewPrivateCharter(false);
               setCopyProduct(false);
               refreshTable();

@@ -73,7 +73,7 @@ const BulkEditModal = ({
     bulkUpdate(tourData.id, data)
       .then((resp) => {
         if (resp.data.status === 200) {
-          triggerUpdate();
+          // triggerUpdate();
           Swal.fire("Success!", "Prices has been edited", "success").then(
             () => {
               // setEditOverriteDate(false);

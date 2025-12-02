@@ -63,6 +63,7 @@ const OnSymbol = () => {
 };
 
 const EditGeneralInformation = ({ data }) => {
+
   //initial info
   const [initialData, setInitialData] = useState();
   const [addMore1, setAddMore1] = useState(false);
@@ -82,7 +83,7 @@ const EditGeneralInformation = ({ data }) => {
   useEffect(() => {
     setInitialData(data);
   }, [data]);
-
+console.log(initialData);
   useEffect(() => {
     if(initialData) {
       setVoucherChannelSelected(initialData.notification_email)
