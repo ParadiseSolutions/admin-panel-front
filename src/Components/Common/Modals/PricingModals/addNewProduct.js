@@ -216,7 +216,7 @@ const AddNewProductPricing = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewProduct(false);
               refreshTable();
               setCopyProduct(false)
@@ -246,7 +246,7 @@ const AddNewProductPricing = ({
         } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewProduct(false);
               setCopyProduct(false)
               refreshTable();

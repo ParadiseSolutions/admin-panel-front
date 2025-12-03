@@ -159,7 +159,7 @@ const HighSeasons = ({ tourData, toggle }) => {
             if (resp.data.status === 200) {
               getSeasonsListAPI(tourData.id).then((resp) => {
                 setSeasonsData(resp.data.data);
-                triggerUpdate()
+                // triggerUpdate()
               });
               Swal.fire("Edited!", "Season has been edited.", "success").then(
                 () => {

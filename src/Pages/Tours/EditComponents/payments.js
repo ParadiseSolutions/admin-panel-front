@@ -1283,7 +1283,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 className="font-16 btn-orange"
                 // onClick={toggleCategory}
               >
-                Continue
+                Save and Continue
                 <i className="uil-angle-double-right mx-1 " />
               </Button>
             </div>

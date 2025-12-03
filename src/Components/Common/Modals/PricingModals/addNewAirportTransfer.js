@@ -416,7 +416,7 @@ const AddNewAirportTransfer = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewAirportTransfer(false);
               refreshTable();
               setCopyProduct(false)
@@ -446,7 +446,7 @@ const AddNewAirportTransfer = ({
         } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewAirportTransfer(false);
               refreshTable();
               setCopyProduct(false)
