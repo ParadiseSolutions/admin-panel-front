@@ -81,7 +81,7 @@ const AddNewOverriteDate = ({
       postOverriteDate(id, data)
         .then((resp) => {
           if (resp.data.status === 201) {
-            triggerUpdate()
+            // triggerUpdate()
             Swal.fire("Success!", "Date has been created", "success").then(
               () => {
                 setNewOverriteDate(false);

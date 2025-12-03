@@ -393,7 +393,7 @@ const Addons = ({
         putAddonAPI(editProductID, data)
        
           .then((resp) => {
-            triggerUpdate();
+            // triggerUpdate();
             editID = null;
             setNewAddon(false);
             refreshTable();
@@ -420,7 +420,7 @@ const Addons = ({
        
         postAddonsAPI(data)
           .then((resp) => {
-            triggerUpdate();
+            // triggerUpdate();
             editID = null;
             setNewAddon(false);
             refreshTable();

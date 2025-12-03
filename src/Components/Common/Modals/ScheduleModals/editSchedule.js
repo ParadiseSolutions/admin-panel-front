@@ -312,7 +312,7 @@ const EditScheduleModal = ({
       
       putSchedule(id, data)
         .then((resp) => {
-          triggerUpdate();
+          // triggerUpdate();
           if (resp.data.status === 200) {
             Swal.fire("Success!", "Schedule has been Edited", "success").then(
               () => {

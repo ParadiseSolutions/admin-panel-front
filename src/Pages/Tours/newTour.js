@@ -197,7 +197,7 @@ const NewTour = ({ history }) => {
           if (resp.data.status === 201) {
             Swal.fire("Created!", "Tour has been created.", "success").then(
               () => {
-                triggerUpdate();
+                // triggerUpdate();
                 history.push(`/tours/${resp.data.data.id}`);
               }
             );

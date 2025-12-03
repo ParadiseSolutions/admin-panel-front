@@ -221,7 +221,7 @@ const Tours = () => {
         deleteTourAPI(tour.id)
           .then((resp) => {
             Swal.fire("Deleted!", "The Tour has been deleted.", "success");
-            triggerUpdate();
+            // triggerUpdate();
             removeTourCookieStatus(tour.id)
           })
           .catch((error) => {

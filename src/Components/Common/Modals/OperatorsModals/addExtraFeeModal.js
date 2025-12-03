@@ -19,9 +19,10 @@ import {
   getExtraFee,
   getPriceType,
   postExtraFee,
-  putExtraFee
+  putExtraFee,
 } from "../../../../Utils/API/Operators";
 import { setDecimalFormat } from "../../../../Utils/CommonFunctions";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const AddExtraFeeModal = ({
   id,
@@ -29,7 +30,10 @@ const AddExtraFeeModal = ({
   setExtraFeeModal,
   extraFeeEditData,
   refreshTable,
-  section
+  readOnlyModal,
+  setReadOnlyModal,
+  section,
+  tourData
 }) => {
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
@@ -40,6 +44,7 @@ const AddExtraFeeModal = ({
   const [currencySelected, setCurrencySelected] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
 
+  console.log('data a editar', tourData);
   useEffect(() => {
     getExtraFee()
       .then((resp) => {
@@ -63,10 +68,10 @@ const AddExtraFeeModal = ({
   }, [extraFeeEditData, extraFeeModal]);
   useEffect(() => {
     if (dataEdit) {
-      setExtraFeeSelected(dataEdit.fee_type_id)
-      setCurrencySelected(dataEdit.currency)
-      setPriceTypeSelected(dataEdit.price_type)
-      setOptionalCheck(+dataEdit.optional === 1 ? true : false)
+      setExtraFeeSelected(dataEdit.fee_type_id);
+      setCurrencySelected(dataEdit.currency);
+      setPriceTypeSelected(dataEdit.price_type);
+      setOptionalCheck(+dataEdit.optional === 1 ? true : false);
     }
   }, [dataEdit]);
 
@@ -100,60 +105,61 @@ const AddExtraFeeModal = ({
       // console.log(data);
       if (dataEdit.length === 0) {
         postExtraFee(data)
-        .then((resp) => {
-          // console.log(resp.data);
-          if (resp.data.status === 201) {
-            Swal.fire("Success!", "Fee Added.", "success").then(() => {
-              setExtraFeeModal(false);
-              //history.goBack()
-              setDataEdit([])
-              refreshTable()
+          .then((resp) => {
+            // console.log(resp.data);
+            if (resp.data.status === 201) {
+              Swal.fire("Success!", "Fee Added.", "success").then(() => {
+                setExtraFeeModal(false);
+                //history.goBack()
+                setDataEdit([]);
+                refreshTable();
+              });
+            }
+          })
+          .catch((error) => {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              return errorMessages.push(item[1]);
             });
-          }
-        })
-        .catch((error) => {
-          let errorMessages = [];
-          Object.entries(error.response.data.data).map((item) => {
-            return errorMessages.push(item[1]);
-          });
 
-          Swal.fire(
-            "Error!",
-            // {error.response.},
-            String(errorMessages[0])
-          );
-        });
-      }else{
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          });
+      } else {
         putExtraFee(dataEdit.fee_id, data)
-        .then((resp) => {
-          // console.log(resp.data);
-          if (resp.data.status === 200) {
-            Swal.fire("Success!", "Fee Edited.", "success").then(() => {
-              setExtraFeeModal(false);
-              //history.goBack()
-              setDataEdit([])
-              refreshTable()
+          .then((resp) => {
+            // console.log(resp.data);
+            if (resp.data.status === 200) {
+              Swal.fire("Success!", "Fee Edited.", "success").then(() => {
+                setExtraFeeModal(false);
+                //history.goBack()
+                setDataEdit([]);
+                refreshTable();
+              });
+            }
+          })
+          .catch((error) => {
+            let errorMessages = [];
+            Object.entries(error.response.data.data).map((item) => {
+              return errorMessages.push(item[1]);
             });
-          }
-        })
-        .catch((error) => {
-          let errorMessages = [];
-          Object.entries(error.response.data.data).map((item) => {
-            return errorMessages.push(item[1]);
-          });
 
-          Swal.fire(
-            "Error!",
-            // {error.response.},
-            String(errorMessages[0])
-          );
-        });
+            Swal.fire(
+              "Error!",
+              // {error.response.},
+              String(errorMessages[0])
+            );
+          });
       }
-     
     },
   });
 
   ////
+
+  console.log( dataEdit );
 
   return (
     <>
@@ -163,7 +169,7 @@ const AddExtraFeeModal = ({
         isOpen={extraFeeModal}
         toggle={() => {
           setExtraFeeModal(false);
-          setDataEdit([])
+          setDataEdit([]);
         }}
       >
         <div
@@ -173,12 +179,15 @@ const AddExtraFeeModal = ({
           <h1 className="modal-title mt-0 text-white">
             {dataEdit.length === 0
               ? "+ Add Fee to Voucher Template"
+              : readOnlyModal
+              ? "View Additional Fee Details"
               : "Edit Existing Additional Fee"}
           </h1>
           <button
             onClick={() => {
               setExtraFeeModal(false);
-              setDataEdit([])
+              setDataEdit([]);
+              setReadOnlyModal(false);
             }}
             type="button"
             className="close"
@@ -223,7 +232,11 @@ const AddExtraFeeModal = ({
                         }}
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
-                        disabled={dataEdit?.length === 0 ? false : true}
+                        disabled={
+                          dataEdit?.length === 0 || !readOnlyModal
+                            ? false
+                            : true
+                        }
                       >
                         <option value="">Select....</option>
                         {map(extraFeeData, (fee, index) => {
@@ -262,6 +275,7 @@ const AddExtraFeeModal = ({
                           min="0"
                           step="any"
                           onChange={validationType.handleChange}
+                          disabled={!readOnlyModal ? false : true}
                           onBlur={(e) => {
                             const value = e.target.value || "";
                             //  setOurPriceValue(value)
@@ -300,6 +314,7 @@ const AddExtraFeeModal = ({
                         onChange={(e) => {
                           setCurrencySelected(e.target.value);
                         }}
+                        disabled={!readOnlyModal ? false : true}
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
@@ -311,8 +326,8 @@ const AddExtraFeeModal = ({
                               value={currency.currency_id}
                               selected={
                                 currency.currency === dataEdit?.currency
-                                ? true
-                                : false
+                                  ? true
+                                  : false
                               }
                             >
                               {currency.currency}
@@ -331,6 +346,7 @@ const AddExtraFeeModal = ({
                         onChange={(e) => {
                           setPriceTypeSelected(e.target.value);
                         }}
+                        disabled={!readOnlyModal ? false : true}
                         onBlur={validationType.handleBlur}
                         //   value={validationType.values.department || ""}
                       >
@@ -342,8 +358,8 @@ const AddExtraFeeModal = ({
                               value={priceType.price_type_id}
                               selected={
                                 priceType.price_type === dataEdit?.price_type
-                                ? true
-                                : false
+                                  ? true
+                                  : false
                               }
                             >
                               {priceType.price_type}
@@ -360,6 +376,7 @@ const AddExtraFeeModal = ({
                         name="optional"
                         onChange={() => setOptionalCheck(!optionalCheck)}
                         checked={optionalCheck}
+                        disabled={!readOnlyModal ? false : true}
                       />
                       <Label className="form-label mx-2">optional</Label>
                     </div>
@@ -368,14 +385,48 @@ const AddExtraFeeModal = ({
 
                 <Row>
                   <Col className="col-10 mx-4 mt-2 d-flex justify-content-end">
-                    <Button
-                      type="submit"
-                      style={{ backgroundColor: "#F6851F", border: "none" }}
-                      className="waves-effect waves-light mb-3 btn btn-success"
-                    >
-                      <i className="mdi mdi-plus me-1" />
-                      Submit
-                    </Button>
+                    {readOnlyModal ? (
+                      <>
+                        <Link to={`/operators/${tourData?.operator_id}`}>
+                          <Button
+                            type="button"
+                            style={{ border: "none" }}
+                            className="waves-effect waves-light mb-3 btn btn-paradise mx-2"
+                            onClick={() => {
+                              setExtraFeeModal(false);
+                              setDataEdit([]);
+                              setReadOnlyModal(false);
+                            }}
+                          >
+                            <i className="mdi mdi-plus me-1" />
+                            Go to Operator
+                          </Button>
+                        </Link>
+
+                        <Button
+                          type="button"
+                          style={{ backgroundColor: "#F6851F", border: "none" }}
+                          className="waves-effect waves-light mb-3 btn btn-paradiseBlue"
+                          onClick={() => {
+                            setExtraFeeModal(false);
+                            setDataEdit([]);
+                            setReadOnlyModal(false);
+                          }}
+                        >
+                          <i className="mdi mdi-plus me-1" />
+                          Close
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        type="submit"
+                        style={{ backgroundColor: "#F6851F", border: "none" }}
+                        className="waves-effect waves-light mb-3 btn btn-success"
+                      >
+                        <i className="mdi mdi-plus me-1" />
+                        Submit
+                      </Button>
+                    )}
                   </Col>
                 </Row>
               </Col>

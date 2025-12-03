@@ -29,7 +29,7 @@ const EditProvider = () => {
       setSocialData(resp.data.data);
     });
   }, [id]);
-
+  console.log(data);
   return (
     <>
       <div className="page-content">
@@ -46,7 +46,8 @@ const EditProvider = () => {
             <EditGeneralInformation data={data} />
             <Contacts contacts={contacts} />
             <PaymentMethods contacts={contacts} id={id} />
-            <Assets contacts={contacts} id={id} />
+            {data?.is_operator === 1 && <Assets contacts={contacts} id={id} />}
+
             <OperationalInfo socialData={socialData} id={id} />
             <SocialMedia socialData={socialData} id={id} />
           </div>

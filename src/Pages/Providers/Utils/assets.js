@@ -14,7 +14,9 @@ import {
   TabPane,
   Table,
 } from "reactstrap";
+import { ActiveBoat } from "../ProvidersCols";
 import { VscEye } from "react-icons/vsc";
+import Switch from "react-switch";
 import Swal from "sweetalert2";
 import classnames from "classnames";
 import { getAssetsAPI } from "../../../Utils/API/Providers";
@@ -29,6 +31,19 @@ const Assets = ({ contacts, id }) => {
   const [showDetails, setshowDetails] = useState(false);
   const [assetModal, setAssetModal] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
+
+    useEffect(() => {
+    getAssetsAPI(id).then((res) => {
+      setboatData(res.data.data.filter((data) => data.asset_id === 1));
+      setvehicleData(
+        res.data.data.filter((data) => data.assets.asset_type === "Vehicles")
+      );
+      setothersData(
+        res.data.data.filter((data) => data.assets.asset_type === "Others")
+      );
+    });
+  }, [id]);
+
   function togglecol1() {
     setcol2(!col2);
   }
@@ -40,23 +55,7 @@ const Assets = ({ contacts, id }) => {
       setactiveTab(tab);
     }
   }
-  useEffect(() => {
-    getAssetsAPI(id).then((res) => {
-      setboatData(res.data.data.filter((data) => data.asset_id === 1));
-      setvehicleData(
-        res.data.data.filter(
-          (data) =>
-            data.assets.asset_type === "Vehicles"
-        )
-      );
-      setothersData(
-        res.data.data.filter(
-          (data) =>
-            data.assets.asset_type === "Others"
-        )
-      );
-    });
-  }, [id]);
+
 
   function toggleDetails(index, type) {
     let selectedAsset = null;
@@ -75,16 +74,10 @@ const Assets = ({ contacts, id }) => {
     getAssetsAPI(id).then((res) => {
       setboatData(res.data.data.filter((data) => data.asset_id === 1));
       setvehicleData(
-        res.data.data.filter(
-          (data) =>
-            data.assets.asset_type === "Vehicles"
-        )
+        res.data.data.filter((data) => data.assets.asset_type === "Vehicles")
       );
       setothersData(
-        res.data.data.filter(
-          (data) =>
-            data.assets.asset_type === "Others"
-        )
+        res.data.data.filter((data) => data.assets.asset_type === "Others")
       );
     });
   };
@@ -260,6 +253,7 @@ const Assets = ({ contacts, id }) => {
                                   <th>Model</th>
                                   <th>Location</th>
                                   <th>Marina Location</th>
+                                  <th>Active</th>
 
                                   <th>Actions</th>
                                 </tr>
@@ -277,6 +271,9 @@ const Assets = ({ contacts, id }) => {
                                         <td>{boat.model}</td>
                                         <td>{boat.location_name}</td>
                                         <td>{boat.asset_marina_location}</td>
+                                        <td>
+                                          <ActiveBoat cell={boat} />
+                                        </td>
 
                                         <td>
                                           {" "}
@@ -567,7 +564,6 @@ const Assets = ({ contacts, id }) => {
                                       {selectedAsset.ac}
                                     </p>
                                   </Col>
-                                  
                                 </div>
                               )}
                               {selectedAsset.asset_id === 2 ||
