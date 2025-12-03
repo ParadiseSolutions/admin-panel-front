@@ -33,6 +33,7 @@ const AddExtraFeeModal = ({
   readOnlyModal,
   setReadOnlyModal,
   section,
+  tourData
 }) => {
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
@@ -43,6 +44,7 @@ const AddExtraFeeModal = ({
   const [currencySelected, setCurrencySelected] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
 
+  console.log('data a editar', tourData);
   useEffect(() => {
     getExtraFee()
       .then((resp) => {
@@ -385,7 +387,7 @@ const AddExtraFeeModal = ({
                   <Col className="col-10 mx-4 mt-2 d-flex justify-content-end">
                     {readOnlyModal ? (
                       <>
-                        <Link to="/operators">
+                        <Link to={`/operators/${tourData?.operator_id}`}>
                           <Button
                             type="button"
                             style={{ border: "none" }}

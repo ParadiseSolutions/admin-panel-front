@@ -1835,6 +1835,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         refreshTable={refreshTable}
         readOnlyModal={readOnlyModal}
         setReadOnlyModal={setReadOnlyModal}
+        tourData={tourData}
       />
       <AddLocationModal
         locationModal={locationModal}

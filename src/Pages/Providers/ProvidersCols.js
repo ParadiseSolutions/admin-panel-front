@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
-import { updateProviders } from "../../Utils/API/Providers";
+import { changeActiveBoats, updateProviders } from "../../Utils/API/Providers";
 import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { providersData } from "../../Utils/Redux/Actions/ProvidersActions";
 import { useDispatch } from "react-redux";
+
 const Name = (cell) => {
   return cell.value ? cell.value : "";
 };
@@ -114,7 +115,7 @@ const Active = (cell) => {
 const ActiveBoat = (boat) => {
   console.log('boat',boat);
   const dispatch = useDispatch();
-  const id = boat.id;
+  const id = boat.cell.id;
   const Offsymbol = () => {
     return (
       <div
@@ -162,34 +163,19 @@ const ActiveBoat = (boat) => {
 
     if (boat.cell.active === 1) {
       let data = { active: 0 };
-    //   updateProviders(id, data).then((resp) => {
-    //     var providersRequest = () => dispatch(providersData());
-    // providersRequest();
-    //     // console.log(resp);
-    //   });
+      changeActiveBoats(id, data).then((resp) => {
+        var providersRequest = () => dispatch(providersData());
+        providersRequest();
+        // console.log(resp);
+      });
     }
     if (boat.cell.active === 0) {
       let data = { active: 1 };
-      // updateProviders(id, data)
-      //   .then((resp) => {
-      //     var providersRequest = () => dispatch(providersData());
-      //     providersRequest();
-
-      //     // console.log(resp);
-      //   })
-      //   .catch((error) => {
-      //     // console.log(error);
-      //     setTimeout(() => {
-      //       <Toast>
-      //         <ToastHeader
-      //           icon={<Spinner type="grow" size="sm" color="danger" />}
-      //         >
-      //           Oops...
-      //         </ToastHeader>
-      //         <ToastBody>Something went wrong. Please, try again later!</ToastBody>
-      //       </Toast>;
-      //     }, 5000);
-      //   });
+     changeActiveBoats(id, data).then((resp) => {
+        var providersRequest = () => dispatch(providersData());
+        providersRequest();
+        // console.log(resp);
+      });
     }
   };
   return (
