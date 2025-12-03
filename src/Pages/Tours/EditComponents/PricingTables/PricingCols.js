@@ -82,14 +82,14 @@ const Active = (cell) => {
     if (activeDep) {
       let data = { active: 0 };
       statusUpdatePrice(id, data).then((resp) => {
-        triggerUpdate()
+        // triggerUpdate()
         // console.log(resp);
       });
     } else {
       let data = { active: 1 };
       statusUpdatePrice(id, data)
         .then((resp) => {
-          triggerUpdate()
+          // triggerUpdate()
           // console.log(resp);
         })
         .catch((error) => {
@@ -168,14 +168,14 @@ const ActiveAddon = (cell) => {
     if (activeDepAddon) {
       let data = { active: 0 };
       statusUpdateAddon(id, data).then((resp) => {
-        triggerUpdate()
+        // triggerUpdate()
         // console.log(resp);
       });
     } else {
       let data = { active: 1 };
       statusUpdateAddon(id, data)
         .then((resp) => {
-          triggerUpdate()
+          // triggerUpdate()
           // console.log(resp);
         })
         .catch((error) => {
@@ -254,14 +254,14 @@ const ActiveRelated = (cell) => {
     if (activeDepAddon) {
       let data = { active: 0 };
       statusUpdateRelated(id, data).then((resp) => {
-        triggerUpdate()
+        // triggerUpdate()
         // console.log(resp);
       });
     } else {
       let data = { active: 1 };
       statusUpdateRelated(id, data)
         .then((resp) => {
-          triggerUpdate()
+          // triggerUpdate()
           // console.log(resp);
         })
         .catch((error) => {

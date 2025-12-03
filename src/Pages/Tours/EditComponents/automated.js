@@ -22,6 +22,7 @@ import {
   getSendVoucherFromAPI,
   getVoucherChannels,
 } from "../../../Utils/API/Operators";
+import { VscEye } from "react-icons/vsc";
 import { map } from "lodash";
 import { Option } from "antd/lib/mentions";
 import {
@@ -99,6 +100,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const [locationModal, setLocationModal] = useState(false);
   const [boatModal, setBoatModal] = useState(false);
   const [restrictionModal, setRestrictionModal] = useState(false);
+  const [readOnlyModal, setReadOnlyModal] = useState(false);
 
   useEffect(() => {
     if (tourID) {
@@ -221,10 +223,9 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
       special_instruction_title: tourData?.special_instruction_title
         ? tourData?.special_instruction_title
         : "",
-      special_instruction_description:
-      tourData?.special_instruction_description
-          ? tourData?.special_instruction_description
-          : "",
+      special_instruction_description: tourData?.special_instruction_description
+        ? tourData?.special_instruction_description
+        : "",
 
       aditional_information: voucherInitialData?.additional_information
         ? voucherInitialData.additional_information
@@ -709,7 +710,32 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                           Edit
                                         </UncontrolledTooltip>
                                       </>
-                                    ) : null}
+                                    ) : (
+                                      <div
+                                        className="text-warning"
+                                        id="viewtooltip"
+                                        onClick={() => {
+                                          setExtraFeeEditData([]);
+                                          setExtraFeeEditData(fee);
+                                          setExtraFeeModal(true);
+                                          setReadOnlyModal(true);
+                                        }}
+                                      >
+                                        <VscEye
+                                          size={30}
+                                          //  onClick={() =>
+                                          //    toggleDetails(index, "boat")
+                                          //  }
+                                          style={{ cursor: "pointer" }}
+                                        />
+                                        <UncontrolledTooltip
+                                          placement="top"
+                                          target="viewtooltip"
+                                        >
+                                          View Details
+                                        </UncontrolledTooltip>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                                 {fee.read_only === 0 ? (
@@ -1794,7 +1820,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                 className="waves-effect waves-light mb-3 btn btn-success"
               >
                 <i className="mdi mdi-plus me-1" />
-                Save Changes
+                Save and Continue
               </Button>
             </Col>
           </Row>
@@ -1807,6 +1833,9 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         id={tourID}
         section={"tours"}
         refreshTable={refreshTable}
+        readOnlyModal={readOnlyModal}
+        setReadOnlyModal={setReadOnlyModal}
+        tourData={tourData}
       />
       <AddLocationModal
         locationModal={locationModal}

@@ -208,7 +208,7 @@ const AddNewScheduleModal = ({
       postSchedule(id, data)
         .then((resp) => {
           if (resp.data.status === 201) {
-            triggerUpdate();
+            // triggerUpdate();
             Swal.fire("Success!", "Schedule has been created", "success").then(
               () => {
                 setNewSchedule(false);

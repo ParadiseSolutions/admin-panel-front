@@ -100,7 +100,7 @@ const URL = ({ tourData, toggle }) => {
       if (resp.data.status === 200) {
         Swal.fire("Deleted!", "URL has been deleted.", "success");
         getURLsAPI(tourData.id).then((resp) => {
-          triggerUpdate();
+          // triggerUpdate();
           setData(resp.data.data);
         });
       }
@@ -213,7 +213,7 @@ const URL = ({ tourData, toggle }) => {
             if (resp.data.status === 200) {
               Swal.fire("Edited!", "URL has been edited.", "success");
               getURLsAPI(tourData.id).then((resp) => {
-                triggerUpdate()
+                // triggerUpdate()
                 setData(resp.data.data);
               });
               cancelEditing();

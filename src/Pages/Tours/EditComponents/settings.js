@@ -204,7 +204,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         .then((resp) => {
           // console.log(resp.data);
           if (resp.data.status === 200) {
-            triggerUpdate();
+            // triggerUpdate();
             Swal.fire("Edited!", "Settings has been created.", "success");
             toggle("3");
           }
@@ -792,7 +792,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 className="font-16 btn-orange"
                 // onClick={toggleCategory}
               >
-                Continue
+                Save and Continue
                 <i className="uil-angle-double-right mx-1 " />
               </Button>
             </div>

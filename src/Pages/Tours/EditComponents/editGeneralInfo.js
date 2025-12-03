@@ -200,7 +200,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         putCopyTourAPI(tourData.id, data)
           .then((resp) => {
             if (resp.data.status === 200) {
-              triggerUpdate();
+              // triggerUpdate();
               Swal.fire("Edited!", "Tour has been edited.", "success").then(
                 () => {
                   onChangeWebsite();
@@ -238,7 +238,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         putTourNameEditAPI(tourData.id, data)
           .then((resp) => {
             if (resp.data.status === 200) {
-              triggerUpdate();
+              // triggerUpdate();
               Swal.fire(
                 "Edited!",
                 "Tour Name has been edited.",
@@ -873,7 +873,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                   className="font-16 btn-block col-2 btn-orange"
                   // onClick={() => toggle("2")}
                 >
-                  Continue
+                  Save and Continue
                   <i className="uil-angle-double-right mx-1 " />
                 </Button>
               </Col>

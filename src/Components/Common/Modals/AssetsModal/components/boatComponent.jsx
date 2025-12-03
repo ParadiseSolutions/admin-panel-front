@@ -236,6 +236,8 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                 () => {
                   setAssetModal(false);
                   resetTable();
+                  setSupportedClassRowTwo(false);
+                  setSupportedClassRowThree(false);
                 }
               );
             }
@@ -269,6 +271,8 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                 () => {
                   setAssetModal(false);
                   resetTable();
+                  setSupportedClassRowTwo(false);
+                  setSupportedClassRowThree(false);
                 }
               );
             }

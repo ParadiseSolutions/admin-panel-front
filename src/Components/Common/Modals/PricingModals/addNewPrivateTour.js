@@ -214,7 +214,7 @@ const AddNewPrivateTour = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewPrivateTour(false);
               refreshTable();
               setCopyProduct(false)
@@ -244,7 +244,7 @@ const AddNewPrivateTour = ({
         } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
           postPricesAPI(data)
             .then((resp) => {
-              triggerUpdate();
+              // triggerUpdate();
               setAddNewPrivateTour(false);
               refreshTable();
               setCopyProduct(false)

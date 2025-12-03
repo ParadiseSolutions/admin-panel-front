@@ -9,6 +9,12 @@ export const updateProviders = (id, body) => {
       headers: options,
     });
   };
+export const changeActiveBoats = (id, body) => {
+    const url = `${API_URL}/assets/change/${id}/status`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
 
 export const deleteProviderAPI = (id) => {
     const url = `${API_URL}/providers/${id}`;

@@ -85,7 +85,7 @@ const ReservePageModal = ({ reserveModal, setReserveModal, id }) => {
               "Booking Form Information has been edited",
               "success"
             ).then(() => {
-              triggerUpdate();
+              // triggerUpdate();
               setReserveModal(!reserveModal);
             });
           }
