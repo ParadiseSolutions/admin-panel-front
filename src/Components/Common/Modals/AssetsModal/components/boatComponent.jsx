@@ -59,6 +59,7 @@ const BoatComponent = ({
   const [flexiblePrice, setFlexiblePrice] = useState(false);
   const [supportedClassRowTwo, setSupportedClassRowTwo] = useState(false);
   const [supportedClassRowThree, setSupportedClassRowThree] = useState(false);
+  const [isRowOpen, setIsRowOpen] = useState(false);
   const [suportedClassSelectedOne, setSuportedClassSelectedOne] = useState("");
   const [durationClassSelectedOne, setDurationClassSelectedOne] = useState("");
   const [suportedClassSelectedTwo, setSuportedClassSelectedTwo] = useState("");
@@ -67,12 +68,18 @@ const BoatComponent = ({
     useState("");
   const [durationClassSelectedThree, setDurationClassSelectedThree] =
     useState("");
-  const [initialDepartureLocationsOne, setInitialDepartureLocationsOne] = useState([]);
-  const [initialDepartureLocationsTwo, setInitialDepartureLocationsTwo] = useState([]);
-  const [initialDepartureLocationsThree, setInitialDepartureLocationsThree] = useState([]);
-  const [dapatureLocationsSelectedOne, setDepartureLocationsSelectedOne] = useState([]);
-  const [dapatureLocationsSelectedTwo, setDepartureLocationsSelectedTwo] = useState([]);
-  const [dapatureLocationsSelectedThree, setDepartureLocationsSelectedThree] = useState([]);
+  const [initialDepartureLocationsOne, setInitialDepartureLocationsOne] =
+    useState([]);
+  const [initialDepartureLocationsTwo, setInitialDepartureLocationsTwo] =
+    useState([]);
+  const [initialDepartureLocationsThree, setInitialDepartureLocationsThree] =
+    useState([]);
+  const [dapatureLocationsSelectedOne, setDepartureLocationsSelectedOne] =
+    useState([]);
+  const [dapatureLocationsSelectedTwo, setDepartureLocationsSelectedTwo] =
+    useState([]);
+  const [dapatureLocationsSelectedThree, setDepartureLocationsSelectedThree] =
+    useState([]);
 
   //initial request
   useEffect(() => {
@@ -118,19 +125,35 @@ const BoatComponent = ({
       setFishingAditionalInputs(
         dataEdit.activities.includes(50) ? true : false
       );
-      setSuportedClassSelectedOne(dataEdit.supported_classes?.class_id_1 || "");
-      setDurationClassSelectedOne(dataEdit.supported_classes?.duration_1 || "");
-      setSuportedClassSelectedTwo(dataEdit.supported_classes?.class_id_2 || "");
-      setDurationClassSelectedTwo(dataEdit.supported_classes?.duration_2 || "");
-      setSuportedClassSelectedThree(dataEdit.supported_classes?.class_id_3 || "");
-      setDurationClassSelectedThree(dataEdit.supported_classes?.duration_3 || "");
-      setInitialDepartureLocationsOne(dataEdit.supported_classes?.departure_locations_1 || []);
-      setInitialDepartureLocationsTwo(dataEdit.supported_classes?.departure_locations_2 || []);
-      setInitialDepartureLocationsThree(dataEdit.supported_classes?.departure_locations_3 || []);
-      if (dataEdit.supported_classes?.class_id_2 && dataEdit.supported_classes?.class_id_2 !== "") {
+      setSuportedClassSelectedOne(dataEdit.supported_classes?.class_id_1 || null);
+      setDurationClassSelectedOne(dataEdit.supported_classes?.duration_1 || null);
+      setSuportedClassSelectedTwo(dataEdit.supported_classes?.class_id_2 || null);
+      setDurationClassSelectedTwo(dataEdit.supported_classes?.duration_2 || null);
+      setSuportedClassSelectedThree(
+        dataEdit.supported_classes?.class_id_3 || null
+      );
+      setDurationClassSelectedThree(
+        dataEdit.supported_classes?.duration_3 || null
+      );
+      setInitialDepartureLocationsOne(
+        dataEdit.supported_classes?.departure_locations_1 || []
+      );
+      setInitialDepartureLocationsTwo(
+        dataEdit.supported_classes?.departure_locations_2 || []
+      );
+      setInitialDepartureLocationsThree(
+        dataEdit.supported_classes?.departure_locations_3 || []
+      );
+      if (
+        dataEdit.supported_classes?.class_id_2 &&
+        dataEdit.supported_classes?.class_id_2 !== ""
+      ) {
         setSupportedClassRowTwo(true);
       }
-      if (dataEdit.supported_classes?.class_id_3 && dataEdit.supported_classes?.class_id_3 !== "") {
+      if (
+        dataEdit.supported_classes?.class_id_3 &&
+        dataEdit.supported_classes?.class_id_3 !== ""
+      ) {
         setSupportedClassRowThree(true);
       }
     }
@@ -171,7 +194,7 @@ const BoatComponent = ({
     setFishingAditionalInputs(Boolean(containsFishing));
     // setSelectionID(selected);
   }
-console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
+  console.log("is Row open", isRowOpen);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -218,13 +241,28 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
         supported_classes: {
           class_id_1: suportedClassSelectedOne,
           duration_1: durationClassSelectedOne,
-          departure_locations_1: dapatureLocationsSelectedOne.length > 0 ? dapatureLocationsSelectedOne : initialDepartureLocationsOne,
-          class_id_2: suportedClassSelectedTwo,
-          duration_2: durationClassSelectedTwo,
-          departure_locations_2: dapatureLocationsSelectedTwo.length > 0 ? dapatureLocationsSelectedTwo : initialDepartureLocationsTwo,
-          class_id_3: suportedClassSelectedThree,
-          duration_3: durationClassSelectedThree,
-          departure_locations_3: dapatureLocationsSelectedThree.length > 0 ? dapatureLocationsSelectedThree : initialDepartureLocationsThree,
+          departure_locations_1:
+            dapatureLocationsSelectedOne.length > 0
+              ? dapatureLocationsSelectedOne
+              : initialDepartureLocationsOne,
+          class_id_2: supportedClassRowTwo ? suportedClassSelectedTwo : null,
+          duration_2: supportedClassRowTwo ? durationClassSelectedTwo : null,
+          departure_locations_2: !supportedClassRowTwo
+            ? []
+            : dapatureLocationsSelectedTwo.length > 0
+            ? dapatureLocationsSelectedTwo
+            : initialDepartureLocationsTwo,
+          class_id_3: supportedClassRowThree
+            ? suportedClassSelectedThree
+            : null,
+          duration_3: supportedClassRowThree
+            ? durationClassSelectedThree
+            : null,
+          departure_locations_3: !supportedClassRowThree
+            ? []
+            : dapatureLocationsSelectedThree.length > 0
+            ? dapatureLocationsSelectedThree
+            : initialDepartureLocationsThree,
         },
       };
 
@@ -1005,16 +1043,14 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                   placeholder=""
                   type="textarea"
                   style={{ height: 124 }}
-                 onChange={validationType.handleChange}
-                onBlur={validationType.handleBlur}
-                
-                value={validationType.values.notes || ""}
-                invalid={
-                  validationType.touched.notes &&
-                  validationType.errors.notes
-                    ? true
-                    : false
-                }
+                  onChange={validationType.handleChange}
+                  onBlur={validationType.handleBlur}
+                  value={validationType.values.notes || ""}
+                  invalid={
+                    validationType.touched.notes && validationType.errors.notes
+                      ? true
+                      : false
+                  }
                 />
               </Col>
             </Row>
@@ -1289,13 +1325,76 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option value={1} selected={ dataEdit?.supported_classes?.class_id_1 === 1 ? true : false } >Economy</option>
-                            <option value={2} selected={ dataEdit?.supported_classes?.class_id_1 === 2 ? true : false } >Full-Size</option>
-                            <option value={3} selected={ dataEdit?.supported_classes?.class_id_1 === 3 ? true : false } >Premium</option>
-                            <option value={4} selected={ dataEdit?.supported_classes?.class_id_1 === 4 ? true : false } >Premium Plus</option>
-                            <option value={5} selected={ dataEdit?.supported_classes?.class_id_1 === 5 ? true : false } >Premium Max</option>
-                            <option value={6} selected={ dataEdit?.supported_classes?.class_id_1 === 6 ? true : false } >Delux</option>
-                            <option value={7} selected={ dataEdit?.supported_classes?.class_id_1 === 7 ? true : false } >Elite</option>
+                            <option
+                              value={1}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 1
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Economy
+                            </option>
+                            <option
+                              value={2}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 2
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Full-Size
+                            </option>
+                            <option
+                              value={3}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 3
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Premium
+                            </option>
+                            <option
+                              value={4}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 4
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Premium Plus
+                            </option>
+                            <option
+                              value={5}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 5
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Premium Max
+                            </option>
+                            <option
+                              value={6}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 6
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Delux
+                            </option>
+                            <option
+                              value={7}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 7
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Elite
+                            </option>
                           </Input>
                         </Col>
                         <Col className="col-2">
@@ -1332,11 +1431,61 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option value={"4 Hours"} selected={ dataEdit?.supported_classes?.duration_1 === '4 Hours' ? true : false } >4 Hours</option>
-                            <option value={"6 Hours"} selected={ dataEdit?.supported_classes?.duration_1 === '6 Hours' ? true : false }>6 Hours</option>
-                            <option value={"8 Hours"} selected={ dataEdit?.supported_classes?.duration_1 === '8 Hours' ? true : false }>8 Hours</option>
-                            <option value={"10 Hours"}selected={ dataEdit?.supported_classes?.duration_1 === '10 Hours' ? true : false }>10 Hours</option>
-                            <option value={"12 Hours"}selected={ dataEdit?.supported_classes?.duration_1 === '12 Hours' ? true : false }>12 Hours</option>
+                            <option
+                              value={"4 Hours"}
+                              selected={
+                                dataEdit?.supported_classes?.duration_1 ===
+                                "4 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              4 Hours
+                            </option>
+                            <option
+                              value={"6 Hours"}
+                              selected={
+                                dataEdit?.supported_classes?.duration_1 ===
+                                "6 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              6 Hours
+                            </option>
+                            <option
+                              value={"8 Hours"}
+                              selected={
+                                dataEdit?.supported_classes?.duration_1 ===
+                                "8 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              8 Hours
+                            </option>
+                            <option
+                              value={"10 Hours"}
+                              selected={
+                                dataEdit?.supported_classes?.duration_1 ===
+                                "10 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              10 Hours
+                            </option>
+                            <option
+                              value={"12 Hours"}
+                              selected={
+                                dataEdit?.supported_classes?.duration_1 ===
+                                "12 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              12 Hours
+                            </option>
                           </Input>
                         </Col>
                         <Col className="col">
@@ -1365,8 +1514,9 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
                             defaultValue={initialDepartureLocationsOne}
-                            onChange={ (e) => setDepartureLocationsSelectedOne(e) }
-                          
+                            onChange={(e) =>
+                              setDepartureLocationsSelectedOne(e)
+                            }
                           >
                             {map(depatureLocationData, (item, index) => {
                               return (
@@ -1419,13 +1569,76 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                               //   value={validationType.values.department || ""}
                             >
                               <option value={null}>Select....</option>
-                              <option value={1} selected={ dataEdit?.supported_classes?.class_id_2 === 1 ? true : false } >Economy</option>
-                              <option value={2} selected={ dataEdit?.supported_classes?.class_id_2 === 2 ? true : false } >Full-Size</option>
-                              <option value={3} selected={ dataEdit?.supported_classes?.class_id_2 === 3 ? true : false } >Premium</option>
-                              <option value={4} selected={ dataEdit?.supported_classes?.class_id_2 === 4 ? true : false } >Premium Plus</option>
-                              <option value={5} selected={ dataEdit?.supported_classes?.class_id_2 === 5 ? true : false } >Premium Max</option>
-                              <option value={6} selected={ dataEdit?.supported_classes?.class_id_2 === 6 ? true : false } >Delux</option>
-                              <option value={7} selected={ dataEdit?.supported_classes?.class_id_2 === 7 ? true : false } >Elite</option>
+                              <option
+                                value={1}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 1
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Economy
+                              </option>
+                              <option
+                                value={2}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 2
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Full-Size
+                              </option>
+                              <option
+                                value={3}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 3
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Premium
+                              </option>
+                              <option
+                                value={4}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 4
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Premium Plus
+                              </option>
+                              <option
+                                value={5}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 5
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Premium Max
+                              </option>
+                              <option
+                                value={6}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 6
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Delux
+                              </option>
+                              <option
+                                value={7}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 7
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Elite
+                              </option>
                             </Input>
                           </Col>
                           <Col className="col-2">
@@ -1462,11 +1675,61 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                               //   value={validationType.values.department || ""}
                             >
                               <option value={null}>Select....</option>
-                              <option value={"4 Hours"} selected={ dataEdit?.supported_classes?.duration_2 === '4 Hours' ? true : false }>4 Hours</option>
-                              <option value={"6 Hours"} selected={ dataEdit?.supported_classes?.duration_2 === '6 Hours' ? true : false }>6 Hours</option>
-                              <option value={"8 Hours"} selected={ dataEdit?.supported_classes?.duration_2 === '8 Hours' ? true : false }>8 Hours</option>
-                              <option value={"10 Hours"}selected={ dataEdit?.supported_classes?.duration_2 === '10 Hours' ? true : false }>10 Hours</option>
-                              <option value={"12 Hours"}selected={ dataEdit?.supported_classes?.duration_2 === '12 Hours' ? true : false }>12 Hours</option>
+                              <option
+                                value={"4 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_2 ===
+                                  "4 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                4 Hours
+                              </option>
+                              <option
+                                value={"6 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_2 ===
+                                  "6 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                6 Hours
+                              </option>
+                              <option
+                                value={"8 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_2 ===
+                                  "8 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                8 Hours
+                              </option>
+                              <option
+                                value={"10 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_2 ===
+                                  "10 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                10 Hours
+                              </option>
+                              <option
+                                value={"12 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_2 ===
+                                  "12 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                12 Hours
+                              </option>
                             </Input>
                           </Col>
                           <Col className="col">
@@ -1495,7 +1758,9 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
                               defaultValue={initialDepartureLocationsTwo}
-                              onChange={ (e) => setDepartureLocationsSelectedTwo(e) }
+                              onChange={(e) =>
+                                setDepartureLocationsSelectedTwo(e)
+                              }
                               // disabled={
                               //   voucherInitialData?.brings_read_only === 1 ? true : false
                               // }
@@ -1510,11 +1775,30 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                             </Select>
                           </Col>
                           <Col className="col-1 d-flex align-items-center mt-4">
-                            <i
-                              className="uil-plus-circle font-size-20"
-                              style={{ color: "#F6851F", cursor: "pointer" }}
-                              onClick={() => setSupportedClassRowThree(true)}
-                            />
+                            {isRowOpen || !supportedClassRowThree ? (
+                              <>
+                                <i
+                                  className="uil-plus-circle font-size-20"
+                                  style={{
+                                    color: "#F6851F",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setSupportedClassRowThree(true);
+                                  }}
+                                />
+                              </>
+                            ) : (
+                              <i
+                                className="uil-minus-circle font-size-20 text-danger"
+                                style={{  cursor: "pointer" }}
+                                onClick={() => {
+                                  setSupportedClassRowThree(true);
+                                  setSupportedClassRowTwo(false);
+                                  setIsRowOpen(true);
+                                }}
+                              />
+                            )}
                           </Col>
                         </Row>
                       ) : null}
@@ -1553,13 +1837,76 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                               //   value={validationType.values.department || ""}
                             >
                               <option value={null}>Select....</option>
-                              <option value={1} selected={ dataEdit?.supported_classes?.class_id_3 === 1 ? true : false }>Economy</option>
-                              <option value={2} selected={ dataEdit?.supported_classes?.class_id_3 === 2 ? true : false }>Full-Size</option>
-                              <option value={3} selected={ dataEdit?.supported_classes?.class_id_3 === 3 ? true : false }>Premium</option>
-                              <option value={4} selected={ dataEdit?.supported_classes?.class_id_3 === 4 ? true : false }>Premium Plus</option>
-                              <option value={5} selected={ dataEdit?.supported_classes?.class_id_3 === 5 ? true : false }>Premium Max</option>
-                              <option value={6} selected={ dataEdit?.supported_classes?.class_id_3 === 6 ? true : false }>Delux</option>
-                              <option value={7} selected={ dataEdit?.supported_classes?.class_id_3 === 7 ? true : false }>Elite</option>
+                              <option
+                                value={1}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 1
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Economy
+                              </option>
+                              <option
+                                value={2}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 2
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Full-Size
+                              </option>
+                              <option
+                                value={3}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 3
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Premium
+                              </option>
+                              <option
+                                value={4}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 4
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Premium Plus
+                              </option>
+                              <option
+                                value={5}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 5
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Premium Max
+                              </option>
+                              <option
+                                value={6}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 6
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Delux
+                              </option>
+                              <option
+                                value={7}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 7
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Elite
+                              </option>
                             </Input>
                           </Col>
                           <Col className="col-2">
@@ -1596,11 +1943,61 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                               //   value={validationType.values.department || ""}
                             >
                               <option value={null}>Select....</option>
-                              <option value={"4 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '4 Hours' ? true : false } >4 Hours</option>
-                              <option value={"6 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '6 Hours' ? true : false }>6 Hours</option>
-                              <option value={"8 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '8 Hours' ? true : false }>8 Hours</option>
-                              <option value={"10 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '10 Hours' ? true : false } >10 Hours</option>
-                              <option value={"12 Hours"} selected={ dataEdit?.supported_classes?.duration_3 === '12 Hours' ? true : false } >12 Hours</option>
+                              <option
+                                value={"4 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_3 ===
+                                  "4 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                4 Hours
+                              </option>
+                              <option
+                                value={"6 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_3 ===
+                                  "6 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                6 Hours
+                              </option>
+                              <option
+                                value={"8 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_3 ===
+                                  "8 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                8 Hours
+                              </option>
+                              <option
+                                value={"10 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_3 ===
+                                  "10 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                10 Hours
+                              </option>
+                              <option
+                                value={"12 Hours"}
+                                selected={
+                                  dataEdit?.supported_classes?.duration_3 ===
+                                  "12 Hours"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                12 Hours
+                              </option>
                             </Input>
                           </Col>
                           <Col className="col">
@@ -1629,7 +2026,9 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
                               defaultValue={initialDepartureLocationsThree}
-                              onChange={ (e) => setDepartureLocationsSelectedThree(e) }
+                              onChange={(e) =>
+                                setDepartureLocationsSelectedThree(e)
+                              }
                               // disabled={
                               //   voucherInitialData?.brings_read_only === 1 ? true : false
                               // }
@@ -1679,8 +2078,7 @@ console.log("dapatureLocationsSelectedOne", dapatureLocationsSelectedOne);
                   className="waves-effect waves-light mb-3 btn mx-4"
                   onClick={() => {
                     setAssetModal(false);
-                    setDataEdit(null);
-                    setMenu(0);
+                    
                   }}
                 >
                   Cancel
