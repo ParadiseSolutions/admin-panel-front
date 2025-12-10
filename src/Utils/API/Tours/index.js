@@ -125,6 +125,12 @@ export const bulkToursPut = (body) => {
       headers: options,
     });
   };
+  export const getCategoryWebsiteTourAPI = (id) => {
+    const url = `${API_URL}/websites/${id}/categories/showMainCategories`;
+    return axios.get (url, {
+      headers: options,
+    });
+  };
 
 
   //settings
