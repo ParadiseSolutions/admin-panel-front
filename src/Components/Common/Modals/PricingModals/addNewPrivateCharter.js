@@ -2917,7 +2917,7 @@ const AddNewPrivateCharter = ({
                             value={"3"}
                             selected={dataEdit?.p_price_sheet === "3"}
                           >
-                            Fixed Commision
+                            Fixed Rate
                           </option>
                         </Input>
                       </div>
@@ -3084,7 +3084,7 @@ const AddNewPrivateCharter = ({
                                 id="basic-addon1"
                                 style={{ fontSize: "0.85em" }}
                               >
-                                $
+                                %
                               </span>
                               <Input
                                 name="p_est_rate"
@@ -4477,7 +4477,7 @@ const AddNewPrivateCharter = ({
                         <Col className="col-2">
                           <div className="form-outline mb-2" id="public_price">
                             <div className="d-flex justify-content-between">
-                              <Label className="form-label">Public Price</Label>
+                              <Label className="form-label">Est. Public</Label>
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
@@ -4682,7 +4682,7 @@ const AddNewPrivateCharter = ({
                                 id="basic-addon1"
                                 style={{ fontSize: "0.85em" }}
                               >
-                                $
+                                %
                               </span>
                               <Input
                                 name="p_est_rate"
