@@ -198,22 +198,7 @@ const Schedules = ({ tourData, toggle }) => {
             ).then(() => {
               refresh();
               // history.goBack();
-              Swal.fire({
-                title: "Congratulation",
-                text: "This tour has been created!",
-                icon: "success",
-                showCancelButton: true,
-                confirmButtonColor: "#F6851F",
-                cancelButtonColor: "#d33",
-                cancelButtonText: "Save & Close!",
-                confirmButtonText: "Save & New",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  history.push("/tours/new");
-                } else {
-                  history.push("/tours");
-                }
-              });
+               toggle("9")
             });
           }
         })

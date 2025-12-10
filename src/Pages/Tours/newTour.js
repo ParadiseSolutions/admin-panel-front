@@ -14,6 +14,7 @@ import {
   getLocationWebsitePI,
   getCategoryWebsiteAPI,
   triggerUpdate,
+  getCategoryWebsiteTourAPI,
 } from "../../Utils/API/Tours";
 import {
   TabContent,
@@ -150,7 +151,7 @@ const NewTour = ({ history }) => {
         setLocationID(null);
       }
     });
-    getCategoryWebsiteAPI(id).then((resp) => {
+    getCategoryWebsiteTourAPI(id).then((resp) => {
       setCategoryData(resp.data.data);
       if (resp.data.data.length === 1) {
         setMainCatID(resp.data.data[0].category_id);
@@ -161,9 +162,8 @@ const NewTour = ({ history }) => {
     });
     //setCategoryId(id)
   };
-
-  //console.log('location', locationData)
-
+  
+  console.log(categoryData);
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
