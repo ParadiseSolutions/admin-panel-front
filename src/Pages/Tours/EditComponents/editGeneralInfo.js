@@ -14,6 +14,7 @@ import {
   getLocationWebsitePI,
   getCategoryWebsiteAPI,
   putCopyTourAPI,
+  getCategoryWebsiteTourAPI,
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -145,7 +146,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
         setLocationID(null);
       }
     });
-    getCategoryWebsiteAPI(id).then((resp) => {
+    getCategoryWebsiteTourAPI(id).then((resp) => {
       setCategoryData(resp.data.data);
       if (resp.data.data.length === 1) {
         setMainCatID(resp.data.data[0].id);

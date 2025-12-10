@@ -2530,7 +2530,7 @@ const AddPezGato = ({
                             value={"3"}
                             selected={dataEdit?.p_price_sheet === "3"}
                           >
-                            Fixed Commision
+                            Fixed Rate
                           </option>
                         </Input>
                       </div>
@@ -2697,7 +2697,7 @@ const AddPezGato = ({
                                 id="basic-addon1"
                                 style={{ fontSize: "0.85em" }}
                               >
-                                $
+                                %
                               </span>
                               <Input
                                 name="p_est_rate"
@@ -3903,7 +3903,7 @@ This is based on the Payment Settings.  If "Unspecified" is chosen, then this fi
                         <Col className="col-2">
                           <div className="form-outline mb-2" id="public_price">
                             <div className="d-flex justify-content-between">
-                              <Label className="form-label">Public Price</Label>
+                              <Label className="form-label">Est. Public</Label>
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
@@ -4106,7 +4106,7 @@ This is based on the Payment Settings.  If "Unspecified" is chosen, then this fi
                                 id="basic-addon1"
                                 style={{ fontSize: "0.85em" }}
                               >
-                                $
+                                %
                               </span>
                               <Input
                                 name="p_est_rate"

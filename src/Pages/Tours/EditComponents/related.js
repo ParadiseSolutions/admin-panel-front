@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { useHistory } from "react-router-dom";
 import {
   getAddonsPricingAPI,
   getRelatedTourAPI,
@@ -40,6 +41,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
   const [editRelatedData, setEditRelatedData] = useState(null);
   const [relatedAssetsActiveData, setRelatedAssetsActiveData] = useState([]);
   const [relatedAssetsOtherData, setRelatedAssetsOtherData] = useState([]);
+    const history = useHistory();
   const columnsAddons = useMemo(
     () => [
       {
@@ -293,13 +295,12 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     });
   };
 
-
   const assignAsset = (asset_id) => {
     let data = {
       tour_id: id,
       asset_provider_id: asset_id,
     };
-   
+
     Swal.fire({
       title: "Assign Related Asset?",
       icon: "question",
@@ -321,7 +322,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
       tour_id: id,
       asset_provider_id: asset_id,
     };
-   
+
     Swal.fire({
       title: "Remove Related Asset?",
       icon: "question",
@@ -338,7 +339,6 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
       }
     });
   };
-  
 
   const indexSubmit = (row, position) => {
     let data = {
@@ -396,7 +396,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
   return (
     <TabPane tabId="1" className="">
       <Row>
-      <Col
+        <Col
           className="col-12 p-1 d-flex"
           style={{ backgroundColor: "#EBF9FE" }}
         >
@@ -421,8 +421,9 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
             }}
           >
             {" "}
-            Identify tour that are either backups (direct replacement, no customer approval required), or alternatives (not quite the same, customer approval required)
-            to the current tour.
+            Identify tour that are either backups (direct replacement, no
+            customer approval required), or alternatives (not quite the same,
+            customer approval required) to the current tour.
           </span>
         </Col>
         {relatedData ? (
@@ -467,7 +468,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           </span>
         </Col>
         <Col className="col-12">
-        <p
+          <p
             className="p-2"
             style={{
               fontSize: "20px",
@@ -476,7 +477,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
               marginBottom: "0px",
             }}
           >
-           Active Assets
+            Active Assets
           </p>
           <span
             style={{
@@ -489,14 +490,18 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
             }}
           >
             {" "}
-            These are the assets currently used on this tour. To add more, see "Other Assets" below.
+            These are the assets currently used on this tour. To add more, see
+            "Other Assets" below.
           </span>
         </Col>
         <Col className="col-12">
-        <ActiveAssetsTable relatedAssetsActiveData={relatedAssetsActiveData} removeAsset={removeAsset}/>
+          <ActiveAssetsTable
+            relatedAssetsActiveData={relatedAssetsActiveData}
+            removeAsset={removeAsset}
+          />
         </Col>
         <Col className="col-12 mt-5">
-        <p
+          <p
             className="p-2"
             style={{
               fontSize: "20px",
@@ -505,7 +510,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
               marginBottom: "0px",
             }}
           >
-           Other Assets from This Operator
+            Other Assets from This Operator
           </p>
           <span
             style={{
@@ -518,11 +523,15 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
             }}
           >
             {" "}
-            If any of the below assets are used on this tour, click "Add" to move that asset to the "Active Assets" list.
+            If any of the below assets are used on this tour, click "Add" to
+            move that asset to the "Active Assets" list.
           </span>
         </Col>
         <Col className="col-12">
-        <ActiveAssetsOthersTable relatedAssetsOtherData={relatedAssetsOtherData} assignAsset={assignAsset} />
+          <ActiveAssetsOthersTable
+            relatedAssetsOtherData={relatedAssetsOtherData}
+            assignAsset={assignAsset}
+          />
         </Col>
       </Row>
       <Row>
@@ -537,14 +546,31 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
             <i className="uil-angle-double-left" />
             Previous
           </Button>
-          {/* <Button
-            type="submit"
+          <Button
+            type="button"
             className="font-16 btn-block btn-orange"
-            onClick={() => toggle("7")}
+            onClick={() => {
+              Swal.fire({
+                title: "Congratulation",
+                text: "This tour has been created!",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#F6851F",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Save & Close!",
+                confirmButtonText: "Save & New",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  history.push("/tours/new");
+                } else {
+                  history.push("/tours");
+                }
+              });
+            }}
           >
-            Continue
+            Save and Close
             <i className="uil-angle-double-right mx-1 " />
-          </Button> */}
+          </Button>
         </Col>
       </Row>
 
