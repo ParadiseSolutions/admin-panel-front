@@ -23,6 +23,7 @@ import {
   putBoatLocationFee,
   putLocationFee,
 } from "../../../../Utils/API/Operators";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const AddBoatModal = ({
   id,
@@ -31,6 +32,9 @@ const AddBoatModal = ({
   locationEditData,
   refreshTable,
   section,
+  readOnlyModal,
+  setReadOnlyModal,
+  tourData,
 }) => {
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
@@ -81,7 +85,9 @@ const AddBoatModal = ({
     initialValues: {
       title: dataEdit?.title ? dataEdit.title : "",
       meeting_location: dataEdit?.boat_location ? dataEdit.boat_location : "",
-      google_maps_url: dataEdit?.google_maps_url ? dataEdit.google_maps_url : "",
+      google_maps_url: dataEdit?.google_maps_url
+        ? dataEdit.google_maps_url
+        : "",
       image_url: dataEdit?.image_url ? dataEdit.image_url : "",
     },
     // validationSchema: Yup.object().shape({
@@ -98,8 +104,8 @@ const AddBoatModal = ({
         id: id,
         title: values.title,
         boat_location: values.meeting_location,
-        google_maps_url:values.google_maps_url ? values.google_maps_url : '',
-        image_url:values.image_url ? values.image_url : '',
+        google_maps_url: values.google_maps_url ? values.google_maps_url : "",
+        image_url: values.image_url ? values.image_url : "",
       };
       // console.log(data);
       if (dataEdit.length === 0) {
@@ -167,6 +173,7 @@ const AddBoatModal = ({
         toggle={() => {
           setLocationModal(false);
           setDataEdit([]);
+          setReadOnlyModal(false);
         }}
       >
         <div
@@ -176,12 +183,15 @@ const AddBoatModal = ({
           <h1 className="modal-title mt-0 text-white">
             {dataEdit.length === 0
               ? "+ Add Boat Location"
+              : readOnlyModal
+              ? "View Boat Location"
               : "Edit Existing Boat Location"}
           </h1>
           <button
             onClick={() => {
               setLocationModal(false);
               setDataEdit([]);
+              setReadOnlyModal(false);
             }}
             type="button"
             className="close"
@@ -222,9 +232,8 @@ const AddBoatModal = ({
                         <Input
                           name="title"
                           placeholder="e.g. Cancun Hotel"
-                          
+                          disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
-                          
                           value={validationType.values.title || ""}
                           invalid={
                             validationType.touched.title &&
@@ -249,9 +258,8 @@ const AddBoatModal = ({
                         <Input
                           name="meeting_location"
                           placeholder="e.g. In front of the main lobby of your hotel"
-                          
+                          disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
-                         
                           value={validationType.values.meeting_location || ""}
                           invalid={
                             validationType.touched.meeting_location &&
@@ -278,9 +286,8 @@ const AddBoatModal = ({
                         <Input
                           name="google_maps_url"
                           // placeholder="e.g. Cancun Hotel"
-                          
+                          disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
-                         
                           value={validationType.values.google_maps_url || ""}
                           invalid={
                             validationType.touched.google_maps_url &&
@@ -305,9 +312,8 @@ const AddBoatModal = ({
                         <Input
                           name="image_url"
                           // placeholder="e.g. In front of the main lobby of your hotel"
-                          
+                          disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
-                    
                           value={validationType.values.image_url || ""}
                           invalid={
                             validationType.touched.image_url &&
@@ -326,17 +332,51 @@ const AddBoatModal = ({
                     </div>
                   </Col>
                 </Row>
-                
+
                 <Row>
                   <Col className="col-12 mt-4 d-flex justify-content-end">
-                    <Button
-                      type="submit"
-                      style={{ backgroundColor: "#F6851F", border: "none" }}
-                      className="waves-effect waves-light mb-3 btn btn-success"
-                    >
-                      <i className="mdi mdi-plus me-1" />
-                      Save and Close
-                    </Button>
+                    {readOnlyModal ? (
+                      <>
+                        <Link to={`/operators/${tourData?.operator_id}`}>
+                          <Button
+                            type="button"
+                            style={{ border: "none" }}
+                            className="waves-effect waves-light mb-3 btn btn-paradise mx-2"
+                            onClick={() => {
+                              setLocationModal(false);
+                              setDataEdit([]);
+                              setReadOnlyModal(false);
+                            }}
+                          >
+                            <i className="mdi mdi-plus me-1" />
+                            Go to Operator
+                          </Button>
+                        </Link>
+
+                        <Button
+                          type="button"
+                          style={{ backgroundColor: "#F6851F", border: "none" }}
+                          className="waves-effect waves-light mb-3 btn btn-paradiseBlue"
+                          onClick={() => {
+                            setLocationModal(false);
+                            setDataEdit([]);
+                            setReadOnlyModal(false);
+                          }}
+                        >
+                          <i className="mdi mdi-plus me-1" />
+                          Close
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        type="submit"
+                        style={{ backgroundColor: "#F6851F", border: "none" }}
+                        className="waves-effect waves-light mb-3 btn btn-success"
+                      >
+                        <i className="mdi mdi-plus me-1" />
+                        Submit
+                      </Button>
+                    )}
                   </Col>
                 </Row>
               </Col>
