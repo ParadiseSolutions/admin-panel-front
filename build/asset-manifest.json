@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.a7af910f.css",
-    "main.js": "/static/js/main.61e1b99e.js",
+    "main.js": "/static/js/main.e829711f.js",
     "static/js/144.ae29c095.chunk.js": "/static/js/144.ae29c095.chunk.js",
     "static/media/asset_banner_one.png": "/static/media/asset_banner_one.093a7db2ee5a4f2ad6c6.png",
     "static/media/asset_banner_three.jpeg": "/static/media/asset_banner_three.a5526161d636ad261f97.jpeg",
@@ -84,11 +84,11 @@
     "static/media/Intersection2.svg": "/static/media/Intersection2.9f8fdbff1f8cc8e8e585399d1070a56e.svg",
     "static/media/Intersection1.svg": "/static/media/Intersection1.94b817dc69392afc1bdd449707001640.svg",
     "main.a7af910f.css.map": "/static/css/main.a7af910f.css.map",
-    "main.61e1b99e.js.map": "/static/js/main.61e1b99e.js.map",
+    "main.e829711f.js.map": "/static/js/main.e829711f.js.map",
     "144.ae29c095.chunk.js.map": "/static/js/144.ae29c095.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a7af910f.css",
-    "static/js/main.61e1b99e.js"
+    "static/js/main.e829711f.js"
   ]
 }
