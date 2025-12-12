@@ -24,6 +24,7 @@ import {
   putLocationFee,
 } from "../../../../Utils/API/Operators";
 import { setDecimalFormat } from "../../../../Utils/CommonFunctions";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const AddLocationModal = ({
   id,
@@ -32,6 +33,9 @@ const AddLocationModal = ({
   locationEditData,
   refreshTable,
   section,
+  readOnlyModal,
+  setReadOnlyModal,
+  tourData
 }) => {
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
@@ -170,6 +174,7 @@ const AddLocationModal = ({
         toggle={() => {
           setLocationModal(false);
           setDataEdit([]);
+          setReadOnlyModal(false);
         }}
       >
         <div
@@ -179,6 +184,7 @@ const AddLocationModal = ({
           <h1 className="modal-title mt-0 text-white">
             {dataEdit.length === 0
               ? "+ Add Meeting Location"
+              : readOnlyModal ? "View Meeting Location"
               : "Edit Existing Meeting Location"}
           </h1>
           <button
@@ -225,7 +231,7 @@ const AddLocationModal = ({
                         <Input
                           name="title"
                           placeholder="e.g. Cancun Hotel"
-                          
+                          disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
                           
                           value={validationType.values.title || ""}
@@ -254,7 +260,7 @@ const AddLocationModal = ({
                           placeholder="e.g. In front of the main lobby of your hotel"
                           
                           onChange={validationType.handleChange}
-                         
+                         disabled={readOnlyModal ? true : false}
                           value={validationType.values.meeting_location || ""}
                           invalid={
                             validationType.touched.meeting_location &&
@@ -283,7 +289,7 @@ const AddLocationModal = ({
                           // placeholder="e.g. Cancun Hotel"
                           
                           onChange={validationType.handleChange}
-                         
+                         disabled={readOnlyModal ? true : false}
                           value={validationType.values.google_maps_url || ""}
                           invalid={
                             validationType.touched.google_maps_url &&
@@ -308,7 +314,7 @@ const AddLocationModal = ({
                         <Input
                           name="image_url"
                           // placeholder="e.g. In front of the main lobby of your hotel"
-                          
+                          disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
                     
                           value={validationType.values.image_url || ""}
@@ -338,7 +344,7 @@ const AddLocationModal = ({
                           name="meeting_instructions"
                           type="textarea"
                           placeholder="e.g. Wait outside and look for a white van with a branded sign."
-                          
+                          disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
                           value={validationType.values.meeting_instructions || ""}
                           invalid={
@@ -360,14 +366,48 @@ const AddLocationModal = ({
                 </Row>
                 <Row>
                   <Col className="col-12 mt-4 d-flex justify-content-end">
-                    <Button
-                      type="submit"
-                      style={{ backgroundColor: "#F6851F", border: "none" }}
-                      className="waves-effect waves-light mb-3 btn btn-success"
-                    >
-                      <i className="mdi mdi-plus me-1" />
-                      Save and Close
-                    </Button>
+                    {readOnlyModal ? (
+                      <>
+                        <Link to={`/operators/${tourData?.operator_id}`}>
+                          <Button
+                            type="button"
+                            style={{ border: "none" }}
+                            className="waves-effect waves-light mb-3 btn btn-paradise mx-2"
+                            onClick={() => {
+                              setLocationModal(false);
+                              setDataEdit([]);
+                              setReadOnlyModal(false);
+                            }}
+                          >
+                            <i className="mdi mdi-plus me-1" />
+                            Go to Operator
+                          </Button>
+                        </Link>
+
+                        <Button
+                          type="button"
+                          style={{ backgroundColor: "#F6851F", border: "none" }}
+                          className="waves-effect waves-light mb-3 btn btn-paradiseBlue"
+                          onClick={() => {
+                            setLocationModal(false);
+                            setDataEdit([]);
+                            setReadOnlyModal(false);
+                          }}
+                        >
+                          <i className="mdi mdi-plus me-1" />
+                          Close
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        type="submit"
+                        style={{ backgroundColor: "#F6851F", border: "none" }}
+                        className="waves-effect waves-light mb-3 btn btn-success"
+                      >
+                        <i className="mdi mdi-plus me-1" />
+                        Submit
+                      </Button>
+                    )}
                   </Col>
                 </Row>
               </Col>
