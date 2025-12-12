@@ -1004,7 +1004,32 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                     </UncontrolledTooltip>
                                   </div>
                                 </div>
-                              ) : null}
+                              ) : (
+                                <div
+                                  className="text-warning"
+                                  id="viewtooltip"
+                                  onClick={() => {
+                                    setLocationEditData([]);
+                                    setLocationEditData(location);
+                                    setLocationModal(true);
+                                    setReadOnlyModal(true);
+                                  }}
+                                >
+                                  <VscEye
+                                    size={30}
+                                    //  onClick={() =>
+                                    //    toggleDetails(index, "boat")
+                                    //  }
+                                    style={{ cursor: "pointer" }}
+                                  />
+                                  <UncontrolledTooltip
+                                    placement="top"
+                                    target="viewtooltip"
+                                  >
+                                    View Details
+                                  </UncontrolledTooltip>
+                                </div>
+                              )}
                             </td>
                           </tr>
                         );
@@ -1107,7 +1132,32 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                     </UncontrolledTooltip>
                                   </div>
                                 </div>
-                              ) : null}
+                              ) : (
+                                <div
+                                  className="text-warning"
+                                  id="viewtooltip"
+                                  onClick={() => {
+                                    setBoatEditData([]);
+                                    setBoatEditData(fee);
+                                    setBoatModal(true);
+                                    setReadOnlyModal(true);
+                                  }}
+                                >
+                                  <VscEye
+                                    size={30}
+                                    //  onClick={() =>
+                                    //    toggleDetails(index, "boat")
+                                    //  }
+                                    style={{ cursor: "pointer" }}
+                                  />
+                                  <UncontrolledTooltip
+                                    placement="top"
+                                    target="viewtooltip"
+                                  >
+                                    View Details
+                                  </UncontrolledTooltip>
+                                </div>
+                              )}
                             </td>
                           </tr>
                         );
@@ -1844,6 +1894,9 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         id={tourID}
         section={"tours"}
         refreshTable={refreshTable}
+        readOnlyModal={readOnlyModal}
+        setReadOnlyModal={setReadOnlyModal}
+        tourData={tourData}
       />
       <AddBoatModal
         locationModal={boatModal}
@@ -1852,6 +1905,9 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         id={tourID}
         section={"tours"}
         refreshTable={refreshTable}
+        readOnlyModal={readOnlyModal}
+        setReadOnlyModal={setReadOnlyModal}
+        tourData={tourData}
       />
       <AddRestrictionModal
         locationModal={restrictionModal}
