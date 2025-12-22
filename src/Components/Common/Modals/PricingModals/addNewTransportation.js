@@ -216,8 +216,6 @@ const AddNewTransportation = ({
     initialValues: {
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
-      min: dataEdit ? dataEdit?.pricedetails[6]?.min : "",
-      max: dataEdit ? dataEdit?.pricedetails[6]?.max : "",
       active: dataEdit?.active ? 1 : 0,
       balance_checkbox: dataEdit?.show_balance_due ? 1 : 0,
       public_price: dataEdit ? dataEdit.public : "",
@@ -232,6 +230,12 @@ const AddNewTransportation = ({
       eff_rate: dataEdit ? setRateFormat(dataEdit.eff_rate) : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
+      //------- esto es de passangers
+      min: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 24)[0]?.min : "",
+      max: dataEdit ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 24)[0]?.max : "",
+      //------- esto es price tiers
+      min_qty: dataEdit ? dataEdit.min_qty : '' ,
+      max_qty: dataEdit ? dataEdit.max_qty : '' ,
       voucher_balance: dataEdit
         && dataEdit.voucher_balance ?
            setDecimalFormatVBalance(
@@ -377,8 +381,8 @@ const AddNewTransportation = ({
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
           //--------------- pendiente passangers min y max
-          min_qty: values.min === "" || values.min === null ? 0 : values.min,
-          max_qty: values.max === "" || values.max === null ? 20 : values.max,
+          min_qty: values.min_pax || null,
+          max_qty: values.max_pax || null,
           price_details: [
             {
               pricing_option_id: 20,
@@ -1037,7 +1041,7 @@ const AddNewTransportation = ({
                           Min
                         </span>
                         <Input
-                          name="min"
+                          name="min_qty"
                           placeholder=""
                           type="text"
                           onChange={validationType.handleChange}
@@ -1046,22 +1050,22 @@ const AddNewTransportation = ({
                           //   setRecalc(true)
                           //   const value = e.target.value || "";
                           //   validationType.setFieldValue(
-                          //     "min",
+                          //     "min_qty",
                           //     setDecimalFormat(value)
                           //   );
                           // }}
-                          value={validationType.values.min || ""}
+                          value={validationType.values.min_qty || ""}
                           invalid={
-                            validationType.touched.min &&
-                              validationType.errors.min
+                            validationType.touched.min_qty &&
+                              validationType.errors.min_qty
                               ? true
                               : false
                           }
                         />
-                        {validationType.touched.min &&
-                          validationType.errors.min ? (
+                        {validationType.touched.min_qty &&
+                          validationType.errors.min_qty ? (
                           <FormFeedback type="invalid">
-                            {validationType.errors.min}
+                            {validationType.errors.min_qty}
                           </FormFeedback>
                         ) : null}
                       </div>
@@ -1098,7 +1102,7 @@ const AddNewTransportation = ({
                           Max
                         </span>
                         <Input
-                          name="max"
+                          name="max_qty"
                           placeholder=""
                           type="text"
                           min="0"
@@ -1108,22 +1112,22 @@ const AddNewTransportation = ({
                           // onBlur={(e) => {
                           //   const value = e.target.value || "";
                           //   validationType.setFieldValue(
-                          //     "max",
+                          //     "max_qty",
                           //     setDecimalFormat(value)
                           //   );
                           // }}
-                          value={validationType.values.max || ""}
+                          value={validationType.values.max_qty || ""}
                           invalid={
-                            validationType.touched.max &&
-                              validationType.errors.max
+                            validationType.touched.max_qty &&
+                              validationType.errors.max_qty
                               ? true
                               : false
                           }
                         />
-                        {validationType.touched.max &&
-                          validationType.errors.max ? (
+                        {validationType.touched.max_qty &&
+                          validationType.errors.max_qty ? (
                           <FormFeedback type="invalid">
-                            {validationType.errors.max}
+                            {validationType.errors.max_qty}
                           </FormFeedback>
                         ) : null}
                       </div>
