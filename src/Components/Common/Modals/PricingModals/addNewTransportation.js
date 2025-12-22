@@ -191,6 +191,7 @@ const AddNewTransportation = ({
       setPriceTransferTypeSelected("");
       setPriceDirectionSelected("");
       setPriceZoneSelected("");
+      setArrivalZoneSelected("");
       setPriceVehicleSelected("");
       setActiveCheckbox(false)
       setBalanceDueCheckbox(false)
@@ -204,7 +205,7 @@ const AddNewTransportation = ({
         setTimeout(() => {
           setLoadingData(false)
           changing = false
-        }, 1000);
+        }, 2000);
       }
     }
   }, [dataEdit, priceCollect]);
@@ -345,7 +346,7 @@ const AddNewTransportation = ({
               ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                (x) => x.pricing_option_id === 51
+                (x) => x.pricing_option_id === 69
               )[0]?.source_id
             : null
           : arrivalZoneSelected;
@@ -440,7 +441,7 @@ const AddNewTransportation = ({
               source_id: arrival_zone === "-1" ? null : arrival_zone,
               min: null,
               max: null,
-              label: null,
+              label: null, 
             },
           ],
         };
@@ -1376,7 +1377,7 @@ const AddNewTransportation = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? zone.id ===
                                   dataEdit.pricedetails.filter(
-                                    (x) => x.pricing_option_id === 51
+                                    (x) => x.pricing_option_id === 69
                                   )[0]?.source_id
                                   : false
                               }
