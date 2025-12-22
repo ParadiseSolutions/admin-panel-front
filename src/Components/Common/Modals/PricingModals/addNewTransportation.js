@@ -7,6 +7,7 @@ import {
   postPricesAPI,
   updatePriceAPI,
   triggerUpdate,
+  getPricingZoneArrivalOptionsAPI,
 } from "../../../../Utils/API/Tours";
 import {
   Row,
@@ -40,7 +41,8 @@ const AddNewTransportation = ({
   editProductID,
   tourData,
   copyProduct,
-  setCopyProduct
+  setCopyProduct,
+   priceRangeCheck
 }) => {
   let id = "";
   id = editProductID;
@@ -63,6 +65,8 @@ const AddNewTransportation = ({
   const [priceCollect, setPriceCollect] = useState([]);
   const [priceSeason, setPriceSeason] = useState([]);
   const [priceZone, setPriceZone] = useState([]);
+  const [arrivalZone, setArrivalZone] = useState([]);
+  const [arrivalZoneSelected, setArrivalZoneSelected] = useState('');
   const [priceTransferType, setPriceTransferType] = useState([]);
   const [priceDirection, setPriceDirection] = useState([]);
   const [priceVehicle, setVehicleZone] = useState([]);
@@ -105,6 +109,9 @@ const AddNewTransportation = ({
       getPricingZoneOptionsAPI(51, tourData.provider_id).then((resp) => {
         setPriceZone(resp.data.data);
       });
+      getPricingZoneArrivalOptionsAPI(69, tourData.provider_id).then((resp) => {
+        setArrivalZone(resp.data.data);
+      });
       getCurrency().then((resp) => {
         setCurrency(resp.data.data)
       })
@@ -137,6 +144,10 @@ const AddNewTransportation = ({
   const [ttop20, setttop20] = useState(false);
   const [ttop21, setttop21] = useState(false);
   const [ttop22, setttop22] = useState(false);
+   const [ttCapacity, setttCapacity] = useState(false);
+  const [ttiers, setttiers] = useState(false);
+  const [ttactive, setttactive] = useState(false);
+  const [ttbd, setbd] = useState(false);
 
   const [providerCommission, setProviderCommission] = useState('')
   const [ourCommission, setOurCommission] = useState('')
@@ -180,6 +191,7 @@ const AddNewTransportation = ({
       setPriceTransferTypeSelected("");
       setPriceDirectionSelected("");
       setPriceZoneSelected("");
+      setArrivalZoneSelected("");
       setPriceVehicleSelected("");
       setActiveCheckbox(false)
       setBalanceDueCheckbox(false)
@@ -193,7 +205,7 @@ const AddNewTransportation = ({
         setTimeout(() => {
           setLoadingData(false)
           changing = false
-        }, 1000);
+        }, 2000);
       }
     }
   }, [dataEdit, priceCollect]);
@@ -327,6 +339,17 @@ const AddNewTransportation = ({
               )[0]?.source_id
             : null
           : priceZoneSelected;
+      let arrival_zone =
+        arrivalZoneSelected === "" || arrivalZoneSelected === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 69)[0]
+              ?.source_id === undefined
+              ? null
+              : dataEdit.pricedetails.filter(
+                (x) => x.pricing_option_id === 69
+              )[0]?.source_id
+            : null
+          : arrivalZoneSelected;
 
       if (price_type && price_option && price_collect && transfer_type) {
         let data = {
@@ -412,6 +435,13 @@ const AddNewTransportation = ({
               min: null,
               max: null,
               label: null,
+            },
+            {
+              pricing_option_id: 69,
+              source_id: arrival_zone === "-1" ? null : arrival_zone,
+              min: null,
+              max: null,
+              label: null, 
             },
           ],
         };
@@ -885,6 +915,293 @@ const AddNewTransportation = ({
                     </Col>
                   ) : null}
                 </Row>
+                <Row className="d-flex mt-4">
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="min_qty_div">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Passengers</Label>
+                       
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Min
+                        </span>
+                        <Input
+                          name="min"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          // onBlur={(e) => {
+                          //   setRecalc(true)
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "public_price",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.min || ""}
+                          invalid={
+                            validationType.touched.min &&
+                              validationType.errors.min
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.min &&
+                          validationType.errors.min ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.min}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="">
+                      <div className="d-flex justify-content-between" style={{marginTop:'6px'}}>
+                        <Label className="form-label"></Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="capacity"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttCapacity}
+                            target="capacity"
+                            toggle={() => {
+                              setttCapacity(!ttCapacity);
+                            }}
+                          >
+                            Tooltip Pending
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Max
+                        </span>
+                        <Input
+                          name="max"
+                          placeholder=""
+                          type="text"
+                          min="0"
+                          step="any"
+                          onChange={validationType.handleChange}
+                          // onBlur={(e) => {
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "max",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.max || ""}
+                          invalid={
+                            validationType.touched.max &&
+                              validationType.errors.max
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.max &&
+                          validationType.errors.max ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.max}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="price_tierss">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Price Range</Label>
+                       
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Min
+                        </span>
+                        <Input
+                          name="min"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   setRecalc(true)
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "min",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.min || ""}
+                          invalid={
+                            validationType.touched.min &&
+                              validationType.errors.min
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.min &&
+                          validationType.errors.min ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.min}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="">
+                      <div className="d-flex justify-content-between" style={{marginTop:'6px'}}>
+                        <Label className="form-label"></Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="tiers"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttiers}
+                            target="tiers"
+                            toggle={() => {
+                              setttiers(!ttiers);
+                            }}
+                          >
+                            Write the ranges of people that will appear in the name of the product and will determine the price of it.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Max
+                        </span>
+                        <Input
+                          name="max"
+                          placeholder=""
+                          type="text"
+                          min="0"
+                          step="any"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "max",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.max || ""}
+                          invalid={
+                            validationType.touched.max &&
+                              validationType.errors.max
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.max &&
+                          validationType.errors.max ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.max}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </Col>
+                  <Col className="col-2 mt-1">
+                    <div className="form-outline mb-2" id="net_rate2">
+                      <div className="d-flex mx-4">
+                        <Label className="form-label mx-2">Active</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="activeT"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttactive}
+                            target="activeT"
+                            toggle={() => {
+                              setttactive(!ttactive);
+                            }}
+                          >
+                            Select if the tour is active for booking or not.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-5 mt-1 ">
+                  <Input
+                    name="active_t"
+                    placeholder=""
+                    type="checkbox"
+                    checked={activeCheckbox}
+                    className="form-check-input"
+                    onChange={() => setActiveCheckbox(!activeCheckbox)}
+                    // onBlur={validationType.handleBlur}
+                    value={activeCheckbox}
+                  />
+                </div>
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="commission">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Balance Notify</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="balanceN"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttbd}
+                            target="balanceN"
+                            toggle={() => {
+                              setbd(!ttbd);
+                            }}
+                          >
+                            Select whether the balance due should be shown to the provider in the "Please Confirm" email. This amount will be the same as in the "Voucher Balance" below. It is the amount the customer will pay to the provider on the day of the tour.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                  <Input
+                    name="balanceT"
+                    placeholder=""
+                    type="checkbox"
+                    checked={balanceDueCheckbox}
+                    className="form-check-input"
+                    onChange={() => setBalanceDueCheckbox(!balanceDueCheckbox)}
+                    // onBlur={validationType.handleBlur}
+                    value={balanceDueCheckbox}
+                  />
+                </div>
+                    </div>
+                  </Col>
+                  
+                </Row>
                 <Col
                   className="col-12 p-1 my-2"
                   style={{ backgroundColor: "#E9F4FF" }}
@@ -936,7 +1253,7 @@ const AddNewTransportation = ({
                       </Input>
                     </div>
                   </Col>
-                  <Col className="col-2">
+                  {/* <Col className="col-2">
                     <div className="form-outline mb-2">
                       <Label className="form-label">Direction</Label>
                       <Input
@@ -969,7 +1286,7 @@ const AddNewTransportation = ({
                         })}
                       </Input>
                     </div>
-                  </Col>
+                  </Col> */}
                   <Col className="col-2">
                     <div className="form-outline mb-2">
                       <Label className="form-label">Vehicle</Label>
@@ -1004,9 +1321,9 @@ const AddNewTransportation = ({
                       </Input>
                     </div>
                   </Col>
-                  <Col className="col-3">
+                  <Col className="col-4">
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Zone Name</Label>
+                      <Label className="form-label">Depature Zone</Label>
                       <Input
                         type="select"
                         name=""
@@ -1038,70 +1355,41 @@ const AddNewTransportation = ({
                       </Input>
                     </div>
                   </Col>
-                  <Col className="col-3">
+                  <Col className="col-4">
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Passangers</Label>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          Min
-                        </span>
-                        <Input
-                          name="min"
-                          placeholder=""
-                          className="me-1"
-                          type="number"
-                          min="0"
-                          onChange={validationType.handleChange}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.min || ""}
-                          invalid={
-                            validationType.touched.min &&
-                              validationType.errors.min
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.min &&
-                          validationType.errors.min ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.min}
-                          </FormFeedback>
-                        ) : null}
-                        <span
-                          className="input-group-text fw-bold bg-paradise text-white border-0 ms-1"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          Max
-                        </span>
-                        <Input
-                          name="max"
-                          placeholder=""
-                          type="number"
-                          min="0"
-                          onChange={validationType.handleChange}
-                          onBlur={validationType.handleBlur}
-                          value={validationType.values.max || ""}
-                          invalid={
-                            validationType.touched.max &&
-                              validationType.errors.max
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.max &&
-                          validationType.errors.max ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.max}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
+                      <Label className="form-label">Arrival Zone</Label>
+                      <Input
+                        type="select"
+                        name=""
+                        onChange={(e) => {
+                          setArrivalZoneSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                      //   value={validationType.values.department || ""}
+                      >
+                        <option value="-1">Select....</option>
+                        {map(arrivalZone, (zone, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={zone.id}
+                              selected={
+                                dataEdit && dataEdit.pricedetails
+                                  ? zone.id ===
+                                  dataEdit.pricedetails.filter(
+                                    (x) => x.pricing_option_id === 69
+                                  )[0]?.source_id
+                                  : false
+                              }
+                            >
+                              {zone.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
                     </div>
                   </Col>
+                 
                 </Row>
                 <Col
                   className="col-12 p-1 my-2"

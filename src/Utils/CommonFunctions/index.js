@@ -61,19 +61,44 @@ export const cleanUpSpecialCharacters = (currentValue) => {
     }
 }
 
-export const capitalizeWords2 = (currentValue) => {    
-    if(currentValue) {        
-        currentValue = currentValue.trim().replaceAll('  ', ' ')
-        return currentValue.replace(/\w*[-\S]/g, function (txt) {
-            if(txt.length > 2) {
-                let text = txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
-                return text.replace("Atv", "ATV").replace("Atx", "ATX");
-            } else {
-                return txt;
-            }
-        });
-    }
-}
+export const capitalizeWords2 = (currentValue) => {
+    if (!currentValue) return;
+
+    const acronyms = {
+        atv: 'ATV',
+        atx: 'ATX',
+        utv: 'UTV',
+        utx: 'UTX',
+        rv:  'RV',
+        rzr: 'RZR',
+        bob: 'BOB',
+        suv: 'SUV',
+    };
+
+    return currentValue
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .split(' ')
+        .map(word => {
+            // Respeta palabras con guiones
+            return word
+                .split('-')
+                .map(part => {
+                    // ACRÓNIMOS solo si es palabra completa
+                    if (acronyms[part]) {
+                        return acronyms[part];
+                    }
+
+                    if (part.length <= 2) return part;
+
+                    return part.charAt(0).toUpperCase() + part.slice(1);
+                })
+                .join('-');
+        })
+        .join(' ');
+};
+
 
 export const capitalizeFirstWord = (currentValue) => {    
     if(currentValue) {        
