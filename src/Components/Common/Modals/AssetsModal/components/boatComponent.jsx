@@ -680,7 +680,7 @@ const BoatComponent = ({
             <Row>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Marina Location</Label>
+                  <Label className="form-label">Marina</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -730,18 +730,18 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Access.</Label>
+                  <Label className="form-label">A/C</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="boat_access"
+                      id="boat_ac"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="boat_access"
+                      target="boat_ac"
                     >
-                      Is your boat wheelchair accessible?
+                      Does your boat feature an air-conditioned cabin?
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -749,25 +749,24 @@ const BoatComponent = ({
                   type="select"
                   name=""
                   onChange={(e) => {
-                    setBoatAccessSelected(+e.target.value);
+                    setBoatACSelected(e.target.value);
                   }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {map(accesData, (acces, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={acces.id}
-                        selected={
-                          dataEdit ? dataEdit.access_id === acces.id : false
-                        }
-                      >
-                        {acces.name}
-                      </option>
-                    );
-                  })}
+                  <option
+                    selected={dataEdit ? dataEdit.ac === "Yes" : false}
+                    value={"Yes"}
+                  >
+                    Yes
+                  </option>
+                  <option
+                    selected={dataEdit ? dataEdit.ac === "No" : false}
+                    value={"No"}
+                  >
+                    No
+                  </option>
                 </Input>
               </Col>
               <Col className="col-1">
@@ -810,7 +809,7 @@ const BoatComponent = ({
                   ) : null}
                 </div>
               </Col>
-
+              
               <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
@@ -852,7 +851,7 @@ const BoatComponent = ({
                   ) : null}
                 </div>
               </Col>
-              <Col className="col-1">
+               <Col className="col-1">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Shade</Label>
                   <div>
@@ -896,18 +895,18 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">A/C</Label>
+                  <Label className="form-label">Access.</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="boat_ac"
+                      id="boat_access"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="boat_ac"
+                      target="boat_access"
                     >
-                      Does your boat feature an air-conditioned cabin?
+                      Is your boat wheelchair accessible?
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -915,26 +914,28 @@ const BoatComponent = ({
                   type="select"
                   name=""
                   onChange={(e) => {
-                    setBoatACSelected(e.target.value);
+                    setBoatAccessSelected(+e.target.value);
                   }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  <option
-                    selected={dataEdit ? dataEdit.ac === "Yes" : false}
-                    value={"Yes"}
-                  >
-                    Yes
-                  </option>
-                  <option
-                    selected={dataEdit ? dataEdit.ac === "No" : false}
-                    value={"No"}
-                  >
-                    No
-                  </option>
+                  {map(accesData, (acces, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={acces.id}
+                        selected={
+                          dataEdit ? dataEdit.access_id === acces.id : false
+                        }
+                      >
+                        {acces.name}
+                      </option>
+                    );
+                  })}
                 </Input>
               </Col>
+        
               <Col className="col">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Activities</Label>
@@ -987,8 +988,7 @@ const BoatComponent = ({
                         placement="top"
                         target="upload_pdf"
                       >
-                        Upload a PDF of photos for display in our CE Tool Chest
-                        and other tools.
+                        Upload an image to be displayed in the CE Tool Chest and other tools. (Image size: 500 x 325 px).
                       </UncontrolledTooltip>
                     </div>
                   </div>
@@ -1023,12 +1023,12 @@ const BoatComponent = ({
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
-                        id="upload_pdf"
+                        id="upload_image"
                       />
                       <UncontrolledTooltip
                         autohide={true}
                         placement="top"
-                        target="upload_pdf"
+                        target="upload_image"
                       >
                         Upload an image to be displayed in the CE Tool Chest and
                         other tools. (Image size: 115 x 90 px).
@@ -1067,12 +1067,12 @@ const BoatComponent = ({
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="boat_location"
+                      id="notes"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="boat_location"
+                      target="notes"
                     >
                       Include any notes about the boat such as its current
                       status, maintenance, restrictions, etc. This may display
@@ -1199,10 +1199,7 @@ const BoatComponent = ({
                           placement="top"
                           target="main_class"
                         >
-                          Include any notes about the boat such as its current
-                          status, maintenance, restrictions, etc. This may
-                          display in the CE Tool Chest, Fishing Dispatch or
-                          other internal tools.
+                          The primary class of the boat. It may take other type of trips but this is its main category.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1266,17 +1263,14 @@ const BoatComponent = ({
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
-                          id="main_class"
+                          id="flexible"
                         />
                         <UncontrolledTooltip
                           autohide={true}
                           placement="top"
-                          target="main_class"
+                          target="flexible"
                         >
-                          Include any notes about the boat such as its current
-                          status, maintenance, restrictions, etc. This may
-                          display in the CE Tool Chest, Fishing Dispatch or
-                          other internal tools.
+                          Indicates whether this boat can be used for trips in other classifications. Enable this option if the boat is allowed to operate outside its primary class.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1301,17 +1295,14 @@ const BoatComponent = ({
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
-                          id="main_class"
+                          id="custom_prices"
                         />
                         <UncontrolledTooltip
                           autohide={true}
                           placement="top"
-                          target="main_class"
+                          target="custom_prices"
                         >
-                          Include any notes about the boat such as its current
-                          status, maintenance, restrictions, etc. This may
-                          display in the CE Tool Chest, Fishing Dispatch or
-                          other internal tools.
+                          Add specific pricing for the boat, for example if the boat requires a specific amount to operate that is different than our standard pricing. This will show in the Boat Details in the Fishing Dispatch tool.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1354,17 +1345,14 @@ const BoatComponent = ({
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="main_class"
+                                id="supported_class_one"
                               />
                               <UncontrolledTooltip
                                 autohide={true}
                                 placement="top"
-                                target="main_class"
+                                target="supported_class_one"
                               >
-                                Specifies the trip classifications this boat can
-                                support when marked as flexible. Select the
-                                classes the boat is allowed to operate in
-                                addition to its primary classification.
+                               Specifies the trip classifications this boat can support when marked as flexible. Select the classes the boat is allowed to operate in addition to its primary classification.
                               </UncontrolledTooltip>
                             </div>
                           </div>
@@ -1456,12 +1444,12 @@ const BoatComponent = ({
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="main_class"
+                                id="duration_one"
                               />
                               <UncontrolledTooltip
                                 autohide={true}
                                 placement="top"
-                                target="main_class"
+                                target="duration_one"
                               >
                                 Select the duration of the trip to define its
                                 available pick-up locations.
@@ -1556,7 +1544,7 @@ const BoatComponent = ({
                                 placement="top"
                                 target="departure_location_one"
                               >
-                                Pending
+                                Choose which departure locations are available for the specified supported class and duration of trip for the particular boat.
                               </UncontrolledTooltip>
                             </div>
                           </div>
