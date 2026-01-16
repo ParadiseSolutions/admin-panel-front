@@ -65,6 +65,8 @@ const Fishing = ({
     }
   }, [id, addNewFishing]);
 
+  
+
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
   const [priceOptions, setPriceOptions] = useState([]);
@@ -91,6 +93,7 @@ const Fishing = ({
   const [comparisonPricingTab, setComparisonPricingTab] = useState(false);
   const [priceBrakedown, setPriceBreakdown] = useState(false);
 
+  
   useEffect(() => {
     if (addNewFishing) {
       setLoadingData(true);
@@ -178,6 +181,7 @@ const Fishing = ({
   const [ourCommission, setOurCommission] = useState("");
   const [recalc, setRecalc] = useState(false);
   let changing = false;
+  
 
   useEffect(() => {
     setActivitiesSelected(dataEdit?.activities);
@@ -247,10 +251,11 @@ const Fishing = ({
     setActivitiesSelected(selected);
   }
 
-  const validationType = useFormik({
+  
+    const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-    initialValues: {
+  initialValues: {
       min: dataEdit
         ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
             ?.min
@@ -259,6 +264,8 @@ const Fishing = ({
         ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
             ?.max
         : "",
+      min_qty: dataEdit ? dataEdit.min_qty : "",
+      max_qty: dataEdit ? dataEdit.max_qty : "",
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
       active: dataEdit?.active ? 1 : 0,
@@ -282,6 +289,31 @@ const Fishing = ({
               dataEdit.voucher_currency
             )
           : "",
+
+      p_est_rate: dataEdit ? setDecimalFormat(dataEdit.p_est_rate) : "",
+      p_est_commission: dataEdit ? dataEdit.p_est_commission : "",
+      p_base_amount: dataEdit ? dataEdit.p_base_amount : "",
+      p_iva: dataEdit ? setDecimalFormat(dataEdit.p_iva) : "",
+      p_total_price: dataEdit ? dataEdit.p_total_price : "",
+      p_gratuity: dataEdit ? dataEdit.p_gratuity : "",
+      p_final_total: dataEdit ? dataEdit.p_final_total : "",
+      provider_commission: dataEdit ? dataEdit.provider_commission : "",
+      p_commission: dataEdit ? dataEdit.p_commission : "",
+      t_base_amount: dataEdit ? dataEdit.t_base_amount : "",
+      t_iva: dataEdit ? setDecimalFormat(dataEdit.t_iva) : "",
+      t_total_price: dataEdit ? dataEdit.t_total_price : "",
+      t_gratuity: dataEdit ? dataEdit.t_gratuity : "",
+      t_final_total: dataEdit ? dataEdit.t_final_total : "",
+      p_price_sheet: dataEdit ? dataEdit.p_price_sheet : "",
+
+      net_price: dataEdit ? dataEdit.net_price : "",
+      net_price_percentage: dataEdit ? dataEdit.net_price : "",
+      net_price_fixed: dataEdit ? dataEdit.net_price : "",
+      cruise_pax:
+        dataEdit && dataEdit?.asset_details
+          ? dataEdit.asset_details?.cruise_pax
+          : null,
+    
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -305,7 +337,7 @@ const Fishing = ({
                 ?.source_id
             : null
           : priceTypeSelected;
-
+      
       let price_option =
         priceOptionSelected === "" || priceOptionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
@@ -371,6 +403,13 @@ const Fishing = ({
             : null
           : priceLocationSelected;
 
+      let p_commission_value =
+        +priceSheetSelected === 1
+          ? values.p_est_commission
+          : +priceSheetSelected === 2
+          ? values.provider_commission
+          : values.p_commission;
+
       if (price_type && price_option && price_collect) {
         let data = {
           tour_id: tourData.id,
@@ -391,14 +430,48 @@ const Fishing = ({
           eff_rate: values.eff_rate,
           commission: ourCommission,
           deposit: values.deposit,
-          net_price: values.balance_due,
+          net_price:
+            priceSheetSelected === 1
+              ? values.net_price
+              : priceSheetSelected === 2
+              ? values.net_price_percentage
+              : values.net_price_fixed,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
-          //--------------- pendiente passangers min y max
-          min_qty: values.min === "" || values.min === null ? 0 : values.min,
-          max_qty: values.max === "" || values.max === null ? 20 : values.max,
+          cruise_pax: cruisePaxSelected,
+          activities: activitiesSelected,
+          p_est_rate: values.p_est_rate !== "" ? values.p_est_rate : null,
+          p_est_commission:
+            values.p_est_commission !== "" ? values.p_est_commission : null,
+          p_base_amount:
+            values.p_base_amount !== "" ? values.p_base_amount : null,
+          p_iva: values.p_iva !== "" ? values.p_iva : null,
+          p_total_price:
+            values.p_total_price !== "" ? values.p_total_price : null,
+          p_gratuity: values.p_gratuity !== "" ? values.p_gratuity : null,
+          p_final_total:
+            values.p_final_total !== "" ? values.p_final_total : null,
+          p_commission: p_commission_value !== "" ? p_commission_value : null,
+          t_base_amount:
+            values.t_base_amount !== "" ? values.t_base_amount : null,
+          t_iva: values.t_iva !== "" ? values.t_iva : null,
+          t_total_price:
+            values.t_total_price !== "" ? values.t_total_price : null,
+          t_gratuity: values.t_gratuity !== "" ? values.t_gratuity : null,
+          t_final_total:
+            values.t_final_total !== "" ? values.t_final_total : null,
+          p_price_sheet: priceSheetSelected,
+
+          min_qty:
+            values.min_qty === "" || values.min_qty === null
+              ? 0
+              : values.min_qty,
+          max_qty:
+            values.max_qty === "" || values.max_qty === null
+              ? 20
+              : values.max_qty,
           price_details: [
             {
               pricing_option_id: 33,
@@ -449,6 +522,7 @@ const Fishing = ({
               max: null,
               label: null,
             },
+            
           ],
         };
 
@@ -456,7 +530,6 @@ const Fishing = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data)
             .then((resp) => {
-              // console.log(resp);
               // triggerUpdate();
               setAddNewFishing(false);
               refreshTable();
@@ -483,8 +556,8 @@ const Fishing = ({
             .then((resp) => {
               // triggerUpdate();
               setAddNewFishing(false);
-              refreshTable();
               setCopyProduct(false);
+              refreshTable();
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -511,207 +584,13 @@ const Fishing = ({
     },
   });
 
-  const onChangeActiveToggle = () => {
-    setActiveCheckbox(!activeCheckbox);
-  };
-  const onChangeBalanceDueToggle = () => {
-    setBalanceDueCheckbox(!balanceDueCheckbox);
-  };
-
-  //Pricing Validations
-  useEffect(() => {
-    if (validationType && recalc) {
-      if (
-        validationType.values.public_price !== "" &&
-        validationType.values.public_price !== 0
-      ) {
-        if (
-          validationType.values.rate !== "" &&
-          validationType.values.rate !== 0
-        ) {
-          let net_rate = calcNetRate(
-            validationType.values.public_price,
-            validationType.values.rate,
-            validationType.values.net_rate
-          );
-          validationType.setFieldValue("net_rate", net_rate);
-        }
-      }
-    }
-  }, [validationType?.values.public_price, validationType?.values.rate]);
 
   useEffect(() => {
-    if (validationType) {
-      if (
-        validationType.values.net_rate !== "" &&
-        validationType.values.net_rate !== 0
-      ) {
-        if (
-          validationType.values.public_price !== "" &&
-          validationType.values.public_price !== 0 &&
-          validationType.values.public_price !== null
-        ) {
-          setProviderCommission(
-            (
-              validationType.values.public_price -
-              validationType.values.net_rate
-            ).toFixed(2)
-          );
-        } else {
-          setProviderCommission("");
-        }
-        if (recalc) {
-          if (
-            validationType.values.our_price !== "" &&
-            validationType.values.our_price !== 0 &&
-            validationType.values.net_rate !== "" &&
-            validationType.values.net_rate !== 0
-          ) {
-            setOurCommission(
-              (
-                validationType.values.our_price - validationType.values.net_rate
-              ).toFixed(2)
-            );
-          }
-        }
-      }
+    if (priceCollectNameSelected) {
+      providerPricingCalc();
     }
-  }, [
-    validationType.values.public_price,
-    validationType?.values.net_rate,
-    validationType?.values.our_price,
-  ]);
+  }, [priceCollectNameSelected, currencySelected]);
 
-  useEffect(() => {
-    if (validationType) {
-      if (
-        validationType.values.public_price !== null &&
-        validationType.values.public_price !== "" &&
-        validationType.values.public_price !== 0
-      ) {
-        validationType.setFieldValue(
-          "eff_rate",
-          setRateFormat(ourCommission / validationType.values.public_price, 1)
-        );
-      } else if (
-        validationType.values.net_rate !== null &&
-        validationType.values.net_rate !== "" &&
-        validationType.values.net_rate !== 0
-      ) {
-        validationType.setFieldValue(
-          "eff_rate",
-          setRateFormat(
-            ourCommission / (+validationType.values.net_rate + +ourCommission),
-            1
-          )
-        );
-      }
-      if (
-        validationType.values.deposit !== null &&
-        validationType.values.deposit !== "" &&
-        validationType.values.deposit !== 0
-      ) {
-        validationType.setFieldValue(
-          "balance_due",
-          (validationType.values.deposit - ourCommission).toFixed(2)
-        );
-      }
-    }
-  }, [
-    validationType?.values.public_price,
-    validationType?.values.net_rate,
-    validationType?.values.deposit,
-    ourCommission,
-  ]);
-
-  useEffect(() => {
-    if (currencySelected && validationType) {
-      validationType.setFieldValue(
-        "voucher_balance",
-        setDecimalFormatVBalance(
-          validationType.values.voucher_balance,
-          currencySelected
-        )
-      );
-    }
-  }, [currencySelected]);
-
-  useEffect(() => {
-    if (validationType) {
-      if (
-        validationType.values.our_price !== "" &&
-        validationType.values.deposit !== "" &&
-        currencySelected === "USD"
-      ) {
-        validationType.setFieldValue(
-          "voucher_balance",
-          setDecimalFormatVBalance(
-            validationType.values.our_price - validationType.values.deposit,
-            currencySelected
-          )
-        );
-      }
-    }
-  }, [validationType?.values.our_price, validationType?.values.deposit]);
-
-  useEffect(() => {
-    if (validationType) {
-      if (
-        validationType.values.our_price !== "" &&
-        priceCollectNameSelected !== ""
-      ) {
-        validationType.setFieldValue(
-          "deposit",
-          calcDeposit(
-            validationType.values.our_price,
-            priceCollectNameSelected,
-            ourCommission,
-            validationType.values.deposit
-          )
-        );
-      }
-    }
-  }, [
-    validationType?.values.our_price,
-    priceCollectNameSelected,
-    ourCommission,
-  ]);
-
-  useEffect(() => {
-    if (recalc && validationType) {
-      if (
-        validationType.values.our_price !== "" &&
-        validationType.values.ship_price &&
-        validationType.values.ship_price !== null &&
-        validationType.values.ship_price !== "0.00"
-      ) {
-        validationType.setFieldValue(
-          "you_save",
-          100 -
-            setYouSaveFormat(
-              validationType.values.our_price / validationType.values.ship_price
-            )
-        );
-      } else if (
-        validationType.values.our_price !== "" &&
-        validationType.values.compare_at !== "" &&
-        validationType.values.compare_at !== null &&
-        validationType.values.compare_at !== "0.00"
-      ) {
-        validationType.setFieldValue(
-          "you_save",
-          100 -
-            setYouSaveFormat(
-              validationType.values.our_price / validationType.values.compare_at
-            )
-        );
-      }
-    }
-  }, [
-    validationType?.values.our_price,
-    validationType?.values.ship_price,
-    validationType?.values.compare_at,
-  ]);
 
   // provider pricing funcion
   const providerPricingCalc = () => {
