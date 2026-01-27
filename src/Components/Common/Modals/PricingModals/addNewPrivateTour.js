@@ -876,7 +876,7 @@ const AddNewPrivateTour = ({
                         name="min_qty"
                         placeholder=""
                         className="me-1"
-                        type="number"
+                        type="text"
                         min="0"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -911,7 +911,7 @@ const AddNewPrivateTour = ({
                       <Input
                         name="max_qty"
                         placeholder=""
-                        type="number"
+                        type="text"
                         min="0"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}

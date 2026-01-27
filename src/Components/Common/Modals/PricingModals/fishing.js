@@ -2195,7 +2195,7 @@ const Fishing = ({
                           name="min_qty"
                           placeholder=""
                           className="me-1"
-                          type="number"
+                          type="text"
                           min="0"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
@@ -2231,7 +2231,7 @@ const Fishing = ({
                         <Input
                           name="max_qty"
                           placeholder=""
-                          type="number"
+                          type="text"
                           min="0"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
@@ -5471,7 +5471,7 @@ const Fishing = ({
                             <Input
                               name="t_gratuity"
                               placeholder=""
-                              readOnly={+priceCollectSelected !== 1}
+                              readOnly
                               type="text"
                               onChange={validationType.handleChange}
                               // onBlur={(e) => {
