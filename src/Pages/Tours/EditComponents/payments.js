@@ -771,7 +771,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         <Input
                           name="gratuity_percentage"
                           placeholder=""
-                          type="number"
+                          type="text"
                           onChange={validationType.handleChange}
                           onBlur={(e) => {
                             const value = e.target.value || "";
@@ -1031,7 +1031,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <Input
                     name="exchange_rate"
                     placeholder=""
-                    type="number"
+                    type="text"
                     disabled={currencySelected === "USD"}
                     onChange={validationType.handleChange}
                     onBlur={(e) => {

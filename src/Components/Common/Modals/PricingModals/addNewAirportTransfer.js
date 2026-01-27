@@ -1060,7 +1060,7 @@ const AddNewAirportTransfer = ({
                           name="min"
                           placeholder=""
                           className="me-1"
-                          type="number"
+                          type="text"
                           min="0"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
@@ -1088,7 +1088,7 @@ const AddNewAirportTransfer = ({
                         <Input
                           name="max"
                           placeholder=""
-                          type="number"
+                          type="text"
                           min="0"
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
