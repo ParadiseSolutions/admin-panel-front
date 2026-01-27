@@ -17,9 +17,12 @@ import {
   FormFeedback,
   Button,
   Tooltip,
+  UncontrolledTooltip,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { Select } from "antd";
+import { Option } from "antd/lib/mentions";
 import { map } from "lodash";
 import Swal from "sweetalert2";
 import {
@@ -31,6 +34,10 @@ import {
   setYouSaveFormat,
 } from "../../../../Utils/CommonFunctions";
 import { getCurrency } from "../../../../Utils/API/Operators";
+import { getActivities } from "../../../../Utils/API/Assets";
+import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import eyeIcon from "../../../Assets/images/eye-icon.svg";
+import eyeIconSlash from "../../../Assets/images/eye-slash-icon.svg";
 
 const Fishing = ({
   addNewFishing,
@@ -40,6 +47,7 @@ const Fishing = ({
   tourData,
   copyProduct,
   setCopyProduct,
+  priceRangeCheck,
 }) => {
   let id = "";
   id = editProductID;
@@ -50,11 +58,14 @@ const Fishing = ({
     if (id) {
       getPriceAPI(id).then((resp) => {
         setDataEdit(resp.data.data[0]);
+        setPriceSheetSelected(resp.data.data[0].p_price_sheet);
       });
     } else {
       setDataEdit(null);
     }
   }, [id, addNewFishing]);
+
+  
 
   //combo box request
   const [priceTypeData, setPriceTypeData] = useState([]);
@@ -74,7 +85,15 @@ const Fishing = ({
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
   const [priceLocationSelected, setPriceLocationSelected] = useState("");
+  const [cruisePaxSelected, setCruisePaxSelected] = useState("");
+  const [activitiesSelected, setActivitiesSelected] = useState([]);
+  const [activityData, setActivityData] = useState([]);
+  const [providerPricingTab, setProviderPricingTab] = useState(false);
+  const [ourPricingTab, setOurPricingTab] = useState(false);
+  const [comparisonPricingTab, setComparisonPricingTab] = useState(false);
+  const [priceBrakedown, setPriceBreakdown] = useState(false);
 
+  
   useEffect(() => {
     if (addNewFishing) {
       setLoadingData(true);
@@ -102,6 +121,14 @@ const Fishing = ({
       getCurrency().then((resp) => {
         setCurrency(resp.data.data);
       });
+      getActivities({
+        search: "",
+        tipo: "boats",
+        list: "admin_cargarActivityCombo",
+      }).then((resp) => {
+        setActivityData(resp.data.results);
+      });
+      providerPricingCalc();
     }
   }, [addNewFishing]);
 
@@ -128,13 +155,36 @@ const Fishing = ({
   const [ttop20, setttop20] = useState(false);
   const [ttop21, setttop21] = useState(false);
   const [ttop22, setttop22] = useState(false);
-
+  const [ttiers, setttiers] = useState(false);
+  const [ttactive, setttactive] = useState(false);
+  const [ttbd, setbd] = useState(false);
+  const [capacityTT, setCapacityTT] = useState(false);
+  const [priceSheetTooltip, setpriceSheetTooltip] = useState(false);
+  const [baseTooltip, setbaseTooltip] = useState(false);
+  const [baseTooltipOP, setbaseTooltipOP] = useState(false);
+  const [estRateTooltip, setestRateTooltip] = useState(false);
+  const [estComTooltip, setestComTooltip] = useState(false);
+  const [ivaTooltip, setivaTooltip] = useState(false);
+  const [ivaTooltipOP, setivaTooltipOP] = useState(false);
+  const [totalPriceTooltipOP, settotalPriceTooltipOP] = useState(false);
+  const [totalPriceTooltip, settotalPriceTooltip] = useState(false);
+  const [gratuityTooltip, setgratuityTooltip] = useState(false);
+  const [finalTotalTooltipOP, setfinalTotalTooltipOP] = useState(false);
+  const [finalTotalTooltip, setfinalTotalTooltip] = useState(false);
+  const [netPriceTooltip, setnetPriceTooltip] = useState(false);
+  const [gratuityTooltipOP, setgratuityTooltipOP] = useState(false);
+  const [priceSheetSelected, setPriceSheetSelected] = useState("");
+  const [comparisonHeaderTooltip, setComparisonHeaderTooltip] = useState(false);
   const [providerCommission, setProviderCommission] = useState("");
+    const [providerHeaderTooltip, setproviderHeaderTooltip] = useState(false);
+    const [ourPricingHeaderTooltip, setOurPricingHeaderTooltip] = useState(false);
   const [ourCommission, setOurCommission] = useState("");
   const [recalc, setRecalc] = useState(false);
   let changing = false;
+  
 
   useEffect(() => {
+    setActivitiesSelected(dataEdit?.activities);
     if (dataEdit && addNewFishing && priceCollect) {
       if (copyProduct) {
         setRecalc(true);
@@ -196,10 +246,16 @@ const Fishing = ({
     }
   }, [dataEdit, priceCollect]);
 
-  const validationType = useFormik({
+  function handleMulti(selected) {
+    console.log("selected activities", selected);
+    setActivitiesSelected(selected);
+  }
+
+  
+    const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-    initialValues: {
+  initialValues: {
       min: dataEdit
         ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
             ?.min
@@ -208,6 +264,8 @@ const Fishing = ({
         ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
             ?.max
         : "",
+      min_qty: dataEdit ? dataEdit.min_qty : "",
+      max_qty: dataEdit ? dataEdit.max_qty : "",
       product_name: dataEdit ? dataEdit.label : "",
       sku: dataEdit ? dataEdit.sku : "",
       active: dataEdit?.active ? 1 : 0,
@@ -231,6 +289,31 @@ const Fishing = ({
               dataEdit.voucher_currency
             )
           : "",
+
+      p_est_rate: dataEdit ? setDecimalFormat(dataEdit.p_est_rate) : "",
+      p_est_commission: dataEdit ? dataEdit.p_est_commission : "",
+      p_base_amount: dataEdit ? dataEdit.p_base_amount : "",
+      p_iva: dataEdit ? setDecimalFormat(dataEdit.p_iva) : "",
+      p_total_price: dataEdit ? dataEdit.p_total_price : "",
+      p_gratuity: dataEdit ? dataEdit.p_gratuity : "",
+      p_final_total: dataEdit ? dataEdit.p_final_total : "",
+      provider_commission: dataEdit ? dataEdit.provider_commission : "",
+      p_commission: dataEdit ? dataEdit.p_commission : "",
+      t_base_amount: dataEdit ? dataEdit.t_base_amount : "",
+      t_iva: dataEdit ? setDecimalFormat(dataEdit.t_iva) : "",
+      t_total_price: dataEdit ? dataEdit.t_total_price : "",
+      t_gratuity: dataEdit ? dataEdit.t_gratuity : "",
+      t_final_total: dataEdit ? dataEdit.t_final_total : "",
+      p_price_sheet: dataEdit ? dataEdit.p_price_sheet : "",
+
+      net_price: dataEdit ? dataEdit.net_price : "",
+      net_price_percentage: dataEdit ? dataEdit.net_price : "",
+      net_price_fixed: dataEdit ? dataEdit.net_price : "",
+      cruise_pax:
+        dataEdit && dataEdit?.asset_details
+          ? dataEdit.asset_details?.cruise_pax
+          : null,
+    
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -254,7 +337,7 @@ const Fishing = ({
                 ?.source_id
             : null
           : priceTypeSelected;
-
+      
       let price_option =
         priceOptionSelected === "" || priceOptionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
@@ -320,6 +403,13 @@ const Fishing = ({
             : null
           : priceLocationSelected;
 
+      let p_commission_value =
+        +priceSheetSelected === 1
+          ? values.p_est_commission
+          : +priceSheetSelected === 2
+          ? values.provider_commission
+          : values.p_commission;
+
       if (price_type && price_option && price_collect) {
         let data = {
           tour_id: tourData.id,
@@ -340,14 +430,48 @@ const Fishing = ({
           eff_rate: values.eff_rate,
           commission: ourCommission,
           deposit: values.deposit,
-          net_price: values.balance_due,
+          net_price:
+            priceSheetSelected === 1
+              ? values.net_price
+              : priceSheetSelected === 2
+              ? values.net_price_percentage
+              : values.net_price_fixed,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
           currencySelected: currencySelected,
-          //--------------- pendiente passangers min y max
-          min_qty: values.min === "" || values.min === null ? 0 : values.min,
-          max_qty: values.max === "" || values.max === null ? 20 : values.max,
+          cruise_pax: cruisePaxSelected,
+          activities: activitiesSelected,
+          p_est_rate: values.p_est_rate !== "" ? values.p_est_rate : null,
+          p_est_commission:
+            values.p_est_commission !== "" ? values.p_est_commission : null,
+          p_base_amount:
+            values.p_base_amount !== "" ? values.p_base_amount : null,
+          p_iva: values.p_iva !== "" ? values.p_iva : null,
+          p_total_price:
+            values.p_total_price !== "" ? values.p_total_price : null,
+          p_gratuity: values.p_gratuity !== "" ? values.p_gratuity : null,
+          p_final_total:
+            values.p_final_total !== "" ? values.p_final_total : null,
+          p_commission: p_commission_value !== "" ? p_commission_value : null,
+          t_base_amount:
+            values.t_base_amount !== "" ? values.t_base_amount : null,
+          t_iva: values.t_iva !== "" ? values.t_iva : null,
+          t_total_price:
+            values.t_total_price !== "" ? values.t_total_price : null,
+          t_gratuity: values.t_gratuity !== "" ? values.t_gratuity : null,
+          t_final_total:
+            values.t_final_total !== "" ? values.t_final_total : null,
+          p_price_sheet: priceSheetSelected,
+
+          min_qty:
+            values.min_qty === "" || values.min_qty === null
+              ? 0
+              : values.min_qty,
+          max_qty:
+            values.max_qty === "" || values.max_qty === null
+              ? 20
+              : values.max_qty,
           price_details: [
             {
               pricing_option_id: 33,
@@ -398,6 +522,7 @@ const Fishing = ({
               max: null,
               label: null,
             },
+            
           ],
         };
 
@@ -405,7 +530,6 @@ const Fishing = ({
         if (dataEdit && copyProduct === false) {
           updatePriceAPI(editProductID, data)
             .then((resp) => {
-              // console.log(resp);
               // triggerUpdate();
               setAddNewFishing(false);
               refreshTable();
@@ -432,8 +556,8 @@ const Fishing = ({
             .then((resp) => {
               // triggerUpdate();
               setAddNewFishing(false);
-              refreshTable();
               setCopyProduct(false);
+              refreshTable();
               resetForm({ values: "" });
               document.getElementById("save-button").disabled = false;
             })
@@ -460,207 +584,954 @@ const Fishing = ({
     },
   });
 
-  const onChangeActiveToggle = () => {
-    setActiveCheckbox(!activeCheckbox);
-  };
-  const onChangeBalanceDueToggle = () => {
-    setBalanceDueCheckbox(!balanceDueCheckbox);
-  };
 
-  //Pricing Validations
   useEffect(() => {
-    if (validationType && recalc) {
-      if (
-        validationType.values.public_price !== "" &&
-        validationType.values.public_price !== 0
-      ) {
-        if (
-          validationType.values.rate !== "" &&
-          validationType.values.rate !== 0
-        ) {
-          let net_rate = calcNetRate(
-            validationType.values.public_price,
-            validationType.values.rate,
-            validationType.values.net_rate
-          );
-          validationType.setFieldValue("net_rate", net_rate);
-        }
-      }
+    if (priceCollectNameSelected) {
+      providerPricingCalc();
     }
-  }, [validationType?.values.public_price, validationType?.values.rate]);
+  }, [priceCollectNameSelected, currencySelected]);
 
-  useEffect(() => {
-    if (validationType) {
-      if (
-        validationType.values.net_rate !== "" &&
-        validationType.values.net_rate !== 0
-      ) {
-        if (
-          validationType.values.public_price !== "" &&
-          validationType.values.public_price !== 0 &&
-          validationType.values.public_price !== null
-        ) {
-          setProviderCommission(
-            (
-              validationType.values.public_price -
-              validationType.values.net_rate
-            ).toFixed(2)
-          );
-        } else {
-          setProviderCommission("");
-        }
-        if (recalc) {
-          if (
-            validationType.values.our_price !== "" &&
-            validationType.values.our_price !== 0 &&
-            validationType.values.net_rate !== "" &&
-            validationType.values.net_rate !== 0
-          ) {
-            setOurCommission(
-              (
-                validationType.values.our_price - validationType.values.net_rate
-              ).toFixed(2)
-            );
-          }
-        }
-      }
-    }
-  }, [
-    validationType.values.public_price,
-    validationType?.values.net_rate,
-    validationType?.values.our_price,
-  ]);
 
-  useEffect(() => {
-    if (validationType) {
+  // provider pricing funcion
+  const providerPricingCalc = () => {
+    // esto es net price en price sheet select
+    let netPriceInput = validationType.values.net_rate;
+    let publicPriceInput = validationType.values.public_price;
+    let estCommissionInput = validationType.values.p_est_commission;
+    let rateInput = validationType.values.rate;
+    let commissionFixedInput = validationType.values.p_commission;
+    // net price
+    let baseAmountInput = validationType.values.p_base_amount;
+    let ivaInput = validationType.values.p_iva;
+    let gratuityInput = validationType.values.p_gratuity;
+    // rate %
+    let netPriceInputRate = validationType.values.net_rate;
+    let providerCommissionInputRate = validationType.values.provider_commission;
+    // fixed commission
+    let netPriceInputCommision = validationType.values.net_rate;
+    if (
+      priceSheetSelected === "1" &&
+      netPriceInput !== "" &&
+      publicPriceInput !== "" &&
+      publicPriceInput > 0
+    ) {
+      validationType.setFieldValue(
+        "p_est_rate",
+        setRateFormat((publicPriceInput - netPriceInput) / publicPriceInput)
+      );
+      estCommissionInput = publicPriceInput - netPriceInput;
+      validationType.setFieldValue(
+        "p_est_commission",
+        setDecimalFormat(estCommissionInput)
+      );
+
+      // tax_id
+      // 1- Included
+      // 2- Not Included
+      // 3- Unspecified
+
+      // gratuity_id
+      // 1- Included
+      // 2- Not Included
+      // 3- Unspecified
+
+      // gratuity_type_id
+      // 3- Fixed Amount
+      // 4- % Percent
+      // 6- Unspecified
+
       if (
-        validationType.values.public_price !== null &&
-        validationType.values.public_price !== "" &&
-        validationType.values.public_price !== 0
+        (tourData.tax_id === 1 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 6)
       ) {
+        // Tax - Yes . Gratuity - Un
+        //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
+        // then this field would be calculated as:
+        // [Net Price] / [1.16]
+        gratuityInput = "";
+        validationType.setFieldValue("p_gratuity", "");
+        validationType.setFieldValue("t_gratuity", "");
+
+        let totalPriceInput = +netPriceInput;
         validationType.setFieldValue(
-          "eff_rate",
-          setRateFormat(ourCommission / validationType.values.public_price, 1)
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(netPriceInput / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
         );
       } else if (
-        validationType.values.net_rate !== null &&
-        validationType.values.net_rate !== "" &&
-        validationType.values.net_rate !== 0
+        (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 6) ||
+        (tourData.tax_id === 3 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 6)
       ) {
-        validationType.setFieldValue(
-          "eff_rate",
-          setRateFormat(
-            ourCommission / (+validationType.values.net_rate + +ourCommission),
-            1
-          )
-        );
-      }
-      if (
-        validationType.values.deposit !== null &&
-        validationType.values.deposit !== "" &&
-        validationType.values.deposit !== 0
-      ) {
-        validationType.setFieldValue(
-          "balance_due",
-          (validationType.values.deposit - ourCommission).toFixed(2)
-        );
-      }
-    }
-  }, [
-    validationType?.values.public_price,
-    validationType?.values.net_rate,
-    validationType?.values.deposit,
-    ourCommission,
-  ]);
+        // Tax - No . Gratuity - Un
+        // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
+        // then this will be a straight reference, no calculation needed.
+        gratuityInput = "";
+        validationType.setFieldValue("p_gratuity", "");
+        validationType.setFieldValue("t_gratuity", "");
 
-  useEffect(() => {
-    if (currencySelected && validationType) {
+        baseAmountInput = setDecimalFormat(+netPriceInput);
+
+        ivaInput = baseAmountInput * 0.16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 4)
+      ) {
+        // Tax - Yes . Gratuity - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+        let totalPriceInput = +netPriceInput;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(netPriceInput / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        if (tourData.gratuity_type_id === 3) {
+          // Fixed
+          gratuityInput = +tourData.gratuity;
+        } else {
+          // Percent
+
+          // Based On
+          // 1- Net Price
+          // 2- Public Price
+
+          // Apply
+          // 1- Before
+          // 2- After
+          if (+tourData.based_on_id === 1) {
+            // 1- Net Price
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * totalPriceInput) / 100;
+            }
+          } else {
+            // 2- Public Price
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              baseAmountInput = setDecimalFormat(
+                publicPriceInput / (1.16 + +tourData.gratuity / 100)
+              );
+
+              ivaInput = baseAmountInput * 0.16;
+              validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+              totalPriceInput = +baseAmountInput + +ivaInput;
+              validationType.setFieldValue(
+                "p_total_price",
+                setDecimalFormat(+totalPriceInput)
+              );
+
+              gratuityInput = (+tourData.gratuity * +baseAmountInput) / 100;
+            } else {
+              // 2- After
+              totalPriceInput = +publicPriceInput;
+              validationType.setFieldValue(
+                "p_total_price",
+                setDecimalFormat(+totalPriceInput)
+              );
+
+              baseAmountInput = setDecimalFormat(publicPriceInput / 1.16);
+
+              ivaInput = totalPriceInput - baseAmountInput;
+              validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+              gratuityInput = (+tourData.gratuity * +totalPriceInput) / 100;
+            }
+          }
+        }
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
+        );
+      } else if (
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 4) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 4)
+      ) {
+        // Tax - No/Un . Gratuity - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+
+        baseAmountInput = setDecimalFormat(netPriceInput);
+
+        ivaInput = baseAmountInput * 0.16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        if (tourData.gratuity_type_id === 3) {
+          // Fixed
+          gratuityInput = +tourData.gratuity;
+        } else {
+          // Percent
+
+          // Based On
+          // 1- Net Price
+          // 2- Public Price
+
+          // Apply
+          // 1- Before
+          // 2- After
+          if (+tourData.based_on_id === 1) {
+            // 1- Net Price
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * totalPriceInput) / 100;
+            }
+          } else {
+            // 2- Public Price
+
+            baseAmountInput = setDecimalFormat(+publicPriceInput);
+
+            ivaInput = baseAmountInput * 0.16;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+            totalPriceInput = +baseAmountInput + +ivaInput;
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * +baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * +totalPriceInput) / 100;
+            }
+          }
+        }
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
+        );
+      }
       validationType.setFieldValue(
-        "voucher_balance",
-        setDecimalFormatVBalance(
-          validationType.values.voucher_balance,
-          currencySelected
+        "p_base_amount",
+        setDecimalFormat(baseAmountInput)
+      );
+    }
+
+    if (
+      priceSheetSelected === "2" &&
+      publicPriceInput !== "" &&
+      rateInput !== "" &&
+      publicPriceInput > 0
+    ) {
+      netPriceInputRate = publicPriceInput * (1 - rateInput / 100);
+      validationType.setFieldValue(
+        "net_rate",
+        setDecimalFormat(netPriceInputRate)
+      );
+      providerCommissionInputRate = publicPriceInput * (rateInput / 100);
+      validationType.setFieldValue(
+        "provider_commission",
+        setDecimalFormat(providerCommissionInputRate)
+      );
+
+      if (
+        (tourData.tax_id === 1 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 6)
+      ) {
+        // Tax - Yes . Gratuity - No
+        //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
+        // then this field would be calculated as:
+        // [Net Price] / [1.16]
+        gratuityInput = "";
+
+        validationType.setFieldValue("p_gratuity", "");
+        validationType.setFieldValue("t_gratuity", "");
+
+        let totalPriceInput = +netPriceInputRate;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(netPriceInputRate / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (
+        (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 6) ||
+        (tourData.tax_id === 3 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 6)
+      ) {
+        // Tax - No . Gratuity - No
+        // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
+        // then this will be a straight reference, no calculation needed.
+        gratuityInput = "";
+
+        validationType.setFieldValue("p_gratuity", "");
+        validationType.setFieldValue("t_gratuity", "");
+
+        baseAmountInput = setDecimalFormat(netPriceInputRate);
+
+        ivaInput = baseAmountInput * 0.16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 4)
+      ) {
+        // Tax - Yes . Gratuity - Yes - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+        let totalPriceInput = +netPriceInputRate;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(netPriceInputRate / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        if (tourData.gratuity_type_id === 3) {
+          // Fixed
+          gratuityInput = +tourData.gratuity;
+        } else {
+          // Percent
+
+          // Based On
+          // 1- Net Price
+          // 2- Public Price
+
+          // Apply
+          // 1- Before
+          // 2- After
+          if (+tourData.based_on_id === 1) {
+            // 1- Net Price
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * totalPriceInput) / 100;
+            }
+          } else {
+            // 2- Public Price
+
+            totalPriceInput = +publicPriceInput;
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
+            baseAmountInput = setDecimalFormat(publicPriceInput / 1.16);
+
+            ivaInput = totalPriceInput - baseAmountInput;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * +baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * +totalPriceInput) / 100;
+            }
+          }
+        }
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
+        );
+      } else if (
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 4) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 4)
+      ) {
+        // Tax - No/Un . Gratuity - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+
+        baseAmountInput = setDecimalFormat(netPriceInputRate);
+
+        ivaInput = baseAmountInput * 0.16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        if (tourData.gratuity_type_id === 3) {
+          // Fixed
+          gratuityInput = +tourData.gratuity;
+        } else {
+          // Percent
+
+          // Based On
+          // 1- Net Price
+          // 2- Public Price
+
+          // Apply
+          // 1- Before
+          // 2- After
+          if (+tourData.based_on_id === 1) {
+            // 1- Net Price
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * totalPriceInput) / 100;
+            }
+          } else {
+            // 2- Public Price
+
+            baseAmountInput = setDecimalFormat(+publicPriceInput);
+
+            ivaInput = baseAmountInput * 0.16;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+            totalPriceInput = +baseAmountInput + +ivaInput;
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * +baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * +totalPriceInput) / 100;
+            }
+          }
+        }
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
+        );
+      }
+      validationType.setFieldValue(
+        "p_base_amount",
+        setDecimalFormat(baseAmountInput)
+      );
+    }
+
+    if (
+      priceSheetSelected === "3" &&
+      publicPriceInput !== "" &&
+      commissionFixedInput !== "" &&
+      publicPriceInput > 0
+    ) {
+      netPriceInputCommision = publicPriceInput - commissionFixedInput;
+      validationType.setFieldValue(
+        "net_rate",
+        setDecimalFormat(netPriceInputCommision)
+      );
+      validationType.setFieldValue(
+        "p_est_rate",
+        setRateFormat(commissionFixedInput / publicPriceInput)
+      );
+
+      if (
+        (tourData.tax_id === 1 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 6)
+      ) {
+        // Tax - Yes . Gratuity - No
+        //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
+        // then this field would be calculated as:
+        // [Net Price] / [1.16]
+        gratuityInput = "";
+
+        validationType.setFieldValue("p_gratuity", "");
+        validationType.setFieldValue("t_gratuity", "");
+
+        let totalPriceInput = +netPriceInputCommision;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+        baseAmountInput = setDecimalFormat(netPriceInputCommision / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (
+        (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 6) ||
+        (tourData.tax_id === 3 && tourData.gratuity_id === 3) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 6)
+      ) {
+        // Tax - No . Gratuity - No
+        // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
+        // then this will be a straight reference, no calculation needed.
+        gratuityInput = "";
+
+        validationType.setFieldValue("p_gratuity", "");
+        validationType.setFieldValue("t_gratuity", "");
+
+        baseAmountInput = setDecimalFormat(+netPriceInputCommision);
+
+        ivaInput = baseAmountInput * 0.16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput)
+        );
+      } else if (
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 1 && tourData.gratuity_type_id === 4)
+      ) {
+        // Tax - Yes . Gratuity - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+        let totalPriceInput = +netPriceInputCommision;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        baseAmountInput = setDecimalFormat(netPriceInputCommision / 1.16);
+
+        ivaInput = totalPriceInput - baseAmountInput;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        if (tourData.gratuity_type_id === 3) {
+          // Fixed
+          gratuityInput = +tourData.gratuity;
+        } else {
+          // Percent
+
+          // Based On
+          // 1- Net Price
+          // 2- Public Price
+
+          // Apply
+          // 1- Before
+          // 2- After
+          if (+tourData.based_on_id === 1) {
+            // 1- Net Price
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * totalPriceInput) / 100;
+            }
+          } else {
+            // 2- Public Price
+            totalPriceInput = +publicPriceInput;
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+
+            baseAmountInput = setDecimalFormat(+publicPriceInput / 1.16);
+
+            ivaInput = totalPriceInput - baseAmountInput;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * +baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * +totalPriceInput) / 100;
+            }
+          }
+        }
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
+        );
+      } else if (
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 3) ||
+        (tourData.tax_id === 2 && tourData.gratuity_type_id === 4) ||
+        (tourData.tax_id === 3 && tourData.gratuity_type_id === 4)
+      ) {
+        // Tax - No/Un . Gratuity - Fixed Amount
+        // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+
+        baseAmountInput = setDecimalFormat(netPriceInputCommision);
+
+        ivaInput = baseAmountInput * 0.16;
+        validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+        let totalPriceInput = +baseAmountInput + +ivaInput;
+        validationType.setFieldValue(
+          "p_total_price",
+          setDecimalFormat(+totalPriceInput)
+        );
+
+        if (tourData.gratuity_type_id === 3) {
+          // Fixed
+          gratuityInput = +tourData.gratuity;
+        } else {
+          // Percent
+
+          // Based On
+          // 1- Net Price
+          // 2- Public Price
+
+          // Apply
+          // 1- Before
+          // 2- After
+          if (+tourData.based_on_id === 1) {
+            // 1- Net Price
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * totalPriceInput) / 100;
+            }
+          } else {
+            // 2- Public Price
+            baseAmountInput = setDecimalFormat(netPriceInputCommision);
+
+            ivaInput = baseAmountInput * 0.16;
+            validationType.setFieldValue("p_iva", setDecimalFormat(ivaInput));
+
+            totalPriceInput = +baseAmountInput + +ivaInput;
+            validationType.setFieldValue(
+              "p_total_price",
+              setDecimalFormat(+totalPriceInput)
+            );
+            if (+tourData.payment_apply_id === 1) {
+              // 1- Before
+              gratuityInput = (+tourData.gratuity * +baseAmountInput) / 100;
+            } else {
+              // 2- After
+              gratuityInput = (+tourData.gratuity * +totalPriceInput) / 100;
+            }
+          }
+        }
+        validationType.setFieldValue(
+          "p_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+        validationType.setFieldValue(
+          "t_gratuity",
+          setDecimalFormat(gratuityInput)
+        );
+
+        validationType.setFieldValue(
+          "p_final_total",
+          setDecimalFormat(+totalPriceInput + +gratuityInput)
+        );
+      }
+      validationType.setFieldValue(
+        "p_base_amount",
+        setDecimalFormat(baseAmountInput)
+      );
+    }
+    ourPricingCalc(gratuityInput);
+  };
+
+  const ourPricingCalc = (gratuityInput) => {
+    let ourPriceInput = validationType.values.our_price;
+    let netPriceInput = validationType.values.net_rate;
+    let ourCommisionPricing = ourPriceInput - netPriceInput;
+    let depositInput = validationType.values.deposit;
+    let baseAmountInput = validationType.values.t_base_amount;
+    let ivaInput = validationType.values.t_iva;
+    setOurCommission(setDecimalFormat(ourCommisionPricing));
+    if (
+      validationType.values.public_price !== null &&
+      validationType.values.public_price !== "" &&
+      validationType.values.public_price !== "0"
+    ) {
+      validationType.setFieldValue(
+        "eff_rate",
+        setRateFormat(
+          ourCommisionPricing / validationType.values.public_price,
+          1
+        )
+      );
+    } else if (
+      validationType.values.net_rate !== null &&
+      validationType.values.net_rate !== "" &&
+      validationType.values.net_rate !== "0" &&
+      ourCommisionPricing > 0
+    ) {
+      validationType.setFieldValue(
+        "eff_rate",
+        setRateFormat(
+          ourCommisionPricing /
+            (+validationType.values.net_rate + +ourCommisionPricing),
+          1
         )
       );
     }
-  }, [currencySelected]);
-
-  useEffect(() => {
-    if (validationType) {
-      if (
-        validationType.values.our_price !== "" &&
-        validationType.values.deposit !== "" &&
-        currencySelected === "USD"
-      ) {
-        validationType.setFieldValue(
-          "voucher_balance",
-          setDecimalFormatVBalance(
-            validationType.values.our_price - validationType.values.deposit,
-            currencySelected
-          )
-        );
-      }
+    if (
+      validationType.values.our_price !== "" &&
+      priceCollectNameSelected !== ""
+    ) {
+      depositInput = calcDeposit(
+        ourPriceInput,
+        priceCollectNameSelected,
+        ourCommisionPricing,
+        depositInput
+      );
+      validationType.setFieldValue("deposit", depositInput);
     }
-  }, [validationType?.values.our_price, validationType?.values.deposit]);
 
-  useEffect(() => {
-    if (validationType) {
-      if (
-        validationType.values.our_price !== "" &&
-        priceCollectNameSelected !== ""
-      ) {
-        validationType.setFieldValue(
-          "deposit",
-          calcDeposit(
-            validationType.values.our_price,
-            priceCollectNameSelected,
-            ourCommission,
-            validationType.values.deposit
-          )
-        );
-      }
+    if (
+      ourPriceInput !== "" &&
+      depositInput !== "" &&
+      currencySelected === "USD"
+    ) {
+      validationType.setFieldValue(
+        "voucher_balance",
+        setDecimalFormatVBalance(ourPriceInput - depositInput, currencySelected)
+      );
     }
-  }, [
-    validationType?.values.our_price,
-    priceCollectNameSelected,
-    ourCommission,
-  ]);
 
-  useEffect(() => {
-    if (recalc && validationType) {
-      if (
-        validationType.values.our_price !== "" &&
-        validationType.values.ship_price &&
-        validationType.values.ship_price !== null &&
-        validationType.values.ship_price !== "0.00"
-      ) {
-        validationType.setFieldValue(
-          "you_save",
-          100 -
-            setYouSaveFormat(
-              validationType.values.our_price / validationType.values.ship_price
-            )
-        );
-      } else if (
-        validationType.values.our_price !== "" &&
-        validationType.values.compare_at !== "" &&
-        validationType.values.compare_at !== null &&
-        validationType.values.compare_at !== "0.00"
-      ) {
-        validationType.setFieldValue(
-          "you_save",
-          100 -
-            setYouSaveFormat(
-              validationType.values.our_price / validationType.values.compare_at
-            )
-        );
-      }
+    if (
+      (tourData.tax_id === 1 && tourData.gratuity_id === 3) ||
+      (tourData.tax_id === 1 && tourData.gratuity_type_id === 6)
+    ) {
+      // Tax - Yes . Gratuity - No
+      //If the Payment Settings indicate the Net Price includes taxes but not gratuity,
+      // then this field would be calculated as:
+      // [Net Price] / [1.16]
+
+      let totalPriceInput = +ourPriceInput;
+      validationType.setFieldValue(
+        "t_total_price",
+        setDecimalFormat(+totalPriceInput)
+      );
+
+      baseAmountInput = setDecimalFormat(ourPriceInput / 1.16);
+
+      ivaInput = totalPriceInput - baseAmountInput;
+      validationType.setFieldValue("t_iva", setDecimalFormat(ivaInput));
+
+      validationType.setFieldValue(
+        "t_final_total",
+        setDecimalFormat(+totalPriceInput)
+      );
+    } else if (
+      (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
+      (tourData.tax_id === 2 && tourData.gratuity_type_id === 6) ||
+      (tourData.tax_id === 3 && tourData.gratuity_id === 3) ||
+      (tourData.tax_id === 3 && tourData.gratuity_type_id === 6)
+    ) {
+      // Tax - No . Gratuity - No
+      // If Payment Settings indicates that the Net Price does not include taxes or gratuity,
+      // then this will be a straight reference, no calculation needed.
+
+      baseAmountInput = setDecimalFormat(ourPriceInput);
+
+      ivaInput = baseAmountInput * 0.16;
+      validationType.setFieldValue("t_iva", setDecimalFormat(ivaInput));
+
+      let totalPriceInput = +baseAmountInput + +ivaInput;
+      validationType.setFieldValue(
+        "t_total_price",
+        setDecimalFormat(+totalPriceInput)
+      );
+
+      validationType.setFieldValue(
+        "t_final_total",
+        setDecimalFormat(+totalPriceInput)
+      );
+    } else if (
+      (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
+      (tourData.tax_id === 1 && tourData.gratuity_type_id === 4)
+    ) {
+      // Tax - Yes . Gratuity - Fixed Amount
+      // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+      let totalPriceInput = +ourPriceInput;
+      validationType.setFieldValue(
+        "t_total_price",
+        setDecimalFormat(+totalPriceInput)
+      );
+
+      baseAmountInput = setDecimalFormat(ourPriceInput / 1.16);
+
+      ivaInput = totalPriceInput - baseAmountInput;
+      validationType.setFieldValue("t_iva", setDecimalFormat(ivaInput));
+
+      validationType.setFieldValue(
+        "t_final_total",
+        setDecimalFormat(+totalPriceInput + +gratuityInput)
+      );
+    } else if (
+      (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
+      (tourData.tax_id === 3 && tourData.gratuity_type_id === 3) ||
+      (tourData.tax_id === 2 && tourData.gratuity_type_id === 4) ||
+      (tourData.tax_id === 3 && tourData.gratuity_type_id === 4)
+    ) {
+      // Tax - No/Un . Gratuity - Fixed Amount
+      // If the Payment Settings says the Net Rate includes Gratuity and Taxes then the calculation would be:
+
+      baseAmountInput = setDecimalFormat(ourPriceInput);
+
+      ivaInput = baseAmountInput * 0.16;
+      validationType.setFieldValue("t_iva", setDecimalFormat(ivaInput));
+
+      let totalPriceInput = +baseAmountInput + +ivaInput;
+      validationType.setFieldValue(
+        "t_total_price",
+        setDecimalFormat(+totalPriceInput)
+      );
+
+      validationType.setFieldValue(
+        "t_final_total",
+        setDecimalFormat(+totalPriceInput + +gratuityInput)
+      );
     }
-  }, [
-    validationType?.values.our_price,
-    validationType?.values.ship_price,
-    validationType?.values.compare_at,
-  ]);
+    validationType.setFieldValue(
+      "t_base_amount",
+      setDecimalFormat(baseAmountInput)
+    );
+    if (
+      ourPriceInput !== "" &&
+      validationType.values.ship_price &&
+      validationType.values.ship_price !== null &&
+      validationType.values.ship_price !== "0.00" &&
+      validationType.values.ship_price !== "0"
+    ) {
+      validationType.setFieldValue(
+        "you_save",
+        100 - setYouSaveFormat(ourPriceInput / validationType.values.ship_price)
+      );
+    } else if (
+      ourPriceInput !== "" &&
+      validationType.values.compare_at !== "" &&
+      validationType.values.compare_at !== null &&
+      validationType.values.compare_at !== "0.00" &&
+      validationType.values.compare_at !== "0"
+    ) {
+      validationType.setFieldValue(
+        "you_save",
+        100 - setYouSaveFormat(ourPriceInput / validationType.values.compare_at)
+      );
+    }
+    if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
+      validationType.setFieldValue(
+        "net_price_fixed",
+        (depositInput - ourCommisionPricing).toFixed(2)
+      );
+    }
+    if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
+      validationType.setFieldValue(
+        "net_price_percentage",
+        (depositInput - ourCommisionPricing).toFixed(2)
+      );
+    }
+    if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
+      validationType.setFieldValue(
+        "net_price",
+        (depositInput - ourCommisionPricing).toFixed(2)
+      );
+    }
+  };
 
   return (
     <Modal
@@ -972,6 +1843,235 @@ const Fishing = ({
                     </Col>
                   ) : null}
                 </Row>
+                <Row className="d-flex mt-3">
+                  <Col className="col-2">
+                    <div
+                      className="form-outline"
+                      style={{ marginRight: "20px" }}
+                    >
+                      <Label className="form-label">Cruise Pax</Label>
+                      <Input
+                        type="select"
+                        name="season"
+                        onChange={(e) => {
+                          setCruisePaxSelected(e.target.value);
+                        }}
+                        onBlur={validationType.handleBlur}
+                        //   value={validationType.values.department || ""}
+                      >
+                        <option value="-1">Select....</option>
+                        <option
+                          value="Yes"
+                          selected={
+                            dataEdit &&
+                            dataEdit.asset_details?.cruise_pax === "Yes"
+                              ? true
+                              : false
+                          }
+                        >
+                          Yes
+                        </option>
+                        <option
+                          value="No"
+                          selected={
+                            dataEdit &&
+                            dataEdit.asset_details?.cruise_pax === "No"
+                              ? true
+                              : false
+                          }
+                        >
+                          No
+                        </option>
+                      </Input>
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="public_price">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Price Tiers</Label>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Min
+                        </span>
+                        <Input
+                          name="min"
+                          placeholder=""
+                          type="text"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   setRecalc(true)
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "min",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.min || ""}
+                          invalid={
+                            validationType.touched.min &&
+                            validationType.errors.min
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.min &&
+                        validationType.errors.min ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.min}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="">
+                      <div
+                        className="d-flex justify-content-between"
+                        style={{ marginTop: "6px" }}
+                      >
+                        <Label className="form-label"></Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="tiers"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttiers}
+                            target="tiers"
+                            toggle={() => {
+                              setttiers(!ttiers);
+                            }}
+                          >
+                            Write the ranges of people that will appear in the
+                            name of the product and will determine the price of
+                            it.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Max
+                        </span>
+                        <Input
+                          name="max"
+                          placeholder=""
+                          type="text"
+                          min="0"
+                          step="any"
+                          onChange={validationType.handleChange}
+                          disabled={!priceRangeCheck}
+                          // onBlur={(e) => {
+                          //   const value = e.target.value || "";
+                          //   validationType.setFieldValue(
+                          //     "max",
+                          //     setDecimalFormat(value)
+                          //   );
+                          // }}
+                          value={validationType.values.max || ""}
+                          invalid={
+                            validationType.touched.max &&
+                            validationType.errors.max
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.max &&
+                        validationType.errors.max ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.max}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+                    </div>
+                  </Col>
+                  <Col className="col-2 mt-1">
+                    <div className="form-outline mb-2" id="active">
+                      <div className="d-flex mx-4">
+                        <Label className="form-label mx-2">Active</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="activeT"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttactive}
+                            target="activeT"
+                            toggle={() => {
+                              setttactive(!ttactive);
+                            }}
+                          >
+                            Select if the tour is active for booking or not.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-5 mt-1 ">
+                        <Input
+                          name="active_t"
+                          placeholder=""
+                          type="checkbox"
+                          checked={activeCheckbox}
+                          className="form-check-input"
+                          onChange={() => setActiveCheckbox(!activeCheckbox)}
+                          // onBlur={validationType.handleBlur}
+                          value={activeCheckbox}
+                        />
+                      </div>
+                    </div>
+                  </Col>
+                  <Col className="col-2">
+                    <div className="form-outline mb-2" id="commission">
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Balance Notify</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="balanceN"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={ttbd}
+                            target="balanceN"
+                            toggle={() => {
+                              setbd(!ttbd);
+                            }}
+                          >
+                            Select whether the balance due should be shown to
+                            the provider in the "Please Confirm" email. This
+                            amount will be the same as in the "Voucher Balance"
+                            below. It is the amount the customer will pay to the
+                            provider on the day of the tour.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                        <Input
+                          name="balanceT"
+                          placeholder=""
+                          type="checkbox"
+                          checked={balanceDueCheckbox}
+                          className="form-check-input"
+                          onChange={() =>
+                            setBalanceDueCheckbox(!balanceDueCheckbox)
+                          }
+                          // onBlur={validationType.handleBlur}
+                          value={balanceDueCheckbox}
+                        />
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
                 <Col
                   className="col-12 p-1 my-2"
                   style={{ backgroundColor: "#E9F4FF" }}
@@ -1059,58 +2159,100 @@ const Fishing = ({
                   </Col>
                   <Col className="col-2">
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Min. Pax.</Label>
-                      <Input
-                        name="min"
-                        placeholder=""
-                        className="me-1"
-                        type="number"
-                        min="0"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.min || ""}
-                        invalid={
-                          validationType.touched.min &&
-                          validationType.errors.min
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.min &&
-                      validationType.errors.min ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.min}
-                        </FormFeedback>
-                      ) : null}
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Capacity</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="Capacity"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={capacityTT}
+                            target="Capacity"
+                            toggle={() => {
+                              setCapacityTT(!capacityTT);
+                            }}
+                          >
+                            Specify the capacity of the boat. If it is up to 50
+                            people same price, then leave the first box empty
+                            and type 50 in the second box. If it is a tiered
+                            pricing like 41 to 50 people for the specified
+                            price, then you'll type 41 in the first box and 50
+                            in the second box.
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Min
+                        </span>
+                        <Input
+                          name="min_qty"
+                          placeholder=""
+                          className="me-1"
+                          type="text"
+                          min="0"
+                          onChange={validationType.handleChange}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.min_qty || ""}
+                          invalid={
+                            validationType.touched.min_qty &&
+                            validationType.errors.min_qty
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.min_qty &&
+                        validationType.errors.min_qty ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.min_qty}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
                     </div>
                   </Col>
 
                   <Col className="col-2">
-                    <div className="form-outline mb-2">
-                      <Label className="form-label">Max. Pax.</Label>
-                      <Input
-                        name="max"
-                        placeholder=""
-                        type="number"
-                        min="0"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.max || ""}
-                        invalid={
-                          validationType.touched.max &&
-                          validationType.errors.max
-                            ? true
-                            : false
-                        }
-                      />
-                      {validationType.touched.max &&
-                      validationType.errors.max ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.max}
-                        </FormFeedback>
-                      ) : null}
+                    <div className="form-outline mb-2 mt-2">
+                      <Label className="form-label"></Label>
+                      <div className="input-group">
+                        <span
+                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                          id="basic-addon1"
+                          style={{ fontSize: "0.85em" }}
+                        >
+                          Max
+                        </span>
+                        <Input
+                          name="max_qty"
+                          placeholder=""
+                          type="text"
+                          min="0"
+                          onChange={validationType.handleChange}
+                          onBlur={validationType.handleBlur}
+                          value={validationType.values.max_qty || ""}
+                          invalid={
+                            validationType.touched.max_qty &&
+                            validationType.errors.max_qty
+                              ? true
+                              : false
+                          }
+                        />
+                        {validationType.touched.max_qty &&
+                        validationType.errors.max_qty ? (
+                          <FormFeedback type="invalid">
+                            {validationType.errors.max_qty}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
                     </div>
                   </Col>
+
                   <Col className="col-3">
                     <div className="form-outline mb-2">
                       <Label className="form-label">Location</Label>
@@ -1146,10 +2288,49 @@ const Fishing = ({
                     </div>
                   </Col>
                 </Row>
+                <Row className="d-flex">
+                  <Col className="col my-2">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Activities</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="activities"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="activities"
+                        >
+                          Pending
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      rows="5"
+                      style={{ width: "100%", paddingTop: "5px" }}
+                      placeholder="Please select"
+                      // defaultValue={initialOptionsArea}
+                      onChange={handleMulti}
+                      value={activitiesSelected}
+                    >
+                      {map(activityData, (item, index) => {
+                        return (
+                          <Option key={index} value={item.id}>
+                            {item.text}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                </Row>
                 <Col
-                  className="col-12 p-1 my-2"
+                  className="col-12 p-1 my-2 d-flex justify-content-between"
                   style={{ backgroundColor: "#FFEFDE" }}
                 >
+                  <div className="d-flex">
                   <p
                     className="p-2"
                     style={{
@@ -1161,345 +2342,2502 @@ const Fishing = ({
                   >
                     Provider Pricing
                   </p>
+ <div className="m-2">
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="providerHeaderTooltip"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={providerHeaderTooltip}
+                        style={{ textAlign: "left" }}
+                        target="providerHeaderTooltip"
+                        toggle={() => {
+                          setproviderHeaderTooltip(!providerHeaderTooltip);
+                        }}
+                      >
+                        The pricing specified by the Provider on the service
+                        agreement. This is for our reference, but it is Our
+                        Pricing that the customer will actually pay.
+                      </Tooltip>
+                    </div>
+                  </div>
+                  {providerPricingTab ? (
+                    <div
+                      className="m-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setProviderPricingTab(!providerPricingTab)}
+                    >
+                      <IoIosArrowDown size={30} />
+                    </div>
+                  ) : (
+                    <div
+                      className="m-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setProviderPricingTab(!providerPricingTab)}
+                    >
+                      <IoIosArrowForward size={30} />
+                    </div>
+                  )}
                 </Col>
                 <Row className="d-flex">
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="public_price">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Public Price</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="publicPrice"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop5}
-                            target="publicPrice"
-                            toggle={() => {
-                              setttop5(!ttop5);
+                  {providerPricingTab ? (
+                    <Row className="d-flex">
+                      <Col className="col-2">
+                        <div className="form-outline">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Rate Type</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15 mx-2"
+                                id="priceSheetTooltip"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={priceSheetTooltip}
+                                target="priceSheetTooltip"
+                                toggle={() => {
+                                  setpriceSheetTooltip(!priceSheetTooltip);
+                                }}
+                              >
+                                Choose what type of agreement we have with the
+                                provider. These options are set up to mirror our
+                                Price Sheets.
+                                <br />
+                                <br />
+                                Net Price - The Service Agreement specifies that
+                                we pay a Net Rate and whatever we add to it is
+                                our commission.
+                                <br />
+                                <br />
+                                Rate % - The Service Agreement specifies a
+                                commission rate off the price specified in the
+                                agreement.
+                                <br />
+                                <br />
+                                Fixed Commission - When the Provider offers a
+                                set commission for the product not based on a
+                                Net Rate or a Commission Rate %, such as $100.00
+                                no matter what the selling price is.
+                                <br />
+                                <br />
+                                The exact details of these fields, such as if
+                                they apply before or after taxes, gratuity, etc
+                                is set up previously in the Payment Settings
+                                tab.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <Input
+                            type="select"
+                            name="p_price_sheet"
+                            onChange={(e) => {
+                              setPriceSheetSelected(e.target.value);
+                              providerPricingCalc();
                             }}
                           >
-                            <p>
-                              The price the provider refers to in our service
-                              agreement as the "Public Price" or "Regular
-                              Price".
-                            </p>
-                            <p>
-                              If Provider only shows a net price on the
-                              agreement, and the tour or a comparable tour is
-                              not found anywhere on the internet, leave blank.
-                            </p>
-                          </Tooltip>
+                            <option value="-1">Select....</option>
+                            <option
+                              value={"1"}
+                              selected={dataEdit?.p_price_sheet === "1"}
+                            >
+                              Net Price
+                            </option>
+                            <option
+                              value={"2"}
+                              selected={dataEdit?.p_price_sheet === "2"}
+                            >
+                              Rate %
+                            </option>
+                            <option
+                              value={"3"}
+                              selected={dataEdit?.p_price_sheet === "3"}
+                            >
+                              Fixed Rate
+                            </option>
+                          </Input>
                         </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="public_price"
-                          placeholder=""
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "public_price",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.public_price || ""}
-                          invalid={
-                            validationType.touched.public_price &&
-                            validationType.errors.public_price
-                              ? true
-                              : false
-                          }
-                        />
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="provider_price">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Provider Price</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="providerPrice"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop6}
-                            target="providerPrice"
-                            toggle={() => {
-                              setttop6(!ttop6);
-                            }}
+                      </Col>
+                      {priceSheetSelected === "1" ? (
+                        <>
+                          <Col className="col-2">
+                            <div className="form-outline mb-2" id="net_rate">
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">Net Price</Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="netRate"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop8}
+                                    target="netRate"
+                                    toggle={() => {
+                                      setttop8(!ttop8);
+                                    }}
+                                  >
+                                    The Net Price specified in our service
+                                    agreement for the tour. If only a commission
+                                    rate is specified in the agreement then this
+                                    will automatically calculate and no entry is
+                                    required.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="net_rate"
+                                  placeholder=""
+                                  type="text"
+                                  min="0"
+                                  step="any"
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    // setRecalc(true);
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "net_rate",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={validationType.values.net_rate || ""}
+                                  invalid={
+                                    validationType.touched.net_rate &&
+                                    validationType.errors.net_rate
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="public_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Est. Public
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="publicPrice"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop5}
+                                    target="publicPrice"
+                                    toggle={() => {
+                                      setttop5(!ttop5);
+                                    }}
+                                  >
+                                    <p>
+                                      The price the provider refers to in our
+                                      service agreement as the "Public Price" or
+                                      "Regular Price".
+                                    </p>
+                                    <p>
+                                      If Provider only shows a net price on the
+                                      agreement, and the tour or a comparable
+                                      tour is not found anywhere on the
+                                      internet, leave blank.
+                                    </p>
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="public_price"
+                                  placeholder=""
+                                  type="text"
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    // setRecalc()
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "public_price",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={
+                                    validationType.values.public_price || ""
+                                  }
+                                  invalid={
+                                    validationType.touched.public_price &&
+                                    validationType.errors.public_price
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="provider_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Est. Rate %
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="estRateTooltip"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={estRateTooltip}
+                                    target="estRateTooltip"
+                                    toggle={() => {
+                                      setestRateTooltip(!estRateTooltip);
+                                    }}
+                                  >
+                                    The approximate commission rate that the
+                                    Provider is offering based on the difference
+                                    between the Public Price and Net Price.
+                                    <br />
+                                    This is just informational for us to
+                                    understand if the Provider is giving us a
+                                    good deal or not.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  %
+                                </span>
+                                <Input
+                                  name="p_est_rate"
+                                  placeholder=""
+                                  type="text"
+                                  min="0"
+                                  step="any"
+                                  readOnly
+                                  onChange={validationType.handleChange}
+                                  // onBlur={(e) => {
+                                  //   const value = e.target.value || "";
+                                  //   validationType.setFieldValue(
+                                  //     "p_est_rate",
+                                  //     setDecimalFormat(value)
+                                  //   );
+                                  // }}
+                                  value={validationType.values.p_est_rate || ""}
+                                  invalid={
+                                    validationType.touched.p_est_rate &&
+                                    validationType.errors.p_est_rate
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="provider_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">Est. Com.</Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="estComTooltip"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={estComTooltip}
+                                    target="estComTooltip"
+                                    toggle={() => {
+                                      setestComTooltip(!estComTooltip);
+                                    }}
+                                  >
+                                    The true amount of commission that the
+                                    Provider is offering us. This is calculated
+                                    as the difference between the Public Price
+                                    and Net Price.
+                                    <br />
+                                    This is just informational for us to
+                                    understand if the Provider is giving us a
+                                    good deal or not.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="p_est_commission"
+                                  placeholder=""
+                                  type="text"
+                                  min="0"
+                                  step="any"
+                                  readOnly
+                                  onChange={validationType.handleChange}
+                                  // onBlur={(e) => {
+                                  //   const value = e.target.value || "";
+                                  //   validationType.setFieldValue(
+                                  //     "p_est_commission",
+                                  //     setDecimalFormat(value)
+                                  //   );
+                                  // }}
+                                  value={
+                                    validationType.values.p_est_commission || ""
+                                  }
+                                  invalid={
+                                    validationType.touched.p_est_commission &&
+                                    validationType.errors.p_est_commission
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="provider_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Provider Site
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="providerPrice"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop6}
+                                    target="providerPrice"
+                                    toggle={() => {
+                                      setttop6(!ttop6);
+                                    }}
+                                  >
+                                    The price the provider sells the tour for on
+                                    their own website.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="provider_price"
+                                  placeholder=""
+                                  type="text"
+                                  min="0"
+                                  step="any"
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "provider_price",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={
+                                    validationType.values.provider_price || ""
+                                  }
+                                  invalid={
+                                    validationType.touched.provider_price &&
+                                    validationType.errors.provider_price
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <div
+                            onClick={() => setPriceBreakdown(!priceBrakedown)}
+                            style={{ cursor: "pointer" }}
+                            className="d-flex align-items-center mt-2"
                           >
-                            The price the provider sells the tour for on their
-                            own website.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="provider_price"
-                          placeholder=""
-                          type="text"
-                          min="0"
-                          step="any"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "provider_price",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.provider_price || ""}
-                          invalid={
-                            validationType.touched.provider_price &&
-                            validationType.errors.provider_price
-                              ? true
-                              : false
-                          }
-                        />
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="rate">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Rate %</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15 "
-                            id="rate_t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop7}
-                            target="rate_t"
-                            toggle={() => {
-                              setttop7(!ttop7);
-                            }}
-                          >
-                            The commission rate for the tour that is specified
-                            in our service agreement. If only a Net Price is
-                            specified then leave blank.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <Input
-                          name="rate"
-                          placeholder=""
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            setRecalc(true);
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "rate",
-                              setRateFormat(value)
-                            );
-                          }}
-                          value={validationType.values.rate || ""}
-                          invalid={
-                            validationType.touched.rate &&
-                            validationType.errors.rate
-                              ? true
-                              : false
-                          }
-                        />
+                            <p>Price Breakdown</p>
+                            {priceBrakedown ? (
+                              <img
+                                src={eyeIconSlash}
+                                alt="Hide Price Breakdown"
+                                style={{
+                                  width: "20px",
+                                  marginLeft: "10px",
+                                  marginTop: "-10px",
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={eyeIcon}
+                                alt="Show Price Breakdown"
+                                style={{
+                                  width: "20px",
+                                  marginLeft: "10px",
+                                  marginTop: "-10px",
+                                }}
+                              />
+                            )}
+                          </div>
 
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="net_rate">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Net Price</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="netRate"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop8}
-                            target="netRate"
-                            toggle={() => {
-                              setttop8(!ttop8);
-                            }}
+                          {priceBrakedown ? (
+                            <>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Before Tax
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="baseTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={baseTooltip}
+                                        target="baseTooltip"
+                                        toggle={() => {
+                                          setbaseTooltip(!baseTooltip);
+                                        }}
+                                      >
+                                        The base price of the product before
+                                        taxes and gratuities are added on.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_base_amount"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_base_amount",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_base_amount ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_base_amount &&
+                                        validationType.errors.p_base_amount
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_base_amount &&
+                                    validationType.errors.p_base_amount ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_base_amount}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      16% IVA
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="ivaTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={ivaTooltip}
+                                        target="ivaTooltip"
+                                        toggle={() => {
+                                          setivaTooltip(!ivaTooltip);
+                                        }}
+                                      >
+                                        The amount of IVA (VAT) that is due to
+                                        the Mexican Government.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_iva"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_iva",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={validationType.values.p_iva || ""}
+                                      invalid={
+                                        validationType.touched.p_iva &&
+                                        validationType.errors.p_iva
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_iva &&
+                                    validationType.errors.p_iva ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_iva}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label text-paradiseOrange">
+                                      Price w/ Tax
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="totalPriceTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={totalPriceTooltip}
+                                        target="totalPriceTooltip"
+                                        toggle={() => {
+                                          settotalPriceTooltip(
+                                            !totalPriceTooltip
+                                          );
+                                        }}
+                                      >
+                                        Net Price including Taxes not including
+                                        Gratuity. This is the main price for
+                                        comparison purposes.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_total_price"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_total_price",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_total_price ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_total_price &&
+                                        validationType.errors.p_total_price
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_total_price &&
+                                    validationType.errors.p_total_price ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_total_price}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#E9F4FFBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Gratuity
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="gratuityTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={gratuityTooltip}
+                                        target="gratuityTooltip"
+                                        toggle={() => {
+                                          setgratuityTooltip(!gratuityTooltip);
+                                        }}
+                                      >
+                                        The amount of mandatory Gratuity that is
+                                        required by the Provider to be
+                                        collected.
+                                        <br />
+                                        <br />
+                                        This is based on the Payment Settings.
+                                        If "Unspecified" is chosen, then this
+                                        field will be zero. Even though a
+                                        gratuity is encouraged and expected, the
+                                        Provider doesn't mandate what it is. The
+                                        customer can decide on the day of the
+                                        tour what gratuity they will give.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_gratuity"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_gratuity",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_gratuity || ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_gratuity &&
+                                        validationType.errors.p_gratuity
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_gratuity &&
+                                    validationType.errors.p_gratuity ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_gratuity}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#E9F4FFBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Total Price
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="finalTotalTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={finalTotalTooltip}
+                                        target="finalTotalTooltip"
+                                        toggle={() => {
+                                          setfinalTotalTooltip(
+                                            !finalTotalTooltip
+                                          );
+                                        }}
+                                      >
+                                        The total cost of the boat, including
+                                        taxes and any mandatory Gratuity.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_final_total"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_final_total",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_final_total ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_final_total &&
+                                        validationType.errors.p_final_total
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_final_total &&
+                                    validationType.errors.p_final_total ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_final_total}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col className="col-2">
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Invoice Amt
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="balanceDue"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={ttop17}
+                                        target="balanceDue"
+                                        toggle={() => {
+                                          setttop17(!ttop17);
+                                        }}
+                                      >
+                                        The amount due to the provider on the
+                                        invoice.
+                                        <br />
+                                        Our Deposit - Our Commission.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="net_price"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      onBlur={(e) => {
+                                        const value = e.target.value || "";
+                                        validationType.setFieldValue(
+                                          "net_price",
+                                          setDecimalFormat(value)
+                                        );
+                                      }}
+                                      value={
+                                        validationType.values.net_price || ""
+                                      }
+                                      invalid={
+                                        validationType.touched.net_price &&
+                                        validationType.errors.net_price
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.net_price &&
+                                    validationType.errors.net_price ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.net_price}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                            </>
+                          ) : null}
+                        </>
+                      ) : null}
+                      {priceSheetSelected === "2" ? (
+                        <>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="public_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Est. Public
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="publicPrice"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop5}
+                                    target="publicPrice"
+                                    toggle={() => {
+                                      setttop5(!ttop5);
+                                    }}
+                                  >
+                                    <p>
+                                      The price the provider refers to in our
+                                      service agreement as the "Public Price" or
+                                      "Regular Price".
+                                    </p>
+                                    <p>
+                                      If Provider only shows a net price on the
+                                      agreement, and the tour or a comparable
+                                      tour is not found anywhere on the
+                                      internet, leave blank.
+                                    </p>
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="public_price"
+                                  placeholder=""
+                                  type="text"
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "public_price",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={
+                                    validationType.values.public_price || ""
+                                  }
+                                  invalid={
+                                    validationType.touched.public_price &&
+                                    validationType.errors.public_price
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div className="form-outline mb-2" id="rate">
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">Rate %</Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15 "
+                                    id="rate_t"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop7}
+                                    target="rate_t"
+                                    toggle={() => {
+                                      setttop7(!ttop7);
+                                    }}
+                                  >
+                                    The commission rate for the tour that is
+                                    specified in our service agreement. If only
+                                    a Net Price is specified then leave blank.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <Input
+                                  name="rate"
+                                  placeholder=""
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    setRecalc(true);
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "rate",
+                                      setRateFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={validationType.values.rate || ""}
+                                  invalid={
+                                    validationType.touched.rate &&
+                                    validationType.errors.rate
+                                      ? true
+                                      : false
+                                  }
+                                />
+
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  %
+                                </span>
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div className="form-outline mb-2" id="rate">
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">Net Price</Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15 "
+                                    id="netPriceTooltip"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={netPriceTooltip}
+                                    target="netPriceTooltip"
+                                    toggle={() => {
+                                      setnetPriceTooltip(!netPriceTooltip);
+                                    }}
+                                  >
+                                    The Net Price shown on the Service
+                                    Agreement. What it represents is specified
+                                    on the Payment Settings tab.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="net_rate"
+                                  placeholder=""
+                                  readOnly
+                                  onChange={validationType.handleChange}
+                                  // onBlur={(e) => {
+                                  //   setRecalc(true);
+                                  //   const value = e.target.value || "";
+                                  //   validationType.setFieldValue(
+                                  //     "net_rate",
+                                  //     setRateFormat(value)
+                                  //   );
+                                  // }}
+                                  value={validationType.values.net_rate || ""}
+                                  invalid={
+                                    validationType.touched.net_rate &&
+                                    validationType.errors.net_rate
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div className="form-outline mb-2" id="commission">
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">Commission</Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="commission_p"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop20}
+                                    target="commission_p"
+                                    toggle={() => {
+                                      setttop20(!ttop20);
+                                    }}
+                                  >
+                                    The agreed commission based on the service
+                                    agreement before any discounts are applied.
+                                    This is automatically calculated based on
+                                    the Net Price so no entry is required.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="provider_commission"
+                                  readOnly
+                                  placeholder=""
+                                  type="text"
+                                  onChange={validationType.handleChange}
+                                  // onBlur={(e) => {
+                                  //   setRecalc(true);
+                                  //   const value = e.target.value || "";
+                                  //   validationType.setFieldValue(
+                                  //     "net_rate",
+                                  //     setRateFormat(value)
+                                  //   );
+                                  // }}
+                                  value={
+                                    validationType.values.provider_commission ||
+                                    ""
+                                  }
+                                  invalid={
+                                    validationType.touched
+                                      .provider_commission &&
+                                    validationType.errors.provider_commission
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="provider_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Provider Site
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="providerPrice"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop6}
+                                    target="providerPrice"
+                                    toggle={() => {
+                                      setttop6(!ttop6);
+                                    }}
+                                  >
+                                    The price the provider sells the tour for on
+                                    their own website.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="provider_price"
+                                  placeholder=""
+                                  type="text"
+                                  min="0"
+                                  step="any"
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "provider_price",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={
+                                    validationType.values.provider_price || ""
+                                  }
+                                  invalid={
+                                    validationType.touched.provider_price &&
+                                    validationType.errors.provider_price
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+
+                          <div
+                            onClick={() => setPriceBreakdown(!priceBrakedown)}
+                            style={{ cursor: "pointer" }}
+                            className="d-flex align-items-center mt-2"
                           >
-                            The Net Price specified in our service agreement for
-                            the tour. If only a commission rate is specified in
-                            the agreement then this will automatically calculate
-                            and no entry is required.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="net_rate"
-                          placeholder=""
-                          type="text"
-                          min="0"
-                          step="any"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            setRecalc(true);
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "net_rate",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.net_rate || ""}
-                          invalid={
-                            validationType.touched.net_rate &&
-                            validationType.errors.net_rate
-                              ? true
-                              : false
-                          }
-                        />
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="commission">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Commission</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="commission_p"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop20}
-                            target="commission_p"
-                            toggle={() => {
-                              setttop20(!ttop20);
-                            }}
+                            <p>Price Breakdown</p>
+                            {priceBrakedown ? (
+                              <img
+                                src={eyeIconSlash}
+                                alt="Hide Price Breakdown"
+                                style={{
+                                  width: "20px",
+                                  marginLeft: "10px",
+                                  marginTop: "-10px",
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={eyeIcon}
+                                alt="Show Price Breakdown"
+                                style={{
+                                  width: "20px",
+                                  marginLeft: "10px",
+                                  marginTop: "-10px",
+                                }}
+                              />
+                            )}
+                          </div>
+
+                          {priceBrakedown ? (
+                            <>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Before Tax
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="baseTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={baseTooltip}
+                                        target="baseTooltip"
+                                        toggle={() => {
+                                          setbaseTooltip(!baseTooltip);
+                                        }}
+                                      >
+                                        The base price of the product before
+                                        taxes and gratuities are added on.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_base_amount"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_base_amount",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_base_amount ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_base_amount &&
+                                        validationType.errors.p_base_amount
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_base_amount &&
+                                    validationType.errors.p_base_amount ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_base_amount}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      16% IVA
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="ivaTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={ivaTooltip}
+                                        target="ivaTooltip"
+                                        toggle={() => {
+                                          setivaTooltip(!ivaTooltip);
+                                        }}
+                                      >
+                                        The amount of IVA (VAT) that is due to
+                                        the Mexican Government.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_iva"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_iva",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={validationType.values.p_iva || ""}
+                                      invalid={
+                                        validationType.touched.p_iva &&
+                                        validationType.errors.p_iva
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_iva &&
+                                    validationType.errors.p_iva ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_iva}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label text-paradiseOrange">
+                                      Price w/Tax
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="totalPriceTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={totalPriceTooltip}
+                                        target="totalPriceTooltip"
+                                        toggle={() => {
+                                          settotalPriceTooltip(
+                                            !totalPriceTooltip
+                                          );
+                                        }}
+                                      >
+                                        Net Price including Taxes not including
+                                        Gratuity. This is the main price for
+                                        comparison purposes.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_total_price"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_total_price",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_total_price ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_total_price &&
+                                        validationType.errors.p_total_price
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_total_price &&
+                                    validationType.errors.p_total_price ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_total_price}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#E9F4FFBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Gratuity
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="gratuityTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={gratuityTooltip}
+                                        target="gratuityTooltip"
+                                        toggle={() => {
+                                          setgratuityTooltip(!gratuityTooltip);
+                                        }}
+                                      >
+                                        The amount of mandatory Gratuity that is
+                                        required by the Provider to be
+                                        collected.
+                                        <br />
+                                        <br />
+                                        This is based on the Payment Settings.
+                                        If "Unspecified" is chosen, then this
+                                        field will be zero. Even though a
+                                        gratuity is encouraged and expected, the
+                                        Provider doesn't mandate what it is. The
+                                        customer can decide on the day of the
+                                        tour what gratuity they will give.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_gratuity"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_gratuity",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_gratuity || ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_gratuity &&
+                                        validationType.errors.p_gratuity
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_gratuity &&
+                                    validationType.errors.p_gratuity ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_gratuity}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#E9F4FFBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Total Price
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="finalTotalTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={finalTotalTooltip}
+                                        target="finalTotalTooltip"
+                                        toggle={() => {
+                                          setfinalTotalTooltip(
+                                            !finalTotalTooltip
+                                          );
+                                        }}
+                                      >
+                                        The total cost of the boat, including
+                                        taxes and any mandatory Gratuity.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_final_total"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_final_total",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_final_total ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_final_total &&
+                                        validationType.errors.p_final_total
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_final_total &&
+                                    validationType.errors.p_final_total ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_final_total}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col className="col-2">
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Invoice Amt
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="balanceDue"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={ttop17}
+                                        target="balanceDue"
+                                        toggle={() => {
+                                          setttop17(!ttop17);
+                                        }}
+                                      >
+                                        The amount due to the provider on the
+                                        invoice.
+                                        <br />
+                                        Our Deposit - Our Commission.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="net_price_percentage"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "net_price_percentage",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values
+                                          .net_price_percentage || ""
+                                      }
+                                      invalid={
+                                        validationType.touched
+                                          .net_price_percentage &&
+                                        validationType.errors
+                                          .net_price_percentage
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched
+                                      .net_price_percentage &&
+                                    validationType.errors
+                                      .net_price_percentage ? (
+                                      <FormFeedback type="invalid">
+                                        {
+                                          validationType.errors
+                                            .net_price_percentage
+                                        }
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                            </>
+                          ) : null}
+                        </>
+                      ) : null}
+                      {priceSheetSelected === "3" ? (
+                        <>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="public_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Est. Public
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="publicPrice"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop5}
+                                    target="publicPrice"
+                                    toggle={() => {
+                                      setttop5(!ttop5);
+                                    }}
+                                  >
+                                    <p>
+                                      The price the provider refers to in our
+                                      service agreement as the "Public Price" or
+                                      "Regular Price".
+                                    </p>
+                                    <p>
+                                      If Provider only shows a net price on the
+                                      agreement, and the tour or a comparable
+                                      tour is not found anywhere on the
+                                      internet, leave blank.
+                                    </p>
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="public_price"
+                                  placeholder=""
+                                  type="text"
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "public_price",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={
+                                    validationType.values.public_price || ""
+                                  }
+                                  invalid={
+                                    validationType.touched.public_price &&
+                                    validationType.errors.public_price
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div className="form-outline mb-2" id="commission">
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">Commission</Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="commission_p"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop20}
+                                    target="commission_p"
+                                    toggle={() => {
+                                      setttop20(!ttop20);
+                                    }}
+                                  >
+                                    The agreed commission based on the service
+                                    agreement before any discounts are applied.
+                                    This is automatically calculated based on
+                                    the Net Price so no entry is required.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="p_commission"
+                                  placeholder=""
+                                  type="text"
+                                  onChange={validationType.handleChange}
+                                  value={
+                                    validationType.values.p_commission || ""
+                                  }
+                                  onBlur={(e) => {
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "p_commission",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  invalid={
+                                    validationType.touched.p_commission &&
+                                    validationType.errors.p_commission
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div className="form-outline mb-2" id="rate">
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">Net Price</Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15 "
+                                    id="rate_t"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop7}
+                                    target="rate_t"
+                                    toggle={() => {
+                                      setttop7(!ttop7);
+                                    }}
+                                  >
+                                    The Net Price shown on the Service
+                                    Agreement. What it represents is specified
+                                    on the Payment Settings tab.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="net_rate"
+                                  placeholder=""
+                                  readOnly
+                                  onChange={validationType.handleChange}
+                                  // onBlur={(e) => {
+                                  //   setRecalc(true);
+                                  //   const value = e.target.value || "";
+                                  //   validationType.setFieldValue(
+                                  //     "net_rate",
+                                  //     setRateFormat(value)
+                                  //   );
+                                  // }}
+                                  value={validationType.values.net_rate || ""}
+                                  invalid={
+                                    validationType.touched.net_rate &&
+                                    validationType.errors.net_rate
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="provider_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Est. Rate %
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="estRateTooltip"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={estRateTooltip}
+                                    target="estRateTooltip"
+                                    toggle={() => {
+                                      setestRateTooltip(!estRateTooltip);
+                                    }}
+                                  >
+                                    The approximate commission rate that the
+                                    Provider is offering based on the difference
+                                    between the Public Price and Net Price. This
+                                    is just informational for us to understand
+                                    if the Provider is giving us a good deal or
+                                    not.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  %
+                                </span>
+                                <Input
+                                  name="p_est_rate"
+                                  placeholder=""
+                                  type="text"
+                                  min="0"
+                                  step="any"
+                                  readOnly
+                                  onChange={validationType.handleChange}
+                                  // onBlur={(e) => {
+                                  //   const value = e.target.value || "";
+                                  //   validationType.setFieldValue(
+                                  //     "p_est_rate",
+                                  //     setDecimalFormat(value)
+                                  //   );
+                                  // }}
+                                  value={validationType.values.p_est_rate || ""}
+                                  invalid={
+                                    validationType.touched.p_est_rate &&
+                                    validationType.errors.p_est_rate
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col className="col-2">
+                            <div
+                              className="form-outline mb-2"
+                              id="provider_price"
+                            >
+                              <div className="d-flex justify-content-between">
+                                <Label className="form-label">
+                                  Provider Site
+                                </Label>
+                                <div>
+                                  <i
+                                    className="uil-question-circle font-size-15"
+                                    id="providerPrice"
+                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    isOpen={ttop6}
+                                    target="providerPrice"
+                                    toggle={() => {
+                                      setttop6(!ttop6);
+                                    }}
+                                  >
+                                    The price the provider sells the tour for on
+                                    their own website.
+                                  </Tooltip>
+                                </div>
+                              </div>
+                              <div className="input-group">
+                                <span
+                                  className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                  id="basic-addon1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  $
+                                </span>
+                                <Input
+                                  name="provider_price"
+                                  placeholder=""
+                                  type="text"
+                                  min="0"
+                                  step="any"
+                                  onChange={validationType.handleChange}
+                                  onBlur={(e) => {
+                                    const value = e.target.value || "";
+                                    validationType.setFieldValue(
+                                      "provider_price",
+                                      setDecimalFormat(value)
+                                    );
+                                    providerPricingCalc();
+                                  }}
+                                  value={
+                                    validationType.values.provider_price || ""
+                                  }
+                                  invalid={
+                                    validationType.touched.provider_price &&
+                                    validationType.errors.provider_price
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </Col>
+
+                          <div
+                            onClick={() => setPriceBreakdown(!priceBrakedown)}
+                            style={{ cursor: "pointer" }}
+                            className="d-flex align-items-center mt-2"
                           >
-                            The agreed commission based on the service agreement
-                            before any discounts are applied. This is
-                            automatically calculated based on the Net Price so
-                            no entry is required.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="provider_commission"
-                          readOnly
-                          placeholder=""
-                          type="text"
-                          value={providerCommission}
-                        />
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="balance_due">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Invoice Amt</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="balanceDue"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop17}
-                            target="balanceDue"
-                            toggle={() => {
-                              setttop17(!ttop17);
-                            }}
-                          >
-                            The amount due to the provider on the invoice.
-                            <br />
-                            Our Deposit - Our Commission.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="balance_due"
-                          placeholder=""
-                          type="text"
-                          readOnly
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "balance_due",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.balance_due || ""}
-                          invalid={
-                            validationType.touched.balance_due &&
-                            validationType.errors.balance_due
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.balance_due &&
-                        validationType.errors.balance_due ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.balance_due}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Col>
+                            <p>Price Breakdown</p>
+                            {priceBrakedown ? (
+                              <img
+                                src={eyeIconSlash}
+                                alt="Hide Price Breakdown"
+                                style={{
+                                  width: "20px",
+                                  marginLeft: "10px",
+                                  marginTop: "-10px",
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={eyeIcon}
+                                alt="Show Price Breakdown"
+                                style={{
+                                  width: "20px",
+                                  marginLeft: "10px",
+                                  marginTop: "-10px",
+                                }}
+                              />
+                            )}
+                          </div>
+
+                          {priceBrakedown ? (
+                            <>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Before Tax
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="baseTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={baseTooltip}
+                                        target="baseTooltip"
+                                        toggle={() => {
+                                          setbaseTooltip(!baseTooltip);
+                                        }}
+                                      >
+                                        The base price of the product before
+                                        taxes and gratuities are added on.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_base_amount"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_base_amount",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_base_amount ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_base_amount &&
+                                        validationType.errors.p_base_amount
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_base_amount &&
+                                    validationType.errors.p_base_amount ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_base_amount}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      16% IVA
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="ivaTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={ivaTooltip}
+                                        target="ivaTooltip"
+                                        toggle={() => {
+                                          setivaTooltip(!ivaTooltip);
+                                        }}
+                                      >
+                                        The amount of IVA (VAT) that is due to
+                                        the Mexican Government.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_iva"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_iva",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={validationType.values.p_iva || ""}
+                                      invalid={
+                                        validationType.touched.p_iva &&
+                                        validationType.errors.p_iva
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_iva &&
+                                    validationType.errors.p_iva ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_iva}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#FFEFDEBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label text-paradiseOrange">
+                                      Price w/Tax
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="totalPriceTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={totalPriceTooltip}
+                                        target="totalPriceTooltip"
+                                        toggle={() => {
+                                          settotalPriceTooltip(
+                                            !totalPriceTooltip
+                                          );
+                                        }}
+                                      >
+                                        Net Price including Taxes not including
+                                        Gratuity. This is the main price for
+                                        comparison purposes.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_total_price"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_total_price",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_total_price ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_total_price &&
+                                        validationType.errors.p_total_price
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_total_price &&
+                                    validationType.errors.p_total_price ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_total_price}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2 "
+                                style={{ backgroundColor: "#E9F4FFBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Gratuity
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="gratuityTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={gratuityTooltip}
+                                        target="gratuityTooltip"
+                                        toggle={() => {
+                                          setgratuityTooltip(!gratuityTooltip);
+                                        }}
+                                      >
+                                        The amount of mandatory Gratuity that is
+                                        required by the Provider to be
+                                        collected.
+                                        <br />
+                                        <br />
+                                        This is based on the Payment Settings.
+                                        If "Unspecified" is chosen, then this
+                                        field will be zero. Even though a
+                                        gratuity is encouraged and expected, the
+                                        Provider doesn't mandate what it is. The
+                                        customer can decide on the day of the
+                                        tour what gratuity they will give.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_gratuity"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_gratuity",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_gratuity || ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_gratuity &&
+                                        validationType.errors.p_gratuity
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_gratuity &&
+                                    validationType.errors.p_gratuity ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_gratuity}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col
+                                className="col-2"
+                                style={{ backgroundColor: "#E9F4FFBF" }}
+                              >
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Total Price
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="finalTotalTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={finalTotalTooltip}
+                                        target="finalTotalTooltip"
+                                        toggle={() => {
+                                          setfinalTotalTooltip(
+                                            !finalTotalTooltip
+                                          );
+                                        }}
+                                      >
+                                        The total cost of the boat, including
+                                        taxes and any mandatory Gratuity.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="p_final_total"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "p_final_total",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.p_final_total ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched.p_final_total &&
+                                        validationType.errors.p_final_total
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.p_final_total &&
+                                    validationType.errors.p_final_total ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.p_final_total}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col className="col-2">
+                                <div
+                                  className="form-outline mb-2"
+                                  id="balance_due"
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <Label className="form-label">
+                                      Invoice Amt
+                                    </Label>
+                                    <div>
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="balanceDue"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={ttop17}
+                                        target="balanceDue"
+                                        toggle={() => {
+                                          setttop17(!ttop17);
+                                        }}
+                                      >
+                                        The amount due to the provider on the
+                                        invoice.
+                                        <br />
+                                        Our Deposit - Our Commission.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div className="input-group">
+                                    <span
+                                      className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                      id="basic-addon1"
+                                      style={{ fontSize: "0.85em" }}
+                                    >
+                                      $
+                                    </span>
+                                    <Input
+                                      name="net_price_fixed"
+                                      placeholder=""
+                                      type="text"
+                                      readOnly
+                                      onChange={validationType.handleChange}
+                                      // onBlur={(e) => {
+                                      //   const value = e.target.value || "";
+                                      //   validationType.setFieldValue(
+                                      //     "net_price_fixed",
+                                      //     setDecimalFormat(value)
+                                      //   );
+                                      // }}
+                                      value={
+                                        validationType.values.net_price_fixed ||
+                                        ""
+                                      }
+                                      invalid={
+                                        validationType.touched
+                                          .net_price_fixed &&
+                                        validationType.errors.net_price_fixed
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validationType.touched.net_price_fixed &&
+                                    validationType.errors.net_price_fixed ? (
+                                      <FormFeedback type="invalid">
+                                        {validationType.errors.net_price_fixed}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </div>
+                              </Col>
+                            </>
+                          ) : null}
+                        </>
+                      ) : null}
+                    </Row>
+                  ) : null}
                 </Row>
                 <Col
-                  className="col-12 p-1 my-2"
+                  className="col-12 p-1 my-2 d-flex justify-content-between"
                   style={{ backgroundColor: "#FFFBC8" }}
                 >
+                  <div className="d-flex"> 
+
                   <p
                     className="p-2"
                     style={{
@@ -1511,619 +4849,1031 @@ const Fishing = ({
                   >
                     Our Pricing
                   </p>
-                </Col>
-                <Row className="d-flex">
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="our_price">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Our Price*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="ourPrice"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop12}
-                            target="ourPrice"
-                            toggle={() => {
-                              setttop12(!ttop12);
-                            }}
-                          >
-                            The price we will sell the tour for.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="our_price"
-                          placeholder=""
-                          type="text"
-                          min="0"
-                          step="any"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            setRecalc(true);
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "our_price",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.our_price || ""}
-                          invalid={
-                            validationType.touched.our_price &&
-                            validationType.errors.our_price
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.our_price &&
-                        validationType.errors.our_price ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.our_price}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="commission">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Commission*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="commission_t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop15}
-                            target="commission_t"
-                            toggle={() => {
-                              setttop15(!ttop15);
-                            }}
-                          >
-                            <p>
-                              The $$ amount we earn from the sale after
-                              discount.
-                            </p>
-                            Calculated automatically:
-                            <br />
-                            Our Price - Net Price = Commission.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="commission"
-                          placeholder=""
-                          readOnly
-                          type="text"
-                          value={ourCommission}
-                        />
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="eff_rate">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Eff. Rate</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="effRate"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop14}
-                            target="effRate"
-                            toggle={() => {
-                              setttop14(!ttop14);
-                            }}
-                          >
-                            <p>
-                              After discounting the tour, what our effective
-                              commission rate is (what we have left after the
-                              discount). This is calculated based on (Commission
-                              / Our Price = Eff. Rate).
-                            </p>
-                            If there is no public price specified, then it is
-                            calculated based on (Commission / (Net Price +
-                            Commission))
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <Input
-                          name="eff_rate"
-                          placeholder=""
-                          type="text"
-                          readOnly
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "eff_rate",
-                              setRateFormat(value)
-                            );
-                          }}
-                          value={validationType.values.eff_rate || ""}
-                          invalid={
-                            validationType.touched.eff_rate &&
-                            validationType.errors.eff_rate
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.eff_rate &&
-                        validationType.errors.eff_rate ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.eff_rate}
-                          </FormFeedback>
-                        ) : null}
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="deposit">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Deposit*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="deposit_t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop16}
-                            target="deposit_t"
-                            toggle={() => {
-                              setttop16(!ttop16);
-                            }}
-                          >
-                            <p>
-                              The amount we collect at the time of booking. This
-                              is calculated based on the option chosen in
-                              "Collect" above.
-                            </p>
-                            If "Deposit" is the Collect type then you will type
-                            in the amount of Deposit you will collect.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="deposit"
-                          placeholder=""
-                          readOnly={+priceCollectSelected !== 1}
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "deposit",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.deposit || ""}
-                          invalid={
-                            validationType.touched.deposit &&
-                            validationType.errors.deposit
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.deposit &&
-                        validationType.errors.deposit ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.deposit}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="voucher_currency">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Vchr. Currency</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="v_currency"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop21}
-                            target="v_currency"
-                            toggle={() => {
-                              setttop21(!ttop21);
-                            }}
-                          >
-                            Choose the currency that the Balance Due on the
-                            confirmation voucher will be shown in (USD or MXN
-                            Pesos).
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <Input
-                          type="select"
-                          name=""
-                          onChange={(e) => {
-                            setCurrencySelected(e.target.value);
-                          }}
-                          onBlur={validationType.handleBlur}
-                          //   value={validationType.values.department || ""}
-                        >
-                          <option value="-1">Select....</option>
-                          {map(currency, (curr, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={curr.currency_id}
-                                selected={
-                                  dataEdit && dataEdit.voucher_currency
-                                    ? curr.currency_id ===
-                                      dataEdit.voucher_currency
-                                    : curr.currency_id === "USD" ||
-                                      curr.currency_id === "USD"
-                                }
-                              >
-                                {curr.currency}
-                              </option>
-                            );
-                          })}
-                        </Input>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="voucher_balance">
-                      <div className="d-flex justify-content-between">
-                        <Label
-                          style={{ fontSize: "13px" }}
-                          className="form-label"
-                        >
-                          Voucher Balance
-                        </Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="v_balance"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop22}
-                            target="v_balance"
-                            toggle={() => {
-                              setttop22(!ttop22);
-                            }}
-                          >
-                            The Balance Due shown on the confirmation voucher
-                            sent to the client, in either USD or MXN Pesos,
-                            depending on the currency selected. If USD is chosen
-                            then this is automatically calculated based on (Our
-                            Price - Deposit = Voucher Balance). If MXN is chosen
-                            then manually enter the amount in pesos that the
-                            customer will pay at check-in on the day of the
-                            tour.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <Input
-                          name="voucher_balance"
-                          placeholder=""
-                          type="text"
-                          readOnly={
-                            currencySelected !== "MXN $" &&
-                            currencySelected !== "MXN"
-                          }
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "voucher_balance",
-                              setDecimalFormatVBalance(value, currencySelected)
-                            );
-                          }}
-                          value={validationType.values.voucher_balance || ""}
-                          invalid={
-                            validationType.touched.voucher_balance &&
-                            validationType.errors.voucher_balance
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.voucher_balance &&
-                        validationType.errors.voucher_balance ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.voucher_balance}
-                          </FormFeedback>
-                        ) : null}
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-                <Row className="d-flex">
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="ship_price">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Ship Price</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="shipPrice"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop10}
-                            target="shipPrice"
-                            toggle={() => {
-                              setttop10(!ttop10);
-                            }}
-                          >
-                            The price that the most expensive cruise ship will
-                            sell this tour at. This price should not be confused
-                            with the "From" price shown on cruise ship websites.
-                            It is always higher. Compare all cruise websites. If
-                            the tour is not available for cruise ship passengers
-                            or the ship price won't shown on the website (as
-                            with Cancun Discounts) then leave this blank.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="ship_price"
-                          placeholder=""
-                          type="text"
-                          min="0"
-                          step="any"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            setRecalc(true);
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "ship_price",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.ship_price || ""}
-                          invalid={
-                            validationType.touched.ship_price &&
-                            validationType.errors.ship_price
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.ship_price &&
-                        validationType.errors.ship_price ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.ship_price}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="compare_at">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Compare At</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="compareAt"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop11}
-                            target="compareAt"
-                            toggle={() => {
-                              setttop11(!ttop11);
-                            }}
-                          >
-                            The price that shows as the "reg price" on our
-                            websites. This should generally be the most
-                            expensive price for a comparable tour you can
-                            commonly find on the web. Typically avoid outliers
-                            where one website is far above from the rest. We
-                            want the customers to be able to see that they're
-                            saving money compared to other options.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="compare_at"
-                          placeholder=""
-                          type="text"
-                          min="0"
-                          step="any"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            setRecalc(true);
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "compare_at",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.compare_at || ""}
-                          invalid={
-                            validationType.touched.compare_at &&
-                            validationType.errors.compare_at
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.compare_at &&
-                        validationType.errors.compare_at ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.compare_at}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="you_save">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">You Save*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="youSave"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop13}
-                            target="youSave"
-                            toggle={() => {
-                              setttop13(!ttop13);
-                            }}
-                          >
-                            This is the amount they save by booking with us
-                            compared to the "other guys" from the "Compare At"
-                            price or "Ship Price" whichever is higher. This will
-                            be shown on the website as "You Save!" or "You Save
-                            15%" depending on the site.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <Input
-                          name="you_save"
-                          placeholder=""
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "you_save",
-                              setYouSaveFormat(value)
-                            );
-                          }}
-                          value={validationType.values.you_save || ""}
-                          invalid={
-                            validationType.touched.you_save &&
-                            validationType.errors.you_save
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.you_save &&
-                        validationType.errors.you_save ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.you_save}
-                          </FormFeedback>
-                        ) : null}
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col className="col-6">
-                    <div className="form-outline mb-2" id="compare_at_url">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">"Compare At" URL</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="compareAtURL"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop9}
-                            target="compareAtURL"
-                            toggle={() => {
-                              setttop9(!ttop9);
-                            }}
-                          >
-                            Paste the URL of the web page where the "Compare At"
-                            price, established during the price survey, can be
-                            verified.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <Input
-                        name="compare_at_url"
-                        placeholder=""
-                        type="text"
-                        onChange={validationType.handleChange}
-                        onBlur={validationType.handleBlur}
-                        value={validationType.values.compare_at_url || ""}
-                        invalid={
-                          validationType.touched.compare_at_url &&
-                          validationType.errors.compare_at_url
-                            ? true
-                            : false
-                        }
+                  <div>
+                     <div className="m-2">
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="ourPricingTooltip"
                       />
-                      {validationType.touched.compare_at_url &&
-                      validationType.errors.compare_at_url ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.compare_at_url}
-                        </FormFeedback>
-                      ) : null}
+                      <Tooltip
+                        placement="right"
+                        isOpen={ourPricingHeaderTooltip}
+                        style={{ textAlign: "left" }}
+                        target="ourPricingTooltip"
+                        toggle={() => {
+                          setOurPricingHeaderTooltip(!ourPricingHeaderTooltip);
+                        }}
+                      >
+                        The price we will sell the boat for. This price will be
+                        based on the settings in the Payment Settings.
+                      </Tooltip>
                     </div>
-                  </Col>
-                </Row>
+                  </div>
+                  </div>
+                  {ourPricingTab ? (
+                    <div
+                      className="m-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setOurPricingTab(!ourPricingTab)}
+                    >
+                      <IoIosArrowDown size={30} />
+                    </div>
+                  ) : (
+                    <div
+                      className="m-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setOurPricingTab(!ourPricingTab)}
+                    >
+                      <IoIosArrowForward size={30} />
+                    </div>
+                  )}
+                </Col>
+
+                {ourPricingTab ? (
+                  <>
+                    <Row className="d-flex">
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="ourPrice">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Our Price</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="ourPrice"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop12}
+                                target="ourPrice"
+                                toggle={() => {
+                                  setttop12(!ttop12);
+                                }}
+                              >
+                                The price we will sell the tour for.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="our_price"
+                              placeholder=""
+                              type="text"
+                              min="0"
+                              step="any"
+                              onChange={validationType.handleChange}
+                              onBlur={(e) => {
+                                // setRecalc(true);
+                                const value = e.target.value || "";
+                                validationType.setFieldValue(
+                                  "our_price",
+                                  setDecimalFormat(value)
+                                );
+                                providerPricingCalc();
+                              }}
+                              value={validationType.values.our_price || ""}
+                              invalid={
+                                validationType.touched.our_price &&
+                                validationType.errors.our_price
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.our_price &&
+                            validationType.errors.our_price ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.our_price}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="commission">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Commission</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="commission_t"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop15}
+                                target="commission_t"
+                                toggle={() => {
+                                  setttop15(!ttop15);
+                                }}
+                              >
+                                <p>
+                                  The $$ amount we earn from the sale after
+                                  discount.
+                                </p>
+                                Calculated automatically:
+                                <br />
+                                Our Price - Net Price = Commission.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="commission"
+                              placeholder=""
+                              readOnly
+                              type="text"
+                              value={ourCommission}
+                            />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="eff_rate">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Eff. Rate</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="effRate"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop14}
+                                target="effRate"
+                                toggle={() => {
+                                  setttop14(!ttop14);
+                                }}
+                              >
+                                <p>
+                                  After discounting the tour, what our effective
+                                  commission rate is (what we have left after
+                                  the discount). This is calculated based on
+                                  (Commission / Our Price = Eff. Rate).
+                                </p>
+                                If there is no public price specified, then it
+                                is calculated based on (Commission / (Net Price
+                                + Commission))
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <Input
+                              name="eff_rate"
+                              placeholder=""
+                              type="text"
+                              readOnly
+                              onChange={validationType.handleChange}
+                              // onBlur={(e) => {
+                              //   const value = e.target.value || "";
+                              //   validationType.setFieldValue(
+                              //     "eff_rate",
+                              //     setRateFormat(value)
+                              //   );
+                              // }}
+                              value={validationType.values.eff_rate || ""}
+                              invalid={
+                                validationType.touched.eff_rate &&
+                                validationType.errors.eff_rate
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.eff_rate &&
+                            validationType.errors.eff_rate ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.eff_rate}
+                              </FormFeedback>
+                            ) : null}
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              %
+                            </span>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="deposit">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Deposit</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="deposit_t"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop16}
+                                target="deposit_t"
+                                toggle={() => {
+                                  setttop16(!ttop16);
+                                }}
+                              >
+                                <p>
+                                  The amount we collect at the time of booking.
+                                  This is calculated based on the option chosen
+                                  in "Collect" above.
+                                </p>
+                                If "Deposit" is the Collect type then you will
+                                type in the amount of Deposit you will collect.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="deposit"
+                              placeholder=""
+                              readOnly={+priceCollectSelected !== 1}
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={(e) => {
+                                const value = e.target.value || "";
+                                validationType.setFieldValue(
+                                  "deposit",
+                                  setDecimalFormat(value)
+                                );
+                                providerPricingCalc();
+                              }}
+                              value={validationType.values.deposit || ""}
+                              invalid={
+                                validationType.touched.deposit &&
+                                validationType.errors.deposit
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.deposit &&
+                            validationType.errors.deposit ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.deposit}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div
+                          className="form-outline mb-2"
+                          id="voucher_currency"
+                        >
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Vchr. Currency</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="v_currency"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop21}
+                                target="v_currency"
+                                toggle={() => {
+                                  setttop21(!ttop21);
+                                }}
+                              >
+                                Choose the currency that the Balance Due on the
+                                confirmation voucher will be shown in (USD or
+                                MXN Pesos).
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <Input
+                              type="select"
+                              name="currency"
+                              onChange={(e) => {
+                                setCurrencySelected(e.target.value);
+                              }}
+                              // onBlur={validationType.handleBlur}
+                              //   value={validationType.values.department || ""}
+                            >
+                              <option value="-1">Select....</option>
+                              {map(currency, (curr, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={curr.currency_id}
+                                    selected={
+                                      dataEdit && dataEdit.voucher_currency
+                                        ? curr.currency_id ===
+                                          dataEdit.voucher_currency
+                                        : curr.currency_id === "USD $" ||
+                                          curr.currency_id === "USD"
+                                    }
+                                  >
+                                    {curr.currency}
+                                  </option>
+                                );
+                              })}
+                            </Input>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="voucher_balance">
+                          <div className="d-flex justify-content-between">
+                            <Label
+                              style={{ fontSize: "13px" }}
+                              className="form-label"
+                            >
+                              Voucher Balance
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="v_balance"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop22}
+                                target="v_balance"
+                                toggle={() => {
+                                  setttop22(!ttop22);
+                                }}
+                              >
+                                The Balance Due shown on the confirmation
+                                voucher sent to the client, in either USD or MXN
+                                Pesos, depending on the currency selected. If
+                                USD is chosen then this is automatically
+                                calculated based on (Our Price - Deposit =
+                                Voucher Balance). If MXN is chosen then manually
+                                enter the amount in pesos that the customer will
+                                pay at check-in on the day of the tour.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <Input
+                              name="voucher_balance"
+                              placeholder=""
+                              type="text"
+                              readOnly={
+                                currencySelected !== "MXN $" &&
+                                currencySelected !== "MXN"
+                              }
+                              onChange={validationType.handleChange}
+                              // onBlur={(e) => {
+                              //   const value = e.target.value || "";
+                              //   validationType.setFieldValue(
+                              //     "voucher_balance",
+                              //     setDecimalFormatVBalance(
+                              //       value,
+                              //       currencySelected
+                              //     )
+                              //   );
+                              // }}
+                              value={
+                                validationType.values.voucher_balance || ""
+                              }
+                              invalid={
+                                validationType.touched.voucher_balance &&
+                                validationType.errors.voucher_balance
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.voucher_balance &&
+                            validationType.errors.voucher_balance ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.voucher_balance}
+                              </FormFeedback>
+                            ) : null}
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row className="d-flex">
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Before Tax</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="baseTooltipOP"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={baseTooltipOP}
+                                target="baseTooltipOP"
+                                toggle={() => {
+                                  setbaseTooltipOP(!baseTooltipOP);
+                                }}
+                              >
+                                The base price of the product before taxes and
+                                gratuities are added on.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="t_base_amount"
+                              placeholder=""
+                              type="text"
+                              min="0"
+                              step="any"
+                              disabled
+                              onChange={validationType.handleChange}
+                              // onBlur={(e) => {
+                              //   setRecalc(true);
+                              //   const value = e.target.value || "";
+                              //   validationType.setFieldValue(
+                              //     "t_base_amount",
+                              //     setDecimalFormat(value)
+                              //   );
+                              // }}
+                              value={validationType.values.t_base_amount || ""}
+                              invalid={
+                                validationType.touched.t_base_amount &&
+                                validationType.errors.t_base_amount
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.t_base_amount &&
+                            validationType.errors.t_base_amount ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.t_base_amount}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="commission">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">16% IVA</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="ivaTooltipOP"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ivaTooltipOP}
+                                target="ivaTooltipOP"
+                                toggle={() => {
+                                  setivaTooltipOP(!ivaTooltipOP);
+                                }}
+                              >
+                                The amount of IVA (VAT) that is due to the
+                                Mexican Government.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="t_iva"
+                              placeholder=""
+                              readOnly
+                              type="text"
+                              value={validationType.values.t_iva || ""}
+                            />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="eff_rate">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label text-paradiseOrange">
+                              Price w/Tax
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="totalPriceTooltipOP"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={totalPriceTooltipOP}
+                                target="totalPriceTooltipOP"
+                                toggle={() => {
+                                  settotalPriceTooltipOP(!totalPriceTooltipOP);
+                                }}
+                              >
+                                It should back calculate Our Price if it is
+                                entered in. If Our Price is entered in, then it
+                                will calculate the Total Price.
+                              </Tooltip>
+                            </div>
+                          </div>
+
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="t_total_price"
+                              placeholder=""
+                              type="text"
+                              disabled={true}
+                              onChange={validationType.handleChange}
+                              // onBlur={(e) => {
+                              //   const value = e.target.value || "";
+                              //   validationType.setFieldValue(
+                              //     "t_total_price",
+                              //     setRateFormat(value)
+                              //   );
+                              // }}
+                              value={validationType.values.t_total_price || ""}
+                              invalid={
+                                validationType.touched.t_total_price &&
+                                validationType.errors.t_total_price
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.t_total_price &&
+                            validationType.errors.t_total_price ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.t_total_price}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="deposit">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Gratuity</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="gratuityTooltipOP"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={gratuityTooltipOP}
+                                target="gratuityTooltipOP"
+                                toggle={() => {
+                                  setgratuityTooltipOP(!gratuityTooltipOP);
+                                }}
+                              >
+                                The amount of mandatory Gratuity that is
+                                required by the Provider to be collected.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="t_gratuity"
+                              placeholder=""
+                              readOnly
+                              type="text"
+                              onChange={validationType.handleChange}
+                              // onBlur={(e) => {
+                              //   const value = e.target.value || "";
+                              //   validationType.setFieldValue(
+                              //     "t_gratuity",
+                              //     setDecimalFormat(value)
+                              //   );
+                              // }}
+                              value={validationType.values.t_gratuity || ""}
+                              invalid={
+                                validationType.touched.t_gratuity &&
+                                validationType.errors.t_gratuity
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.t_gratuity &&
+                            validationType.errors.t_gratuity ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.t_gratuity}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="deposit">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Total Price </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="finalTotalTooltipOP"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={finalTotalTooltipOP}
+                                target="finalTotalTooltipOP"
+                                toggle={() => {
+                                  setfinalTotalTooltipOP(!finalTotalTooltipOP);
+                                }}
+                              >
+                                The total cost of the boat, including taxes and
+                                any mandatory Gratuity.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="t_final_total"
+                              placeholder=""
+                              readOnly={+priceCollectSelected !== 1}
+                              type="text"
+                              onChange={validationType.handleChange}
+                              // onBlur={(e) => {
+                              //   const value = e.target.value || "";
+                              //   validationType.setFieldValue(
+                              //     "t_final_total",
+                              //     setDecimalFormat(value)
+                              //   );
+                              // }}
+                              value={validationType.values.t_final_total || ""}
+                              invalid={
+                                validationType.touched.t_final_total &&
+                                validationType.errors.t_final_total
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.t_final_total &&
+                            validationType.errors.t_final_total ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.t_final_total}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  </>
+                ) : null}
+                 <Col
+                                  className="col-12 p-1 my-2  d-flex justify-content-between"
+                                  style={{ backgroundColor: "#e7ffdc", cursor: "pointer" }}
+                                  onClick={() => setComparisonPricingTab(!comparisonPricingTab)}
+                                >
+                                  <div className="d-flex">
+                                    <p
+                                      className="p-2"
+                                      style={{
+                                        fontSize: "20px",
+                                        fontWeight: "bold",
+                                        color: "#495057",
+                                        marginBottom: "0px",
+                                      }}
+                                    >
+                                      Comparison Pricing
+                                    </p>
+                                    <div className="m-2">
+                                      <i
+                                        className="uil-question-circle font-size-15"
+                                        id="comparisonPricingTooltip"
+                                      />
+                                      <Tooltip
+                                        placement="right"
+                                        isOpen={comparisonHeaderTooltip}
+                                        style={{ textAlign: "left" }}
+                                        target="comparisonPricingTooltip"
+                                        toggle={() => {
+                                          setComparisonHeaderTooltip(!comparisonHeaderTooltip);
+                                        }}
+                                      >
+                                        The price at which competitors sell the same or similar
+                                        product. This helps assess how our pricing compares
+                                        within the market.
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  {comparisonPricingTab ? (
+                                    <div
+                                      className="m-2"
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() =>
+                                        setComparisonPricingTab(!comparisonPricingTab)
+                                      }
+                                    >
+                                      <IoIosArrowDown size={30} />
+                                    </div>
+                                  ) : (
+                                    <div
+                                      className="m-2"
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() =>
+                                        setComparisonPricingTab(!comparisonPricingTab)
+                                      }
+                                    >
+                                      <IoIosArrowForward size={30} />
+                                    </div>
+                                  )}
+                                </Col>
+                                {comparisonPricingTab ? (
+                                  <>
+                                    <Row className="d-flex">
+                                      <Col className="col-2">
+                                        <div className="form-outline mb-2" id="ship_price">
+                                          <div className="d-flex justify-content-between">
+                                            <Label className="form-label">Ship Price</Label>
+                                            <div>
+                                              <i
+                                                className="uil-question-circle font-size-15"
+                                                id="shipPrice"
+                                              />
+                                              <Tooltip
+                                                placement="right"
+                                                isOpen={ttop10}
+                                                target="shipPrice"
+                                                toggle={() => {
+                                                  setttop10(!ttop10);
+                                                }}
+                                              >
+                                                The price that the most expensive cruise ship
+                                                will sell this tour at. This price should not be
+                                                confused with the "From" price shown on cruise
+                                                ship websites. It is always higher. Compare all
+                                                cruise websites. If the tour is not available
+                                                for cruise ship passengers or the ship price
+                                                won't shown on the website (as with Cancun
+                                                Discounts) then leave this blank.
+                                              </Tooltip>
+                                            </div>
+                                          </div>
+                                          <div className="input-group">
+                                            <span
+                                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                              id="basic-addon1"
+                                              style={{ fontSize: "0.85em" }}
+                                            >
+                                              $
+                                            </span>
+                                            <Input
+                                              name="ship_price"
+                                              placeholder=""
+                                              type="text"
+                                              min="0"
+                                              step="any"
+                                              onChange={validationType.handleChange}
+                                              onBlur={(e) => {
+                                                // setRecalc(true);
+                                                const value = e.target.value || "";
+                                                validationType.setFieldValue(
+                                                  "ship_price",
+                                                  setDecimalFormat(value)
+                                                );
+                                                ourPricingCalc();
+                                              }}
+                                              value={validationType.values.ship_price || ""}
+                                              invalid={
+                                                validationType.touched.ship_price &&
+                                                validationType.errors.ship_price
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                            {validationType.touched.ship_price &&
+                                            validationType.errors.ship_price ? (
+                                              <FormFeedback type="invalid">
+                                                {validationType.errors.ship_price}
+                                              </FormFeedback>
+                                            ) : null}
+                                          </div>
+                                        </div>
+                                      </Col>
+                                      <Col className="col-2">
+                                        <div className="form-outline mb-2" id="compare_at">
+                                          <div className="d-flex justify-content-between">
+                                            <Label className="form-label">Compare At</Label>
+                                            <div>
+                                              <i
+                                                className="uil-question-circle font-size-15"
+                                                id="compareAt"
+                                              />
+                                              <Tooltip
+                                                placement="right"
+                                                isOpen={ttop11}
+                                                target="compareAt"
+                                                toggle={() => {
+                                                  setttop11(!ttop11);
+                                                }}
+                                              >
+                                                The price that shows as the "reg price" on our
+                                                websites. This should generally be the most
+                                                expensive price for a comparable tour you can
+                                                commonly find on the web. Typically avoid
+                                                outliers where one website is far above from the
+                                                rest. We want the customers to be able to see
+                                                that they're saving money compared to other
+                                                options.
+                                              </Tooltip>
+                                            </div>
+                                          </div>
+                                          <div className="input-group">
+                                            <span
+                                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                              id="basic-addon1"
+                                              style={{ fontSize: "0.85em" }}
+                                            >
+                                              $
+                                            </span>
+                                            <Input
+                                              name="compare_at"
+                                              placeholder=""
+                                              type="text"
+                                              min="0"
+                                              step="any"
+                                              onChange={validationType.handleChange}
+                                              onBlur={(e) => {
+                                                // setRecalc(true);
+                                                const value = e.target.value || "";
+                                                validationType.setFieldValue(
+                                                  "compare_at",
+                                                  setDecimalFormat(value)
+                                                );
+                                                ourPricingCalc();
+                                              }}
+                                              value={validationType.values.compare_at || ""}
+                                              invalid={
+                                                validationType.touched.compare_at &&
+                                                validationType.errors.compare_at
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                            {validationType.touched.compare_at &&
+                                            validationType.errors.compare_at ? (
+                                              <FormFeedback type="invalid">
+                                                {validationType.errors.compare_at}
+                                              </FormFeedback>
+                                            ) : null}
+                                          </div>
+                                        </div>
+                                      </Col>
+                                      <Col className="col-2">
+                                        <div className="form-outline mb-2" id="you_save">
+                                          <div className="d-flex justify-content-between">
+                                            <Label className="form-label">You Save</Label>
+                                            <div>
+                                              <i
+                                                className="uil-question-circle font-size-15"
+                                                id="youSave"
+                                              />
+                                              <Tooltip
+                                                placement="right"
+                                                isOpen={ttop13}
+                                                target="youSave"
+                                                toggle={() => {
+                                                  setttop13(!ttop13);
+                                                }}
+                                              >
+                                                This is the amount they save by booking with us
+                                                compared to the "other guys" from the "Compare
+                                                At" price or "Ship Price" whichever is higher.
+                                                This will be shown on the website as "You Save!"
+                                                or "You Save 15%" depending on the site.
+                                              </Tooltip>
+                                            </div>
+                                          </div>
+                                          <div className="input-group">
+                                            <Input
+                                              name="you_save"
+                                              placeholder=""
+                                              type="text"
+                                              onChange={validationType.handleChange}
+                                              // onBlur={(e) => {
+                                              //   const value = e.target.value || "";
+                                              //   validationType.setFieldValue(
+                                              //     "you_save",
+                                              //     setYouSaveFormat(value)
+                                              //   );
+                                              // }}
+                                              value={validationType.values.you_save || ""}
+                                              invalid={
+                                                validationType.touched.you_save &&
+                                                validationType.errors.you_save
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                            {validationType.touched.you_save &&
+                                            validationType.errors.you_save ? (
+                                              <FormFeedback type="invalid">
+                                                {validationType.errors.you_save}
+                                              </FormFeedback>
+                                            ) : null}
+                                            <span
+                                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                                              id="basic-addon1"
+                                              style={{ fontSize: "0.85em" }}
+                                            >
+                                              %
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </Col>
+                                      <Col className="col-6">
+                                        <div className="form-outline mb-2" id="compare_at_url">
+                                          <div className="d-flex justify-content-between">
+                                            <Label className="form-label">
+                                              "Compare At" URL
+                                            </Label>
+                                            <div>
+                                              <i
+                                                className="uil-question-circle font-size-15"
+                                                id="compareAtURL"
+                                              />
+                                              <Tooltip
+                                                placement="right"
+                                                isOpen={ttop9}
+                                                target="compareAtURL"
+                                                toggle={() => {
+                                                  setttop9(!ttop9);
+                                                }}
+                                              >
+                                                Paste the URL of the web page where the "Compare
+                                                At" price, established during the price survey,
+                                                can be verified.
+                                              </Tooltip>
+                                            </div>
+                                          </div>
+                                          <Input
+                                            name="compare_at_url"
+                                            placeholder=""
+                                            type="text"
+                                            onChange={validationType.handleChange}
+                                            // onBlur={validationType.handleBlur}
+                                            value={validationType.values.compare_at_url || ""}
+                                            invalid={
+                                              validationType.touched.compare_at_url &&
+                                              validationType.errors.compare_at_url
+                                                ? true
+                                                : false
+                                            }
+                                          />
+                                          {validationType.touched.compare_at_url &&
+                                          validationType.errors.compare_at_url ? (
+                                            <FormFeedback type="invalid">
+                                              {validationType.errors.compare_at_url}
+                                            </FormFeedback>
+                                          ) : null}
+                                        </div>
+                                      </Col>
+                                    </Row>
+                                  </>
+                                ) : null}
+
                 <Row>
                   <Col className="col-12 d-flex justify-content-end mt-4">
                     <Button

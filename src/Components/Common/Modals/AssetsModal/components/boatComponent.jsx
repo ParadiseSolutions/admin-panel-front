@@ -57,6 +57,7 @@ const BoatComponent = ({
   const [mainClassSelected, setMainClassSelected] = useState(0);
   const [fishingAditionalInputs, setFishingAditionalInputs] = useState(false);
   const [flexiblePrice, setFlexiblePrice] = useState(false);
+  const [customPricesCheck, setCustomPricesCheck] = useState(false);
   const [supportedClassRowTwo, setSupportedClassRowTwo] = useState(false);
   const [supportedClassRowThree, setSupportedClassRowThree] = useState(false);
   const [isRowOpen, setIsRowOpen] = useState(false);
@@ -80,6 +81,12 @@ const BoatComponent = ({
     useState([]);
   const [dapatureLocationsSelectedThree, setDepartureLocationsSelectedThree] =
     useState([]);
+  const [customDurationOne, setCustomDurationOne] = useState(null);
+  const [customDurationTwo, setCustomDurationTwo] = useState(null);
+  const [customDurationThree, setCustomDurationThree] = useState(null);
+  const [customDurationFour, setCustomDurationFour] = useState(null);
+  const [customDurationFive, setCustomDurationFive] = useState(null);
+  const [customDurationSix, setCustomDurationSix] = useState(null);
 
   //initial request
   useEffect(() => {
@@ -106,7 +113,7 @@ const BoatComponent = ({
       setDepartureLocationData(resp.data.data);
     });
   }, []);
-  console.log("dataEdit", dataEdit);
+  
 
   //edit request
   useEffect(() => {
@@ -125,10 +132,18 @@ const BoatComponent = ({
       setFishingAditionalInputs(
         dataEdit.activities.includes(50) ? true : false
       );
-      setSuportedClassSelectedOne(dataEdit.supported_classes?.class_id_1 || null);
-      setDurationClassSelectedOne(dataEdit.supported_classes?.duration_1 || null);
-      setSuportedClassSelectedTwo(dataEdit.supported_classes?.class_id_2 || null);
-      setDurationClassSelectedTwo(dataEdit.supported_classes?.duration_2 || null);
+      setSuportedClassSelectedOne(
+        dataEdit.supported_classes?.class_id_1 || null
+      );
+      setDurationClassSelectedOne(
+        dataEdit.supported_classes?.duration_1 || null
+      );
+      setSuportedClassSelectedTwo(
+        dataEdit.supported_classes?.class_id_2 || null
+      );
+      setDurationClassSelectedTwo(
+        dataEdit.supported_classes?.duration_2 || null
+      );
       setSuportedClassSelectedThree(
         dataEdit.supported_classes?.class_id_3 || null
       );
@@ -156,6 +171,13 @@ const BoatComponent = ({
       ) {
         setSupportedClassRowThree(true);
       }
+      setCustomPricesCheck(dataEdit.has_custom_prices === 1 ? true : false);
+      setCustomDurationOne(dataEdit.custom_prices?.duration_1 || null);
+      setCustomDurationTwo(dataEdit.custom_prices?.duration_2 || null);
+      setCustomDurationThree(dataEdit.custom_prices?.duration_3 || null);
+      setCustomDurationFour(dataEdit.custom_prices?.duration_4 || null);
+      setCustomDurationFive(dataEdit.custom_prices?.duration_5 || null);
+      setCustomDurationSix(dataEdit.custom_prices?.duration_6 || null);
     }
   }, [dataEdit]);
 
@@ -194,7 +216,7 @@ const BoatComponent = ({
     setFishingAditionalInputs(Boolean(containsFishing));
     // setSelectionID(selected);
   }
-  console.log("is Row open", isRowOpen);
+
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -208,6 +230,12 @@ const BoatComponent = ({
       notes: dataEdit ? dataEdit.notes : "",
       joint_fleet: dataEdit ? dataEdit.joined_fleet_at : "",
       last_inspected: dataEdit ? dataEdit.last_inspected_at : "",
+      net_price_1: dataEdit ? dataEdit.custom_prices?.net_price_1 : "",
+      net_price_2: dataEdit ? dataEdit.custom_prices?.net_price_2 : "",
+      net_price_3: dataEdit ? dataEdit.custom_prices?.net_price_3 : "",
+      net_price_4: dataEdit ? dataEdit.custom_prices?.net_price_4 : "",
+      net_price_5: dataEdit ? dataEdit.custom_prices?.net_price_5 : "",
+      net_price_6: dataEdit ? dataEdit.custom_prices?.net_price_6 : "",
     },
     // validationSchema: Yup.object().shape({
     //   name: Yup.string().required("Name is required"),
@@ -263,6 +291,21 @@ const BoatComponent = ({
             : dapatureLocationsSelectedThree.length > 0
             ? dapatureLocationsSelectedThree
             : initialDepartureLocationsThree,
+        },
+        has_custom_prices: customPricesCheck ? 1 : 0,
+        custom_prices: {
+          duration_1: customDurationOne,
+          net_price_1: values.net_price_1,
+          duration_2: customDurationTwo,
+          net_price_2: values.net_price_2,
+          duration_3: customDurationThree,
+          net_price_3: values.net_price_3,
+          duration_4: customDurationFour,
+          net_price_4: values.net_price_4,
+          duration_5: customDurationFive,
+          net_price_5: values.net_price_5,
+          duration_6: customDurationSix,
+          net_price_6: values.net_price_6,
         },
       };
 
@@ -637,7 +680,7 @@ const BoatComponent = ({
             <Row>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Marina Location</Label>
+                  <Label className="form-label">Marina</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -687,18 +730,18 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Access.</Label>
+                  <Label className="form-label">A/C</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="boat_access"
+                      id="boat_ac"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="boat_access"
+                      target="boat_ac"
                     >
-                      Is your boat wheelchair accessible?
+                      Does your boat feature an air-conditioned cabin?
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -706,25 +749,24 @@ const BoatComponent = ({
                   type="select"
                   name=""
                   onChange={(e) => {
-                    setBoatAccessSelected(+e.target.value);
+                    setBoatACSelected(e.target.value);
                   }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  {map(accesData, (acces, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={acces.id}
-                        selected={
-                          dataEdit ? dataEdit.access_id === acces.id : false
-                        }
-                      >
-                        {acces.name}
-                      </option>
-                    );
-                  })}
+                  <option
+                    selected={dataEdit ? dataEdit.ac === "Yes" : false}
+                    value={"Yes"}
+                  >
+                    Yes
+                  </option>
+                  <option
+                    selected={dataEdit ? dataEdit.ac === "No" : false}
+                    value={"No"}
+                  >
+                    No
+                  </option>
                 </Input>
               </Col>
               <Col className="col-1">
@@ -767,7 +809,7 @@ const BoatComponent = ({
                   ) : null}
                 </div>
               </Col>
-
+              
               <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
@@ -809,7 +851,7 @@ const BoatComponent = ({
                   ) : null}
                 </div>
               </Col>
-              <Col className="col-1">
+               <Col className="col-1">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Shade</Label>
                   <div>
@@ -853,18 +895,18 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">A/C</Label>
+                  <Label className="form-label">Access.</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="boat_ac"
+                      id="boat_access"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="boat_ac"
+                      target="boat_access"
                     >
-                      Does your boat feature an air-conditioned cabin?
+                      Is your boat wheelchair accessible?
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -872,26 +914,28 @@ const BoatComponent = ({
                   type="select"
                   name=""
                   onChange={(e) => {
-                    setBoatACSelected(e.target.value);
+                    setBoatAccessSelected(+e.target.value);
                   }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
                 >
                   <option value={null}>Select....</option>
-                  <option
-                    selected={dataEdit ? dataEdit.ac === "Yes" : false}
-                    value={"Yes"}
-                  >
-                    Yes
-                  </option>
-                  <option
-                    selected={dataEdit ? dataEdit.ac === "No" : false}
-                    value={"No"}
-                  >
-                    No
-                  </option>
+                  {map(accesData, (acces, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={acces.id}
+                        selected={
+                          dataEdit ? dataEdit.access_id === acces.id : false
+                        }
+                      >
+                        {acces.name}
+                      </option>
+                    );
+                  })}
                 </Input>
               </Col>
+        
               <Col className="col">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Activities</Label>
@@ -944,8 +988,7 @@ const BoatComponent = ({
                         placement="top"
                         target="upload_pdf"
                       >
-                        Upload a PDF of photos for display in our CE Tool Chest
-                        and other tools.
+                        Upload an image to be displayed in the CE Tool Chest and other tools. (Image size: 500 x 325 px).
                       </UncontrolledTooltip>
                     </div>
                   </div>
@@ -980,12 +1023,12 @@ const BoatComponent = ({
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
-                        id="upload_pdf"
+                        id="upload_image"
                       />
                       <UncontrolledTooltip
                         autohide={true}
                         placement="top"
-                        target="upload_pdf"
+                        target="upload_image"
                       >
                         Upload an image to be displayed in the CE Tool Chest and
                         other tools. (Image size: 115 x 90 px).
@@ -1024,12 +1067,12 @@ const BoatComponent = ({
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="boat_location"
+                      id="notes"
                     />
                     <UncontrolledTooltip
                       autohide={true}
                       placement="top"
-                      target="boat_location"
+                      target="notes"
                     >
                       Include any notes about the boat such as its current
                       status, maintenance, restrictions, etc. This may display
@@ -1156,10 +1199,7 @@ const BoatComponent = ({
                           placement="top"
                           target="main_class"
                         >
-                          Include any notes about the boat such as its current
-                          status, maintenance, restrictions, etc. This may
-                          display in the CE Tool Chest, Fishing Dispatch or
-                          other internal tools.
+                          The primary class of the boat. It may take other type of trips but this is its main category.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1223,17 +1263,14 @@ const BoatComponent = ({
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
-                          id="main_class"
+                          id="flexible"
                         />
                         <UncontrolledTooltip
                           autohide={true}
                           placement="top"
-                          target="main_class"
+                          target="flexible"
                         >
-                          Include any notes about the boat such as its current
-                          status, maintenance, restrictions, etc. This may
-                          display in the CE Tool Chest, Fishing Dispatch or
-                          other internal tools.
+                          Indicates whether this boat can be used for trips in other classifications. Enable this option if the boat is allowed to operate outside its primary class.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1258,17 +1295,14 @@ const BoatComponent = ({
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
-                          id="main_class"
+                          id="custom_prices"
                         />
                         <UncontrolledTooltip
                           autohide={true}
                           placement="top"
-                          target="main_class"
+                          target="custom_prices"
                         >
-                          Include any notes about the boat such as its current
-                          status, maintenance, restrictions, etc. This may
-                          display in the CE Tool Chest, Fishing Dispatch or
-                          other internal tools.
+                          Add specific pricing for the boat, for example if the boat requires a specific amount to operate that is different than our standard pricing. This will show in the Boat Details in the Fishing Dispatch tool.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1277,21 +1311,31 @@ const BoatComponent = ({
                         name="seasonality"
                         placeholder=""
                         type="checkbox"
-                        // checked={openTicketCheck}
+                        checked={customPricesCheck}
                         className="form-check-input"
-                        // onChange={() => {
-                        //   setOpenTicketCheck(!openTicketCheck);
-                        //   openTicketFunction();
-                        // }}
+                        onChange={() => {
+                          setCustomPricesCheck(!customPricesCheck);
+                        }}
                         // onBlur={validationType.handleBlur}
-                        // value={openTicketCheck}
+                        value={customPricesCheck}
                       />
                     </div>
                   </Col>
                 </Row>
+
                 <Row className="mt-4">
                   {flexiblePrice ? (
                     <>
+                      <Row className="mt-4">
+                        <div
+                          className="p-3"
+                          style={{ backgroundColor: "#E9F4FF" }}
+                        >
+                          <p className="fs-5 fw-bold text-uppercase text-dark mb-0">
+                            Class Flexibility
+                          </p>
+                        </div>
+                      </Row>
                       <Row className=" mb-2 d-flex ">
                         <Col className="col-2">
                           <div className="d-flex justify-content-between">
@@ -1301,17 +1345,14 @@ const BoatComponent = ({
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="main_class"
+                                id="supported_class_one"
                               />
                               <UncontrolledTooltip
                                 autohide={true}
                                 placement="top"
-                                target="main_class"
+                                target="supported_class_one"
                               >
-                                Specifies the trip classifications this boat can
-                                support when marked as flexible. Select the
-                                classes the boat is allowed to operate in
-                                addition to its primary classification.
+                               Specifies the trip classifications this boat can support when marked as flexible. Select the classes the boat is allowed to operate in addition to its primary classification.
                               </UncontrolledTooltip>
                             </div>
                           </div>
@@ -1403,12 +1444,12 @@ const BoatComponent = ({
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="main_class"
+                                id="duration_one"
                               />
                               <UncontrolledTooltip
                                 autohide={true}
                                 placement="top"
-                                target="main_class"
+                                target="duration_one"
                               >
                                 Select the duration of the trip to define its
                                 available pick-up locations.
@@ -1503,7 +1544,7 @@ const BoatComponent = ({
                                 placement="top"
                                 target="departure_location_one"
                               >
-                                Pending
+                                Choose which departure locations are available for the specified supported class and duration of trip for the particular boat.
                               </UncontrolledTooltip>
                             </div>
                           </div>
@@ -1791,7 +1832,7 @@ const BoatComponent = ({
                             ) : (
                               <i
                                 className="uil-minus-circle font-size-20 text-danger"
-                                style={{  cursor: "pointer" }}
+                                style={{ cursor: "pointer" }}
                                 onClick={() => {
                                   setSupportedClassRowThree(true);
                                   setSupportedClassRowTwo(false);
@@ -2054,6 +2095,850 @@ const BoatComponent = ({
                     </>
                   ) : null}
                 </Row>
+
+                <Row className="mt-3">
+                  {customPricesCheck ? (
+                    <>
+                      <Row className="mt-4">
+                        <div
+                          className="p-3"
+                          style={{ backgroundColor: "#FFEFDE" }}
+                        >
+                          <p className="fs-5 fw-bold text-uppercase text-dark mb-0">
+                            Custom Prices
+                          </p>
+                        </div>
+                      </Row>
+                      <Row className="col-12">
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                                <br />
+                                <br />
+                                For example, the boat may take 4 hour trips from
+                                the marina, 6 hour trips it can also pick up
+                                from Northern hotels, and for 8 hour trips it
+                                can pick up at all hotels.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setCustomDurationOne(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option
+                              value={"4 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_1 ===
+                                "4 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              4 Hours
+                            </option>
+                            <option
+                              value={"6 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_1 ===
+                                "6 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              6 Hours
+                            </option>
+                            <option
+                              value={"8 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_1 ===
+                                "8 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              8 Hours
+                            </option>
+                            <option
+                              value={"10 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_1 ===
+                                "10 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              10 Hours
+                            </option>
+                            <option
+                              value={"12 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_1 ===
+                                "12 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              12 Hours
+                            </option>
+                          </Input>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Net Price</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_price_1"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_price_1"
+                              ></UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="net_price_1"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={validationType.values.net_price_1 || ""}
+                              invalid={
+                                validationType.touched.net_price_1 &&
+                                validationType.errors.net_price_1
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.net_price_1 &&
+                            validationType.errors.net_price_1 ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.net_price_1}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            {/* <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                                <br />
+                                <br />
+                                For example, the boat may take 4 hour trips from
+                                the marina, 6 hour trips it can also pick up
+                                from Northern hotels, and for 8 hour trips it
+                                can pick up at all hotels.
+                              </UncontrolledTooltip>
+                            </div> */}
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setCustomDurationTwo(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option
+                              value={"4 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_2 ===
+                                "4 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              4 Hours
+                            </option>
+                            <option
+                              value={"6 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_2 ===
+                                "6 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              6 Hours
+                            </option>
+                            <option
+                              value={"8 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_2 ===
+                                "8 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              8 Hours
+                            </option>
+                            <option
+                              value={"10 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_2 ===
+                                "10 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              10 Hours
+                            </option>
+                            <option
+                              value={"12 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_2 ===
+                                "12 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              12 Hours
+                            </option>
+                          </Input>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Net Price</Label>
+                            {/* <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id=""
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target=""
+                            >
+                            </UncontrolledTooltip>
+                          </div> */}
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="net_price_2"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={validationType.values.net_price_2 || ""}
+                              invalid={
+                                validationType.touched.net_price_2 &&
+                                validationType.errors.net_price_2
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.net_price_2 &&
+                            validationType.errors.net_price_2 ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.net_price_2}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                      </Row>
+                      <Row className="col-12">
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            {/* <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                                <br />
+                                <br />
+                                For example, the boat may take 4 hour trips from
+                                the marina, 6 hour trips it can also pick up
+                                from Northern hotels, and for 8 hour trips it
+                                can pick up at all hotels.
+                              </UncontrolledTooltip>
+                            </div> */}
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setCustomDurationThree(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option
+                              value={"4 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_3 ===
+                                "4 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              4 Hours
+                            </option>
+                            <option
+                              value={"6 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_3 ===
+                                "6 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              6 Hours
+                            </option>
+                            <option
+                              value={"8 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_3 ===
+                                "8 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              8 Hours
+                            </option>
+                            <option
+                              value={"10 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_3 ===
+                                "10 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              10 Hours
+                            </option>
+                            <option
+                              value={"12 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_3 ===
+                                "12 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              12 Hours
+                            </option>
+                          </Input>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Net Price</Label>
+                            {/* <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id=""
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target=""
+                            >
+                            </UncontrolledTooltip>
+                          </div> */}
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="net_price_3"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={validationType.values.net_price_3 || ""}
+                              invalid={
+                                validationType.touched.net_price_3 &&
+                                validationType.errors.net_price_3
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.net_price_3 &&
+                            validationType.errors.net_price_3 ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.net_price_3}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            {/* <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                                <br />
+                                <br />
+                                For example, the boat may take 4 hour trips from
+                                the marina, 6 hour trips it can also pick up
+                                from Northern hotels, and for 8 hour trips it
+                                can pick up at all hotels.
+                              </UncontrolledTooltip>
+                            </div> */}
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setCustomDurationFour(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option
+                              value={"4 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_4 ===
+                                "4 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              4 Hours
+                            </option>
+                            <option
+                              value={"6 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_4 ===
+                                "6 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              6 Hours
+                            </option>
+                            <option
+                              value={"8 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_4 ===
+                                "8 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              8 Hours
+                            </option>
+                            <option
+                              value={"10 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_4 ===
+                                "10 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              10 Hours
+                            </option>
+                            <option
+                              value={"12 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_4 ===
+                                "12 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              12 Hours
+                            </option>
+                          </Input>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Net Price</Label>
+                            {/* <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id=""
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target=""
+                            >
+                            </UncontrolledTooltip>
+                          </div> */}
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="net_price_4"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={validationType.values.net_price_4 || ""}
+                              invalid={
+                                validationType.touched.net_price_4 &&
+                                validationType.errors.net_price_4
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.net_price_4 &&
+                            validationType.errors.net_price_4 ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.net_price_4}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                      </Row>
+                      <Row className="col-12">
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            {/* <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                                <br />
+                                <br />
+                                For example, the boat may take 4 hour trips from
+                                the marina, 6 hour trips it can also pick up
+                                from Northern hotels, and for 8 hour trips it
+                                can pick up at all hotels.
+                              </UncontrolledTooltip>
+                            </div> */}
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setCustomDurationFive(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option
+                              value={"4 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_5 ===
+                                "4 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              4 Hours
+                            </option>
+                            <option
+                              value={"6 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_5 ===
+                                "6 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              6 Hours
+                            </option>
+                            <option
+                              value={"8 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_5 ===
+                                "8 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              8 Hours
+                            </option>
+                            <option
+                              value={"10 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_5 ===
+                                "10 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              10 Hours
+                            </option>
+                            <option
+                              value={"12 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_5 ===
+                                "12 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              12 Hours
+                            </option>
+                          </Input>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Net Price</Label>
+                            {/* <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id=""
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target=""
+                            >
+                            </UncontrolledTooltip>
+                          </div> */}
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="net_price_5"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={validationType.values.net_price_5 || ""}
+                              invalid={
+                                validationType.touched.net_price_5 &&
+                                validationType.errors.net_price_5
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.net_price_5 &&
+                            validationType.errors.net_price_5 ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.net_price_5}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            {/* <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="main_class"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="main_class"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                                <br />
+                                <br />
+                                For example, the boat may take 4 hour trips from
+                                the marina, 6 hour trips it can also pick up
+                                from Northern hotels, and for 8 hour trips it
+                                can pick up at all hotels.
+                              </UncontrolledTooltip>
+                            </div> */}
+                          </div>
+                          <Input
+                            type="select"
+                            name=""
+                            onChange={(e) => {
+                              setCustomDurationSix(e.target.value);
+                            }}
+                            onBlur={validationType.handleBlur}
+                            //   value={validationType.values.department || ""}
+                          >
+                            <option value={null}>Select....</option>
+                            <option
+                              value={"4 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_6 ===
+                                "4 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              4 Hours
+                            </option>
+                            <option
+                              value={"6 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_6 ===
+                                "6 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              6 Hours
+                            </option>
+                            <option
+                              value={"8 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_6 ===
+                                "8 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              8 Hours
+                            </option>
+                            <option
+                              value={"10 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_6 ===
+                                "10 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              10 Hours
+                            </option>
+                            <option
+                              value={"12 Hours"}
+                              selected={
+                                dataEdit?.custom_prices?.duration_6 ===
+                                "12 Hours"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              12 Hours
+                            </option>
+                          </Input>
+                        </Col>
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Net Price</Label>
+                            {/* <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id=""
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target=""
+                            >
+                            </UncontrolledTooltip>
+                          </div> */}
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="net_price_6"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              onBlur={validationType.handleBlur}
+                              value={validationType.values.net_price_6 || ""}
+                              invalid={
+                                validationType.touched.net_price_6 &&
+                                validationType.errors.net_price_6
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.net_price_6 &&
+                            validationType.errors.net_price_6 ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.net_price_6}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </Col>
+                      </Row>
+                    </>
+                  ) : null}
+                </Row>
               </>
             ) : null}
             <Row>
@@ -2078,7 +2963,6 @@ const BoatComponent = ({
                   className="waves-effect waves-light mb-3 btn mx-4"
                   onClick={() => {
                     setAssetModal(false);
-                    
                   }}
                 >
                   Cancel
