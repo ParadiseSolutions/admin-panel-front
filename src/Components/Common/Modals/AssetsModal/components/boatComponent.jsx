@@ -113,7 +113,7 @@ const BoatComponent = ({
       setDepartureLocationData(resp.data.data);
     });
   }, []);
-  console.log("dataEdit", dataEdit.custom_prices);
+  
 
   //edit request
   useEffect(() => {
