@@ -295,17 +295,17 @@ const BoatComponent = ({
         has_custom_prices: customPricesCheck ? 1 : 0,
         custom_prices: {
           duration_1: customDurationOne,
-          net_price_1: values.net_price_1,
+          net_price_1: values.net_price_1 !== "" ? values.net_price_1 : null,
           duration_2: customDurationTwo,
-          net_price_2: values.net_price_2,
+          net_price_2: values.net_price_2 !== "" ? values.net_price_2 : null,
           duration_3: customDurationThree,
-          net_price_3: values.net_price_3,
+          net_price_3: values.net_price_3 !== "" ? values.net_price_3 : null,
           duration_4: customDurationFour,
-          net_price_4: values.net_price_4,
+          net_price_4: values.net_price_4 !== "" ? values.net_price_4 : null,
           duration_5: customDurationFive,
-          net_price_5: values.net_price_5,
+          net_price_5: values.net_price_5 !== "" ? values.net_price_5 : null,
           duration_6: customDurationSix,
-          net_price_6: values.net_price_6,
+          net_price_6: values.net_price_6 !== "" ? values.net_price_6 : null,
         },
       };
 
@@ -973,7 +973,7 @@ const BoatComponent = ({
                 </Select>
               </Col>
             </Row>
-            <Row className="mb-5">
+            <Row className="mb-2">
               <Col className="col-6">
                 <div>
                   <div className="d-flex justify-content-between">
@@ -988,7 +988,7 @@ const BoatComponent = ({
                         placement="top"
                         target="upload_pdf"
                       >
-                        Upload an image to be displayed in the CE Tool Chest and other tools. (Image size: 500 x 325 px).
+                        Upload a PDF of photos for display in our CE Tool Chest and other tools.
                       </UncontrolledTooltip>
                     </div>
                   </div>
@@ -1030,8 +1030,7 @@ const BoatComponent = ({
                         placement="top"
                         target="upload_image"
                       >
-                        Upload an image to be displayed in the CE Tool Chest and
-                        other tools. (Image size: 115 x 90 px).
+                        Upload an image to be displayed in the CE Tool Chest and other tools. (Image size: 500 x 325 px).
                       </UncontrolledTooltip>
                     </div>
                   </div>
@@ -1200,6 +1199,7 @@ const BoatComponent = ({
                           target="main_class"
                         >
                           The primary class of the boat. It may take other type of trips but this is its main category.
+                          
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1323,7 +1323,7 @@ const BoatComponent = ({
                   </Col>
                 </Row>
 
-                <Row className="mt-4">
+                <Row className="">
                   {flexiblePrice ? (
                     <>
                       <Row className="mt-4">
@@ -1570,8 +1570,8 @@ const BoatComponent = ({
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
                           <i
-                            className="uil-plus-circle font-size-20"
-                            style={{ color: "#F6851F", cursor: "pointer" }}
+                            className="uil-plus-circle font-size-20 text-paradise"
+                            style={{  cursor: "pointer" }}
                             onClick={() => setSupportedClassRowTwo(true)}
                           />
                         </Col>
@@ -1586,17 +1586,14 @@ const BoatComponent = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="main_class"
+                                  id="suported_class_two"
                                 />
                                 <UncontrolledTooltip
                                   autohide={true}
                                   placement="top"
-                                  target="main_class"
+                                  target="suported_class_two"
                                 >
-                                  Specifies the trip classifications this boat
-                                  can support when marked as flexible. Select
-                                  the classes the boat is allowed to operate in
-                                  addition to its primary classification.
+                                 Specifies the trip classifications this boat can support when marked as flexible. Select the classes the boat is allowed to operate in addition to its primary classification.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
@@ -1688,12 +1685,12 @@ const BoatComponent = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="main_class"
+                                  id="duration_two"
                                 />
                                 <UncontrolledTooltip
                                   autohide={true}
                                   placement="top"
-                                  target="main_class"
+                                  target="duration_two"
                                 >
                                   Select the duration of the trip to define its
                                   available pick-up locations.
@@ -1788,7 +1785,7 @@ const BoatComponent = ({
                                   placement="top"
                                   target="departure_location_two"
                                 >
-                                  Pending
+                                  Choose which departure locations are available for the specified supported class and duration of trip for the particular boat.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
@@ -1819,9 +1816,8 @@ const BoatComponent = ({
                             {isRowOpen || !supportedClassRowThree ? (
                               <>
                                 <i
-                                  className="uil-plus-circle font-size-20"
+                                  className="uil-plus-circle font-size-20 text-paradise"
                                   style={{
-                                    color: "#F6851F",
                                     cursor: "pointer",
                                   }}
                                   onClick={() => {
@@ -1854,17 +1850,14 @@ const BoatComponent = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="main_class"
+                                  id="suported_class_three"
                                 />
                                 <UncontrolledTooltip
                                   autohide={true}
                                   placement="top"
-                                  target="main_class"
+                                  target="suported_class_three"
                                 >
-                                  Specifies the trip classifications this boat
-                                  can support when marked as flexible. Select
-                                  the classes the boat is allowed to operate in
-                                  addition to its primary classification.
+                                  Specifies the trip classifications this boat can support when marked as flexible. Select the classes the boat is allowed to operate in addition to its primary classification.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
@@ -2056,7 +2049,7 @@ const BoatComponent = ({
                                   placement="top"
                                   target="departure_location_three"
                                 >
-                                  Pending
+                                  Choose which departure locations are available for the specified supported class and duration of trip for the particular boat.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
