@@ -12,6 +12,10 @@ import {
   deletePriceAPI,
   triggerUpdate,
   putPriceRangesAPI,
+  getPricingOptionsAPI,
+  getPricingOptions2API,
+  getPricingZoneOptionsAPI,
+  getPricingZoneArrivalOptionsAPI,
 } from "../../../Utils/API/Tours";
 import {
   TabPane,
@@ -26,11 +30,141 @@ import {
 import { Name, Code, Price, Rate, Active } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 import AddPezGato from "../../../Components/Common/Modals/PricingModals/addPezGato";
+import { getCurrency } from "../../../Utils/API/Operators";
+import { getActivities } from "../../../Utils/API/Assets";
 
 const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
   const [priceRangeCheck, setPriceRangeCheck] = useState(false);
+
+  //add new product
+  const [addNewProduct, setAddNewProduct] = useState(false);
+  const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);
+  const [addNewFishing, setAddNewFishing] = useState(false);
+  const [addNewPrivateCharter, setAddNewPrivateCharter] = useState(false);
+  const [addNewPrivateTour, setAddNewPrivateTour] = useState(false);
+  const [addNewTransportation, setAddNewTransportation] = useState(false);
+
+  // data request
+  const [priceTypeData, setPriceTypeData] = useState([]);
+  const [priceOptions, setPriceOptions] = useState([]);
+  const [priceCollect, setPriceCollect] = useState([]);
+  const [priceSeason, setPriceSeason] = useState([]);
+  const [priceCharterType, setPriceCharterType] = useState([]);
+  const [priceDuration, setPriceDuration] = useState([]);
+  const [priceLocation, setPriceLocation] = useState([]);
+  const [pricingOption2Selected, setPricingOption2Selected] = useState([]);
+  const [currency, setCurrency] = useState([]);
+  const [activityData, setActivityData] = useState([]);
+  const [priceTransferType, setPriceTransferType] = useState([]);
+  const [priceDirection, setPriceDirection] = useState([]);
+  const [priceVehicle, setPriceVehicle] = useState([]);
+  const [priceZone, setPriceZone] = useState([]);
+  const [arrivalZone, setArrivalZone] = useState([]);
+    // const [priceVehicle, setVehicleZone] = useState([]);
+
+  useEffect(() => {
+    const type = tourData?.type_id;
+    const provider = tourData?.provider_id;
+    if (!type) return;
+
+    let mounted = true;
+    const requests = [];
+    const setters = [];
+
+    const add = (promise, setter) => {
+      requests.push(promise);
+      setters.push(setter);
+    };
+
+    if (type === 6 && provider != 147) {
+      add(getPricingOptionsAPI(38), setPriceTypeData);
+      add(getPricingOptionsAPI(39), setPriceOptions);
+      add(getPricingOptionsAPI(41), setPriceCollect);
+      add(getPricingOptionsAPI(44), setPriceSeason);
+      add(getPricingOptionsAPI(48), setPriceCharterType);
+      add(getPricingOptionsAPI(40), setPriceDuration);
+      add(getPricingOptionsAPI(42), setPriceLocation);
+      add(getPricingOptions2API(68), setPricingOption2Selected);
+      add(getCurrency(), setCurrency);
+    } else {
+      switch (type) {
+        case 5:
+          add(getPricingOptionsAPI(33), setPriceTypeData);
+          add(getPricingOptionsAPI(34), setPriceOptions);
+          add(getPricingOptionsAPI(36), setPriceCollect);
+          add(getPricingOptionsAPI(32), setPriceSeason);
+          add(getPricingOptionsAPI(47), setPriceCharterType);
+          add(getPricingOptionsAPI(35), setPriceDuration);
+          add(getPricingOptionsAPI(37), setPriceLocation);
+          add(getCurrency(), setCurrency);
+          add(
+            getActivities({ search: "", tipo: "boats", list: "admin_cargarActivityCombo" }),
+            setActivityData,
+          );
+          break;
+        case 2:
+          add(getPricingOptionsAPI(6), setPriceTypeData);
+          add(getPricingOptionsAPI(7), setPriceOptions);
+          add(getPricingOptionsAPI(9), setPriceCollect);
+          add(getPricingOptionsAPI(29), setPriceSeason);
+          add(getPricingOptions2API(64), setPricingOption2Selected);
+          add(getCurrency(), setCurrency);
+          break;
+        case 1:
+          add(getPricingOptionsAPI(1), setPriceTypeData);
+          add(getPricingOptionsAPI(2), setPriceOptions);
+          add(getPricingOptionsAPI(4), setPriceCollect);
+          add(getPricingOptionsAPI(28), setPriceSeason);
+          add(getPricingOptions2API(63), setPricingOption2Selected);
+          add(getCurrency(), setCurrency);
+          break;
+        case 3:
+          add(getPricingOptionsAPI(10), setPriceTypeData);
+          add(getPricingOptionsAPI(11), setPriceOptions);
+          add(getPricingOptionsAPI(14), setPriceCollect);
+          add(getPricingOptionsAPI(30), setPriceSeason);
+          add(getPricingOptionsAPI(12), setPriceTransferType);
+          add(getPricingOptionsAPI(13), setPriceDirection);
+          add(getPricingOptionsAPI(17), setPriceVehicle);
+          add(getPricingZoneOptionsAPI(50, provider), setPriceZone);
+          add(getCurrency(), setCurrency);
+          break;
+        case 4:
+          add(getPricingOptionsAPI(20), setPriceTypeData);
+          add(getPricingOptionsAPI(21), setPriceOptions);
+          add(getPricingOptionsAPI(22), setPriceCollect);
+          add(getPricingOptionsAPI(31), setPriceSeason);
+          add(getPricingOptionsAPI(46), setPriceTransferType);
+          add(getPricingOptionsAPI(49), setPriceDirection);
+          add(getPricingOptionsAPI(24), setPriceVehicle);
+          add(getPricingZoneOptionsAPI(51, provider), setPriceZone);
+          add(getPricingZoneArrivalOptionsAPI(69, provider), setArrivalZone);
+          add(getCurrency(), setCurrency);
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (requests.length === 0) return () => (mounted = false);
+
+    Promise.all(requests.map((p) => p.catch((e) => e))).then((responses) => {
+      if (!mounted) return;
+      responses.forEach((resp, idx) => {
+        if (!mounted) return;
+        const setter = setters[idx];
+        if (!resp || resp instanceof Error) return;
+        const payload = resp.data?.data ?? resp.data?.results;
+        if (typeof setter === "function") setter(payload);
+      });
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [tourData?.type_id, tourData?.provider_id]);
 
   useEffect(() => {
     getPricesPricingAPI(id).then((resp) => {
@@ -83,7 +217,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(error.response.data.message)
+                String(error.response.data.message),
               );
             } else {
               let errorMessages = [];
@@ -95,7 +229,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(errorMessages[0])
+                String(errorMessages[0]),
               );
             }
           });
@@ -320,14 +454,6 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       },
     },
   ]);
-  //add new product
-  const [addNewProduct, setAddNewProduct] = useState(false);
-  const [addNewAirportTransfer, setAddNewAirportTransfer] = useState(false);
-  const [addNewFishing, setAddNewFishing] = useState(false);
-
-  const [addNewPrivateCharter, setAddNewPrivateCharter] = useState(false);
-  const [addNewPrivateTour, setAddNewPrivateTour] = useState(false);
-  const [addNewTransportation, setAddNewTransportation] = useState(false);
 
   // bulk edit
   const [bulkEditModal, setBulkEditModal] = useState(false);
@@ -491,6 +617,15 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
+          priceTypeData={priceTypeData}
+          priceOptions={priceOptions}
+          priceCollect={priceCollect}
+          priceSeason={priceSeason}
+          priceCharterType={priceCharterType}
+          priceDuration={priceDuration}
+          priceLocation={priceLocation}
+          pricingOption2Selected={pricingOption2Selected}
+          currency={currency}
         />
       ) : null}
       {tourData?.type_id === 2 ? (
@@ -504,6 +639,15 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
+          priceTypeData={priceTypeData}
+          priceOptions={priceOptions}
+          priceCollect={priceCollect}
+          priceSeason={priceSeason}
+          priceCharterType={priceCharterType}
+          priceDuration={priceDuration}
+          priceLocation={priceLocation}
+          pricingOption2Selected={pricingOption2Selected}
+          currency={currency}
         />
       ) : null}
       {tourData?.type_id === 3 ? (
@@ -517,6 +661,19 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
+          priceTypeData={priceTypeData}
+          priceOptions={priceOptions}
+          priceCollect={priceCollect}
+          priceSeason={priceSeason}
+          priceCharterType={priceCharterType}
+          priceDuration={priceDuration}
+          priceLocation={priceLocation}
+          pricingOption2Selected={pricingOption2Selected}
+          currency={currency}
+          priceTransferType={priceTransferType}
+          priceDirection={priceDirection}
+          priceVehicle={priceVehicle}
+          priceZone={priceZone}
         />
       ) : null}
       {tourData?.type_id === 4 ? (
@@ -530,6 +687,16 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
+           priceTypeData={priceTypeData}
+          priceOptions={priceOptions}
+          priceCollect={priceCollect}
+          priceSeason={priceSeason}
+          priceCharterType={priceCharterType}
+          priceDuration={priceDuration}
+          priceLocation={priceLocation}
+          pricingOption2Selected={pricingOption2Selected}
+          currency={currency}
+          arrivalZone={arrivalZone}
         />
       ) : null}
       {tourData?.type_id === 5 ? (
@@ -543,9 +710,19 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
+          priceTypeData={priceTypeData}
+          priceOptions={priceOptions}
+          priceCollect={priceCollect}
+          priceSeason={priceSeason}
+          priceCharterType={priceCharterType}
+          priceDuration={priceDuration}
+          priceLocation={priceLocation}
+          pricingOption2Selected={pricingOption2Selected}
+          currency={currency}
+          activityData={activityData}
         />
       ) : null}
-      {tourData?.type_id === 6 && tourData?.provider_id != 147? (
+      {tourData?.type_id === 6 && tourData?.provider_id != 147 ? (
         <AddNewPrivateCharter
           addNewPrivateCharter={addNewPrivateCharter}
           setAddNewPrivateCharter={setAddNewPrivateCharter}
@@ -556,6 +733,15 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
+          priceTypeData={priceTypeData}
+          priceOptions={priceOptions}
+          priceCollect={priceCollect}
+          priceSeason={priceSeason}
+          priceCharterType={priceCharterType}
+          priceDuration={priceDuration}
+          priceLocation={priceLocation}
+          pricingOption2Selected={pricingOption2Selected}
+          currency={currency}
         />
       ) : null}
       {tourData?.type_id === 6 && tourData?.provider_id === 147 ? (
@@ -569,6 +755,15 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           setCopyProduct={setCopyProduct}
           priceRangeCheck={priceRangeCheck}
           setPriceRangeCheck={setPriceRangeCheck}
+          priceTypeData={priceTypeData}
+          priceOptions={priceOptions}
+          priceCollect={priceCollect}
+          priceSeason={priceSeason}
+          priceCharterType={priceCharterType}
+          priceDuration={priceDuration}
+          priceLocation={priceLocation}
+          pricingOption2Selected={pricingOption2Selected}
+          currency={currency}
         />
       ) : null}
 

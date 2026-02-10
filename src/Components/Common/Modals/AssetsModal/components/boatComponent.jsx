@@ -294,7 +294,7 @@ const BoatComponent = ({
         },
         has_custom_prices: customPricesCheck ? 1 : 0,
         custom_prices: {
-          duration_1: customDurationOne,
+          duration_1: customDurationOne ,
           net_price_1: values.net_price_1 !== "" ? values.net_price_1 : null,
           duration_2: customDurationTwo,
           net_price_2: values.net_price_2 !== "" ? values.net_price_2 : null,
@@ -1191,12 +1191,12 @@ const BoatComponent = ({
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
-                          id="main_class"
+                          id="main_class_boat"
                         />
                         <UncontrolledTooltip
                           autohide={true}
                           placement="top"
-                          target="main_class"
+                          target="main_class_boat"
                         >
                           The primary class of the boat. It may take other type of trips but this is its main category.
                           

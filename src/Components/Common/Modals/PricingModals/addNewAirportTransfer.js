@@ -39,7 +39,16 @@ const AddNewAirportTransfer = ({
   editProductID,
   tourData,
   copyProduct,
-  setCopyProduct
+  setCopyProduct,
+  priceTypeData,
+  priceOptions,
+  priceCollect,
+  priceSeason,
+  currency,
+  priceTransferType,
+  priceDirection,
+  priceVehicle,
+  priceZone,
 }) => {
   let id = "";
   id = editProductID;
@@ -57,59 +66,59 @@ const AddNewAirportTransfer = ({
   }, [id, addNewAirportTransfer]);
 
   //combo box request
-  const [priceTypeData, setPriceTypeData] = useState([]);
-  const [priceOptions, setPriceOptions] = useState([]);
-  const [priceCollect, setPriceCollect] = useState([]);
-  const [priceSeason, setPriceSeason] = useState([]);
+  // const [priceTypeData, setPriceTypeData] = useState([]);
+  // const [priceOptions, setPriceOptions] = useState([]);
+  // const [priceCollect, setPriceCollect] = useState([]);
+  // const [priceSeason, setPriceSeason] = useState([]);
+  // const [currency, setCurrency] = useState([])
+  // const [priceTransferType, setPriceTransferType] = useState([]);
+  // const [priceDirection, setPriceDirection] = useState([]);
+  // const [priceVehicle, setPriceVehicle] = useState([]);
+  // const [priceZone, setPriceZone] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
-  const [currency, setCurrency] = useState([])
   const [currencySelected, setCurrencySelected] = useState('')
-  const [priceTransferType, setPriceTransferType] = useState([]);
-  const [priceDirection, setPriceDirection] = useState([]);
-  const [priceVehicle, setPriceVehicle] = useState([]);
-  const [priceZone, setPriceZone] = useState([]);
   const [priceTransferTypeSelected, setPriceTransferTypeSelected] = useState("");
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
 
-  useEffect(() => {
-    if (addNewAirportTransfer) {
-      setLoadingData(true)
-      getPricingOptionsAPI(10).then((resp) => {
-        setPriceTypeData(resp.data.data);
-      });
-      getPricingOptionsAPI(11).then((resp) => {
-        setPriceOptions(resp.data.data);
-      });
-      getPricingOptionsAPI(14).then((resp) => {
-        setPriceCollect(resp.data.data);
-      });
-      getPricingOptionsAPI(30).then((resp) => {
-        setPriceSeason(resp.data.data);
-      });
-      getPricingOptionsAPI(12).then((resp) => {
-        setPriceTransferType(resp.data.data);
-      });
-      getPricingOptionsAPI(13).then((resp) => {
-        setPriceDirection(resp.data.data);
-      });
-      getPricingOptionsAPI(17).then((resp) => {
-        setPriceVehicle(resp.data.data);
-      });
-      getPricingZoneOptionsAPI(50, tourData.provider_id).then((resp) => {
-        setPriceZone(resp.data.data);
-      });
-      getCurrency().then((resp) => {
-        setCurrency(resp.data.data)
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addNewAirportTransfer]);
+  // useEffect(() => {
+  //   if (addNewAirportTransfer) {
+  //     setLoadingData(true)
+  //     getPricingOptionsAPI(10).then((resp) => {
+  //       setPriceTypeData(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(11).then((resp) => {
+  //       setPriceOptions(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(14).then((resp) => {
+  //       setPriceCollect(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(30).then((resp) => {
+  //       setPriceSeason(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(12).then((resp) => {
+  //       setPriceTransferType(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(13).then((resp) => {
+  //       setPriceDirection(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(17).then((resp) => {
+  //       setPriceVehicle(resp.data.data);
+  //     });
+  //     getPricingZoneOptionsAPI(50, tourData.provider_id).then((resp) => {
+  //       setPriceZone(resp.data.data);
+  //     });
+  //     getCurrency().then((resp) => {
+  //       setCurrency(resp.data.data)
+  //     })
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [addNewAirportTransfer]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
