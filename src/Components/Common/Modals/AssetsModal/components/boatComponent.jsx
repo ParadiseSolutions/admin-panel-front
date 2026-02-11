@@ -230,12 +230,12 @@ const BoatComponent = ({
       notes: dataEdit ? dataEdit.notes : "",
       joint_fleet: dataEdit ? dataEdit.joined_fleet_at : "",
       last_inspected: dataEdit ? dataEdit.last_inspected_at : "",
-      net_price_1: dataEdit ? dataEdit.custom_prices?.net_price_1 : "",
-      net_price_2: dataEdit ? dataEdit.custom_prices?.net_price_2 : "",
-      net_price_3: dataEdit ? dataEdit.custom_prices?.net_price_3 : "",
-      net_price_4: dataEdit ? dataEdit.custom_prices?.net_price_4 : "",
-      net_price_5: dataEdit ? dataEdit.custom_prices?.net_price_5 : "",
-      net_price_6: dataEdit ? dataEdit.custom_prices?.net_price_6 : "",
+      net_price_1: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_1 : "",
+      net_price_2: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_2 : "",
+      net_price_3: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_3 : "",
+      net_price_4: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_4 : "",
+      net_price_5: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_5 : "",
+      net_price_6: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_6 : "",
     },
     // validationSchema: Yup.object().shape({
     //   name: Yup.string().required("Name is required"),
@@ -308,7 +308,7 @@ const BoatComponent = ({
           net_price_6: values.net_price_6 !== "" ? values.net_price_6 : null,
         },
       };
-
+console.log('Submitting boat data:', data);
       if (dataEdit) {
         putBoat(dataEdit.id, data)
           .then((resp) => {
