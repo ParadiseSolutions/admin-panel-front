@@ -41,7 +41,16 @@ const AddNewPrivateTour = ({
   tourData,
   copyProduct,
   setCopyProduct,
-  priceRangeCheck
+  priceRangeCheck,
+    priceTypeData,
+  priceOptions,
+  priceCollect,
+  priceSeason,
+  priceCharterType,
+  priceDuration,
+  priceLocation,
+  pricingOption2Selected,
+  currency,
 }) => {
   let id = "";
   id = editProductID;
@@ -284,10 +293,10 @@ const AddNewPrivateTour = ({
 
   // console.log(dataEdit);
   //combo box request
-  const [priceTypeData, setPriceTypeData] = useState([]);
-  const [priceOptions, setPriceOptions] = useState([]);
-  const [priceCollect, setPriceCollect] = useState([]);
-  const [priceSeason, setPriceSeason] = useState([]);
+  // const [priceTypeData, setPriceTypeData] = useState([]);
+  // const [priceOptions, setPriceOptions] = useState([]);
+  // const [priceCollect, setPriceCollect] = useState([]);
+  // const [priceSeason, setPriceSeason] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[0]?.source_id : ""
   );
@@ -303,33 +312,33 @@ const AddNewPrivateTour = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState(
     dataEdit && dataEdit.pricedetails ? dataEdit.pricedetails[3]?.source_id : ""
   );
-  const [currency, setCurrency] = useState([])
+  // const [currency, setCurrency] = useState([])
   const [currencySelected, setCurrencySelected] = useState('')
-  const [pricingOption2Selected, setPricingOption2Selected] = useState("");
+  // const [pricingOption2Selected, setPricingOption2Selected] = useState("");
 
-  useEffect(() => {
-    if (addNewPrivateTour) {
-      setLoadingData(true)
-      getPricingOptionsAPI(6).then((resp) => {
-        setPriceTypeData(resp.data.data);
-      });
-      getPricingOptionsAPI(7).then((resp) => {
-        setPriceOptions(resp.data.data);
-      });
-      getPricingOptionsAPI(9).then((resp) => {
-        setPriceCollect(resp.data.data);
-      });
-      getPricingOptionsAPI(29).then((resp) => {
-        setPriceSeason(resp.data.data);
-      });
-      getPricingOptions2API(64).then((resp) => {
-        setPricingOption2Selected(resp.data.data);
-      });
-      getCurrency().then((resp) => {
-        setCurrency(resp.data.data)
-      })
-    }
-  }, [addNewPrivateTour]);
+  // useEffect(() => {
+  //   if (addNewPrivateTour) {
+  //     setLoadingData(true)
+  //     getPricingOptionsAPI(6).then((resp) => {
+  //       setPriceTypeData(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(7).then((resp) => {
+  //       setPriceOptions(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(9).then((resp) => {
+  //       setPriceCollect(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(29).then((resp) => {
+  //       setPriceSeason(resp.data.data);
+  //     });
+  //     getPricingOptions2API(64).then((resp) => {
+  //       setPricingOption2Selected(resp.data.data);
+  //     });
+  //     getCurrency().then((resp) => {
+  //       setCurrency(resp.data.data)
+  //     })
+  //   }
+  // }, [addNewPrivateTour]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);

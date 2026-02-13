@@ -43,6 +43,15 @@ const AddPezGato = ({
   copyProduct,
   setCopyProduct,
   priceRangeCheck,
+   priceTypeData,
+  priceOptions,
+  priceCollect,
+  priceSeason,
+  priceCharterType,
+  priceDuration,
+  priceLocation,
+  pricingOption2Selected,
+  currency,
 }) => {
   let id = "";
   id = editProductID;
@@ -400,16 +409,7 @@ const AddPezGato = ({
   });
 
   //combo box request
-  const [priceTypeData, setPriceTypeData] = useState([]);
-  const [priceOptions, setPriceOptions] = useState([]);
-  const [priceOptions2, setPriceOptions2] = useState([]);
-  const [priceCollect, setPriceCollect] = useState([]);
-  const [priceSeason, setPriceSeason] = useState([]);
-  const [currency, setCurrency] = useState([]);
   const [currencySelected, setCurrencySelected] = useState("");
-  const [priceCharterType, setPriceCharterType] = useState([]);
-  const [priceDuration, setPriceDuration] = useState([]);
-  const [priceLocation, setPriceLocation] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceTypeSelected2, setPriceTypeSelected2] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
@@ -419,44 +419,15 @@ const AddPezGato = ({
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
   const [priceLocationSelected, setPriceLocationSelected] = useState("");
-  const [pricingOption2Selected, setPricingOption2Selected] = useState("");
 
   const [priceSheetSelected, setPriceSheetSelected] = useState("");
 
-  useEffect(() => {
-    if (addNewPrivateCharter) {
-      setLoadingData(true);
-      getPricingOptionsAPI(38).then((resp) => {
-        setPriceTypeData(resp.data.data);
-      });
-      getPricingOptionsAPI(39).then((resp) => {
-        setPriceOptions(resp.data.data);
-      });
-      getPricingOptionsAPI(41).then((resp) => {
-        setPriceCollect(resp.data.data);
-      });
-      getPricingOptionsAPI(44).then((resp) => {
-        setPriceSeason(resp.data.data);
-      });
-      getPricingOptionsAPI(48).then((resp) => {
-        setPriceCharterType(resp.data.data);
-      });
-      getPricingOptionsAPI(40).then((resp) => {
-        setPriceDuration(resp.data.data);
-      });
-      getPricingOptionsAPI(42).then((resp) => {
-        setPriceLocation(resp.data.data);
-      });
-      getPricingOptions2API(68).then((resp) => {
-        setPricingOption2Selected(resp.data.data);
-      });
-      getCurrency().then((resp) => {
-        setCurrency(resp.data.data);
-      });
-      providerPricingCalc()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addNewPrivateCharter]);
+   useEffect(() => {
+     if (addNewPrivateCharter) {
+       
+       providerPricingCalc();
+     }
+   }, [addNewPrivateCharter]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);
