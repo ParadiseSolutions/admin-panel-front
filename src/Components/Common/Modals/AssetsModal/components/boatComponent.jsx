@@ -230,12 +230,12 @@ const BoatComponent = ({
       notes: dataEdit ? dataEdit.notes : "",
       joint_fleet: dataEdit ? dataEdit.joined_fleet_at : "",
       last_inspected: dataEdit ? dataEdit.last_inspected_at : "",
-      net_price_1: dataEdit ? dataEdit.custom_prices?.net_price_1 : "",
-      net_price_2: dataEdit ? dataEdit.custom_prices?.net_price_2 : "",
-      net_price_3: dataEdit ? dataEdit.custom_prices?.net_price_3 : "",
-      net_price_4: dataEdit ? dataEdit.custom_prices?.net_price_4 : "",
-      net_price_5: dataEdit ? dataEdit.custom_prices?.net_price_5 : "",
-      net_price_6: dataEdit ? dataEdit.custom_prices?.net_price_6 : "",
+      net_price_1: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_1 : "",
+      net_price_2: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_2 : "",
+      net_price_3: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_3 : "",
+      net_price_4: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_4 : "",
+      net_price_5: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_5 : "",
+      net_price_6: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_6 : "",
     },
     // validationSchema: Yup.object().shape({
     //   name: Yup.string().required("Name is required"),
@@ -294,7 +294,7 @@ const BoatComponent = ({
         },
         has_custom_prices: customPricesCheck ? 1 : 0,
         custom_prices: {
-          duration_1: customDurationOne,
+          duration_1: customDurationOne ,
           net_price_1: values.net_price_1 !== "" ? values.net_price_1 : null,
           duration_2: customDurationTwo,
           net_price_2: values.net_price_2 !== "" ? values.net_price_2 : null,
@@ -308,7 +308,7 @@ const BoatComponent = ({
           net_price_6: values.net_price_6 !== "" ? values.net_price_6 : null,
         },
       };
-
+console.log('Submitting boat data:', data);
       if (dataEdit) {
         putBoat(dataEdit.id, data)
           .then((resp) => {
@@ -1191,12 +1191,12 @@ const BoatComponent = ({
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
-                          id="main_class"
+                          id="main_class_boat"
                         />
                         <UncontrolledTooltip
                           autohide={true}
                           placement="top"
-                          target="main_class"
+                          target="main_class_boat"
                         >
                           The primary class of the boat. It may take other type of trips but this is its main category.
                           

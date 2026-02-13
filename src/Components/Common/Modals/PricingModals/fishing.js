@@ -48,6 +48,15 @@ const Fishing = ({
   copyProduct,
   setCopyProduct,
   priceRangeCheck,
+  priceTypeData,
+  priceOptions,
+  priceCollect,
+  priceSeason,
+  priceCharterType,
+  priceDuration,
+  priceLocation,
+  currency,
+  activityData
 }) => {
   let id = "";
   id = editProductID;
@@ -68,26 +77,22 @@ const Fishing = ({
   
 
   //combo box request
-  const [priceTypeData, setPriceTypeData] = useState([]);
-  const [priceOptions, setPriceOptions] = useState([]);
-  const [priceCollect, setPriceCollect] = useState([]);
-  const [priceSeason, setPriceSeason] = useState([]);
+ 
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
-  const [currency, setCurrency] = useState([]);
+
   const [currencySelected, setCurrencySelected] = useState("USD");
-  const [priceCharterType, setPriceCharterType] = useState([]);
-  const [priceDuration, setPriceDuration] = useState([]);
-  const [priceLocation, setPriceLocation] = useState([]);
+
+
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
   const [priceLocationSelected, setPriceLocationSelected] = useState("");
   const [cruisePaxSelected, setCruisePaxSelected] = useState("");
   const [activitiesSelected, setActivitiesSelected] = useState([]);
-  const [activityData, setActivityData] = useState([]);
+
   const [providerPricingTab, setProviderPricingTab] = useState(false);
   const [ourPricingTab, setOurPricingTab] = useState(false);
   const [comparisonPricingTab, setComparisonPricingTab] = useState(false);
@@ -96,38 +101,7 @@ const Fishing = ({
   
   useEffect(() => {
     if (addNewFishing) {
-      setLoadingData(true);
-      getPricingOptionsAPI(33).then((resp) => {
-        setPriceTypeData(resp.data.data);
-      });
-      getPricingOptionsAPI(34).then((resp) => {
-        setPriceOptions(resp.data.data);
-      });
-      getPricingOptionsAPI(36).then((resp) => {
-        setPriceCollect(resp.data.data);
-      });
-      getPricingOptionsAPI(32).then((resp) => {
-        setPriceSeason(resp.data.data);
-      });
-      getPricingOptionsAPI(47).then((resp) => {
-        setPriceCharterType(resp.data.data);
-      });
-      getPricingOptionsAPI(35).then((resp) => {
-        setPriceDuration(resp.data.data);
-      });
-      getPricingOptionsAPI(37).then((resp) => {
-        setPriceLocation(resp.data.data);
-      });
-      getCurrency().then((resp) => {
-        setCurrency(resp.data.data);
-      });
-      getActivities({
-        search: "",
-        tipo: "boats",
-        list: "admin_cargarActivityCombo",
-      }).then((resp) => {
-        setActivityData(resp.data.results);
-      });
+      
       providerPricingCalc();
     }
   }, [addNewFishing]);
