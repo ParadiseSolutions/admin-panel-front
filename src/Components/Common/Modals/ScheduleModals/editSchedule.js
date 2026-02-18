@@ -133,16 +133,22 @@ const EditScheduleModal = ({
       
       setEditTimeM1( newArr[0] ? newArr[0][0] : 0);
       setEditFrameM1(newArr[0] ?  newArr[0][1] : 0);
+      setTimeFrameMulti1(newArr[0] ?  newArr[0][1] : "AM");
       setEditTimeM2(newArr[1] ?  newArr[1][0] : 0);
       setEditFrameM2(newArr[1] ?  newArr[1][1] : 0);
+      setTimeFrameMulti2(newArr[1] ?  newArr[1][1] : "AM");
       setEditTimeM3(newArr[2] ? newArr[2][0] : 0);
       setEditFrameM3(newArr[2] ? newArr[2][1] : 0);
+      setTimeFrameMulti3(newArr[2] ? newArr[2][1] : "AM");
       setEditTimeM4(newArr[3] ? newArr[3][0] : 0 );
       setEditFrameM4(newArr[3] ? newArr[3][1] : 0);
+      setTimeFrameMulti4(newArr[3] ? newArr[3][1] : "AM");
       setEditTimeM5(newArr[4] ? newArr[4][0] : 0);
       setEditFrameM5(newArr[4] ? newArr[4][1] : 0);
+      setTimeFrameMulti5(newArr[4] ? newArr[4][1] : "AM");
       setEditTimeM6(newArr[5] ? newArr[5][0] : 0);
       setEditFrameM6(newArr[5] ? newArr[5][1] : 0);
+      setTimeFrameMulti6(newArr[5] ? newArr[5][1] : "AM");
     }
     setTypeToEdit(dataEdit.type_id);
     setProductToEdit(dataEdit.price_id);
@@ -267,7 +273,7 @@ const EditScheduleModal = ({
       const startTimeSingle = `${values.start_time_single} ${timeFrameSingleSchedule}`;
       const startTimeIntervalsFrom = `${values.from_intervals} ${timeFrameIntervalFrom}`;
       const startTimeIntervalsTo = `${values.to_interval} ${timeFrameIntervalTo}`;
-      debugger
+      
       const daysListString = daysList ? daysList.toString() : '';
 
       let multiTimesList = [];
@@ -309,7 +315,7 @@ const EditScheduleModal = ({
         price_id: productSelected,
       };
 
-      
+      console.log(data);
       putSchedule(id, data)
         .then((resp) => {
           // triggerUpdate();
