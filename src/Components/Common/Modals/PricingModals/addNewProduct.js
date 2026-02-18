@@ -41,7 +41,13 @@ const AddNewProductPricing = ({
   tourData,
   copyProduct,
   setCopyProduct,
-  priceRangeCheck
+  priceRangeCheck,
+    priceTypeData,
+  priceOptions,
+  priceCollect,
+  priceSeason,
+  pricingOption2Selected,
+  currency,
 }) => {
   let id = "";
   id = editProductID;
@@ -284,43 +290,43 @@ const AddNewProductPricing = ({
     },
   });
 
-  //combo box request
-  const [priceTypeData, setPriceTypeData] = useState([]);
-  const [priceOptions, setPriceOptions] = useState([]);
-  const [priceCollect, setPriceCollect] = useState([]);
-  const [priceSeason, setPriceSeason] = useState([]);
+  // //combo box request
+  // const [priceTypeData, setPriceTypeData] = useState([]);
+  // const [priceOptions, setPriceOptions] = useState([]);
+  // const [priceCollect, setPriceCollect] = useState([]);
+  // const [priceSeason, setPriceSeason] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
   const [priceCollectNameSelected, setPriceCollectNameSelected] = useState("");
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
-  const [currency, setCurrency] = useState([])
+  // const [currency, setCurrency] = useState([])
   const [currencySelected, setCurrencySelected] = useState('')
-  const [pricingOption2Selected, setPricingOption2Selected] = useState("");
+  // const [pricingOption2Selected, setPricingOption2Selected] = useState("");
   const [priceTypeSelected2, setPriceTypeSelected2] = useState("");
-  useEffect(() => {
-    if (addNewProduct) {
-      setLoadingData(true)
-      getPricingOptionsAPI(1).then((resp) => {
-        setPriceTypeData(resp.data.data);
-      });
-      getPricingOptionsAPI(2).then((resp) => {
-        setPriceOptions(resp.data.data);
-      });
-      getPricingOptionsAPI(4).then((resp) => {
-        setPriceCollect(resp.data.data);
-      });
-      getPricingOptionsAPI(28).then((resp) => {
-        setPriceSeason(resp.data.data);
-      });
-      getPricingOptions2API(63).then((resp) => {
-        setPricingOption2Selected(resp.data.data);
-      });
-      getCurrency().then((resp) => {
-        setCurrency(resp.data.data)
-      })
-    }
-  }, [addNewProduct]);
+  // useEffect(() => {
+  //   if (addNewProduct) {
+  //     setLoadingData(true)
+  //     getPricingOptionsAPI(1).then((resp) => {
+  //       setPriceTypeData(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(2).then((resp) => {
+  //       setPriceOptions(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(4).then((resp) => {
+  //       setPriceCollect(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(28).then((resp) => {
+  //       setPriceSeason(resp.data.data);
+  //     });
+  //     getPricingOptions2API(63).then((resp) => {
+  //       setPricingOption2Selected(resp.data.data);
+  //     });
+  //     getCurrency().then((resp) => {
+  //       setCurrency(resp.data.data)
+  //     })
+  //   }
+  // }, [addNewProduct]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);

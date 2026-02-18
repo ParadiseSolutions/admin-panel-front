@@ -42,7 +42,16 @@ const AddNewTransportation = ({
   tourData,
   copyProduct,
   setCopyProduct,
-   priceRangeCheck
+   priceRangeCheck,
+    priceTypeData,
+  priceOptions,
+  priceCollect,
+  priceSeason,
+  currency,
+  priceTransferType,
+  priceVehicle,
+  priceZone,
+  arrivalZone,
 }) => {
   let id = "";
   id = editProductID;
@@ -60,16 +69,17 @@ const AddNewTransportation = ({
   }, [id, addNewTransportation]);
 
   //combo box request
-  const [priceTypeData, setPriceTypeData] = useState([]);
-  const [priceOptions, setPriceOptions] = useState([]);
-  const [priceCollect, setPriceCollect] = useState([]);
-  const [priceSeason, setPriceSeason] = useState([]);
-  const [priceZone, setPriceZone] = useState([]);
-  const [arrivalZone, setArrivalZone] = useState([]);
+  // const [priceTypeData, setPriceTypeData] = useState([]);
+  // const [priceOptions, setPriceOptions] = useState([]);
+  // const [priceCollect, setPriceCollect] = useState([]);
+  // const [priceSeason, setPriceSeason] = useState([]);
+  // const [priceZone, setPriceZone] = useState([]);
+  // const [priceTransferType, setPriceTransferType] = useState([]);
+  // const [priceDirection, setPriceDirection] = useState([]);
+  // const [priceVehicle, setVehicleZone] = useState([]);
+  // const [currency, setCurrency] = useState([])
+  // const [arrivalZone, setArrivalZone] = useState([]);
   const [arrivalZoneSelected, setArrivalZoneSelected] = useState('');
-  const [priceTransferType, setPriceTransferType] = useState([]);
-  const [priceDirection, setPriceDirection] = useState([]);
-  const [priceVehicle, setVehicleZone] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
@@ -79,45 +89,44 @@ const AddNewTransportation = ({
   const [priceDirectionSelected, setPriceDirectionSelected] = useState("");
   const [priceZoneSelected, setPriceZoneSelected] = useState("");
   const [priceVehicleSelected, setPriceVehicleSelected] = useState("");
-  const [currency, setCurrency] = useState([])
   const [currencySelected, setCurrencySelected] = useState('')
 
-  useEffect(() => {
-    if (addNewTransportation) {
-      setLoadingData(true)
-      getPricingOptionsAPI(20).then((resp) => {
-        setPriceTypeData(resp.data.data);
-      });
-      getPricingOptionsAPI(21).then((resp) => {
-        setPriceOptions(resp.data.data);
-      });
-      getPricingOptionsAPI(22).then((resp) => {
-        setPriceCollect(resp.data.data);
-      });
-      getPricingOptionsAPI(31).then((resp) => {
-        setPriceSeason(resp.data.data);
-      });
-      getPricingOptionsAPI(46).then((resp) => {
-        setPriceTransferType(resp.data.data);
-      });
-      getPricingOptionsAPI(49).then((resp) => {
-        setPriceDirection(resp.data.data);
-      });
-      getPricingOptionsAPI(24).then((resp) => {
-        setVehicleZone(resp.data.data);
-      });
-      getPricingZoneOptionsAPI(51, tourData.provider_id).then((resp) => {
-        setPriceZone(resp.data.data);
-      });
-      getPricingZoneArrivalOptionsAPI(69, tourData.provider_id).then((resp) => {
-        setArrivalZone(resp.data.data);
-      });
-      getCurrency().then((resp) => {
-        setCurrency(resp.data.data)
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addNewTransportation]);
+  // useEffect(() => {
+  //   if (addNewTransportation) {
+  //     setLoadingData(true)
+  //     getPricingOptionsAPI(20).then((resp) => {
+  //       setPriceTypeData(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(21).then((resp) => {
+  //       setPriceOptions(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(22).then((resp) => {
+  //       setPriceCollect(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(31).then((resp) => {
+  //       setPriceSeason(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(46).then((resp) => {
+  //       setPriceTransferType(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(49).then((resp) => {
+  //       setPriceDirection(resp.data.data);
+  //     });
+  //     getPricingOptionsAPI(24).then((resp) => {
+  //       setVehicleZone(resp.data.data);
+  //     });
+  //     getPricingZoneOptionsAPI(51, tourData.provider_id).then((resp) => {
+  //       setPriceZone(resp.data.data);
+  //     });
+  //     getPricingZoneArrivalOptionsAPI(69, tourData.provider_id).then((resp) => {
+  //       setArrivalZone(resp.data.data);
+  //     });
+  //     getCurrency().then((resp) => {
+  //       setCurrency(resp.data.data)
+  //     })
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [addNewTransportation]);
 
   //checkbox
   const [activeCheckbox, setActiveCheckbox] = useState(null);

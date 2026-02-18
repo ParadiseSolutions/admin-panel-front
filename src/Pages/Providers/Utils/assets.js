@@ -31,6 +31,7 @@ const Assets = ({ contacts, id }) => {
   const [showDetails, setshowDetails] = useState(false);
   const [assetModal, setAssetModal] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
 
     useEffect(() => {
     getAssetsAPI(id).then((res) => {
@@ -198,6 +199,7 @@ const Assets = ({ contacts, id }) => {
                             onClick={() => {
                               toggle("2");
                               setshowDetails(false);
+                              
                             }}
                           >
                             <span className="d-block d-sm-none">
@@ -286,6 +288,7 @@ const Assets = ({ contacts, id }) => {
                                                 onClick={() => {
                                                   setEditID(boat.id);
                                                   setAssetModal(true);
+                                                  setIsEdit(true);
                                                 }}
                                               />
                                               <UncontrolledTooltip
@@ -651,6 +654,8 @@ const Assets = ({ contacts, id }) => {
             setAssetModal={setAssetModal}
             editID={editID}
             resetTable={resetTable}
+            isEdit={isEdit}
+            setIsEdit={setIsEdit}
           />
         </div>
       </Collapse>
