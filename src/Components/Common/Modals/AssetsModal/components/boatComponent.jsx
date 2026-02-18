@@ -35,6 +35,8 @@ const BoatComponent = ({
   dataEdit,
   setDataEdit,
   resetTable,
+  isEdit,
+  setIsEdit,
 }) => {
   const { id } = useParams();
   const [boatTypeData, setBoatTypeData] = useState([]);
@@ -117,7 +119,7 @@ const BoatComponent = ({
 
   //edit request
   useEffect(() => {
-    if (dataEdit) {
+    if (isEdit && dataEdit) {
       setBoatTypeSelected(dataEdit.type_id);
       setLocationSelected(dataEdit.location_id);
       setBoatLocationSelected(dataEdit.asset_marina_location_id);
@@ -178,8 +180,10 @@ const BoatComponent = ({
       setCustomDurationFour(dataEdit.custom_prices?.duration_4 || null);
       setCustomDurationFive(dataEdit.custom_prices?.duration_5 || null);
       setCustomDurationSix(dataEdit.custom_prices?.duration_6 || null);
-    }
-  }, [dataEdit]);
+      setPdfLink(dataEdit.pdf_url || "");
+      setImageLink(dataEdit.image_url || "");
+    } 
+  }, [dataEdit, isEdit]);
 
   //multi select activities
   function handleMulti(selected) {
@@ -319,6 +323,8 @@ console.log('Submitting boat data:', data);
                   resetTable();
                   setSupportedClassRowTwo(false);
                   setSupportedClassRowThree(false);
+                  setDataEdit(null);
+                  setIsEdit(false);
                 }
               );
             }
@@ -354,6 +360,7 @@ console.log('Submitting boat data:', data);
                   resetTable();
                   setSupportedClassRowTwo(false);
                   setSupportedClassRowThree(false);
+                  setDataEdit(null);
                 }
               );
             }
@@ -2956,6 +2963,9 @@ console.log('Submitting boat data:', data);
                   className="waves-effect waves-light mb-3 btn mx-4"
                   onClick={() => {
                     setAssetModal(false);
+                    setIsEdit(false);
+                    setDataEdit(null);
+                    
                   }}
                 >
                   Cancel

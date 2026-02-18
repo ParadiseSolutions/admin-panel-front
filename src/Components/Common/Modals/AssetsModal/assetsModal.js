@@ -10,11 +10,11 @@ import VehicleComponent from "./components/vehicleComponent";
 import OthersComponent from "./components/othersComponent";
 import { getBoatEdit } from "../../../../Utils/API/Assets";
 
-const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
+const AssetModal = ({ assetModal, setAssetModal, editID, resetTable, isEdit, setIsEdit }) => {
   const [menu, setMenu] = useState(0);
   const [dataEdit, setDataEdit] = useState(null);
   useEffect(() => {
-    if (editID) {
+    if (isEdit) {
       getBoatEdit(editID).then((res) => {
         setDataEdit(res.data.data);
         setMenu(
@@ -26,7 +26,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
         );
       });
     }
-  }, [editID]);
+  }, [isEdit]);
   return (
     <Modal
       size="xl"
@@ -176,6 +176,8 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable }) => {
                 dataEdit={dataEdit}
                 setDataEdit={setDataEdit}
                 resetTable={resetTable}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
               />
             ) : menu === 2 ? (
               <VehicleComponent
