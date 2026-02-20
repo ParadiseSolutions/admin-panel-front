@@ -2213,7 +2213,9 @@ console.log('Submitting boat data:', data);
                                 autohide={true}
                                 placement="top"
                                 target="custom_price_1"
-                              ></UncontrolledTooltip>
+                              >
+                                The price that needs to be paid to the boat for the trip.
+                              </UncontrolledTooltip>
                             </div>
                           </div>
                           <div className="input-group">
