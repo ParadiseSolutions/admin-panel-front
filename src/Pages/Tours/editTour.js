@@ -65,6 +65,13 @@ const EditTour = ({ history }) => {
   useEffect(() => {
     getTourSettingsAPI(id).then((resp) => {
       setTourSettings(resp.data.data);
+    }).catch((error) => {
+      Swal.fire({
+        title: 'Error',
+        text: 'Something happened with the connection. Refresh the page and try again.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     });
   }, [id]);
 
@@ -84,7 +91,7 @@ const EditTour = ({ history }) => {
       Swal.fire(
         "Published!",
         "The tour has been published successfully.",
-        "success"
+        "success",
       );
       setPublishPending(false);
       setPublishing(false);
@@ -101,7 +108,6 @@ const EditTour = ({ history }) => {
         </div>
         <div className="col-7 d-flex justify-content-end">
           <div className="d-flex flex-column align-items-center">
-            
             <Button
               color={`${publishPending ? "danger" : "paradise"}`}
               className={`waves-effect waves-light col-10 mx-4 blue-outlined-hover`}
@@ -114,21 +120,21 @@ const EditTour = ({ history }) => {
               Publish
             </Button>
             {publishPending && !publishing && (
-
-            <p className="fs-6 fw-lighter py-2 text-danger">Pending changes to publish</p>
+              <p className="fs-6 fw-lighter py-2 text-danger">
+                Pending changes to publish
+              </p>
             )}
             {publishing && (
-
-            <p className="fs-6 fw-lighter py-2 paradise">Publishing...</p>
+              <p className="fs-6 fw-lighter py-2 paradise">Publishing...</p>
             )}
           </div>
-<UncontrolledTooltip placement="top" target="publish_tooltip">
-              Click to update Reserve Page and Pages from the URLs tab with Schema and Prices
-            </UncontrolledTooltip>
+          <UncontrolledTooltip placement="top" target="publish_tooltip">
+            Click to update Reserve Page and Pages from the URLs tab with Schema
+            and Prices
+          </UncontrolledTooltip>
           <Link to={"/tours"}>
             <Button
               color="paradiseGray"
-              
               outline
               className="waves-effect waves-light col-2 mx-4 blue-outlined-hover"
               style={{ height: "45px", minWidth: "fit-content" }}

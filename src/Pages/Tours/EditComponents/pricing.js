@@ -152,13 +152,25 @@ const Pricing = ({ history, id, tourData, toggle }) => {
 
     Promise.all(requests.map((p) => p.catch((e) => e))).then((responses) => {
       if (!mounted) return;
+      let hasError = false;
       responses.forEach((resp, idx) => {
         if (!mounted) return;
         const setter = setters[idx];
-        if (!resp || resp instanceof Error) return;
+        if (!resp || resp instanceof Error) {
+          hasError = true;
+          return;
+        }
         const payload = resp.data?.data ?? resp.data?.results;
         if (typeof setter === "function") setter(payload);
       });
+      if (hasError) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Something happened with the connection. Refresh the page and try again.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
     });
 
     return () => {
