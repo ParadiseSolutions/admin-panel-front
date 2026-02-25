@@ -108,52 +108,122 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         .then((resp) => {
           setExtraFeeInitialData(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
 
       getBringList()
         .then((resp) => {
           setBringListInitialData(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
 
       getVoucherInfoTours(tourID)
         .then((resp) => {
           setVoucherInitialData(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
       getChannels()
         .then((resp) => {
           setChannelList(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
       getSendVoucherFromAPI()
         .then((resp) => {
           setVoucherSendList(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
       getVoucherChannels()
         .then((resp) => {
           setVoucherChannelList(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
       getNotyfyChannelAPI().then((resp) => {
         setConfirmationChannelList(resp.data.data);
+      }).catch((error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'Something happened with the connection. Refresh the page and try again.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       });
       getMeetingLocationToursTable(id)
         .then((resp) => {
           setMeetingLocationTable(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
       getBoatLocationToursTable(id)
         .then((resp) => {
           setBoatLocationTable(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
       getRestrictionsToursTable(id)
         .then((resp) => {
           setRestrictionTable(resp.data.data);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     }
   }, [tourID]);
 

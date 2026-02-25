@@ -87,13 +87,34 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   useEffect(() => {
     getAvailableFromAPI().then((resp) => {
       setAvailableData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     getAvailableAPI().then((resp) => {
       setAvailableFormData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     getVouchersTemplatesAPI().then((resp) => {
       setTemplatesData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
   }, []);
   useEffect(() => {
     if (tourSettings && availableData) {
@@ -130,10 +151,6 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   //modal reserve page
   const [reserveModal, setReserveModal] = useState(false);
 
-  // console.log("template id", tourSettings);
-  //form creation
-
-  // console.log('id',availableFromIDs)
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
