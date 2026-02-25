@@ -618,6 +618,7 @@ const AddNewTransportation = ({
     }
   }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
 
+  console.log("priceTransferType", priceTransferType);
   return (
     <Modal
       centered
@@ -749,7 +750,7 @@ const AddNewTransportation = ({
                       //   value={validationType.values.department || ""}
                       >
                         <option value={null}>Select.....</option>
-                        {map(priceTypeData, (type, index) => {
+                        {                        map(priceTypeData, (type, index) => {
                           return (
                             <option
                               key={index}

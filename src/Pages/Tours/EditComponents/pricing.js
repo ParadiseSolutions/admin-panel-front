@@ -88,7 +88,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       add(getPricingOptionsAPI(42), setPriceLocation);
       add(getPricingOptions2API(68), setPricingOption2Selected);
       add(getCurrency(), setCurrency);
-    } else {
+    } else { 
       switch (type) {
         case 5:
           add(getPricingOptionsAPI(33), setPriceTypeData);
@@ -703,11 +703,10 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           priceOptions={priceOptions}
           priceCollect={priceCollect}
           priceSeason={priceSeason}
-          priceCharterType={priceCharterType}
-          priceDuration={priceDuration}
-          priceLocation={priceLocation}
-          pricingOption2Selected={pricingOption2Selected}
           currency={currency}
+          priceTransferType={priceTransferType}
+          priceVehicle={priceVehicle}
+          priceZone={priceZone}
           arrivalZone={arrivalZone}
         />
       ) : null}
