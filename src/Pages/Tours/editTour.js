@@ -95,7 +95,17 @@ const EditTour = ({ history }) => {
       );
       setPublishPending(false);
       setPublishing(false);
-    });
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "We're still on it!",
+        text: "Cloudflare politely kicks us out after 2 minutes, but don't worry — the update keeps running in the background. Bigger tours with more URLs just need a little extra love. Refresh the page later, and if something's pending, the button will be red.",
+        icon: "info",
+        confirmButtonText: "Got it"
+      });
+      setPublishPending(false);
+      setPublishing(false);
+    });;
   };
 
   return (
