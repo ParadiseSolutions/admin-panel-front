@@ -53,15 +53,36 @@ const Schedules = ({ tourData, toggle }) => {
   useEffect(() => {
     getScheduleTimeAPI(TourID).then((resp) => {
       setSchedulesData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     getScheduleDatesOverrideAPI(TourID).then((resp) => {
       setDatesOverrideData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     getSeasonalityAPI(TourID).then((resp) => {
       // console.log(resp);
       setSeasonalityData(resp.data.data);
       setSeasonSelected(resp.data.data[0]?.repeat_id);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
   }, [TourID]);
   useEffect(() => {
     if (tourData?.open_ticket === 1) {

@@ -1,25 +1,36 @@
 import React, { useEffect, useState, useMemo } from "react";
 import AddonsTables from "./PricingTables/addonsTables";
 import Addons from "../../../Components/Common/Modals/PricingModals/addons";
-import {
-  getAddonsPricingAPI,
-  deleteAddonAPI,
-} from "../../../Utils/API/Tours";
+import { getAddonsPricingAPI, deleteAddonAPI } from "../../../Utils/API/Tours";
 import AddonsInstructionModal from "../../../Components/Common/Modals/AddonsModals/AddonsInstructionModal";
 import { TabPane, Row, Button, UncontrolledTooltip, Col } from "reactstrap";
-import { Name, Code, Price, ActiveAddon, Rate } from "./PricingTables/PricingCols";
+import {
+  Name,
+  Code,
+  Price,
+  ActiveAddon,
+  Rate,
+} from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 
 const AddonsComponent = ({ id, tourData, toggle }) => {
-
   useEffect(() => {
     let isMounted = true; // Bandera para verificar si el componente está montado
 
-    getAddonsPricingAPI(id).then((resp) => {
-      if (isMounted) {
-        setAddonsData(resp.data.data);
-      }
-    });
+    getAddonsPricingAPI(id)
+      .then((resp) => {
+        if (isMounted) {
+          setAddonsData(resp.data.data);
+        }
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
 
     // Función de limpieza
     return () => {
@@ -50,26 +61,31 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
     }).then((resp) => {
       if (resp.isConfirmed) {
         deleteAddonAPI(depData.id)
-        .then((response) => {
-          refreshTable()
-        }).catch((error) => {
-          let errorMessages = [];
-          if (error.response && error.response.data && error.response.data.data) {
-            Object.entries(error.response.data.data).map((item) => {
-              errorMessages.push(item[1]);
-              return true;
+          .then((response) => {
+            refreshTable();
+          })
+          .catch((error) => {
+            let errorMessages = [];
+            if (
+              error.response &&
+              error.response.data &&
+              error.response.data.data
+            ) {
+              Object.entries(error.response.data.data).map((item) => {
+                errorMessages.push(item[1]);
+                return true;
+              });
+            } else {
+              errorMessages.push("An unexpected error occurred");
+            }
+
+            // Mostrar el error
+            Swal.fire({
+              title: "Error!",
+              text: errorMessages.join(", "),
+              icon: "error",
             });
-          } else {
-            errorMessages.push('An unexpected error occurred');
-          }
-          
-          // Mostrar el error
-          Swal.fire({
-            title: "Error!",
-            text: errorMessages.join(', '),
-            icon: "error",
           });
-        });
       }
     });
   };
@@ -174,7 +190,11 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
                 }}
                 className="text-success"
               >
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip" style={{ cursor: "pointer" }} />
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Edit
                 </UncontrolledTooltip>
@@ -187,7 +207,11 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
                 }}
                 className="text-warning"
               >
-                <i className="mdi mdi-content-copy font-size-18" id="copytooltip" style={{ cursor: "pointer" }} />
+                <i
+                  className="mdi mdi-content-copy font-size-18"
+                  id="copytooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="edittooltip">
                   Copy
                 </UncontrolledTooltip>
@@ -201,7 +225,12 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
                   onDeleteAddon(depData);
                 }}
               >
-                <i className="mdi mdi-delete font-size-18" title="Delete" id="deletetooltip" style={{ cursor: "pointer" }} />
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  title="Delete"
+                  id="deletetooltip"
+                  style={{ cursor: "pointer" }}
+                />
                 <UncontrolledTooltip placement="top" target="deletetooltip">
                   Delete
                 </UncontrolledTooltip>
@@ -210,8 +239,10 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
           );
         },
       },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    ],[]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    ],
+    [],
+  );
 
   //add new addon
   const [newAddon, setNewAddon] = useState(false);
@@ -223,7 +254,7 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
   };
 
   const onClickNewAddon = () => {
-    setEditProductID(null)
+    setEditProductID(null);
     setNewAddon(!newAddon);
   };
 

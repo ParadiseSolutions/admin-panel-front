@@ -258,7 +258,14 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
       if (isMounted) {
         setRelatedData(resp.data.data);
       }
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
 
     // Función de limpieza
     return () => {
@@ -280,10 +287,24 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
   useEffect(() => {
     getActiveRelatedAsset(id).then((resp) => {
       setRelatedAssetsActiveData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     getOtherRelatedAsset(id).then((resp) => {
       setRelatedAssetsOtherData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
   }, [id]);
 
   const refreshTableAssets = () => {

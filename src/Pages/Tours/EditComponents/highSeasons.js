@@ -34,14 +34,28 @@ const HighSeasons = ({ tourData, toggle }) => {
   useEffect(() => {
     getSeasonsNameAPI().then((resp) => {
       setSeasonNames(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
   }, [tourData]);
 
   useEffect(() => {
     if (tourData?.id) {
       getSeasonsListAPI(tourData.id).then((resp) => {
         setSeasonsData(resp.data.data);
-      });
+      }).catch((error) => {
+            Swal.fire({
+              title: 'Error',
+              text: 'Something happened with the connection. Refresh the page and try again.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          });
     }
   }, [tourData]);
 
