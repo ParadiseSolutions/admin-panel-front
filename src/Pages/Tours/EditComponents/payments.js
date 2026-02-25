@@ -95,63 +95,189 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const initialRequest = () => {
     paymentsIndexGet(id).then((resp) => {
       setPaymentData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
   };
 
   //initial Data
   useEffect(() => {
     paymentsIndexGet(id).then((resp) => {
       setPaymentData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsTaxGet().then((resp) => {
       setTaxData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsGratuiteGet().then((resp) => {
       setGratuitesData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsGratuiteTypeGet().then((resp) => {
       setGratuitesTypeData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsBaseOnGet().then((resp) => {
       setBasedOnData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsApplyGet().then((resp) => {
       setApplyData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     getCurrency().then((resp) => {
       setCurrencyData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentstypeGet().then((resp) => {
       setPaymentsTypeData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsOptionsGet().then((resp) => {
       setPaymentsOptionsData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsPaidByGet().then((resp) => {
       setPaidByData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsMethodGet().then((resp) => {
       setMethodData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsDueGet().then((resp) => {
       setDueData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsWhenGet().then((resp) => {
       setWhenData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsEventGet().then((resp) => {
       setEventData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     
     paymentsTaxesBaseOnGet().then((resp) => {
       setTaxesBasedOnData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsCommissionBaseOnGet().then((resp) => {
       setCommissionBasedOnData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
     paymentsCommissionApplyGet().then((resp) => {
       setApplyCommissionData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
 
 
   }, [id]);

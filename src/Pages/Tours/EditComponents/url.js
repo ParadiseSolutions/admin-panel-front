@@ -40,7 +40,14 @@ const URL = ({ tourData, toggle }) => {
   useEffect(() => {
     getURLsAPI(tourData.id).then((resp) => {
       setData(resp.data.data);
-    });
+    }).catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Something happened with the connection. Refresh the page and try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
 
     getURLTypeAPI(tourData.id).then((resp) => {
       setUrlTypes(resp.data.data);
@@ -53,11 +60,7 @@ const URL = ({ tourData, toggle }) => {
   useEffect(() => {
     getURLAvailableFromAPI(tourData.id, urlTypeSelected).then((resp) => {
       setLocationData(resp.data.data);
-      // if (resp.data.data.length === 1) {
-      //   setLocationSelected(resp.data.data[0].available_from_id);
-      // } else {
-      //   setLocationSelected(null);
-      // }
+     
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlTypeSelected]);
