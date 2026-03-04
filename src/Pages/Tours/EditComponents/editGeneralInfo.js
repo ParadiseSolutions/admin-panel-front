@@ -170,6 +170,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     initialValues: {
       tour_name: tourData.name,
       code: tourData.code,
+      tour_id: tourData.id,
+      tour_hash: tourData.hash,
     },
     validationSchema: Yup.object().shape({
       tour_name: Yup.string().required("Field required"),
@@ -286,6 +288,8 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
       setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60);
     }
   };
+
+  console.log("tourData desde general info", tourData);
   return (
     <Form
       onSubmit={(e) => {
@@ -584,6 +588,92 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                       );
                     })}
                   </Input>
+                </div>
+              </Col>
+              <Col className="col-2">
+                <div className="form-outline my-2">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Tour ID</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="TourID"
+                      />
+                      <Tooltip
+                        placement="right"
+                        // isOpen={codeTT}
+                        target="TourID"
+                        // toggle={() => {
+                        //   setCodeTT(!codeTT);
+                        // }}
+                      >
+                        A unique 2-letter code that will distinguish your tour
+                        from other tours in the subcategory.
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <Input
+                    name="tour_id"
+                    placeholder=""
+                    type="text"
+                    disabled={editMode}
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.tour_id || ""}
+                    invalid={
+                      validationType.touched.tour_id && validationType.errors.tour_id
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.tour_id && validationType.errors.tour_id ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.tour_id}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+              <Col className="col-2">
+                <div className="form-outline my-2">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Tour Hash</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="TourHash"
+                      />
+                      <Tooltip
+                        placement="right"
+                        // isOpen={codeTT}
+                        target="TourHash"
+                        // toggle={() => {
+                        //   setCodeTT(!codeTT);
+                        // }}
+                      >
+                        A unique 2-letter code that will distinguish your tour
+                        from other tours in the subcategory.
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <Input
+                    name="tour_hash"
+                    placeholder=""
+                    type="text"
+                    disabled={editMode}
+                    onChange={validationType.handleChange}
+                    onBlur={validationType.handleBlur}
+                    value={validationType.values.tour_hash || ""}
+                    invalid={
+                      validationType.touched.tour_hash && validationType.errors.tour_hash
+                        ? true
+                        : false
+                    }
+                  />
+                  {validationType.touched.tour_hash && validationType.errors.tour_hash ? (
+                    <FormFeedback type="invalid">
+                      {validationType.errors.tour_hash}
+                    </FormFeedback>
+                  ) : null}
                 </div>
               </Col>
             </Row>
