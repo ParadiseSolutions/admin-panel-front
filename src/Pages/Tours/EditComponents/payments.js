@@ -18,6 +18,7 @@ import {
   paymentsTaxesBaseOnGet,
   paymentsCommissionBaseOnGet,
   paymentsCommissionApplyGet,
+  putPaymentRequestAPI,
 } from "../../../Utils/API/Tours";
 import { getCurrency } from "../../../Utils/API/Operators";
 import SettingsImageOne from "../../../Components/Assets/images/header-one.png";
@@ -75,10 +76,11 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [taxesBasedOnData, setTaxesBasedOnData] = useState([]);
   const [taxesBasedOnSelected, setTaxesBasedOnSelected] = useState(null);
   const [commissionBasedOnData, setCommissionBasedOnData] = useState([]);
-  const [commissionBasedOnSelected, setCommissionBasedOnSelected] = useState(null);
+  const [commissionBasedOnSelected, setCommissionBasedOnSelected] =
+    useState(null);
   const [applyCommissionData, setApplyCommissionData] = useState([]);
   const [applyCommissionSelected, setApplyCommissionSelected] = useState(null);
-
+  const [paymentRequest, setPaymentRequest] = useState(false);
 
   //tooltips
   const [taxTooltip, setTaxTooltip] = useState(false);
@@ -93,193 +95,227 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [headerTT, setheaderTT] = useState(false);
 
   const initialRequest = () => {
-    paymentsIndexGet(id).then((resp) => {
-      setPaymentData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+    paymentsIndexGet(id)
+      .then((resp) => {
+        setPaymentData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
+      });
   };
 
   //initial Data
   useEffect(() => {
-    paymentsIndexGet(id).then((resp) => {
-      setPaymentData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+    paymentsIndexGet(id)
+      .then((resp) => {
+        setPaymentData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsTaxGet().then((resp) => {
-      setTaxData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsTaxGet()
+      .then((resp) => {
+        setTaxData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsGratuiteGet().then((resp) => {
-      setGratuitesData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsGratuiteGet()
+      .then((resp) => {
+        setGratuitesData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsGratuiteTypeGet().then((resp) => {
-      setGratuitesTypeData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsGratuiteTypeGet()
+      .then((resp) => {
+        setGratuitesTypeData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsBaseOnGet().then((resp) => {
-      setBasedOnData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsBaseOnGet()
+      .then((resp) => {
+        setBasedOnData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsApplyGet().then((resp) => {
-      setApplyData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsApplyGet()
+      .then((resp) => {
+        setApplyData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    getCurrency().then((resp) => {
-      setCurrencyData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    getCurrency()
+      .then((resp) => {
+        setCurrencyData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentstypeGet().then((resp) => {
-      setPaymentsTypeData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentstypeGet()
+      .then((resp) => {
+        setPaymentsTypeData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsOptionsGet().then((resp) => {
-      setPaymentsOptionsData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsOptionsGet()
+      .then((resp) => {
+        setPaymentsOptionsData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsPaidByGet().then((resp) => {
-      setPaidByData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsPaidByGet()
+      .then((resp) => {
+        setPaidByData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsMethodGet().then((resp) => {
-      setMethodData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsMethodGet()
+      .then((resp) => {
+        setMethodData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsDueGet().then((resp) => {
-      setDueData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsDueGet()
+      .then((resp) => {
+        setDueData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsWhenGet().then((resp) => {
-      setWhenData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsWhenGet()
+      .then((resp) => {
+        setWhenData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    paymentsEventGet().then((resp) => {
-      setEventData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    paymentsEventGet()
+      .then((resp) => {
+        setEventData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    
-    paymentsTaxesBaseOnGet().then((resp) => {
-      setTaxesBasedOnData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        });
-    paymentsCommissionBaseOnGet().then((resp) => {
-      setCommissionBasedOnData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        });
-    paymentsCommissionApplyGet().then((resp) => {
-      setApplyCommissionData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        });
+      });
 
-
+    paymentsTaxesBaseOnGet()
+      .then((resp) => {
+        setTaxesBasedOnData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
+    paymentsCommissionBaseOnGet()
+      .then((resp) => {
+        setCommissionBasedOnData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
+    paymentsCommissionApplyGet()
+      .then((resp) => {
+        setApplyCommissionData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   }, [id]);
 
   useEffect(() => {
@@ -290,6 +326,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
       setBasedOnSelected(tourSettings.based_on_id);
       setApplySelected(tourSettings.payment_apply_id);
       setCurrencySelected(tourSettings.payment_currency);
+      setPaymentRequest(tourSettings.payment_request === 1 ? true : false);
     }
     if (tourSettings.gratuity_type_id) {
       setGratuitesTypeSelected(tourSettings.gratuity_type_id.toString());
@@ -317,7 +354,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(error.response.data.message)
+                String(error.response.data.message),
               );
             } else {
               let errorMessages = [];
@@ -329,12 +366,16 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(errorMessages[0])
+                String(errorMessages[0]),
               );
             }
           });
       }
     });
+  };
+
+  const paymentRequestChange = () => {
+    putPaymentRequestAPI(id, { active: paymentRequest ? 0 : 1 });
   };
 
   const columnsProducts = useMemo(
@@ -517,7 +558,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         },
       },
     ],
-    []
+    [],
   );
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -565,7 +606,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           let errorMessages = [];
           if (error.response.data.data) {
             Object.entries(error.response.data.data).map((item) =>
-              errorMessages.push(item[1])
+              errorMessages.push(item[1]),
             );
           } else {
             if (error.response.data.message === "Array to string conversion") {
@@ -578,7 +619,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           Swal.fire(
             "Error!",
             // {error.response.},
-            String(errorMessages[0])
+            String(errorMessages[0]),
           );
         });
     },
@@ -649,9 +690,9 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="d-flex mt-2 form-check form-switch">
                   <Label className="mx-2">Advanced Settings</Label>
                   <input
-                     type="checkbox"
-                     className="form-check-input mx-1"
-                     id="customSwitchsizesm"
+                    type="checkbox"
+                    className="form-check-input mx-1"
+                    id="customSwitchsizesm"
                     checked={advanceSettings}
                     onChange={(e) => setAdvanceSettings(e.target.checked)}
                   />
@@ -873,7 +914,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                                 target="gratPercentageTooltip"
                                 toggle={() => {
                                   setgratPercentageTooltip(
-                                    !gratPercentageTooltip
+                                    !gratPercentageTooltip,
                                   );
                                 }}
                               >
@@ -903,7 +944,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                             const value = e.target.value || "";
                             validationType.setFieldValue(
                               "gratuity_percentage",
-                              setDecimalFormat(value)
+                              setDecimalFormat(value),
                             );
                           }}
                           value={
@@ -1164,7 +1205,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                       const value = e.target.value || "";
                       validationType.setFieldValue(
                         "exchange_rate",
-                        setDecimalFormat(value)
+                        setDecimalFormat(value),
                       );
                     }}
                     value={validationType.values.exchange_rate || ""}
@@ -1281,7 +1322,8 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                             value={gratuites.id}
                             selected={
                               tourSettings && tourSettings.commission_based_on
-                                ? gratuites.id === tourSettings.commission_based_on
+                                ? gratuites.id ===
+                                  tourSettings.commission_based_on
                                 : false
                             }
                           >
@@ -1345,25 +1387,39 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   </div>
                 </div>
               </Col>
-              
             </Row>
           ) : null}
           <Row>
             <Col className="col-xl">
               <div
-                className="mb-4 py-2 px-3"
+                className="mb-4 py-2 px-3 d-flex justify-content-between"
                 style={{ backgroundColor: "#FFEFDE" }}
               >
-                <p
-                  className="fs-5"
-                  style={{
-                    fontWeight: "bold",
-                    color: "#495057",
-                    marginBottom: "0px",
-                  }}
-                >
-                  PAYMENTS
-                </p>
+                <div className="d-flex">
+                  <p
+                    className="px-2 fs-5"
+                    style={{
+                      fontWeight: "bold",
+                      color: "#495057",
+                      marginBottom: "0px",
+                    }}
+                  >
+                    PAYMENTS
+                  </p>
+                </div>
+                <div className="d-flex mt-2 form-check form-switch">
+                  <Label className="mx-2">Payment Request</Label>
+                  <input
+                    type="checkbox"
+                    className="form-check-input mx-1"
+                    id="customSwitchsizesm"
+                    checked={paymentRequest}
+                    onChange={(e) => {
+                      setPaymentRequest(e.target.checked);
+                      paymentRequestChange();
+                    }}
+                  />
+                </div>
               </div>
             </Col>
             <Col className="col-1">
