@@ -157,7 +157,8 @@ const AddNewTransportation = ({
   const [ttiers, setttiers] = useState(false);
   const [ttactive, setttactive] = useState(false);
   const [ttbd, setbd] = useState(false);
-
+  const [depatureZoneTooltip, setDepartureZoneTooltip] = useState(false);
+  const [arrivalZoneTooltip, setArrivalZoneTooltip] = useState(false);
   const [providerCommission, setProviderCommission] = useState('')
   const [ourCommission, setOurCommission] = useState('')
   const [recalc, setRecalc] = useState(false)
@@ -1337,7 +1338,25 @@ const AddNewTransportation = ({
                   </Col>
                   <Col className="col-4">
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Depature Zone</Label>
+                      <div className="d-flex justify-content-between">
+                        <Label className="form-label">Depature Zone</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="depatureTooltip"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={depatureZoneTooltip}
+                            target="depatureTooltip"
+                            toggle={() => {
+                              setDepartureZoneTooltip(!depatureZoneTooltip);
+                            }}
+                          >
+                           The zone where the trip begins. Pricing will apply to trips starting from this area.
+                             </Tooltip>
+                        </div>
+                      </div>
                       <Input
                         type="select"
                         name=""
@@ -1371,7 +1390,25 @@ const AddNewTransportation = ({
                   </Col>
                   <Col className="col-4">
                     <div className="form-outline mb-2">
-                      <Label className="form-label">Arrival Zone</Label>
+                       <div className="d-flex justify-content-between">
+                        <Label className="form-label">Arrival Zone</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="arrivalZoneTooltip"
+                          />
+                          <Tooltip
+                            placement="right"
+                            isOpen={arrivalZoneTooltip}
+                            target="arrivalZoneTooltip"
+                            toggle={() => {
+                              setArrivalZoneTooltip(!arrivalZoneTooltip);
+                            }}
+                          >
+                           The zone where the trip ends. Pricing will apply to trips arriving in this area.
+                             </Tooltip>
+                        </div>
+                      </div>
                       <Input
                         type="select"
                         name=""

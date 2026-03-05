@@ -26,7 +26,7 @@ import Switch from "react-switch";
 import ReservePageModal from "../../../Components/Common/Modals/TourSetingsModal/ReservePageModal";
 // import * as Yup from "yup";
 import { useFormik } from "formik";
-import { map } from "lodash";
+import { map, min, set } from "lodash";
 import Swal from "sweetalert2";
 
 const Offsymbol = () => {
@@ -71,50 +71,44 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   //seasons request
   const [availableData, setAvailableData] = useState([]);
   const [availableFromData, setAvailableFormData] = useState([]);
-  const [templatesData, setTemplatesData] = useState([]);
-  const [templateSelected, setTemplateSelected] = useState("");
+
   const [activeDep, setActiveDep] = useState(false);
   const [tourIDTT, setTourIDTT] = useState(false);
   const [hashTT, setHashTT] = useState(false);
   const [providerNameTT, setProviderNameTT] = useState(false);
   const [providerURLTT, setProviderURLTT] = useState(false);
-  const [voucherTT, setVoucherTT] = useState(false);
+
   const [paymentTT, setPaymentTT] = useState(false);
   const [infantsTT, setInfantsTT] = useState(false);
   const [kidsTT, setKidsTT] = useState(false);
   const [teenagersTT, setTeenagersTT] = useState(false);
 
+  const [agesAcceptedSwitch, setAgesAcceptedSwitch] = useState(false);
   useEffect(() => {
-    getAvailableFromAPI().then((resp) => {
-      setAvailableData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+    getAvailableFromAPI()
+      .then((resp) => {
+        setAvailableData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    getAvailableAPI().then((resp) => {
-      setAvailableFormData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+      });
+    getAvailableAPI()
+      .then((resp) => {
+        setAvailableFormData(resp.data.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something happened with the connection. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
-    getVouchersTemplatesAPI().then((resp) => {
-      setTemplatesData(resp.data.data);
-    }).catch((error) => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        });
+      });
   }, []);
   useEffect(() => {
     if (tourSettings && availableData) {
@@ -145,12 +139,14 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
 
   useEffect(() => {
     setAvailableFromIDs(tourSettings.available_from);
-    setTemplateSelected(tourSettings.voucher_template_id);
+    // setTemplateSelected(tourSettings.voucher_template_id);
+    setAgesAcceptedSwitch(tourSettings.all_ages === 1 ? true : false);
   }, [tourSettings]);
 
   //modal reserve page
   const [reserveModal, setReserveModal] = useState(false);
 
+  console.log(tourSettings,' tour settings');
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -180,6 +176,11 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
       teenagers_range_to: tourSettings.teenagers_range_to
         ? tourSettings.teenagers_range_to
         : "",
+      cruise_ship_tour_name: tourSettings.cruise_excursion_name ? tourSettings.cruise_excursion_name : "",
+      cruise_ship_tour_url: tourSettings.cruise_excursion_url ? tourSettings.cruise_excursion_url : "",
+      min_age: tourSettings.people_range_from ? tourSettings.people_range_from : "",
+      max_age: tourSettings.people_range_to ? tourSettings.people_range_to : "",
+      
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -211,8 +212,13 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         teenagers_range_to: values.teenagers_range_to
           ? values.teenagers_range_to
           : "",
-        voucher_template_id: templateSelected,
+
         payment_request: activeDep === true ? 1 : 0,
+        all_ages: agesAcceptedSwitch === true ? 1 : 0,
+        cruise_excursion_name: values.cruise_ship_tour_name ? values.cruise_ship_tour_name : "",
+        cruise_excursion_url: values.cruise_ship_tour_url ? values.cruise_ship_tour_url : "",
+        people_range_from: values.min_age ? values.min_age : "",
+        people_range_to: values.max_age ? values.max_age : "",
       };
 
       //console.log('data a enviar', data)
@@ -230,7 +236,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           let errorMessages = [];
           if (error.response.data.data) {
             Object.entries(error.response.data.data).map((item) =>
-              errorMessages.push(item[1])
+              errorMessages.push(item[1]),
             );
           } else {
             if (error.response.data.message === "Array to string conversion") {
@@ -243,7 +249,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           Swal.fire(
             "Error!",
             // {error.response.},
-            String(errorMessages[0])
+            String(errorMessages[0]),
           );
         });
     },
@@ -287,7 +293,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 </p>
               </div>
             </Col>
-            <Col className="col-1 mb-3">
+            {/* <Col className="col-1 mb-3">
               <div className="form-outline mt-2">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Tour ID</Label>
@@ -316,8 +322,8 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   value={validationType.values.tour_id || ""}
                 />
               </div>
-            </Col>
-            <Col className="col-1 mb-3">
+            </Col> */}
+            {/* <Col className="col-1 mb-3">
               <div className="form-outline mt-2">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Tour Hash</Label>
@@ -346,7 +352,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   value={tourSettings?.hash || ""}
                 />
               </div>
-            </Col>
+            </Col> */}
             <Col className="col-2">
               <div className="form-outline mt-2">
                 <div className="d-flex justify-content-between">
@@ -364,7 +370,10 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                         setProviderNameTT(!providerNameTT);
                       }}
                     >
-                      The name the provider calls the tour on their own website or service agreement.  This name is used on the please confirm emails to minimize confusion where we use a different marketing name for the tour than they do.
+                      The name the provider calls the tour on their own website
+                      or service agreement. This name is used on the please
+                      confirm emails to minimize confusion where we use a
+                      different marketing name for the tour than they do.
                     </Tooltip>
                   </div>
                 </div>
@@ -407,7 +416,9 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                         setProviderURLTT(!providerURLTT);
                       }}
                     >
-                      The link on the provider's website where we can view their description of the tour.  If the provider doesn't have a website, you can leave this blank.
+                      The link on the provider's website where we can view their
+                      description of the tour. If the provider doesn't have a
+                      website, you can leave this blank.
                     </Tooltip>
                   </div>
                 </div>
@@ -433,59 +444,90 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 ) : null}
               </div>
             </Col>
-            <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
+            <Col className="col-2">
+              <div className="form-outline mt-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Voucher Template</Label>
+                  <Label className="form-label">Cruise Ship Tour Name</Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="Voucher"
+                      id="CruiseShipTour"
                     />
                     <Tooltip
                       placement="right"
-                      isOpen={voucherTT}
-                      target="Voucher"
+                      //  isOpen={cruiseShipTourTT}
+                      target="CruiseShipTour"
                       toggle={() => {
-                        setVoucherTT(!voucherTT);
+                        // setCruiseShipTourTT(!cruiseShipTourTT);
                       }}
-                    >
-                      Select the type of voucher that the customer will receive.
-                    </Tooltip>
+                    ></Tooltip>
                   </div>
                 </div>
-                <div className="input-group">
-                  <Input
-                    type="select"
-                    name=""
-                    onChange={(e) => {
-                      setTemplateSelected(e.target.value);
-                    }}
-                    onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
-                  >
-                    <option value="">Select....</option>
-                    {map(templatesData, (template, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={template.voucher_template_id}
-                          selected={
-                            tourSettings && tourSettings.voucher_template_id
-                              ? template.voucher_template_id ===
-                                tourSettings.voucher_template_id
-                              : false
-                          }
-                        >
-                          {template.voucher_template}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </div>
+                <Input
+                  name="cruise_ship_tour_name"
+                  placeholder=""
+                  type="text"
+                  onChange={validationType.handleChange}
+                  onBlur={validationType.handleBlur}
+                  value={validationType.values.cruise_ship_tour_name || ""}
+                  invalid={
+                    validationType.touched.cruise_ship_tour_name &&
+                    validationType.errors.cruise_ship_tour_name
+                      ? true
+                      : false
+                  }
+                />
+                {validationType.touched.cruise_ship_tour_name &&
+                validationType.errors.cruise_ship_tour_name ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.cruise_ship_tour_name}
+                  </FormFeedback>
+                ) : null}
               </div>
             </Col>
-            <Col className="col-2">
+            <Col className="col-4">
+              <div className="form-outline mt-2">
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Cruise Ship Tour URL</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="CruiseShipTourURL"
+                    />
+                    <Tooltip
+                      placement="right"
+                      // isOpen={cruiseShipTourURLTT}
+                      target="CruiseShipTourURL"
+                      toggle={() => {
+                        // setCruiseShipTourURLTT(!cruiseShipTourURLTT);
+                      }}
+                    ></Tooltip>
+                  </div>
+                </div>
+                <Input
+                  name="cruise_ship_tour_url"
+                  placeholder=""
+                  type="text"
+                  onChange={validationType.handleChange}
+                  onBlur={validationType.handleBlur}
+                  value={validationType.values.cruise_ship_tour_url || ""}
+                  invalid={
+                    validationType.touched.cruise_ship_tour_url &&
+                    validationType.errors.cruise_ship_tour_url
+                      ? true
+                      : false
+                  }
+                />
+                {validationType.touched.cruise_ship_tour_url &&
+                validationType.errors.cruise_ship_tour_url ? (
+                  <FormFeedback type="invalid">
+                    {validationType.errors.cruise_ship_tour_url}
+                  </FormFeedback>
+                ) : null}
+              </div>
+            </Col>
+
+            {/* <Col className="col-2">
               <div className="d-flex justify-content-start">
                 <Label className="form-label">Payment Request</Label>
                 <div>
@@ -514,7 +556,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   checked={activeDep}
                 />
               </div>
-            </Col>
+            </Col> */}
           </Row>
 
           <Row>
@@ -562,232 +604,378 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                     marginBottom: "0px",
                   }}
                 >
-                  AGE RANGES FOR PRICE TIERS
+                  Kids Settings
                 </p>
               </div>
             </Col>
           </Row>
           <Row className="row">
-            <Col className="col-md-4 col-12 px-xxl-5">
-              <div className="d-flex justify-content-between">
-                <Label className="form-label">Infants</Label>
-                <div>
-                  <i
-                    className="uil-question-circle font-size-15"
-                    id="Infants"
+            <Col className="col-3">
+              <div className="d-flex align-items-center">
+                <p
+                  className="fs-5"
+                  style={{
+                    fontWeight: "bold",
+                    color: "#495057",
+                    marginBottom: "20px",
+                  }}
+                >
+                  Ages Accepted
+                </p>
+                <div className="d-flex mb-2 form-check form-switch">
+                  <Label className="mx-2">All Ages</Label>
+                  <input
+                    type="checkbox"
+                    className="form-check-input mx-1"
+                    id="customSwitchsizesm"
+                     checked={agesAcceptedSwitch}
+                     onChange={(e) => setAgesAcceptedSwitch(e.target.checked)}
                   />
-                  <Tooltip
-                    placement="right"
-                    isOpen={infantsTT}
-                    target="Infants"
-                    toggle={() => {
-                      setInfantsTT(!infantsTT);
-                    }}
-                  >
-                   Use only if the tour specifies an infants price, or a different price for kids under a certain age than the normal kids price. <br/><br/> For example Kids 6 to 12 years are $50.00, but Kids under 6 years old are $5.00.
-                  </Tooltip>
                 </div>
               </div>
-              <div className="d-flex align-items-center">
-                <div className="input-group me-4">
-                  <span className="input-group-text">From</span>
-                  <Input
-                    name="infants_range_from"
-                    placeholder="Years"
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.infants_range_from || ""}
-                    invalid={
-                      validationType.touched.infants_range_from &&
-                      validationType.errors.infants_range_from
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.infants_range_from &&
-                  validationType.errors.infants_range_from ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.infants_range_from}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="input-group">
-                  <span
-                    className="input-group-text text-center"
-                    style={{ minWidth: "59px" }}
-                  >
-                    To
-                  </span>
-                  <Input
-                    name="infants_range_to"
-                    placeholder="Years"
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.infants_range_to || ""}
-                    invalid={
-                      validationType.touched.infants_range_to &&
-                      validationType.errors.infants_range_to
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.infants_range_to &&
-                  validationType.errors.infants_range_to ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.infants_range_to}
-                    </FormFeedback>
-                  ) : null}
-                </div>
+              <div className="col-10 d-flex justify-content-between">
+                <Col className="col-5">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Min. Age</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="minAge"
+                      />
+                      <Tooltip
+                        placement="right"
+                        // isOpen={infantsTT}
+                        target="minAge"
+                        toggle={() => {
+                          // setInfantsTT(!infantsTT)
+                        }}
+                      >
+                        {/* Use only if the tour specifies an infants price, or a different price for kids under a certain age than the normal kids price. <br/><br/> For example Kids 6 to 12 years are $50.00, but Kids under 6 years old are $5.00. */}
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="input-group ">
+                      <span className="input-group-text">From</span>
+                      <Input
+                        name="min_age"
+                        placeholder="Years"
+                        type="number"
+                        disabled={agesAcceptedSwitch}
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.min_age || ""}
+                        invalid={
+                          validationType.touched.min_age &&
+                          validationType.errors.min_age
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.min_age &&
+                      validationType.errors.min_age ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.min_age}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </div>
+                </Col>
+                <Col className="col-5">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Max. Age</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="maxAge"
+                      />
+                      <Tooltip
+                        placement="right"
+                        // isOpen={infantsTT}
+                        target="maxAge"
+                        toggle={() => {
+                          // setInfantsTT(!infantsTT)
+                        }}
+                      >
+                        {/* Use only if the tour specifies an infants price, or a different price for kids under a certain age than the normal kids price. <br/><br/> For example Kids 6 to 12 years are $50.00, but Kids under 6 years old are $5.00. */}
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="input-group ">
+                      <span className="input-group-text">To</span>
+                      <Input
+                        name="max_age"
+                        placeholder="Years"
+                        type="number"
+                        disabled={agesAcceptedSwitch}
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.max_age || ""}
+                        invalid={
+                          validationType.touched.max_age &&
+                          validationType.errors.max_age
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.max_age &&
+                      validationType.errors.max_age ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.max_age}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </div>
+                </Col>
               </div>
             </Col>
-            <Col className="col-md-4 col-12 px-xxl-5">
-              <div className="d-flex justify-content-between">
-                <Label className="form-label">Kids</Label>
-                <div>
-                  <i
-                    className="uil-question-circle font-size-15"
-                    id="Kids"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={kidsTT}
-                    target="Kids"
-                    toggle={() => {
-                      setKidsTT(!kidsTT);
-                    }}
-                  >
-                    Specify what ages are defined to charge kids price to.  For example, Kids 6 to 12 years old pay kids price.  More than that is considered an Adult.  Less than that is either not specified (as in the case where only Kids 6 and up are allowed, an infants price, or free.).
-                  </Tooltip>
-                </div>
-              </div>
+            <Col>
               <div className="d-flex align-items-center">
-                <div className="input-group me-4">
-                  <span className="input-group-text">From</span>
-                  <Input
-                    name="kids_range_from"
-                    placeholder="Years"
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.kids_range_from || ""}
-                    invalid={
-                      validationType.touched.kids_range_from &&
-                      validationType.errors.kids_range_from
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.kids_range_from &&
-                  validationType.errors.kids_range_from ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.kids_range_from}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="input-group">
-                  <span
-                    className="input-group-text"
-                    style={{ minWidth: "59px" }}
-                  >
-                    To
-                  </span>
-                  <Input
-                    name="kids_range_to"
-                    placeholder="Years"
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.kids_range_to || ""}
-                    invalid={
-                      validationType.touched.kids_range_to &&
-                      validationType.errors.kids_range_to
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.kids_range_to &&
-                  validationType.errors.kids_range_to ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.kids_range_to}
-                    </FormFeedback>
-                  ) : null}
-                </div>
+                <p
+                  className="fs-5"
+                  style={{
+                    fontWeight: "bold",
+                    color: "#495057",
+                    marginBottom: "20px",
+                  }}
+                >
+                  Age Ranges for Pricing
+                </p>
               </div>
-            </Col>
-            <Col className="col-md-4 col-12 px-xxl-5">
-              <div className="d-flex justify-content-between">
-                <Label className="form-label">Teenagers</Label>
-                <div>
-                  <i
-                    className="uil-question-circle font-size-15"
-                    id="Teenagers"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={teenagersTT}
-                    target="Teenagers"
-                    toggle={() => {
-                      setTeenagersTT(!teenagersTT);
-                    }}
-                  >
-                    Specify only if the tour has a different price for teenagers as they do for young kids.
-                  </Tooltip>
-                </div>
-              </div>
-              <div className="d-flex align-items-center">
-                <div className="input-group me-4">
-                  <span className="input-group-text">From</span>
-                  <Input
-                    name="teenagers_range_from"
-                    placeholder="Years"
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.teenagers_range_from || ""}
-                    invalid={
-                      validationType.touched.teenagers_range_from &&
-                      validationType.errors.teenagers_range_from
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.teenagers_range_from &&
-                  validationType.errors.teenagers_range_from ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.teenagers_range_from}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="input-group">
-                  <span
-                    className="input-group-text"
-                    style={{ minWidth: "59px" }}
-                  >
-                    To
-                  </span>
-                  <Input
-                    name="teenagers_range_to"
-                    placeholder="Years"
-                    type="text"
-                    onChange={validationType.handleChange}
-                    onBlur={validationType.handleBlur}
-                    value={validationType.values.teenagers_range_to || ""}
-                    invalid={
-                      validationType.touched.teenagers_range_to &&
-                      validationType.errors.teenagers_range_to
-                        ? true
-                        : false
-                    }
-                  />
-                  {validationType.touched.teenagers_range_to &&
-                  validationType.errors.teenagers_range_to ? (
-                    <FormFeedback type="invalid">
-                      {validationType.errors.teenagers_range_to}
-                    </FormFeedback>
-                  ) : null}
-                </div>
+
+              <div className=" d-flex justify-content-between">
+                <Col className="col-3 ">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Infants</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Infants"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={infantsTT}
+                        target="Infants"
+                        toggle={() => {
+                          setInfantsTT(!infantsTT);
+                        }}
+                      >
+                        Use only if the tour specifies an infants price, or a
+                        different price for kids under a certain age than the
+                        normal kids price. <br />
+                        <br /> For example Kids 6 to 12 years are $50.00, but
+                        Kids under 6 years old are $5.00.
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="input-group me-4">
+                      <span className="input-group-text">From</span>
+                      <Input
+                        name="infants_range_from"
+                        placeholder="Years"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.infants_range_from || ""}
+                        invalid={
+                          validationType.touched.infants_range_from &&
+                          validationType.errors.infants_range_from
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.infants_range_from &&
+                      validationType.errors.infants_range_from ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.infants_range_from}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="input-group">
+                      <span
+                        className="input-group-text text-center"
+                        style={{ minWidth: "59px" }}
+                      >
+                        To
+                      </span>
+                      <Input
+                        name="infants_range_to"
+                        placeholder="Years"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.infants_range_to || ""}
+                        invalid={
+                          validationType.touched.infants_range_to &&
+                          validationType.errors.infants_range_to
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.infants_range_to &&
+                      validationType.errors.infants_range_to ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.infants_range_to}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </div>
+                </Col>
+                <Col className="col-3">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Kids</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Kids"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={kidsTT}
+                        target="Kids"
+                        toggle={() => {
+                          setKidsTT(!kidsTT);
+                        }}
+                      >
+                        Specify what ages are defined to charge kids price to.
+                        For example, Kids 6 to 12 years old pay kids price. More
+                        than that is considered an Adult. Less than that is
+                        either not specified (as in the case where only Kids 6
+                        and up are allowed, an infants price, or free.).
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="input-group me-4">
+                      <span className="input-group-text">From</span>
+                      <Input
+                        name="kids_range_from"
+                        placeholder="Years"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.kids_range_from || ""}
+                        invalid={
+                          validationType.touched.kids_range_from &&
+                          validationType.errors.kids_range_from
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.kids_range_from &&
+                      validationType.errors.kids_range_from ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.kids_range_from}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="input-group">
+                      <span
+                        className="input-group-text"
+                        style={{ minWidth: "59px" }}
+                      >
+                        To
+                      </span>
+                      <Input
+                        name="kids_range_to"
+                        placeholder="Years"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.kids_range_to || ""}
+                        invalid={
+                          validationType.touched.kids_range_to &&
+                          validationType.errors.kids_range_to
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.kids_range_to &&
+                      validationType.errors.kids_range_to ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.kids_range_to}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </div>
+                </Col>
+                <Col className="col-3 ">
+                  <div className="d-flex justify-content-between">
+                    <Label className="form-label">Teenagers</Label>
+                    <div>
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="Teenagers"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={teenagersTT}
+                        target="Teenagers"
+                        toggle={() => {
+                          setTeenagersTT(!teenagersTT);
+                        }}
+                      >
+                        Specify only if the tour has a different price for
+                        teenagers as they do for young kids.
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="input-group me-4">
+                      <span className="input-group-text">From</span>
+                      <Input
+                        name="teenagers_range_from"
+                        placeholder="Years"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.teenagers_range_from || ""}
+                        invalid={
+                          validationType.touched.teenagers_range_from &&
+                          validationType.errors.teenagers_range_from
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.teenagers_range_from &&
+                      validationType.errors.teenagers_range_from ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.teenagers_range_from}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="input-group">
+                      <span
+                        className="input-group-text"
+                        style={{ minWidth: "59px" }}
+                      >
+                        To
+                      </span>
+                      <Input
+                        name="teenagers_range_to"
+                        placeholder="Years"
+                        type="number"
+                        onChange={validationType.handleChange}
+                        onBlur={validationType.handleBlur}
+                        value={validationType.values.teenagers_range_to || ""}
+                        invalid={
+                          validationType.touched.teenagers_range_to &&
+                          validationType.errors.teenagers_range_to
+                            ? true
+                            : false
+                        }
+                      />
+                      {validationType.touched.teenagers_range_to &&
+                      validationType.errors.teenagers_range_to ? (
+                        <FormFeedback type="invalid">
+                          {validationType.errors.teenagers_range_to}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </div>
+                </Col>
               </div>
             </Col>
           </Row>
