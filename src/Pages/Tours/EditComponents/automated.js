@@ -446,6 +446,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         send_voucher_read_only: voucherInitialData.send_voucher_read_only,
         notification_email_read_only:
           voucherInitialData.notification_email_read_only,
+        voucher_template_id: templateSelected === "" ? null : templateSelected,
       };
       putVoucherInformationTours(voucherInitialData.tour_id, data)
         .then((resp) => {
