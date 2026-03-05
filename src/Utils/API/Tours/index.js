@@ -362,6 +362,12 @@ export const putPaymentsAPI = (id,body) => {
     headers: options,
   });
 };
+export const putPaymentRequestAPI = (id,body) => {
+  const url = `${API_URL}/payments/payment-request/${id}`;
+  return axios.post (url, body, {
+    headers: options,
+  });
+};
 export const deletePaymentsAPI = (id) => {
   const url = `${API_URL}/payments/${id}`;
   return axios.delete (url, {

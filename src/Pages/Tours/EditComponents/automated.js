@@ -11,6 +11,7 @@ import {
   Card,
   UncontrolledTooltip,
   Tooltip,
+  Label,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -42,6 +43,7 @@ import { getNotyfyChannelAPI } from "../../../Utils/API/Providers";
 import AddLocationModal from "../../../Components/Common/Modals/OperatorsModals/addLocationModal";
 import AddBoatModal from "../../../Components/Common/Modals/OperatorsModals/addBoatModal";
 import AddRestrictionModal from "../../../Components/Common/Modals/OperatorsModals/addRestrictionModal";
+import { getVouchersTemplatesAPI } from "../../../Utils/API/Tours";
 
 const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const tourID = tourData?.id;
@@ -77,7 +79,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const [ttop7, setttop7] = useState(false);
   const [ttmlocation, setttmlocation] = useState(false);
   const [ttblocation, setttblocation] = useState(false);
-
+  const [voucherTT, setVoucherTT] = useState(false);
   const [ttdp, setdp] = useState(false);
   const [ttai, setai] = useState(false);
   const [ttpcontact, settpcontact] = useState(false);
@@ -101,6 +103,8 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const [boatModal, setBoatModal] = useState(false);
   const [restrictionModal, setRestrictionModal] = useState(false);
   const [readOnlyModal, setReadOnlyModal] = useState(false);
+    const [templatesData, setTemplatesData] = useState([]);
+    const [templateSelected, setTemplateSelected] = useState("");
 
   useEffect(() => {
     if (tourID) {
@@ -224,6 +228,16 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
             confirmButtonText: 'OK'
           });
         });
+         getVouchersTemplatesAPI().then((resp) => {
+              setTemplatesData(resp.data.data);
+            }).catch((error) => {
+                  Swal.fire({
+                    title: 'Error',
+                    text: 'Something happened with the connection. Refresh the page and try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
+                });
     }
   }, [tourID]);
 
@@ -273,6 +287,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
       setVoucherSendSelected(voucherInitialData.send_voucher_from);
       setVoucherChannelSelected(voucherInitialData.send_voucher);
       setConfirmationChannelSelected(voucherInitialData.notification_email);
+      setTemplateSelected(voucherInitialData.voucher_template_id);
     }
   }, [voucherInitialData, bringListInitialData, tourData]);
 
@@ -330,6 +345,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
       boat_location: voucherInitialData?.boat_location
         ? voucherInitialData.boat_location
         : "",
+        voucher_template_id: templateSelected,
     },
     validationSchema: Yup.object().shape({
       // name: Yup.string().required("Name is required"),
@@ -1674,7 +1690,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
               </div>
             </Col>
           </Row>
-          <Row className="mt-2">
+          <Row className="mt-5">
             <Col className="col-2">
               <label>Voucher Contact</label>
               <i
@@ -1875,7 +1891,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
               </div>
             </Col>
 
-            <Col className="col-4">
+            <Col className="col-2">
               <label>Send Voucher As</label>
               <i
                 className="uil-question-circle font-size-15 mx-2"
@@ -1927,6 +1943,58 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                     );
                   })}
                 </Input>
+              </div>
+            </Col>
+             <Col className=" col-2">
+              <div className="form-outline " id="voucher_currency">
+                <div className="d-flex justify-content-between">
+                  <Label className="form-label">Voucher Template</Label>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15"
+                      id="Voucher"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={voucherTT}
+                      target="Voucher"
+                      toggle={() => {
+                        setVoucherTT(!voucherTT);
+                      }}
+                    >
+                      Select the type of voucher that the customer will receive.
+                    </Tooltip>
+                  </div>
+                </div>
+                <div className="input-group">
+                  <Input
+                    type="select"
+                    name=""
+                    onChange={(e) => {
+                      setTemplateSelected(e.target.value);
+                    }}
+                    onBlur={validationType.handleBlur}
+                    //   value={validationType.values.department || ""}
+                  >
+                    <option value="">Select....</option>
+                    {map(templatesData, (template, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={template.voucher_template_id}
+                          selected={
+                            tourData && tourData.voucher_template_id
+                              ? template.voucher_template_id ===
+                                tourData.voucher_template_id
+                              : false
+                          }
+                        >
+                          {template.voucher_template}
+                        </option>
+                      );
+                    })}
+                  </Input>
+                </div>
               </div>
             </Col>
           </Row>
