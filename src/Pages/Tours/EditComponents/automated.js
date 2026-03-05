@@ -1983,9 +1983,9 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                           key={index}
                           value={template.voucher_template_id}
                           selected={
-                            voucherInitialData && voucherInitialData.voucher_template_id
+                            tourData && tourData.voucher_template_id
                               ? template.voucher_template_id ===
-                                voucherInitialData.voucher_template_id
+                                tourData.voucher_template_id
                               : false
                           }
                         >

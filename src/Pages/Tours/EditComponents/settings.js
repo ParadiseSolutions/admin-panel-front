@@ -564,7 +564,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
               <></>
             ) : (
               <>
-                <Col className="col-1 d-flex align-items-center">
+                <Col className="col-1 d-flex align-items-center pt-4">
                   <Label className="form-label mb-0">Available From: </Label>
                 </Col>
 
@@ -572,7 +572,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   <>
                     {map(availableFromData, (available, index) => {
                       return (
-                        <Col key={index} className="col-2">
+                        <Col key={index} className="col-2 pt-4">
                           <div className="">
                             <AvailableCheckbox
                               available={available}
@@ -591,7 +591,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           </Row>
 
           <Row>
-            <Col className="col-12">
+            <Col className="col-12 pt-4">
               <div
                 className="mb-4 py-2 px-3"
                 style={{ backgroundColor: "#FFEFDE" }}
