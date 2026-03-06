@@ -660,7 +660,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="min_age"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         disabled={agesAcceptedSwitch}
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -707,7 +707,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="max_age"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         disabled={agesAcceptedSwitch}
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
@@ -775,7 +775,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="infants_range_from"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.infants_range_from || ""}
@@ -803,7 +803,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="infants_range_to"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.infants_range_to || ""}
@@ -853,7 +853,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="kids_range_from"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.kids_range_from || ""}
@@ -881,7 +881,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="kids_range_to"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.kids_range_to || ""}
@@ -928,7 +928,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="teenagers_range_from"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.teenagers_range_from || ""}
@@ -956,7 +956,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                       <Input
                         name="teenagers_range_to"
                         placeholder="Years"
-                        type="number"
+                        type="text"
                         onChange={validationType.handleChange}
                         onBlur={validationType.handleBlur}
                         value={validationType.values.teenagers_range_to || ""}
