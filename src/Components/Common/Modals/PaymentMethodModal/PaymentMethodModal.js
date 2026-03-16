@@ -38,7 +38,10 @@ import {
   postPaymentMethod,
   putPaymentMethod,
 } from "../../../../Utils/API/PaymentsMethods";
-import { capitalizeWords2, setDecimalFormatFee } from "../../../../Utils/CommonFunctions";
+import {
+  capitalizeWords2,
+  setDecimalFormatFee,
+} from "../../../../Utils/CommonFunctions";
 
 const PaymentMethodModal = ({
   addContactModal,
@@ -46,7 +49,7 @@ const PaymentMethodModal = ({
   onClickNewContactProvider,
   setContactID,
   contactID,
-  refreshTable
+  refreshTable,
 }) => {
   const { id } = useParams();
   // console.log(contactID);
@@ -67,7 +70,7 @@ const PaymentMethodModal = ({
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [paymentInstructionData, setPaymentInstructionData] = useState([]);
 
-  const [paymentTypeTT, setPaymentTypeTT] = useState(false)
+  const [paymentTypeTT, setPaymentTypeTT] = useState(false);
 
   useEffect(() => {
     getCountryPM().then((response) => {
@@ -104,7 +107,7 @@ const PaymentMethodModal = ({
       setCountrySelected(paymentDataEdit?.bank_country);
       setCurrencySelected(paymentDataEdit?.currency_id);
       setCountryCodeSelected(paymentDataEdit?.phone_country);
-      setCountryHolderSelected(paymentDataEdit?.country_id)
+      setCountryHolderSelected(paymentDataEdit?.country_id);
       setAccountTypeSelected(paymentDataEdit?.account_type_id);
       setExtraFeeSelected(paymentDataEdit?.extrafee_id);
       setPaymentInstructionSelected(paymentDataEdit?.payment_instruction_id);
@@ -157,22 +160,42 @@ const PaymentMethodModal = ({
       phone_WU: paymentDataEdit?.phone ? paymentDataEdit?.phone : "",
       // paypal
       email_PP: paymentDataEdit?.email ? paymentDataEdit?.email : "",
-      amount_PP: paymentDataEdit?.amount ? setDecimalFormatFee(paymentDataEdit?.amount, paymentDataEdit?.extrafee_id) : "",
+      amount_PP: paymentDataEdit?.amount
+        ? setDecimalFormatFee(
+            paymentDataEdit?.amount,
+            paymentDataEdit?.extrafee_id,
+          )
+        : "",
       payment_link_PP: paymentDataEdit?.form_url
         ? paymentDataEdit?.form_url
         : "",
       // zelle
       email_zelle: paymentDataEdit?.email ? paymentDataEdit?.email : "",
-      amount_zelle: paymentDataEdit?.amount ? setDecimalFormatFee(paymentDataEdit?.amount, paymentDataEdit?.extrafee_id) : "",
+      amount_zelle: paymentDataEdit?.amount
+        ? setDecimalFormatFee(
+            paymentDataEdit?.amount,
+            paymentDataEdit?.extrafee_id,
+          )
+        : "",
       // venmo
       email_venmo: paymentDataEdit?.email ? paymentDataEdit?.email : "",
-      amount_venmo: paymentDataEdit?.amount ? setDecimalFormatFee(paymentDataEdit?.amount, paymentDataEdit?.extrafee_id) : "",
+      amount_venmo: paymentDataEdit?.amount
+        ? setDecimalFormatFee(
+            paymentDataEdit?.amount,
+            paymentDataEdit?.extrafee_id,
+          )
+        : "",
       // credit card
       payment_link_CC: paymentDataEdit?.form_url
         ? paymentDataEdit?.form_url
         : "",
       phone_CC: paymentDataEdit?.phone ? paymentDataEdit?.phone : "",
-      amount_CC: paymentDataEdit?.amount ? setDecimalFormatFee(paymentDataEdit?.amount, paymentDataEdit?.extrafee_id) : "",
+      amount_CC: paymentDataEdit?.amount
+        ? setDecimalFormatFee(
+            paymentDataEdit?.amount,
+            paymentDataEdit?.extrafee_id,
+          )
+        : "",
       // wire transfer
       bank_name_WT: paymentDataEdit?.bank_name
         ? paymentDataEdit?.bank_name
@@ -194,108 +217,184 @@ const PaymentMethodModal = ({
       postal_WT: paymentDataEdit?.postal ? paymentDataEdit?.postal : "",
       phone_WT: paymentDataEdit?.phone ? paymentDataEdit?.phone : "",
       email_WT: paymentDataEdit?.email ? paymentDataEdit?.email : "",
-      payment_type: paymentTypeSelected
+      payment_type: paymentTypeSelected,
     },
     validationSchema: Yup.object().shape({
       bank_name: Yup.string().when("payment_type", {
         is: 1,
-        then: (schema) => schema.matches(/^[a-zA-ZÀ-ÿ\s]+(?: [a-zA-ZÀ-ÿ]+)*$/, "Letters Only, no numbers or symbols")
+        then: (schema) =>
+          schema.matches(
+            /^[a-zA-ZÀ-ÿ\s]+(?: [a-zA-ZÀ-ÿ]+)*$/,
+            "Letters Only, no numbers or symbols",
+          ),
       }),
       bank_name_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/^[a-zA-ZÀ-ÿ\s]+(?: [a-zA-ZÀ-ÿ]+)*$/, "Letters Only, no numbers or symbols")
+        then: (schema) =>
+          schema.matches(
+            /^[a-zA-ZÀ-ÿ\s]+(?: [a-zA-ZÀ-ÿ]+)*$/,
+            "Letters Only, no numbers or symbols",
+          ),
       }),
       bank_name_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/^[a-zA-ZÀ-ÿ\s]+(?: [a-zA-ZÀ-ÿ]+)*$/, "Letters Only, no numbers or symbols")
+        then: (schema) =>
+          schema.matches(
+            /^[a-zA-ZÀ-ÿ\s]+(?: [a-zA-ZÀ-ÿ]+)*$/,
+            "Letters Only, no numbers or symbols",
+          ),
       }),
       ABA_Routing: Yup.string().when("payment_type", {
         is: 1,
-        then: (schema) => schema.matches(/^.{9}$/, "Must be 9 numerical digits.").max(9, "Must be 9 numerical digits"),
+        then: (schema) =>
+          schema
+            .matches(/^.{9}$/, "Must be 9 numerical digits.")
+            .max(9, "Must be 9 numerical digits"),
       }),
       aba_routing_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/^.{9}$/, "Must be 9 numerical digits.").max(9, "Must be 9 numerical digits"),
+        then: (schema) =>
+          schema
+            .matches(/^.{9}$/, "Must be 9 numerical digits.")
+            .max(9, "Must be 9 numerical digits"),
       }),
       aba_routing_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/^.{9}$/, "Must be 9 numerical digits.").max(9, "Must be 9 numerical digits"),
+        then: (schema) =>
+          schema
+            .matches(/^.{9}$/, "Must be 9 numerical digits.")
+            .max(9, "Must be 9 numerical digits"),
       }),
       city_ach: Yup.string().when("payment_type", {
         is: 1,
-        then: (schema) => schema.min(3, "Invalid name")
+        then: (schema) => schema.min(3, "Invalid name"),
       }),
       city_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.min(3, "Invalid name")
+        then: (schema) => schema.min(3, "Invalid name"),
       }),
       phone_ach: Yup.string().when("payment_type", {
         is: 1,
-        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required 987 123 4567')
+        then: (schema) =>
+          schema.matches(
+            /[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/,
+            "Format required 987 123 4567",
+          ),
       }),
       phone_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required 987 123 4567')
+        then: (schema) =>
+          schema.matches(
+            /[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/,
+            "Format required 987 123 4567",
+          ),
       }),
       phone_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required 987 123 4567')
+        then: (schema) =>
+          schema.matches(
+            /[0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/,
+            "Format required 987 123 4567",
+          ),
       }),
       phone_CC: Yup.string().when("payment_type", {
         is: 2,
-        then: (schema) => schema.matches(/[+]{1}[0-9]{1,3}[ ][0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/ , 'Format required +1 222 333 4444')
+        then: (schema) =>
+          schema.matches(
+            /[+]{1}[0-9]{1,3}[ ][0-9]{3}[ ][0-9]{3}[ ][0-9]{4}/,
+            "Format required +1 222 333 4444",
+          ),
       }),
       email_ach: Yup.string().when("payment_type", {
         is: 1,
-        then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
+        then: (schema) =>
+          schema.matches(
+            /[^@]+[@]{1}[^@.]+[.]{1}[^.].+/,
+            "Email format invalid",
+          ),
       }),
       email_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
+        then: (schema) =>
+          schema.matches(
+            /[^@]+[@]{1}[^@.]+[.]{1}[^.].+/,
+            "Email format invalid",
+          ),
       }),
       email_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
+        then: (schema) =>
+          schema.matches(
+            /[^@]+[@]{1}[^@.]+[.]{1}[^.].+/,
+            "Email format invalid",
+          ),
       }),
       email_PP: Yup.string().when("payment_type", {
         is: 3,
-        then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
+        then: (schema) =>
+          schema.matches(
+            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@[a-zA-Z0-9_]+$)/,
+            "Invalid format: must be a valid email or @username",
+          ),
       }),
-      // email_zelle: Yup.string().when("payment_type", {
-      //   is: 6,
-      //   then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
-      // }),
+      email_zelle: Yup.string().when("payment_type", {
+        is: 6,
+        then: (schema) =>
+          schema.matches(
+            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@[a-zA-Z0-9_]+$)/,
+            "Invalid format: must be a valid email or @username",
+          ),
+      }),
       email_venmo: Yup.string().when("payment_type", {
         is: 7,
-        then: (schema) => schema.matches(/[^@]+[@]{1}[^@.]+[.]{1}[^.].+/ , 'Email format invalid')
+        then: (schema) =>
+          schema.matches(
+            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@[a-zA-Z0-9_]+$)/,
+            "Invalid format: must be a valid email or @username",
+          ),
       }),
       swift_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/^.{8}$|^.{11}$/, "Must be 8 or 11 characters.").max(11, "Max 11 characters.")
+        then: (schema) =>
+          schema
+            .matches(/^.{8}$|^.{11}$/, "Must be 8 or 11 characters.")
+            .max(11, "Max 11 characters."),
       }),
       swift_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/^.{8}$|^.{11}$/, "Must be 8 or 11 characters.").max(11, "Max 11 characters.")
+        then: (schema) =>
+          schema
+            .matches(/^.{8}$|^.{11}$/, "Must be 8 or 11 characters.")
+            .max(11, "Max 11 characters."),
       }),
       clabe_WT: Yup.string().when("payment_type", {
         is: 5,
-        then: (schema) => schema.matches(/^.{18}$/, "Must be 18 numerical digits.").max(18, "Must be 18 numerical digits.")
+        then: (schema) =>
+          schema
+            .matches(/^.{18}$/, "Must be 18 numerical digits.")
+            .max(18, "Must be 18 numerical digits."),
       }),
       clabe_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/^.{18}$/, "Must be 18 numerical digits.").max(18, "Must be 18 numerical digits.")
+        then: (schema) =>
+          schema
+            .matches(/^.{18}$/, "Must be 18 numerical digits.")
+            .max(18, "Must be 18 numerical digits."),
       }),
       debit_card_WU: Yup.string().when("payment_type", {
         is: 4,
-        then: (schema) => schema.matches(/^.{16}$/, "Must be 16 numerical digits.").max(16, "Must be 16 numerical digits.")
+        then: (schema) =>
+          schema
+            .matches(/^.{16}$/, "Must be 16 numerical digits.")
+            .max(16, "Must be 16 numerical digits."),
       }),
       payment_link_CC: Yup.string().when("payment_type", {
         is: 2,
-        then: (schema) => schema.url('URL format invalid')
+        then: (schema) => schema.url("URL format invalid"),
       }),
       payment_link_PP: Yup.string().when("payment_type", {
         is: 3,
-        then: (schema) => schema.url('URL format invalid')
+        then: (schema) => schema.url("URL format invalid"),
       }),
     }),
 
@@ -384,7 +483,10 @@ const PaymentMethodModal = ({
             bank_name: values.bank_name_WT,
             bank_country: countrySelected,
             aba_routing: values.aba_routing_WT,
-            account_number: +countrySelected === 2 ? null : values.account_number_WT.toString(),
+            account_number:
+              +countrySelected === 2
+                ? null
+                : values.account_number_WT.toString(),
             account_name: values.name_WT,
             address: values.address_WT,
             state: values.state_WT,
@@ -510,7 +612,8 @@ const PaymentMethodModal = ({
             amount: values.amount_CC,
             payment_instruction_id: paymentInstructionSelected,
             form_url:
-              paymentInstructionSelected === 2 || paymentInstructionSelected === 4
+              paymentInstructionSelected === 2 ||
+              paymentInstructionSelected === 4
                 ? values.payment_link_CC
                 : null,
             clabe: null,
@@ -530,10 +633,10 @@ const PaymentMethodModal = ({
               Swal.fire(
                 "Edited!",
                 "Payment Method has been Edited.",
-                "success"
+                "success",
               ).then(() => {
                 setAddContactModal(false);
-                setContactID(false)
+                setContactID(false);
                 setPaymentDataEdit([]);
                 refreshTable();
               });
@@ -559,10 +662,10 @@ const PaymentMethodModal = ({
               Swal.fire(
                 "Created!",
                 "Payment Method has been created.",
-                "success"
+                "success",
               ).then(() => {
                 setAddContactModal(false);
-                setContactID(false)
+                setContactID(false);
                 setPaymentDataEdit([]);
                 refreshTable();
               });
@@ -599,11 +702,11 @@ const PaymentMethodModal = ({
         className="modal-header"
         style={{ backgroundColor: "#3DC7F4", border: "none" }}
       >
-        {
-          contactID === false ? (
-            <h1 className="modal-title mt-0 text-white">+ New Payment Method</h1>
-          ):(<h1 className="modal-title mt-0 text-white">Edit Payment Method</h1>)
-        }
+        {contactID === false ? (
+          <h1 className="modal-title mt-0 text-white">+ New Payment Method</h1>
+        ) : (
+          <h1 className="modal-title mt-0 text-white">Edit Payment Method</h1>
+        )}
         <button
           onClick={() => {
             setAddContactModal(false);
@@ -625,7 +728,7 @@ const PaymentMethodModal = ({
           onSubmit={(e) => {
             e.preventDefault();
             validationType.handleSubmit();
-        
+
             // validationType.validateForm().then((errors) => {
             //   if (Object.keys(errors).length > 0) {
             //       // Si hay errores, mostrar alerta
@@ -690,8 +793,12 @@ const PaymentMethodModal = ({
                             className="uil-question-circle font-size-15"
                             id="paymentTypeTT2"
                           />
-                          <UncontrolledTooltip placement="top" target="paymentTypeTT2">
-                            Select the type of Payment Method you want to define.
+                          <UncontrolledTooltip
+                            placement="top"
+                            target="paymentTypeTT2"
+                          >
+                            Select the type of Payment Method you want to
+                            define.
                           </UncontrolledTooltip>
                         </div>
                       </div>
@@ -780,28 +887,27 @@ const PaymentMethodModal = ({
                   ) : (
                     <div className="form-outline mb-2">
                       <div className="form-outline mb-2" id="balance_due">
-                            <div className="d-flex justify-content-between">
-                              <Label className="form-label">
-                                Payment Type
-                              </Label>
-                              <div>
-                                <i
-                                  className="uil-question-circle font-size-15"
-                                  id="paymentTypeTT"
-                                />
-                                <Tooltip
-                                  placement="right"
-                                  isOpen={paymentTypeTT}
-                                  target="paymentTypeTT"
-                                  toggle={() => {
-                                    setPaymentTypeTT(!paymentTypeTT);
-                                  }}
-                                >
-                                  Select the type of Payment Method you want to define.
-                                </Tooltip>
-                              </div>
-                            </div>
-                            </div>
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Payment Type</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="paymentTypeTT"
+                            />
+                            <Tooltip
+                              placement="right"
+                              isOpen={paymentTypeTT}
+                              target="paymentTypeTT"
+                              toggle={() => {
+                                setPaymentTypeTT(!paymentTypeTT);
+                              }}
+                            >
+                              Select the type of Payment Method you want to
+                              define.
+                            </Tooltip>
+                          </div>
+                        </div>
+                      </div>
                       <Input
                         type="select"
                         name="payment_type"
