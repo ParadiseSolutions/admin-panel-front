@@ -61,6 +61,7 @@ const AddNewPrivateTour = ({
     if (id) {
       getPriceAPI(id).then((resp) => {
         setDataEdit(resp.data.data[0]);
+        setPriceSheetSelected(resp.data.data[0].p_price_sheet);
       });
     } else {
       setDataEdit(null);
