@@ -13,7 +13,7 @@ const VenmoForm = ({
       <Col className="col-4">
         <div className="form-outline">
           <div className="d-flex justify-content-between">
-            <Label className="form-label">Email</Label>
+            <Label className="form-label">Email or @Username</Label>
             <div>
               <i className="uil-question-circle font-size-15" id="emailTTVE" />
               <UncontrolledTooltip
@@ -21,7 +21,7 @@ const VenmoForm = ({
                 placement="top"
                 target="emailTTVE"
               >
-                Enter the email address associated with the Venmo account.
+                Enter the email address or @username associated with the Venmo account.
               </UncontrolledTooltip>
             </div>
           </div>

@@ -21,7 +21,6 @@ import {
   Button,
   Tooltip,
 } from "reactstrap";
-import Switch from "react-switch";
 // import classnames from "classnames";
 import ReservePageModal from "../../../Components/Common/Modals/TourSetingsModal/ReservePageModal";
 // import * as Yup from "yup";
@@ -29,60 +28,20 @@ import { useFormik } from "formik";
 import { map, min, set } from "lodash";
 import Swal from "sweetalert2";
 
-const Offsymbol = () => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100%",
-        fontSize: 12,
-        color: "#fff",
-        paddingRight: 2,
-      }}
-    >
-      {" "}
-      No
-    </div>
-  );
-};
-
-const OnSymbol = () => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100%",
-        fontSize: 12,
-        color: "#fff",
-        paddingRight: 2,
-      }}
-    >
-      {" "}
-      Yes
-    </div>
-  );
-};
-
 const Settings = ({ history, tourSettings, id, toggle }) => {
   //seasons request
   const [availableData, setAvailableData] = useState([]);
   const [availableFromData, setAvailableFormData] = useState([]);
 
   const [activeDep, setActiveDep] = useState(false);
-  const [tourIDTT, setTourIDTT] = useState(false);
-  const [hashTT, setHashTT] = useState(false);
   const [providerNameTT, setProviderNameTT] = useState(false);
   const [providerURLTT, setProviderURLTT] = useState(false);
-
-  const [paymentTT, setPaymentTT] = useState(false);
   const [infantsTT, setInfantsTT] = useState(false);
   const [kidsTT, setKidsTT] = useState(false);
   const [teenagersTT, setTeenagersTT] = useState(false);
-
+  const [cruiseShipTourTT, setCruiseShipTourTT] = useState(false);
+  const [cruiseShipTourURLTT, setCruiseShipTourURLTT] = useState(false);
+  const [agesAcceptanceTT, setAgesAcceptanceTT] = useState(false);
   const [agesAcceptedSwitch, setAgesAcceptedSwitch] = useState(false);
   useEffect(() => {
     getAvailableFromAPI()
@@ -146,7 +105,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   //modal reserve page
   const [reserveModal, setReserveModal] = useState(false);
 
-  console.log(tourSettings,' tour settings');
+  console.log(tourSettings, " tour settings");
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -176,11 +135,16 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
       teenagers_range_to: tourSettings.teenagers_range_to
         ? tourSettings.teenagers_range_to
         : "",
-      cruise_ship_tour_name: tourSettings.cruise_excursion_name ? tourSettings.cruise_excursion_name : "",
-      cruise_ship_tour_url: tourSettings.cruise_excursion_url ? tourSettings.cruise_excursion_url : "",
-      min_age: tourSettings.people_range_from ? tourSettings.people_range_from : "",
+      cruise_ship_tour_name: tourSettings.cruise_excursion_name
+        ? tourSettings.cruise_excursion_name
+        : "",
+      cruise_ship_tour_url: tourSettings.cruise_excursion_url
+        ? tourSettings.cruise_excursion_url
+        : "",
+      min_age: tourSettings.people_range_from
+        ? tourSettings.people_range_from
+        : "",
       max_age: tourSettings.people_range_to ? tourSettings.people_range_to : "",
-      
     },
     // validationSchema: Yup.object().shape({
     //   tour_name: Yup.string().required("Field required"),
@@ -215,8 +179,12 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
 
         payment_request: activeDep === true ? 1 : 0,
         all_ages: agesAcceptedSwitch === true ? 1 : 0,
-        cruise_excursion_name: values.cruise_ship_tour_name ? values.cruise_ship_tour_name : "",
-        cruise_excursion_url: values.cruise_ship_tour_url ? values.cruise_ship_tour_url : "",
+        cruise_excursion_name: values.cruise_ship_tour_name
+          ? values.cruise_ship_tour_name
+          : "",
+        cruise_excursion_url: values.cruise_ship_tour_url
+          ? values.cruise_ship_tour_url
+          : "",
         people_range_from: values.min_age ? values.min_age : "",
         people_range_to: values.max_age ? values.max_age : "",
       };
@@ -293,66 +261,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 </p>
               </div>
             </Col>
-            {/* <Col className="col-1 mb-3">
-              <div className="form-outline mt-2">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-label">Tour ID</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15"
-                      id="Tour"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={tourIDTT}
-                      target="Tour"
-                      toggle={() => {
-                        setTourIDTT(!tourIDTT);
-                      }}
-                    >
-                      The unique id of the tour.  This is automatically assigned by the system to identify the tour record in the database.
-                    </Tooltip>
-                  </div>
-                </div>
-                <Input
-                  name="tour_id"
-                  placeholder=""
-                  type="text"
-                  disabled
-                  value={validationType.values.tour_id || ""}
-                />
-              </div>
-            </Col> */}
-            {/* <Col className="col-1 mb-3">
-              <div className="form-outline mt-2">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-label">Tour Hash</Label>
-                  <div>
-                    <i
-                      className="uil-question-circle font-size-15"
-                      id="Hash"
-                    />
-                    <Tooltip
-                      placement="right"
-                      isOpen={hashTT}
-                      target="Hash"
-                      toggle={() => {
-                        setHashTT(!hashTT);
-                      }}
-                    >
-                      The unique hash of the tour.  This is automatically assigned by the system.  It is specified in the code of the page to identify the tour for loading elements from the database such as reviews or schema.
-                    </Tooltip>
-                  </div>
-                </div>
-                <Input
-                  name="tour_hash"
-                  placeholder=""
-                  type="text"
-                  disabled
-                  value={tourSettings?.hash || ""}
-                />
-              </div>
-            </Col> */}
+
             <Col className="col-2">
               <div className="form-outline mt-2">
                 <div className="d-flex justify-content-between">
@@ -370,10 +279,12 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                         setProviderNameTT(!providerNameTT);
                       }}
                     >
-                      The name the provider calls the tour on their own website
-                      or service agreement. This name is used on the please
-                      confirm emails to minimize confusion where we use a
-                      different marketing name for the tour than they do.
+                      The name that the Provider calls the tour on their own
+                      website or service agreement.
+                      <br />
+                      <br />
+                      This will be shown on all Provider correspondence to avoid
+                      confusion where our assigned name is different.
                     </Tooltip>
                   </div>
                 </div>
@@ -416,9 +327,13 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                         setProviderURLTT(!providerURLTT);
                       }}
                     >
-                      The link on the provider's website where we can view their
-                      description of the tour. If the provider doesn't have a
-                      website, you can leave this blank.
+                      Paste the URL from the Provider's website where the
+                      information from this tour can be viewed.
+                      <br />
+                      <br />
+                      This will be appear in internal tools such as Adventure
+                      Finder, and is used by Marketing to compare pricing with
+                      our rate sheet and to locate information about the tour.
                     </Tooltip>
                   </div>
                 </div>
@@ -455,12 +370,22 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                     />
                     <Tooltip
                       placement="right"
-                      //  isOpen={cruiseShipTourTT}
+                      isOpen={cruiseShipTourTT}
                       target="CruiseShipTour"
                       toggle={() => {
-                        // setCruiseShipTourTT(!cruiseShipTourTT);
+                        setCruiseShipTourTT(!cruiseShipTourTT);
                       }}
-                    ></Tooltip>
+                    >
+                      The name the cruise ships call this excursion on their
+                      shore excursion lists. Make sure the one you choose is
+                      comparable to the one we offer, even if not the same, it's
+                      close..
+                      <br />
+                      <br />
+                      This will appear on our Shore Excursions page, and is used
+                      for SEO and price comparison purposes so the ship
+                      passengers can see that they can save money with us.
+                    </Tooltip>
                   </div>
                 </div>
                 <Input
@@ -496,12 +421,16 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                     />
                     <Tooltip
                       placement="right"
-                      // isOpen={cruiseShipTourURLTT}
+                      isOpen={cruiseShipTourURLTT}
                       target="CruiseShipTourURL"
                       toggle={() => {
-                        // setCruiseShipTourURLTT(!cruiseShipTourURLTT);
+                        setCruiseShipTourURLTT(!cruiseShipTourURLTT);
                       }}
-                    ></Tooltip>
+                    >
+                      Paste the URL from the cruise ship's website where this
+                      tour is shown. This is for marketing reference when doing
+                      pricing.
+                    </Tooltip>
                   </div>
                 </div>
                 <Input
@@ -526,37 +455,6 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                 ) : null}
               </div>
             </Col>
-
-            {/* <Col className="col-2">
-              <div className="d-flex justify-content-start">
-                <Label className="form-label">Payment Request</Label>
-                <div>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="Payment"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={paymentTT}
-                    target="Payment"
-                    toggle={() => {
-                      setPaymentTT(!paymentTT);
-                    }}
-                  >
-                   If selected, this will notify CE that a Payment Request will need to be created in Ryver.
-                  </Tooltip>
-                </div>
-              </div>
-              <div className="form-check form-switch form-switch-md mt-1">
-                <Switch
-                  uncheckedIcon={<Offsymbol />}
-                  checkedIcon={<OnSymbol />}
-                  onColor="#3DC7F4"
-                  onChange={(e) => onChangeActive(e)}
-                  checked={activeDep}
-                />
-              </div>
-            </Col> */}
           </Row>
 
           <Row>
@@ -604,7 +502,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                     marginBottom: "0px",
                   }}
                 >
-                  Kids Settings
+                  KIDS SETTINGS
                 </p>
               </div>
             </Col>
@@ -612,24 +510,49 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           <Row className="row">
             <Col className="col-3">
               <div className="d-flex align-items-center">
-                <p
-                  className="fs-5"
-                  style={{
-                    fontWeight: "bold",
-                    color: "#495057",
-                    marginBottom: "20px",
-                  }}
-                >
-                  Ages Accepted
-                </p>
+                <div className="d-flex justify-content-between">
+                  <p
+                    className="fs-5"
+                    style={{
+                      fontWeight: "bold",
+                      color: "#495057",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    Ages Accepted
+                  </p>
+                  <div>
+                    <i
+                      className="uil-question-circle font-size-15 mx-2"
+                      id="agesAcceptance"
+                    />
+                    <Tooltip
+                      placement="right"
+                      isOpen={agesAcceptanceTT}
+                      target="agesAcceptance"
+                      toggle={() => {
+                        setAgesAcceptanceTT(!agesAcceptanceTT);
+                      }}
+                    >
+                      Specify the minimum and maximum ages allowed to
+                      participate on the tour.
+                      <br />
+                      <br />
+                      If all ages are welcome, select the "All Ages" toggle. If
+                      there is no maximum age, leave "Max. Age" blank and only
+                      fill in the Min. Age".
+                    </Tooltip>
+                  </div>
+                </div>
+
                 <div className="d-flex mb-2 form-check form-switch">
                   <Label className="mx-2">All Ages</Label>
                   <input
                     type="checkbox"
                     className="form-check-input mx-1"
                     id="customSwitchsizesm"
-                     checked={agesAcceptedSwitch}
-                     onChange={(e) => setAgesAcceptedSwitch(e.target.checked)}
+                    checked={agesAcceptedSwitch}
+                    onChange={(e) => setAgesAcceptedSwitch(e.target.checked)}
                   />
                 </div>
               </div>
@@ -761,11 +684,13 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                           setInfantsTT(!infantsTT);
                         }}
                       >
-                        Use only if the tour specifies an infants price, or a
-                        different price for kids under a certain age than the
-                        normal kids price. <br />
-                        <br /> For example Kids 6 to 12 years are $50.00, but
-                        Kids under 6 years old are $5.00.
+                        Used only if your tour has infants pricing that is
+                        different than kids pricing. If your tour has only one
+                        Kids price, leave this section blank.
+                        <br />
+                        <br />
+                        This will show in the price boxes and Kids note on the
+                        website.
                       </Tooltip>
                     </div>
                   </div>
@@ -839,11 +764,14 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                           setKidsTT(!kidsTT);
                         }}
                       >
-                        Specify what ages are defined to charge kids price to.
-                        For example, Kids 6 to 12 years old pay kids price. More
-                        than that is considered an Adult. Less than that is
-                        either not specified (as in the case where only Kids 6
-                        and up are allowed, an infants price, or free.).
+                        Specify the age range that qualifies for kids pricing.
+                        If there is no separate kids price, leave this section
+                        blank. If all kids under a certain age pay kids price,
+                        write zero in the From box.
+                        <br />
+                        <br />
+                        This will appear in the price box and in the Kids note
+                        on the website.
                       </Tooltip>
                     </div>
                   </div>
@@ -917,8 +845,13 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                           setTeenagersTT(!teenagersTT);
                         }}
                       >
-                        Specify only if the tour has a different price for
-                        teenagers as they do for young kids.
+                        Use if your tour specifies a teen price that is
+                        different than kids price or adults price. If your tour
+                        doesn't have a teen price, leave blank.
+                        <br />
+                        <br />
+                        This will appear in the price boxes and the Kids note on
+                        the website.
                       </Tooltip>
                     </div>
                   </div>

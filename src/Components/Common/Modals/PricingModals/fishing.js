@@ -56,7 +56,7 @@ const Fishing = ({
   priceDuration,
   priceLocation,
   currency,
-  activityData
+  activityData,
 }) => {
   let id = "";
   id = editProductID;
@@ -74,10 +74,8 @@ const Fishing = ({
     }
   }, [id, addNewFishing]);
 
-  
-
   //combo box request
- 
+
   const [priceTypeSelected, setPriceTypeSelected] = useState("");
   const [priceOptionSelected, setPriceOptionSelected] = useState("");
   const [priceCollectSelected, setPriceCollectSelected] = useState("");
@@ -85,7 +83,6 @@ const Fishing = ({
   const [priceSeasonSelected, setPriceSeasonSelected] = useState("");
 
   const [currencySelected, setCurrencySelected] = useState("USD");
-
 
   const [priceCharterTypeSelected, setPriceCharterTypeSelected] = useState("");
   const [priceDurationSelected, setPriceDurationSelected] = useState("");
@@ -98,10 +95,8 @@ const Fishing = ({
   const [comparisonPricingTab, setComparisonPricingTab] = useState(false);
   const [priceBrakedown, setPriceBreakdown] = useState(false);
 
-  
   useEffect(() => {
     if (addNewFishing) {
-      
       providerPricingCalc();
     }
   }, [addNewFishing]);
@@ -150,12 +145,11 @@ const Fishing = ({
   const [priceSheetSelected, setPriceSheetSelected] = useState("");
   const [comparisonHeaderTooltip, setComparisonHeaderTooltip] = useState(false);
   const [providerCommission, setProviderCommission] = useState("");
-    const [providerHeaderTooltip, setproviderHeaderTooltip] = useState(false);
-    const [ourPricingHeaderTooltip, setOurPricingHeaderTooltip] = useState(false);
+  const [providerHeaderTooltip, setproviderHeaderTooltip] = useState(false);
+  const [ourPricingHeaderTooltip, setOurPricingHeaderTooltip] = useState(false);
   const [ourCommission, setOurCommission] = useState("");
   const [recalc, setRecalc] = useState(false);
   let changing = false;
-  
 
   useEffect(() => {
     setActivitiesSelected(dataEdit?.activities);
@@ -166,17 +160,17 @@ const Fishing = ({
         setRecalc(false);
       }
       setCurrencySelected(
-        dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD"
+        dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD",
       );
       setPriceCollectSelected(
         dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
-          ?.source_id
+          ?.source_id,
       );
       let priceCollectSe = priceCollect.filter(
         (x) =>
           x.id ===
           dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
-            ?.source_id
+            ?.source_id,
       );
       if (priceCollectSe.length > 0) {
         setPriceCollectNameSelected(priceCollectSe[0].text);
@@ -225,11 +219,10 @@ const Fishing = ({
     setActivitiesSelected(selected);
   }
 
-  
-    const validationType = useFormik({
+  const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-  initialValues: {
+    initialValues: {
       min: dataEdit
         ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
             ?.min
@@ -260,7 +253,7 @@ const Fishing = ({
         dataEdit && dataEdit.voucher_balance
           ? setDecimalFormatVBalance(
               dataEdit.voucher_balance,
-              dataEdit.voucher_currency
+              dataEdit.voucher_currency,
             )
           : "",
 
@@ -287,7 +280,6 @@ const Fishing = ({
         dataEdit && dataEdit?.asset_details
           ? dataEdit.asset_details?.cruise_pax
           : null,
-    
     },
     validationSchema: Yup.object().shape({
       min: Yup.number().integer().nullable(),
@@ -311,7 +303,7 @@ const Fishing = ({
                 ?.source_id
             : null
           : priceTypeSelected;
-      
+
       let price_option =
         priceOptionSelected === "" || priceOptionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
@@ -335,7 +327,7 @@ const Fishing = ({
                 ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 32
+                  (x) => x.pricing_option_id === 32,
                 )[0]?.source_id
             : null
           : priceSeasonSelected;
@@ -348,7 +340,7 @@ const Fishing = ({
                 ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 47
+                  (x) => x.pricing_option_id === 47,
                 )[0]?.source_id
             : null
           : priceCharterTypeSelected;
@@ -360,7 +352,7 @@ const Fishing = ({
                 ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 35
+                  (x) => x.pricing_option_id === 35,
                 )[0]?.source_id
             : null
           : priceDurationSelected;
@@ -372,7 +364,7 @@ const Fishing = ({
                 ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 37
+                  (x) => x.pricing_option_id === 37,
                 )[0]?.source_id
             : null
           : priceLocationSelected;
@@ -381,8 +373,8 @@ const Fishing = ({
         +priceSheetSelected === 1
           ? values.p_est_commission
           : +priceSheetSelected === 2
-          ? values.provider_commission
-          : values.p_commission;
+            ? values.provider_commission
+            : values.p_commission;
 
       if (price_type && price_option && price_collect) {
         let data = {
@@ -408,8 +400,8 @@ const Fishing = ({
             priceSheetSelected === 1
               ? values.net_price
               : priceSheetSelected === 2
-              ? values.net_price_percentage
-              : values.net_price_fixed,
+                ? values.net_price_percentage
+                : values.net_price_fixed,
           active: activeCheckbox ? 1 : 0,
           show_balance_due: balanceDueCheckbox ? 1 : 0,
           voucher_balance: values.voucher_balance,
@@ -496,7 +488,6 @@ const Fishing = ({
               max: null,
               label: null,
             },
-            
           ],
         };
 
@@ -558,13 +549,11 @@ const Fishing = ({
     },
   });
 
-
   useEffect(() => {
     if (priceCollectNameSelected) {
       providerPricingCalc();
     }
   }, [priceCollectNameSelected, currencySelected]);
-
 
   // provider pricing funcion
   const providerPricingCalc = () => {
@@ -591,12 +580,12 @@ const Fishing = ({
     ) {
       validationType.setFieldValue(
         "p_est_rate",
-        setRateFormat((publicPriceInput - netPriceInput) / publicPriceInput)
+        setRateFormat((publicPriceInput - netPriceInput) / publicPriceInput),
       );
       estCommissionInput = publicPriceInput - netPriceInput;
       validationType.setFieldValue(
         "p_est_commission",
-        setDecimalFormat(estCommissionInput)
+        setDecimalFormat(estCommissionInput),
       );
 
       // tax_id
@@ -629,7 +618,7 @@ const Fishing = ({
         let totalPriceInput = +netPriceInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         baseAmountInput = setDecimalFormat(netPriceInput / 1.16);
@@ -639,7 +628,7 @@ const Fishing = ({
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
@@ -662,12 +651,12 @@ const Fishing = ({
         let totalPriceInput = +baseAmountInput + +ivaInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
       } else if (
         (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
@@ -678,7 +667,7 @@ const Fishing = ({
         let totalPriceInput = +netPriceInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         baseAmountInput = setDecimalFormat(netPriceInput / 1.16);
@@ -713,7 +702,7 @@ const Fishing = ({
             if (+tourData.payment_apply_id === 1) {
               // 1- Before
               baseAmountInput = setDecimalFormat(
-                publicPriceInput / (1.16 + +tourData.gratuity / 100)
+                publicPriceInput / (1.16 + +tourData.gratuity / 100),
               );
 
               ivaInput = baseAmountInput * 0.16;
@@ -722,7 +711,7 @@ const Fishing = ({
               totalPriceInput = +baseAmountInput + +ivaInput;
               validationType.setFieldValue(
                 "p_total_price",
-                setDecimalFormat(+totalPriceInput)
+                setDecimalFormat(+totalPriceInput),
               );
 
               gratuityInput = (+tourData.gratuity * +baseAmountInput) / 100;
@@ -731,7 +720,7 @@ const Fishing = ({
               totalPriceInput = +publicPriceInput;
               validationType.setFieldValue(
                 "p_total_price",
-                setDecimalFormat(+totalPriceInput)
+                setDecimalFormat(+totalPriceInput),
               );
 
               baseAmountInput = setDecimalFormat(publicPriceInput / 1.16);
@@ -745,16 +734,16 @@ const Fishing = ({
         }
         validationType.setFieldValue(
           "p_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
         validationType.setFieldValue(
           "t_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput + +gratuityInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput),
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -773,7 +762,7 @@ const Fishing = ({
         let totalPriceInput = +baseAmountInput + +ivaInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         if (tourData.gratuity_type_id === 3) {
@@ -809,7 +798,7 @@ const Fishing = ({
             totalPriceInput = +baseAmountInput + +ivaInput;
             validationType.setFieldValue(
               "p_total_price",
-              setDecimalFormat(+totalPriceInput)
+              setDecimalFormat(+totalPriceInput),
             );
 
             if (+tourData.payment_apply_id === 1) {
@@ -823,21 +812,21 @@ const Fishing = ({
         }
         validationType.setFieldValue(
           "p_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
         validationType.setFieldValue(
           "t_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput + +gratuityInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput),
         );
       }
       validationType.setFieldValue(
         "p_base_amount",
-        setDecimalFormat(baseAmountInput)
+        setDecimalFormat(baseAmountInput),
       );
     }
 
@@ -850,12 +839,12 @@ const Fishing = ({
       netPriceInputRate = publicPriceInput * (1 - rateInput / 100);
       validationType.setFieldValue(
         "net_rate",
-        setDecimalFormat(netPriceInputRate)
+        setDecimalFormat(netPriceInputRate),
       );
       providerCommissionInputRate = publicPriceInput * (rateInput / 100);
       validationType.setFieldValue(
         "provider_commission",
-        setDecimalFormat(providerCommissionInputRate)
+        setDecimalFormat(providerCommissionInputRate),
       );
 
       if (
@@ -874,7 +863,7 @@ const Fishing = ({
         let totalPriceInput = +netPriceInputRate;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         baseAmountInput = setDecimalFormat(netPriceInputRate / 1.16);
@@ -884,7 +873,7 @@ const Fishing = ({
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
@@ -908,12 +897,12 @@ const Fishing = ({
         let totalPriceInput = +baseAmountInput + +ivaInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
       } else if (
         (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
@@ -924,7 +913,7 @@ const Fishing = ({
         let totalPriceInput = +netPriceInputRate;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         baseAmountInput = setDecimalFormat(netPriceInputRate / 1.16);
@@ -960,7 +949,7 @@ const Fishing = ({
             totalPriceInput = +publicPriceInput;
             validationType.setFieldValue(
               "p_total_price",
-              setDecimalFormat(+totalPriceInput)
+              setDecimalFormat(+totalPriceInput),
             );
 
             baseAmountInput = setDecimalFormat(publicPriceInput / 1.16);
@@ -979,16 +968,16 @@ const Fishing = ({
         }
         validationType.setFieldValue(
           "p_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
         validationType.setFieldValue(
           "t_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput + +gratuityInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput),
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -1007,7 +996,7 @@ const Fishing = ({
         let totalPriceInput = +baseAmountInput + +ivaInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         if (tourData.gratuity_type_id === 3) {
@@ -1043,7 +1032,7 @@ const Fishing = ({
             totalPriceInput = +baseAmountInput + +ivaInput;
             validationType.setFieldValue(
               "p_total_price",
-              setDecimalFormat(+totalPriceInput)
+              setDecimalFormat(+totalPriceInput),
             );
 
             if (+tourData.payment_apply_id === 1) {
@@ -1057,21 +1046,21 @@ const Fishing = ({
         }
         validationType.setFieldValue(
           "p_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
         validationType.setFieldValue(
           "t_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput + +gratuityInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput),
         );
       }
       validationType.setFieldValue(
         "p_base_amount",
-        setDecimalFormat(baseAmountInput)
+        setDecimalFormat(baseAmountInput),
       );
     }
 
@@ -1084,11 +1073,11 @@ const Fishing = ({
       netPriceInputCommision = publicPriceInput - commissionFixedInput;
       validationType.setFieldValue(
         "net_rate",
-        setDecimalFormat(netPriceInputCommision)
+        setDecimalFormat(netPriceInputCommision),
       );
       validationType.setFieldValue(
         "p_est_rate",
-        setRateFormat(commissionFixedInput / publicPriceInput)
+        setRateFormat(commissionFixedInput / publicPriceInput),
       );
 
       if (
@@ -1107,7 +1096,7 @@ const Fishing = ({
         let totalPriceInput = +netPriceInputCommision;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
         baseAmountInput = setDecimalFormat(netPriceInputCommision / 1.16);
 
@@ -1116,7 +1105,7 @@ const Fishing = ({
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
@@ -1140,12 +1129,12 @@ const Fishing = ({
         let totalPriceInput = +baseAmountInput + +ivaInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
       } else if (
         (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
@@ -1156,7 +1145,7 @@ const Fishing = ({
         let totalPriceInput = +netPriceInputCommision;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         baseAmountInput = setDecimalFormat(netPriceInputCommision / 1.16);
@@ -1191,7 +1180,7 @@ const Fishing = ({
             totalPriceInput = +publicPriceInput;
             validationType.setFieldValue(
               "p_total_price",
-              setDecimalFormat(+totalPriceInput)
+              setDecimalFormat(+totalPriceInput),
             );
 
             baseAmountInput = setDecimalFormat(+publicPriceInput / 1.16);
@@ -1210,16 +1199,16 @@ const Fishing = ({
         }
         validationType.setFieldValue(
           "p_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
         validationType.setFieldValue(
           "t_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput + +gratuityInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput),
         );
       } else if (
         (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -1238,7 +1227,7 @@ const Fishing = ({
         let totalPriceInput = +baseAmountInput + +ivaInput;
         validationType.setFieldValue(
           "p_total_price",
-          setDecimalFormat(+totalPriceInput)
+          setDecimalFormat(+totalPriceInput),
         );
 
         if (tourData.gratuity_type_id === 3) {
@@ -1273,7 +1262,7 @@ const Fishing = ({
             totalPriceInput = +baseAmountInput + +ivaInput;
             validationType.setFieldValue(
               "p_total_price",
-              setDecimalFormat(+totalPriceInput)
+              setDecimalFormat(+totalPriceInput),
             );
             if (+tourData.payment_apply_id === 1) {
               // 1- Before
@@ -1286,21 +1275,21 @@ const Fishing = ({
         }
         validationType.setFieldValue(
           "p_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
         validationType.setFieldValue(
           "t_gratuity",
-          setDecimalFormat(gratuityInput)
+          setDecimalFormat(gratuityInput),
         );
 
         validationType.setFieldValue(
           "p_final_total",
-          setDecimalFormat(+totalPriceInput + +gratuityInput)
+          setDecimalFormat(+totalPriceInput + +gratuityInput),
         );
       }
       validationType.setFieldValue(
         "p_base_amount",
-        setDecimalFormat(baseAmountInput)
+        setDecimalFormat(baseAmountInput),
       );
     }
     ourPricingCalc(gratuityInput);
@@ -1323,8 +1312,8 @@ const Fishing = ({
         "eff_rate",
         setRateFormat(
           ourCommisionPricing / validationType.values.public_price,
-          1
-        )
+          1,
+        ),
       );
     } else if (
       validationType.values.net_rate !== null &&
@@ -1337,8 +1326,8 @@ const Fishing = ({
         setRateFormat(
           ourCommisionPricing /
             (+validationType.values.net_rate + +ourCommisionPricing),
-          1
-        )
+          1,
+        ),
       );
     }
     if (
@@ -1349,7 +1338,7 @@ const Fishing = ({
         ourPriceInput,
         priceCollectNameSelected,
         ourCommisionPricing,
-        depositInput
+        depositInput,
       );
       validationType.setFieldValue("deposit", depositInput);
     }
@@ -1361,7 +1350,10 @@ const Fishing = ({
     ) {
       validationType.setFieldValue(
         "voucher_balance",
-        setDecimalFormatVBalance(ourPriceInput - depositInput, currencySelected)
+        setDecimalFormatVBalance(
+          ourPriceInput - depositInput,
+          currencySelected,
+        ),
       );
     }
 
@@ -1377,7 +1369,7 @@ const Fishing = ({
       let totalPriceInput = +ourPriceInput;
       validationType.setFieldValue(
         "t_total_price",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput),
       );
 
       baseAmountInput = setDecimalFormat(ourPriceInput / 1.16);
@@ -1387,7 +1379,7 @@ const Fishing = ({
 
       validationType.setFieldValue(
         "t_final_total",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput),
       );
     } else if (
       (tourData.tax_id === 2 && tourData.gratuity_id === 3) ||
@@ -1407,12 +1399,12 @@ const Fishing = ({
       let totalPriceInput = +baseAmountInput + +ivaInput;
       validationType.setFieldValue(
         "t_total_price",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput),
       );
 
       validationType.setFieldValue(
         "t_final_total",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput),
       );
     } else if (
       (tourData.tax_id === 1 && tourData.gratuity_type_id === 3) ||
@@ -1423,7 +1415,7 @@ const Fishing = ({
       let totalPriceInput = +ourPriceInput;
       validationType.setFieldValue(
         "t_total_price",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput),
       );
 
       baseAmountInput = setDecimalFormat(ourPriceInput / 1.16);
@@ -1433,7 +1425,7 @@ const Fishing = ({
 
       validationType.setFieldValue(
         "t_final_total",
-        setDecimalFormat(+totalPriceInput + +gratuityInput)
+        setDecimalFormat(+totalPriceInput + +gratuityInput),
       );
     } else if (
       (tourData.tax_id === 2 && tourData.gratuity_type_id === 3) ||
@@ -1452,17 +1444,17 @@ const Fishing = ({
       let totalPriceInput = +baseAmountInput + +ivaInput;
       validationType.setFieldValue(
         "t_total_price",
-        setDecimalFormat(+totalPriceInput)
+        setDecimalFormat(+totalPriceInput),
       );
 
       validationType.setFieldValue(
         "t_final_total",
-        setDecimalFormat(+totalPriceInput + +gratuityInput)
+        setDecimalFormat(+totalPriceInput + +gratuityInput),
       );
     }
     validationType.setFieldValue(
       "t_base_amount",
-      setDecimalFormat(baseAmountInput)
+      setDecimalFormat(baseAmountInput),
     );
     if (
       ourPriceInput !== "" &&
@@ -1473,7 +1465,8 @@ const Fishing = ({
     ) {
       validationType.setFieldValue(
         "you_save",
-        100 - setYouSaveFormat(ourPriceInput / validationType.values.ship_price)
+        100 -
+          setYouSaveFormat(ourPriceInput / validationType.values.ship_price),
       );
     } else if (
       ourPriceInput !== "" &&
@@ -1484,25 +1477,26 @@ const Fishing = ({
     ) {
       validationType.setFieldValue(
         "you_save",
-        100 - setYouSaveFormat(ourPriceInput / validationType.values.compare_at)
+        100 -
+          setYouSaveFormat(ourPriceInput / validationType.values.compare_at),
       );
     }
     if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
       validationType.setFieldValue(
         "net_price_fixed",
-        (depositInput - ourCommisionPricing).toFixed(2)
+        (depositInput - ourCommisionPricing).toFixed(2),
       );
     }
     if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
       validationType.setFieldValue(
         "net_price_percentage",
-        (depositInput - ourCommisionPricing).toFixed(2)
+        (depositInput - ourCommisionPricing).toFixed(2),
       );
     }
     if (depositInput !== null && depositInput !== "" && depositInput !== 0) {
       validationType.setFieldValue(
         "net_price",
-        (depositInput - ourCommisionPricing).toFixed(2)
+        (depositInput - ourCommisionPricing).toFixed(2),
       );
     }
   };
@@ -1642,7 +1636,7 @@ const Fishing = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? type.id ===
                                     dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 33
+                                      (x) => x.pricing_option_id === 33,
                                     )[0]?.source_id
                                   : false
                               }
@@ -1700,7 +1694,7 @@ const Fishing = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? option.id ===
                                     dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 34
+                                      (x) => x.pricing_option_id === 34,
                                     )[0]?.source_id
                                   : false
                               }
@@ -1754,7 +1748,7 @@ const Fishing = ({
                           setRecalc(true);
                           setPriceCollectSelected(e.target.value);
                           setPriceCollectNameSelected(
-                            e.target.selectedOptions[0].label
+                            e.target.selectedOptions[0].label,
                           );
                         }}
                       >
@@ -1768,7 +1762,7 @@ const Fishing = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? collect.id ===
                                     dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 36
+                                      (x) => x.pricing_option_id === 36,
                                     )[0]?.source_id
                                   : false
                               }
@@ -1803,7 +1797,7 @@ const Fishing = ({
                                   dataEdit && dataEdit.pricedetails
                                     ? season.id ===
                                       dataEdit.pricedetails.filter(
-                                        (x) => x.pricing_option_id === 32
+                                        (x) => x.pricing_option_id === 32,
                                       )[0]?.source_id
                                     : false
                                 }
@@ -2085,7 +2079,7 @@ const Fishing = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? charterType.id ===
                                     dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 47
+                                      (x) => x.pricing_option_id === 47,
                                     )[0]?.source_id
                                   : false
                               }
@@ -2119,7 +2113,7 @@ const Fishing = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? duration.id ===
                                     dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 35
+                                      (x) => x.pricing_option_id === 35,
                                     )[0]?.source_id
                                   : false
                               }
@@ -2249,7 +2243,7 @@ const Fishing = ({
                                 dataEdit && dataEdit.pricedetails
                                   ? location.id ===
                                     dataEdit.pricedetails.filter(
-                                      (x) => x.pricing_option_id === 37
+                                      (x) => x.pricing_option_id === 37,
                                     )[0]?.source_id
                                   : false
                               }
@@ -2305,18 +2299,18 @@ const Fishing = ({
                   style={{ backgroundColor: "#FFEFDE" }}
                 >
                   <div className="d-flex">
-                  <p
-                    className="p-2"
-                    style={{
-                      fontSize: "20px",
-                      fontWeight: "bold",
-                      color: "#495057",
-                      marginBottom: "0px",
-                    }}
-                  >
-                    Provider Pricing
-                  </p>
- <div className="m-2">
+                    <p
+                      className="p-2"
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                        color: "#495057",
+                        marginBottom: "0px",
+                      }}
+                    >
+                      Provider Pricing
+                    </p>
+                    <div className="m-2">
                       <i
                         className="uil-question-circle font-size-15"
                         id="providerHeaderTooltip"
@@ -2479,7 +2473,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "net_rate",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -2548,7 +2542,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "public_price",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -2744,7 +2738,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "provider_price",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -2954,7 +2948,7 @@ const Fishing = ({
                                         target="totalPriceTooltip"
                                         toggle={() => {
                                           settotalPriceTooltip(
-                                            !totalPriceTooltip
+                                            !totalPriceTooltip,
                                           );
                                         }}
                                       >
@@ -3108,7 +3102,7 @@ const Fishing = ({
                                         target="finalTotalTooltip"
                                         toggle={() => {
                                           setfinalTotalTooltip(
-                                            !finalTotalTooltip
+                                            !finalTotalTooltip,
                                           );
                                         }}
                                       >
@@ -3205,7 +3199,7 @@ const Fishing = ({
                                         const value = e.target.value || "";
                                         validationType.setFieldValue(
                                           "net_price",
-                                          setDecimalFormat(value)
+                                          setDecimalFormat(value),
                                         );
                                       }}
                                       value={
@@ -3286,7 +3280,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "public_price",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -3336,7 +3330,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "rate",
-                                      setRateFormat(value)
+                                      setRateFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -3521,7 +3515,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "provider_price",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -3732,7 +3726,7 @@ const Fishing = ({
                                         target="totalPriceTooltip"
                                         toggle={() => {
                                           settotalPriceTooltip(
-                                            !totalPriceTooltip
+                                            !totalPriceTooltip,
                                           );
                                         }}
                                       >
@@ -3886,7 +3880,7 @@ const Fishing = ({
                                         target="finalTotalTooltip"
                                         toggle={() => {
                                           setfinalTotalTooltip(
-                                            !finalTotalTooltip
+                                            !finalTotalTooltip,
                                           );
                                         }}
                                       >
@@ -4072,7 +4066,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "public_price",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -4133,7 +4127,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "p_commission",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -4313,7 +4307,7 @@ const Fishing = ({
                                     const value = e.target.value || "";
                                     validationType.setFieldValue(
                                       "provider_price",
-                                      setDecimalFormat(value)
+                                      setDecimalFormat(value),
                                     );
                                     providerPricingCalc();
                                   }}
@@ -4524,7 +4518,7 @@ const Fishing = ({
                                         target="totalPriceTooltip"
                                         toggle={() => {
                                           settotalPriceTooltip(
-                                            !totalPriceTooltip
+                                            !totalPriceTooltip,
                                           );
                                         }}
                                       >
@@ -4678,7 +4672,7 @@ const Fishing = ({
                                         target="finalTotalTooltip"
                                         toggle={() => {
                                           setfinalTotalTooltip(
-                                            !finalTotalTooltip
+                                            !finalTotalTooltip,
                                           );
                                         }}
                                       >
@@ -4810,39 +4804,40 @@ const Fishing = ({
                   className="col-12 p-1 my-2 d-flex justify-content-between"
                   style={{ backgroundColor: "#FFFBC8" }}
                 >
-                  <div className="d-flex"> 
-
-                  <p
-                    className="p-2"
-                    style={{
-                      fontSize: "20px",
-                      fontWeight: "bold",
-                      color: "#495057",
-                      marginBottom: "0px",
-                    }}
-                  >
-                    Our Pricing
-                  </p>
-                  <div>
-                     <div className="m-2">
-                      <i
-                        className="uil-question-circle font-size-15"
-                        id="ourPricingTooltip"
-                      />
-                      <Tooltip
-                        placement="right"
-                        isOpen={ourPricingHeaderTooltip}
-                        style={{ textAlign: "left" }}
-                        target="ourPricingTooltip"
-                        toggle={() => {
-                          setOurPricingHeaderTooltip(!ourPricingHeaderTooltip);
-                        }}
-                      >
-                        The price we will sell the boat for. This price will be
-                        based on the settings in the Payment Settings.
-                      </Tooltip>
+                  <div className="d-flex">
+                    <p
+                      className="p-2"
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                        color: "#495057",
+                        marginBottom: "0px",
+                      }}
+                    >
+                      Our Pricing
+                    </p>
+                    <div>
+                      <div className="m-2">
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="ourPricingTooltip"
+                        />
+                        <Tooltip
+                          placement="right"
+                          isOpen={ourPricingHeaderTooltip}
+                          style={{ textAlign: "left" }}
+                          target="ourPricingTooltip"
+                          toggle={() => {
+                            setOurPricingHeaderTooltip(
+                              !ourPricingHeaderTooltip,
+                            );
+                          }}
+                        >
+                          The price we will sell the boat for. This price will
+                          be based on the settings in the Payment Settings.
+                        </Tooltip>
+                      </div>
                     </div>
-                  </div>
                   </div>
                   {ourPricingTab ? (
                     <div
@@ -4907,7 +4902,7 @@ const Fishing = ({
                                 const value = e.target.value || "";
                                 validationType.setFieldValue(
                                   "our_price",
-                                  setDecimalFormat(value)
+                                  setDecimalFormat(value),
                                 );
                                 providerPricingCalc();
                               }}
@@ -5085,7 +5080,7 @@ const Fishing = ({
                                 const value = e.target.value || "";
                                 validationType.setFieldValue(
                                   "deposit",
-                                  setDecimalFormat(value)
+                                  setDecimalFormat(value),
                                 );
                                 providerPricingCalc();
                               }}
@@ -5535,318 +5530,318 @@ const Fishing = ({
                     </Row>
                   </>
                 ) : null}
-                 <Col
-                                  className="col-12 p-1 my-2  d-flex justify-content-between"
-                                  style={{ backgroundColor: "#e7ffdc", cursor: "pointer" }}
-                                  onClick={() => setComparisonPricingTab(!comparisonPricingTab)}
-                                >
-                                  <div className="d-flex">
-                                    <p
-                                      className="p-2"
-                                      style={{
-                                        fontSize: "20px",
-                                        fontWeight: "bold",
-                                        color: "#495057",
-                                        marginBottom: "0px",
-                                      }}
-                                    >
-                                      Comparison Pricing
-                                    </p>
-                                    <div className="m-2">
-                                      <i
-                                        className="uil-question-circle font-size-15"
-                                        id="comparisonPricingTooltip"
-                                      />
-                                      <Tooltip
-                                        placement="right"
-                                        isOpen={comparisonHeaderTooltip}
-                                        style={{ textAlign: "left" }}
-                                        target="comparisonPricingTooltip"
-                                        toggle={() => {
-                                          setComparisonHeaderTooltip(!comparisonHeaderTooltip);
-                                        }}
-                                      >
-                                        The price at which competitors sell the same or similar
-                                        product. This helps assess how our pricing compares
-                                        within the market.
-                                      </Tooltip>
-                                    </div>
-                                  </div>
-                                  {comparisonPricingTab ? (
-                                    <div
-                                      className="m-2"
-                                      style={{ cursor: "pointer" }}
-                                      onClick={() =>
-                                        setComparisonPricingTab(!comparisonPricingTab)
-                                      }
-                                    >
-                                      <IoIosArrowDown size={30} />
-                                    </div>
-                                  ) : (
-                                    <div
-                                      className="m-2"
-                                      style={{ cursor: "pointer" }}
-                                      onClick={() =>
-                                        setComparisonPricingTab(!comparisonPricingTab)
-                                      }
-                                    >
-                                      <IoIosArrowForward size={30} />
-                                    </div>
-                                  )}
-                                </Col>
-                                {comparisonPricingTab ? (
-                                  <>
-                                    <Row className="d-flex">
-                                      <Col className="col-2">
-                                        <div className="form-outline mb-2" id="ship_price">
-                                          <div className="d-flex justify-content-between">
-                                            <Label className="form-label">Ship Price</Label>
-                                            <div>
-                                              <i
-                                                className="uil-question-circle font-size-15"
-                                                id="shipPrice"
-                                              />
-                                              <Tooltip
-                                                placement="right"
-                                                isOpen={ttop10}
-                                                target="shipPrice"
-                                                toggle={() => {
-                                                  setttop10(!ttop10);
-                                                }}
-                                              >
-                                                The price that the most expensive cruise ship
-                                                will sell this tour at. This price should not be
-                                                confused with the "From" price shown on cruise
-                                                ship websites. It is always higher. Compare all
-                                                cruise websites. If the tour is not available
-                                                for cruise ship passengers or the ship price
-                                                won't shown on the website (as with Cancun
-                                                Discounts) then leave this blank.
-                                              </Tooltip>
-                                            </div>
-                                          </div>
-                                          <div className="input-group">
-                                            <span
-                                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                                              id="basic-addon1"
-                                              style={{ fontSize: "0.85em" }}
-                                            >
-                                              $
-                                            </span>
-                                            <Input
-                                              name="ship_price"
-                                              placeholder=""
-                                              type="text"
-                                              min="0"
-                                              step="any"
-                                              onChange={validationType.handleChange}
-                                              onBlur={(e) => {
-                                                // setRecalc(true);
-                                                const value = e.target.value || "";
-                                                validationType.setFieldValue(
-                                                  "ship_price",
-                                                  setDecimalFormat(value)
-                                                );
-                                                ourPricingCalc();
-                                              }}
-                                              value={validationType.values.ship_price || ""}
-                                              invalid={
-                                                validationType.touched.ship_price &&
-                                                validationType.errors.ship_price
-                                                  ? true
-                                                  : false
-                                              }
-                                            />
-                                            {validationType.touched.ship_price &&
-                                            validationType.errors.ship_price ? (
-                                              <FormFeedback type="invalid">
-                                                {validationType.errors.ship_price}
-                                              </FormFeedback>
-                                            ) : null}
-                                          </div>
-                                        </div>
-                                      </Col>
-                                      <Col className="col-2">
-                                        <div className="form-outline mb-2" id="compare_at">
-                                          <div className="d-flex justify-content-between">
-                                            <Label className="form-label">Compare At</Label>
-                                            <div>
-                                              <i
-                                                className="uil-question-circle font-size-15"
-                                                id="compareAt"
-                                              />
-                                              <Tooltip
-                                                placement="right"
-                                                isOpen={ttop11}
-                                                target="compareAt"
-                                                toggle={() => {
-                                                  setttop11(!ttop11);
-                                                }}
-                                              >
-                                                The price that shows as the "reg price" on our
-                                                websites. This should generally be the most
-                                                expensive price for a comparable tour you can
-                                                commonly find on the web. Typically avoid
-                                                outliers where one website is far above from the
-                                                rest. We want the customers to be able to see
-                                                that they're saving money compared to other
-                                                options.
-                                              </Tooltip>
-                                            </div>
-                                          </div>
-                                          <div className="input-group">
-                                            <span
-                                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                                              id="basic-addon1"
-                                              style={{ fontSize: "0.85em" }}
-                                            >
-                                              $
-                                            </span>
-                                            <Input
-                                              name="compare_at"
-                                              placeholder=""
-                                              type="text"
-                                              min="0"
-                                              step="any"
-                                              onChange={validationType.handleChange}
-                                              onBlur={(e) => {
-                                                // setRecalc(true);
-                                                const value = e.target.value || "";
-                                                validationType.setFieldValue(
-                                                  "compare_at",
-                                                  setDecimalFormat(value)
-                                                );
-                                                ourPricingCalc();
-                                              }}
-                                              value={validationType.values.compare_at || ""}
-                                              invalid={
-                                                validationType.touched.compare_at &&
-                                                validationType.errors.compare_at
-                                                  ? true
-                                                  : false
-                                              }
-                                            />
-                                            {validationType.touched.compare_at &&
-                                            validationType.errors.compare_at ? (
-                                              <FormFeedback type="invalid">
-                                                {validationType.errors.compare_at}
-                                              </FormFeedback>
-                                            ) : null}
-                                          </div>
-                                        </div>
-                                      </Col>
-                                      <Col className="col-2">
-                                        <div className="form-outline mb-2" id="you_save">
-                                          <div className="d-flex justify-content-between">
-                                            <Label className="form-label">You Save</Label>
-                                            <div>
-                                              <i
-                                                className="uil-question-circle font-size-15"
-                                                id="youSave"
-                                              />
-                                              <Tooltip
-                                                placement="right"
-                                                isOpen={ttop13}
-                                                target="youSave"
-                                                toggle={() => {
-                                                  setttop13(!ttop13);
-                                                }}
-                                              >
-                                                This is the amount they save by booking with us
-                                                compared to the "other guys" from the "Compare
-                                                At" price or "Ship Price" whichever is higher.
-                                                This will be shown on the website as "You Save!"
-                                                or "You Save 15%" depending on the site.
-                                              </Tooltip>
-                                            </div>
-                                          </div>
-                                          <div className="input-group">
-                                            <Input
-                                              name="you_save"
-                                              placeholder=""
-                                              type="text"
-                                              onChange={validationType.handleChange}
-                                              // onBlur={(e) => {
-                                              //   const value = e.target.value || "";
-                                              //   validationType.setFieldValue(
-                                              //     "you_save",
-                                              //     setYouSaveFormat(value)
-                                              //   );
-                                              // }}
-                                              value={validationType.values.you_save || ""}
-                                              invalid={
-                                                validationType.touched.you_save &&
-                                                validationType.errors.you_save
-                                                  ? true
-                                                  : false
-                                              }
-                                            />
-                                            {validationType.touched.you_save &&
-                                            validationType.errors.you_save ? (
-                                              <FormFeedback type="invalid">
-                                                {validationType.errors.you_save}
-                                              </FormFeedback>
-                                            ) : null}
-                                            <span
-                                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                                              id="basic-addon1"
-                                              style={{ fontSize: "0.85em" }}
-                                            >
-                                              %
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </Col>
-                                      <Col className="col-6">
-                                        <div className="form-outline mb-2" id="compare_at_url">
-                                          <div className="d-flex justify-content-between">
-                                            <Label className="form-label">
-                                              "Compare At" URL
-                                            </Label>
-                                            <div>
-                                              <i
-                                                className="uil-question-circle font-size-15"
-                                                id="compareAtURL"
-                                              />
-                                              <Tooltip
-                                                placement="right"
-                                                isOpen={ttop9}
-                                                target="compareAtURL"
-                                                toggle={() => {
-                                                  setttop9(!ttop9);
-                                                }}
-                                              >
-                                                Paste the URL of the web page where the "Compare
-                                                At" price, established during the price survey,
-                                                can be verified.
-                                              </Tooltip>
-                                            </div>
-                                          </div>
-                                          <Input
-                                            name="compare_at_url"
-                                            placeholder=""
-                                            type="text"
-                                            onChange={validationType.handleChange}
-                                            // onBlur={validationType.handleBlur}
-                                            value={validationType.values.compare_at_url || ""}
-                                            invalid={
-                                              validationType.touched.compare_at_url &&
-                                              validationType.errors.compare_at_url
-                                                ? true
-                                                : false
-                                            }
-                                          />
-                                          {validationType.touched.compare_at_url &&
-                                          validationType.errors.compare_at_url ? (
-                                            <FormFeedback type="invalid">
-                                              {validationType.errors.compare_at_url}
-                                            </FormFeedback>
-                                          ) : null}
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                  </>
-                                ) : null}
+                <Col
+                  className="col-12 p-1 my-2  d-flex justify-content-between"
+                  style={{ backgroundColor: "#e7ffdc", cursor: "pointer" }}
+                  onClick={() => setComparisonPricingTab(!comparisonPricingTab)}
+                >
+                  <div className="d-flex">
+                    <p
+                      className="p-2"
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                        color: "#495057",
+                        marginBottom: "0px",
+                      }}
+                    >
+                      Comparison Pricing
+                    </p>
+                    <div className="m-2">
+                      <i
+                        className="uil-question-circle font-size-15"
+                        id="comparisonPricingTooltip"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={comparisonHeaderTooltip}
+                        style={{ textAlign: "left" }}
+                        target="comparisonPricingTooltip"
+                        toggle={() => {
+                          setComparisonHeaderTooltip(!comparisonHeaderTooltip);
+                        }}
+                      >
+                        The price at which competitors sell the same or similar
+                        product. This helps assess how our pricing compares
+                        within the market.
+                      </Tooltip>
+                    </div>
+                  </div>
+                  {comparisonPricingTab ? (
+                    <div
+                      className="m-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        setComparisonPricingTab(!comparisonPricingTab)
+                      }
+                    >
+                      <IoIosArrowDown size={30} />
+                    </div>
+                  ) : (
+                    <div
+                      className="m-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        setComparisonPricingTab(!comparisonPricingTab)
+                      }
+                    >
+                      <IoIosArrowForward size={30} />
+                    </div>
+                  )}
+                </Col>
+                {comparisonPricingTab ? (
+                  <>
+                    <Row className="d-flex">
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="ship_price">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Ship Price</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="shipPrice"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop10}
+                                target="shipPrice"
+                                toggle={() => {
+                                  setttop10(!ttop10);
+                                }}
+                              >
+                                The price that the most expensive cruise ship
+                                will sell this tour at. This price should not be
+                                confused with the "From" price shown on cruise
+                                ship websites. It is always higher. Compare all
+                                cruise websites. If the tour is not available
+                                for cruise ship passengers or the ship price
+                                won't shown on the website (as with Cancun
+                                Discounts) then leave this blank.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="ship_price"
+                              placeholder=""
+                              type="text"
+                              min="0"
+                              step="any"
+                              onChange={validationType.handleChange}
+                              onBlur={(e) => {
+                                // setRecalc(true);
+                                const value = e.target.value || "";
+                                validationType.setFieldValue(
+                                  "ship_price",
+                                  setDecimalFormat(value),
+                                );
+                                ourPricingCalc();
+                              }}
+                              value={validationType.values.ship_price || ""}
+                              invalid={
+                                validationType.touched.ship_price &&
+                                validationType.errors.ship_price
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.ship_price &&
+                            validationType.errors.ship_price ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.ship_price}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="compare_at">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Compare At</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="compareAt"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop11}
+                                target="compareAt"
+                                toggle={() => {
+                                  setttop11(!ttop11);
+                                }}
+                              >
+                                The price that shows as the "reg price" on our
+                                websites. This should generally be the most
+                                expensive price for a comparable tour you can
+                                commonly find on the web. Typically avoid
+                                outliers where one website is far above from the
+                                rest. We want the customers to be able to see
+                                that they're saving money compared to other
+                                options.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              $
+                            </span>
+                            <Input
+                              name="compare_at"
+                              placeholder=""
+                              type="text"
+                              min="0"
+                              step="any"
+                              onChange={validationType.handleChange}
+                              onBlur={(e) => {
+                                // setRecalc(true);
+                                const value = e.target.value || "";
+                                validationType.setFieldValue(
+                                  "compare_at",
+                                  setDecimalFormat(value),
+                                );
+                                ourPricingCalc();
+                              }}
+                              value={validationType.values.compare_at || ""}
+                              invalid={
+                                validationType.touched.compare_at &&
+                                validationType.errors.compare_at
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.compare_at &&
+                            validationType.errors.compare_at ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.compare_at}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-2">
+                        <div className="form-outline mb-2" id="you_save">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">You Save</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="youSave"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop13}
+                                target="youSave"
+                                toggle={() => {
+                                  setttop13(!ttop13);
+                                }}
+                              >
+                                This is the amount they save by booking with us
+                                compared to the "other guys" from the "Compare
+                                At" price or "Ship Price" whichever is higher.
+                                This will be shown on the website as "You Save!"
+                                or "You Save 15%" depending on the site.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div className="input-group">
+                            <Input
+                              name="you_save"
+                              placeholder=""
+                              type="text"
+                              onChange={validationType.handleChange}
+                              // onBlur={(e) => {
+                              //   const value = e.target.value || "";
+                              //   validationType.setFieldValue(
+                              //     "you_save",
+                              //     setYouSaveFormat(value)
+                              //   );
+                              // }}
+                              value={validationType.values.you_save || ""}
+                              invalid={
+                                validationType.touched.you_save &&
+                                validationType.errors.you_save
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validationType.touched.you_save &&
+                            validationType.errors.you_save ? (
+                              <FormFeedback type="invalid">
+                                {validationType.errors.you_save}
+                              </FormFeedback>
+                            ) : null}
+                            <span
+                              className="input-group-text form-label fw-bold bg-paradise text-white border-0"
+                              id="basic-addon1"
+                              style={{ fontSize: "0.85em" }}
+                            >
+                              %
+                            </span>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="col-6">
+                        <div className="form-outline mb-2" id="compare_at_url">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">
+                              "Compare At" URL
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="compareAtURL"
+                              />
+                              <Tooltip
+                                placement="right"
+                                isOpen={ttop9}
+                                target="compareAtURL"
+                                toggle={() => {
+                                  setttop9(!ttop9);
+                                }}
+                              >
+                                Paste the URL of the web page where the "Compare
+                                At" price, established during the price survey,
+                                can be verified.
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <Input
+                            name="compare_at_url"
+                            placeholder=""
+                            type="text"
+                            onChange={validationType.handleChange}
+                            // onBlur={validationType.handleBlur}
+                            value={validationType.values.compare_at_url || ""}
+                            invalid={
+                              validationType.touched.compare_at_url &&
+                              validationType.errors.compare_at_url
+                                ? true
+                                : false
+                            }
+                          />
+                          {validationType.touched.compare_at_url &&
+                          validationType.errors.compare_at_url ? (
+                            <FormFeedback type="invalid">
+                              {validationType.errors.compare_at_url}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+                      </Col>
+                    </Row>
+                  </>
+                ) : null}
 
                 <Row>
                   <Col className="col-12 d-flex justify-content-end mt-4">

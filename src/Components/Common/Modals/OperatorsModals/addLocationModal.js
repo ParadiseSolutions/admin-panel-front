@@ -8,6 +8,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  UncontrolledTooltip,
 } from "reactstrap";
 import newFeeImg from "../../../Assets/images/addfee.jpg";
 import editFeeImg from "../../../Assets/images/editfee.jpg";
@@ -25,6 +26,8 @@ import {
 } from "../../../../Utils/API/Operators";
 import { setDecimalFormat } from "../../../../Utils/CommonFunctions";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
+import { API_URL, imagesOptions } from "../../../../Utils/API";
 
 const AddLocationModal = ({
   id,
@@ -35,7 +38,7 @@ const AddLocationModal = ({
   section,
   readOnlyModal,
   setReadOnlyModal,
-  tourData
+  tourData,
 }) => {
   const [extraFeeData, setExtraFeeData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
@@ -45,6 +48,7 @@ const AddLocationModal = ({
   const [extraFeeSelected, setExtraFeeSelected] = useState([]);
   const [currencySelected, setCurrencySelected] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
+  const [imageLink, setImageLink] = useState(null);
 
   useEffect(() => {
     getExtraFee()
@@ -73,10 +77,11 @@ const AddLocationModal = ({
       setCurrencySelected(dataEdit.currency);
       setPriceTypeSelected(dataEdit.price_type);
       setOptionalCheck(+dataEdit.optional === 1 ? true : false);
+      setImageLink(dataEdit?.image_url || null);
     }
   }, [dataEdit]);
 
-  // console.log('data edit de tour',dataEdit);
+  console.log("data edit de location", dataEdit);
 
   // console.log(dataEdit.length);
   const validationType = useFormik({
@@ -85,10 +90,16 @@ const AddLocationModal = ({
 
     initialValues: {
       title: dataEdit?.title ? dataEdit.title : "",
-      meeting_location: dataEdit?.meeting_location ? dataEdit.meeting_location : "",
-      google_maps_url: dataEdit?.google_maps_url ? dataEdit.google_maps_url : "",
+      meeting_location: dataEdit?.meeting_location
+        ? dataEdit.meeting_location
+        : "",
+      google_maps_url: dataEdit?.google_maps_url
+        ? dataEdit.google_maps_url
+        : "",
       image_url: dataEdit?.image_url ? dataEdit.image_url : "",
-      meeting_instructions: dataEdit?.meeting_instructions ? dataEdit.meeting_instructions : "",
+      meeting_instructions: dataEdit?.meeting_instructions
+        ? dataEdit.meeting_instructions
+        : "",
     },
     // validationSchema: Yup.object().shape({
     //   // cpanel_account: Yup.string().required("cPanel Account Name is required"),
@@ -104,9 +115,9 @@ const AddLocationModal = ({
         id: id,
         title: values.title,
         meeting_location: values.meeting_location,
-        google_maps_url:values.google_maps_url ? values.google_maps_url : '',
-        image_url:values.image_url ? values.image_url : '',
-        meeting_instructions: values.meeting_instructions
+        google_maps_url: values.google_maps_url ? values.google_maps_url : "",
+        image_url: values.image_url ? values.image_url : "",
+        meeting_instructions: values.meeting_instructions,
       };
       // console.log(data);
       if (dataEdit.length === 0) {
@@ -131,7 +142,7 @@ const AddLocationModal = ({
             Swal.fire(
               "Error!",
               // {error.response.},
-              String(errorMessages[0])
+              String(errorMessages[0]),
             );
           });
       } else {
@@ -156,7 +167,7 @@ const AddLocationModal = ({
             Swal.fire(
               "Error!",
               // {error.response.},
-              String(errorMessages[0])
+              String(errorMessages[0]),
             );
           });
       }
@@ -184,8 +195,9 @@ const AddLocationModal = ({
           <h1 className="modal-title mt-0 text-white">
             {dataEdit.length === 0
               ? "+ Add Meeting Location"
-              : readOnlyModal ? "View Meeting Location"
-              : "Edit Existing Meeting Location"}
+              : readOnlyModal
+                ? "View Meeting Location"
+                : "Edit Existing Meeting Location"}
           </h1>
           <button
             onClick={() => {
@@ -226,14 +238,61 @@ const AddLocationModal = ({
                 <Row className="mt-5">
                   <Col className="col-4">
                     <div className="form-outline mb-2 mx-2" id="amount">
-                      <Label className="form-label">Title</Label>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Label className="form-label">Title</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="titleTT"
+                          />
+                          <UncontrolledTooltip
+                            autohide={true}
+                            placement="left"
+                            target="titleTT"
+                          >
+                            The Title is how the Meeting Location will show in
+                            the admin panel, in the provider form drop-down and
+                            our internal tools such as Adventure Finder.
+                            <br />
+                            <br />
+                            It will not be shown on the voucher, and the
+                            customer will not see it, only us and the provider.
+                            <br />
+                            <br />
+                            This doesn't need to be the same name as the
+                            provider calls it, just something that makes it
+                            identifiable. Try to keep it standardized and
+                            consistent using proper punctuation and
+                            capitalization.
+                            <br />
+                            <br />
+                            Examples:
+                            <br />
+                            <br />
+                            Hotel (for Hotel Pick-Up)
+                            <br />
+                            Cruise Ship (for Cruise Pick-Up)
+                            <br />
+                            Mega Soriana
+                            <br />
+                            Coco Bongo
+                            <br />
+                            Plaza Antigua
+                            <br />
+                            <br />
+                            Use clarifiers where there may be more than one, for
+                            example Oxxo or Mega, where there may be that
+                            location in Cancun and Playa del Carmen, such as
+                            Mega Playa del Carmen or Oxxo Nuevo Vallarta.
+                          </UncontrolledTooltip>
+                        </div>
+                      </div>
                       <div className="input-group">
                         <Input
                           name="title"
                           placeholder="e.g. Cancun Hotel"
                           disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
-                          
                           value={validationType.values.title || ""}
                           invalid={
                             validationType.touched.title &&
@@ -253,14 +312,54 @@ const AddLocationModal = ({
                   </Col>
                   <Col className="col-8">
                     <div className="form-outline mb-2 mx-2" id="amount">
-                      <Label className="form-label">Location</Label>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Label className="form-label">Location</Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="locationTT"
+                          />
+                          <UncontrolledTooltip
+                            autohide={true}
+                            placement="top"
+                            target="locationTT"
+                          >
+                            This should be short and to the point, a
+                            recognizable location that the customer can show to
+                            a taxi driver or see on Google Maps. Do not include
+                            postal codes, cities, colonias, etc, but include
+                            enough to make it easily identifiable.
+                            <br />
+                            Try to keep it to one line if possible (30
+                            characters) but not more than 2 lines (70
+                            characters). Don't end with a period. This will
+                            display in all caps on the voucher.
+                            <br />
+                            <br />
+                            Examples:
+                            <br />
+                            In Front of Your Hotel Lobby
+                            <br />
+                            Coco Bongo in Playa del Carmen
+                            <br />
+                            Mega Supermarket, Av 10 Nte
+                            <br />
+                            Oxxo Estefania, Km 13.5 Zona Hotelera
+                            <br />
+                            Playa Mia Beach Club, Km 12 of the Coastal Highway
+                            <br />
+                            Royal Plaza, Across from the Cruise Pier
+                            <br />
+                            Opequimar Marina in Marina Vallarta
+                          </UncontrolledTooltip>
+                        </div>
+                      </div>
                       <div className="input-group">
                         <Input
                           name="meeting_location"
                           placeholder="e.g. In front of the main lobby of your hotel"
-                          
                           onChange={validationType.handleChange}
-                         disabled={readOnlyModal ? true : false}
+                          disabled={readOnlyModal ? true : false}
                           value={validationType.values.meeting_location || ""}
                           invalid={
                             validationType.touched.meeting_location &&
@@ -282,14 +381,35 @@ const AddLocationModal = ({
                 <Row className="">
                   <Col className="col-6">
                     <div className="form-outline mb-2 mx-2" id="amount">
-                      <Label className="form-label">Google Maps URL</Label>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Label className="form-label">Google Maps URL</Label>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="googleMapsTT"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="googleMapsTT"
+                        >
+                          Upload a photo or map of the meeting location. This is
+                          usually a screen snip taken from Google Maps street
+                          view, but can also be a map or photograph.
+                          <br />
+                          Make sure the exact meeting location is clearly noted
+                          in the image, use an arrow if you need to, to avoid
+                          any confusion.
+                          <br />
+                          This will appear as a clickable link on the voucher.
+                        </UncontrolledTooltip>
+                      </div>
                       <div className="input-group">
                         <Input
                           name="google_maps_url"
                           // placeholder="e.g. Cancun Hotel"
-                          
+
                           onChange={validationType.handleChange}
-                         disabled={readOnlyModal ? true : false}
+                          disabled={readOnlyModal ? true : false}
                           value={validationType.values.google_maps_url || ""}
                           invalid={
                             validationType.touched.google_maps_url &&
@@ -309,28 +429,100 @@ const AddLocationModal = ({
                   </Col>
                   <Col className="col-6">
                     <div className="form-outline mb-2 mx-2" id="amount">
-                      <Label className="form-label">Image URL</Label>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div className="d-flex">
+                          <Label className="form-label">Image URL</Label>
+                          {imageLink && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="18"
+                              width="18"
+                              className="mx-2"
+                              viewBox="0 0 640 640"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                window.open(
+                                  imageLink,
+                                  "_blank",
+                                  "noopener,noreferrer",
+                                );
+                              }}
+                            >
+                              <path d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z" />
+                            </svg>
+                          )}
+                        </div>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="upload_image"
+                          />
+                          <UncontrolledTooltip
+                            autohide={true}
+                            placement="top"
+                            target="upload_image"
+                          >
+                            How the customer can find the meeting location. Be
+                            as specific as needed, but don't restate the Meeting
+                            Location Field. This is so they know what to do once
+                            they get to the meeting location, where to stand,
+                            what to look for, where to go, or maybe how to find
+                            the meeting location.
+                            <br />
+                            Show your voucher at the guard shack at the marina
+                            entrance. The guard will show you to your boat.
+                            <br />
+                            Once inside the marina, turn right at Lorenzillo's
+                            Lobster house and walk toward the sign that says
+                            "Dock 1", about 100 yards down on the right. Wait at
+                            the sign and your captain will find you.
+                            <br />
+                            This field is optional, as sometimes the meeting
+                            location is enough, such as in the case of In Front
+                            of Your Hotel Lobby. Only need to add meeting
+                            instructions if it makes sense and clarifies where
+                            to go. This field will be shown just below the
+                            Meeting Location on the voucher.
+                          </UncontrolledTooltip>
+                        </div>
+                      </div>
                       <div className="input-group">
                         <Input
-                          name="image_url"
-                          // placeholder="e.g. In front of the main lobby of your hotel"
-                          disabled={readOnlyModal ? true : false}
-                          onChange={validationType.handleChange}
-                    
-                          value={validationType.values.image_url || ""}
-                          invalid={
-                            validationType.touched.image_url &&
-                            validationType.errors.image_url
-                              ? true
-                              : false
-                          }
+                          type="file"
+                          id="fileInput"
+                          name="file"
+                          accept=".jpg, .jpeg, .png"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            const formData = new FormData();
+                            formData.append("document", file);
+                            formData.append(
+                              "media_type_name",
+                              "meeting_location_image",
+                            );
+
+                            axios
+                              .post(
+                                `${API_URL}/media-library/upload`,
+                                formData,
+                                {
+                                  headers: imagesOptions,
+                                },
+                              )
+                              .then((response) => {
+                                console.log(
+                                  "respuesta",
+                                  response.data.data.url,
+                                );
+                                const url = response.data.data.url;
+                                setImageLink(url);
+                                validationType.setFieldValue("image_url", url);
+                              })
+                              .catch((error) => {
+                                console.error(error);
+                              });
+                          }}
                         />
-                        {validationType.touched.image_url &&
-                        validationType.errors.image_url ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.image_url}
-                          </FormFeedback>
-                        ) : null}
                       </div>
                     </div>
                   </Col>
@@ -338,7 +530,25 @@ const AddLocationModal = ({
                 <Row className="">
                   <Col className="col-12">
                     <div className="form-outline mb-2 mx-2" id="amount">
-                      <Label className="form-label">Meeting Instructions</Label>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Label className="form-label">
+                          Meeting Instructions
+                        </Label>
+                        <div>
+                          <i
+                            className="uil-question-circle font-size-15"
+                            id="upload_image"
+                          />
+                          <UncontrolledTooltip
+                            autohide={true}
+                            placement="top"
+                            target="upload_image"
+                          >
+                            Upload an image to be displayed in the CE Tool Chest
+                            and other tools. (Image size: 500 x 325 px).
+                          </UncontrolledTooltip>
+                        </div>
+                      </div>
                       <div className="input-group">
                         <Input
                           name="meeting_instructions"
@@ -346,7 +556,9 @@ const AddLocationModal = ({
                           placeholder="e.g. Wait outside and look for a white van with a branded sign."
                           disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
-                          value={validationType.values.meeting_instructions || ""}
+                          value={
+                            validationType.values.meeting_instructions || ""
+                          }
                           invalid={
                             validationType.touched.meeting_instructions &&
                             validationType.errors.meeting_instructions

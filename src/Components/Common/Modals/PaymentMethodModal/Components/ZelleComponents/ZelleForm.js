@@ -13,7 +13,7 @@ const ZelleForm = ({
       <Col className="col-4">
         <div className="form-outline">
           <div className="d-flex justify-content-between">
-            <Label className="form-label">Email</Label>
+            <Label className="form-label">Email or @Username</Label>
             <div>
               <i className="uil-question-circle font-size-15" id="emailTT" />
               <UncontrolledTooltip
@@ -21,7 +21,7 @@ const ZelleForm = ({
                 placement="top"
                 target="emailTT"
               >
-                Enter the email address associated with the Zelle account.
+                Enter the email address or @username associated with the Zelle account.
               </UncontrolledTooltip>
             </div>
           </div>
