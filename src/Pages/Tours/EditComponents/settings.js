@@ -105,7 +105,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
   //modal reserve page
   const [reserveModal, setReserveModal] = useState(false);
 
-  console.log(tourSettings, " tour settings");
+  // console.log(tourSettings, " tour settings");
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
