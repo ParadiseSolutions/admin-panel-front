@@ -289,7 +289,7 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
     }
   };
 
-  console.log("tourData desde general info", tourData);
+  // console.log("tourData desde general info", tourData);
   return (
     <Form
       onSubmit={(e) => {
