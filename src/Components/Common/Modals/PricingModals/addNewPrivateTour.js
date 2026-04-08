@@ -79,11 +79,11 @@ const AddNewPrivateTour = ({
     enableReinitialize: true,
     initialValues: {
       min: dataEdit
-        ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
+        ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 7)[0]
             ?.min
         : "",
       max: dataEdit
-        ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 35)[0]
+        ? dataEdit.pricedetails?.filter((x) => x.pricing_option_id === 7)[0]
             ?.max
         : "",
       min_qty: dataEdit ? dataEdit.min_qty : "",
@@ -151,18 +151,27 @@ const AddNewPrivateTour = ({
       balance_due: Yup.number(),
     }),
     onSubmit: (values, { resetForm }) => {
+      debugger
       let price_type =
         priceTypeSelected === "" || priceTypeSelected === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 33)[0]
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 6)[0]
                 ?.source_id
             : null
           : priceTypeSelected;
 
+          let price_type2 =
+        priceTypeSelected2 === "" || priceTypeSelected2 === undefined
+          ? dataEdit && dataEdit.pricedetails
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 64)[0]
+              ?.source_id
+            : null
+          : priceTypeSelected2;
+
       let price_option =
         priceOptionSelected === "" || priceOptionSelected === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 34)[0]
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 7)[0]
                 ?.source_id
             : null
           : priceOptionSelected;
@@ -170,7 +179,7 @@ const AddNewPrivateTour = ({
       let price_collect =
         priceCollectSelected === "" || priceCollectSelected === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 36)[0]
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 9)[0]
                 ?.source_id
             : null
           : priceCollectSelected;
@@ -178,11 +187,11 @@ const AddNewPrivateTour = ({
       let price_season =
         priceSeasonSelected === "" || priceSeasonSelected === undefined
           ? dataEdit && dataEdit.pricedetails
-            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 32)[0]
+            ? dataEdit.pricedetails.filter((x) => x.pricing_option_id === 29)[0]
                 ?.source_id === undefined
               ? null
               : dataEdit.pricedetails.filter(
-                  (x) => x.pricing_option_id === 32,
+                  (x) => x.pricing_option_id === 29,
                 )[0]?.source_id
             : null
           : priceSeasonSelected;
@@ -194,6 +203,7 @@ const AddNewPrivateTour = ({
             ? values.provider_commission
             : values.p_commission;
 
+      debugger
       if (price_type && price_option && price_collect) {
         let data = {
           tour_id: tourData.id,
@@ -257,29 +267,37 @@ const AddNewPrivateTour = ({
               : values.max_qty,
           price_details: [
             {
-              pricing_option_id: 33,
+              pricing_option_id: 6,
               source_id: price_type === "-1" ? null : price_type,
               min: null,
               max: null,
               label: null,
             },
             {
-              pricing_option_id: 34,
+              pricing_option_id: 7,
               source_id: price_option === "-1" ? null : price_option,
-              min: null,
-              max: null,
+              //------- aqui van los price tiers
+              min: values.min === "" ? null : values.min,
+              max: values.max === "" ? null : values.max,
               label: null,
             },
             {
-              pricing_option_id: 36,
+              pricing_option_id: 9,
               source_id: price_collect === "-1" ? null : price_collect,
               min: null,
               max: null,
               label: null,
             },
             {
-              pricing_option_id: 32,
+              pricing_option_id: 29,
               source_id: price_season === "-1" ? null : price_season,
+              min: null,
+              max: null,
+              label: null,
+            },
+            {
+              pricing_option_id: 64,
+              source_id: price_type === "-1" ? null : price_type2,
               min: null,
               max: null,
               label: null,
