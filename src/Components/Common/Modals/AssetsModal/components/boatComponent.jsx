@@ -1223,6 +1223,12 @@ console.log('Submitting boat data:', data);
                     >
                       <option value={null}>Select....</option>
                       <option
+                        value={10}
+                        selected={dataEdit?.main_class_id === 10 ? true : false}
+                      >
+                        Basic
+                      </option>
+                      <option
                         value={1}
                         selected={dataEdit?.main_class_id === 1 ? true : false}
                       >
@@ -1256,13 +1262,25 @@ console.log('Submitting boat data:', data);
                         value={6}
                         selected={dataEdit?.main_class_id === 6 ? true : false}
                       >
-                        Delux
+                        Deluxe
                       </option>
                       <option
                         value={7}
                         selected={dataEdit?.main_class_id === 7 ? true : false}
                       >
                         Elite
+                      </option>
+                      <option
+                        value={8}
+                        selected={dataEdit?.main_class_id === 8 ? true : false}
+                      >
+                        Luxury
+                      </option>
+                      <option
+                        value={9}
+                        selected={dataEdit?.main_class_id === 9 ? true : false}
+                      >
+                        Super Luxury
                       </option>
                     </Input>
                   </Col>
@@ -1376,6 +1394,16 @@ console.log('Submitting boat data:', data);
                           >
                             <option value={null}>Select....</option>
                             <option
+                              value={10}
+                              selected={
+                                dataEdit?.supported_classes?.class_id_1 === 10
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Basic
+                            </option>
+                            <option
                               value={1}
                               selected={
                                 dataEdit?.supported_classes?.class_id_1 === 1
@@ -1433,7 +1461,7 @@ console.log('Submitting boat data:', data);
                                   : false
                               }
                             >
-                              Delux
+                              Deluxe
                             </option>
                             <option
                               value={7}
@@ -1444,6 +1472,18 @@ console.log('Submitting boat data:', data);
                               }
                             >
                               Elite
+                            </option>
+                            <option
+                              value={8}
+                              selected={dataEdit?.main_class_id === 8 ? true : false}
+                            >
+                              Luxury
+                            </option>
+                            <option
+                              value={9}
+                              selected={dataEdit?.main_class_id === 9 ? true : false}
+                            >
+                              Super Luxury
                             </option>
                           </Input>
                         </Col>
@@ -1617,6 +1657,14 @@ console.log('Submitting boat data:', data);
                             >
                               <option value={null}>Select....</option>
                               <option
+                                value={10}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_2 === 10
+                                }
+                              >
+                                Basic
+                              </option>
+                              <option
                                 value={1}
                                 selected={
                                   dataEdit?.supported_classes?.class_id_2 === 1
@@ -1674,7 +1722,7 @@ console.log('Submitting boat data:', data);
                                     : false
                                 }
                               >
-                                Delux
+                                Deluxe
                               </option>
                               <option
                                 value={7}
@@ -1685,6 +1733,18 @@ console.log('Submitting boat data:', data);
                                 }
                               >
                                 Elite
+                              </option>
+                              <option
+                                value={8}
+                                selected={dataEdit?.main_class_id === 8 ? true : false}
+                              >
+                                Luxury
+                              </option>
+                              <option
+                                value={9}
+                                selected={dataEdit?.main_class_id === 9 ? true : false}
+                              >
+                                Super Luxury
                               </option>
                             </Input>
                           </Col>
@@ -1881,6 +1941,16 @@ console.log('Submitting boat data:', data);
                             >
                               <option value={null}>Select....</option>
                               <option
+                                value={10}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_3 === 10
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Basic
+                              </option>
+                              <option
                                 value={1}
                                 selected={
                                   dataEdit?.supported_classes?.class_id_3 === 1
@@ -1938,7 +2008,7 @@ console.log('Submitting boat data:', data);
                                     : false
                                 }
                               >
-                                Delux
+                                Deluxe
                               </option>
                               <option
                                 value={7}
@@ -1949,6 +2019,18 @@ console.log('Submitting boat data:', data);
                                 }
                               >
                                 Elite
+                              </option>
+                              <option
+                                value={8}
+                                selected={dataEdit?.main_class_id === 8 ? true : false}
+                              >
+                                Luxury
+                              </option>
+                              <option
+                                value={9}
+                                selected={dataEdit?.main_class_id === 9 ? true : false}
+                              >
+                                Super Luxury
                               </option>
                             </Input>
                           </Col>
