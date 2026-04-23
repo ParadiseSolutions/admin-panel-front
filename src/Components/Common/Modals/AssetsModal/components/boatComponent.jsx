@@ -131,8 +131,10 @@ const BoatComponent = ({
       setFlexiblePrice(dataEdit.has_supported_classes === 1 ? true : false);
       setInitialOptionsArea(dataEdit.activities);
       setActivitiesSelected(dataEdit.activities);
+      const fishingIds = [1, 2, 17, 50, 51, 52, 55];
+
       setFishingAditionalInputs(
-        dataEdit.activities.includes(50) ? true : false
+        fishingIds.some(id => dataEdit.activities.includes(id))
       );
       setSuportedClassSelectedOne(
         dataEdit.supported_classes?.class_id_1 || null
@@ -196,21 +198,21 @@ const BoatComponent = ({
 
     const containsFishing = selected.some((sel) => {
       if (typeof sel === "string" || typeof sel === "number") {
-        if (String(sel).toLowerCase() === "fishing") return true;
+        if (String(sel).toLowerCase().includes("fishing")) return true;
         return activityData.some(
           (a) =>
             String(a.id) === String(sel) &&
-            String(a.text).toLowerCase() === "fishing"
+            String(a.text).toLowerCase().includes("fishing")
         );
       }
       if (sel && typeof sel === "object") {
-        if (sel.label && String(sel.label).toLowerCase() === "fishing")
+        if (sel.label && String(sel.label).toLowerCase().includes("fishing"))
           return true;
         if (sel.value) {
           return activityData.some(
             (a) =>
               String(a.id) === String(sel.value) &&
-              String(a.text).toLowerCase() === "fishing"
+              String(a.text).toLowerCase().includes("fishing")
           );
         }
       }
