@@ -24,7 +24,7 @@ import {
   getVoucherChannels,
 } from "../../../Utils/API/Operators";
 import { VscEye } from "react-icons/vsc";
-import { map } from "lodash";
+import { map, set } from "lodash";
 import { Option } from "antd/lib/mentions";
 import {
   deleteExtraFeeTours,
@@ -44,6 +44,7 @@ import AddLocationModal from "../../../Components/Common/Modals/OperatorsModals/
 import AddBoatModal from "../../../Components/Common/Modals/OperatorsModals/addBoatModal";
 import AddRestrictionModal from "../../../Components/Common/Modals/OperatorsModals/addRestrictionModal";
 import { getVouchersTemplatesAPI } from "../../../Utils/API/Tours";
+import AddMapImageModal from "../../../Components/Common/Modals/OperatorsModals/addMapImageModal";
 
 const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const tourID = tourData?.id;
@@ -103,8 +104,9 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const [boatModal, setBoatModal] = useState(false);
   const [restrictionModal, setRestrictionModal] = useState(false);
   const [readOnlyModal, setReadOnlyModal] = useState(false);
-    const [templatesData, setTemplatesData] = useState([]);
-    const [templateSelected, setTemplateSelected] = useState("");
+  const [templatesData, setTemplatesData] = useState([]);
+  const [templateSelected, setTemplateSelected] = useState("");
+  const [addAirportMapModal, setAddAirportMapModal] = useState(false);
 
   useEffect(() => {
     if (tourID) {
@@ -114,10 +116,10 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
 
@@ -127,10 +129,10 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
 
@@ -140,10 +142,10 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
       getChannels()
@@ -152,10 +154,10 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
       getSendVoucherFromAPI()
@@ -164,10 +166,10 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
       getVoucherChannels()
@@ -176,32 +178,34 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
-      getNotyfyChannelAPI().then((resp) => {
-        setConfirmationChannelList(resp.data.data);
-      }).catch((error) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'Something happened with the connection. Refresh the page and try again.',
-          icon: 'error',
-          confirmButtonText: 'OK'
+      getNotyfyChannelAPI()
+        .then((resp) => {
+          setConfirmationChannelList(resp.data.data);
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
         });
-      });
       getMeetingLocationToursTable(id)
         .then((resp) => {
           setMeetingLocationTable(resp.data.data);
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
       getBoatLocationToursTable(id)
@@ -210,10 +214,10 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
       getRestrictionsToursTable(id)
@@ -222,22 +226,24 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         })
         .catch((error) => {
           Swal.fire({
-            title: 'Error',
-            text: 'Something happened with the connection. Refresh the page and try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
           });
         });
-         getVouchersTemplatesAPI().then((resp) => {
-              setTemplatesData(resp.data.data);
-            }).catch((error) => {
-                  Swal.fire({
-                    title: 'Error',
-                    text: 'Something happened with the connection. Refresh the page and try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                  });
-                });
+      getVouchersTemplatesAPI()
+        .then((resp) => {
+          setTemplatesData(resp.data.data);
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: "Error",
+            text: "Something happened with the connection. Refresh the page and try again.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        });
     }
   }, [tourID]);
 
@@ -282,7 +288,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
       setSelectionID(optionsAreaShort);
       setRestrictionList(voucherInitialData.restrictions);
       setSpecialInstructionCheck(
-        tourData.special_instruction_enable === 1 ? true : false
+        tourData.special_instruction_enable === 1 ? true : false,
       );
       setVoucherSendSelected(voucherInitialData.send_voucher_from);
       setVoucherChannelSelected(voucherInitialData.send_voucher);
@@ -345,7 +351,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
       boat_location: voucherInitialData?.boat_location
         ? voucherInitialData.boat_location
         : "",
-        voucher_template_id: templateSelected,
+      voucher_template_id: templateSelected,
     },
     validationSchema: Yup.object().shape({
       // name: Yup.string().required("Name is required"),
@@ -454,7 +460,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
             Swal.fire(
               "Edited!",
               "Automated Confirmation Information has been edited.",
-              "success"
+              "success",
             ).then(() => {});
           }
         })
@@ -466,7 +472,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                 ? error.response.data.data.name
                 : error.response.data.data.code
             }`,
-            "error"
+            "error",
           );
         });
     },
@@ -509,7 +515,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
             Swal.fire(
               "deleted!",
               "Meeting Location has been deleted.",
-              "success"
+              "success",
             );
           }
         });
@@ -1483,22 +1489,38 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
             ) : (
               <>
                 <Col className="col-4 ">
-                  <label>Arrival Instructions</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="arrival_instructions"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttai}
-                    target="arrival_instructions"
-                    toggle={() => {
-                      setai(!ttai);
-                    }}
-                  >
-                    Provide clear directions to the customer of what will happen
-                    on arrival to the airport, or where to find their driver.
-                  </Tooltip>
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <label>Arrival Instructions</label>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="arrival_instructions"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={ttai}
+                        target="arrival_instructions"
+                        toggle={() => {
+                          setai(!ttai);
+                        }}
+                      >
+                        Provide clear directions to the customer of what will
+                        happen on arrival to the airport, or where to find their
+                        driver.
+                      </Tooltip>
+                    </div>
+                    <label
+                      className="text-paradise"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                       
+                        setAddAirportMapModal(!addAirportMapModal);
+                      }}
+                    >
+                      + Set Up Airport Map
+                    </label>
+                  </div>
+
                   <div className="">
                     <Input
                       name="arrival_instructions"
@@ -1946,7 +1968,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                 </Input>
               </div>
             </Col>
-             <Col className=" col-2">
+            <Col className=" col-2">
               <div className="form-outline " id="voucher_currency">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Voucher Template</Label>
@@ -2060,6 +2082,17 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         reserveModal={reserveModal}
         setReserveModal={setReserveModal}
         id={id}
+      />
+      <AddMapImageModal
+        addAirportMapModal={addAirportMapModal}
+        setAddAirportMapModal={setAddAirportMapModal}
+        locationEditData={locationEditData}
+        id={tourID}
+        section={"tours"}
+        refreshTable={refreshTable}
+        readOnlyModal={readOnlyModal}
+        setReadOnlyModal={setReadOnlyModal}
+        tourData={tourData}
       />
     </div>
   );

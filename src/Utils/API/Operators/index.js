@@ -109,6 +109,12 @@ export const deleteOperatorAPI = (id) => {
       headers: options,
     });
   };
+  export const putAirportImages = (id, body) => {
+    const url = `${API_URL}/tours/${id}/airportMapInfo`;
+    return axios.put (url, body, {
+      headers: options,
+    });
+  };
   export const putBoatLocationFee = (id, body) => {
     const url = `${API_URL}/vouchers/updateBoatLocation/${id}`;
     return axios.put (url, body, {
