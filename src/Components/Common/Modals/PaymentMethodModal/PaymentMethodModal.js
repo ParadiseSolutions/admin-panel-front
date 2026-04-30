@@ -333,7 +333,7 @@ const PaymentMethodModal = ({
         is: 3,
         then: (schema) =>
           schema.matches(
-            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@[a-zA-Z0-9_]+$)/,
+            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@?[a-zA-Z0-9_]+$)/,
             "Invalid format: must be a valid email or @username",
           ),
       }),
@@ -341,7 +341,7 @@ const PaymentMethodModal = ({
         is: 6,
         then: (schema) =>
           schema.matches(
-            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@[a-zA-Z0-9_]+$)/,
+            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@?[a-zA-Z0-9_]+$)/,
             "Invalid format: must be a valid email or @username",
           ),
       }),
@@ -349,7 +349,7 @@ const PaymentMethodModal = ({
         is: 7,
         then: (schema) =>
           schema.matches(
-            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@[a-zA-Z0-9_]+$)/,
+            /([^@]+[@]{1}[^@.]+[.]{1}[^.].+)|(^@?[a-zA-Z0-9_]+$)/,
             "Invalid format: must be a valid email or @username",
           ),
       }),
