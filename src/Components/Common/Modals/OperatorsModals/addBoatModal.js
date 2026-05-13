@@ -374,22 +374,32 @@ const AddBoatModal = ({
                             placement="top"
                             target="googleMapsTT"
                           >
-                            Upload a photo or map of the meeting location. This
-                            is usually a screen snip taken from Google Maps
-                            street view, but can also be a map or photograph.
+                            From Google Maps at https://maps.google.com. To find
+                            this link, go to Google Maps and search for your
+                            location. Use a location that is identifiable rather
+                            than coordinates. Click "Share" to obtain the link.
+                            Do not use the browser URL. Make sure to use only
+                            the English version, and make sure that the specific
+                            location where the customer will stand is selected.
+                            Use map view not street view or terrain view for
+                            this purpose.
                             <br />
-                            Make sure the exact meeting location is clearly
-                            noted in the image, use an arrow if you need to, to
-                            avoid any confusion.
                             <br />
-                            This will appear as a clickable link on the voucher.
+                            Make sure the map is zoomed out at the default
+                            setting and the directions button is visible.
+                            Example: https://maps.app.goo.gl/hFFwJt7fmzjsRbc36
+                            <br />
+                            <br />
+                            This will appear as a pin on the vouchers and
+                            reminders for the customers to use to navigate to
+                            the meeting location.
                           </UncontrolledTooltip>
                         </div>
                       </div>
                       <div className="input-group">
                         <Input
                           name="google_maps_url"
-                          // placeholder="e.g. Cancun Hotel"
+                          placeholder="https://maps.app.goo.gl/hFFwJt7fmzjsRbc363"
                           disabled={readOnlyModal ? true : false}
                           onChange={validationType.handleChange}
                           value={validationType.values.google_maps_url || ""}
@@ -444,27 +454,15 @@ const AddBoatModal = ({
                             placement="top"
                             target="upload_image"
                           >
-                            How the customer can find the meeting location. Be
-                            as specific as needed, but don't restate the Meeting
-                            Location Field. This is so they know what to do once
-                            they get to the meeting location, where to stand,
-                            what to look for, where to go, or maybe how to find
-                            the meeting location.
+                            Upload a photo or map of the meeting location. This
+                            is usually a screen snip taken from Google Maps
+                            street view, but can also be a map or photograph.
                             <br />
-                            Show your voucher at the guard shack at the marina
-                            entrance. The guard will show you to your boat.
-                            <br />
-                            Once inside the marina, turn right at Lorenzillo's
-                            Lobster house and walk toward the sign that says
-                            "Dock 1", about 100 yards down on the right. Wait at
-                            the sign and your captain will find you.
-                            <br />
-                            This field is optional, as sometimes the meeting
-                            location is enough, such as in the case of In Front
-                            of Your Hotel Lobby. Only need to add meeting
-                            instructions if it makes sense and clarifies where
-                            to go. This field will be shown just below the
-                            Meeting Location on the voucher.
+                            Make sure the exact meeting location is clearly
+                            noted in the image, use an arrow if you need to, to
+                            avoid any confusion.
+                            <br /> This will appear as a clickable link on the
+                            voucher.
                           </UncontrolledTooltip>
                         </div>
                       </div>
