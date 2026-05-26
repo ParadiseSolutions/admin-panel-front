@@ -28,11 +28,17 @@ import Swal from "sweetalert2";
 import {
   setDecimalFormat,
   setRateFormat,
-  calcDeposit,
   setYouSaveFormat,
+  setDecimalFormatVBalance,
 } from "../../../../Utils/CommonFunctions";
+import { getCurrency } from "../../../../Utils/API/Operators";
 import { Select } from "antd";
 import { Option } from "antd/lib/mentions";
+import AddonPricingSections from "./AddonPricingSections";
+import {
+  createProviderPricingCalc,
+  createOurPricingCalc,
+} from "./tourPricingCalculations";
 
 const Offsymbol = () => {
   return (
@@ -155,6 +161,9 @@ const Addons = ({
       getPricesPricingAPI(id).then((resp) => {
         setMatchingProducts(resp.data.data);
       });
+      getCurrency().then((resp) => {
+        setCurrency(resp.data.data);
+      });
     }
     setApplyOptionsSelected(0)
   }, [newAddon]);
@@ -184,6 +193,31 @@ const Addons = ({
   const [ttop22, setttop22] = useState(false);
 
   const [recalc, setRecalc] = useState(false);
+  const [priceSheetSelected, setPriceSheetSelected] = useState("");
+  const [priceBreakdown, setPriceBreakdown] = useState(false);
+  const [currency, setCurrency] = useState([]);
+  const [currencySelected, setCurrencySelected] = useState("USD");
+  const [providerCommission, setProviderCommission] = useState("");
+  const [ourCommission, setOurCommission] = useState("");
+  const [providerPricingTab, setProviderPricingTab] = useState(true);
+  const [ourPricingTab, setOurPricingTab] = useState(true);
+  const [comparisonPricingTab, setComparisonPricingTab] = useState(true);
+  const [providerHeaderTooltip, setproviderHeaderTooltip] = useState(false);
+  const [comparisonHeaderTooltip, setComparisonHeaderTooltip] = useState(false);
+  const [priceSheetTooltip, setpriceSheetTooltip] = useState(false);
+  const [estRateTooltip, setestRateTooltip] = useState(false);
+  const [estComTooltip, setestComTooltip] = useState(false);
+  const [netPriceTooltip, setnetPriceTooltip] = useState(false);
+  const [baseTooltip, setbaseTooltip] = useState(false);
+  const [ivaTooltip, setivaTooltip] = useState(false);
+  const [totalPriceTooltip, settotalPriceTooltip] = useState(false);
+  const [gratuityTooltip, setgratuityTooltip] = useState(false);
+  const [finalTotalTooltip, setfinalTotalTooltip] = useState(false);
+  const [baseTooltipOP, setbaseTooltipOP] = useState(false);
+  const [ivaTooltipOP, setivaTooltipOP] = useState(false);
+  const [totalPriceTooltipOP, settotalPriceTooltipOP] = useState(false);
+  const [gratuityTooltipOP, setgratuityTooltipOP] = useState(false);
+  const [finalTotalTooltipOP, setfinalTotalTooltipOP] = useState(false);
   let changing = false;
 
   useEffect(() => {
@@ -210,6 +244,17 @@ const Addons = ({
       setIsUpgrade(dataEdit?.type === 2 ? true : false);
       setDisplayOptionSelected(dataEdit?.display_option);
       setCustomMessage(dataEdit?.custom_text === 0 ? false : true);
+      setPriceSheetSelected(
+        dataEdit.p_price_sheet ? String(dataEdit.p_price_sheet) : "1"
+      );
+      setCurrencySelected(
+        dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD"
+      );
+      if (dataEdit?.price != null && dataEdit?.net_rate != null) {
+        setOurCommission((dataEdit.price - dataEdit.net_rate).toFixed(2));
+      } else {
+        setOurCommission("");
+      }
 
       if (!changing) {
         changing = true;
@@ -234,6 +279,11 @@ const Addons = ({
       setCustomMessage(false);
       setIsCustomMessage(false);
       setIsUpgrade(false);
+      setPriceSheetSelected("1");
+      setCurrencySelected("USD");
+      setPriceBreakdown(false);
+      setProviderCommission("");
+      setOurCommission("");
       if (validationType) {
         validationType.resetForm();
       }
@@ -280,22 +330,58 @@ const Addons = ({
       min_qty: dataEdit ? dataEdit.min_qty : "",
       max_qty: dataEdit ? dataEdit.max_qty : "",
       addon_description: dataEdit ? dataEdit.description : "",
-      rate: dataEdit ? setRateFormat(dataEdit.net_rate) : "",
+      public_price: dataEdit?.public ?? "",
+      provider_price: dataEdit?.provider_price ?? "",
+      rate: dataEdit?.rate ? setRateFormat(dataEdit.rate) : "",
+      net_rate: dataEdit?.net_rate ?? "",
       our_price: dataEdit ? dataEdit.price : "",
       you_save: dataEdit ? setYouSaveFormat(dataEdit.you_save) : "",
+      eff_rate: dataEdit?.eff_rate ? setRateFormat(dataEdit.eff_rate) : "",
       commission: dataEdit ? dataEdit.commission : "",
       deposit: dataEdit ? dataEdit.deposit : "",
       balance_due: dataEdit ? dataEdit.net_price : "",
+      net_price: dataEdit?.net_price ?? "",
+      net_price_percentage: dataEdit?.net_price ?? "",
+      net_price_fixed: dataEdit?.net_price ?? "",
+      ship_price: dataEdit?.ship_price ?? "",
+      compare_at: dataEdit?.compare_at ?? "",
+      compare_at_url: dataEdit?.compare_at_url ?? "",
+      voucher_balance:
+        dataEdit && dataEdit.voucher_balance
+          ? setDecimalFormatVBalance(
+              dataEdit.voucher_balance,
+              dataEdit.voucher_currency
+            )
+          : "",
+      p_est_rate: dataEdit ? setRateFormat(dataEdit.p_est_rate) : "",
+      p_est_commission: dataEdit?.p_est_commission ?? "",
+      p_base_amount: dataEdit?.p_base_amount ?? "",
+      p_iva: dataEdit?.p_iva ?? "",
+      p_total_price: dataEdit?.p_total_price ?? "",
+      p_gratuity: dataEdit?.p_gratuity ?? "",
+      p_final_total: dataEdit?.p_final_total ?? "",
+      provider_commission: dataEdit?.provider_commission ?? "",
+      p_commission: dataEdit?.p_commission ?? "",
+      t_base_amount: dataEdit?.t_base_amount ?? "",
+      t_iva: dataEdit?.t_iva ?? "",
+      t_total_price: dataEdit?.t_total_price ?? "",
+      t_gratuity: dataEdit?.t_gratuity ?? "",
+      t_final_total: dataEdit?.t_final_total ?? "",
       custom_message: dataEdit ? dataEdit.option_label : "",
     },
     validationSchema: Yup.object().shape({
       min_qty: Yup.number().integer().nullable(),
       max_qty: Yup.number().integer().nullable(),
+      public_price: Yup.number().nullable(),
+      provider_price: Yup.number().nullable(),
       rate: Yup.number().nullable(),
+      net_rate: Yup.number().nullable(),
+      ship_price: Yup.number().nullable(),
+      compare_at: Yup.number().nullable(),
+      compare_at_url: Yup.string().url("URL invalid format").trim().nullable(),
       our_price: Yup.number().required("Field Required"),
-      commission: Yup.number().required("Field Required"),
       deposit: Yup.number().required("Field Required"),
-      balance_due: Yup.number().required("Field Required"),
+      balance_due: Yup.number().nullable(),
     }),
     onSubmit: (values, { resetForm }) => {
       let match_qty = matchQuantitySelected
@@ -334,6 +420,13 @@ const Addons = ({
         ? dataEdit.instruction_label_id
         : null;
 
+      const p_commission_value =
+        +priceSheetSelected === 1
+          ? values.p_est_commission
+          : +priceSheetSelected === 2
+          ? values.provider_commission
+          : values.p_commission;
+
       let data = {
         tour_id: +id,
         match_qty_id: match_qty === "-1" ? null : match_qty,
@@ -346,17 +439,59 @@ const Addons = ({
           instruction_label === "-1" ? null : instruction_label,
         description: values.addon_description,
         show_balance_due: balance,
-        price: values.our_price,
-        you_save: values.you_save,
-        net_rate:
+        public: values.public_price !== "" ? values.public_price : null,
+        provider_price:
+          values.provider_price !== "" ? values.provider_price : null,
+        rate:
           values.rate !== ""
             ? values.rate > 1
               ? values.rate / 100
               : values.rate
-            : values.rate,
-        commission: values.commission,
+            : null,
+        net_rate: values.net_rate !== "" ? values.net_rate : null,
+        price: values.our_price,
+        you_save: values.you_save,
+        eff_rate:
+          values.eff_rate !== ""
+            ? values.eff_rate > 1
+              ? values.eff_rate / 100
+              : values.eff_rate
+            : null,
+        commission: ourCommission !== "" ? ourCommission : values.commission,
         deposit: values.deposit,
-        net_price: values.balance_due,
+        net_price:
+          priceSheetSelected === "1"
+            ? values.net_price
+            : priceSheetSelected === "2"
+            ? values.net_price_percentage
+            : values.net_price_fixed,
+        voucher_balance: values.voucher_balance,
+        voucher_currency: currencySelected,
+        currencySelected: currencySelected,
+        p_est_rate: values.p_est_rate !== "" ? values.p_est_rate : null,
+        p_est_commission:
+          values.p_est_commission !== "" ? values.p_est_commission : null,
+        p_base_amount:
+          values.p_base_amount !== "" ? values.p_base_amount : null,
+        p_iva: values.p_iva !== "" ? values.p_iva : null,
+        p_total_price:
+          values.p_total_price !== "" ? values.p_total_price : null,
+        p_gratuity: values.p_gratuity !== "" ? values.p_gratuity : null,
+        p_final_total:
+          values.p_final_total !== "" ? values.p_final_total : null,
+        p_commission: p_commission_value !== "" ? p_commission_value : null,
+        p_price_sheet: priceSheetSelected,
+        t_base_amount:
+          values.t_base_amount !== "" ? values.t_base_amount : null,
+        t_iva: values.t_iva !== "" ? values.t_iva : null,
+        t_total_price:
+          values.t_total_price !== "" ? values.t_total_price : null,
+        t_gratuity: values.t_gratuity !== "" ? values.t_gratuity : null,
+        t_final_total:
+          values.t_final_total !== "" ? values.t_final_total : null,
+        ship_price: values.ship_price !== "" ? values.ship_price : null,
+        compare_at: values.compare_at !== "" ? values.compare_at : null,
+        compare_at_url: values.compare_at_url || null,
         type: isUpgrade ? 2 : 1,
         custom_text: customMessage === true ? 1 : 0,
         option_label:
@@ -447,43 +582,71 @@ const Addons = ({
     },
   });
 
-  useEffect(() => {
-    if (
-      validationType.values.deposit !== "" &&
-      validationType.values.deposit !== 0 &&
-      validationType.values.commission !== "" &&
-      validationType.values.commission !== 0
-    ) {
-      validationType.setFieldValue(
-        "balance_due",
-        (
-          validationType.values.deposit - validationType.values.commission
-        ).toFixed(2)
-      );
-    }
-  }, [validationType.values.deposit, validationType.values.commission]);
+  const pricingCalcCtx = {
+    validationType,
+    tourData: tourData || {},
+    priceSheetSelected,
+    priceCollectNameSelected,
+    currencySelected,
+    setOurCommission,
+  };
+
+  const ourPricingCalc = createOurPricingCalc(pricingCalcCtx);
+
+  const providerPricingCalc = () => {
+    if (!tourData || !validationType) return;
+    const gratuityInput = createProviderPricingCalc(pricingCalcCtx)();
+    ourPricingCalc(gratuityInput);
+  };
 
   useEffect(() => {
-    if (
-      validationType.values.our_price !== "" &&
-      validationType.values.commission !== "" &&
-      priceCollectNameSelected !== ""
-    ) {
+    if (newAddon && priceCollectNameSelected && tourData && !loadingData) {
+      providerPricingCalc();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    priceCollectNameSelected,
+    currencySelected,
+    priceSheetSelected,
+    loadingData,
+    newAddon,
+  ]);
+
+  useEffect(() => {
+    if (currencySelected && validationType) {
       validationType.setFieldValue(
-        "deposit",
-        calcDeposit(
-          validationType.values.our_price,
-          priceCollectNameSelected,
-          validationType.values.commission,
-          validationType.values.deposit
+        "voucher_balance",
+        setDecimalFormatVBalance(
+          validationType.values.voucher_balance,
+          currencySelected
         )
       );
     }
-  }, [
-    validationType.values.our_price,
-    validationType.values.commission,
-    priceCollectNameSelected,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currencySelected]);
+
+  const handleProviderFieldBlur = (field, value, isRate = false) => {
+    if (isRate) {
+      validationType.setFieldValue(field, setRateFormat(value || ""));
+    } else {
+      validationType.setFieldValue(field, setDecimalFormat(value || ""));
+    }
+    providerPricingCalc();
+  };
+
+  const handleOurPriceBlur = (e) => {
+    setRecalc(true);
+    const value = e.target.value || "";
+    customTextAssing({ type: "ourPrice", label: value });
+    validationType.setFieldValue("our_price", setDecimalFormat(value));
+    providerPricingCalc();
+  };
+
+  const handleComparisonFieldBlur = (field, value) => {
+    setRecalc(true);
+    validationType.setFieldValue(field, setDecimalFormat(value || ""));
+    providerPricingCalc();
+  };
 
   // console.log("---", dataEdit);
 
@@ -1402,389 +1565,95 @@ const Addons = ({
                   ) : null}
                 </Row>
 
-                <Row
-                  className="col-12 p-1 mt-4 mb-2"
-                  style={{ backgroundColor: "#FFEFDE" }}
-                >
-                  <p
-                    className="py-2"
-                    style={{
-                      fontSize: "20px",
-                      fontWeight: "bold",
-                      color: "#495057",
-                      marginBottom: "0px",
-                    }}
-                  >
-                    Pricing
-                  </p>
-                </Row>
-                <Row className="col-12 d-flex">
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="our_price">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Our Price*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="ourPrice"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop12}
-                            target="ourPrice"
-                            toggle={() => {
-                              setttop12(!ttop12);
-                            }}
-                          >
-                            The price we will sell the addon for.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="our_price"
-                          placeholder=""
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            setRecalc(true);
-                            const value = e.target.value || "";
-                            customTextAssing({
-                              type: "ourPrice",
-                              label: value,
-                            });
-                            validationType.setFieldValue(
-                              "our_price",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.our_price || ""}
-                          invalid={
-                            validationType.touched.our_price &&
-                            validationType.errors.our_price
-                              ? true
-                              : false
-                          }
-                        />
-                      </div>
-                      {validationType.touched.our_price &&
-                      validationType.errors.our_price ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.our_price}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="you_save">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">You Save*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="youSave"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop13}
-                            target="youSave"
-                            toggle={() => {
-                              setttop13(!ttop13);
-                            }}
-                          >
-                            This is the amount they save by booking with us
-                            compared to the "other guys" from the compare at
-                            price.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <Input
-                          name="you_save"
-                          placeholder=""
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "you_save",
-                              setYouSaveFormat(value)
-                            );
-                          }}
-                          value={validationType.values.you_save || ""}
-                          invalid={
-                            validationType.touched.you_save &&
-                            validationType.errors.you_save
-                              ? true
-                              : false
-                          }
-                        />
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          %
-                        </span>
-                      </div>
-                      {validationType.touched.you_save &&
-                      validationType.errors.you_save ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.you_save}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="rate">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Rate %</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15 "
-                            id="rate_t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop7}
-                            target="rate_t"
-                            toggle={() => {
-                              setttop7(!ttop7);
-                            }}
-                          >
-                            The commission rate for the addon that is specified
-                            in our service agreement.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <Input
-                          name="rate"
-                          placeholder=""
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            setRecalc(true);
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "rate",
-                              setRateFormat(value)
-                            );
-                          }}
-                          value={validationType.values.rate || ""}
-                          invalid={
-                            validationType.touched.rate &&
-                            validationType.errors.rate
-                              ? true
-                              : false
-                          }
-                        />
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          %
-                        </span>
-                      </div>
-                      {validationType.touched.rate &&
-                      validationType.errors.rate ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.rate}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="commission">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Commission*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="commission_t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop15}
-                            target="commission_t"
-                            toggle={() => {
-                              setttop15(!ttop15);
-                            }}
-                          >
-                            The $$ amount that we earn from the sale.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="commission"
-                          placeholder=""
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "commission",
-                              setDecimalFormat(value),
-                              validationType.handleBlur
-                            );
-                          }}
-                          value={validationType.values.commission || ""}
-                          invalid={
-                            validationType.touched.commission &&
-                            validationType.errors.commission
-                              ? true
-                              : false
-                          }
-                        />
-                      </div>
-                      {validationType.touched.commission &&
-                      validationType.errors.commission ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.commission}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="deposit">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Deposit*</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="deposit_t"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop16}
-                            target="deposit_t"
-                            toggle={() => {
-                              setttop16(!ttop16);
-                            }}
-                          >
-                            The amount we collect at the time of booking. This
-                            is calculated based on the option chosen in
-                            "Collect" above.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="deposit"
-                          placeholder=""
-                          readOnly={+priceCollectSelected !== 1}
-                          type="text"
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "deposit",
-                              setDecimalFormat(value)
-                            );
-                          }}
-                          value={validationType.values.deposit || ""}
-                          invalid={
-                            validationType.touched.deposit &&
-                            validationType.errors.deposit
-                              ? true
-                              : false
-                          }
-                        />
-                      </div>
-                      {validationType.touched.deposit &&
-                      validationType.errors.deposit ? (
-                        <FormFeedback type="invalid">
-                          {validationType.errors.deposit}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-2">
-                    <div className="form-outline mb-2" id="balance_due">
-                      <div className="d-flex justify-content-between">
-                        <Label className="form-label">Invoice Amt</Label>
-                        <div>
-                          <i
-                            className="uil-question-circle font-size-15"
-                            id="balanceDue"
-                          />
-                          <Tooltip
-                            placement="right"
-                            isOpen={ttop17}
-                            target="balanceDue"
-                            toggle={() => {
-                              setttop17(!ttop17);
-                            }}
-                          >
-                            The amount due to the provider on the invoice.
-                            <br />
-                            Our Deposit - Our Commission.
-                          </Tooltip>
-                        </div>
-                      </div>
-                      <div className="input-group">
-                        <span
-                          className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                          id="basic-addon1"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          $
-                        </span>
-                        <Input
-                          name="balance_due"
-                          placeholder=""
-                          type="text"
-                          readOnly
-                          onChange={validationType.handleChange}
-                          onBlur={(e) => {
-                            const value = e.target.value || "";
-                            validationType.setFieldValue(
-                              "balance_due",
-                              setDecimalFormat(value),
-                              validationType.handleBlur
-                            );
-                          }}
-                          value={validationType.values.balance_due || ""}
-                          invalid={
-                            validationType.touched.balance_due &&
-                            validationType.errors.balance_due
-                              ? true
-                              : false
-                          }
-                        />
-                        {validationType.touched.balance_due &&
-                        validationType.errors.balance_due ? (
-                          <FormFeedback type="invalid">
-                            {validationType.errors.balance_due}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
+                <AddonPricingSections
+                  validationType={validationType}
+                  priceSheetSelected={priceSheetSelected}
+                  setPriceSheetSelected={setPriceSheetSelected}
+                  priceBreakdown={priceBreakdown}
+                  setPriceBreakdown={setPriceBreakdown}
+                  dataEdit={dataEdit}
+                  providerPricingCalc={providerPricingCalc}
+                  ourCommission={ourCommission}
+                  currency={currency}
+                  currencyList={currency}
+                  setCurrencySelected={setCurrencySelected}
+                  currencySelected={currencySelected}
+                  priceCollectSelected={priceCollectSelected}
+                  setRecalc={setRecalc}
+                  providerPricingTab={providerPricingTab}
+                  setProviderPricingTab={setProviderPricingTab}
+                  ourPricingTab={ourPricingTab}
+                  setOurPricingTab={setOurPricingTab}
+                  comparisonPricingTab={comparisonPricingTab}
+                  setComparisonPricingTab={setComparisonPricingTab}
+                  providerHeaderTooltip={providerHeaderTooltip}
+                  setproviderHeaderTooltip={setproviderHeaderTooltip}
+                  comparisonHeaderTooltip={comparisonHeaderTooltip}
+                  setComparisonHeaderTooltip={setComparisonHeaderTooltip}
+                  priceSheetTooltip={priceSheetTooltip}
+                  setpriceSheetTooltip={setpriceSheetTooltip}
+                  estRateTooltip={estRateTooltip}
+                  setestRateTooltip={setestRateTooltip}
+                  estComTooltip={estComTooltip}
+                  setestComTooltip={setestComTooltip}
+                  netPriceTooltip={netPriceTooltip}
+                  setnetPriceTooltip={setnetPriceTooltip}
+                  baseTooltip={baseTooltip}
+                  setbaseTooltip={setbaseTooltip}
+                  ivaTooltip={ivaTooltip}
+                  setivaTooltip={setivaTooltip}
+                  totalPriceTooltip={totalPriceTooltip}
+                  settotalPriceTooltip={settotalPriceTooltip}
+                  gratuityTooltip={gratuityTooltip}
+                  setgratuityTooltip={setgratuityTooltip}
+                  finalTotalTooltip={finalTotalTooltip}
+                  setfinalTotalTooltip={setfinalTotalTooltip}
+                  baseTooltipOP={baseTooltipOP}
+                  setbaseTooltipOP={setbaseTooltipOP}
+                  ivaTooltipOP={ivaTooltipOP}
+                  setivaTooltipOP={setivaTooltipOP}
+                  totalPriceTooltipOP={totalPriceTooltipOP}
+                  settotalPriceTooltipOP={settotalPriceTooltipOP}
+                  gratuityTooltipOP={gratuityTooltipOP}
+                  setgratuityTooltipOP={setgratuityTooltipOP}
+                  finalTotalTooltipOP={finalTotalTooltipOP}
+                  setfinalTotalTooltipOP={setfinalTotalTooltipOP}
+                  ttop5={ttop5}
+                  setttop5={setttop5}
+                  ttop6={ttop6}
+                  setttop6={setttop6}
+                  ttop7={ttop7}
+                  setttop7={setttop7}
+                  ttop8={ttop8}
+                  setttop8={setttop8}
+                  ttop9={ttop9}
+                  setttop9={setttop9}
+                  ttop10={ttop10}
+                  setttop10={setttop10}
+                  ttop11={ttop11}
+                  setttop11={setttop11}
+                  ttop12={ttop12}
+                  setttop12={setttop12}
+                  ttop13={ttop13}
+                  setttop13={setttop13}
+                  ttop14={ttop14}
+                  setttop14={setttop14}
+                  ttop15={ttop15}
+                  setttop15={setttop15}
+                  ttop16={ttop16}
+                  setttop16={setttop16}
+                  ttop17={ttop17}
+                  setttop17={setttop17}
+                  ttop20={ttop20}
+                  setttop20={setttop20}
+                  ttop21={ttop21}
+                  setttop21={setttop21}
+                  ttop22={ttop22}
+                  setttop22={setttop22}
+                  onOurPriceBlur={handleOurPriceBlur}
+                  onProviderFieldBlur={handleProviderFieldBlur}
+                  onComparisonFieldBlur={handleComparisonFieldBlur}
+                />
               </Col>
             </Row>
             <Row xl={12}>
