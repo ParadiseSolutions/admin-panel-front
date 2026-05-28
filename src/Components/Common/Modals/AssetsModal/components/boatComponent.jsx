@@ -115,7 +115,6 @@ const BoatComponent = ({
       setDepartureLocationData(resp.data.data);
     });
   }, []);
-  
 
   //edit request
   useEffect(() => {
@@ -134,34 +133,34 @@ const BoatComponent = ({
       const fishingIds = [1, 2, 17, 50, 51, 52, 55];
 
       setFishingAditionalInputs(
-        fishingIds.some(id => dataEdit.activities.includes(id))
+        fishingIds.some((id) => dataEdit.activities.includes(id)),
       );
       setSuportedClassSelectedOne(
-        dataEdit.supported_classes?.class_id_1 || null
+        dataEdit.supported_classes?.class_id_1 || null,
       );
       setDurationClassSelectedOne(
-        dataEdit.supported_classes?.duration_1 || null
+        dataEdit.supported_classes?.duration_1 || null,
       );
       setSuportedClassSelectedTwo(
-        dataEdit.supported_classes?.class_id_2 || null
+        dataEdit.supported_classes?.class_id_2 || null,
       );
       setDurationClassSelectedTwo(
-        dataEdit.supported_classes?.duration_2 || null
+        dataEdit.supported_classes?.duration_2 || null,
       );
       setSuportedClassSelectedThree(
-        dataEdit.supported_classes?.class_id_3 || null
+        dataEdit.supported_classes?.class_id_3 || null,
       );
       setDurationClassSelectedThree(
-        dataEdit.supported_classes?.duration_3 || null
+        dataEdit.supported_classes?.duration_3 || null,
       );
       setInitialDepartureLocationsOne(
-        dataEdit.supported_classes?.departure_locations_1 || []
+        dataEdit.supported_classes?.departure_locations_1 || [],
       );
       setInitialDepartureLocationsTwo(
-        dataEdit.supported_classes?.departure_locations_2 || []
+        dataEdit.supported_classes?.departure_locations_2 || [],
       );
       setInitialDepartureLocationsThree(
-        dataEdit.supported_classes?.departure_locations_3 || []
+        dataEdit.supported_classes?.departure_locations_3 || [],
       );
       if (
         dataEdit.supported_classes?.class_id_2 &&
@@ -184,7 +183,7 @@ const BoatComponent = ({
       setCustomDurationSix(dataEdit.custom_prices?.duration_6 || null);
       setPdfLink(dataEdit.pdf_url || "");
       setImageLink(dataEdit.image_url || "");
-    } 
+    }
   }, [dataEdit, isEdit]);
 
   //multi select activities
@@ -202,7 +201,7 @@ const BoatComponent = ({
         return activityData.some(
           (a) =>
             String(a.id) === String(sel) &&
-            String(a.text).toLowerCase().includes("fishing")
+            String(a.text).toLowerCase().includes("fishing"),
         );
       }
       if (sel && typeof sel === "object") {
@@ -212,7 +211,7 @@ const BoatComponent = ({
           return activityData.some(
             (a) =>
               String(a.id) === String(sel.value) &&
-              String(a.text).toLowerCase().includes("fishing")
+              String(a.text).toLowerCase().includes("fishing"),
           );
         }
       }
@@ -236,12 +235,30 @@ const BoatComponent = ({
       notes: dataEdit ? dataEdit.notes : "",
       joint_fleet: dataEdit ? dataEdit.joined_fleet_at : "",
       last_inspected: dataEdit ? dataEdit.last_inspected_at : "",
-      net_price_1: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_1 : "",
-      net_price_2: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_2 : "",
-      net_price_3: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_3 : "",
-      net_price_4: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_4 : "",
-      net_price_5: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_5 : "",
-      net_price_6: dataEdit && dataEdit.custom_prices ? dataEdit.custom_prices?.net_price_6 : "",
+      net_price_1:
+        dataEdit && dataEdit.custom_prices
+          ? dataEdit.custom_prices?.net_price_1
+          : "",
+      net_price_2:
+        dataEdit && dataEdit.custom_prices
+          ? dataEdit.custom_prices?.net_price_2
+          : "",
+      net_price_3:
+        dataEdit && dataEdit.custom_prices
+          ? dataEdit.custom_prices?.net_price_3
+          : "",
+      net_price_4:
+        dataEdit && dataEdit.custom_prices
+          ? dataEdit.custom_prices?.net_price_4
+          : "",
+      net_price_5:
+        dataEdit && dataEdit.custom_prices
+          ? dataEdit.custom_prices?.net_price_5
+          : "",
+      net_price_6:
+        dataEdit && dataEdit.custom_prices
+          ? dataEdit.custom_prices?.net_price_6
+          : "",
     },
     // validationSchema: Yup.object().shape({
     //   name: Yup.string().required("Name is required"),
@@ -284,8 +301,8 @@ const BoatComponent = ({
           departure_locations_2: !supportedClassRowTwo
             ? []
             : dapatureLocationsSelectedTwo.length > 0
-            ? dapatureLocationsSelectedTwo
-            : initialDepartureLocationsTwo,
+              ? dapatureLocationsSelectedTwo
+              : initialDepartureLocationsTwo,
           class_id_3: supportedClassRowThree
             ? suportedClassSelectedThree
             : null,
@@ -295,12 +312,12 @@ const BoatComponent = ({
           departure_locations_3: !supportedClassRowThree
             ? []
             : dapatureLocationsSelectedThree.length > 0
-            ? dapatureLocationsSelectedThree
-            : initialDepartureLocationsThree,
+              ? dapatureLocationsSelectedThree
+              : initialDepartureLocationsThree,
         },
         has_custom_prices: customPricesCheck ? 1 : 0,
         custom_prices: {
-          duration_1: customDurationOne ,
+          duration_1: customDurationOne,
           net_price_1: values.net_price_1 !== "" ? values.net_price_1 : null,
           duration_2: customDurationTwo,
           net_price_2: values.net_price_2 !== "" ? values.net_price_2 : null,
@@ -314,7 +331,7 @@ const BoatComponent = ({
           net_price_6: values.net_price_6 !== "" ? values.net_price_6 : null,
         },
       };
-console.log('Submitting boat data:', data);
+      console.log("Submitting boat data:", data);
       if (dataEdit) {
         putBoat(dataEdit.id, data)
           .then((resp) => {
@@ -327,7 +344,7 @@ console.log('Submitting boat data:', data);
                   setSupportedClassRowThree(false);
                   setDataEdit(null);
                   setIsEdit(false);
-                }
+                },
               );
             }
           })
@@ -336,7 +353,7 @@ console.log('Submitting boat data:', data);
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(error.response.data.message)
+                String(error.response.data.message),
               );
             } else {
               let errorMessages = [];
@@ -348,7 +365,7 @@ console.log('Submitting boat data:', data);
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(errorMessages[0])
+                String(errorMessages[0]),
               );
             }
           });
@@ -363,7 +380,7 @@ console.log('Submitting boat data:', data);
                   setSupportedClassRowTwo(false);
                   setSupportedClassRowThree(false);
                   setDataEdit(null);
-                }
+                },
               );
             }
           })
@@ -372,7 +389,7 @@ console.log('Submitting boat data:', data);
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(error.response.data.message)
+                String(error.response.data.message),
               );
             } else {
               let errorMessages = [];
@@ -384,7 +401,7 @@ console.log('Submitting boat data:', data);
               Swal.fire(
                 "Error!",
                 // {error.response.},
-                String(errorMessages[0])
+                String(errorMessages[0]),
               );
             }
           });
@@ -818,7 +835,7 @@ console.log('Submitting boat data:', data);
                   ) : null}
                 </div>
               </Col>
-              
+
               <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
@@ -860,7 +877,7 @@ console.log('Submitting boat data:', data);
                   ) : null}
                 </div>
               </Col>
-               <Col className="col-1">
+              <Col className="col-1">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Shade</Label>
                   <div>
@@ -944,7 +961,7 @@ console.log('Submitting boat data:', data);
                   })}
                 </Input>
               </Col>
-        
+
               <Col className="col">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Activities</Label>
@@ -997,7 +1014,8 @@ console.log('Submitting boat data:', data);
                         placement="top"
                         target="upload_pdf"
                       >
-                        Upload a PDF of photos for display in our CE Tool Chest and other tools.
+                        Upload a PDF of photos for display in our CE Tool Chest
+                        and other tools.
                       </UncontrolledTooltip>
                     </div>
                   </div>
@@ -1039,7 +1057,8 @@ console.log('Submitting boat data:', data);
                         placement="top"
                         target="upload_image"
                       >
-                        Upload an image to be displayed in the CE Tool Chest and other tools. (Image size: 500 x 325 px).
+                        Upload an image to be displayed in the CE Tool Chest and
+                        other tools. (Image size: 500 x 325 px).
                       </UncontrolledTooltip>
                     </div>
                   </div>
@@ -1207,8 +1226,8 @@ console.log('Submitting boat data:', data);
                           placement="top"
                           target="main_class_boat"
                         >
-                          The primary class of the boat. It may take other type of trips but this is its main category.
-                          
+                          The primary class of the boat. It may take other type
+                          of trips but this is its main category.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1297,7 +1316,9 @@ console.log('Submitting boat data:', data);
                           placement="top"
                           target="flexible"
                         >
-                          Indicates whether this boat can be used for trips in other classifications. Enable this option if the boat is allowed to operate outside its primary class.
+                          Indicates whether this boat can be used for trips in
+                          other classifications. Enable this option if the boat
+                          is allowed to operate outside its primary class.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1329,7 +1350,10 @@ console.log('Submitting boat data:', data);
                           placement="top"
                           target="custom_prices"
                         >
-                          Add specific pricing for the boat, for example if the boat requires a specific amount to operate that is different than our standard pricing. This will show in the Boat Details in the Fishing Dispatch tool.
+                          Add specific pricing for the boat, for example if the
+                          boat requires a specific amount to operate that is
+                          different than our standard pricing. This will show in
+                          the Boat Details in the Fishing Dispatch tool.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1379,7 +1403,10 @@ console.log('Submitting boat data:', data);
                                 placement="top"
                                 target="supported_class_one"
                               >
-                               Specifies the trip classifications this boat can support when marked as flexible. Select the classes the boat is allowed to operate in addition to its primary classification.
+                                Specifies the trip classifications this boat can
+                                support when marked as flexible. Select the
+                                classes the boat is allowed to operate in
+                                addition to its primary classification.
                               </UncontrolledTooltip>
                             </div>
                           </div>
@@ -1475,13 +1502,17 @@ console.log('Submitting boat data:', data);
                             </option>
                             <option
                               value={8}
-                              selected={dataEdit?.main_class_id === 8 ? true : false}
+                              selected={
+                                dataEdit?.main_class_id === 8 ? true : false
+                              }
                             >
                               Luxury
                             </option>
                             <option
                               value={9}
-                              selected={dataEdit?.main_class_id === 9 ? true : false}
+                              selected={
+                                dataEdit?.main_class_id === 9 ? true : false
+                              }
                             >
                               Super Luxury
                             </option>
@@ -1593,7 +1624,9 @@ console.log('Submitting boat data:', data);
                                 placement="top"
                                 target="departure_location_one"
                               >
-                                Choose which departure locations are available for the specified supported class and duration of trip for the particular boat.
+                                Choose which departure locations are available
+                                for the specified supported class and duration
+                                of trip for the particular boat.
                               </UncontrolledTooltip>
                             </div>
                           </div>
@@ -1620,7 +1653,7 @@ console.log('Submitting boat data:', data);
                         <Col className="col-1 d-flex align-items-center mt-4">
                           <i
                             className="uil-plus-circle font-size-20 text-paradise"
-                            style={{  cursor: "pointer" }}
+                            style={{ cursor: "pointer" }}
                             onClick={() => setSupportedClassRowTwo(true)}
                           />
                         </Col>
@@ -1642,7 +1675,10 @@ console.log('Submitting boat data:', data);
                                   placement="top"
                                   target="suported_class_two"
                                 >
-                                 Specifies the trip classifications this boat can support when marked as flexible. Select the classes the boat is allowed to operate in addition to its primary classification.
+                                  Specifies the trip classifications this boat
+                                  can support when marked as flexible. Select
+                                  the classes the boat is allowed to operate in
+                                  addition to its primary classification.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
@@ -1736,13 +1772,17 @@ console.log('Submitting boat data:', data);
                               </option>
                               <option
                                 value={8}
-                                selected={dataEdit?.main_class_id === 8 ? true : false}
+                                selected={
+                                  dataEdit?.main_class_id === 8 ? true : false
+                                }
                               >
                                 Luxury
                               </option>
                               <option
                                 value={9}
-                                selected={dataEdit?.main_class_id === 9 ? true : false}
+                                selected={
+                                  dataEdit?.main_class_id === 9 ? true : false
+                                }
                               >
                                 Super Luxury
                               </option>
@@ -1854,7 +1894,9 @@ console.log('Submitting boat data:', data);
                                   placement="top"
                                   target="departure_location_two"
                                 >
-                                  Choose which departure locations are available for the specified supported class and duration of trip for the particular boat.
+                                  Choose which departure locations are available
+                                  for the specified supported class and duration
+                                  of trip for the particular boat.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
@@ -1926,7 +1968,10 @@ console.log('Submitting boat data:', data);
                                   placement="top"
                                   target="suported_class_three"
                                 >
-                                  Specifies the trip classifications this boat can support when marked as flexible. Select the classes the boat is allowed to operate in addition to its primary classification.
+                                  Specifies the trip classifications this boat
+                                  can support when marked as flexible. Select
+                                  the classes the boat is allowed to operate in
+                                  addition to its primary classification.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
@@ -2022,13 +2067,17 @@ console.log('Submitting boat data:', data);
                               </option>
                               <option
                                 value={8}
-                                selected={dataEdit?.main_class_id === 8 ? true : false}
+                                selected={
+                                  dataEdit?.main_class_id === 8 ? true : false
+                                }
                               >
                                 Luxury
                               </option>
                               <option
                                 value={9}
-                                selected={dataEdit?.main_class_id === 9 ? true : false}
+                                selected={
+                                  dataEdit?.main_class_id === 9 ? true : false
+                                }
                               >
                                 Super Luxury
                               </option>
@@ -2140,7 +2189,9 @@ console.log('Submitting boat data:', data);
                                   placement="top"
                                   target="departure_location_three"
                                 >
-                                  Choose which departure locations are available for the specified supported class and duration of trip for the particular boat.
+                                  Choose which departure locations are available
+                                  for the specified supported class and duration
+                                  of trip for the particular boat.
                                 </UncontrolledTooltip>
                               </div>
                             </div>
@@ -2291,14 +2342,15 @@ console.log('Submitting boat data:', data);
                             <div>
                               <i
                                 className="uil-question-circle font-size-15"
-                                id="custom_price_1"
+                                id="net_price_1"
                               />
                               <UncontrolledTooltip
                                 autohide={true}
                                 placement="top"
-                                target="custom_price_1"
+                                target="net_price_1"
                               >
-                                The price that needs to be paid to the boat for the trip.
+                                The price that needs to be paid to the boat for
+                                the trip.
                               </UncontrolledTooltip>
                             </div>
                           </div>
@@ -2426,18 +2478,20 @@ console.log('Submitting boat data:', data);
                         <Col className="col-3">
                           <div className="d-flex justify-content-between">
                             <Label className="form-label">Net Price</Label>
-                            {/* <div>
-                            <i
-                              className="uil-question-circle font-size-15"
-                              id=""
-                            />
-                            <UncontrolledTooltip
-                              autohide={true}
-                              placement="top"
-                              target=""
-                            >
-                            </UncontrolledTooltip>
-                          </div> */}
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="net_price_2"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="net_price_2"
+                              >
+                                The price that needs to be paid to the boat for
+                                the trip.
+                              </UncontrolledTooltip>
+                            </div>
                           </div>
                           <div className="input-group">
                             <span
@@ -3051,7 +3105,6 @@ console.log('Submitting boat data:', data);
                     setAssetModal(false);
                     setIsEdit(false);
                     setDataEdit(null);
-                    
                   }}
                 >
                   Cancel

@@ -541,8 +541,27 @@ const AddLocationModal = ({
                             placement="top"
                             target="upload_image2"
                           >
-                            Upload an image to be displayed in the CE Tool Chest
-                            and other tools. (Image size: 500 x 325 px).
+                            How the customer can find the meeting location. Be
+                            as specific as needed, but don't restate the Meeting
+                            Location Field. This is so they know what to do once
+                            they get to the meeting location, where to stand,
+                            what to look for, where to go, or maybe how to find
+                            the meeting location.
+                            <br />
+                            Show your voucher at the guard shack at the marina
+                            entrance. The guard will show you to your boat.
+                            <br />
+                            Once inside the marina, turn right at Lorenzillo's
+                            Lobster house and walk toward the sign that says
+                            "Dock 1", about 100 yards down on the right. Wait at
+                            the sign and your captain will find you.
+                            <br />
+                            This field is optional, as sometimes the meeting
+                            location is enough, such as in the case of In Front
+                            of Your Hotel Lobby. Only need to add meeting
+                            instructions if it makes sense and clarifies where
+                            to go. This field will be shown just below the
+                            Meeting Location on the voucher.
                           </UncontrolledTooltip>
                         </div>
                       </div>
