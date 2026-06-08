@@ -20,6 +20,17 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 import { capitalizeWords2, cleanUpSpecialCharacters, nameFormat } from "../../../../Utils/CommonFunctions";
 
+const EMPTY_FORM_VALUES = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  password: "",
+  repeat_password: "",
+  job_title: "",
+  role: "",
+  department: "",
+};
+
 const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
   //departments request
 
@@ -90,7 +101,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
           if (resp.data.status === 201) {
             Swal.fire("Created!", "The User has been created.", "success").then(
               () => {
-                setAddModal(false);
+                handleClose();
               }
             );
           }
@@ -119,12 +130,31 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
     },
   });
 
+  const resetForm = () => {
+    validationType.resetForm({ values: EMPTY_FORM_VALUES });
+    setDepartment(null);
+    setRol(null);
+  };
+
+  const handleClose = () => {
+    setAddModal(false);
+    resetForm();
+  };
+
+  useEffect(() => {
+    if (!addModal) {
+      resetForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addModal]);
+
   return (
     <Modal
       size="lg"
       isOpen={addModal}
       toggle={() => {
         onClickAddNew();
+        resetForm();
       }}
     >
       <div
@@ -133,9 +163,7 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
       >
         <h1 className="modal-title mt-0 text-white">+ Add New User</h1>
         <button
-          onClick={() => {
-            setAddModal(false);
-          }}
+          onClick={handleClose}
           type="button"
           className="close"
           data-dismiss="modal"
@@ -332,9 +360,9 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     <Input
                       type="select"
                       name="department"
+                      value={department || ""}
                       onChange={(e) => onChangeSelectionDep(e.target.value)}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
                     >
                       <option value="">Select....</option>
                       {map(dataDepartments, (department, index) => {
@@ -354,10 +382,9 @@ const AddUserModal = ({ addModal, setAddModal, onClickAddNew }) => {
                     <Input
                       type="select"
                       name="roles"
-                      
+                      value={rol || ""}
                       onChange={(e) => onChangeSelectionRol(e.target.value)}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
                     >
                       <option value="">Select....</option>
                       {map(dataRoles, (rol, index) => {
