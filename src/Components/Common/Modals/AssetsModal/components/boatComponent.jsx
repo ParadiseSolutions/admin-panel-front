@@ -28,6 +28,11 @@ import { API_URL, imagesOptions } from "../../../../../Utils/API";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { SUPPORTED_CLASS_OPTIONS } from "../constants/boatClassOptions";
+import {
+  DURATION_OPTIONS,
+  normalizeDurationValues,
+} from "../constants/boatDurationOptions";
 
 const BoatComponent = ({
   setMenu,
@@ -60,17 +65,51 @@ const BoatComponent = ({
   const [fishingAditionalInputs, setFishingAditionalInputs] = useState(false);
   const [flexiblePrice, setFlexiblePrice] = useState(false);
   const [customPricesCheck, setCustomPricesCheck] = useState(false);
+  const [customPickUpCheck, setCustomPickUpCheck] = useState(false);
+  const [customPickUpRowTwo, setCustomPickUpRowTwo] = useState(false);
+  const [customPickUpRowThree, setCustomPickUpRowThree] = useState(false);
+  const [customPickUpIsRowOpen, setCustomPickUpIsRowOpen] = useState(false);
+  const [customPickUpDurationOne, setCustomPickUpDurationOne] = useState([]);
+  const [customPickUpDurationTwo, setCustomPickUpDurationTwo] = useState([]);
+  const [customPickUpDurationThree, setCustomPickUpDurationThree] = useState(
+    [],
+  );
+  const [initialCustomPickUpDurationOne, setInitialCustomPickUpDurationOne] =
+    useState([]);
+  const [initialCustomPickUpDurationTwo, setInitialCustomPickUpDurationTwo] =
+    useState([]);
+  const [
+    initialCustomPickUpDurationThree,
+    setInitialCustomPickUpDurationThree,
+  ] = useState([]);
+  const [customPickUpDepartureOne, setCustomPickUpDepartureOne] = useState([]);
+  const [customPickUpDepartureTwo, setCustomPickUpDepartureTwo] = useState([]);
+  const [customPickUpDepartureThree, setCustomPickUpDepartureThree] = useState(
+    [],
+  );
+  const [initialCustomPickUpDepartureOne, setInitialCustomPickUpDepartureOne] =
+    useState([]);
+  const [initialCustomPickUpDepartureTwo, setInitialCustomPickUpDepartureTwo] =
+    useState([]);
+  const [
+    initialCustomPickUpDepartureThree,
+    setInitialCustomPickUpDepartureThree,
+  ] = useState([]);
   const [supportedClassRowTwo, setSupportedClassRowTwo] = useState(false);
   const [supportedClassRowThree, setSupportedClassRowThree] = useState(false);
   const [isRowOpen, setIsRowOpen] = useState(false);
   const [suportedClassSelectedOne, setSuportedClassSelectedOne] = useState("");
-  const [durationClassSelectedOne, setDurationClassSelectedOne] = useState("");
+  const [durationClassSelectedOne, setDurationClassSelectedOne] = useState([]);
   const [suportedClassSelectedTwo, setSuportedClassSelectedTwo] = useState("");
-  const [durationClassSelectedTwo, setDurationClassSelectedTwo] = useState("");
+  const [durationClassSelectedTwo, setDurationClassSelectedTwo] = useState([]);
   const [suportedClassSelectedThree, setSuportedClassSelectedThree] =
     useState("");
-  const [durationClassSelectedThree, setDurationClassSelectedThree] =
-    useState("");
+  const [durationClassSelectedThree, setDurationClassSelectedThree] = useState(
+    [],
+  );
+  const [initialDurationOne, setInitialDurationOne] = useState([]);
+  const [initialDurationTwo, setInitialDurationTwo] = useState([]);
+  const [initialDurationThree, setInitialDurationThree] = useState([]);
   const [initialDepartureLocationsOne, setInitialDepartureLocationsOne] =
     useState([]);
   const [initialDepartureLocationsTwo, setInitialDepartureLocationsTwo] =
@@ -138,23 +177,25 @@ const BoatComponent = ({
       setSuportedClassSelectedOne(
         dataEdit.supported_classes?.class_id_1 || null,
       );
-      setDurationClassSelectedOne(
-        dataEdit.supported_classes?.duration_1 || null,
+      setInitialDurationOne(
+        normalizeDurationValues(dataEdit.supported_classes?.duration_1),
       );
       setSuportedClassSelectedTwo(
         dataEdit.supported_classes?.class_id_2 || null,
       );
-      setDurationClassSelectedTwo(
-        dataEdit.supported_classes?.duration_2 || null,
+      setInitialDurationTwo(
+        normalizeDurationValues(dataEdit.supported_classes?.duration_2),
       );
       setSuportedClassSelectedThree(
         dataEdit.supported_classes?.class_id_3 || null,
       );
-      setDurationClassSelectedThree(
-        dataEdit.supported_classes?.duration_3 || null,
+      setInitialDurationThree(
+        normalizeDurationValues(dataEdit.supported_classes?.duration_3),
       );
       setInitialDepartureLocationsOne(
-        dataEdit.supported_classes?.departure_locations_1 || [],
+        dataEdit.has_custom_pick_up === 1 && dataEdit.has_supported_classes !== 1
+          ? []
+          : dataEdit.supported_classes?.departure_locations_1 || [],
       );
       setInitialDepartureLocationsTwo(
         dataEdit.supported_classes?.departure_locations_2 || [],
@@ -175,6 +216,37 @@ const BoatComponent = ({
         setSupportedClassRowThree(true);
       }
       setCustomPricesCheck(dataEdit.has_custom_prices === 1 ? true : false);
+      setCustomPickUpCheck(dataEdit.has_custom_pick_up === 1 ? true : false);
+      setInitialCustomPickUpDurationOne(
+        normalizeDurationValues(dataEdit.custom_pick_up_locations?.duration_1),
+      );
+      setInitialCustomPickUpDurationTwo(
+        normalizeDurationValues(dataEdit.custom_pick_up_locations?.duration_2),
+      );
+      setInitialCustomPickUpDurationThree(
+        normalizeDurationValues(dataEdit.custom_pick_up_locations?.duration_3),
+      );
+      setInitialCustomPickUpDepartureOne(
+        dataEdit.custom_pick_up_locations?.departure_locations_1 || [],
+      );
+      setInitialCustomPickUpDepartureTwo(
+        dataEdit.custom_pick_up_locations?.departure_locations_2 || [],
+      );
+      setInitialCustomPickUpDepartureThree(
+        dataEdit.custom_pick_up_locations?.departure_locations_3 || [],
+      );
+      if (
+        dataEdit.custom_pick_up_locations?.duration_2?.length ||
+        dataEdit.custom_pick_up_locations?.departure_locations_2?.length
+      ) {
+        setCustomPickUpRowTwo(true);
+      }
+      if (
+        dataEdit.custom_pick_up_locations?.duration_3?.length ||
+        dataEdit.custom_pick_up_locations?.departure_locations_3?.length
+      ) {
+        setCustomPickUpRowThree(true);
+      }
       setCustomDurationOne(dataEdit.custom_prices?.duration_1 || null);
       setCustomDurationTwo(dataEdit.custom_prices?.duration_2 || null);
       setCustomDurationThree(dataEdit.custom_prices?.duration_3 || null);
@@ -185,6 +257,13 @@ const BoatComponent = ({
       setImageLink(dataEdit.image_url || "");
     }
   }, [dataEdit, isEdit]);
+
+  useEffect(() => {
+    if (customPickUpCheck && !flexiblePrice) {
+      setInitialDepartureLocationsOne([]);
+      setDepartureLocationsSelectedOne([]);
+    }
+  }, [customPickUpCheck, flexiblePrice]);
 
   //multi select activities
   function handleMulti(selected) {
@@ -291,13 +370,22 @@ const BoatComponent = ({
         last_inspected_at: values.last_inspected,
         supported_classes: {
           class_id_1: suportedClassSelectedOne,
-          duration_1: durationClassSelectedOne,
+          duration_1:
+            durationClassSelectedOne.length > 0
+              ? durationClassSelectedOne
+              : initialDurationOne,
           departure_locations_1:
-            dapatureLocationsSelectedOne.length > 0
-              ? dapatureLocationsSelectedOne
-              : initialDepartureLocationsOne,
+            customPickUpCheck && !flexiblePrice
+              ? []
+              : dapatureLocationsSelectedOne.length > 0
+                ? dapatureLocationsSelectedOne
+                : initialDepartureLocationsOne,
           class_id_2: supportedClassRowTwo ? suportedClassSelectedTwo : null,
-          duration_2: supportedClassRowTwo ? durationClassSelectedTwo : null,
+          duration_2: !supportedClassRowTwo
+            ? null
+            : durationClassSelectedTwo.length > 0
+              ? durationClassSelectedTwo
+              : initialDurationTwo,
           departure_locations_2: !supportedClassRowTwo
             ? []
             : dapatureLocationsSelectedTwo.length > 0
@@ -306,9 +394,11 @@ const BoatComponent = ({
           class_id_3: supportedClassRowThree
             ? suportedClassSelectedThree
             : null,
-          duration_3: supportedClassRowThree
-            ? durationClassSelectedThree
-            : null,
+          duration_3: !supportedClassRowThree
+            ? null
+            : durationClassSelectedThree.length > 0
+              ? durationClassSelectedThree
+              : initialDurationThree,
           departure_locations_3: !supportedClassRowThree
             ? []
             : dapatureLocationsSelectedThree.length > 0
@@ -316,6 +406,39 @@ const BoatComponent = ({
               : initialDepartureLocationsThree,
         },
         has_custom_prices: customPricesCheck ? 1 : 0,
+        has_custom_pick_up: customPickUpCheck ? 1 : 0,
+        custom_pick_up_locations: customPickUpCheck
+          ? {
+              duration_1:
+                customPickUpDurationOne.length > 0
+                  ? customPickUpDurationOne
+                  : initialCustomPickUpDurationOne,
+              departure_locations_1:
+                customPickUpDepartureOne.length > 0
+                  ? customPickUpDepartureOne
+                  : initialCustomPickUpDepartureOne,
+              duration_2: !customPickUpRowTwo
+                ? null
+                : customPickUpDurationTwo.length > 0
+                  ? customPickUpDurationTwo
+                  : initialCustomPickUpDurationTwo,
+              departure_locations_2: !customPickUpRowTwo
+                ? []
+                : customPickUpDepartureTwo.length > 0
+                  ? customPickUpDepartureTwo
+                  : initialCustomPickUpDepartureTwo,
+              duration_3: !customPickUpRowThree
+                ? null
+                : customPickUpDurationThree.length > 0
+                  ? customPickUpDurationThree
+                  : initialCustomPickUpDurationThree,
+              departure_locations_3: !customPickUpRowThree
+                ? []
+                : customPickUpDepartureThree.length > 0
+                  ? customPickUpDepartureThree
+                  : initialCustomPickUpDepartureThree,
+            }
+          : null,
         custom_prices: {
           duration_1: customDurationOne,
           net_price_1: values.net_price_1 !== "" ? values.net_price_1 : null,
@@ -342,6 +465,9 @@ const BoatComponent = ({
                   resetTable();
                   setSupportedClassRowTwo(false);
                   setSupportedClassRowThree(false);
+                  setCustomPickUpRowTwo(false);
+                  setCustomPickUpRowThree(false);
+                  setCustomPickUpIsRowOpen(false);
                   setDataEdit(null);
                   setIsEdit(false);
                 },
@@ -379,6 +505,9 @@ const BoatComponent = ({
                   resetTable();
                   setSupportedClassRowTwo(false);
                   setSupportedClassRowThree(false);
+                  setCustomPickUpRowTwo(false);
+                  setCustomPickUpRowThree(false);
+                  setCustomPickUpIsRowOpen(false);
                   setDataEdit(null);
                 },
               );
@@ -1241,68 +1370,100 @@ const BoatComponent = ({
                       //   value={validationType.values.department || ""}
                     >
                       <option value={null}>Select....</option>
-                      <option
-                        value={10}
-                        selected={dataEdit?.main_class_id === 10 ? true : false}
-                      >
-                        Basic
-                      </option>
-                      <option
-                        value={1}
-                        selected={dataEdit?.main_class_id === 1 ? true : false}
-                      >
-                        Economy
-                      </option>
-                      <option
-                        value={2}
-                        selected={dataEdit?.main_class_id === 2 ? true : false}
-                      >
-                        Full-Size
-                      </option>
-                      <option
-                        value={3}
-                        selected={dataEdit?.main_class_id === 3 ? true : false}
-                      >
-                        Premium
-                      </option>
-                      <option
-                        value={4}
-                        selected={dataEdit?.main_class_id === 4 ? true : false}
-                      >
-                        Premium Plus
-                      </option>
-                      <option
-                        value={5}
-                        selected={dataEdit?.main_class_id === 5 ? true : false}
-                      >
-                        Premium Max
-                      </option>
-                      <option
-                        value={6}
-                        selected={dataEdit?.main_class_id === 6 ? true : false}
-                      >
-                        Deluxe
-                      </option>
-                      <option
-                        value={7}
-                        selected={dataEdit?.main_class_id === 7 ? true : false}
-                      >
-                        Elite
-                      </option>
-                      <option
-                        value={8}
-                        selected={dataEdit?.main_class_id === 8 ? true : false}
-                      >
-                        Luxury
-                      </option>
-                      <option
-                        value={9}
-                        selected={dataEdit?.main_class_id === 9 ? true : false}
-                      >
-                        Super Luxury
-                      </option>
+                      {SUPPORTED_CLASS_OPTIONS.map(({ value, label }) => (
+                        <option
+                          key={value}
+                          value={value}
+                          selected={dataEdit?.main_class_id === value}
+                        >
+                          {label}
+                        </option>
+                      ))}
                     </Input>
                   </Col>
+                  <Col className="col-4">
+                    <div className="d-flex justify-content-between">
+                      <Label className="form-label">Depature Location</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="departure_location_general"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="departure_location_general"
+                        >
+                          Choose which departure locations are available for
+                          this boat when custom pick-up is not enabled.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      rows="5"
+                      disabled={flexiblePrice || customPickUpCheck}
+                      style={{ width: "100%", paddingTop: "5px" }}
+                      placeholder="Please select"
+                      value={
+                        customPickUpCheck
+                          ? []
+                          : dapatureLocationsSelectedOne.length > 0
+                            ? dapatureLocationsSelectedOne
+                            : initialDepartureLocationsOne
+                      }
+                      onChange={(e) => setDepartureLocationsSelectedOne(e)}
+                    >
+                      {map(depatureLocationData, (item, index) => {
+                        return (
+                          <Option key={index} value={item.id}>
+                            {item.name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Col>
+                  <Col className="col-1 d-flex align-items-center mt-4">
+                    <div className="d-flex mt-1 ">
+                      <Label className="form-label">Custom</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="custom_pick_up"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="custom_pick_up"
+                        >
+                          Enable custom pick-up locations by duration. When
+                          enabled, define specific departure locations for each
+                          trip duration.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <div className="form-check form-switch form-switch-md  mx-4">
+                      <Input
+                        name="custom_pick_up"
+                        placeholder=""
+                        type="checkbox"
+                        checked={customPickUpCheck}
+                        className="form-check-input"
+                        onChange={() => {
+                          const nextValue = !customPickUpCheck;
+                          setCustomPickUpCheck(nextValue);
+                          if (nextValue && !flexiblePrice) {
+                            setInitialDepartureLocationsOne([]);
+                            setDepartureLocationsSelectedOne([]);
+                          }
+                        }}
+                        value={customPickUpCheck}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="">
                   <Col className="col-3 d-flex align-items-center mt-4">
                     <div className="d-flex mt-1 ">
                       <Label className="form-label">Flexible</Label>
@@ -1374,6 +1535,292 @@ const BoatComponent = ({
                   </Col>
                 </Row>
 
+                {customPickUpCheck ? (
+                  <>
+                    <Row className="mt-4">
+                      <div
+                        className="p-3"
+                        style={{ backgroundColor: "#E9F4FF" }}
+                      >
+                        <p className="fs-5 fw-bold text-uppercase text-dark mb-0">
+                          Custom Pick-Up Locations
+                        </p>
+                      </div>
+                    </Row>
+                    <Row className="mb-2 d-flex">
+                      <Col className="col-2">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Duration</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="custom_pick_up_duration_one"
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target="custom_pick_up_duration_one"
+                            >
+                              Select the duration of the trip to define its
+                              available pick-up locations.
+                            </UncontrolledTooltip>
+                          </div>
+                        </div>
+                        <Select
+                          mode="multiple"
+                          allowClear
+                          style={{ width: "100%", paddingTop: "5px" }}
+                          placeholder="Please select"
+                          defaultValue={initialCustomPickUpDurationOne}
+                          onChange={(values) =>
+                            setCustomPickUpDurationOne(values)
+                          }
+                        >
+                          {DURATION_OPTIONS.map(({ value, label }) => (
+                            <Option key={value} value={value}>
+                              {label}
+                            </Option>
+                          ))}
+                        </Select>
+                      </Col>
+                      <Col className="col">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">
+                            Depature Location
+                          </Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="custom_pick_up_departure_one"
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target="custom_pick_up_departure_one"
+                            >
+                              Choose which departure locations are available for
+                              the selected duration.
+                            </UncontrolledTooltip>
+                          </div>
+                        </div>
+                        <Select
+                          mode="multiple"
+                          allowClear
+                          rows="5"
+                          style={{ width: "100%", paddingTop: "5px" }}
+                          placeholder="Please select"
+                          defaultValue={initialCustomPickUpDepartureOne}
+                          onChange={(values) =>
+                            setCustomPickUpDepartureOne(values)
+                          }
+                        >
+                          {map(depatureLocationData, (item, index) => {
+                            return (
+                              <Option key={index} value={item.id}>
+                                {item.name}
+                              </Option>
+                            );
+                          })}
+                        </Select>
+                      </Col>
+                      <Col className="col-1 d-flex align-items-center mt-4">
+                        <i
+                          className="uil-plus-circle font-size-20 text-paradise"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setCustomPickUpRowTwo(true)}
+                        />
+                      </Col>
+                    </Row>
+                    {customPickUpRowTwo ? (
+                      <Row className="mb-2 d-flex">
+                        <Col className="col-2">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_duration_two"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_duration_two"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            defaultValue={initialCustomPickUpDurationTwo}
+                            onChange={(values) =>
+                              setCustomPickUpDurationTwo(values)
+                            }
+                          >
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <Option key={value} value={value}>
+                                {label}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Col>
+                        <Col className="col">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">
+                              Depature Location
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_departure_two"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_departure_two"
+                              >
+                                Choose which departure locations are available
+                                for the selected duration.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            rows="5"
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            defaultValue={initialCustomPickUpDepartureTwo}
+                            onChange={(values) =>
+                              setCustomPickUpDepartureTwo(values)
+                            }
+                          >
+                            {map(depatureLocationData, (item, index) => {
+                              return (
+                                <Option key={index} value={item.id}>
+                                  {item.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        </Col>
+                        <Col className="col-1 d-flex align-items-center mt-4">
+                          {customPickUpIsRowOpen || !customPickUpRowThree ? (
+                            <i
+                              className="uil-plus-circle font-size-20 text-paradise"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => setCustomPickUpRowThree(true)}
+                            />
+                          ) : (
+                            <i
+                              className="uil-minus-circle font-size-20 text-danger"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setCustomPickUpRowThree(true);
+                                setCustomPickUpRowTwo(false);
+                                setCustomPickUpIsRowOpen(true);
+                              }}
+                            />
+                          )}
+                        </Col>
+                      </Row>
+                    ) : null}
+                    {customPickUpRowThree ? (
+                      <Row className="mb-2 d-flex">
+                        <Col className="col-2">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_duration_three"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_duration_three"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            defaultValue={initialCustomPickUpDurationThree}
+                            onChange={(values) =>
+                              setCustomPickUpDurationThree(values)
+                            }
+                          >
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <Option key={value} value={value}>
+                                {label}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Col>
+                        <Col className="col">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">
+                              Depature Location
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_departure_three"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_departure_three"
+                              >
+                                Choose which departure locations are available
+                                for the selected duration.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            rows="5"
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            defaultValue={initialCustomPickUpDepartureThree}
+                            onChange={(values) =>
+                              setCustomPickUpDepartureThree(values)
+                            }
+                          >
+                            {map(depatureLocationData, (item, index) => {
+                              return (
+                                <Option key={index} value={item.id}>
+                                  {item.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        </Col>
+                        <Col className="col-1 d-flex align-items-center mt-4">
+                          <i
+                            className="uil-minus-circle font-size-20 text-danger"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setCustomPickUpRowThree(false);
+                              setCustomPickUpIsRowOpen(false);
+                            }}
+                          />
+                        </Col>
+                      </Row>
+                    ) : null}
+                  </>
+                ) : null}
+
                 <Row className="">
                   {flexiblePrice ? (
                     <>
@@ -1420,102 +1867,18 @@ const BoatComponent = ({
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option
-                              value={10}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 10
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Basic
-                            </option>
-                            <option
-                              value={1}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 1
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Economy
-                            </option>
-                            <option
-                              value={2}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 2
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Full-Size
-                            </option>
-                            <option
-                              value={3}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 3
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Premium
-                            </option>
-                            <option
-                              value={4}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 4
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Premium Plus
-                            </option>
-                            <option
-                              value={5}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 5
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Premium Max
-                            </option>
-                            <option
-                              value={6}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 6
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Deluxe
-                            </option>
-                            <option
-                              value={7}
-                              selected={
-                                dataEdit?.supported_classes?.class_id_1 === 7
-                                  ? true
-                                  : false
-                              }
-                            >
-                              Elite
-                            </option>
-                            <option
-                              value={8}
-                              selected={
-                                dataEdit?.main_class_id === 8 ? true : false
-                              }
-                            >
-                              Luxury
-                            </option>
-                            <option
-                              value={9}
-                              selected={
-                                dataEdit?.main_class_id === 9 ? true : false
-                              }
-                            >
-                              Super Luxury
-                            </option>
+                            {SUPPORTED_CLASS_OPTIONS.map(({ value, label }) => (
+                              <option
+                                key={value}
+                                value={value}
+                                selected={
+                                  dataEdit?.supported_classes?.class_id_1 ===
+                                  value
+                                }
+                              >
+                                {label}
+                              </option>
+                            ))}
                           </Input>
                         </Col>
                         <Col className="col-2">
@@ -1542,72 +1905,22 @@ const BoatComponent = ({
                               </UncontrolledTooltip>
                             </div>
                           </div>
-                          <Input
-                            type="select"
-                            name=""
-                            onChange={(e) => {
-                              setDurationClassSelectedOne(e.target.value);
-                            }}
-                            onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            defaultValue={initialDurationOne}
+                            onChange={(values) =>
+                              setDurationClassSelectedOne(values)
+                            }
                           >
-                            <option value={null}>Select....</option>
-                            <option
-                              value={"4 Hours"}
-                              selected={
-                                dataEdit?.supported_classes?.duration_1 ===
-                                "4 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              4 Hours
-                            </option>
-                            <option
-                              value={"6 Hours"}
-                              selected={
-                                dataEdit?.supported_classes?.duration_1 ===
-                                "6 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              6 Hours
-                            </option>
-                            <option
-                              value={"8 Hours"}
-                              selected={
-                                dataEdit?.supported_classes?.duration_1 ===
-                                "8 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              8 Hours
-                            </option>
-                            <option
-                              value={"10 Hours"}
-                              selected={
-                                dataEdit?.supported_classes?.duration_1 ===
-                                "10 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              10 Hours
-                            </option>
-                            <option
-                              value={"12 Hours"}
-                              selected={
-                                dataEdit?.supported_classes?.duration_1 ===
-                                "12 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              12 Hours
-                            </option>
-                          </Input>
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <Option key={value} value={value}>
+                                {label}
+                              </Option>
+                            ))}
+                          </Select>
                         </Col>
                         <Col className="col">
                           <div className="d-flex justify-content-between">
@@ -1692,100 +2005,20 @@ const BoatComponent = ({
                               //   value={validationType.values.department || ""}
                             >
                               <option value={null}>Select....</option>
-                              <option
-                                value={10}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 10
-                                }
-                              >
-                                Basic
-                              </option>
-                              <option
-                                value={1}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 1
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Economy
-                              </option>
-                              <option
-                                value={2}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 2
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Full-Size
-                              </option>
-                              <option
-                                value={3}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 3
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Premium
-                              </option>
-                              <option
-                                value={4}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 4
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Premium Plus
-                              </option>
-                              <option
-                                value={5}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 5
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Premium Max
-                              </option>
-                              <option
-                                value={6}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 6
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Deluxe
-                              </option>
-                              <option
-                                value={7}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_2 === 7
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Elite
-                              </option>
-                              <option
-                                value={8}
-                                selected={
-                                  dataEdit?.main_class_id === 8 ? true : false
-                                }
-                              >
-                                Luxury
-                              </option>
-                              <option
-                                value={9}
-                                selected={
-                                  dataEdit?.main_class_id === 9 ? true : false
-                                }
-                              >
-                                Super Luxury
-                              </option>
+                              {SUPPORTED_CLASS_OPTIONS.map(
+                                ({ value, label }) => (
+                                  <option
+                                    key={value}
+                                    value={value}
+                                    selected={
+                                      dataEdit?.supported_classes
+                                        ?.class_id_2 === value
+                                    }
+                                  >
+                                    {label}
+                                  </option>
+                                ),
+                              )}
                             </Input>
                           </Col>
                           <Col className="col-2">
@@ -1812,72 +2045,22 @@ const BoatComponent = ({
                                 </UncontrolledTooltip>
                               </div>
                             </div>
-                            <Input
-                              type="select"
-                              name=""
-                              onChange={(e) => {
-                                setDurationClassSelectedTwo(e.target.value);
-                              }}
-                              onBlur={validationType.handleBlur}
-                              //   value={validationType.values.department || ""}
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              style={{ width: "100%", paddingTop: "5px" }}
+                              placeholder="Please select"
+                              defaultValue={initialDurationTwo}
+                              onChange={(values) =>
+                                setDurationClassSelectedTwo(values)
+                              }
                             >
-                              <option value={null}>Select....</option>
-                              <option
-                                value={"4 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_2 ===
-                                  "4 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                4 Hours
-                              </option>
-                              <option
-                                value={"6 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_2 ===
-                                  "6 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                6 Hours
-                              </option>
-                              <option
-                                value={"8 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_2 ===
-                                  "8 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                8 Hours
-                              </option>
-                              <option
-                                value={"10 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_2 ===
-                                  "10 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                10 Hours
-                              </option>
-                              <option
-                                value={"12 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_2 ===
-                                  "12 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                12 Hours
-                              </option>
-                            </Input>
+                              {DURATION_OPTIONS.map(({ value, label }) => (
+                                <Option key={value} value={value}>
+                                  {label}
+                                </Option>
+                              ))}
+                            </Select>
                           </Col>
                           <Col className="col">
                             <div className="d-flex justify-content-between">
@@ -1985,102 +2168,20 @@ const BoatComponent = ({
                               //   value={validationType.values.department || ""}
                             >
                               <option value={null}>Select....</option>
-                              <option
-                                value={10}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 10
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Basic
-                              </option>
-                              <option
-                                value={1}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 1
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Economy
-                              </option>
-                              <option
-                                value={2}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 2
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Full-Size
-                              </option>
-                              <option
-                                value={3}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 3
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Premium
-                              </option>
-                              <option
-                                value={4}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 4
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Premium Plus
-                              </option>
-                              <option
-                                value={5}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 5
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Premium Max
-                              </option>
-                              <option
-                                value={6}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 6
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Deluxe
-                              </option>
-                              <option
-                                value={7}
-                                selected={
-                                  dataEdit?.supported_classes?.class_id_3 === 7
-                                    ? true
-                                    : false
-                                }
-                              >
-                                Elite
-                              </option>
-                              <option
-                                value={8}
-                                selected={
-                                  dataEdit?.main_class_id === 8 ? true : false
-                                }
-                              >
-                                Luxury
-                              </option>
-                              <option
-                                value={9}
-                                selected={
-                                  dataEdit?.main_class_id === 9 ? true : false
-                                }
-                              >
-                                Super Luxury
-                              </option>
+                              {SUPPORTED_CLASS_OPTIONS.map(
+                                ({ value, label }) => (
+                                  <option
+                                    key={value}
+                                    value={value}
+                                    selected={
+                                      dataEdit?.supported_classes
+                                        ?.class_id_3 === value
+                                    }
+                                  >
+                                    {label}
+                                  </option>
+                                ),
+                              )}
                             </Input>
                           </Col>
                           <Col className="col-2">
@@ -2089,12 +2190,12 @@ const BoatComponent = ({
                               <div>
                                 <i
                                   className="uil-question-circle font-size-15"
-                                  id="main_class"
+                                  id="duration_three"
                                 />
                                 <UncontrolledTooltip
                                   autohide={true}
                                   placement="top"
-                                  target="main_class"
+                                  target="duration_three"
                                 >
                                   Select the duration of the trip to define its
                                   available pick-up locations.
@@ -2107,72 +2208,22 @@ const BoatComponent = ({
                                 </UncontrolledTooltip>
                               </div>
                             </div>
-                            <Input
-                              type="select"
-                              name=""
-                              onChange={(e) => {
-                                setDurationClassSelectedThree(e.target.value);
-                              }}
-                              onBlur={validationType.handleBlur}
-                              //   value={validationType.values.department || ""}
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              style={{ width: "100%", paddingTop: "5px" }}
+                              placeholder="Please select"
+                              defaultValue={initialDurationThree}
+                              onChange={(values) =>
+                                setDurationClassSelectedThree(values)
+                              }
                             >
-                              <option value={null}>Select....</option>
-                              <option
-                                value={"4 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_3 ===
-                                  "4 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                4 Hours
-                              </option>
-                              <option
-                                value={"6 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_3 ===
-                                  "6 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                6 Hours
-                              </option>
-                              <option
-                                value={"8 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_3 ===
-                                  "8 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                8 Hours
-                              </option>
-                              <option
-                                value={"10 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_3 ===
-                                  "10 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                10 Hours
-                              </option>
-                              <option
-                                value={"12 Hours"}
-                                selected={
-                                  dataEdit?.supported_classes?.duration_3 ===
-                                  "12 Hours"
-                                    ? true
-                                    : false
-                                }
-                              >
-                                12 Hours
-                              </option>
-                            </Input>
+                              {DURATION_OPTIONS.map(({ value, label }) => (
+                                <Option key={value} value={value}>
+                                  {label}
+                                </Option>
+                              ))}
+                            </Select>
                           </Col>
                           <Col className="col">
                             <div className="d-flex justify-content-between">
@@ -2279,61 +2330,17 @@ const BoatComponent = ({
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option
-                              value={"4 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_1 ===
-                                "4 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              4 Hours
-                            </option>
-                            <option
-                              value={"6 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_1 ===
-                                "6 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              6 Hours
-                            </option>
-                            <option
-                              value={"8 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_1 ===
-                                "8 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              8 Hours
-                            </option>
-                            <option
-                              value={"10 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_1 ===
-                                "10 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              10 Hours
-                            </option>
-                            <option
-                              value={"12 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_1 ===
-                                "12 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              12 Hours
-                            </option>
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <option
+                                key={value}
+                                value={value}
+                                selected={
+                                  dataEdit?.custom_prices?.duration_1 === value
+                                }
+                              >
+                                {label}
+                              </option>
+                            ))}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2418,61 +2425,17 @@ const BoatComponent = ({
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option
-                              value={"4 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_2 ===
-                                "4 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              4 Hours
-                            </option>
-                            <option
-                              value={"6 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_2 ===
-                                "6 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              6 Hours
-                            </option>
-                            <option
-                              value={"8 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_2 ===
-                                "8 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              8 Hours
-                            </option>
-                            <option
-                              value={"10 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_2 ===
-                                "10 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              10 Hours
-                            </option>
-                            <option
-                              value={"12 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_2 ===
-                                "12 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              12 Hours
-                            </option>
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <option
+                                key={value}
+                                value={value}
+                                selected={
+                                  dataEdit?.custom_prices?.duration_2 === value
+                                }
+                              >
+                                {label}
+                              </option>
+                            ))}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2559,61 +2522,17 @@ const BoatComponent = ({
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option
-                              value={"4 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_3 ===
-                                "4 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              4 Hours
-                            </option>
-                            <option
-                              value={"6 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_3 ===
-                                "6 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              6 Hours
-                            </option>
-                            <option
-                              value={"8 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_3 ===
-                                "8 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              8 Hours
-                            </option>
-                            <option
-                              value={"10 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_3 ===
-                                "10 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              10 Hours
-                            </option>
-                            <option
-                              value={"12 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_3 ===
-                                "12 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              12 Hours
-                            </option>
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <option
+                                key={value}
+                                value={value}
+                                selected={
+                                  dataEdit?.custom_prices?.duration_3 === value
+                                }
+                              >
+                                {label}
+                              </option>
+                            ))}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2696,61 +2615,17 @@ const BoatComponent = ({
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option
-                              value={"4 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_4 ===
-                                "4 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              4 Hours
-                            </option>
-                            <option
-                              value={"6 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_4 ===
-                                "6 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              6 Hours
-                            </option>
-                            <option
-                              value={"8 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_4 ===
-                                "8 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              8 Hours
-                            </option>
-                            <option
-                              value={"10 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_4 ===
-                                "10 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              10 Hours
-                            </option>
-                            <option
-                              value={"12 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_4 ===
-                                "12 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              12 Hours
-                            </option>
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <option
+                                key={value}
+                                value={value}
+                                selected={
+                                  dataEdit?.custom_prices?.duration_4 === value
+                                }
+                              >
+                                {label}
+                              </option>
+                            ))}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2835,61 +2710,17 @@ const BoatComponent = ({
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option
-                              value={"4 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_5 ===
-                                "4 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              4 Hours
-                            </option>
-                            <option
-                              value={"6 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_5 ===
-                                "6 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              6 Hours
-                            </option>
-                            <option
-                              value={"8 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_5 ===
-                                "8 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              8 Hours
-                            </option>
-                            <option
-                              value={"10 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_5 ===
-                                "10 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              10 Hours
-                            </option>
-                            <option
-                              value={"12 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_5 ===
-                                "12 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              12 Hours
-                            </option>
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <option
+                                key={value}
+                                value={value}
+                                selected={
+                                  dataEdit?.custom_prices?.duration_5 === value
+                                }
+                              >
+                                {label}
+                              </option>
+                            ))}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2972,61 +2803,17 @@ const BoatComponent = ({
                             //   value={validationType.values.department || ""}
                           >
                             <option value={null}>Select....</option>
-                            <option
-                              value={"4 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_6 ===
-                                "4 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              4 Hours
-                            </option>
-                            <option
-                              value={"6 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_6 ===
-                                "6 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              6 Hours
-                            </option>
-                            <option
-                              value={"8 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_6 ===
-                                "8 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              8 Hours
-                            </option>
-                            <option
-                              value={"10 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_6 ===
-                                "10 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              10 Hours
-                            </option>
-                            <option
-                              value={"12 Hours"}
-                              selected={
-                                dataEdit?.custom_prices?.duration_6 ===
-                                "12 Hours"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              12 Hours
-                            </option>
+                            {DURATION_OPTIONS.map(({ value, label }) => (
+                              <option
+                                key={value}
+                                value={value}
+                                selected={
+                                  dataEdit?.custom_prices?.duration_6 === value
+                                }
+                              >
+                                {label}
+                              </option>
+                            ))}
                           </Input>
                         </Col>
                         <Col className="col-3">
