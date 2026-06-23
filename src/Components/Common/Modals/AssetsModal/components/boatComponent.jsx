@@ -110,6 +110,10 @@ const BoatComponent = ({
   const [initialDurationOne, setInitialDurationOne] = useState([]);
   const [initialDurationTwo, setInitialDurationTwo] = useState([]);
   const [initialDurationThree, setInitialDurationThree] = useState([]);
+  const [initialMainDepartureLocations, setInitialMainDepartureLocations] =
+    useState([]);
+  const [mainDepartureLocationsSelected, setMainDepartureLocationsSelected] =
+    useState([]);
   const [initialDepartureLocationsOne, setInitialDepartureLocationsOne] =
     useState([]);
   const [initialDepartureLocationsTwo, setInitialDepartureLocationsTwo] =
@@ -192,10 +196,18 @@ const BoatComponent = ({
       setInitialDurationThree(
         normalizeDurationValues(dataEdit.supported_classes?.duration_3),
       );
-      setInitialDepartureLocationsOne(
-        dataEdit.has_custom_pick_up === 1 && dataEdit.has_supported_classes !== 1
+      const hasCustomPickup =
+        dataEdit.has_custom_pickup === 1 || dataEdit.has_custom_pick_up === 1;
+      const customPickupLocations =
+        dataEdit.custom_pickup_locations ?? dataEdit.custom_pick_up_locations;
+
+      setInitialMainDepartureLocations(
+        hasCustomPickup && dataEdit.has_supported_classes !== 1
           ? []
-          : dataEdit.supported_classes?.departure_locations_1 || [],
+          : dataEdit.list_departure_locations || [],
+      );
+      setInitialDepartureLocationsOne(
+        dataEdit.supported_classes?.departure_locations_1 || [],
       );
       setInitialDepartureLocationsTwo(
         dataEdit.supported_classes?.departure_locations_2 || [],
@@ -216,34 +228,34 @@ const BoatComponent = ({
         setSupportedClassRowThree(true);
       }
       setCustomPricesCheck(dataEdit.has_custom_prices === 1 ? true : false);
-      setCustomPickUpCheck(dataEdit.has_custom_pick_up === 1 ? true : false);
+      setCustomPickUpCheck(hasCustomPickup);
       setInitialCustomPickUpDurationOne(
-        normalizeDurationValues(dataEdit.custom_pick_up_locations?.duration_1),
+        normalizeDurationValues(customPickupLocations?.duration_1),
       );
       setInitialCustomPickUpDurationTwo(
-        normalizeDurationValues(dataEdit.custom_pick_up_locations?.duration_2),
+        normalizeDurationValues(customPickupLocations?.duration_2),
       );
       setInitialCustomPickUpDurationThree(
-        normalizeDurationValues(dataEdit.custom_pick_up_locations?.duration_3),
+        normalizeDurationValues(customPickupLocations?.duration_3),
       );
       setInitialCustomPickUpDepartureOne(
-        dataEdit.custom_pick_up_locations?.departure_locations_1 || [],
+        customPickupLocations?.departure_locations_1 || [],
       );
       setInitialCustomPickUpDepartureTwo(
-        dataEdit.custom_pick_up_locations?.departure_locations_2 || [],
+        customPickupLocations?.departure_locations_2 || [],
       );
       setInitialCustomPickUpDepartureThree(
-        dataEdit.custom_pick_up_locations?.departure_locations_3 || [],
+        customPickupLocations?.departure_locations_3 || [],
       );
       if (
-        dataEdit.custom_pick_up_locations?.duration_2?.length ||
-        dataEdit.custom_pick_up_locations?.departure_locations_2?.length
+        customPickupLocations?.duration_2?.length ||
+        customPickupLocations?.departure_locations_2?.length
       ) {
         setCustomPickUpRowTwo(true);
       }
       if (
-        dataEdit.custom_pick_up_locations?.duration_3?.length ||
-        dataEdit.custom_pick_up_locations?.departure_locations_3?.length
+        customPickupLocations?.duration_3?.length ||
+        customPickupLocations?.departure_locations_3?.length
       ) {
         setCustomPickUpRowThree(true);
       }
@@ -260,8 +272,8 @@ const BoatComponent = ({
 
   useEffect(() => {
     if (customPickUpCheck && !flexiblePrice) {
-      setInitialDepartureLocationsOne([]);
-      setDepartureLocationsSelectedOne([]);
+      setInitialMainDepartureLocations([]);
+      setMainDepartureLocationsSelected([]);
     }
   }, [customPickUpCheck, flexiblePrice]);
 
@@ -344,6 +356,12 @@ const BoatComponent = ({
     //   default_label: Yup.string().required("Default Label is required"),
     // }),
     onSubmit: (values) => {
+      const mainDepartureLocations = customPickUpCheck
+        ? null
+        : mainDepartureLocationsSelected.length > 0
+          ? mainDepartureLocationsSelected
+          : initialMainDepartureLocations;
+
       let data = {
         provider_operator_id: +id,
         asset_id: 1,
@@ -366,6 +384,7 @@ const BoatComponent = ({
         image_url: imageLink,
         notes: values.notes,
         has_supported_classes: flexiblePrice ? 1 : 0,
+        departure_locations: mainDepartureLocations,
         joined_fleet_at: values.joint_fleet,
         last_inspected_at: values.last_inspected,
         supported_classes: {
@@ -374,12 +393,11 @@ const BoatComponent = ({
             durationClassSelectedOne.length > 0
               ? durationClassSelectedOne
               : initialDurationOne,
-          departure_locations_1:
-            customPickUpCheck && !flexiblePrice
-              ? []
-              : dapatureLocationsSelectedOne.length > 0
-                ? dapatureLocationsSelectedOne
-                : initialDepartureLocationsOne,
+          departure_locations_1: !flexiblePrice
+            ? []
+            : dapatureLocationsSelectedOne.length > 0
+              ? dapatureLocationsSelectedOne
+              : initialDepartureLocationsOne,
           class_id_2: supportedClassRowTwo ? suportedClassSelectedTwo : null,
           duration_2: !supportedClassRowTwo
             ? null
@@ -406,8 +424,8 @@ const BoatComponent = ({
               : initialDepartureLocationsThree,
         },
         has_custom_prices: customPricesCheck ? 1 : 0,
-        has_custom_pick_up: customPickUpCheck ? 1 : 0,
-        custom_pick_up_locations: customPickUpCheck
+        has_custom_pickup: customPickUpCheck ? 1 : 0,
+        custom_pickup_locations: customPickUpCheck
           ? {
               duration_1:
                 customPickUpDurationOne.length > 0
@@ -1383,7 +1401,7 @@ const BoatComponent = ({
                   </Col>
                   <Col className="col-4">
                     <div className="d-flex justify-content-between">
-                      <Label className="form-label">Depature Location</Label>
+                      <Label className="form-label">Main Departure</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1394,8 +1412,8 @@ const BoatComponent = ({
                           placement="top"
                           target="departure_location_general"
                         >
-                          Choose which departure locations are available for
-                          this boat when custom pick-up is not enabled.
+                          Choose the main departure locations for this boat when
+                          custom pick-up is not enabled.
                         </UncontrolledTooltip>
                       </div>
                     </div>
@@ -1409,11 +1427,11 @@ const BoatComponent = ({
                       value={
                         customPickUpCheck
                           ? []
-                          : dapatureLocationsSelectedOne.length > 0
-                            ? dapatureLocationsSelectedOne
-                            : initialDepartureLocationsOne
+                          : mainDepartureLocationsSelected.length > 0
+                            ? mainDepartureLocationsSelected
+                            : initialMainDepartureLocations
                       }
-                      onChange={(e) => setDepartureLocationsSelectedOne(e)}
+                      onChange={(e) => setMainDepartureLocationsSelected(e)}
                     >
                       {map(depatureLocationData, (item, index) => {
                         return (
@@ -1454,8 +1472,8 @@ const BoatComponent = ({
                           const nextValue = !customPickUpCheck;
                           setCustomPickUpCheck(nextValue);
                           if (nextValue && !flexiblePrice) {
-                            setInitialDepartureLocationsOne([]);
-                            setDepartureLocationsSelectedOne([]);
+                            setInitialMainDepartureLocations([]);
+                            setMainDepartureLocationsSelected([]);
                           }
                         }}
                         value={customPickUpCheck}
