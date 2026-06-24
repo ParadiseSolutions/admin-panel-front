@@ -49,6 +49,7 @@ const AddLocationModal = ({
   const [currencySelected, setCurrencySelected] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
   const [imageLink, setImageLink] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     getExtraFee()
@@ -249,6 +250,7 @@ const AddLocationModal = ({
                             autohide={true}
                             placement="left"
                             target="titleTT"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             The Title is how the Meeting Location will show in
                             the admin panel, in the provider form drop-down and
@@ -323,6 +325,7 @@ const AddLocationModal = ({
                             autohide={true}
                             placement="top"
                             target="locationTT"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             This should be short and to the point, a
                             recognizable location that the customer can show to
@@ -391,6 +394,7 @@ const AddLocationModal = ({
                           autohide={true}
                           placement="top"
                           target="googleMapsTT"
+                          style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                         >
                           From Google Maps at https://maps.google.com. To find
                           this link, go to Google Maps and search for your
@@ -441,24 +445,46 @@ const AddLocationModal = ({
                       <div className="d-flex align-items-center justify-content-between">
                         <div className="d-flex">
                           <Label className="form-label">Image URL</Label>
-                          {imageLink && (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              height="18"
-                              width="18"
-                              className="mx-2"
-                              viewBox="0 0 640 640"
-                              style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                window.open(
-                                  imageLink,
-                                  "_blank",
-                                  "noopener,noreferrer",
-                                );
+                          {uploadingImage && (
+                            <small
+                              style={{
+                                color: "#9aa0a6",
+                                fontSize: "12px",
+                                marginLeft: "8px",
+                                alignSelf: "center",
                               }}
                             >
-                              <path d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z" />
-                            </svg>
+                              Uploading...
+                            </small>
+                          )}
+                          {imageLink && (
+                            <>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="18"
+                                width="18"
+                                className="mx-2"
+                                viewBox="0 0 640 640"
+                                style={{ cursor: "pointer" }}
+                                id="t_location_show_image_preview"
+                                onClick={() => {
+                                  window.open(
+                                    imageLink,
+                                    "_blank",
+                                    "noopener,noreferrer",
+                                  );
+                                }}
+                              >
+                                <path d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z" />
+                              </svg>
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="t_location_show_image_preview"
+                              >
+                                Show Preview
+                              </UncontrolledTooltip>
+                            </>
                           )}
                         </div>
                         <div>
@@ -498,6 +524,8 @@ const AddLocationModal = ({
                               "meeting_location_image",
                             );
 
+                            setUploadingImage(true);
+
                             axios
                               .post(
                                 `${API_URL}/media-library/upload`,
@@ -517,7 +545,8 @@ const AddLocationModal = ({
                               })
                               .catch((error) => {
                                 console.error(error);
-                              });
+                              })
+                              .finally(() => setUploadingImage(false));
                           }}
                         />
                       </div>
@@ -540,9 +569,29 @@ const AddLocationModal = ({
                             autohide={true}
                             placement="top"
                             target="upload_image2"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
-                            Upload an image to be displayed in the CE Tool Chest
-                            and other tools. (Image size: 500 x 325 px).
+                            How the customer can find the meeting location. Be
+                            as specific as needed, but don't restate the Meeting
+                            Location Field. This is so they know what to do once
+                            they get to the meeting location, where to stand,
+                            what to look for, where to go, or maybe how to find
+                            the meeting location.
+                            <br />
+                            Show your voucher at the guard shack at the marina
+                            entrance. The guard will show you to your boat.
+                            <br />
+                            Once inside the marina, turn right at Lorenzillo's
+                            Lobster house and walk toward the sign that says
+                            "Dock 1", about 100 yards down on the right. Wait at
+                            the sign and your captain will find you.
+                            <br />
+                            This field is optional, as sometimes the meeting
+                            location is enough, such as in the case of In Front
+                            of Your Hotel Lobby. Only need to add meeting
+                            instructions if it makes sense and clarifies where
+                            to go. This field will be shown just below the
+                            Meeting Location on the voucher.
                           </UncontrolledTooltip>
                         </div>
                       </div>

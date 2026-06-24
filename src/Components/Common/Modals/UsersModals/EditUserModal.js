@@ -21,16 +21,27 @@ import { map } from "lodash";
 import Swal from "sweetalert2";
 import { capitalizeWords2, cleanUpSpecialCharacters, nameFormat } from "../../../../Utils/CommonFunctions";
 
+const EMPTY_FORM_VALUES = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  password: "",
+  repeat_password: "",
+  job_title: "",
+  role: "",
+  department: "",
+};
+
 const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
   //user data Request
   const [dataUser, setData] = useState();
   useEffect(() => {
-    if (userId) {
+    if (editModal && userId) {
       getUserAPI(userId).then((resp) => {
         setData(resp.data.data);
       });
     }
-  }, [userId]);
+  }, [userId, editModal]);
 
   //departments request
   const [dataDepartments, setDataDepartments] = useState(null);
@@ -44,14 +55,21 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
     });
   }, []);
   // selects
-  const [department, setDepartment] = useState( dataUser?.department_id);
+  const [department, setDepartment] = useState(null);
   const onChangeSelectionDep = (value) => {
     setDepartment(value);
   };
-  const [rol, setRol] = useState(dataUser?.role_id);
+  const [rol, setRol] = useState(null);
   const onChangeSelectionRol = (value) => {
     setRol(value);
   };
+
+  useEffect(() => {
+    if (dataUser) {
+      setDepartment(dataUser.department_id);
+      setRol(dataUser.role_id);
+    }
+  }, [dataUser]);
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -91,7 +109,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
           if (resp.data.status === 200) {
             Swal.fire("Edited!", "The User has been edited.", "success").then(
               () => {
-                setEditModal(false);
+                handleClose();
               }
             );
           }
@@ -103,12 +121,32 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
     },
   });
 
+  const resetForm = () => {
+    validationType.resetForm({ values: EMPTY_FORM_VALUES });
+    setData(undefined);
+    setDepartment(null);
+    setRol(null);
+  };
+
+  const handleClose = () => {
+    setEditModal(false);
+    resetForm();
+  };
+
+  useEffect(() => {
+    if (!editModal) {
+      resetForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editModal]);
+
   return (
     <Modal
       size="lg"
       isOpen={editModal}
       toggle={() => {
         onClickEdit();
+        resetForm();
       }}
     >
       <div
@@ -117,9 +155,7 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
       >
         <h1 className="modal-title mt-0 text-white">Edit User</h1>
         <button
-          onClick={() => {
-            setEditModal(false);
-          }}
+          onClick={handleClose}
           type="button"
           className="close"
           data-dismiss="modal"
@@ -261,22 +297,14 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                     <Input
                       type="select"
                       name="department"
+                      value={department || ""}
                       onChange={(e) => onChangeSelectionDep(e.target.value)}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
                     >
                       <option value="">Select....</option>
                       {map(dataDepartments, (department, index) => {
                         return (
-                          <option
-                            selected={
-                              dataUser &&
-                              dataUser.department_id === department.id
-                                ? true
-                                : false
-                            }
-                            value={department.id}
-                          >
+                          <option value={department.id}>
                             {department.name}
                           </option>
                         );
@@ -291,23 +319,14 @@ const EditUserModal = ({ userId, editModal, setEditModal, onClickEdit }) => {
                     <Input
                       type="select"
                       name="roles"
+                      value={rol || ""}
                       onChange={(e) => onChangeSelectionRol(e.target.value)}
                       onBlur={validationType.handleBlur}
-                      //   value={validationType.values.department || ""}
                     >
                       <option value="">Select....</option>
                       {map(dataRoles, (rol, index) => {
                         return (
-                          <option
-                            selected={
-                              dataUser && dataUser.role_id === rol.id
-                                ? true
-                                : false
-                            }
-                            value={rol.id}
-                          >
-                            {rol.name}
-                          </option>
+                          <option value={rol.id}>{rol.name}</option>
                         );
                       })}
                     </Input>

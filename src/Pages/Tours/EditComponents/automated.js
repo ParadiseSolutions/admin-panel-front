@@ -1372,115 +1372,99 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
             {tourData?.type_id === 5 || tourData?.type_id === 6 ? (
               <>
                 <Col className="col-4 ">
-                  <label>Boat Location</label>
-                  <i
-                    className="uil-question-circle font-size-15 mx-2"
-                    id="boat_location"
-                  />
-                  <Tooltip
-                    placement="right"
-                    isOpen={ttai}
-                    target="boat_location"
-                    toggle={() => {
-                      setai(!ttai);
-                    }}
-                  >
-                    Enter the address where the actual boat is located, for
-                    example the marina it is located in. Be specific, if there
-                    is a certain dock or slip or area. This will be shown on the
-                    customer's voucher.
-                    <br />
-                    <br />
-                    Example: Marina Puerto Aventuras, next to Dolphin Discovery.
-                    <br />
-                    Example: El Cid Marina in Puerto Morelos.
-                    <br />
-                    Example: Marina Las Perlas at Km 2 of the Cancun Hotel Zone.
-                    <br />
-                    Example: Marina Los Peines, Marina Vallarta, Dock K, Slip
-                    12.
-                  </Tooltip>
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <label>Arrival Instructions</label>
+                      <i
+                        className="uil-question-circle font-size-15 mx-2"
+                        id="arrival_instructions"
+                      />
+                      <Tooltip
+                        placement="right"
+                        isOpen={ttai}
+                        target="arrival_instructions"
+                        toggle={() => {
+                          setai(!ttai);
+                        }}
+                      >
+                        Provide clear directions to the customer of what will
+                        happen on arrival to the airport, or where to find their
+                        driver.
+                      </Tooltip>
+                    </div>
+                    <label
+                      className="text-paradise"
+                      style={{ cursor: "not-allowed" }}
+                    >
+                      + Set Up Airport Map
+                    </label>
+                  </div>
+
                   <div className="">
                     <Input
-                      name="boat_location"
+                      name="arrival_instructions"
                       placeholder=""
-                      type="text"
+                      type="textarea"
+                      rows={1}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      disabled={
-                        tourData?.type_id === 1 ||
-                        tourData?.type_id === 2 ||
-                        voucherInitialData?.boat_location_read_only !== 0 ||
-                        tourData?.type_id === 4
-                          ? true
-                          : false
-                      }
-                      value={validationType.values.boat_location || ""}
+                      disabled={true}
+                      value={validationType.values.arrival_instructions || ""}
                       invalid={
-                        validationType.touched.boat_location &&
-                        validationType.errors.boat_location
+                        validationType.touched.arrival_instructions &&
+                        validationType.errors.arrival_instructions
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.boat_location &&
-                    validationType.errors.boat_location ? (
+
+                    {validationType.touched.arrival_instructions &&
+                    validationType.errors.arrival_instructions ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.boat_location}
+                        {validationType.errors.arrival_instructions}
                       </FormFeedback>
                     ) : null}
                   </div>
                 </Col>
                 <Col className="col-4 ">
-                  <label>Google Maps URL</label>
+                  <label>Departure Instructions</label>
                   <i
                     className="uil-question-circle font-size-15 mx-2"
-                    id="boat_google_maps_url"
+                    id="departure_instructions"
                   />
                   <Tooltip
                     placement="right"
                     isOpen={ttdp}
-                    target="boat_google_maps_url"
+                    target="departure_instructions"
                     toggle={() => {
                       setdp(!ttdp);
                     }}
                   >
-                    Paste the URL from Google Maps of the exact boat location,
-                    so the customer can view exact directions of how to get
-                    there.
-                    <br />
-                    <br />
-                    Be very specific, zoom in and make certain that the pin is
-                    exactly where the customer should stand.
+                    Provide clear directions to the customer as to where they
+                    will meet their transfer for their departure, or any
+                    clarifications of what they need to do.
                   </Tooltip>
                   <div className="">
                     <Input
-                      name="boat_google_maps_url"
+                      name="departure_instructions"
                       placeholder=""
-                      type="text"
+                      type="textarea"
+                      rows={1}
                       onChange={validationType.handleChange}
                       onBlur={validationType.handleBlur}
-                      disabled={
-                        tourData?.type_id === 1 ||
-                        tourData?.type_id === 2 ||
-                        voucherInitialData?.boat_google_maps_url_read_only !==
-                          0 ||
-                        tourData?.type_id === 4
-                          ? true
-                          : false
-                      }
-                      value={validationType.values.boat_google_maps_url || ""}
+                      disabled={true}
+                      value={validationType.values.departure_instructions || ""}
                       invalid={
-                        validationType.touched.boat_google_maps_url &&
-                        validationType.errors.boat_google_maps_url
+                        validationType.touched.departure_instructions &&
+                        validationType.errors.departure_instructions
                           ? true
                           : false
                       }
                     />
-                    {validationType.touched.boat_google_maps_url &&
-                    validationType.errors.boat_google_maps_url ? (
+                    {validationType.touched.departure_instructions &&
+                    validationType.errors.departure_instructions ? (
                       <FormFeedback type="invalid">
-                        {validationType.errors.boat_google_maps_url}
+                        {validationType.errors.departure_instructions}
                       </FormFeedback>
                     ) : null}
                   </div>
