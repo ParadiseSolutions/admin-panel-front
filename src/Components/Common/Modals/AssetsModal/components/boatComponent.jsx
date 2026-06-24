@@ -61,6 +61,8 @@ const BoatComponent = ({
   const [boatAccessSelected, setBoatAccessSelected] = useState(0);
   const [pdfLink, setPdfLink] = useState("");
   const [imageLink, setImageLink] = useState("");
+  const [uploadingPdf, setUploadingPdf] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [mainClassSelected, setMainClassSelected] = useState(0);
   const [fishingAditionalInputs, setFishingAditionalInputs] = useState(false);
   const [flexiblePrice, setFlexiblePrice] = useState(false);
@@ -1152,6 +1154,18 @@ const BoatComponent = ({
                   <div className="d-flex justify-content-between">
                     <div className="d-flex align-items-center">
                       <Label className="form-label">Upload PDF</Label>
+                      {uploadingPdf && (
+                        <small
+                          style={{
+                            color: "#9aa0a6",
+                            fontSize: "12px",
+                            marginLeft: "8px",
+                            alignSelf: "center",
+                          }}
+                        >
+                          Uploading...
+                        </small>
+                      )}
                       {pdfLink && (
                         <>
                           <svg
@@ -1208,6 +1222,8 @@ const BoatComponent = ({
                       formData.append("document", file);
                       formData.append("media_type_name", "boat_asset_pdf");
 
+                      setUploadingPdf(true);
+
                       axios
                         .post(`${API_URL}/media-library/upload`, formData, {
                           headers: imagesOptions,
@@ -1218,7 +1234,8 @@ const BoatComponent = ({
                         })
                         .catch((error) => {
                           console.error(error);
-                        });
+                        })
+                        .finally(() => setUploadingPdf(false));
                     }}
                   />
                 </div>
@@ -1226,6 +1243,18 @@ const BoatComponent = ({
                   <div className="d-flex justify-content-between">
                     <div className="d-flex align-items-center">
                       <Label className="form-label">Upload Image</Label>
+                      {uploadingImage && (
+                        <small
+                          style={{
+                            color: "#9aa0a6",
+                            fontSize: "12px",
+                            marginLeft: "8px",
+                            alignSelf: "center",
+                          }}
+                        >
+                          Uploading...
+                        </small>
+                      )}
                       {imageLink && (
                         <>
                           <svg
@@ -1282,6 +1311,8 @@ const BoatComponent = ({
                       formData.append("document", file);
                       formData.append("media_type_name", "boat_asset_image");
 
+                      setUploadingImage(true);
+
                       axios
                         .post(`${API_URL}/media-library/upload`, formData, {
                           headers: imagesOptions,
@@ -1292,7 +1323,8 @@ const BoatComponent = ({
                         })
                         .catch((error) => {
                           console.error(error);
-                        });
+                        })
+                        .finally(() => setUploadingImage(false));
                     }}
                   />
                 </div>

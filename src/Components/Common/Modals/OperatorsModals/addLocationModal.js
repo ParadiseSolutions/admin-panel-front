@@ -49,6 +49,7 @@ const AddLocationModal = ({
   const [currencySelected, setCurrencySelected] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
   const [imageLink, setImageLink] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     getExtraFee()
@@ -444,6 +445,18 @@ const AddLocationModal = ({
                       <div className="d-flex align-items-center justify-content-between">
                         <div className="d-flex">
                           <Label className="form-label">Image URL</Label>
+                          {uploadingImage && (
+                            <small
+                              style={{
+                                color: "#9aa0a6",
+                                fontSize: "12px",
+                                marginLeft: "8px",
+                                alignSelf: "center",
+                              }}
+                            >
+                              Uploading...
+                            </small>
+                          )}
                           {imageLink && (
                             <>
                               <svg
@@ -511,6 +524,8 @@ const AddLocationModal = ({
                               "meeting_location_image",
                             );
 
+                            setUploadingImage(true);
+
                             axios
                               .post(
                                 `${API_URL}/media-library/upload`,
@@ -530,7 +545,8 @@ const AddLocationModal = ({
                               })
                               .catch((error) => {
                                 console.error(error);
-                              });
+                              })
+                              .finally(() => setUploadingImage(false));
                           }}
                         />
                       </div>

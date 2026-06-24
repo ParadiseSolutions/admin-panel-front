@@ -48,6 +48,7 @@ const AddBoatModal = ({
   const [currencySelected, setCurrencySelected] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
   const [imageLink, setImageLink] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     getExtraFee()
@@ -425,6 +426,18 @@ const AddBoatModal = ({
                       <div className="d-flex align-items-center justify-content-between">
                         <div className="d-flex">
                           <Label className="form-label">Image URL</Label>
+                          {uploading && (
+                            <small
+                              style={{
+                                color: "#9aa0a6",
+                                fontSize: "12px",
+                                marginLeft: "8px",
+                                alignSelf: "center",
+                              }}
+                            >
+                              Uploading...
+                            </small>
+                          )}
                           {imageLink && (
                             <>
                               <svg
@@ -494,6 +507,8 @@ const AddBoatModal = ({
                               "boat_location_image",
                             );
 
+                            setUploading(true);
+
                             axios
                               .post(
                                 `${API_URL}/media-library/upload`,
@@ -509,7 +524,8 @@ const AddBoatModal = ({
                               })
                               .catch((error) => {
                                 console.error(error);
-                              });
+                              })
+                              .finally(() => setUploading(false));
                           }}
                         />
                       </div>
