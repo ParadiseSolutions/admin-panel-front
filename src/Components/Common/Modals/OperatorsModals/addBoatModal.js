@@ -243,11 +243,11 @@ const AddBoatModal = ({
                             autohide={true}
                             placement="top"
                             target="ttitleTT"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             The Title is how the Meeting Location will show in
                             the admin panel, in the provider form drop-down and
                             our internal tools such as Adventure Finder.
-                            <br />
                             <br />
                             It will not be shown on the voucher, and the
                             customer will not see it, only us and the provider.
@@ -261,7 +261,6 @@ const AddBoatModal = ({
                             <br />
                             <br />
                             Examples:
-                            <br />
                             <br />
                             Hotel (for Hotel Pick-Up)
                             <br />
@@ -317,6 +316,7 @@ const AddBoatModal = ({
                             autohide={true}
                             placement="top"
                             target="boatTT"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             This field is used to clarify where the boat is
                             located, for example if the Meeting Location is In
@@ -373,6 +373,7 @@ const AddBoatModal = ({
                             autohide={true}
                             placement="top"
                             target="googleMapsTT"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             From Google Maps at https://maps.google.com. To find
                             this link, go to Google Maps and search for your

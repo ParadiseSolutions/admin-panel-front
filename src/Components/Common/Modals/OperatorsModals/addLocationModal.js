@@ -249,6 +249,7 @@ const AddLocationModal = ({
                             autohide={true}
                             placement="left"
                             target="titleTT"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             The Title is how the Meeting Location will show in
                             the admin panel, in the provider form drop-down and
@@ -323,6 +324,7 @@ const AddLocationModal = ({
                             autohide={true}
                             placement="top"
                             target="locationTT"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             This should be short and to the point, a
                             recognizable location that the customer can show to
@@ -391,6 +393,7 @@ const AddLocationModal = ({
                           autohide={true}
                           placement="top"
                           target="googleMapsTT"
+                          style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                         >
                           From Google Maps at https://maps.google.com. To find
                           this link, go to Google Maps and search for your
@@ -540,6 +543,7 @@ const AddLocationModal = ({
                             autohide={true}
                             placement="top"
                             target="upload_image2"
+                            style={{ maxWidth: '460px', whiteSpace: 'normal' }}
                           >
                             How the customer can find the meeting location. Be
                             as specific as needed, but don't restate the Meeting
