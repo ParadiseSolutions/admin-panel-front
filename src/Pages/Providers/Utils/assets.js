@@ -141,7 +141,11 @@ const Assets = ({ contacts, id }) => {
                         <Button
                           type="button"
                           className="waves-effect waves-light mb-3 btn btn-orange"
-                          onClick={() => setAssetModal(true)}
+                          onClick={() => {
+                            setAssetModal(true);
+                            setIsEdit(false);
+                            setEditID(null);
+                          }}
                         >
                           <i className="mdi mdi-plus me-1" />
                           New
@@ -378,6 +382,7 @@ const Assets = ({ contacts, id }) => {
                                                 style={{ cursor: "pointer" }}
                                                 onClick={() => {
                                                   setEditID(vehicle.id);
+                                                  setIsEdit(true);
                                                   setAssetModal(true);
                                                 }}
                                               />
@@ -468,6 +473,7 @@ const Assets = ({ contacts, id }) => {
                                                 style={{ cursor: "pointer" }}
                                                 onClick={() => {
                                                   setEditID(item.id);
+                                                  setIsEdit(true);
                                                   setAssetModal(true);
                                                 }}
                                               />
