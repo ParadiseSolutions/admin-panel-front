@@ -141,7 +141,11 @@ const Assets = ({ contacts, id }) => {
                         <Button
                           type="button"
                           className="waves-effect waves-light mb-3 btn btn-orange"
-                          onClick={() => setAssetModal(true)}
+                          onClick={() => {
+                            setAssetModal(true);
+                            setIsEdit(false);
+                            setEditID(null);
+                          }}
                         >
                           <i className="mdi mdi-plus me-1" />
                           New
@@ -283,7 +287,7 @@ const Assets = ({ contacts, id }) => {
                                             <div className="text-success">
                                               <i
                                                 className="mdi mdi-pencil-outline font-size-18 text-paradise"
-                                                id="edittooltip"
+                                                id={`editboat-${boat.id}`}
                                                 style={{ cursor: "pointer" }}
                                                 onClick={() => {
                                                   setEditID(boat.id);
@@ -293,7 +297,7 @@ const Assets = ({ contacts, id }) => {
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="edittooltip"
+                                                target={`editboat-${boat.id}`}
                                               >
                                                 Edit
                                               </UncontrolledTooltip>
@@ -301,6 +305,7 @@ const Assets = ({ contacts, id }) => {
                                             <div className="text-warning">
                                               <VscEye
                                                 size={30}
+                                                id={`detailboat-${boat.id}`}
                                                 onClick={() =>
                                                   toggleDetails(index, "boat")
                                                 }
@@ -308,7 +313,7 @@ const Assets = ({ contacts, id }) => {
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="edittooltip"
+                                                target={`detailboat-${boat.id}`}
                                               >
                                                 Details
                                               </UncontrolledTooltip>
@@ -321,12 +326,12 @@ const Assets = ({ contacts, id }) => {
                                             >
                                               <i
                                                 className="mdi mdi-delete-outline font-size-18"
-                                                id="deletetooltip"
+                                                id={`deleteboat-${boat.id}`}
                                                 style={{ cursor: "pointer" }}
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="deletetooltip"
+                                                target={`deleteboat-${boat.id}`}
                                               >
                                                 Delete
                                               </UncontrolledTooltip>
@@ -374,16 +379,17 @@ const Assets = ({ contacts, id }) => {
                                             <div className="text-success">
                                               <i
                                                 className="mdi mdi-pencil-outline font-size-18 text-paradise"
-                                                id="edittooltip"
+                                                id={`editvehicle-${vehicle.id}`}
                                                 style={{ cursor: "pointer" }}
                                                 onClick={() => {
                                                   setEditID(vehicle.id);
+                                                  setIsEdit(true);
                                                   setAssetModal(true);
                                                 }}
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="edittooltip"
+                                                target={`editvehicle-${vehicle.id}`}
                                               >
                                                 Edit
                                               </UncontrolledTooltip>
@@ -391,6 +397,7 @@ const Assets = ({ contacts, id }) => {
                                             <div className="text-warning">
                                               <VscEye
                                                 size={30}
+                                                id={`detailvehicle-${vehicle.id}`}
                                                 onClick={() =>
                                                   toggleDetails(
                                                     index,
@@ -401,7 +408,7 @@ const Assets = ({ contacts, id }) => {
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="edittooltip"
+                                                target={`detailvehicle-${vehicle.id}`}
                                               >
                                                 Details
                                               </UncontrolledTooltip>
@@ -414,12 +421,12 @@ const Assets = ({ contacts, id }) => {
                                             >
                                               <i
                                                 className="mdi mdi-delete-outline font-size-18"
-                                                id="deletetooltip"
+                                                id={`deletevehicle-${vehicle.id}`}
                                                 style={{ cursor: "pointer" }}
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="deletetooltip"
+                                                target={`deletevehicle-${vehicle.id}`}
                                               >
                                                 Delete
                                               </UncontrolledTooltip>
@@ -464,16 +471,17 @@ const Assets = ({ contacts, id }) => {
                                             <div className="text-success">
                                               <i
                                                 className="mdi mdi-pencil-outline font-size-18 text-paradise"
-                                                id="edittooltip"
+                                                id={`editother-${item.id}`}
                                                 style={{ cursor: "pointer" }}
                                                 onClick={() => {
                                                   setEditID(item.id);
+                                                  setIsEdit(true);
                                                   setAssetModal(true);
                                                 }}
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="edittooltip"
+                                                target={`editother-${item.id}`}
                                               >
                                                 Edit
                                               </UncontrolledTooltip>
@@ -481,6 +489,7 @@ const Assets = ({ contacts, id }) => {
                                             <div className="text-warning">
                                               <VscEye
                                                 size={30}
+                                                id={`detailother-${item.id}`}
                                                 onClick={() =>
                                                   toggleDetails(index, "other")
                                                 }
@@ -488,7 +497,7 @@ const Assets = ({ contacts, id }) => {
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="edittooltip"
+                                                target={`detailother-${item.id}`}
                                               >
                                                 Details
                                               </UncontrolledTooltip>
@@ -501,12 +510,12 @@ const Assets = ({ contacts, id }) => {
                                             >
                                               <i
                                                 className="mdi mdi-delete-outline font-size-18"
-                                                id="deletetooltip"
+                                                id={`deleteother-${item.id}`}
                                                 style={{ cursor: "pointer" }}
                                               />
                                               <UncontrolledTooltip
                                                 placement="top"
-                                                target="deletetooltip"
+                                                target={`deleteother-${item.id}`}
                                               >
                                                 Delete
                                               </UncontrolledTooltip>
