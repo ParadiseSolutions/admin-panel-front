@@ -14,7 +14,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable, isEdit, set
   const [menu, setMenu] = useState(0);
   const [dataEdit, setDataEdit] = useState(null);
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit && editID) {
       getBoatEdit(editID).then((res) => {
         setDataEdit(res.data.data);
         setMenu(
@@ -26,7 +26,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable, isEdit, set
         );
       });
     }
-  }, [isEdit]);
+  }, [isEdit, editID]);
   return (
     <Modal
       size="xl"
@@ -62,7 +62,7 @@ const AssetModal = ({ assetModal, setAssetModal, editID, resetTable, isEdit, set
           <button
             onClick={() => {
               setAssetModal(false);
-              setAssetModal(false);
+              setIsEdit(false);
               setDataEdit(null);
               setMenu(0);
             }}
