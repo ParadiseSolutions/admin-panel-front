@@ -1242,7 +1242,7 @@ const BoatComponent = ({
                 <div className="mt-3">
                   <div className="d-flex justify-content-between">
                     <div className="d-flex align-items-center">
-                      <Label className="form-label">Upload Image</Label>
+                      <Label className="form-label">Upload Image (500x325 px)</Label>
                       {uploadingImage && (
                         <small
                           style={{
@@ -1495,7 +1495,7 @@ const BoatComponent = ({
                   </Col>
                   <Col className="col-4">
                     <div className="d-flex justify-content-between">
-                      <Label className="form-label">Main Departure</Label>
+                      <Label className="form-label">Departure Location(s)</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
