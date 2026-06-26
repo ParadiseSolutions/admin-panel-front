@@ -1160,7 +1160,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                       setBoatModal(!boatModal);
                     }}
                   >
-                    + Add Boat
+                    + Add Location
                   </label>
                 ) : null}
               </div>
