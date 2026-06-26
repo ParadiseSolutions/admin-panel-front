@@ -838,7 +838,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
                         setBoatModal(!boatModal);
                       }}
                     >
-                      + Add Boat
+                      + Add Location
                     </label>
                   </div>
                   <div className="table-responsive" style={{ height: "127px" }}>
