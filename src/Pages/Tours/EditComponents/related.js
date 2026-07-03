@@ -8,6 +8,7 @@ import {
   getActiveRelatedAsset,
   getOtherRelatedAsset,
   assingAssetAPI,
+  editAssetAPI,
   removeAssetAPI,
 } from "../../../Utils/API/Tours";
 import {
@@ -316,26 +317,31 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     });
   };
 
-  const assignAsset = (asset_id) => {
-    let data = {
+  const assignAsset = (asset_id, applyData = {}) => {
+    const { apply_to = 0, products = [] } = applyData;
+    const data = {
       tour_id: id,
       asset_provider_id: asset_id,
+      apply_to,
+      products,
     };
 
-    Swal.fire({
-      title: "Assign Related Asset?",
-      icon: "question",
-      text: `Do you want assign this asset to this tour`,
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      confirmButtonColor: "#F38430",
-      cancelButtonText: "Cancel",
-    }).then((resp) => {
-      if (resp.isConfirmed) {
-        assingAssetAPI(data).then((resp) => {
-          refreshTableAssets();
-        });
-      }
+    assingAssetAPI(data).then(() => {
+      refreshTableAssets();
+    });
+  };
+
+  const editAsset = (asset_id, applyData = {}) => {
+    const { apply_to = 0, products = [] } = applyData;
+    const data = {
+      tour_id: id,
+      asset_provider_id: asset_id,
+      apply_to,
+      products,
+    };
+
+    editAssetAPI(data).then(() => {
+      refreshTableAssets();
     });
   };
   const removeAsset = (asset_id) => {
@@ -518,7 +524,9 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         <Col className="col-12">
           <ActiveAssetsTable
             relatedAssetsActiveData={relatedAssetsActiveData}
+            editAsset={editAsset}
             removeAsset={removeAsset}
+            tourId={id}
           />
         </Col>
         <Col className="col-12 mt-5">
@@ -552,6 +560,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
           <ActiveAssetsOthersTable
             relatedAssetsOtherData={relatedAssetsOtherData}
             assignAsset={assignAsset}
+            tourId={id}
           />
         </Col>
       </Row>

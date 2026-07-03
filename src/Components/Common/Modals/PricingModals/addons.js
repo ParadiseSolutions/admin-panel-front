@@ -99,7 +99,7 @@ const Addons = ({
       setDataEdit(null);
     }
   }, [editID, newAddon]);
-// console.log(copyProduct);
+  // console.log(copyProduct);
 
   //combo box request
   const [priceMatchQuantityData, setPriceMatchQuantityData] = useState([]);
@@ -110,7 +110,7 @@ const Addons = ({
   const [applyOptionsSelected, setApplyOptionsSelected] = useState();
   const [matchingProducts, setMatchingProducts] = useState([]);
   const [matchingProductsSelected, setMatchingProductsSelected] = useState([]);
-  const [initialProductsList, setInitialProductList] = useState([])
+  const [initialProductsList, setInitialProductList] = useState([]);
   const [addonType, setAddonType] = useState([]);
   const [displayOptionData, setDisplayOptionData] = useState([]);
   const [addonLabelData, setAddonLabelData] = useState([]);
@@ -128,7 +128,7 @@ const Addons = ({
   const [customMessage, setCustomMessage] = useState(false);
   const [isCustomMessage, setIsCustomMessage] = useState(false);
   const [isUpgrade, setIsUpgrade] = useState(
-    dataEdit?.type === 2 ? true : false
+    dataEdit?.type === 2 ? true : false,
   );
 
   useEffect(() => {
@@ -165,7 +165,7 @@ const Addons = ({
         setCurrency(resp.data.data);
       });
     }
-    setApplyOptionsSelected(0)
+    setApplyOptionsSelected(0);
   }, [newAddon]);
   // console.log(applyOptions);
   // console.log('apply options------>', applyOptionsSelected);
@@ -224,10 +224,10 @@ const Addons = ({
     if (dataEdit && newAddon && priceCollect) {
       setRecalc(false);
       setPriceCollectSelected(dataEdit.collect_id);
-      setInitialProductList(dataEdit.products)
-      setApplyOptionsSelected(dataEdit.apply_to)
+      setInitialProductList(dataEdit.products);
+      setApplyOptionsSelected(dataEdit.apply_to);
       let priceCollectSe = priceCollect.filter(
-        (x) => x.id === dataEdit.collect_id
+        (x) => x.id === dataEdit.collect_id,
       );
       if (priceCollectSe.length > 0) {
         setPriceCollectNameSelected(priceCollectSe[0].text);
@@ -245,10 +245,10 @@ const Addons = ({
       setDisplayOptionSelected(dataEdit?.display_option);
       setCustomMessage(dataEdit?.custom_text === 0 ? false : true);
       setPriceSheetSelected(
-        dataEdit.p_price_sheet ? String(dataEdit.p_price_sheet) : "1"
+        dataEdit.p_price_sheet ? String(dataEdit.p_price_sheet) : "1",
       );
       setCurrencySelected(
-        dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD"
+        dataEdit.voucher_currency ? dataEdit.voucher_currency : "USD",
       );
       if (dataEdit?.price != null && dataEdit?.net_rate != null) {
         setOurCommission((dataEdit.price - dataEdit.net_rate).toFixed(2));
@@ -350,7 +350,7 @@ const Addons = ({
         dataEdit && dataEdit.voucher_balance
           ? setDecimalFormatVBalance(
               dataEdit.voucher_balance,
-              dataEdit.voucher_currency
+              dataEdit.voucher_currency,
             )
           : "",
       p_est_rate: dataEdit ? setRateFormat(dataEdit.p_est_rate) : "",
@@ -387,45 +387,45 @@ const Addons = ({
       let match_qty = matchQuantitySelected
         ? matchQuantitySelected
         : dataEdit
-        ? dataEdit.match_qty_id
-        : null;
+          ? dataEdit.match_qty_id
+          : null;
       let price_type = priceTypeSelected
         ? priceTypeSelected
         : dataEdit
-        ? dataEdit.price_type_id
-        : null;
+          ? dataEdit.price_type_id
+          : null;
       let addon_type = addonTypeSelected
         ? addonTypeSelected
         : dataEdit
-        ? dataEdit.add_on_type_id
-        : null;
+          ? dataEdit.add_on_type_id
+          : null;
       let price_option = priceOptionSelected
         ? priceOptionSelected
         : dataEdit
-        ? dataEdit.price_option_id
-        : null;
+          ? dataEdit.price_option_id
+          : null;
       let collect = priceCollectSelected
         ? priceCollectSelected
         : dataEdit
-        ? dataEdit.collect_id
-        : null;
+          ? dataEdit.collect_id
+          : null;
       let display_option = displayOptionSelected
         ? displayOptionSelected
         : dataEdit
-        ? dataEdit.display_option
-        : null;
+          ? dataEdit.display_option
+          : null;
       let instruction_label = addonLabelSelected
         ? addonLabelSelected
         : dataEdit
-        ? dataEdit.instruction_label_id
-        : null;
+          ? dataEdit.instruction_label_id
+          : null;
 
       const p_commission_value =
         +priceSheetSelected === 1
           ? values.p_est_commission
           : +priceSheetSelected === 2
-          ? values.provider_commission
-          : values.p_commission;
+            ? values.provider_commission
+            : values.p_commission;
 
       let data = {
         tour_id: +id,
@@ -463,8 +463,8 @@ const Addons = ({
           priceSheetSelected === "1"
             ? values.net_price
             : priceSheetSelected === "2"
-            ? values.net_price_percentage
-            : values.net_price_fixed,
+              ? values.net_price_percentage
+              : values.net_price_fixed,
         voucher_balance: values.voucher_balance,
         voucher_currency: currencySelected,
         currencySelected: currencySelected,
@@ -498,20 +498,20 @@ const Addons = ({
           customMessage === true
             ? values.custom_message
             : addonTypeNameSelected
-            ? `We want to ${
-                addonTypeNameSelected !== ""
-                  ? addonTypeNameSelected
-                  : "[Add-On Type]"
-              } for $ ${
-                validationType.values.our_price !== ""
-                  ? validationType.values.our_price
-                  : "[Price]"
-              } ${
-                priceTypeNameSelected !== ""
-                  ? priceTypeNameSelected
-                  : "[Price Type]"
-              }, paid in cash on the day of the tour.`
-            : values.custom_message,
+              ? `We want to ${
+                  addonTypeNameSelected !== ""
+                    ? addonTypeNameSelected
+                    : "[Add-On Type]"
+                } for $ ${
+                  validationType.values.our_price !== ""
+                    ? validationType.values.our_price
+                    : "[Price]"
+                } ${
+                  priceTypeNameSelected !== ""
+                    ? priceTypeNameSelected
+                    : "[Price Type]"
+                }, paid in cash on the day of the tour.`
+              : values.custom_message,
         min_qty:
           values.min_qty === "" || values.min_qty === null ? 0 : values.min_qty,
         max_qty:
@@ -519,20 +519,21 @@ const Addons = ({
             ? 20
             : values.max_qty,
         apply_to: applyOptionsSelected,
-        products: matchingProductsSelected.length === 0 ? dataEdit?.products : matchingProductsSelected
+        products:
+          matchingProductsSelected.length === 0
+            ? dataEdit?.products
+            : matchingProductsSelected,
       };
 
-      
       document.getElementById("save-button").disabled = true;
       if (dataEdit && !copyProduct) {
         putAddonAPI(editProductID, data)
-       
           .then((resp) => {
             // triggerUpdate();
             editID = null;
             setNewAddon(false);
             refreshTable();
-            setCopyProduct(false)
+            setCopyProduct(false);
             resetForm({ values: "" });
             document.getElementById("save-button").disabled = false;
           })
@@ -550,16 +551,14 @@ const Addons = ({
             }
             document.getElementById("save-button").disabled = false;
           });
-      } 
-      else if (copyProduct || dataEdit === undefined || dataEdit === null) {
-       
+      } else if (copyProduct || dataEdit === undefined || dataEdit === null) {
         postAddonsAPI(data)
           .then((resp) => {
             // triggerUpdate();
             editID = null;
             setNewAddon(false);
             refreshTable();
-            setCopyProduct(false)
+            setCopyProduct(false);
             resetForm({ values: "" });
             document.getElementById("save-button").disabled = false;
           })
@@ -618,8 +617,8 @@ const Addons = ({
         "voucher_balance",
         setDecimalFormatVBalance(
           validationType.values.voucher_balance,
-          currencySelected
-        )
+          currencySelected,
+        ),
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -666,8 +665,7 @@ const Addons = ({
       >
         {dataEdit?.id ? (
           <h1 className="modal-title mt-0 text-white">Edit Add-On</h1>
-        ) :
-        (
+        ) : (
           <h1 className="modal-title mt-0 text-white">+ New Add-On</h1>
         )}
         <button
@@ -963,7 +961,7 @@ const Addons = ({
                               onChange={(e) => {
                                 setPriceCollectSelected(e.target.value);
                                 setPriceCollectNameSelected(
-                                  e.target.selectedOptions[0].label
+                                  e.target.selectedOptions[0].label,
                                 );
                               }}
                             >
@@ -1130,7 +1128,7 @@ const Addons = ({
                               onChange={(e) => {
                                 setPriceCollectSelected(e.target.value);
                                 setPriceCollectNameSelected(
-                                  e.target.selectedOptions[0].label
+                                  e.target.selectedOptions[0].label,
                                 );
                               }}
                             >
@@ -1285,7 +1283,7 @@ const Addons = ({
                               (display) =>
                                 display.id !== 2 &&
                                 display.id !== 13 &&
-                                display.id !== 9
+                                display.id !== 9,
                             ),
                             (type, index) => {
                               return (
@@ -1301,7 +1299,7 @@ const Addons = ({
                                   {type.text}
                                 </option>
                               );
-                            }
+                            },
                           )}
                         </Input>
                       </div>
@@ -1412,8 +1410,8 @@ const Addons = ({
                           onChange={(e) => {
                             setApplyOptionsSelected(+e.target.value);
                             // console.log(+e.target.value);
-                            setMatchingProductsSelected([])
-                            setInitialProductList([])
+                            setMatchingProductsSelected([]);
+                            setInitialProductList([]);
                           }}
                           onBlur={validationType.handleBlur}
                         >
@@ -1448,20 +1446,20 @@ const Addons = ({
                               name="apply_to"
                               onChange={(e) => {
                                 setMatchingProductsSelected([+e.target.value]);
-                               
                               }}
-                              
                               onBlur={validationType.handleBlur}
                             >
                               <option value="-1">Select....</option>
                               {map(matchingProducts, (item, index) => {
                                 return (
-                                  <option key={index} value={item.id}
-                                  selected={
-                                    dataEdit
-                                      ? item.id === dataEdit?.products[0]
-                                      : false
-                                  }
+                                  <option
+                                    key={index}
+                                    value={item.id}
+                                    selected={
+                                      dataEdit
+                                        ? item.id === dataEdit?.products[0]
+                                        : false
+                                    }
                                   >
                                     {item.label}
                                   </option>
@@ -1493,7 +1491,6 @@ const Addons = ({
                                   </Option>
                                 );
                               })}
-                             
                             </Select>
                           </>
                         ) : null}
@@ -1667,8 +1664,8 @@ const Addons = ({
                   className="waves-effect waves-light col-2 mx-4"
                   type="button"
                   onClick={() => {
-                    setNewAddon(false)
-                    setCopyProduct(false)
+                    setNewAddon(false);
+                    setCopyProduct(false);
                   }}
                 >
                   Close

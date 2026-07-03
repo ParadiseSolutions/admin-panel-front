@@ -6,15 +6,68 @@ import {
   TabContent,
   Table,
   TabPane,
-
+  UncontrolledTooltip,
 } from "reactstrap";
 import classnames from "classnames";
+import AssignRelatedAssetModal from "./AssignRelatedAssetModal";
 
-const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
+const ActiveAssetsTable = ({
+  relatedAssetsActiveData,
+  editAsset,
+  removeAsset,
+  tourId,
+}) => {
   const [activeTab, setactiveTab] = useState("1");
   const [boatData, setboatData] = useState([]);
   const [vehicleData, setvehicleData] = useState([]);
   const [othersData, setothersData] = useState([]);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+
+  const openAssignModal = (asset) => {
+    setSelectedAsset(asset);
+    setAssignModalOpen(true);
+  };
+
+  const closeAssignModal = () => {
+    setAssignModalOpen(false);
+    setSelectedAsset(null);
+  };
+
+  const handleAssignConfirm = ({ apply_to, products }) => {
+    if (selectedAsset) {
+      editAsset(selectedAsset.id, { apply_to, products });
+    }
+    closeAssignModal();
+  };
+
+  const renderActions = (asset) => (
+    <div className="d-flex gap-3">
+      <div onClick={() => openAssignModal(asset)} className="text-success">
+        <i
+          className="mdi mdi-pencil font-size-18"
+          id={`edit-asset-${asset.id}`}
+          style={{ cursor: "pointer" }}
+        />
+        <UncontrolledTooltip placement="top" target={`edit-asset-${asset.id}`}>
+          Edit
+        </UncontrolledTooltip>
+      </div>
+      <div className="text-danger" onClick={() => removeAsset(asset.id)}>
+        <i
+          className="mdi mdi-delete font-size-18"
+          id={`delete-asset-${asset.id}`}
+          style={{ cursor: "pointer" }}
+        />
+        <UncontrolledTooltip
+          placement="top"
+          target={`delete-asset-${asset.id}`}
+        >
+          Delete
+        </UncontrolledTooltip>
+      </div>
+    </div>
+  );
 
   function toggle(tab) {
     if (activeTab !== tab) {
@@ -25,22 +78,19 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
   useEffect(() => {
     if (relatedAssetsActiveData) {
       const boat = relatedAssetsActiveData.filter(
-        (item) => item.asset_id === 1
+        (item) => item.asset_id === 1,
       );
       const vehicle = relatedAssetsActiveData.filter(
-        (item) =>
-          item.assets.asset_type === "Vehicles"
+        (item) => item.assets.asset_type === "Vehicles",
       );
       const others = relatedAssetsActiveData.filter(
-        (item) =>
-          item.assets.asset_type === "Others"
+        (item) => item.assets.asset_type === "Others",
       );
       setboatData(boat);
       setvehicleData(vehicle);
       setothersData(others);
     }
   }, [relatedAssetsActiveData]);
-
 
   return (
     <>
@@ -128,32 +178,25 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                   <th>Model</th>
                   <th>Location</th>
                   <th>Boat / Marina Location</th>
-
+                  <th>Related To</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {boatData.map((boat, index) => {
-                  return (
-                    <>
-                      <tr>
-                        <td>{boat.name}</td>
-                        <td>{boat.type_name}</td>
-                        <td>{boat.length}</td>
-                        <td>{boat.capacity}</td>
-                        <td>{boat.make}</td>
-                        <td>{boat.model}</td>
-                        <td>{boat.location_name}</td>
-                        <td>{boat.asset_marina_location}</td>
-
-                        <td>
-                          {" "}
-                          <span style={{cursor:'pointer', color:"#3DC7F4"}} onClick={() => removeAsset(boat.id)} >- Remove</span>
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
+                {boatData.map((boat, index) => (
+                  <tr key={index}>
+                    <td>{boat.name}</td>
+                    <td>{boat.type_name}</td>
+                    <td>{boat.length}</td>
+                    <td>{boat.capacity}</td>
+                    <td>{boat.make}</td>
+                    <td>{boat.model}</td>
+                    <td>{boat.location_name}</td>
+                    <td>{boat.asset_marina_location}</td>
+                    <td>{boat.apply_to_name}</td>
+                    <td>{renderActions(boat)}</td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>
@@ -169,29 +212,23 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
                   <th>Location</th>
                   <th>Qty</th>
                   <th>Capacity</th>
+                  <th>Related To</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {vehicleData.map((vehicle, index) => {
-                  return (
-                    <>
-                      <tr key={index}>
-                        <td>{vehicle.asset_name}</td>
-                        <td>{vehicle.make}</td>
-                        <td>{vehicle.model}</td>
-                        <td>{vehicle.location_name}</td>
-                        <td>{vehicle.quantity}</td>
-
-                        <td>{vehicle.capacity}</td>
-
-                        <td>
-                          <span style={{cursor:'pointer', color:"#3DC7F4"}} onClick={() => removeAsset(vehicle.id)}>- Remove</span>
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
+                {vehicleData.map((vehicle, index) => (
+                  <tr key={index}>
+                    <td>{vehicle.asset_name}</td>
+                    <td>{vehicle.make}</td>
+                    <td>{vehicle.model}</td>
+                    <td>{vehicle.location_name}</td>
+                    <td>{vehicle.quantity}</td>
+                    <td>{vehicle.capacity}</td>
+                    <td>{vehicle.apply_to_name}</td>
+                    <td>{renderActions(vehicle)}</td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>
@@ -202,36 +239,38 @@ const ActiveAssetsTable = ({ relatedAssetsActiveData, removeAsset }) => {
               <thead className="table-nowrap">
                 <tr>
                   <th>Asset</th>
-
                   <th>Qty</th>
                   <th>Location</th>
                   <th>Capacity Ea.</th>
                   <th>Max Capacity</th>
+                  <th>Related To</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {othersData.map((item, index) => {
-                  return (
-                    <>
-                      <tr>
-                        <td>{item.asset_name}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.location_name}</td>
-                        <td>{item.cap_ea}</td>
-                        <td>{item.max_cap}</td>
-                        <td>
-                          <span style={{cursor:'pointer', color:"#3DC7F4"}} onClick={() => removeAsset(item.id)}>- Remove</span>
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
+                {othersData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.asset_name}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.location_name}</td>
+                    <td>{item.cap_ea}</td>
+                    <td>{item.max_cap}</td>
+                    <td>{item.apply_to_name}</td>
+                    <td>{renderActions(item)}</td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>
         </TabPane>
       </TabContent>
+      <AssignRelatedAssetModal
+        isOpen={assignModalOpen}
+        onClose={closeAssignModal}
+        onConfirm={handleAssignConfirm}
+        tourId={tourId}
+        editData={selectedAsset}
+      />
     </>
   );
 };

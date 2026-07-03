@@ -6,15 +6,38 @@ import {
   TabContent,
   Table,
   TabPane,
-  UncontrolledTooltip,
 } from "reactstrap";
 import classnames from "classnames";
+import AssignRelatedAssetModal from "./AssignRelatedAssetModal";
 
-const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
+const ActiveAssetsOthersTable = ({
+  relatedAssetsOtherData,
+  assignAsset,
+  tourId,
+}) => {
   const [activeTab, setactiveTab] = useState("1");
   const [boatData, setboatData] = useState([]);
   const [vehicleData, setvehicleData] = useState([]);
   const [othersData, setothersData] = useState([]);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [selectedAssetId, setSelectedAssetId] = useState(null);
+
+  const openAssignModal = (assetId) => {
+    setSelectedAssetId(assetId);
+    setAssignModalOpen(true);
+  };
+
+  const closeAssignModal = () => {
+    setAssignModalOpen(false);
+    setSelectedAssetId(null);
+  };
+
+  const handleAssignConfirm = ({ apply_to, products }) => {
+    if (selectedAssetId) {
+      assignAsset(selectedAssetId, { apply_to, products });
+    }
+    closeAssignModal();
+  };
 
   function toggle(tab) {
     if (activeTab !== tab) {
@@ -24,16 +47,12 @@ const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
 
   useEffect(() => {
     if (relatedAssetsOtherData) {
-      const boat = relatedAssetsOtherData.filter(
-        (item) => item.asset_id === 1
-      );
+      const boat = relatedAssetsOtherData.filter((item) => item.asset_id === 1);
       const vehicle = relatedAssetsOtherData.filter(
-        (item) =>
-          item.assets.asset_type === "Vehicles"
+        (item) => item.assets.asset_type === "Vehicles",
       );
       const others = relatedAssetsOtherData.filter(
-        (item) =>
-          item.assets.asset_type === "Others"
+        (item) => item.assets.asset_type === "Others",
       );
       setboatData(boat);
       setvehicleData(vehicle);
@@ -147,7 +166,12 @@ const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
 
                         <td>
                           {" "}
-                          <span style={{cursor:'pointer', color:"#F6851F"}} onClick={() => assignAsset(boat.id)} >+ Add</span>
+                          <span
+                            style={{ cursor: "pointer", color: "#F6851F" }}
+                            onClick={() => openAssignModal(boat.id)}
+                          >
+                            + Add
+                          </span>
                         </td>
                       </tr>
                     </>
@@ -185,7 +209,12 @@ const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
                         <td>{vehicle.capacity}</td>
 
                         <td>
-                          <span style={{cursor:'pointer', color:"#F6851F"}} onClick={() => assignAsset(vehicle.id)} >+ Add</span>
+                          <span
+                            style={{ cursor: "pointer", color: "#F6851F" }}
+                            onClick={() => openAssignModal(vehicle.id)}
+                          >
+                            + Add
+                          </span>
                         </td>
                       </tr>
                     </>
@@ -220,7 +249,12 @@ const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
                         <td>{item.cap_ea}</td>
                         <td>{item.max_cap}</td>
                         <td>
-                          <span style={{cursor:'pointer', color:"#F6851F"}} onClick={() => assignAsset(item.id)} >+ Add</span>
+                          <span
+                            style={{ cursor: "pointer", color: "#F6851F" }}
+                            onClick={() => openAssignModal(item.id)}
+                          >
+                            + Add
+                          </span>
                         </td>
                       </tr>
                     </>
@@ -231,6 +265,12 @@ const ActiveAssetsOthersTable = ({ relatedAssetsOtherData, assignAsset }) => {
           </div>
         </TabPane>
       </TabContent>
+      <AssignRelatedAssetModal
+        isOpen={assignModalOpen}
+        onClose={closeAssignModal}
+        onConfirm={handleAssignConfirm}
+        tourId={tourId}
+      />
     </>
   );
 };
