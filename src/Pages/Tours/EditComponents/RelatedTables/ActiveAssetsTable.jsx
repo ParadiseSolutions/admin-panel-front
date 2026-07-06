@@ -41,6 +41,39 @@ const ActiveAssetsTable = ({
     closeAssignModal();
   };
 
+  const renderRelatedToCell = (asset) => {
+    const products = asset.products || [];
+    const tooltipId = `related-to-${asset.assignment_id ?? asset.id}`;
+
+    if (!products.length) {
+      return asset.apply_to_name;
+    }
+
+    return (
+      <>
+        <span
+          id={tooltipId}
+          style={{ cursor: "help" }}
+        >
+          {asset.apply_to_name}
+        </span>
+        <UncontrolledTooltip
+          autohide
+          placement="top"
+          target={tooltipId}
+          innerClassName="text-start"
+          style={{ maxWidth: "460px", whiteSpace: "normal" }}
+        >
+          <div>
+            {products.map((product) => (
+              <div key={product.id}>{product.name}</div>
+            ))}
+          </div>
+        </UncontrolledTooltip>
+      </>
+    );
+  };
+
   const renderActions = (asset) => (
     <div className="d-flex gap-3">
       <div onClick={() => openAssignModal(asset)} className="text-success">
@@ -193,7 +226,7 @@ const ActiveAssetsTable = ({
                     <td>{boat.model}</td>
                     <td>{boat.location_name}</td>
                     <td>{boat.asset_marina_location}</td>
-                    <td>{boat.apply_to_name}</td>
+                    <td>{renderRelatedToCell(boat)}</td>
                     <td>{renderActions(boat)}</td>
                   </tr>
                 ))}
@@ -225,7 +258,7 @@ const ActiveAssetsTable = ({
                     <td>{vehicle.location_name}</td>
                     <td>{vehicle.quantity}</td>
                     <td>{vehicle.capacity}</td>
-                    <td>{vehicle.apply_to_name}</td>
+                    <td>{renderRelatedToCell(vehicle)}</td>
                     <td>{renderActions(vehicle)}</td>
                   </tr>
                 ))}
@@ -255,7 +288,7 @@ const ActiveAssetsTable = ({
                     <td>{item.location_name}</td>
                     <td>{item.cap_ea}</td>
                     <td>{item.max_cap}</td>
-                    <td>{item.apply_to_name}</td>
+                    <td>{renderRelatedToCell(item)}</td>
                     <td>{renderActions(item)}</td>
                   </tr>
                 ))}
