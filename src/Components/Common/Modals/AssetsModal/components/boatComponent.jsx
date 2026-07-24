@@ -1,5 +1,5 @@
 // import { createPaymentTypeAPI } from "../../../../Utils/API/Payments";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Row,
   Col,
@@ -33,6 +33,12 @@ import {
   DURATION_OPTIONS,
   normalizeDurationValues,
 } from "../constants/boatDurationOptions";
+import {
+  ACTIVITY_SHORTCUTS,
+  filterActivityOptions,
+  getAllowedActivityNames,
+  resolveActivitySelection,
+} from "../constants/boatActivityOptions";
 
 const BoatComponent = ({
   setMenu,
@@ -64,7 +70,34 @@ const BoatComponent = ({
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [mainClassSelected, setMainClassSelected] = useState(0);
-  const [fishingAditionalInputs, setFishingAditionalInputs] = useState(false);
+  const fishingAditionalInputs = Number(boatTypeSelected) === 3;
+  const selectedBoatTypeName =
+    boatTypeData.find((type) => Number(type.id) === Number(boatTypeSelected))
+      ?.name || "";
+  const filteredActivityData = useMemo(
+    () =>
+      filterActivityOptions(
+        activityData,
+        getAllowedActivityNames({
+          boatTypeId: boatTypeSelected,
+          boatTypeName: selectedBoatTypeName,
+          locationId: locationSelected,
+        }),
+      ),
+    [
+      activityData,
+      boatTypeSelected,
+      selectedBoatTypeName,
+      locationSelected,
+    ],
+  );
+  const filteredDepartureLocationData = useMemo(
+    () =>
+      depatureLocationData.filter(
+        (item) => Number(item.location_id) === Number(locationSelected),
+      ),
+    [depatureLocationData, locationSelected],
+  );
   const [flexiblePrice, setFlexiblePrice] = useState(false);
   const [customPricesCheck, setCustomPricesCheck] = useState(false);
   const [customPickUpCheck, setCustomPickUpCheck] = useState(false);
@@ -175,11 +208,6 @@ const BoatComponent = ({
       setFlexiblePrice(dataEdit.has_supported_classes === 1 ? true : false);
       setInitialOptionsArea(dataEdit.activities);
       setActivitiesSelected(dataEdit.activities);
-      const fishingIds = [1, 2, 17, 50, 51, 52, 55];
-
-      setFishingAditionalInputs(
-        fishingIds.some((id) => dataEdit.activities.includes(id)),
-      );
       setSuportedClassSelectedOne(
         dataEdit.supported_classes?.class_id_1 || null,
       );
@@ -279,40 +307,84 @@ const BoatComponent = ({
     }
   }, [customPickUpCheck, flexiblePrice]);
 
-  //multi select activities
-  function handleMulti(selected) {
-    console.log("selected activities", selected);
-    setActivitiesSelected(selected);
-    if (!selected || selected.length === 0) {
-      setFishingAditionalInputs(false);
+  const clearDepartureLocationSelections = () => {
+    setMainDepartureLocationsSelected([]);
+    setInitialMainDepartureLocations([]);
+    setDepartureLocationsSelectedOne([]);
+    setDepartureLocationsSelectedTwo([]);
+    setDepartureLocationsSelectedThree([]);
+    setInitialDepartureLocationsOne([]);
+    setInitialDepartureLocationsTwo([]);
+    setInitialDepartureLocationsThree([]);
+    setCustomPickUpDepartureOne([]);
+    setCustomPickUpDepartureTwo([]);
+    setCustomPickUpDepartureThree([]);
+    setInitialCustomPickUpDepartureOne([]);
+    setInitialCustomPickUpDepartureTwo([]);
+    setInitialCustomPickUpDepartureThree([]);
+  };
+
+  // Drop selected activities that are no longer valid for boat type / location.
+  useEffect(() => {
+    const allowedIds = new Set(
+      filteredActivityData.map((item) => Number(item.id)),
+    );
+    setActivitiesSelected((prev) => {
+      const next = (prev || []).filter((id) => allowedIds.has(Number(id)));
+      if (
+        next.length === (prev || []).length &&
+        next.every((id, index) => Number(id) === Number(prev[index]))
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, [filteredActivityData]);
+
+  // Drop departure selections that do not belong to the current Location.
+  useEffect(() => {
+    if (!locationSelected || depatureLocationData.length === 0) {
       return;
     }
-
-    const containsFishing = selected.some((sel) => {
-      if (typeof sel === "string" || typeof sel === "number") {
-        if (String(sel).toLowerCase().includes("fishing")) return true;
-        return activityData.some(
-          (a) =>
-            String(a.id) === String(sel) &&
-            String(a.text).toLowerCase().includes("fishing"),
-        );
+    const allowedIds = new Set(
+      filteredDepartureLocationData.map((item) => Number(item.id)),
+    );
+    const prune = (prev) => {
+      const next = (prev || []).filter((id) => allowedIds.has(Number(id)));
+      if (
+        next.length === (prev || []).length &&
+        next.every((id, index) => Number(id) === Number(prev[index]))
+      ) {
+        return prev;
       }
-      if (sel && typeof sel === "object") {
-        if (sel.label && String(sel.label).toLowerCase().includes("fishing"))
-          return true;
-        if (sel.value) {
-          return activityData.some(
-            (a) =>
-              String(a.id) === String(sel.value) &&
-              String(a.text).toLowerCase().includes("fishing"),
-          );
-        }
-      }
-      return false;
-    });
+      return next;
+    };
 
-    setFishingAditionalInputs(Boolean(containsFishing));
-    // setSelectionID(selected);
+    setMainDepartureLocationsSelected(prune);
+    setInitialMainDepartureLocations(prune);
+    setDepartureLocationsSelectedOne(prune);
+    setDepartureLocationsSelectedTwo(prune);
+    setDepartureLocationsSelectedThree(prune);
+    setInitialDepartureLocationsOne(prune);
+    setInitialDepartureLocationsTwo(prune);
+    setInitialDepartureLocationsThree(prune);
+    setCustomPickUpDepartureOne(prune);
+    setCustomPickUpDepartureTwo(prune);
+    setCustomPickUpDepartureThree(prune);
+    setInitialCustomPickUpDepartureOne(prune);
+    setInitialCustomPickUpDepartureTwo(prune);
+    setInitialCustomPickUpDepartureThree(prune);
+  }, [
+    locationSelected,
+    depatureLocationData.length,
+    filteredDepartureLocationData,
+  ]);
+
+  //multi select activities
+  function handleMulti(selected) {
+    setActivitiesSelected(
+      resolveActivitySelection(selected, filteredActivityData),
+    );
   }
 
   const validationType = useFormik({
@@ -826,6 +898,8 @@ const BoatComponent = ({
                   name=""
                   onChange={(e) => {
                     setLocationSelected(+e.target.value);
+                    setBoatLocationSelected(0);
+                    clearDepartureLocationSelections();
                   }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -1138,7 +1212,13 @@ const BoatComponent = ({
                   onChange={handleMulti}
                   value={activitiesSelected}
                 >
-                  {map(activityData, (item, index) => {
+                  {filteredActivityData.length > 0 &&
+                    map(ACTIVITY_SHORTCUTS, (shortcut) => (
+                      <Option key={shortcut.value} value={shortcut.value}>
+                        {shortcut.label}
+                      </Option>
+                    ))}
+                  {map(filteredActivityData, (item, index) => {
                     return (
                       <Option key={index} value={item.id}>
                         {item.text}
@@ -1456,7 +1536,7 @@ const BoatComponent = ({
                   </Col>
                   <Col className="col-2">
                     <div className="d-flex justify-content-between">
-                      <Label className="form-label">Main Class</Label>
+                      <Label className="form-label">Boat Class</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1527,13 +1607,11 @@ const BoatComponent = ({
                       }
                       onChange={(e) => setMainDepartureLocationsSelected(e)}
                     >
-                      {map(depatureLocationData, (item, index) => {
-                        return (
-                          <Option key={index} value={item.id}>
-                            {item.name}
-                          </Option>
-                        );
-                      })}
+                      {map(filteredDepartureLocationData, (item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                     </Select>
                   </Col>
                   <Col className="col-1 d-flex align-items-center mt-4">
@@ -1721,18 +1799,20 @@ const BoatComponent = ({
                           rows="5"
                           style={{ width: "100%", paddingTop: "5px" }}
                           placeholder="Please select"
-                          defaultValue={initialCustomPickUpDepartureOne}
+                          value={
+                            customPickUpDepartureOne.length > 0
+                              ? customPickUpDepartureOne
+                              : initialCustomPickUpDepartureOne
+                          }
                           onChange={(values) =>
                             setCustomPickUpDepartureOne(values)
                           }
                         >
-                          {map(depatureLocationData, (item, index) => {
-                            return (
-                              <Option key={index} value={item.id}>
-                                {item.name}
-                              </Option>
-                            );
-                          })}
+                          {map(filteredDepartureLocationData, (item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                         </Select>
                       </Col>
                       <Col className="col-1 d-flex align-items-center mt-4">
@@ -1806,18 +1886,20 @@ const BoatComponent = ({
                             rows="5"
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialCustomPickUpDepartureTwo}
+                            value={
+                              customPickUpDepartureTwo.length > 0
+                                ? customPickUpDepartureTwo
+                                : initialCustomPickUpDepartureTwo
+                            }
                             onChange={(values) =>
                               setCustomPickUpDepartureTwo(values)
                             }
                           >
-                            {map(depatureLocationData, (item, index) => {
-                              return (
-                                <Option key={index} value={item.id}>
-                                  {item.name}
-                                </Option>
-                              );
-                            })}
+                            {map(filteredDepartureLocationData, (item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                           </Select>
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
@@ -1904,18 +1986,20 @@ const BoatComponent = ({
                             rows="5"
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialCustomPickUpDepartureThree}
+                            value={
+                              customPickUpDepartureThree.length > 0
+                                ? customPickUpDepartureThree
+                                : initialCustomPickUpDepartureThree
+                            }
                             onChange={(values) =>
                               setCustomPickUpDepartureThree(values)
                             }
                           >
-                            {map(depatureLocationData, (item, index) => {
-                              return (
-                                <Option key={index} value={item.id}>
-                                  {item.name}
-                                </Option>
-                              );
-                            })}
+                            {map(filteredDepartureLocationData, (item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                           </Select>
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
@@ -2061,18 +2145,20 @@ const BoatComponent = ({
                             rows="5"
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialDepartureLocationsOne}
+                            value={
+                              dapatureLocationsSelectedOne.length > 0
+                                ? dapatureLocationsSelectedOne
+                                : initialDepartureLocationsOne
+                            }
                             onChange={(e) =>
                               setDepartureLocationsSelectedOne(e)
                             }
                           >
-                            {map(depatureLocationData, (item, index) => {
-                              return (
-                                <Option key={index} value={item.id}>
-                                  {item.name}
-                                </Option>
-                              );
-                            })}
+                            {map(filteredDepartureLocationData, (item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                           </Select>
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
@@ -2201,7 +2287,11 @@ const BoatComponent = ({
                               rows="5"
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDepartureLocationsTwo}
+                              value={
+                                dapatureLocationsSelectedTwo.length > 0
+                                  ? dapatureLocationsSelectedTwo
+                                  : initialDepartureLocationsTwo
+                              }
                               onChange={(e) =>
                                 setDepartureLocationsSelectedTwo(e)
                               }
@@ -2209,13 +2299,11 @@ const BoatComponent = ({
                               //   voucherInitialData?.brings_read_only === 1 ? true : false
                               // }
                             >
-                              {map(depatureLocationData, (item, index) => {
-                                return (
-                                  <Option key={index} value={item.id}>
-                                    {item.name}
-                                  </Option>
-                                );
-                              })}
+                              {map(filteredDepartureLocationData, (item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                             </Select>
                           </Col>
                           <Col className="col-1 d-flex align-items-center mt-4">
@@ -2364,7 +2452,11 @@ const BoatComponent = ({
                               rows="5"
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDepartureLocationsThree}
+                              value={
+                                dapatureLocationsSelectedThree.length > 0
+                                  ? dapatureLocationsSelectedThree
+                                  : initialDepartureLocationsThree
+                              }
                               onChange={(e) =>
                                 setDepartureLocationsSelectedThree(e)
                               }
@@ -2372,13 +2464,11 @@ const BoatComponent = ({
                               //   voucherInitialData?.brings_read_only === 1 ? true : false
                               // }
                             >
-                              {map(depatureLocationData, (item, index) => {
-                                return (
-                                  <Option key={index} value={item.id}>
-                                    {item.name}
-                                  </Option>
-                                );
-                              })}
+                              {map(filteredDepartureLocationData, (item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                             </Select>
                           </Col>
                           <Col className="col-1 d-flex align-items-center mt-4">

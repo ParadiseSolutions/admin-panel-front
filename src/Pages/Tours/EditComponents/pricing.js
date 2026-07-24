@@ -32,6 +32,10 @@ import Swal from "sweetalert2";
 import AddPezGato from "../../../Components/Common/Modals/PricingModals/addPezGato";
 import { getCurrency } from "../../../Utils/API/Operators";
 import { getActivities } from "../../../Utils/API/Assets";
+import {
+  filterActivityOptions,
+  getAllManagedActivityNames,
+} from "../../../Components/Common/Modals/AssetsModal/constants/boatActivityOptions";
 
 const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
@@ -101,7 +105,10 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           add(getCurrency(), setCurrency);
           add(
             getActivities({ search: "", tipo: "boats", list: "admin_cargarActivityCombo" }),
-            setActivityData,
+            (results) =>
+              setActivityData(
+                filterActivityOptions(results, getAllManagedActivityNames()),
+              ),
           );
           break;
         case 2:

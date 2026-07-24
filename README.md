@@ -347,6 +347,10 @@ Si no ves una sección en el menú, el usuario no tiene ese módulo asignado (no
 
 Los módulos **Tours** y **Providers** concentran la mayor parte de la lógica y los modales.
 
+**Assets (Boats) / wiki:** análisis del modal de boats, modelo de datos y relación con Group Tool, Dispatch y Database → [`src/Components/Common/Modals/AssetsModal/README.md`](src/Components/Common/Modals/AssetsModal/README.md).
+
+**Pricing / Products / wiki:** características EAV por tipo de tour, `prices` / `products_temp`, `charter_types(_fishing)` y vínculo con activities → [`src/Components/Common/Modals/PricingModals/README.md`](src/Components/Common/Modals/PricingModals/README.md).
+
 ---
 
 ## Guía para desarrollar

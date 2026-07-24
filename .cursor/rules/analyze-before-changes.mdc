@@ -1,0 +1,28 @@
+---
+description: Análisis previo sin cambios — activar cuando el usuario diga analizar código, analyze before changes, analiza esto, o pase archivos pidiendo análisis previo
+alwaysApply: false
+---
+
+# Analizar código antes de cambiar
+
+Cuando el usuario pida análisis previo (aunque el prompt sea corto) y pase rutas, selección o contexto de archivos:
+
+## Obligatorio
+1. **No modificar código** ni sugerir cambios todavía.
+2. Leer el código indicado y su contexto cercano (imports, callers, tests si existen).
+3. Leer `README` / `readme*` y `.cursorrules` / `.cursor/rules` del proyecto si existen.
+4. Explicar en español:
+   - **Qué hace**
+   - **Dependencias clave**
+   - **Posibles side effects**
+   - **Riesgos si se modifica**
+5. Ofrecer crear/actualizar un README con el análisis **solo tras aprobación explícita** del usuario. No escribirlo hasta entonces.
+
+## Estilo
+Conciso, orientado a riesgos reales. Sin propuestas de refactor ni “mejoras” hasta que el usuario lo pida.
+
+## Prompt corto del usuario (ejemplos)
+- `Analiza antes de cambiar: <rutas o selección>`
+- `Analyze before changes — <archivo>`
+- `Analiza esto`
+- `Análisis previo de <componente/flujo>`
