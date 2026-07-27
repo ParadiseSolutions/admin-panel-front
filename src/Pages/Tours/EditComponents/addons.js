@@ -44,6 +44,16 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
     });
   };
 
+  // Se actualiza solo la fila afectada en memoria: recargar la tabla completa
+  // devolveria al usuario a la primera pagina.
+  const onAddonActiveChange = (addonId, active) => {
+    setAddonsData((prev) =>
+      prev.map((item) =>
+        item.id === addonId ? { ...item, active: active } : item
+      )
+    );
+  };
+
   //
   const [addonsData, setAddonsData] = useState([]);
   const [copyProduct, setCopyProduct] = useState(false);
@@ -172,7 +182,9 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <ActiveAddon {...cellProps} />;
+          return (
+            <ActiveAddon {...cellProps} onStatusChange={onAddonActiveChange} />
+          );
         },
       },
       {

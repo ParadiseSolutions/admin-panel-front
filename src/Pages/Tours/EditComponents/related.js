@@ -195,7 +195,12 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <ActiveRelated {...cellProps} />;
+          return (
+            <ActiveRelated
+              {...cellProps}
+              onStatusChange={onRelatedActiveChange}
+            />
+          );
         },
       },
       {
@@ -281,6 +286,16 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
     getRelatedTourAPI(data).then((resp) => {
       setRelatedData(resp.data.data);
     });
+  };
+
+  // Se actualiza solo la fila afectada en memoria: recargar la tabla completa
+  // devolveria al usuario a la primera pagina.
+  const onRelatedActiveChange = (relatedId, active) => {
+    setRelatedData((prev) =>
+      prev.map((item) =>
+        item.id === relatedId ? { ...item, related_active: active } : item
+      )
+    );
   };
 
   // request related assets

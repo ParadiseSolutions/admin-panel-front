@@ -26,6 +26,7 @@ import {
   Label,
   Input,
   Tooltip,
+  Spinner,
 } from "reactstrap";
 import { Name, Code, Price, Rate, Active } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
@@ -41,6 +42,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
   const [priceRangeCheck, setPriceRangeCheck] = useState(false);
+  const [priceRangeSaving, setPriceRangeSaving] = useState(false);
 
   //add new product
   const [addNewProduct, setAddNewProduct] = useState(false);
@@ -197,18 +199,39 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     });
   };
 
+  // Se actualiza solo la fila afectada en memoria: recargar la tabla completa
+  // devolveria al usuario a la primera pagina.
+  const onProductActiveChange = (priceId, active) => {
+    setPricesData((prev) =>
+      prev.map((item) =>
+        item.id === priceId ? { ...item, active: active } : item
+      )
+    );
+  };
+
   useEffect(() => {
     if (tourData !== undefined) {
-      tourData?.range_price === 0
-        ? setPriceRangeCheck(false)
-        : setPriceRangeCheck(true);
+      setPriceRangeCheck(Number(tourData?.range_price) === 1);
     }
   }, [tourData]);
 
   // console.log(tourData);
-  const postPriceRange = () => {
-    let data = { active: priceRangeCheck === false ? 1 : 0 };
-    putPriceRangesAPI(id, data).then((resp) => {});
+  const postPriceRange = (isActive) => {
+    setPriceRangeSaving(true);
+    putPriceRangesAPI(id, { active: isActive ? 1 : 0 })
+      .then(() => {
+        setPriceRangeCheck(isActive);
+        setPriceRangeSaving(false);
+      })
+      .catch(() => {
+        setPriceRangeSaving(false);
+        Swal.fire({
+          title: "Error",
+          text: "Price Ranges could not be updated. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   };
 
   //table actions
@@ -347,7 +370,9 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       disableFilters: false,
       filterable: true,
       Cell: (cellProps) => {
-        return <Active {...cellProps} />;
+        return (
+          <Active {...cellProps} onStatusChange={onProductActiveChange} />
+        );
       },
     },
     {
@@ -555,20 +580,36 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     </Tooltip>
                   </div>
                 </div>
-                <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                <div className="form-check form-switch form-switch-md mx-4 mt-2 d-flex align-items-center">
                   <Input
                     name="seasonality"
                     placeholder=""
                     type="checkbox"
                     checked={priceRangeCheck}
+                    disabled={priceRangeSaving}
                     className="form-check-input"
-                    onChange={() => {
-                      setPriceRangeCheck(!priceRangeCheck);
-                      postPriceRange();
+                    onChange={(e) => {
+                      postPriceRange(e.target.checked);
                     }}
-                    // onBlur={validationType.handleBlur}
                     value={priceRangeCheck}
                   />
+                  <div
+                    className="d-flex align-items-center text-muted ms-2"
+                    style={{ minWidth: "70px", fontSize: "10px" }}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {priceRangeSaving ? (
+                      <>
+                        <Spinner
+                          size="sm"
+                          className="me-1"
+                          style={{ width: "10px", height: "10px" }}
+                        />
+                        Saving...
+                      </>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </div>

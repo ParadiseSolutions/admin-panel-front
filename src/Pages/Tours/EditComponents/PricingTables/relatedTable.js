@@ -37,6 +37,8 @@ const RelatedTables = ({
       columns,
       data,
       initialState: { pageIndex: 0, pageSize: 10 },
+      // Sin esto, cualquier cambio en data devuelve al usuario a la pagina 1.
+      autoResetPage: false,
     },
     useGlobalFilter,
     useFilters,

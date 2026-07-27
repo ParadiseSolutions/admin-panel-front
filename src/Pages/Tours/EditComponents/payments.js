@@ -35,6 +35,7 @@ import {
   Button,
   UncontrolledTooltip,
   Tooltip,
+  Spinner,
 } from "reactstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
@@ -81,6 +82,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [applyCommissionData, setApplyCommissionData] = useState([]);
   const [applyCommissionSelected, setApplyCommissionSelected] = useState(null);
   const [paymentRequest, setPaymentRequest] = useState(false);
+  const [paymentRequestSaving, setPaymentRequestSaving] = useState(false);
 
   //tooltips
   const [taxTooltip, setTaxTooltip] = useState(false);
@@ -374,8 +376,22 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     });
   };
 
-  const paymentRequestChange = () => {
-    putPaymentRequestAPI(id, { active: paymentRequest ? 0 : 1 });
+  const paymentRequestChange = (isActive) => {
+    setPaymentRequestSaving(true);
+    putPaymentRequestAPI(id, { active: isActive ? 1 : 0 })
+      .then(() => {
+        setPaymentRequest(isActive);
+        setPaymentRequestSaving(false);
+      })
+      .catch(() => {
+        setPaymentRequestSaving(false);
+        Swal.fire({
+          title: "Error",
+          text: "Payment Request could not be updated. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   };
 
   const columnsProducts = useMemo(
@@ -692,7 +708,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <input
                     type="checkbox"
                     className="form-check-input mx-1"
-                    id="customSwitchsizesm"
+                    id="payments-advanced-settings-switch"
                     checked={advanceSettings}
                     onChange={(e) => setAdvanceSettings(e.target.checked)}
                   />
@@ -1407,18 +1423,35 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     PAYMENTS
                   </p>
                 </div>
-                <div className="d-flex mt-2 form-check form-switch">
-                  <Label className="mx-2">Payment Request</Label>
+                <div className="d-flex mt-2 form-check form-switch align-items-center">
+                  <Label className="mx-2 mb-0">Payment Request</Label>
                   <input
                     type="checkbox"
                     className="form-check-input mx-1"
-                    id="customSwitchsizesm"
+                    id="payment-request-switch"
                     checked={paymentRequest}
+                    disabled={paymentRequestSaving}
                     onChange={(e) => {
-                      setPaymentRequest(e.target.checked);
-                      paymentRequestChange();
+                      paymentRequestChange(e.target.checked);
                     }}
                   />
+                  <div
+                    className="d-flex align-items-center text-muted ms-1"
+                    style={{ minWidth: "70px", fontSize: "10px" }}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {paymentRequestSaving ? (
+                      <>
+                        <Spinner
+                          size="sm"
+                          className="me-1"
+                          style={{ width: "10px", height: "10px" }}
+                        />
+                        Saving...
+                      </>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </Col>
