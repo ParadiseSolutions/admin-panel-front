@@ -23,6 +23,10 @@ import {
 } from "../../../../../Utils/API/Assets";
 import { map } from "lodash";
 import { useParams } from "react-router-dom";
+import {
+  RequiredFieldsLegend,
+  RequiredMark,
+} from "../constants/othersFormUi";
 const OthersComponent = ({
   setMenu,
   setAssetModal,
@@ -163,11 +167,15 @@ const OthersComponent = ({
           }}
           className="custom-validation"
         >
+          <RequiredFieldsLegend />
           <Row>
             <Row>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Type</Label>
+                  <Label className="form-label">
+                    Type
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -210,7 +218,10 @@ const OthersComponent = ({
 
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Category</Label>
+                  <Label className="form-label">
+                    Category
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -252,7 +263,10 @@ const OthersComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Location</Label>
+                  <Label className="form-label">
+                    Location
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -297,7 +311,10 @@ const OthersComponent = ({
               <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Qty</Label>
+                    <Label className="form-label">
+                      Qty
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
@@ -334,10 +351,13 @@ const OthersComponent = ({
                   ) : null}
                 </div>
               </Col>
-              <Col className="col-1">
+              <Col className="col-2">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Cap. Ea.</Label>
+                    <Label className="form-label">
+                      Cap. Ea.
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"

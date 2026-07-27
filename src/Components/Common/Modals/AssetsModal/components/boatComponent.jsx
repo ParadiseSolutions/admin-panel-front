@@ -1,5 +1,5 @@
 // import { createPaymentTypeAPI } from "../../../../Utils/API/Payments";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Row,
   Col,
@@ -30,8 +30,10 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { SUPPORTED_CLASS_OPTIONS } from "../constants/boatClassOptions";
 import {
-  DURATION_OPTIONS,
+  getDurationOptionsForLocation,
   normalizeDurationValues,
+  pruneDurationValue,
+  pruneDurationValues,
 } from "../constants/boatDurationOptions";
 import {
   ACTIVITY_SHORTCUTS,
@@ -39,6 +41,14 @@ import {
   getAllowedActivityNames,
   resolveActivitySelection,
 } from "../constants/boatActivityOptions";
+import {
+  DEPARTURE_SHORTCUTS,
+  resolveDepartureLocationSelection,
+} from "../constants/boatDepartureLocationOptions";
+import {
+  RequiredFieldsLegend,
+  RequiredMark,
+} from "../constants/boatFormUi";
 
 const BoatComponent = ({
   setMenu,
@@ -93,11 +103,62 @@ const BoatComponent = ({
   );
   const filteredDepartureLocationData = useMemo(
     () =>
-      depatureLocationData.filter(
-        (item) => Number(item.location_id) === Number(locationSelected),
-      ),
+      depatureLocationData.filter((item) => {
+        const matchesLocation =
+          Number(item.location_id) === Number(locationSelected);
+        // Treat missing active as enabled (legacy rows).
+        const isActive =
+          item.active == null ||
+          item.active === "" ||
+          Number(item.active) === 1;
+        return matchesLocation && isActive;
+      }),
     [depatureLocationData, locationSelected],
   );
+  const filteredCustomWorkflowDurationOptions = useMemo(
+    () => getDurationOptionsForLocation(locationSelected),
+    [locationSelected],
+  );
+
+  const normalizeDepartureName = (value) =>
+    String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase()
+      .replace(/^marina\s+/i, "");
+
+  const findDepartureIdsForMarina = (marinaId, departureOptions) => {
+    if (!marinaId || !departureOptions?.length) {
+      return [];
+    }
+    const marina = boatLocationData.find(
+      (item) => Number(item.id) === Number(marinaId),
+    );
+    const marinaName = normalizeDepartureName(marina?.name);
+    const matchingDeparture =
+      departureOptions.find((item) => Number(item.id) === Number(marinaId)) ||
+      (marinaName
+        ? departureOptions.find(
+            (item) => normalizeDepartureName(item.name) === marinaName,
+          )
+        : null) ||
+      (marinaName
+        ? departureOptions.find((item) => {
+            const departureName = normalizeDepartureName(item.name);
+            return (
+              !!departureName &&
+              (departureName.includes(marinaName) ||
+                marinaName.includes(departureName))
+            );
+          })
+        : null);
+    return matchingDeparture ? [matchingDeparture.id] : [];
+  };
+
+  // Tracks which Marina+section defaults were already applied, so clearing the
+  // only chip is respected instead of being re-defaulted on the next render.
+  const appliedDepartureDefaultsRef = useRef(new Set());
+
   const [flexiblePrice, setFlexiblePrice] = useState(false);
   const [customPricesCheck, setCustomPricesCheck] = useState(false);
   const [customPickUpCheck, setCustomPickUpCheck] = useState(false);
@@ -301,11 +362,11 @@ const BoatComponent = ({
   }, [dataEdit, isEdit]);
 
   useEffect(() => {
-    if (customPickUpCheck && !flexiblePrice) {
+    if (customPickUpCheck) {
       setInitialMainDepartureLocations([]);
       setMainDepartureLocationsSelected([]);
     }
-  }, [customPickUpCheck, flexiblePrice]);
+  }, [customPickUpCheck]);
 
   const clearDepartureLocationSelections = () => {
     setMainDepartureLocationsSelected([]);
@@ -340,6 +401,47 @@ const BoatComponent = ({
       return next;
     });
   }, [filteredActivityData]);
+
+  // Drop custom-workflow duration selections not allowed for the current Location.
+  useEffect(() => {
+    if (!locationSelected) {
+      return;
+    }
+
+    const pruneList = (prev) => {
+      const next = pruneDurationValues(prev, locationSelected);
+      if (
+        next.length === (prev || []).length &&
+        next.every((value, index) => value === (prev || [])[index])
+      ) {
+        return prev;
+      }
+      return next;
+    };
+    const pruneSingle = (prev) => {
+      const next = pruneDurationValue(prev, locationSelected);
+      return next === prev ? prev : next;
+    };
+
+    setCustomPickUpDurationOne(pruneList);
+    setCustomPickUpDurationTwo(pruneList);
+    setCustomPickUpDurationThree(pruneList);
+    setInitialCustomPickUpDurationOne(pruneList);
+    setInitialCustomPickUpDurationTwo(pruneList);
+    setInitialCustomPickUpDurationThree(pruneList);
+    setDurationClassSelectedOne(pruneList);
+    setDurationClassSelectedTwo(pruneList);
+    setDurationClassSelectedThree(pruneList);
+    setInitialDurationOne(pruneList);
+    setInitialDurationTwo(pruneList);
+    setInitialDurationThree(pruneList);
+    setCustomDurationOne(pruneSingle);
+    setCustomDurationTwo(pruneSingle);
+    setCustomDurationThree(pruneSingle);
+    setCustomDurationFour(pruneSingle);
+    setCustomDurationFive(pruneSingle);
+    setCustomDurationSix(pruneSingle);
+  }, [locationSelected, filteredCustomWorkflowDurationOptions]);
 
   // Drop departure selections that do not belong to the current Location.
   useEffect(() => {
@@ -380,12 +482,160 @@ const BoatComponent = ({
     filteredDepartureLocationData,
   ]);
 
+  // Default empty/enabled Departure Location selects to the Marina name.
+  // Never overwrite selections the user already customized, and only default
+  // each Marina+section once so the user can clear the last chip on purpose.
+  useEffect(() => {
+    if (!boatLocationSelected || filteredDepartureLocationData.length === 0) {
+      return;
+    }
+
+    const defaultIds = findDepartureIdsForMarina(
+      boatLocationSelected,
+      filteredDepartureLocationData,
+    );
+    if (!defaultIds.length) {
+      return;
+    }
+
+    const allowedIds = new Set(
+      filteredDepartureLocationData.map((item) => Number(item.id)),
+    );
+    const hasValidSelection = (ids = []) =>
+      (ids || []).some((id) => allowedIds.has(Number(id)));
+
+    const applied = appliedDepartureDefaultsRef.current;
+    // Apply the default only once per Marina + section combination.
+    const applyDefaultOnce = (section, current, initial, setter) => {
+      const key = `${boatLocationSelected}:${section}`;
+      if (applied.has(key)) {
+        return;
+      }
+      applied.add(key);
+      if (!hasValidSelection(current) && !hasValidSelection(initial)) {
+        setter(defaultIds);
+      }
+    };
+
+    // Main Departure Location(s) — only when custom pick-up is not enabled.
+    if (fishingAditionalInputs && !customPickUpCheck) {
+      applyDefaultOnce(
+        "main",
+        mainDepartureLocationsSelected,
+        initialMainDepartureLocations,
+        setMainDepartureLocationsSelected,
+      );
+    }
+
+    // Custom pick-up departure rows (only enabled ones).
+    if (customPickUpCheck) {
+      applyDefaultOnce(
+        "custom1",
+        customPickUpDepartureOne,
+        initialCustomPickUpDepartureOne,
+        setCustomPickUpDepartureOne,
+      );
+      if (customPickUpRowTwo) {
+        applyDefaultOnce(
+          "custom2",
+          customPickUpDepartureTwo,
+          initialCustomPickUpDepartureTwo,
+          setCustomPickUpDepartureTwo,
+        );
+      }
+      if (customPickUpRowThree) {
+        applyDefaultOnce(
+          "custom3",
+          customPickUpDepartureThree,
+          initialCustomPickUpDepartureThree,
+          setCustomPickUpDepartureThree,
+        );
+      }
+    }
+
+    // Supported-class departure rows (only enabled ones).
+    if (flexiblePrice) {
+      applyDefaultOnce(
+        "class1",
+        dapatureLocationsSelectedOne,
+        initialDepartureLocationsOne,
+        setDepartureLocationsSelectedOne,
+      );
+      if (supportedClassRowTwo) {
+        applyDefaultOnce(
+          "class2",
+          dapatureLocationsSelectedTwo,
+          initialDepartureLocationsTwo,
+          setDepartureLocationsSelectedTwo,
+        );
+      }
+      if (supportedClassRowThree) {
+        applyDefaultOnce(
+          "class3",
+          dapatureLocationsSelectedThree,
+          initialDepartureLocationsThree,
+          setDepartureLocationsSelectedThree,
+        );
+      }
+    }
+  }, [
+    boatLocationSelected,
+    boatLocationData,
+    filteredDepartureLocationData,
+    fishingAditionalInputs,
+    flexiblePrice,
+    customPickUpCheck,
+    customPickUpRowTwo,
+    customPickUpRowThree,
+    supportedClassRowTwo,
+    supportedClassRowThree,
+    mainDepartureLocationsSelected,
+    initialMainDepartureLocations,
+    customPickUpDepartureOne,
+    initialCustomPickUpDepartureOne,
+    customPickUpDepartureTwo,
+    initialCustomPickUpDepartureTwo,
+    customPickUpDepartureThree,
+    initialCustomPickUpDepartureThree,
+    dapatureLocationsSelectedOne,
+    initialDepartureLocationsOne,
+    dapatureLocationsSelectedTwo,
+    initialDepartureLocationsTwo,
+    dapatureLocationsSelectedThree,
+    initialDepartureLocationsThree,
+  ]);
+
   //multi select activities
   function handleMulti(selected) {
     setActivitiesSelected(
       resolveActivitySelection(selected, filteredActivityData),
     );
   }
+
+  function handleDepartureMulti(selected, setter) {
+    setter(
+      resolveDepartureLocationSelection(
+        selected,
+        filteredDepartureLocationData,
+      ),
+    );
+  }
+
+  const departureLocationSelectOptions = (
+    <>
+      {filteredDepartureLocationData.length > 0 &&
+        map(DEPARTURE_SHORTCUTS, (shortcut) => (
+          <Option key={shortcut.value} value={shortcut.value}>
+            {shortcut.label}
+          </Option>
+        ))}
+      {map(filteredDepartureLocationData, (item) => (
+        <Option key={item.id} value={item.id}>
+          {item.name}
+        </Option>
+      ))}
+    </>
+  );
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -640,12 +890,16 @@ const BoatComponent = ({
           }}
           className="custom-validation"
         >
+          <RequiredFieldsLegend />
           <Row>
             <Row>
               <Col className="col-2">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Boat Name</Label>
+                    <Label className="form-label">
+                      Boat Name
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
@@ -687,7 +941,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Type</Label>
+                  <Label className="form-label">
+                    Type
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -729,7 +986,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Length</Label>
+                  <Label className="form-label">
+                    Length
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -777,7 +1037,10 @@ const BoatComponent = ({
               <Col className="col-2">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Make</Label>
+                    <Label className="form-label">
+                      Make
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
@@ -874,7 +1137,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Location</Label>
+                  <Label className="form-label">
+                    Location
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -929,7 +1195,10 @@ const BoatComponent = ({
             <Row>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Marina</Label>
+                  <Label className="form-label">
+                    Marina
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -979,7 +1248,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">A/C</Label>
+                  <Label className="form-label">
+                    A/C
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -1021,7 +1293,10 @@ const BoatComponent = ({
               <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Capacity</Label>
+                    <Label className="form-label">
+                      Capacity
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
@@ -1102,7 +1377,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Shade</Label>
+                  <Label className="form-label">
+                    Shade
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -1144,7 +1422,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Access.</Label>
+                  <Label className="form-label">
+                    Access.
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -1595,7 +1876,7 @@ const BoatComponent = ({
                       mode="multiple"
                       allowClear
                       rows="5"
-                      disabled={flexiblePrice || customPickUpCheck}
+                      disabled={customPickUpCheck}
                       style={{ width: "100%", paddingTop: "5px" }}
                       placeholder="Please select"
                       value={
@@ -1605,18 +1886,19 @@ const BoatComponent = ({
                             ? mainDepartureLocationsSelected
                             : initialMainDepartureLocations
                       }
-                      onChange={(e) => setMainDepartureLocationsSelected(e)}
+                      onChange={(values) =>
+                        handleDepartureMulti(
+                          values,
+                          setMainDepartureLocationsSelected,
+                        )
+                      }
                     >
-                      {map(filteredDepartureLocationData, (item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
+                      {departureLocationSelectOptions}
                     </Select>
                   </Col>
                   <Col className="col-1 d-flex align-items-center mt-4">
-                    <div className="d-flex mt-1 ">
-                      <Label className="form-label">Custom</Label>
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                      <Label className="form-label mb-0">Custom</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1643,7 +1925,7 @@ const BoatComponent = ({
                         onChange={() => {
                           const nextValue = !customPickUpCheck;
                           setCustomPickUpCheck(nextValue);
-                          if (nextValue && !flexiblePrice) {
+                          if (nextValue) {
                             setInitialMainDepartureLocations([]);
                             setMainDepartureLocationsSelected([]);
                           }
@@ -1653,78 +1935,6 @@ const BoatComponent = ({
                     </div>
                   </Col>
                 </Row>
-                <Row className="">
-                  <Col className="col-3 d-flex align-items-center mt-4">
-                    <div className="d-flex mt-1 ">
-                      <Label className="form-label">Flexible</Label>
-                      <div>
-                        <i
-                          className="uil-question-circle font-size-15"
-                          id="flexible"
-                        />
-                        <UncontrolledTooltip
-                          autohide={true}
-                          placement="top"
-                          target="flexible"
-                        >
-                          Indicates whether this boat can be used for trips in
-                          other classifications. Enable this option if the boat
-                          is allowed to operate outside its primary class.
-                        </UncontrolledTooltip>
-                      </div>
-                    </div>
-                    <div className="form-check form-switch form-switch-md  mx-4">
-                      <Input
-                        name="seasonality"
-                        placeholder=""
-                        type="checkbox"
-                        checked={flexiblePrice}
-                        className="form-check-input"
-                        onChange={() => {
-                          setFlexiblePrice(!flexiblePrice);
-                        }}
-                        // onBlur={validationType.handleBlur}
-                        value={flexiblePrice}
-                      />
-                    </div>
-                  </Col>
-                  <Col className="col-3 d-flex align-items-center mt-4">
-                    <div className="d-flex mt-1 ">
-                      <Label className="form-label">Add Custom Prices</Label>
-                      <div>
-                        <i
-                          className="uil-question-circle font-size-15"
-                          id="custom_prices"
-                        />
-                        <UncontrolledTooltip
-                          autohide={true}
-                          placement="top"
-                          target="custom_prices"
-                        >
-                          Add specific pricing for the boat, for example if the
-                          boat requires a specific amount to operate that is
-                          different than our standard pricing. This will show in
-                          the Boat Details in the Fishing Dispatch tool.
-                        </UncontrolledTooltip>
-                      </div>
-                    </div>
-                    <div className="form-check form-switch form-switch-md  mx-4">
-                      <Input
-                        name="seasonality"
-                        placeholder=""
-                        type="checkbox"
-                        checked={customPricesCheck}
-                        className="form-check-input"
-                        onChange={() => {
-                          setCustomPricesCheck(!customPricesCheck);
-                        }}
-                        // onBlur={validationType.handleBlur}
-                        value={customPricesCheck}
-                      />
-                    </div>
-                  </Col>
-                </Row>
-
                 {customPickUpCheck ? (
                   <>
                     <Row className="mt-4">
@@ -1738,7 +1948,7 @@ const BoatComponent = ({
                       </div>
                     </Row>
                     <Row className="mb-2 d-flex">
-                      <Col className="col-2">
+                      <Col className="col-3">
                         <div className="d-flex justify-content-between">
                           <Label className="form-label">Duration</Label>
                           <div>
@@ -1761,12 +1971,16 @@ const BoatComponent = ({
                           allowClear
                           style={{ width: "100%", paddingTop: "5px" }}
                           placeholder="Please select"
-                          defaultValue={initialCustomPickUpDurationOne}
+                          value={
+                            customPickUpDurationOne.length > 0
+                              ? customPickUpDurationOne
+                              : initialCustomPickUpDurationOne
+                          }
                           onChange={(values) =>
                             setCustomPickUpDurationOne(values)
                           }
                         >
-                          {DURATION_OPTIONS.map(({ value, label }) => (
+                          {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                             <Option key={value} value={value}>
                               {label}
                             </Option>
@@ -1805,14 +2019,13 @@ const BoatComponent = ({
                               : initialCustomPickUpDepartureOne
                           }
                           onChange={(values) =>
-                            setCustomPickUpDepartureOne(values)
+                            handleDepartureMulti(
+                              values,
+                              setCustomPickUpDepartureOne,
+                            )
                           }
                         >
-                          {map(filteredDepartureLocationData, (item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
+                          {departureLocationSelectOptions}
                         </Select>
                       </Col>
                       <Col className="col-1 d-flex align-items-center mt-4">
@@ -1825,7 +2038,7 @@ const BoatComponent = ({
                     </Row>
                     {customPickUpRowTwo ? (
                       <Row className="mb-2 d-flex">
-                        <Col className="col-2">
+                        <Col className="col-3">
                           <div className="d-flex justify-content-between">
                             <Label className="form-label">Duration</Label>
                             <div>
@@ -1848,12 +2061,16 @@ const BoatComponent = ({
                             allowClear
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialCustomPickUpDurationTwo}
+                            value={
+                              customPickUpDurationTwo.length > 0
+                                ? customPickUpDurationTwo
+                                : initialCustomPickUpDurationTwo
+                            }
                             onChange={(values) =>
                               setCustomPickUpDurationTwo(values)
                             }
                           >
-                            {DURATION_OPTIONS.map(({ value, label }) => (
+                            {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                               <Option key={value} value={value}>
                                 {label}
                               </Option>
@@ -1892,14 +2109,13 @@ const BoatComponent = ({
                                 : initialCustomPickUpDepartureTwo
                             }
                             onChange={(values) =>
-                              setCustomPickUpDepartureTwo(values)
+                              handleDepartureMulti(
+                                values,
+                                setCustomPickUpDepartureTwo,
+                              )
                             }
                           >
-                            {map(filteredDepartureLocationData, (item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
+                            {departureLocationSelectOptions}
                           </Select>
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
@@ -1925,7 +2141,7 @@ const BoatComponent = ({
                     ) : null}
                     {customPickUpRowThree ? (
                       <Row className="mb-2 d-flex">
-                        <Col className="col-2">
+                        <Col className="col-3">
                           <div className="d-flex justify-content-between">
                             <Label className="form-label">Duration</Label>
                             <div>
@@ -1948,12 +2164,16 @@ const BoatComponent = ({
                             allowClear
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialCustomPickUpDurationThree}
+                            value={
+                              customPickUpDurationThree.length > 0
+                                ? customPickUpDurationThree
+                                : initialCustomPickUpDurationThree
+                            }
                             onChange={(values) =>
                               setCustomPickUpDurationThree(values)
                             }
                           >
-                            {DURATION_OPTIONS.map(({ value, label }) => (
+                            {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                               <Option key={value} value={value}>
                                 {label}
                               </Option>
@@ -1992,14 +2212,13 @@ const BoatComponent = ({
                                 : initialCustomPickUpDepartureThree
                             }
                             onChange={(values) =>
-                              setCustomPickUpDepartureThree(values)
+                              handleDepartureMulti(
+                                values,
+                                setCustomPickUpDepartureThree,
+                              )
                             }
                           >
-                            {map(filteredDepartureLocationData, (item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
+                            {departureLocationSelectOptions}
                           </Select>
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
@@ -2016,6 +2235,77 @@ const BoatComponent = ({
                     ) : null}
                   </>
                 ) : null}
+                <Row className="">
+                  <Col className="col-3 d-flex align-items-center mt-4">
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                      <Label className="form-label mb-0">Flexible</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="flexible"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="flexible"
+                        >
+                          Indicates whether this boat can be used for trips in
+                          other classifications. Enable this option if the boat
+                          is allowed to operate outside its primary class.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <div className="form-check form-switch form-switch-md  mx-4">
+                      <Input
+                        name="seasonality"
+                        placeholder=""
+                        type="checkbox"
+                        checked={flexiblePrice}
+                        className="form-check-input"
+                        onChange={() => {
+                          setFlexiblePrice(!flexiblePrice);
+                        }}
+                        // onBlur={validationType.handleBlur}
+                        value={flexiblePrice}
+                      />
+                    </div>
+                  </Col>
+                  <Col className="col-3 d-flex align-items-center mt-4">
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                      <Label className="form-label mb-0">Add Custom Prices</Label>
+                      <div>
+                        <i
+                          className="uil-question-circle font-size-15"
+                          id="custom_prices"
+                        />
+                        <UncontrolledTooltip
+                          autohide={true}
+                          placement="top"
+                          target="custom_prices"
+                        >
+                          Add specific pricing for the boat, for example if the
+                          boat requires a specific amount to operate that is
+                          different than our standard pricing. This will show in
+                          the Boat Details in the Fishing Dispatch tool.
+                        </UncontrolledTooltip>
+                      </div>
+                    </div>
+                    <div className="form-check form-switch form-switch-md  mx-4">
+                      <Input
+                        name="seasonality"
+                        placeholder=""
+                        type="checkbox"
+                        checked={customPricesCheck}
+                        className="form-check-input"
+                        onChange={() => {
+                          setCustomPricesCheck(!customPricesCheck);
+                        }}
+                        // onBlur={validationType.handleBlur}
+                        value={customPricesCheck}
+                      />
+                    </div>
+                  </Col>
+                </Row>
 
                 <Row className="">
                   {flexiblePrice ? (
@@ -2077,7 +2367,7 @@ const BoatComponent = ({
                             ))}
                           </Input>
                         </Col>
-                        <Col className="col-2">
+                        <Col className="col-3">
                           <div className="d-flex justify-content-between">
                             <Label className="form-label">Duration</Label>
                             <div>
@@ -2106,12 +2396,16 @@ const BoatComponent = ({
                             allowClear
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialDurationOne}
+                            value={
+                              durationClassSelectedOne.length > 0
+                                ? durationClassSelectedOne
+                                : initialDurationOne
+                            }
                             onChange={(values) =>
                               setDurationClassSelectedOne(values)
                             }
                           >
-                            {DURATION_OPTIONS.map(({ value, label }) => (
+                            {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                               <Option key={value} value={value}>
                                 {label}
                               </Option>
@@ -2150,15 +2444,14 @@ const BoatComponent = ({
                                 ? dapatureLocationsSelectedOne
                                 : initialDepartureLocationsOne
                             }
-                            onChange={(e) =>
-                              setDepartureLocationsSelectedOne(e)
+                            onChange={(values) =>
+                              handleDepartureMulti(
+                                values,
+                                setDepartureLocationsSelectedOne,
+                              )
                             }
                           >
-                            {map(filteredDepartureLocationData, (item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
+                            {departureLocationSelectOptions}
                           </Select>
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
@@ -2219,7 +2512,7 @@ const BoatComponent = ({
                               )}
                             </Input>
                           </Col>
-                          <Col className="col-2">
+                          <Col className="col-3">
                             <div className="d-flex justify-content-between">
                               <Label className="form-label">Duration</Label>
                               <div>
@@ -2248,12 +2541,16 @@ const BoatComponent = ({
                               allowClear
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDurationTwo}
+                              value={
+                                durationClassSelectedTwo.length > 0
+                                  ? durationClassSelectedTwo
+                                  : initialDurationTwo
+                              }
                               onChange={(values) =>
                                 setDurationClassSelectedTwo(values)
                               }
                             >
-                              {DURATION_OPTIONS.map(({ value, label }) => (
+                              {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                                 <Option key={value} value={value}>
                                   {label}
                                 </Option>
@@ -2292,18 +2589,14 @@ const BoatComponent = ({
                                   ? dapatureLocationsSelectedTwo
                                   : initialDepartureLocationsTwo
                               }
-                              onChange={(e) =>
-                                setDepartureLocationsSelectedTwo(e)
+                              onChange={(values) =>
+                                handleDepartureMulti(
+                                  values,
+                                  setDepartureLocationsSelectedTwo,
+                                )
                               }
-                              // disabled={
-                              //   voucherInitialData?.brings_read_only === 1 ? true : false
-                              // }
                             >
-                              {map(filteredDepartureLocationData, (item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
+                              {departureLocationSelectOptions}
                             </Select>
                           </Col>
                           <Col className="col-1 d-flex align-items-center mt-4">
@@ -2384,7 +2677,7 @@ const BoatComponent = ({
                               )}
                             </Input>
                           </Col>
-                          <Col className="col-2">
+                          <Col className="col-3">
                             <div className="d-flex justify-content-between">
                               <Label className="form-label">Duration</Label>
                               <div>
@@ -2413,12 +2706,16 @@ const BoatComponent = ({
                               allowClear
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDurationThree}
+                              value={
+                                durationClassSelectedThree.length > 0
+                                  ? durationClassSelectedThree
+                                  : initialDurationThree
+                              }
                               onChange={(values) =>
                                 setDurationClassSelectedThree(values)
                               }
                             >
-                              {DURATION_OPTIONS.map(({ value, label }) => (
+                              {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                                 <Option key={value} value={value}>
                                   {label}
                                 </Option>
@@ -2457,18 +2754,14 @@ const BoatComponent = ({
                                   ? dapatureLocationsSelectedThree
                                   : initialDepartureLocationsThree
                               }
-                              onChange={(e) =>
-                                setDepartureLocationsSelectedThree(e)
+                              onChange={(values) =>
+                                handleDepartureMulti(
+                                  values,
+                                  setDepartureLocationsSelectedThree,
+                                )
                               }
-                              // disabled={
-                              //   voucherInitialData?.brings_read_only === 1 ? true : false
-                              // }
                             >
-                              {map(filteredDepartureLocationData, (item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
+                              {departureLocationSelectOptions}
                             </Select>
                           </Col>
                           <Col className="col-1 d-flex align-items-center mt-4">
@@ -2525,24 +2818,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationOne || ""}
                             onChange={(e) => {
-                              setCustomDurationOne(e.target.value);
+                              setCustomDurationOne(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_1 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2620,24 +2909,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationTwo || ""}
                             onChange={(e) => {
-                              setCustomDurationTwo(e.target.value);
+                              setCustomDurationTwo(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_2 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2717,24 +3002,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationThree || ""}
                             onChange={(e) => {
-                              setCustomDurationThree(e.target.value);
+                              setCustomDurationThree(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_3 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2810,24 +3091,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationFour || ""}
                             onChange={(e) => {
-                              setCustomDurationFour(e.target.value);
+                              setCustomDurationFour(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_4 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2905,24 +3182,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationFive || ""}
                             onChange={(e) => {
-                              setCustomDurationFive(e.target.value);
+                              setCustomDurationFive(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_5 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2998,24 +3271,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationSix || ""}
                             onChange={(e) => {
-                              setCustomDurationSix(e.target.value);
+                              setCustomDurationSix(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_6 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
