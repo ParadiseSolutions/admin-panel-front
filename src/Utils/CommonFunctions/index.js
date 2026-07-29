@@ -75,24 +75,33 @@ export const capitalizeWords2 = (currentValue) => {
         suv: 'SUV',
     };
 
+    const smallWords = new Set([
+        'a', 'an', 'and', 'at', 'by', 'for', 'from', 'in', 'of', 'on', 'or', 'the', 'to', 'vs',
+    ]);
+
+    const formatPart = (part, isFirstWord) => {
+        if (acronyms[part]) {
+            return acronyms[part];
+        }
+
+        if (!isFirstWord && (part.length <= 2 || smallWords.has(part))) {
+            return part;
+        }
+
+        return part.charAt(0).toUpperCase() + part.slice(1);
+    };
+
     return currentValue
         .trim()
         .toLowerCase()
         .replace(/\s+/g, ' ')
         .split(' ')
-        .map(word => {
-            // Respeta palabras con guiones
+        .map((word, wordIndex) => {
             return word
                 .split('-')
-                .map(part => {
-                    // ACRÓNIMOS solo si es palabra completa
-                    if (acronyms[part]) {
-                        return acronyms[part];
-                    }
-
-                    if (part.length <= 2) return part;
-
-                    return part.charAt(0).toUpperCase() + part.slice(1);
+                .map((part, partIndex) => {
+                    const isFirstWord = wordIndex === 0 && partIndex === 0;
+                    return formatPart(part, isFirstWord);
                 })
                 .join('-');
         })
