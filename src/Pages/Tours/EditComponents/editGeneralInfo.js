@@ -489,12 +489,12 @@ const EditGeneralInformation = ({ tourData, toggle }) => {
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
-                        id="Provider"
+                        id="provider-tooltip"
                       />
                       <Tooltip
                         placement="right"
                         isOpen={providerTT}
-                        target="Provider"
+                        target="provider-tooltip"
                         toggle={() => {
                           setProviderTT(!providerTT);
                         }}

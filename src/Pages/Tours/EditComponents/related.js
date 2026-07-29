@@ -128,7 +128,7 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
               <>
                 <FaLink
                   className="mx-2 cursor-pointer text-paradise"
-                  id="copyTT"
+                  id={`related-copy-link-${cellProps.row.original.id}`}
                   size={20}
                   onClick={() => {
                     navigator.clipboard.writeText(
@@ -136,7 +136,10 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
                     );
                   }}
                 />
-                <UncontrolledTooltip placement="top" target="copyTT">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`related-copy-link-${cellProps.row.original.id}`}
+                >
                   Copy
                 </UncontrolledTooltip>
               </>
@@ -220,10 +223,13 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
               >
                 <i
                   className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
+                  id={`related-edit-${depData.id}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="edittooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`related-edit-${depData.id}`}
+                >
                   Edit
                 </UncontrolledTooltip>
               </div>
@@ -238,10 +244,13 @@ const RelatedComponent = ({ id, tourData, toggle }) => {
                 <i
                   className="mdi mdi-delete font-size-18"
                   title="Delete"
-                  id="deletetooltip"
+                  id={`related-delete-${depData.id}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="deletetooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`related-delete-${depData.id}`}
+                >
                   Delete
                 </UncontrolledTooltip>
               </div>

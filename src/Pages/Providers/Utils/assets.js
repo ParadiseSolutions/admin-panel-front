@@ -82,6 +82,16 @@ const Assets = ({ contacts, id }) => {
     setcol2(!col2);
   }
 
+  // Actualiza solo el barco tocado: antes el switch recargaba el listado global
+  // de providers, que ni siquiera esta en pantalla aqui.
+  const onBoatActiveChange = (boatId, nextActive) => {
+    setboatData((prev) =>
+      prev.map((boat) =>
+        boat.id === boatId ? { ...boat, active: nextActive } : boat
+      )
+    );
+  };
+
   //tabs
   const [activeTab, setactiveTab] = useState("1");
   function toggle(tab) {
@@ -321,7 +331,10 @@ const Assets = ({ contacts, id }) => {
                                         <td>{boat.location_name}</td>
                                         <td>{boat.asset_marina_location}</td>
                                         <td>
-                                          <ActiveBoat cell={boat} />
+                                          <ActiveBoat
+                                            cell={boat}
+                                            onStatusChange={onBoatActiveChange}
+                                          />
                                         </td>
 
                                         <td>

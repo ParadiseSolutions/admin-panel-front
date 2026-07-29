@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useCallback, useMemo, useEffect, useRef, useState } from "react";
 import TableContainer from "../../Components/Common/TableContainer";
 import {
   Name,
@@ -48,6 +48,17 @@ const Providers = () => {
     // var providersRequest = () => dispatch(providersData(active));
     // providersRequest();
   }, [dispatch, addModal, editModal , switch1]);
+
+  // Las columnas se memorizan una sola vez, asi que el refresh lee el filtro
+  // desde una ref para no quedarse con el valor del primer render.
+  const activeFilter = useRef(switch1 ? 1 : 0);
+  useEffect(() => {
+    activeFilter.current = switch1 ? 1 : 0;
+  }, [switch1]);
+  const refreshProviders = useCallback(
+    () => dispatch(providersData(activeFilter.current)),
+    [dispatch]
+  );
 
   //get info
   const data = useSelector((state) => state.providers.providers.data);
@@ -165,7 +176,7 @@ const Providers = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Active {...cellProps} />;
+          return <Active {...cellProps} onStatusChange={refreshProviders} />;
         },
       },
       {

@@ -328,8 +328,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                             name="from"
                             className="form-control"
                             type="date"
-                            // defaultValue="2019-08-19"
-                            id="example-date-input"
+                            id="high-season-from-input"
                             onChange={validationType.handleChange}
                             onBlur={validationType.handleBlur}
                             value={validationType.values.from || ""}
@@ -360,8 +359,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                             name="to"
                             className="form-control"
                             type="date"
-                            // defaultValue="2019-08-19"
-                            id="example-date-input"
+                            id="high-season-to-input"
                             onChange={validationType.handleChange}
                             onBlur={validationType.handleBlur}
                             value={validationType.values.to || ""}
@@ -466,11 +464,11 @@ const HighSeasons = ({ tourData, toggle }) => {
                                     >
                                       <i
                                         className="mdi mdi-pencil font-size-18"
-                                        id="edittooltip"
+                                        id={`season-edit-${season.id}`}
                                       />
                                       <UncontrolledTooltip
                                         placement="top"
-                                        target="edittooltip"
+                                        target={`season-edit-${season.id}`}
                                       >
                                         Edit
                                       </UncontrolledTooltip>
@@ -484,11 +482,11 @@ const HighSeasons = ({ tourData, toggle }) => {
                                     >
                                       <i
                                         className="mdi mdi-delete font-size-18"
-                                        id="deletetooltip"
+                                        id={`season-delete-${season.id}`}
                                       />
                                       <UncontrolledTooltip
                                         placement="top"
-                                        target="deletetooltip"
+                                        target={`season-delete-${season.id}`}
                                       >
                                         Delete
                                       </UncontrolledTooltip>

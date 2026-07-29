@@ -309,7 +309,6 @@ const RelatedModal = ({
 
   const onsubmitNameFilter = () => {
     setSubmitType(1);
-    debugger;
     let data = {
       current_tour_id: id,
       search: filterByNameData,

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import Switch from "react-switch";
+import React from "react";
 import { statusUpdateTour, triggerUpdate } from "../../../Utils/API/Tours";
-import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { getCookie, setCookie } from "../../../Utils/API";
 import Swal from "sweetalert2";
 import { updateProviders } from "../../../Utils/API/Providers";
+import {
+  StatusSwitch,
+  useStatusToggle,
+} from "../../../Components/Common/StatusSwitch";
 const CartName = (cell) => {
   return cell.value ? cell.value : "";
 };
@@ -21,117 +23,58 @@ const Website = (cell) => {
 const TestLink = (cell) => {
   return cell.value ? cell.value : "";
 };
+// Cuando hay una busqueda activa, la tabla se repinta desde este listado
+// guardado en sessionStorage y no desde Redux, asi que hay que reflejar el
+// cambio ahi o al recargar reaparece el estado viejo.
+// Solo se toca el campo active: la respuesta del API trae una version reducida
+// del tour y sustituir la fila entera dejaria sin datos a las demas columnas.
+const updateLocalStorageStatus = (tourId, nextActive) => {
+  const tourInfo = getCookie("tour_data", true);
+  if (!Array.isArray(tourInfo)) return;
+  const updated = tourInfo.map((tour) =>
+    Number(tour.id) === Number(tourId) ? { ...tour, active: nextActive } : tour
+  );
+  setCookie("tour_data", JSON.stringify(updated), 24 * 60 * 60);
+};
+
+const askDisableProvider = (tourData) => {
+  return Swal.fire({
+    title: "Deactivate Provider?",
+    icon: "question",
+    text: `Since this tour was the last one asigned to this provider, this action may deactivate the provider. Do you want to proceed?`,
+    showCancelButton: true,
+    confirmButtonText: "Yes",
+    confirmButtonColor: "#F38430",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      return updateProviders(tourData.tour.provider_id, { active: 0 });
+    }
+    return null;
+  });
+};
+
 const Active = (cell) => {
-  const id = cell.row.original.id;
-  const Offsymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        No
-      </div>
-    );
-  };
+  const active = Number(cell.value) === 1;
+  const [saving, toggle] = useStatusToggle({
+    id: cell.row.original.id,
+    active: active,
+    request: statusUpdateTour,
+    onStatusChange: (id, nextActive, resp) => {
+      const tourData = resp?.data?.data;
+      triggerUpdate();
+      updateLocalStorageStatus(id, nextActive);
+      if (typeof cell.onStatusChange === "function") {
+        cell.onStatusChange(id, nextActive);
+      }
+      if (tourData?.ask_disable_provider === 1) {
+        return askDisableProvider(tourData);
+      }
+      return null;
+    },
+  });
 
-  const OnSymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        Yes
-      </div>
-    );
-  };
-
-  const [activeDep, setActiveDep] = useState(
-    cell.value && cell.value === 1 ? true : false
-  );
-
-  const updateLocalStorageStatus = (newInfo, cell) => {
-    let tourInfo = getCookie("tour_data", true);
-    if (tourInfo && newInfo?.id) {
-      tourInfo[cell.row.index] = newInfo;
-      setCookie("tour_data", JSON.stringify(tourInfo), 24 * 60 * 60);
-    }
-  };
-
-  const onChangeActive = () => {
-    setActiveDep(!activeDep);
-    if (activeDep) {
-      let data = { active: 0 };
-      statusUpdateTour(id, data).then((resp) => {
-        triggerUpdate();
-        updateLocalStorageStatus(resp.data.data, cell);
-
-        if (resp.data.data.ask_disable_provider === 1) {
-          Swal.fire({
-            title: "Deactivate Provider?",
-            icon: "question",
-            text: `Since this tour was the last one asigned to this provider, this action may deactivate the provider. Do you want to proceed?`,
-            showCancelButton: true,
-            confirmButtonText: "Yes",
-            confirmButtonColor: "#F38430",
-            cancelButtonText: "Cancel",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              updateProviders(resp.data.data.tour.provider_id, {
-                active: 0,
-              });
-              
-            }
-          });
-        }
-      });
-    } else {
-      let data = { active: 1 };
-      statusUpdateTour(id, data)
-        .then((resp) => {
-          // console.log(resp);
-          triggerUpdate();
-          updateLocalStorageStatus(resp.data.data, cell);
-        })
-        .catch((error) => {
-          // console.log(error);
-          setTimeout(() => {
-            <Toast>
-              <ToastHeader
-                icon={<Spinner type="grow" size="sm" color="danger" />}
-              >
-                Oops...
-              </ToastHeader>
-              <ToastBody>Something goes wrong try again later!!!</ToastBody>
-            </Toast>;
-          }, 5000);
-        });
-    }
-  };
-  return (
-    <Switch
-      uncheckedIcon={<Offsymbol />}
-      checkedIcon={<OnSymbol />}
-      onColor="#3DC7F4"
-      onChange={() => onChangeActive()}
-      checked={activeDep}
-    />
-  );
+  return <StatusSwitch active={active} saving={saving} onToggle={toggle} />;
 };
 
 export { CartName, CartID, Server, Website, TestLink, Active };

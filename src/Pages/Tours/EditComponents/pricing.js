@@ -380,6 +380,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       accessor: "action",
       disableFilters: true,
       Cell: (cellProps) => {
+        const rowId = cellProps.row.original.id;
         return (
           <div className="d-flex gap-3">
             <div
@@ -422,10 +423,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-pencil font-size-18"
-                id="edit_tooltip"
+                id={`product-edit-${rowId}`}
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="edit_tooltip">
+              <UncontrolledTooltip
+                placement="top"
+                target={`product-edit-${rowId}`}
+              >
                 Edit
               </UncontrolledTooltip>
             </div>
@@ -469,10 +473,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-content-copy font-size-18"
-                id="copytooltip"
+                id={`product-copy-${rowId}`}
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="copytooltip">
+              <UncontrolledTooltip
+                placement="top"
+                target={`product-copy-${rowId}`}
+              >
                 Copy
               </UncontrolledTooltip>
             </div>
@@ -486,10 +493,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-delete font-size-18"
-                id="deletetooltip"
+                id={`product-delete-${rowId}`}
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="deletetooltip">
+              <UncontrolledTooltip
+                placement="top"
+                target={`product-delete-${rowId}`}
+              >
                 Delete
               </UncontrolledTooltip>
             </div>

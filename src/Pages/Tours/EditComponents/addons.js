@@ -204,10 +204,13 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
               >
                 <i
                   className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
+                  id={`addon-edit-${depData.id}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="edittooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`addon-edit-${depData.id}`}
+                >
                   Edit
                 </UncontrolledTooltip>
               </div>
@@ -221,10 +224,13 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
               >
                 <i
                   className="mdi mdi-content-copy font-size-18"
-                  id="copytooltip"
+                  id={`addon-copy-${depData.id}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="edittooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`addon-copy-${depData.id}`}
+                >
                   Copy
                 </UncontrolledTooltip>
               </div>
@@ -240,10 +246,13 @@ const AddonsComponent = ({ id, tourData, toggle }) => {
                 <i
                   className="mdi mdi-delete font-size-18"
                   title="Delete"
-                  id="deletetooltip"
+                  id={`addon-delete-${depData.id}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="deletetooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`addon-delete-${depData.id}`}
+                >
                   Delete
                 </UncontrolledTooltip>
               </div>

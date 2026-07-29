@@ -306,12 +306,12 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="Provider"
+                      id="provider-tour-name-tooltip"
                     />
                     <Tooltip
                       placement="right"
                       isOpen={providerNameTT}
-                      target="Provider"
+                      target="provider-tour-name-tooltip"
                       toggle={() => {
                         setProviderNameTT(!providerNameTT);
                       }}

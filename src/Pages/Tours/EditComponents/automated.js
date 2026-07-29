@@ -793,12 +793,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                       <>
                                         <i
                                           className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                          id="edittooltip"
+                                          id={`fee-edit-${fee.fee_id}`}
                                           style={{ cursor: "pointer" }}
                                         />
                                         <UncontrolledTooltip
                                           placement="top"
-                                          target="edittooltip"
+                                          target={`fee-edit-${fee.fee_id}`}
                                         >
                                           Edit
                                         </UncontrolledTooltip>
@@ -806,7 +806,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                     ) : (
                                       <div
                                         className="text-warning"
-                                        id="viewtooltip"
+                                        id={`fee-view-${fee.fee_id}`}
                                         onClick={() => {
                                           setExtraFeeEditData([]);
                                           setExtraFeeEditData(fee);
@@ -823,7 +823,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                         />
                                         <UncontrolledTooltip
                                           placement="top"
-                                          target="viewtooltip"
+                                          target={`fee-view-${fee.fee_id}`}
                                         >
                                           View Details
                                         </UncontrolledTooltip>
@@ -842,12 +842,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-delete-outline font-size-17"
-                                      id="deletetooltip"
+                                      id={`fee-delete-${fee.fee_id}`}
                                       style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="deletetooltip"
+                                      target={`fee-delete-${fee.fee_id}`}
                                     >
                                       Delete
                                     </UncontrolledTooltip>
@@ -1040,6 +1040,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                       {map(meetingLocationTable, (location, index) => {
                         return (
                           <tr
+                            key={index}
                             style={{
                               backgroundColor:
                                 location.read_only === 1
@@ -1065,12 +1066,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                     >
                                       <i
                                         className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                        id="edittooltip"
+                                        id={`meeting-location-edit-${location.id}`}
                                         style={{ cursor: "pointer" }}
                                       />
                                       <UncontrolledTooltip
                                         placement="top"
-                                        target="edittooltip"
+                                        target={`meeting-location-edit-${location.id}`}
                                       >
                                         Edit
                                       </UncontrolledTooltip>
@@ -1086,12 +1087,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-delete-outline font-size-17"
-                                      id="deletetooltip"
+                                      id={`meeting-location-delete-${location.id}`}
                                       style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="deletetooltip"
+                                      target={`meeting-location-delete-${location.id}`}
                                     >
                                       Delete
                                     </UncontrolledTooltip>
@@ -1100,7 +1101,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                               ) : (
                                 <div
                                   className="text-warning"
-                                  id="viewtooltip"
+                                  id={`meeting-location-view-${location.id}`}
                                   onClick={() => {
                                     setLocationEditData([]);
                                     setLocationEditData(location);
@@ -1110,14 +1111,11 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                 >
                                   <VscEye
                                     size={30}
-                                    //  onClick={() =>
-                                    //    toggleDetails(index, "boat")
-                                    //  }
                                     style={{ cursor: "pointer" }}
                                   />
                                   <UncontrolledTooltip
                                     placement="top"
-                                    target="viewtooltip"
+                                    target={`meeting-location-view-${location.id}`}
                                   >
                                     View Details
                                   </UncontrolledTooltip>
@@ -1171,6 +1169,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                       {map(boatLocationTable, (fee, index) => {
                         return (
                           <tr
+                            key={index}
                             style={{
                               backgroundColor:
                                 fee.read_only === 1 ? "#f5f6f8" : "#ffffff",
@@ -1193,12 +1192,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                     >
                                       <i
                                         className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                        id="edittooltip"
+                                        id={`boat-location-edit-${fee.id}`}
                                         style={{ cursor: "pointer" }}
                                       />
                                       <UncontrolledTooltip
                                         placement="top"
-                                        target="edittooltip"
+                                        target={`boat-location-edit-${fee.id}`}
                                       >
                                         Edit
                                       </UncontrolledTooltip>
@@ -1214,12 +1213,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-delete-outline font-size-17"
-                                      id="deletetooltip"
+                                      id={`boat-location-delete-${fee.id}`}
                                       style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="deletetooltip"
+                                      target={`boat-location-delete-${fee.id}`}
                                     >
                                       Delete
                                     </UncontrolledTooltip>
@@ -1228,7 +1227,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                               ) : (
                                 <div
                                   className="text-warning"
-                                  id="viewtooltip"
+                                  id={`boat-location-view-${fee.id}`}
                                   onClick={() => {
                                     setBoatEditData([]);
                                     setBoatEditData(fee);
@@ -1238,14 +1237,11 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                 >
                                   <VscEye
                                     size={30}
-                                    //  onClick={() =>
-                                    //    toggleDetails(index, "boat")
-                                    //  }
                                     style={{ cursor: "pointer" }}
                                   />
                                   <UncontrolledTooltip
                                     placement="top"
-                                    target="viewtooltip"
+                                    target={`boat-location-view-${fee.id}`}
                                   >
                                     View Details
                                   </UncontrolledTooltip>
@@ -1303,6 +1299,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                       {map(restrictionTable, (fee, index) => {
                         return (
                           <tr
+                            key={index}
                             style={{
                               backgroundColor:
                                 fee.read_only === 1 ? "#f5f6f8" : "#ffffff",
@@ -1325,12 +1322,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                     >
                                       <i
                                         className="mdi mdi-pencil-outline font-size-17 text-paradise"
-                                        id="edittooltip"
+                                        id={`restriction-edit-${fee.id}`}
                                         style={{ cursor: "pointer" }}
                                       />
                                       <UncontrolledTooltip
                                         placement="top"
-                                        target="edittooltip"
+                                        target={`restriction-edit-${fee.id}`}
                                       >
                                         Edit
                                       </UncontrolledTooltip>
@@ -1346,12 +1343,12 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-delete-outline font-size-17"
-                                      id="deletetooltip"
+                                      id={`restriction-delete-${fee.id}`}
                                       style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="deletetooltip"
+                                      target={`restriction-delete-${fee.id}`}
                                     >
                                       Delete
                                     </UncontrolledTooltip>
