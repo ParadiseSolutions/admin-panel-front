@@ -600,7 +600,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     //     .max(2, "Must be exactly 2 chars")
     //     .required("Max 2 chars"),
     // }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       let data = {
         tax_id: +taxSelected,
         gratuity_id: +gratuitesSelected,
@@ -621,6 +621,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           // console.log(resp.data);
           if (resp.data.status === 200) {
             // triggerUpdate();
+            resetForm({ values });
             Swal.fire("Edited!", "Payments has been edited.", "success");
             window.location.href = switchTourTab(4);
           }
@@ -647,6 +648,47 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         });
     },
   });
+
+  // Los selects viven fuera de Formik (y algunos ni se inicializan hasta que
+  // el usuario los toca), asi que dirty se mide contra tourSettings. Payment
+  // Request se guarda solo y no cuenta.
+  const sameValue = (current, saved) =>
+    String(current ?? "") === String(saved ?? "");
+
+  const selectsHaveChanged =
+    !sameValue(taxSelected, tourSettings?.tax_id) ||
+    !sameValue(gratuitesSelected, tourSettings?.gratuity_id) ||
+    !sameValue(gratuitesTypeSelected, tourSettings?.gratuity_type_id) ||
+    !sameValue(basedOnSelected, tourSettings?.based_on_id) ||
+    !sameValue(applySelected, tourSettings?.payment_apply_id) ||
+    !sameValue(currencySelected, tourSettings?.payment_currency) ||
+    !sameValue(
+      taxesBasedOnSelected ?? tourSettings?.tax_based_on,
+      tourSettings?.tax_based_on,
+    ) ||
+    !sameValue(
+      commissionBasedOnSelected ?? tourSettings?.commission_based_on,
+      tourSettings?.commission_based_on,
+    ) ||
+    !sameValue(
+      applyCommissionSelected ?? tourSettings?.apply_commission,
+      tourSettings?.apply_commission,
+    );
+
+  const hasUnsavedChanges = validationType.dirty || selectsHaveChanged;
+
+  const unsavedChangesNotice = hasUnsavedChanges ? (
+    <div
+      className="text-danger d-flex align-items-center"
+      style={{ fontSize: "12px" }}
+    >
+      <i className="mdi mdi-alert-circle-outline me-1" />
+      <span>
+        You have unsaved changes. Click{" "}
+        <strong>Save and Continue</strong> to save them.
+      </span>
+    </div>
+  ) : null;
 
   return (
     <>
@@ -1486,7 +1528,10 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           </Row>
 
           <Row>
-            <div className="col-12 d-flex justify-content-end mt-5">
+            <div className="col-12 d-flex justify-content-end align-items-center mt-5">
+              {unsavedChangesNotice ? (
+                <div className="me-3">{unsavedChangesNotice}</div>
+              ) : null}
               <Button
                 color="paradise"
                 outline
