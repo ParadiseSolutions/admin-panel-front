@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toursData } from "../../Utils/Redux/Actions/ToursActions";
 import {
   deleteTourAPI,
@@ -80,6 +80,17 @@ const Tours = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, switch1]);
+  // El switch de la columna Active se pinta desde esta copia local, asi que hay
+  // que actualizarla al confirmar el API o la fila vuelve al valor viejo cuando
+  // la tabla la remonta al paginar.
+  const onTourActiveChange = useCallback((tourId, nextActive) => {
+    setToursDataInfo((prev) =>
+      prev.map((tour) =>
+        tour.id === tourId ? { ...tour, active: nextActive } : tour
+      )
+    );
+  }, []);
+
   // filters
   const [filters, setFilters] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
@@ -339,7 +350,7 @@ const Tours = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Active {...cellProps} />;
+          return <Active {...cellProps} onStatusChange={onTourActiveChange} />;
         },
       },
       {
@@ -354,10 +365,13 @@ const Tours = () => {
                 <Link to={`/tours/${tourData.id}`} target="_blank" className="text-success">
                   <i
                     className="mdi mdi-pencil-outline font-size-18 text-paradise"
-                    id="edittooltip"
+                    id={`tour-edit-${tourData.id}`}
                     style={{ cursor: "pointer" }}
                   />
-                  <UncontrolledTooltip placement="top" target="edittooltip">
+                  <UncontrolledTooltip
+                    placement="top"
+                    target={`tour-edit-${tourData.id}`}
+                  >
                     Edit
                   </UncontrolledTooltip>
                 </Link>
@@ -372,10 +386,13 @@ const Tours = () => {
               >
                 <i
                   className="mdi mdi-delete-outline font-size-18"
-                  id="deletetooltip"
+                  id={`tour-delete-${tourData.id}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="deletetooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`tour-delete-${tourData.id}`}
+                >
                   Delete
                 </UncontrolledTooltip>
               </div>
@@ -389,10 +406,13 @@ const Tours = () => {
               >
                 <i
                   className="mdi mdi-content-copy font-size-18"
-                  id="copytooltip"
+                  id={`tour-copy-${tourData.id}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="copytooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`tour-copy-${tourData.id}`}
+                >
                   Copy
                 </UncontrolledTooltip>
               </div>

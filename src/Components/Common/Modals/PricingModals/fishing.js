@@ -35,6 +35,10 @@ import {
 } from "../../../../Utils/CommonFunctions";
 import { getCurrency } from "../../../../Utils/API/Operators";
 import { getActivities } from "../../../../Utils/API/Assets";
+import {
+  ACTIVITY_SHORTCUTS,
+  resolveActivitySelection,
+} from "../AssetsModal/constants/boatActivityOptions";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import eyeIcon from "../../../Assets/images/eye-icon.svg";
 import eyeIconSlash from "../../../Assets/images/eye-slash-icon.svg";
@@ -215,8 +219,7 @@ const Fishing = ({
   }, [dataEdit, priceCollect]);
 
   function handleMulti(selected) {
-    console.log("selected activities", selected);
-    setActivitiesSelected(selected);
+    setActivitiesSelected(resolveActivitySelection(selected, activityData));
   }
 
   const validationType = useFormik({
@@ -2284,6 +2287,12 @@ const Fishing = ({
                       onChange={handleMulti}
                       value={activitiesSelected}
                     >
+                      {(activityData?.length || 0) > 0 &&
+                        map(ACTIVITY_SHORTCUTS, (shortcut) => (
+                          <Option key={shortcut.value} value={shortcut.value}>
+                            {shortcut.label}
+                          </Option>
+                        ))}
                       {map(activityData, (item, index) => {
                         return (
                           <Option key={index} value={item.id}>

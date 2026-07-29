@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { deleteContactAPI } from "../../../Utils/API/Contacts";
 import TableContainer from "../../../Components/Common/TableContainer";
 import AddContactProviderModal from "../../../Components/Common/Modals/ContactsProviderModal/addContactProviderModal";
@@ -20,7 +20,22 @@ const Contacts = ({contacts}) => {
   const [addContactModal, setAddContactModal] = useState(false)
   const [editContactModal, setEditContactModal] = useState(false)
   const [contactID, setContactID] = useState(false)
-  
+  // Copia local para poder actualizar la fila que cambia de estado sin recargar
+  // la pagina completa, que era lo que hacia el switch antes.
+  const [contactsData, setContactsData] = useState(contacts || []);
+
+  useEffect(() => {
+    setContactsData(contacts || []);
+  }, [contacts]);
+
+  const onContactActiveChange = useCallback((contactId, nextActive) => {
+    setContactsData((prev) =>
+      prev.map((contact) =>
+        contact.id === contactId ? { ...contact, active: nextActive } : contact
+      )
+    );
+  }, []);
+
   function togglecol1() {
     setcol2(!col2);
   }
@@ -116,7 +131,9 @@ const Contacts = ({contacts}) => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Active {...cellProps} />;
+          return (
+            <Active {...cellProps} onStatusChange={onContactActiveChange} />
+          );
         },
       },
       {
@@ -163,7 +180,7 @@ const Contacts = ({contacts}) => {
         },
       },
     ],
-    []
+    [onContactActiveChange]
   );
 
 
@@ -191,10 +208,10 @@ const Contacts = ({contacts}) => {
           <Col xs="12">
             <Card>
               <CardBody>
-                {contacts ? (
+                {contactsData ? (
                   <TableContainer
                     columns={columns}
-                    data={contacts}
+                    data={contactsData}
                     isGlobalFilter={true}
                     contactsProvidersTable={true}
                     isAddOrder={true}

@@ -35,6 +35,7 @@ import {
   Button,
   UncontrolledTooltip,
   Tooltip,
+  Spinner,
 } from "reactstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
@@ -81,6 +82,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
   const [applyCommissionData, setApplyCommissionData] = useState([]);
   const [applyCommissionSelected, setApplyCommissionSelected] = useState(null);
   const [paymentRequest, setPaymentRequest] = useState(false);
+  const [paymentRequestSaving, setPaymentRequestSaving] = useState(false);
 
   //tooltips
   const [taxTooltip, setTaxTooltip] = useState(false);
@@ -374,8 +376,22 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     });
   };
 
-  const paymentRequestChange = () => {
-    putPaymentRequestAPI(id, { active: paymentRequest ? 0 : 1 });
+  const paymentRequestChange = (isActive) => {
+    setPaymentRequestSaving(true);
+    putPaymentRequestAPI(id, { active: isActive ? 1 : 0 })
+      .then(() => {
+        setPaymentRequest(isActive);
+        setPaymentRequestSaving(false);
+      })
+      .catch(() => {
+        setPaymentRequestSaving(false);
+        Swal.fire({
+          title: "Error",
+          text: "Payment Request could not be updated. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   };
 
   const columnsProducts = useMemo(
@@ -515,6 +531,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         accessor: "action",
         disableFilters: true,
         Cell: (cellProps) => {
+          const rowId = cellProps.row.original.id;
           return (
             <div className="d-flex gap-3">
               <div
@@ -528,10 +545,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
               >
                 <i
                   className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
+                  id={`payment-method-edit-${rowId}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="edittooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`payment-method-edit-${rowId}`}
+                >
                   Edit
                 </UncontrolledTooltip>
               </div>
@@ -546,10 +566,13 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
               >
                 <i
                   className="mdi mdi-delete font-size-18"
-                  id="deletetooltip"
+                  id={`payment-method-delete-${rowId}`}
                   style={{ cursor: "pointer" }}
                 />
-                <UncontrolledTooltip placement="top" target="deletetooltip">
+                <UncontrolledTooltip
+                  placement="top"
+                  target={`payment-method-delete-${rowId}`}
+                >
                   Delete
                 </UncontrolledTooltip>
               </div>
@@ -577,7 +600,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
     //     .max(2, "Must be exactly 2 chars")
     //     .required("Max 2 chars"),
     // }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       let data = {
         tax_id: +taxSelected,
         gratuity_id: +gratuitesSelected,
@@ -598,6 +621,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           // console.log(resp.data);
           if (resp.data.status === 200) {
             // triggerUpdate();
+            resetForm({ values });
             Swal.fire("Edited!", "Payments has been edited.", "success");
             window.location.href = switchTourTab(4);
           }
@@ -624,6 +648,47 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
         });
     },
   });
+
+  // Los selects viven fuera de Formik (y algunos ni se inicializan hasta que
+  // el usuario los toca), asi que dirty se mide contra tourSettings. Payment
+  // Request se guarda solo y no cuenta.
+  const sameValue = (current, saved) =>
+    String(current ?? "") === String(saved ?? "");
+
+  const selectsHaveChanged =
+    !sameValue(taxSelected, tourSettings?.tax_id) ||
+    !sameValue(gratuitesSelected, tourSettings?.gratuity_id) ||
+    !sameValue(gratuitesTypeSelected, tourSettings?.gratuity_type_id) ||
+    !sameValue(basedOnSelected, tourSettings?.based_on_id) ||
+    !sameValue(applySelected, tourSettings?.payment_apply_id) ||
+    !sameValue(currencySelected, tourSettings?.payment_currency) ||
+    !sameValue(
+      taxesBasedOnSelected ?? tourSettings?.tax_based_on,
+      tourSettings?.tax_based_on,
+    ) ||
+    !sameValue(
+      commissionBasedOnSelected ?? tourSettings?.commission_based_on,
+      tourSettings?.commission_based_on,
+    ) ||
+    !sameValue(
+      applyCommissionSelected ?? tourSettings?.apply_commission,
+      tourSettings?.apply_commission,
+    );
+
+  const hasUnsavedChanges = validationType.dirty || selectsHaveChanged;
+
+  const unsavedChangesNotice = hasUnsavedChanges ? (
+    <div
+      className="text-danger d-flex align-items-center"
+      style={{ fontSize: "12px" }}
+    >
+      <i className="mdi mdi-alert-circle-outline me-1" />
+      <span>
+        You have unsaved changes. Click{" "}
+        <strong>Save and Continue</strong> to save them.
+      </span>
+    </div>
+  ) : null;
 
   return (
     <>
@@ -692,7 +757,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                   <input
                     type="checkbox"
                     className="form-check-input mx-1"
-                    id="customSwitchsizesm"
+                    id="payments-advanced-settings-switch"
                     checked={advanceSettings}
                     onChange={(e) => setAdvanceSettings(e.target.checked)}
                   />
@@ -702,7 +767,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           </Row>
           <Row>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
+              <div className="form-outline mb-2">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Taxes</Label>
                   <div>
@@ -756,7 +821,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
               </div>
             </Col>
             <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
+              <div className="form-outline mb-2">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label">Gratuities</Label>
                   <div>
@@ -810,7 +875,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
             {+gratuitesSelected !== 3 ? (
               <>
                 <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                  <div className="form-outline mb-2" id="voucher_currency">
+                  <div className="form-outline mb-2">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label">Gratuity Type</Label>
                       <div>
@@ -929,7 +994,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         {gratuitesTypeSelected === "3" ? (
                           <span
                             className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                            id="basic-addon1"
                             style={{ fontSize: "0.85em" }}
                           >
                             $
@@ -966,7 +1030,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                         {gratuitesTypeSelected !== "3" ? (
                           <span
                             className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                            id="basic-addon1"
                             style={{ fontSize: "0.85em" }}
                           >
                             %
@@ -982,7 +1045,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 gratuitesSelected == 3 ? null : (
                   <>
                     <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
-                      <div className="form-outline mb-2" id="voucher_currency">
+                      <div className="form-outline mb-2">
                         <div className="d-flex justify-content-between">
                           <Label className="form-label">Based On</Label>
                           <div>
@@ -1045,7 +1108,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                       </div>
                     </Col>
                     <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
-                      <div className="form-outline mb-2" id="voucher_currency">
+                      <div className="form-outline mb-2">
                         <div className="d-flex justify-content-between">
                           <Label className="form-label">Apply</Label>
                           <div>
@@ -1111,7 +1174,7 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
               </>
             ) : null}
             <Col className="mb-2 col-1" style={{ paddingTop: "7px" }}>
-              <div className="form-outline mb-2" id="voucher_currency">
+              <div className="form-outline mb-2">
                 <div className="d-flex justify-content-between">
                   <Label className="form-label text-paradise">Currency</Label>
                   <div>
@@ -1190,7 +1253,6 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 <div className="input-group">
                   <span
                     className="input-group-text form-label fw-bold bg-paradise text-white border-0"
-                    id="basic-addon1"
                     style={{ fontSize: "0.85em" }}
                   >
                     $
@@ -1229,18 +1291,18 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           {advanceSettings ? (
             <Row>
               <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                <div className="form-outline mb-2" id="voucher_currency">
+                <div className="form-outline mb-2">
                   <div className="d-flex justify-content-between">
                     <Label className="form-label">Taxes Based On</Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15 mx-2"
-                        id="taxtooltip"
+                        id="taxes-based-on-tooltip"
                       />
                       {/* <Tooltip
                         placement="right"
                         isOpen={taxTooltip}
-                        target="taxtooltip"
+                        target="taxes-based-on-tooltip"
                         toggle={() => {
                           setTaxTooltip(!taxTooltip);
                         }}
@@ -1283,18 +1345,18 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </div>
               </Col>
               <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                <div className="form-outline mb-2" id="voucher_currency">
+                <div className="form-outline mb-2">
                   <div className="d-flex justify-content-between">
                     <Label className="form-label">Commission Based On</Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15 mx-2"
-                        id="gratuitiestooltip"
+                        id="commission-based-on-tooltip"
                       />
                       {/* <Tooltip
                         placement="right"
                         isOpen={gratuitiesTooltip}
-                        target="gratuitiestooltip"
+                        target="commission-based-on-tooltip"
                         toggle={() => {
                           setGratuitiesTooltip(!gratuitiesTooltip);
                         }}
@@ -1336,18 +1398,18 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                 </div>
               </Col>
               <Col className="mb-2 col-2" style={{ paddingTop: "7px" }}>
-                <div className="form-outline mb-2" id="voucher_currency">
+                <div className="form-outline mb-2">
                   <div className="d-flex justify-content-between">
                     <Label className="form-label">Apply Commission</Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15 mx-2"
-                        id="gratuitiestooltip"
+                        id="apply-commission-tooltip"
                       />
                       {/* <Tooltip
                         placement="right"
                         isOpen={gratuitiesTooltip}
-                        target="gratuitiestooltip"
+                        target="apply-commission-tooltip"
                         toggle={() => {
                           setGratuitiesTooltip(!gratuitiesTooltip);
                         }}
@@ -1407,18 +1469,35 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
                     PAYMENTS
                   </p>
                 </div>
-                <div className="d-flex mt-2 form-check form-switch">
-                  <Label className="mx-2">Payment Request</Label>
+                <div className="d-flex mt-2 form-check form-switch align-items-center">
+                  <Label className="mx-2 mb-0">Payment Request</Label>
                   <input
                     type="checkbox"
                     className="form-check-input mx-1"
-                    id="customSwitchsizesm"
+                    id="payment-request-switch"
                     checked={paymentRequest}
+                    disabled={paymentRequestSaving}
                     onChange={(e) => {
-                      setPaymentRequest(e.target.checked);
-                      paymentRequestChange();
+                      paymentRequestChange(e.target.checked);
                     }}
                   />
+                  <div
+                    className="d-flex align-items-center text-muted ms-1"
+                    style={{ minWidth: "70px", fontSize: "10px" }}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {paymentRequestSaving ? (
+                      <>
+                        <Spinner
+                          size="sm"
+                          className="me-1"
+                          style={{ width: "10px", height: "10px" }}
+                        />
+                        Saving...
+                      </>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </Col>
@@ -1449,7 +1528,10 @@ const Payments = ({ history, tourSettings, id, toggle }) => {
           </Row>
 
           <Row>
-            <div className="col-12 d-flex justify-content-end mt-5">
+            <div className="col-12 d-flex justify-content-end align-items-center mt-5">
+              {unsavedChangesNotice ? (
+                <div className="me-3">{unsavedChangesNotice}</div>
+              ) : null}
               <Button
                 color="paradise"
                 outline

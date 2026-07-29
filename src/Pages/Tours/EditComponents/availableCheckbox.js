@@ -1,66 +1,38 @@
-import { useEffect, useState } from "react";
-
-const AvailableCheckbox = ({ available, availableFromIDs,  setAvailableFromIDs }) => {
-
- 
-  const isChecked = availableFromIDs ?  availableFromIDs.includes(available.id) ? true : false : false;
-
-  const [checked, setChecked] = useState(
-   availableFromIDs ? availableFromIDs.includes(available.id) ? true : false : false
+const AvailableCheckbox = ({
+  available,
+  availableFromIDs,
+  setAvailableFromIDs,
+}) => {
+  // Controlado 100% desde el padre: evita state local desfasado al cambiar
+  // tourSettings o al vaciar la lista (el useEffect anterior no sincronizaba []).
+  const idStr = String(available.id);
+  const checked = (availableFromIDs || []).some(
+    (item) => String(item) === idStr
   );
 
-  useEffect(() => {
-    if ( availableFromIDs && availableFromIDs.length > 0) {
-      setChecked(availableFromIDs.includes(available.id.toString()) ? true : false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isChecked]);
-
   const onChangeMembers = (e) => {
-    setChecked(!checked);
-    
-    const selection = e.target.value;
-    // const selectionFlag = availableFromIDs ? availableFromIDs.includes(selection) : [];
-    // console.log('---------------',availableFromIDs)
-    let idsTemp = availableFromIDs
-    
-    let isSelected = !checked
-
-    if(availableFromIDs) {
-      if(availableFromIDs.filter((ele) => ele === selection).length > 0) {//check if exists
-        //if exists and is not selected anymore I need to remove it
-        if(!isSelected) {
-          idsTemp = availableFromIDs.filter((ele) => ele !== selection)
-        }
-      } else {
-        //if not exists and is selected anymore I need to remove it
-        if(isSelected) {
-          idsTemp.push(selection)
-        }
-      }
-    }else{
-      if(isSelected)
-        idsTemp = [selection]
-      else 
-        idsTemp = []
-    }
-
-    setAvailableFromIDs(idsTemp)
+    const selection = String(e.target.value);
+    const current = (availableFromIDs || []).map(String);
+    const next = e.target.checked
+      ? current.includes(selection)
+        ? current
+        : [...current, selection]
+      : current.filter((item) => item !== selection);
+    setAvailableFromIDs(next);
   };
+
   return (
     <div className="controls my-2">
       <div className="form-check">
         <input
           className="form-check-input"
           type="checkbox"
-          value={+available.id}
+          value={available.id}
           name={available.name}
-          onChange={(e) => onChangeMembers(e)}
+          onChange={onChangeMembers}
           checked={checked}
         />
-        <label className="form-check-label">
-          {`${available.name}` }
-        </label>
+        <label className="form-check-label">{`${available.name}`}</label>
       </div>
     </div>
   );

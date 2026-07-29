@@ -95,11 +95,19 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
 
   //available from
   const [availableFromIDs, setAvailableFromIDs] = useState([]);
+  // Baselines locales: tourSettings del padre no se actualiza al guardar este tab,
+  // asi que dirty de All Ages / Available From se mide contra estos valores.
+  const [savedAllAges, setSavedAllAges] = useState(false);
+  const [savedAvailableFrom, setSavedAvailableFrom] = useState([]);
 
   useEffect(() => {
-    setAvailableFromIDs(tourSettings.available_from);
+    const nextAvailableFrom = tourSettings.available_from || [];
+    const nextAllAges = Number(tourSettings.all_ages) === 1;
+    setAvailableFromIDs(nextAvailableFrom);
     // setTemplateSelected(tourSettings.voucher_template_id);
-    setAgesAcceptedSwitch(tourSettings.all_ages === 1 ? true : false);
+    setAgesAcceptedSwitch(nextAllAges);
+    setSavedAllAges(nextAllAges);
+    setSavedAvailableFrom(nextAvailableFrom);
   }, [tourSettings]);
 
   //modal reserve page
@@ -153,7 +161,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
     //     .max(2, "Must be exactly 2 chars")
     //     .required("Max 2 chars"),
     // }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       let data = {
         provider_tour_name: values.provider_tour_name
           ? values.provider_tour_name
@@ -196,6 +204,10 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           // console.log(resp.data);
           if (resp.data.status === 200) {
             // triggerUpdate();
+            // resetForm marca dirty=false contra los valores recien guardados
+            resetForm({ values });
+            setSavedAllAges(agesAcceptedSwitch);
+            setSavedAvailableFrom(availableFromIDs || []);
             Swal.fire("Edited!", "Settings has been created.", "success");
             toggle("3");
           }
@@ -222,6 +234,31 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
         });
     },
   });
+
+  const normalizeIds = (ids) =>
+    (ids || [])
+      .map((item) => String(item))
+      .sort()
+      .join(",");
+
+  const allAgesHasChanged = agesAcceptedSwitch !== savedAllAges;
+  const availableFromHasChanged =
+    normalizeIds(availableFromIDs) !== normalizeIds(savedAvailableFrom);
+  const hasUnsavedChanges =
+    validationType.dirty || allAgesHasChanged || availableFromHasChanged;
+
+  const unsavedChangesNotice = hasUnsavedChanges ? (
+    <div
+      className="text-danger d-flex align-items-center"
+      style={{ fontSize: "12px" }}
+    >
+      <i className="mdi mdi-alert-circle-outline me-1" />
+      <span>
+        You have unsaved changes. Click{" "}
+        <strong>Save and Continue</strong> to save them.
+      </span>
+    </div>
+  ) : null;
 
   return (
     <>
@@ -269,12 +306,12 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
-                      id="Provider"
+                      id="provider-tour-name-tooltip"
                     />
                     <Tooltip
                       placement="right"
                       isOpen={providerNameTT}
-                      target="Provider"
+                      target="provider-tour-name-tooltip"
                       toggle={() => {
                         setProviderNameTT(!providerNameTT);
                       }}
@@ -550,7 +587,7 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
                   <input
                     type="checkbox"
                     className="form-check-input mx-1"
-                    id="customSwitchsizesm"
+                    id="settings-all-ages-switch"
                     checked={agesAcceptedSwitch}
                     onChange={(e) => setAgesAcceptedSwitch(e.target.checked)}
                   />
@@ -914,7 +951,10 @@ const Settings = ({ history, tourSettings, id, toggle }) => {
           </Row>
 
           <Row>
-            <div className="col-12 d-flex justify-content-end mt-5">
+            <div className="col-12 d-flex justify-content-end align-items-center mt-5">
+              {unsavedChangesNotice ? (
+                <div className="me-3">{unsavedChangesNotice}</div>
+              ) : null}
               <Button
                 color="paradise"
                 outline

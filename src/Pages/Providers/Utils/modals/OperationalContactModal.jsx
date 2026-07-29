@@ -107,8 +107,6 @@ const OperationalContactModal = ({
     }
   }, [dataEdit]);
 
-  console.log("dataEdit", dataEdit);
-
   //contact info data
   useEffect(() => {
     if (contactNameSelected && dataEdit === null) {

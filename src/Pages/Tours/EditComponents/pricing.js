@@ -26,17 +26,23 @@ import {
   Label,
   Input,
   Tooltip,
+  Spinner,
 } from "reactstrap";
 import { Name, Code, Price, Rate, Active } from "./PricingTables/PricingCols";
 import Swal from "sweetalert2";
 import AddPezGato from "../../../Components/Common/Modals/PricingModals/addPezGato";
 import { getCurrency } from "../../../Utils/API/Operators";
 import { getActivities } from "../../../Utils/API/Assets";
+import {
+  filterActivityOptions,
+  getAllManagedActivityNames,
+} from "../../../Components/Common/Modals/AssetsModal/constants/boatActivityOptions";
 
 const Pricing = ({ history, id, tourData, toggle }) => {
   //prices request
   const [pricesData, setPricesData] = useState([]);
   const [priceRangeCheck, setPriceRangeCheck] = useState(false);
+  const [priceRangeSaving, setPriceRangeSaving] = useState(false);
 
   //add new product
   const [addNewProduct, setAddNewProduct] = useState(false);
@@ -101,7 +107,10 @@ const Pricing = ({ history, id, tourData, toggle }) => {
           add(getCurrency(), setCurrency);
           add(
             getActivities({ search: "", tipo: "boats", list: "admin_cargarActivityCombo" }),
-            setActivityData,
+            (results) =>
+              setActivityData(
+                filterActivityOptions(results, getAllManagedActivityNames()),
+              ),
           );
           break;
         case 2:
@@ -190,18 +199,39 @@ const Pricing = ({ history, id, tourData, toggle }) => {
     });
   };
 
+  // Se actualiza solo la fila afectada en memoria: recargar la tabla completa
+  // devolveria al usuario a la primera pagina.
+  const onProductActiveChange = (priceId, active) => {
+    setPricesData((prev) =>
+      prev.map((item) =>
+        item.id === priceId ? { ...item, active: active } : item
+      )
+    );
+  };
+
   useEffect(() => {
     if (tourData !== undefined) {
-      tourData?.range_price === 0
-        ? setPriceRangeCheck(false)
-        : setPriceRangeCheck(true);
+      setPriceRangeCheck(Number(tourData?.range_price) === 1);
     }
   }, [tourData]);
 
   // console.log(tourData);
-  const postPriceRange = () => {
-    let data = { active: priceRangeCheck === false ? 1 : 0 };
-    putPriceRangesAPI(id, data).then((resp) => {});
+  const postPriceRange = (isActive) => {
+    setPriceRangeSaving(true);
+    putPriceRangesAPI(id, { active: isActive ? 1 : 0 })
+      .then(() => {
+        setPriceRangeCheck(isActive);
+        setPriceRangeSaving(false);
+      })
+      .catch(() => {
+        setPriceRangeSaving(false);
+        Swal.fire({
+          title: "Error",
+          text: "Price Ranges could not be updated. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   };
 
   //table actions
@@ -340,7 +370,9 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       disableFilters: false,
       filterable: true,
       Cell: (cellProps) => {
-        return <Active {...cellProps} />;
+        return (
+          <Active {...cellProps} onStatusChange={onProductActiveChange} />
+        );
       },
     },
     {
@@ -348,6 +380,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       accessor: "action",
       disableFilters: true,
       Cell: (cellProps) => {
+        const rowId = cellProps.row.original.id;
         return (
           <div className="d-flex gap-3">
             <div
@@ -390,10 +423,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-pencil font-size-18"
-                id="edit_tooltip"
+                id={`product-edit-${rowId}`}
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="edit_tooltip">
+              <UncontrolledTooltip
+                placement="top"
+                target={`product-edit-${rowId}`}
+              >
                 Edit
               </UncontrolledTooltip>
             </div>
@@ -437,10 +473,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-content-copy font-size-18"
-                id="copytooltip"
+                id={`product-copy-${rowId}`}
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="copytooltip">
+              <UncontrolledTooltip
+                placement="top"
+                target={`product-copy-${rowId}`}
+              >
                 Copy
               </UncontrolledTooltip>
             </div>
@@ -454,10 +493,13 @@ const Pricing = ({ history, id, tourData, toggle }) => {
             >
               <i
                 className="mdi mdi-delete font-size-18"
-                id="deletetooltip"
+                id={`product-delete-${rowId}`}
                 style={{ cursor: "pointer" }}
               />
-              <UncontrolledTooltip placement="top" target="deletetooltip">
+              <UncontrolledTooltip
+                placement="top"
+                target={`product-delete-${rowId}`}
+              >
                 Delete
               </UncontrolledTooltip>
             </div>
@@ -548,20 +590,36 @@ const Pricing = ({ history, id, tourData, toggle }) => {
                     </Tooltip>
                   </div>
                 </div>
-                <div className="form-check form-switch form-switch-md mx-4 mt-2 ">
+                <div className="form-check form-switch form-switch-md mx-4 mt-2 d-flex align-items-center">
                   <Input
                     name="seasonality"
                     placeholder=""
                     type="checkbox"
                     checked={priceRangeCheck}
+                    disabled={priceRangeSaving}
                     className="form-check-input"
-                    onChange={() => {
-                      setPriceRangeCheck(!priceRangeCheck);
-                      postPriceRange();
+                    onChange={(e) => {
+                      postPriceRange(e.target.checked);
                     }}
-                    // onBlur={validationType.handleBlur}
                     value={priceRangeCheck}
                   />
+                  <div
+                    className="d-flex align-items-center text-muted ms-2"
+                    style={{ minWidth: "70px", fontSize: "10px" }}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {priceRangeSaving ? (
+                      <>
+                        <Spinner
+                          size="sm"
+                          className="me-1"
+                          style={{ width: "10px", height: "10px" }}
+                        />
+                        Saving...
+                      </>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </div>
