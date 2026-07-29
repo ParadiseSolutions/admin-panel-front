@@ -796,7 +796,6 @@ const BoatComponent = ({
           net_price_6: values.net_price_6 !== "" ? values.net_price_6 : null,
         },
       };
-      console.log("Submitting boat data:", data);
       if (dataEdit) {
         putBoat(dataEdit.id, data)
           .then((resp) => {
@@ -1590,7 +1589,6 @@ const BoatComponent = ({
                           headers: imagesOptions,
                         })
                         .then((response) => {
-                          console.log("respuesta", response);
                           setPdfLink(response.data.data.url);
                         })
                         .catch((error) => {
@@ -1679,7 +1677,6 @@ const BoatComponent = ({
                           headers: imagesOptions,
                         })
                         .then((response) => {
-                          console.log("respuesta", response.data.data.url);
                           setImageLink(response.data.data.url);
                         })
                         .catch((error) => {

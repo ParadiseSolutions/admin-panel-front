@@ -10,7 +10,7 @@ import {
 } from "react-table";
 import { Table, Row, Col, Button, Input } from "reactstrap";
 
-const FilteredTable = ({ columns, data, addonsTable }) => {
+const FilteredTable = ({ columns, data, addonsTable, selectedIds = [] }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -74,7 +74,13 @@ const FilteredTable = ({ columns, data, addonsTable }) => {
                 prepareRow(row);
                 return (
                   <Fragment key={row.getRowProps().key}>
-                    <tr id={`row-selected-${row.original.id}`} >
+                    <tr
+                      className={
+                        selectedIds.includes(row.original.id)
+                          ? "selected-row"
+                          : undefined
+                      }
+                    >
                       {row.cells.map((cell) => {
                         return (
                           <td key={cell.id} {...cell.getCellProps()}>

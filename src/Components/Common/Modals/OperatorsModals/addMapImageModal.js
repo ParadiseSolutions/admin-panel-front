@@ -77,8 +77,6 @@ const AddMapImageModal = ({
   }, [tourData, addAirportMapModal]);
 
 
-  console.log("data edit map", tourData);
-
   // console.log(dataEdit.length);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -273,10 +271,6 @@ const AddMapImageModal = ({
                                 },
                               )
                               .then((response) => {
-                                console.log(
-                                  "respuesta",
-                                  response.data.data.url,
-                                );
                                 const url = response.data.data.url;
                                 setAirportMapImage(url);
                                 // validationType.setFieldValue("image_url", url);
@@ -372,10 +366,6 @@ const AddMapImageModal = ({
                                 },
                               )
                               .then((response) => {
-                                console.log(
-                                  "respuesta",
-                                  response.data.data.url,
-                                );
                                 const url = response.data.data.url;
                                 setMeetingPointImage(url);
                                 // validationType.setFieldValue("image_url", url);

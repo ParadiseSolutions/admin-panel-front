@@ -82,8 +82,6 @@ const AddLocationModal = ({
     }
   }, [dataEdit]);
 
-  console.log("data edit de location", dataEdit);
-
   // console.log(dataEdit.length);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -535,10 +533,6 @@ const AddLocationModal = ({
                                 },
                               )
                               .then((response) => {
-                                console.log(
-                                  "respuesta",
-                                  response.data.data.url,
-                                );
                                 const url = response.data.data.url;
                                 setImageLink(url);
                                 validationType.setFieldValue("image_url", url);

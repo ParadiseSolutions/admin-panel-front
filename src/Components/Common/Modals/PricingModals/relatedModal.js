@@ -43,7 +43,6 @@ const RelatedModal = ({
 }) => {
   // initial request
   const [typeSelectData, setTypeSelectData] = useState([]);
-  const [typeSelectSelected, setTypeSelectSelected] = useState([]);
   // filter by name
   const [filterByNameData, setFilterByNameData] = useState("");
   // website data request
@@ -59,9 +58,13 @@ const RelatedModal = ({
   const [locationSelected, setLocationSelected] = useState(null);
   // filtered data
   const [filteredData, setFilteredData] = useState([]);
-  const [buttonToogle, setButtonToogle] = useState(true);
   const [submitType, setSubmitType] = useState(1);
-  const [counter, setCounter] = useState(0);
+  // Que tours quedaron relacionados y que tipo eligio el usuario en cada fila.
+  // Antes esto vivia en el DOM (clases y el value del select), asi que al
+  // paginar React repintaba las filas y se perdia todo lo marcado.
+  const [addedIds, setAddedIds] = useState([]);
+  const [typeByRow, setTypeByRow] = useState({});
+  const counter = addedIds.length;
 
   useEffect(() => {
     typeRelatedTourSelect().then((resp) => {
@@ -213,16 +216,17 @@ const RelatedModal = ({
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
+          const rowId = cellProps.cell.row.original.id;
           return (
             <Input
               type="select"
-              id={`type-select-${cellProps.cell.row.original.id}`}
+              id={`type-select-${rowId}`}
               name=""
+              value={typeByRow[rowId] ?? "-1"}
               onChange={(e) => {
-                /* console.log(cellProps.cell.row.original); */
-                setTypeSelectSelected(e.target.value);
+                const value = e.target.value;
+                setTypeByRow((prev) => ({ ...prev, [rowId]: value }));
               }}
-              //   value={validationType.values.department || ""}
             >
               <option value="-1">Select....</option>
               <option value="1">Backup</option>
@@ -237,30 +241,29 @@ const RelatedModal = ({
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return (
-            <>
-              <p
-                id={`toogle-button-add-${cellProps.cell.row.original.id}`}
-                style={{ color: "#F6851F", cursor: "pointer" }}
-                onClick={() => onSubmitRelation(cellProps.cell.row.original)}
-              >
-                + Add
-              </p>
-              <p
-                id={`toogle-button-delete-${cellProps.cell.row.original.id}`}
-                style={{ color: "#3CC6F3", cursor: "pointer" }}
-                className="hide-element-ps"
-                onClick={() => deleteRelation(cellProps.cell.row.original)}
-              >
-                - Remove
-              </p>
-            </>
+          const row = cellProps.cell.row.original;
+          return addedIds.includes(row.id) ? (
+            <p
+              style={{ color: "#3CC6F3", cursor: "pointer" }}
+              onClick={() => deleteRelation(row)}
+            >
+              - Remove
+            </p>
+          ) : (
+            <p
+              style={{ color: "#F6851F", cursor: "pointer" }}
+              onClick={() => onSubmitRelation(row)}
+            >
+              + Add
+            </p>
           );
         },
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     ],
-    []
+    // Las celdas necesitan ver el estado actual, pero no las funciones, que se
+    // recrean en cada render y reconstruirian las columnas de mas.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [addedIds, typeByRow]
   );
 
   const onChangeWebsite = (id) => {
@@ -340,23 +343,14 @@ const RelatedModal = ({
     let data = {
       current_tour_id: id,
       related_tour_id: row.id,
-      type_id: document.querySelector(`#type-select-${row.id}`).value,
+      type_id: typeByRow[row.id] ?? "-1",
     };
     postAddRelated(data)
       .then((resp) => {
         if (resp.data.status === 201) {
-          setButtonToogle(false);
-          document
-            .querySelector(`#toogle-button-add-${row.id}`)
-            .classList.add("hide-element-ps");
-          document
-            .querySelector(`#toogle-button-delete-${row.id}`)
-            .classList.remove("hide-element-ps");
-          document
-            .querySelector(`#row-selected-${row.id}`)
-            .classList.add("selected-row");
-
-          setCounter((counter) => counter + 1);
+          setAddedIds((prev) =>
+            prev.includes(row.id) ? prev : [...prev, row.id]
+          );
           refreshTable()
         }
       })
@@ -384,17 +378,7 @@ const RelatedModal = ({
   const deleteRelation = (row) => {
     deleteRelated(id, row.id).then((resp) => {
       if (resp.data.status === 200) {
-        document
-          .querySelector(`#toogle-button-add-${row.id}`)
-          .classList.remove("hide-element-ps");
-        document
-          .querySelector(`#toogle-button-delete-${row.id}`)
-          .classList.add("hide-element-ps");
-        document
-          .querySelector(`#row-selected-${row.id}`)
-          .classList.remove("selected-row");
-
-        setCounter((counter) => counter - 1);
+        setAddedIds((prev) => prev.filter((addedId) => addedId !== row.id));
         refreshTable()
       }
     });
@@ -657,6 +641,7 @@ const RelatedModal = ({
               columns={columnsAddons}
               data={filteredData}
               addonsTable={true}
+              selectedIds={addedIds}
             />
           </Row>
           <Row>
