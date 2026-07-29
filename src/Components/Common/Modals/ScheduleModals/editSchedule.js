@@ -315,7 +315,6 @@ const EditScheduleModal = ({
         price_id: productSelected,
       };
 
-      console.log(data);
       putSchedule(id, data)
         .then((resp) => {
           // triggerUpdate();

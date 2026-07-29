@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { operatorsData } from "../../Utils/Redux/Actions/OperatorsActions";
 import { deleteOperatorAPI } from "../../Utils/API/Operators";
 import TableContainer from "../../Components/Common/TableContainer";
@@ -31,6 +31,17 @@ const Operators = () => {
     };
     providersRequest();
   }, [dispatch, switch1]);
+  // Las columnas se memorizan una sola vez, asi que el refresh lee el filtro
+  // desde una ref para no quedarse con el valor del primer render.
+  const activeFilter = useRef(switch1 ? 1 : 0);
+  useEffect(() => {
+    activeFilter.current = switch1 ? 1 : 0;
+  }, [switch1]);
+  const refreshOperators = useCallback(
+    () => dispatch(operatorsData(activeFilter.current)),
+    [dispatch]
+  );
+
   const data = useSelector((state) => state.operators.operators.data);
   // useEffect(() => {
   //   if (data) {
@@ -151,7 +162,7 @@ const Operators = () => {
         disableFilters: true,
         filterable: false,
         Cell: (cellProps) => {
-          return <Active {...cellProps} />;
+          return <Active {...cellProps} onStatusChange={refreshOperators} />;
         },
       },
       {
@@ -196,8 +207,8 @@ const Operators = () => {
           );
         },
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

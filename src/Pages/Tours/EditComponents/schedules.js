@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import ScheduleDolphins from "../../../Components/Assets/images/schedulesDolphins.png";
 import {
   putSeasonalAPI,
-  getSeasonsListAPI,
   getScheduleTimeAPI,
   getScheduleDatesOverrideAPI,
   getSeasonalityAPI,
@@ -37,6 +36,8 @@ const seasonalityValues = [
   { id: 7, label: "All Year Long" },
   { id: 3, label: "Fixed Range" },
 ];
+
+const ALL_YEAR_LONG_ID = 7;
 
 const Schedules = ({ tourData, toggle }) => {
   const history = useHistory();
@@ -74,7 +75,7 @@ const Schedules = ({ tourData, toggle }) => {
     getSeasonalityAPI(TourID).then((resp) => {
       // console.log(resp);
       setSeasonalityData(resp.data.data);
-      setSeasonSelected(resp.data.data[0]?.repeat_id);
+      setSeasonSelected(String(resp.data.data[0]?.repeat_id ?? ""));
     }).catch((error) => {
           Swal.fire({
             title: 'Error',
@@ -92,18 +93,52 @@ const Schedules = ({ tourData, toggle }) => {
     }
   }, [tourData]);
   const [seasonSelected, setSeasonSelected] = useState("");
+  // repeat_id llega como entero desde el API y como string desde el <select>,
+  // se compara siempre normalizado para evitar falsos negativos.
+  const isAllYearLong = Number(seasonSelected) === ALL_YEAR_LONG_ID;
+  const showError = (text) => {
+    Swal.fire({
+      title: "Error",
+      text: text,
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  };
+
   //refresh tables
-  const refresh = () => {
-    getScheduleTimeAPI(TourID).then((resp) => {
-      setSchedulesData(resp.data.data);
-    });
-    getScheduleDatesOverrideAPI(TourID).then((resp) => {
-      setDatesOverrideData(resp.data.data);
-    });
-    getSeasonalityAPI(TourID).then((resp) => {
-      setSeasonalityData(resp.data.data);
-      setSeasonSelected(resp.data.data[0]?.repeat_id);
-    });
+  // Se refresca por tabla: recargar la seasonality reinicializa el formulario y
+  // descartaria los cambios que el usuario aun no ha guardado.
+  // Cada helper atrapa su propio error para no rechazar y no confundirse con el
+  // error de la peticion que lo disparo.
+  const reloadFailedMessage =
+    "The information could not be reloaded. Refresh the page to see the latest data.";
+  const refreshSchedules = () => {
+    return getScheduleTimeAPI(TourID)
+      .then((resp) => {
+        setSchedulesData(resp.data.data);
+      })
+      .catch(() => {
+        showError(reloadFailedMessage);
+      });
+  };
+  const refreshOverrideDates = () => {
+    return getScheduleDatesOverrideAPI(TourID)
+      .then((resp) => {
+        setDatesOverrideData(resp.data.data);
+      })
+      .catch(() => {
+        showError(reloadFailedMessage);
+      });
+  };
+  const refreshSeasonality = () => {
+    return getSeasonalityAPI(TourID)
+      .then((resp) => {
+        setSeasonalityData(resp.data.data);
+        setSeasonSelected(String(resp.data.data[0]?.repeat_id ?? ""));
+      })
+      .catch(() => {
+        showError(reloadFailedMessage);
+      });
   };
 
   //add new schedule
@@ -125,11 +160,11 @@ const Schedules = ({ tourData, toggle }) => {
   // };
 
   useEffect(() => {
-    if (seasonSelected === "7") {
+    if (isAllYearLong) {
       setDataFromEdit(null);
       setDataToEdit(null);
     }
-  }, [seasonSelected]);
+  }, [isAllYearLong]);
 
   useEffect(() => {
     if (seasonalityData.length > 0) {
@@ -140,40 +175,51 @@ const Schedules = ({ tourData, toggle }) => {
 
   //delete season
   const onDeleteSeason = (data) => {
-    deleteSchedule(tourData.id, data.id).then((resp) => {
-      Swal.fire("Deleted!", "Time has been deleted.", "success").then(() => {
-        // history.goBack();
+    deleteSchedule(tourData.id, data.id)
+      .then(() => {
+        return refreshSchedules().then(() => {
+          Swal.fire("Deleted!", "Time has been deleted.", "success");
+        });
+      })
+      .catch(() => {
+        showError(
+          "The schedule could not be deleted. Refresh the page and try again."
+        );
       });
-      getSeasonsListAPI(tourData.id).then((resp) => {
-        // triggerUpdate();
-        // setSeasonsData(resp.data.data);
-      });
-    });
-    refresh();
   };
 
   //delete overrite date
   const onDeleteOverriteDate = (data) => {
-    deleteOverriteDate(tourData.id, data.id).then((resp) => {
-      Swal.fire("Deleted!", "Time has been deleted.", "success");
-
-      getScheduleDatesOverrideAPI(TourID).then((resp) => {
-        // triggerUpdate();
-        setDatesOverrideData(resp.data.data);
+    deleteOverriteDate(tourData.id, data.id)
+      .then(() => {
+        return refreshOverrideDates().then(() => {
+          Swal.fire("Deleted!", "Time has been deleted.", "success");
+        });
+      })
+      .catch(() => {
+        showError(
+          "The date could not be deleted. Refresh the page and try again."
+        );
       });
-    });
-    refresh();
   };
 
   // open tickets functionality
-  const openTicketFunction = () => {
+  const openTicketFunction = (isActive) => {
     let body = {
-      active: openTicketCheck ? 0 : 1,
+      active: isActive ? 1 : 0,
     };
-    putOpenTicket(tourData.id, body).then((resp) => {
-      Swal.fire("Open Ticket!", "Open Ticket has been change.", "success");
-    });
-    refresh();
+    putOpenTicket(tourData.id, body)
+      .then(() => {
+        return refreshSchedules().then(() => {
+          Swal.fire("Open Ticket!", "Open Ticket has been change.", "success");
+        });
+      })
+      .catch(() => {
+        setOpenTicketCheck(!isActive);
+        showError(
+          "Open Ticket could not be updated. Refresh the page and try again."
+        );
+      });
   };
 
   // console.log('tiempos ----',schedulesData)
@@ -196,11 +242,39 @@ const Schedules = ({ tourData, toggle }) => {
     //     .required("Max 2 chars"),
     // }),
     onSubmit: (values) => {
+      const repeatId = Number(seasonSelected);
+      const seasonalityId = seasonalityData[0]?.id;
+
+      if (!repeatId) {
+        Swal.fire(
+          "Missing information!",
+          "Please select a seasonality option before saving.",
+          "warning"
+        );
+        return;
+      }
+      if (!seasonalityId) {
+        Swal.fire(
+          "Error!",
+          "This tour has no seasonality record to update. Refresh the page and try again.",
+          "error"
+        );
+        return;
+      }
+      if (repeatId !== ALL_YEAR_LONG_ID && (!values.from || !values.to)) {
+        Swal.fire(
+          "Missing information!",
+          "Please set both From and To dates for a fixed range.",
+          "warning"
+        );
+        return;
+      }
+
       let data = {
-        repeat_id: seasonSelected,
-        from: seasonSelected === 7 ? null : values.from,
-        to: seasonSelected === 7 ? null : values.to,
-        id: seasonalityData[0]?.id,
+        repeat_id: repeatId,
+        from: repeatId === ALL_YEAR_LONG_ID ? null : values.from,
+        to: repeatId === ALL_YEAR_LONG_ID ? null : values.to,
+        id: seasonalityId,
         type_id: 5,
         action: "Available",
         on: null,
@@ -217,7 +291,7 @@ const Schedules = ({ tourData, toggle }) => {
               "Seasonality has been created.",
               "success"
             ).then(() => {
-              refresh();
+              refreshSeasonality();
               // history.goBack();
                toggle("9")
             });
@@ -247,6 +321,34 @@ const Schedules = ({ tourData, toggle }) => {
     },
   });
 
+  const seasonalityHasChanged =
+    String(seasonalityData[0]?.repeat_id ?? "") !== String(seasonSelected ?? "");
+  const hasUnsavedChanges = validationType.dirty || seasonalityHasChanged;
+
+  const unsavedChangesNotice = hasUnsavedChanges ? (
+    <div
+      className="text-danger d-flex align-items-center"
+      style={{ fontSize: "12px" }}
+    >
+      <i className="mdi mdi-alert-circle-outline me-1" />
+      <span>
+        You have unsaved changes in Seasonality. Click{" "}
+        <strong>Save and Continue</strong> to save them.
+      </span>
+    </div>
+  ) : null;
+
+  const onSeasonalityChange = (e) => {
+    const value = e.target.value;
+    setSeasonSelected(value);
+    if (Number(value) === ALL_YEAR_LONG_ID) {
+      setDataFromEdit(null);
+      setDataToEdit(null);
+      validationType.setFieldValue("from", "");
+      validationType.setFieldValue("to", "");
+    }
+  };
+
   return (
     <>
       <Form
@@ -259,7 +361,7 @@ const Schedules = ({ tourData, toggle }) => {
       >
         <TabPane tabId="3">
           <Row>
-            <Col className="col-8">
+            <Col className="col-7">
               <section className="d-flex justify-content-between mb-4">
                 <h2 className="text-paradise font-bold">Schedule</h2>
                 <div className="d-flex align-items-center gap-3">
@@ -301,8 +403,9 @@ const Schedules = ({ tourData, toggle }) => {
                       checked={openTicketCheck}
                       className="form-check-input"
                       onChange={() => {
-                        setOpenTicketCheck(!openTicketCheck);
-                        openTicketFunction();
+                        const isActive = !openTicketCheck;
+                        setOpenTicketCheck(isActive);
+                        openTicketFunction(isActive);
                       }}
                       // onBlur={validationType.handleBlur}
                       value={openTicketCheck}
@@ -386,12 +489,12 @@ const Schedules = ({ tourData, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-pencil-outline font-size-18"
-                                      id="edittooltip"
+                                      id={`schedule-edit-${schedule.id}`}
                                       style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="edittooltip"
+                                      target={`schedule-edit-${schedule.id}`}
                                     >
                                       Edit
                                     </UncontrolledTooltip>
@@ -405,11 +508,11 @@ const Schedules = ({ tourData, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-delete-outline font-size-18"
-                                      id="deletetooltip"
+                                      id={`schedule-delete-${schedule.id}`}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="deletetooltip"
+                                      target={`schedule-delete-${schedule.id}`}
                                     >
                                       Delete
                                     </UncontrolledTooltip>
@@ -486,12 +589,12 @@ const Schedules = ({ tourData, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-pencil-outline font-size-18"
-                                      id="edittooltip"
+                                      id={`override-edit-${dates.id}`}
                                       style={{ cursor: "pointer" }}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="edittooltip"
+                                      target={`override-edit-${dates.id}`}
                                     >
                                       Edit
                                     </UncontrolledTooltip>
@@ -505,11 +608,11 @@ const Schedules = ({ tourData, toggle }) => {
                                   >
                                     <i
                                       className="mdi mdi-delete-outline font-size-18"
-                                      id="deletetooltip"
+                                      id={`override-delete-${dates.id}`}
                                     />
                                     <UncontrolledTooltip
                                       placement="top"
-                                      target="deletetooltip"
+                                      target={`override-delete-${dates.id}`}
                                     >
                                       Delete
                                     </UncontrolledTooltip>
@@ -571,26 +674,18 @@ const Schedules = ({ tourData, toggle }) => {
                     <Input
                       type="select"
                       name="repeat_id"
-                      onChange={(e) => {
-                        setSeasonSelected(e.target.value);
-                      }}
+                      value={seasonSelected}
+                      onChange={onSeasonalityChange}
                       onBlur={validationType.handleBlur}
                     >
                       <option value="">Select....</option>
                       {seasonalityValues.map((option, index) => {
                         return (
-                          <option
-                            key={index}
-                            value={option.id}
-                            selected={
-                              seasonalityData[0]?.repeat_id === option.id
-                            }
-                          >
+                          <option key={index} value={option.id}>
                             {option.label}
                           </option>
                         );
                       })}
-                      {/* <option value='7' selected >All Year Long</option> */}
                     </Input>
                   </div>
                 </Col>
@@ -603,8 +698,8 @@ const Schedules = ({ tourData, toggle }) => {
                           name="from"
                           className="form-control"
                           type="date"
-                          // defaultValue="2019-08-19"
-                          id="example-date-input"
+                          id="seasonality-from-input"
+                          disabled={isAllYearLong}
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.from || ""}
@@ -634,8 +729,8 @@ const Schedules = ({ tourData, toggle }) => {
                           name="to"
                           className="form-control"
                           type="date"
-                          // defaultValue="2019-08-19"
-                          id="example-date-input"
+                          id="seasonality-to-input"
+                          disabled={isAllYearLong}
                           onChange={validationType.handleChange}
                           onBlur={validationType.handleBlur}
                           value={validationType.values.to || ""}
@@ -657,6 +752,9 @@ const Schedules = ({ tourData, toggle }) => {
                   </div>
                 </Col>
               </Row>
+              {unsavedChangesNotice ? (
+                <div className="mt-2">{unsavedChangesNotice}</div>
+              ) : null}
               <section className="mt-4">
                 <img
                   src={ScheduleDolphins}
@@ -665,7 +763,10 @@ const Schedules = ({ tourData, toggle }) => {
                 />
               </section>
             </Col>
-            <div className="col-12 d-flex justify-content-end mt-5">
+            <div className="col-12 d-flex justify-content-end align-items-center mt-5">
+              {unsavedChangesNotice ? (
+                <div className="me-3">{unsavedChangesNotice}</div>
+              ) : null}
               <Button
                 color="paradise"
                 outline
@@ -692,25 +793,25 @@ const Schedules = ({ tourData, toggle }) => {
         newSchedule={newSchedule}
         setNewSchedule={setNewSchedule}
         tourData={tourData}
-        refresh={refresh}
+        refresh={refreshSchedules}
       />
       <EditScheduleModal
         editSchedule={editSchedule}
         setEditSchedule={setEditSchedule}
         scheduleEditID={scheduleEditID}
         tourData={tourData}
-        refresh={refresh}
+        refresh={refreshSchedules}
       />
       <AddNewOverriteDate
         newOverriteDate={newOverriteDate}
         setNewOverriteDate={setNewOverriteDate}
-        refresh={refresh}
+        refresh={refreshOverrideDates}
       />
       <EdditOverriteDate
         editOverriteDate={editOverriteDate}
         setEditOverriteDate={setEditOverriteDate}
         editOverriteDateData={editOverriteDateData}
-        refresh={refresh}
+        refresh={refreshOverrideDates}
       />
     </>
   );

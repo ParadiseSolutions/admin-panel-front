@@ -619,7 +619,6 @@ const AddNewTransportation = ({
     }
   }, [validationType?.values.our_price, validationType?.values.ship_price, validationType?.values.compare_at])
 
-  console.log("priceTransferType", priceTransferType);
   return (
     <Modal
       centered

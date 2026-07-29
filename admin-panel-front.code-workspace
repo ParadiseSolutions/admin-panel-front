@@ -1,0 +1,41 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Admin-Panel-API"
+		},
+		{
+			"path": "../../../../xampp82/htdocs/Dispatch-Tool-API"
+		},
+		{
+			"path": "../dispatch-management-tool"
+		},
+		{
+			"path": "../Database"
+		},
+		{
+			"path": "../jstourandtravel/cetools/group-tool"
+		},
+		{
+			"path": "E:/Shared/My Webs/Cabo Fishing"
+		},
+		{
+			"path": "E:/Shared/My Webs/Cancun Discounts"
+		},
+		{
+			"path": "E:/Shared/My Webs/CancunFishing"
+		},
+		{
+			"path": "E:/Shared/My Webs/Cozumel"
+		},
+		{
+			"path": "E:/Shared/My Webs/CozumelTours"
+		},
+		{
+			"path": "E:/Shared/My Webs/PVFishing"
+		}
+	],
+	"settings": {}
+}

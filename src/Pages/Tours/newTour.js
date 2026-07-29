@@ -163,7 +163,6 @@ const NewTour = ({ history }) => {
     //setCategoryId(id)
   };
   
-  console.log(categoryData);
   //form creation
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed

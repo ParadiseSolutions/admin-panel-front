@@ -22,6 +22,39 @@ import classnames from "classnames";
 import { getAssetsAPI } from "../../../Utils/API/Providers";
 import AssetModal from "../../../Components/Common/Modals/AssetsModal/assetsModal";
 import { deleteAsset } from "../../../Utils/API/Assets";
+
+const getAssetRelatedTours = (asset) =>
+  asset?.asset_related_tours ?? asset?.assets_related_tours ?? [];
+
+const buildRelatedToursDeleteWarningHtml = (tours) => {
+  const rows = tours
+    .map(
+      (tour) => `
+        <tr>
+          <td>${tour.tour_name ?? ""}</td>
+          <td>
+            <a href="${tour.admin_link}?t=10" target="_blank" rel="noreferrer">View tour</a>
+          </td>
+        </tr>`
+    )
+    .join("");
+
+  return `
+    <p class="mb-3" style="font-size: 16px;">This asset is linked to the following tour(s):</p>
+    <div class="table-responsive">
+      <table class="table table-sm table-bordered text-start mb-0" style="font-size: 14px;">
+        <thead>
+          <tr>
+            <th>Tour Name</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <p class="mt-3 mb-0" style="font-size: 16px;">Are you sure you want to delete this asset?</p>`;
+};
+
 const Assets = ({ contacts, id }) => {
   const [col2, setcol2] = useState(false);
   const [boatData, setboatData] = useState([]);
@@ -48,6 +81,16 @@ const Assets = ({ contacts, id }) => {
   function togglecol1() {
     setcol2(!col2);
   }
+
+  // Actualiza solo el barco tocado: antes el switch recargaba el listado global
+  // de providers, que ni siquiera esta en pantalla aqui.
+  const onBoatActiveChange = (boatId, nextActive) => {
+    setboatData((prev) =>
+      prev.map((boat) =>
+        boat.id === boatId ? { ...boat, active: nextActive } : boat
+      )
+    );
+  };
 
   //tabs
   const [activeTab, setactiveTab] = useState("1");
@@ -83,17 +126,27 @@ const Assets = ({ contacts, id }) => {
     });
   };
 
-  const deleteAssetSelected = (id) => {
+  const deleteAssetSelected = (asset) => {
+    const relatedTours = getAssetRelatedTours(asset);
+    const hasRelatedTours = relatedTours.length > 0;
+
     Swal.fire({
-      title: "Delete Asset?",
-      icon: "question",
-      // text: `Do you want delete ${depData.first_name}`,
+      title: hasRelatedTours ? "Delete Linked Asset?" : "Delete Asset?",
+      icon: hasRelatedTours ? "warning" : "question",
+      html: hasRelatedTours
+        ? buildRelatedToursDeleteWarningHtml(relatedTours)
+        : undefined,
       showCancelButton: true,
       confirmButtonText: "Yes",
       confirmButtonColor: "#F38430",
       cancelButtonText: "Cancel",
+      width: hasRelatedTours ? "28rem" : undefined,
     }).then((resp) => {
-      deleteAsset(id)
+      if (!resp.isConfirmed) {
+        return;
+      }
+
+      deleteAsset(asset.id)
         .then((res) => {
           resetTable();
           Swal.fire({
@@ -278,7 +331,10 @@ const Assets = ({ contacts, id }) => {
                                         <td>{boat.location_name}</td>
                                         <td>{boat.asset_marina_location}</td>
                                         <td>
-                                          <ActiveBoat cell={boat} />
+                                          <ActiveBoat
+                                            cell={boat}
+                                            onStatusChange={onBoatActiveChange}
+                                          />
                                         </td>
 
                                         <td>
@@ -321,7 +377,7 @@ const Assets = ({ contacts, id }) => {
                                             <div
                                               className="text-danger"
                                               onClick={() => {
-                                                deleteAssetSelected(boat.id);
+                                                deleteAssetSelected(boat);
                                               }}
                                             >
                                               <i
@@ -416,7 +472,7 @@ const Assets = ({ contacts, id }) => {
                                             <div
                                               className="text-danger"
                                               onClick={() => {
-                                                deleteAssetSelected(vehicle.id);
+                                                deleteAssetSelected(vehicle);
                                               }}
                                             >
                                               <i
@@ -505,7 +561,7 @@ const Assets = ({ contacts, id }) => {
                                             <div
                                               className="text-danger"
                                               onClick={() => {
-                                                deleteAssetSelected(item.id);
+                                                deleteAssetSelected(item);
                                               }}
                                             >
                                               <i
@@ -620,7 +676,7 @@ const Assets = ({ contacts, id }) => {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {selectedAsset?.assets_related_tours.map(
+                                      {getAssetRelatedTours(selectedAsset).map(
                                         (item, index) => {
                                           return (
                                             <>
@@ -632,7 +688,7 @@ const Assets = ({ contacts, id }) => {
                                                 </td>
                                                 <td>
                                                   <a
-                                                    href={item.admin_link}
+                                                    href={item.admin_link + "?t=10"}
                                                     target="_blank"
                                                     rel="noreferrer"
                                                   >

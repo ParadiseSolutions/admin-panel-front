@@ -81,9 +81,6 @@ const AddBoatModal = ({
     }
   }, [dataEdit]);
 
-  console.log("data desde boat", dataEdit);
-
-  // console.log(dataEdit.length);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,

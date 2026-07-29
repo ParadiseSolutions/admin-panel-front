@@ -9,7 +9,8 @@ Este documento está pensado para que un desarrollador nuevo pueda entender el p
 ## Tabla de contenidos
 
 - [Requisitos](#requisitos)
-- [Inicio rápido](#inicio-rápido)
+- [Instalación paso a paso (desde cero)](#instalación-paso-a-paso-desde-cero)
+- [Inicio rápido (si ya tienes todo instalado)](#inicio-rápido-si-ya-tienes-todo-instalado)
 - [Qué hace esta aplicación](#qué-hace-esta-aplicación)
 - [Relación con Admin-Panel-API](#relación-con-admin-panel-api)
 - [Estructura del proyecto](#estructura-del-proyecto)
@@ -26,20 +27,133 @@ Este documento está pensado para que un desarrollador nuevo pueda entender el p
 
 ## Requisitos
 
-| Herramienta | Versión recomendada |
-|-------------|-------------------|
-| Node.js     | 16.x o 18.x (LTS) |
-| npm         | 8+                |
+| Herramienta | Versión recomendada | Para qué sirve |
+|-------------|---------------------|----------------|
+| Node.js     | 16.x o 18.x (LTS)   | Motor que ejecuta el proyecto y trae `npm` |
+| npm         | 8+ (viene con Node) | Instala las librerías y arranca la app |
+| Git         | Última estable      | Descargar (clonar) el código del repositorio |
+| VS Code     | Última estable      | Editor recomendado para leer/editar el código |
+| Navegador   | Google Chrome       | Ver la app y usar las DevTools (pestaña Network) |
 
 El proyecto usa **Create React App** (`react-scripts` 5) con **React 17**.
 
+> **No necesitas saber React para levantarlo.** Esta guía te lleva de cero (equipo recién formateado) hasta ver el login en el navegador. La parte de "cómo está hecho por dentro" viene más abajo.
+
 ---
 
-## Inicio rápido
+## Instalación paso a paso (desde cero)
 
-```bash
-# 1. Clonar el repositorio
-git clone <url-del-repo>
+Esta sección asume **Windows** y que **no tienes nada instalado** todavía. Si ya tienes Node, Git y VS Code, salta al [Inicio rápido](#inicio-rápido-si-ya-tienes-todo-instalado).
+
+### Conceptos mínimos (30 segundos)
+
+Antes de empezar, tres palabras que vas a ver todo el tiempo:
+
+- **Node.js**: programa que permite ejecutar JavaScript fuera del navegador. Es lo que necesita el proyecto para funcionar.
+- **npm**: el "gestor de paquetes" que viene incluido con Node. Descarga las librerías que el proyecto necesita (quedan en la carpeta `node_modules`) y ejecuta comandos como arrancar la app.
+- **Git**: sistema para descargar y sincronizar el código del repositorio (clonar, actualizar, subir cambios).
+
+No hace falta entender más para instalar. Vamos por pasos.
+
+### Paso 1 — Instalar Node.js (incluye npm)
+
+1. Entra a [https://nodejs.org](https://nodejs.org).
+2. Descarga la versión **LTS** (recomendada: **18.x**). El instalador `.msi` de Windows trae Node **y npm** juntos.
+3. Ejecuta el instalador y acepta todo por defecto (deja marcada la opción "Add to PATH").
+4. **Cierra y vuelve a abrir** cualquier terminal que tuvieras abierta (para que reconozca los comandos nuevos).
+
+> Si en tu equipo se manejan varias versiones de Node, pregunta si usan **nvm-windows** ([nvm-windows releases](https://github.com/coreybutler/nvm-windows/releases)) en lugar del instalador oficial. Para una primera instalación, el `.msi` oficial es suficiente.
+
+### Paso 2 — Instalar Git
+
+1. Entra a [https://git-scm.com/download/win](https://git-scm.com/download/win) y descarga el instalador.
+2. Ejecútalo y acepta las opciones por defecto (son adecuadas para la mayoría).
+3. Cierra y vuelve a abrir la terminal.
+
+### Paso 3 — Instalar VS Code (editor)
+
+1. Descárgalo desde [https://code.visualstudio.com](https://code.visualstudio.com) e instálalo.
+2. (Opcional pero recomendado) instala las extensiones **ESLint** y **Prettier** desde el panel de extensiones.
+
+### Paso 4 — Verificar que todo quedó instalado
+
+Abre una terminal nueva. En Windows puedes usar **PowerShell** (busca "PowerShell" en el menú inicio) o la terminal integrada de VS Code (`Ctrl` + `` ` ``). Ejecuta uno por uno:
+
+```powershell
+node -v
+npm -v
+git --version
+```
+
+Deberías ver algo como `v18.20.0`, `10.x.x` y `git version 2.x`. Si algún comando dice *"no se reconoce"*, cierra la terminal, ábrela de nuevo y, si sigue fallando, reinstala esa herramienta asegurándote de dejar marcada la opción de agregar al PATH.
+
+### Paso 5 — Obtener el código (clonar el repositorio)
+
+1. Elige (o crea) una carpeta donde guardar proyectos. En este equipo el estándar es trabajar dentro de `C:\xampp\htdocs\sites`.
+2. En la terminal, entra a esa carpeta y clona el repo. Pide la **URL del repositorio** a tu equipo:
+
+```powershell
+cd C:\xampp\htdocs\sites
+git clone <url-del-repo> admin-panel-front
+cd admin-panel-front
+```
+
+> La primera vez, Git puede pedirte iniciar sesión (GitHub/GitLab). Usa las credenciales que te dé tu equipo. Si el proyecto **ya está** en tu equipo (como en este caso, dentro de `C:\xampp\htdocs\sites\admin-panel-front`), solo entra a la carpeta con `cd` y sáltate el `git clone`.
+
+### Paso 6 — Instalar las dependencias del proyecto
+
+Estando **dentro** de la carpeta `admin-panel-front` (donde está el archivo `package.json`):
+
+```powershell
+npm install
+```
+
+Qué esperar:
+
+- Tarda varios minutos la primera vez (descarga cientos de librerías a `node_modules`).
+- Es **normal** ver mensajes amarillos de `warn` (deprecaciones, peer dependencies). No son errores; puedes ignorarlos.
+- Solo preocúpate si aparece `ERR!` en rojo y el comando termina sin instalar. En ese caso revisa [Problemas frecuentes](#problemas-frecuentes).
+
+> Si `npm install` falla por conflictos de versiones (peer dependencies), prueba `npm install --legacy-peer-deps`.
+
+### Paso 7 — Arrancar la app
+
+```powershell
+npm start
+```
+
+Qué esperar:
+
+- La terminal compila el proyecto y, al terminar, abre automáticamente el navegador en [http://localhost:3000](http://localhost:3000).
+- Verás la **pantalla de login**. La terminal se queda "ocupada" mostrando `Compiled successfully!`: eso es correcto, significa que el servidor de desarrollo está corriendo.
+- Cada vez que guardes un cambio en el código, la página se recarga sola (*hot reload*).
+- Para **detener** el servidor, vuelve a la terminal y pulsa `Ctrl` + `C`.
+
+### Paso 8 — Iniciar sesión
+
+Por defecto el front apunta al **API de producción** (`api.paradisesolutions.com`), así que necesitas **credenciales reales** (email y contraseña) que te debe proporcionar tu equipo. No hay usuario de prueba genérico en este repositorio.
+
+Tras un login correcto, la app te lleva a **`/tours`** (la pantalla principal de trabajo).
+
+> Si quieres apuntar a un backend local en lugar de producción, revisa [API y autenticación](#api-y-autenticación) y [Configuración de entorno compartida](#configuración-de-entorno-compartida).
+
+### ¿Y ahora qué?
+
+Ya tienes el proyecto corriendo. A partir de aquí:
+
+- Para **entender qué es y qué hace**, sigue con [Qué hace esta aplicación](#qué-hace-esta-aplicación).
+- Para **saber dónde tocar el código**, ve a [Estructura del proyecto](#estructura-del-proyecto) y [Guía para desarrollar](#guía-para-desarrollar).
+- Si algo salió mal en la instalación, revisa [Problemas frecuentes](#problemas-frecuentes).
+
+---
+
+## Inicio rápido (si ya tienes todo instalado)
+
+Para quien ya tiene **Node 16/18, npm y Git** en su equipo:
+
+```powershell
+# 1. Clonar el repositorio (omite si ya lo tienes local)
+git clone <url-del-repo> admin-panel-front
 cd admin-panel-front
 
 # 2. Instalar dependencias
@@ -347,6 +461,10 @@ Si no ves una sección en el menú, el usuario no tiene ese módulo asignado (no
 
 Los módulos **Tours** y **Providers** concentran la mayor parte de la lógica y los modales.
 
+**Assets (Boats) / wiki:** análisis del modal de boats, modelo de datos y relación con Group Tool, Dispatch y Database → [`src/Components/Common/Modals/AssetsModal/README.md`](src/Components/Common/Modals/AssetsModal/README.md).
+
+**Pricing / Products / wiki:** características EAV por tipo de tour, `prices` / `products_temp`, `charter_types(_fishing)` y vínculo con activities → [`src/Components/Common/Modals/PricingModals/README.md`](src/Components/Common/Modals/PricingModals/README.md).
+
 ---
 
 ## Guía para desarrollar
@@ -529,6 +647,11 @@ Antes de cambiar lógica de tours, carritos o policies desde el panel, consulta 
 
 | Síntoma | Posible causa |
 |---------|----------------|
+| `node`, `npm` o `git` "no se reconoce como comando" | La herramienta no está instalada o no quedó en el PATH. Cierra y reabre la terminal; si sigue, reinstala marcando "Add to PATH". |
+| `npm install` falla con errores de peer dependencies | Reintenta con `npm install --legacy-peer-deps`. |
+| `npm install` se corta a la mitad / errores de red | Problema de conexión o proxy. Reintenta; borra `node_modules` y el `package-lock.json` y vuelve a `npm install` si persiste. |
+| `npm start` no encuentra scripts / módulos | No corriste `npm install` o no estás dentro de la carpeta correcta (donde está `package.json`). |
+| La app abre pero el login da 401 / no entra | Credenciales incorrectas o el front apunta a un API distinto. Verifica usuario/clave y la URL en `Utils/API/index.js`. |
 | Redirige siempre a `/login` | No hay `token` en `localStorage` o está corrupto. Borra `localStorage` y vuelve a iniciar sesión. |
 | No aparece un ítem del menú | El usuario no tiene el `module_id` en `token.modules`. |
 | Error 401 en todas las peticiones | Token expirado o inválido. Cierra sesión y entra de nuevo. |

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import Switch from "react-switch";
+import React from "react";
 import { changeActiveBoats, updateProviders } from "../../Utils/API/Providers";
-import { Toast, ToastBody, ToastHeader, Spinner } from "reactstrap";
 import { providersData } from "../../Utils/Redux/Actions/ProvidersActions";
 import { useDispatch } from "react-redux";
+import {
+  StatusSwitch,
+  useStatusToggle,
+} from "../../Components/Common/StatusSwitch";
 
 const Name = (cell) => {
   return cell.value ? cell.value : "";
@@ -22,171 +24,30 @@ const Rol = (cell) => {
 };
 
 const Active = (cell) => {
-  
   const dispatch = useDispatch();
-  const id = cell.row.original.id;
-  const Offsymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        No
-      </div>
-    );
-  };
+  const active = Number(cell.value) === 1;
+  const [saving, toggle] = useStatusToggle({
+    id: cell.row.original.id,
+    active: active,
+    request: updateProviders,
+    // El listado pasa su propio refresh para conservar el filtro Show Active;
+    // sin el, recargar traeria la lista completa.
+    onStatusChange: cell.onStatusChange || (() => dispatch(providersData())),
+  });
 
-  const OnSymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        Yes
-      </div>
-    );
-  };
-
-  const [activeDep, setActiveDep] = useState(
-    cell.value && cell.value === 1 ? true : false
-  );
-
-  const onChangeActive = () => {
-    setActiveDep(!activeDep);
-
-    if (cell.value === 1) {
-      let data = { active: 0 };
-      updateProviders(id, data).then((resp) => {
-        var providersRequest = () => dispatch(providersData());
-    providersRequest();
-        // console.log(resp);
-      });
-    }
-    if (cell.value === 0) {
-      let data = { active: 1 };
-      updateProviders(id, data)
-        .then((resp) => {
-          var providersRequest = () => dispatch(providersData());
-          providersRequest();
-
-          // console.log(resp);
-        })
-        .catch((error) => {
-          // console.log(error);
-          setTimeout(() => {
-            <Toast>
-              <ToastHeader
-                icon={<Spinner type="grow" size="sm" color="danger" />}
-              >
-                Oops...
-              </ToastHeader>
-              <ToastBody>Something went wrong. Please, try again later!</ToastBody>
-            </Toast>;
-          }, 5000);
-        });
-    }
-  };
-  return (
-    <Switch
-      uncheckedIcon={<Offsymbol />}
-      checkedIcon={<OnSymbol />}
-      onColor="#3DC7F4"
-      onChange={() => onChangeActive()}
-      checked={activeDep}
-    />
-  );
+  return <StatusSwitch active={active} saving={saving} onToggle={toggle} />;
 };
-const ActiveBoat = (boat) => {
-  console.log('boat',boat);
-  const dispatch = useDispatch();
-  const id = boat.cell.id;
-  const Offsymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        No
-      </div>
-    );
-  };
 
-  const OnSymbol = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          fontSize: 12,
-          color: "#fff",
-          paddingRight: 2,
-        }}
-      >
-        {" "}
-        Yes
-      </div>
-    );
-  };
+const ActiveBoat = ({ cell, onStatusChange }) => {
+  const active = Number(cell.active) === 1;
+  const [saving, toggle] = useStatusToggle({
+    id: cell.id,
+    active: active,
+    request: changeActiveBoats,
+    onStatusChange: onStatusChange,
+  });
 
-  const [activeDep, setActiveDep] = useState(
-    boat.cell.active && boat.cell.active === 1 ? true : false
-  );
-
-  const onChangeActive = () => {
-    setActiveDep(!activeDep);
-
-    if (boat.cell.active === 1) {
-      let data = { active: 0 };
-      changeActiveBoats(id, data).then((resp) => {
-        var providersRequest = () => dispatch(providersData());
-        providersRequest();
-        // console.log(resp);
-      });
-    }
-    if (boat.cell.active === 0) {
-      let data = { active: 1 };
-     changeActiveBoats(id, data).then((resp) => {
-        var providersRequest = () => dispatch(providersData());
-        providersRequest();
-        // console.log(resp);
-      });
-    }
-  };
-  return (
-    <Switch
-      uncheckedIcon={<Offsymbol />}
-      checkedIcon={<OnSymbol />}
-      onColor="#3DC7F4"
-      onChange={() => onChangeActive()}
-      checked={activeDep}
-    />
-  );
+  return <StatusSwitch active={active} saving={saving} onToggle={toggle} />;
 };
 
 // const Active = (boat) => {

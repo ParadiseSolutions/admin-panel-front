@@ -1,5 +1,5 @@
 // import { createPaymentTypeAPI } from "../../../../Utils/API/Payments";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Row,
   Col,
@@ -30,9 +30,25 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { SUPPORTED_CLASS_OPTIONS } from "../constants/boatClassOptions";
 import {
-  DURATION_OPTIONS,
+  getDurationOptionsForLocation,
   normalizeDurationValues,
+  pruneDurationValue,
+  pruneDurationValues,
 } from "../constants/boatDurationOptions";
+import {
+  ACTIVITY_SHORTCUTS,
+  filterActivityOptions,
+  getAllowedActivityNames,
+  resolveActivitySelection,
+} from "../constants/boatActivityOptions";
+import {
+  DEPARTURE_SHORTCUTS,
+  resolveDepartureLocationSelection,
+} from "../constants/boatDepartureLocationOptions";
+import {
+  RequiredFieldsLegend,
+  RequiredMark,
+} from "../constants/boatFormUi";
 
 const BoatComponent = ({
   setMenu,
@@ -64,7 +80,85 @@ const BoatComponent = ({
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [mainClassSelected, setMainClassSelected] = useState(0);
-  const [fishingAditionalInputs, setFishingAditionalInputs] = useState(false);
+  const fishingAditionalInputs = Number(boatTypeSelected) === 3;
+  const selectedBoatTypeName =
+    boatTypeData.find((type) => Number(type.id) === Number(boatTypeSelected))
+      ?.name || "";
+  const filteredActivityData = useMemo(
+    () =>
+      filterActivityOptions(
+        activityData,
+        getAllowedActivityNames({
+          boatTypeId: boatTypeSelected,
+          boatTypeName: selectedBoatTypeName,
+          locationId: locationSelected,
+        }),
+      ),
+    [
+      activityData,
+      boatTypeSelected,
+      selectedBoatTypeName,
+      locationSelected,
+    ],
+  );
+  const filteredDepartureLocationData = useMemo(
+    () =>
+      depatureLocationData.filter((item) => {
+        const matchesLocation =
+          Number(item.location_id) === Number(locationSelected);
+        // Treat missing active as enabled (legacy rows).
+        const isActive =
+          item.active == null ||
+          item.active === "" ||
+          Number(item.active) === 1;
+        return matchesLocation && isActive;
+      }),
+    [depatureLocationData, locationSelected],
+  );
+  const filteredCustomWorkflowDurationOptions = useMemo(
+    () => getDurationOptionsForLocation(locationSelected),
+    [locationSelected],
+  );
+
+  const normalizeDepartureName = (value) =>
+    String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase()
+      .replace(/^marina\s+/i, "");
+
+  const findDepartureIdsForMarina = (marinaId, departureOptions) => {
+    if (!marinaId || !departureOptions?.length) {
+      return [];
+    }
+    const marina = boatLocationData.find(
+      (item) => Number(item.id) === Number(marinaId),
+    );
+    const marinaName = normalizeDepartureName(marina?.name);
+    const matchingDeparture =
+      departureOptions.find((item) => Number(item.id) === Number(marinaId)) ||
+      (marinaName
+        ? departureOptions.find(
+            (item) => normalizeDepartureName(item.name) === marinaName,
+          )
+        : null) ||
+      (marinaName
+        ? departureOptions.find((item) => {
+            const departureName = normalizeDepartureName(item.name);
+            return (
+              !!departureName &&
+              (departureName.includes(marinaName) ||
+                marinaName.includes(departureName))
+            );
+          })
+        : null);
+    return matchingDeparture ? [matchingDeparture.id] : [];
+  };
+
+  // Tracks which Marina+section defaults were already applied, so clearing the
+  // only chip is respected instead of being re-defaulted on the next render.
+  const appliedDepartureDefaultsRef = useRef(new Set());
+
   const [flexiblePrice, setFlexiblePrice] = useState(false);
   const [customPricesCheck, setCustomPricesCheck] = useState(false);
   const [customPickUpCheck, setCustomPickUpCheck] = useState(false);
@@ -175,11 +269,6 @@ const BoatComponent = ({
       setFlexiblePrice(dataEdit.has_supported_classes === 1 ? true : false);
       setInitialOptionsArea(dataEdit.activities);
       setActivitiesSelected(dataEdit.activities);
-      const fishingIds = [1, 2, 17, 50, 51, 52, 55];
-
-      setFishingAditionalInputs(
-        fishingIds.some((id) => dataEdit.activities.includes(id)),
-      );
       setSuportedClassSelectedOne(
         dataEdit.supported_classes?.class_id_1 || null,
       );
@@ -273,47 +362,280 @@ const BoatComponent = ({
   }, [dataEdit, isEdit]);
 
   useEffect(() => {
-    if (customPickUpCheck && !flexiblePrice) {
+    if (customPickUpCheck) {
       setInitialMainDepartureLocations([]);
       setMainDepartureLocationsSelected([]);
     }
-  }, [customPickUpCheck, flexiblePrice]);
+  }, [customPickUpCheck]);
 
-  //multi select activities
-  function handleMulti(selected) {
-    console.log("selected activities", selected);
-    setActivitiesSelected(selected);
-    if (!selected || selected.length === 0) {
-      setFishingAditionalInputs(false);
+  const clearDepartureLocationSelections = () => {
+    setMainDepartureLocationsSelected([]);
+    setInitialMainDepartureLocations([]);
+    setDepartureLocationsSelectedOne([]);
+    setDepartureLocationsSelectedTwo([]);
+    setDepartureLocationsSelectedThree([]);
+    setInitialDepartureLocationsOne([]);
+    setInitialDepartureLocationsTwo([]);
+    setInitialDepartureLocationsThree([]);
+    setCustomPickUpDepartureOne([]);
+    setCustomPickUpDepartureTwo([]);
+    setCustomPickUpDepartureThree([]);
+    setInitialCustomPickUpDepartureOne([]);
+    setInitialCustomPickUpDepartureTwo([]);
+    setInitialCustomPickUpDepartureThree([]);
+  };
+
+  // Drop selected activities that are no longer valid for boat type / location.
+  useEffect(() => {
+    const allowedIds = new Set(
+      filteredActivityData.map((item) => Number(item.id)),
+    );
+    setActivitiesSelected((prev) => {
+      const next = (prev || []).filter((id) => allowedIds.has(Number(id)));
+      if (
+        next.length === (prev || []).length &&
+        next.every((id, index) => Number(id) === Number(prev[index]))
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, [filteredActivityData]);
+
+  // Drop custom-workflow duration selections not allowed for the current Location.
+  useEffect(() => {
+    if (!locationSelected) {
       return;
     }
 
-    const containsFishing = selected.some((sel) => {
-      if (typeof sel === "string" || typeof sel === "number") {
-        if (String(sel).toLowerCase().includes("fishing")) return true;
-        return activityData.some(
-          (a) =>
-            String(a.id) === String(sel) &&
-            String(a.text).toLowerCase().includes("fishing"),
+    const pruneList = (prev) => {
+      const next = pruneDurationValues(prev, locationSelected);
+      if (
+        next.length === (prev || []).length &&
+        next.every((value, index) => value === (prev || [])[index])
+      ) {
+        return prev;
+      }
+      return next;
+    };
+    const pruneSingle = (prev) => {
+      const next = pruneDurationValue(prev, locationSelected);
+      return next === prev ? prev : next;
+    };
+
+    setCustomPickUpDurationOne(pruneList);
+    setCustomPickUpDurationTwo(pruneList);
+    setCustomPickUpDurationThree(pruneList);
+    setInitialCustomPickUpDurationOne(pruneList);
+    setInitialCustomPickUpDurationTwo(pruneList);
+    setInitialCustomPickUpDurationThree(pruneList);
+    setDurationClassSelectedOne(pruneList);
+    setDurationClassSelectedTwo(pruneList);
+    setDurationClassSelectedThree(pruneList);
+    setInitialDurationOne(pruneList);
+    setInitialDurationTwo(pruneList);
+    setInitialDurationThree(pruneList);
+    setCustomDurationOne(pruneSingle);
+    setCustomDurationTwo(pruneSingle);
+    setCustomDurationThree(pruneSingle);
+    setCustomDurationFour(pruneSingle);
+    setCustomDurationFive(pruneSingle);
+    setCustomDurationSix(pruneSingle);
+  }, [locationSelected, filteredCustomWorkflowDurationOptions]);
+
+  // Drop departure selections that do not belong to the current Location.
+  useEffect(() => {
+    if (!locationSelected || depatureLocationData.length === 0) {
+      return;
+    }
+    const allowedIds = new Set(
+      filteredDepartureLocationData.map((item) => Number(item.id)),
+    );
+    const prune = (prev) => {
+      const next = (prev || []).filter((id) => allowedIds.has(Number(id)));
+      if (
+        next.length === (prev || []).length &&
+        next.every((id, index) => Number(id) === Number(prev[index]))
+      ) {
+        return prev;
+      }
+      return next;
+    };
+
+    setMainDepartureLocationsSelected(prune);
+    setInitialMainDepartureLocations(prune);
+    setDepartureLocationsSelectedOne(prune);
+    setDepartureLocationsSelectedTwo(prune);
+    setDepartureLocationsSelectedThree(prune);
+    setInitialDepartureLocationsOne(prune);
+    setInitialDepartureLocationsTwo(prune);
+    setInitialDepartureLocationsThree(prune);
+    setCustomPickUpDepartureOne(prune);
+    setCustomPickUpDepartureTwo(prune);
+    setCustomPickUpDepartureThree(prune);
+    setInitialCustomPickUpDepartureOne(prune);
+    setInitialCustomPickUpDepartureTwo(prune);
+    setInitialCustomPickUpDepartureThree(prune);
+  }, [
+    locationSelected,
+    depatureLocationData.length,
+    filteredDepartureLocationData,
+  ]);
+
+  // Default empty/enabled Departure Location selects to the Marina name.
+  // Never overwrite selections the user already customized, and only default
+  // each Marina+section once so the user can clear the last chip on purpose.
+  useEffect(() => {
+    if (!boatLocationSelected || filteredDepartureLocationData.length === 0) {
+      return;
+    }
+
+    const defaultIds = findDepartureIdsForMarina(
+      boatLocationSelected,
+      filteredDepartureLocationData,
+    );
+    if (!defaultIds.length) {
+      return;
+    }
+
+    const allowedIds = new Set(
+      filteredDepartureLocationData.map((item) => Number(item.id)),
+    );
+    const hasValidSelection = (ids = []) =>
+      (ids || []).some((id) => allowedIds.has(Number(id)));
+
+    const applied = appliedDepartureDefaultsRef.current;
+    // Apply the default only once per Marina + section combination.
+    const applyDefaultOnce = (section, current, initial, setter) => {
+      const key = `${boatLocationSelected}:${section}`;
+      if (applied.has(key)) {
+        return;
+      }
+      applied.add(key);
+      if (!hasValidSelection(current) && !hasValidSelection(initial)) {
+        setter(defaultIds);
+      }
+    };
+
+    // Main Departure Location(s) — only when custom pick-up is not enabled.
+    if (fishingAditionalInputs && !customPickUpCheck) {
+      applyDefaultOnce(
+        "main",
+        mainDepartureLocationsSelected,
+        initialMainDepartureLocations,
+        setMainDepartureLocationsSelected,
+      );
+    }
+
+    // Custom pick-up departure rows (only enabled ones).
+    if (customPickUpCheck) {
+      applyDefaultOnce(
+        "custom1",
+        customPickUpDepartureOne,
+        initialCustomPickUpDepartureOne,
+        setCustomPickUpDepartureOne,
+      );
+      if (customPickUpRowTwo) {
+        applyDefaultOnce(
+          "custom2",
+          customPickUpDepartureTwo,
+          initialCustomPickUpDepartureTwo,
+          setCustomPickUpDepartureTwo,
         );
       }
-      if (sel && typeof sel === "object") {
-        if (sel.label && String(sel.label).toLowerCase().includes("fishing"))
-          return true;
-        if (sel.value) {
-          return activityData.some(
-            (a) =>
-              String(a.id) === String(sel.value) &&
-              String(a.text).toLowerCase().includes("fishing"),
-          );
-        }
+      if (customPickUpRowThree) {
+        applyDefaultOnce(
+          "custom3",
+          customPickUpDepartureThree,
+          initialCustomPickUpDepartureThree,
+          setCustomPickUpDepartureThree,
+        );
       }
-      return false;
-    });
+    }
 
-    setFishingAditionalInputs(Boolean(containsFishing));
-    // setSelectionID(selected);
+    // Supported-class departure rows (only enabled ones).
+    if (flexiblePrice) {
+      applyDefaultOnce(
+        "class1",
+        dapatureLocationsSelectedOne,
+        initialDepartureLocationsOne,
+        setDepartureLocationsSelectedOne,
+      );
+      if (supportedClassRowTwo) {
+        applyDefaultOnce(
+          "class2",
+          dapatureLocationsSelectedTwo,
+          initialDepartureLocationsTwo,
+          setDepartureLocationsSelectedTwo,
+        );
+      }
+      if (supportedClassRowThree) {
+        applyDefaultOnce(
+          "class3",
+          dapatureLocationsSelectedThree,
+          initialDepartureLocationsThree,
+          setDepartureLocationsSelectedThree,
+        );
+      }
+    }
+  }, [
+    boatLocationSelected,
+    boatLocationData,
+    filteredDepartureLocationData,
+    fishingAditionalInputs,
+    flexiblePrice,
+    customPickUpCheck,
+    customPickUpRowTwo,
+    customPickUpRowThree,
+    supportedClassRowTwo,
+    supportedClassRowThree,
+    mainDepartureLocationsSelected,
+    initialMainDepartureLocations,
+    customPickUpDepartureOne,
+    initialCustomPickUpDepartureOne,
+    customPickUpDepartureTwo,
+    initialCustomPickUpDepartureTwo,
+    customPickUpDepartureThree,
+    initialCustomPickUpDepartureThree,
+    dapatureLocationsSelectedOne,
+    initialDepartureLocationsOne,
+    dapatureLocationsSelectedTwo,
+    initialDepartureLocationsTwo,
+    dapatureLocationsSelectedThree,
+    initialDepartureLocationsThree,
+  ]);
+
+  //multi select activities
+  function handleMulti(selected) {
+    setActivitiesSelected(
+      resolveActivitySelection(selected, filteredActivityData),
+    );
   }
+
+  function handleDepartureMulti(selected, setter) {
+    setter(
+      resolveDepartureLocationSelection(
+        selected,
+        filteredDepartureLocationData,
+      ),
+    );
+  }
+
+  const departureLocationSelectOptions = (
+    <>
+      {filteredDepartureLocationData.length > 0 &&
+        map(DEPARTURE_SHORTCUTS, (shortcut) => (
+          <Option key={shortcut.value} value={shortcut.value}>
+            {shortcut.label}
+          </Option>
+        ))}
+      {map(filteredDepartureLocationData, (item) => (
+        <Option key={item.id} value={item.id}>
+          {item.name}
+        </Option>
+      ))}
+    </>
+  );
 
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -474,7 +796,6 @@ const BoatComponent = ({
           net_price_6: values.net_price_6 !== "" ? values.net_price_6 : null,
         },
       };
-      console.log("Submitting boat data:", data);
       if (dataEdit) {
         putBoat(dataEdit.id, data)
           .then((resp) => {
@@ -568,12 +889,16 @@ const BoatComponent = ({
           }}
           className="custom-validation"
         >
+          <RequiredFieldsLegend />
           <Row>
             <Row>
               <Col className="col-2">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Boat Name</Label>
+                    <Label className="form-label">
+                      Boat Name
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
@@ -615,7 +940,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Type</Label>
+                  <Label className="form-label">
+                    Type
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -657,7 +985,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Length</Label>
+                  <Label className="form-label">
+                    Length
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -705,7 +1036,10 @@ const BoatComponent = ({
               <Col className="col-2">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Make</Label>
+                    <Label className="form-label">
+                      Make
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
@@ -802,7 +1136,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Location</Label>
+                  <Label className="form-label">
+                    Location
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -826,6 +1163,8 @@ const BoatComponent = ({
                   name=""
                   onChange={(e) => {
                     setLocationSelected(+e.target.value);
+                    setBoatLocationSelected(0);
+                    clearDepartureLocationSelections();
                   }}
                   onBlur={validationType.handleBlur}
                   //   value={validationType.values.department || ""}
@@ -855,7 +1194,10 @@ const BoatComponent = ({
             <Row>
               <Col className="col-2">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Marina</Label>
+                  <Label className="form-label">
+                    Marina
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -905,7 +1247,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">A/C</Label>
+                  <Label className="form-label">
+                    A/C
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -947,7 +1292,10 @@ const BoatComponent = ({
               <Col className="col-1">
                 <div className="form-outline mb-4">
                   <div className="d-flex justify-content-between">
-                    <Label className="form-label">Capacity</Label>
+                    <Label className="form-label">
+                      Capacity
+                      <RequiredMark />
+                    </Label>
                     <div>
                       <i
                         className="uil-question-circle font-size-15"
@@ -1028,7 +1376,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Shade</Label>
+                  <Label className="form-label">
+                    Shade
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -1070,7 +1421,10 @@ const BoatComponent = ({
               </Col>
               <Col className="col-1">
                 <div className="d-flex justify-content-between">
-                  <Label className="form-label">Access.</Label>
+                  <Label className="form-label">
+                    Access.
+                    <RequiredMark />
+                  </Label>
                   <div>
                     <i
                       className="uil-question-circle font-size-15"
@@ -1138,7 +1492,13 @@ const BoatComponent = ({
                   onChange={handleMulti}
                   value={activitiesSelected}
                 >
-                  {map(activityData, (item, index) => {
+                  {filteredActivityData.length > 0 &&
+                    map(ACTIVITY_SHORTCUTS, (shortcut) => (
+                      <Option key={shortcut.value} value={shortcut.value}>
+                        {shortcut.label}
+                      </Option>
+                    ))}
+                  {map(filteredActivityData, (item, index) => {
                     return (
                       <Option key={index} value={item.id}>
                         {item.text}
@@ -1229,7 +1589,6 @@ const BoatComponent = ({
                           headers: imagesOptions,
                         })
                         .then((response) => {
-                          console.log("respuesta", response);
                           setPdfLink(response.data.data.url);
                         })
                         .catch((error) => {
@@ -1318,7 +1677,6 @@ const BoatComponent = ({
                           headers: imagesOptions,
                         })
                         .then((response) => {
-                          console.log("respuesta", response.data.data.url);
                           setImageLink(response.data.data.url);
                         })
                         .catch((error) => {
@@ -1456,7 +1814,7 @@ const BoatComponent = ({
                   </Col>
                   <Col className="col-2">
                     <div className="d-flex justify-content-between">
-                      <Label className="form-label">Main Class</Label>
+                      <Label className="form-label">Boat Class</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1515,7 +1873,7 @@ const BoatComponent = ({
                       mode="multiple"
                       allowClear
                       rows="5"
-                      disabled={flexiblePrice || customPickUpCheck}
+                      disabled={customPickUpCheck}
                       style={{ width: "100%", paddingTop: "5px" }}
                       placeholder="Please select"
                       value={
@@ -1525,20 +1883,19 @@ const BoatComponent = ({
                             ? mainDepartureLocationsSelected
                             : initialMainDepartureLocations
                       }
-                      onChange={(e) => setMainDepartureLocationsSelected(e)}
+                      onChange={(values) =>
+                        handleDepartureMulti(
+                          values,
+                          setMainDepartureLocationsSelected,
+                        )
+                      }
                     >
-                      {map(depatureLocationData, (item, index) => {
-                        return (
-                          <Option key={index} value={item.id}>
-                            {item.name}
-                          </Option>
-                        );
-                      })}
+                      {departureLocationSelectOptions}
                     </Select>
                   </Col>
                   <Col className="col-1 d-flex align-items-center mt-4">
-                    <div className="d-flex mt-1 ">
-                      <Label className="form-label">Custom</Label>
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                      <Label className="form-label mb-0">Custom</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1565,7 +1922,7 @@ const BoatComponent = ({
                         onChange={() => {
                           const nextValue = !customPickUpCheck;
                           setCustomPickUpCheck(nextValue);
-                          if (nextValue && !flexiblePrice) {
+                          if (nextValue) {
                             setInitialMainDepartureLocations([]);
                             setMainDepartureLocationsSelected([]);
                           }
@@ -1575,10 +1932,310 @@ const BoatComponent = ({
                     </div>
                   </Col>
                 </Row>
+                {customPickUpCheck ? (
+                  <>
+                    <Row className="mt-4">
+                      <div
+                        className="p-3"
+                        style={{ backgroundColor: "#E9F4FF" }}
+                      >
+                        <p className="fs-5 fw-bold text-uppercase text-dark mb-0">
+                          Custom Pick-Up Locations
+                        </p>
+                      </div>
+                    </Row>
+                    <Row className="mb-2 d-flex">
+                      <Col className="col-3">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">Duration</Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="custom_pick_up_duration_one"
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target="custom_pick_up_duration_one"
+                            >
+                              Select the duration of the trip to define its
+                              available pick-up locations.
+                            </UncontrolledTooltip>
+                          </div>
+                        </div>
+                        <Select
+                          mode="multiple"
+                          allowClear
+                          style={{ width: "100%", paddingTop: "5px" }}
+                          placeholder="Please select"
+                          value={
+                            customPickUpDurationOne.length > 0
+                              ? customPickUpDurationOne
+                              : initialCustomPickUpDurationOne
+                          }
+                          onChange={(values) =>
+                            setCustomPickUpDurationOne(values)
+                          }
+                        >
+                          {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
+                            <Option key={value} value={value}>
+                              {label}
+                            </Option>
+                          ))}
+                        </Select>
+                      </Col>
+                      <Col className="col">
+                        <div className="d-flex justify-content-between">
+                          <Label className="form-label">
+                            Depature Location
+                          </Label>
+                          <div>
+                            <i
+                              className="uil-question-circle font-size-15"
+                              id="custom_pick_up_departure_one"
+                            />
+                            <UncontrolledTooltip
+                              autohide={true}
+                              placement="top"
+                              target="custom_pick_up_departure_one"
+                            >
+                              Choose which departure locations are available for
+                              the selected duration.
+                            </UncontrolledTooltip>
+                          </div>
+                        </div>
+                        <Select
+                          mode="multiple"
+                          allowClear
+                          rows="5"
+                          style={{ width: "100%", paddingTop: "5px" }}
+                          placeholder="Please select"
+                          value={
+                            customPickUpDepartureOne.length > 0
+                              ? customPickUpDepartureOne
+                              : initialCustomPickUpDepartureOne
+                          }
+                          onChange={(values) =>
+                            handleDepartureMulti(
+                              values,
+                              setCustomPickUpDepartureOne,
+                            )
+                          }
+                        >
+                          {departureLocationSelectOptions}
+                        </Select>
+                      </Col>
+                      <Col className="col-1 d-flex align-items-center mt-4">
+                        <i
+                          className="uil-plus-circle font-size-20 text-paradise"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setCustomPickUpRowTwo(true)}
+                        />
+                      </Col>
+                    </Row>
+                    {customPickUpRowTwo ? (
+                      <Row className="mb-2 d-flex">
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_duration_two"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_duration_two"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            value={
+                              customPickUpDurationTwo.length > 0
+                                ? customPickUpDurationTwo
+                                : initialCustomPickUpDurationTwo
+                            }
+                            onChange={(values) =>
+                              setCustomPickUpDurationTwo(values)
+                            }
+                          >
+                            {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
+                              <Option key={value} value={value}>
+                                {label}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Col>
+                        <Col className="col">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">
+                              Depature Location
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_departure_two"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_departure_two"
+                              >
+                                Choose which departure locations are available
+                                for the selected duration.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            rows="5"
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            value={
+                              customPickUpDepartureTwo.length > 0
+                                ? customPickUpDepartureTwo
+                                : initialCustomPickUpDepartureTwo
+                            }
+                            onChange={(values) =>
+                              handleDepartureMulti(
+                                values,
+                                setCustomPickUpDepartureTwo,
+                              )
+                            }
+                          >
+                            {departureLocationSelectOptions}
+                          </Select>
+                        </Col>
+                        <Col className="col-1 d-flex align-items-center mt-4">
+                          {customPickUpIsRowOpen || !customPickUpRowThree ? (
+                            <i
+                              className="uil-plus-circle font-size-20 text-paradise"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => setCustomPickUpRowThree(true)}
+                            />
+                          ) : (
+                            <i
+                              className="uil-minus-circle font-size-20 text-danger"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setCustomPickUpRowThree(true);
+                                setCustomPickUpRowTwo(false);
+                                setCustomPickUpIsRowOpen(true);
+                              }}
+                            />
+                          )}
+                        </Col>
+                      </Row>
+                    ) : null}
+                    {customPickUpRowThree ? (
+                      <Row className="mb-2 d-flex">
+                        <Col className="col-3">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">Duration</Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_duration_three"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_duration_three"
+                              >
+                                Select the duration of the trip to define its
+                                available pick-up locations.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            value={
+                              customPickUpDurationThree.length > 0
+                                ? customPickUpDurationThree
+                                : initialCustomPickUpDurationThree
+                            }
+                            onChange={(values) =>
+                              setCustomPickUpDurationThree(values)
+                            }
+                          >
+                            {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
+                              <Option key={value} value={value}>
+                                {label}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Col>
+                        <Col className="col">
+                          <div className="d-flex justify-content-between">
+                            <Label className="form-label">
+                              Depature Location
+                            </Label>
+                            <div>
+                              <i
+                                className="uil-question-circle font-size-15"
+                                id="custom_pick_up_departure_three"
+                              />
+                              <UncontrolledTooltip
+                                autohide={true}
+                                placement="top"
+                                target="custom_pick_up_departure_three"
+                              >
+                                Choose which departure locations are available
+                                for the selected duration.
+                              </UncontrolledTooltip>
+                            </div>
+                          </div>
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            rows="5"
+                            style={{ width: "100%", paddingTop: "5px" }}
+                            placeholder="Please select"
+                            value={
+                              customPickUpDepartureThree.length > 0
+                                ? customPickUpDepartureThree
+                                : initialCustomPickUpDepartureThree
+                            }
+                            onChange={(values) =>
+                              handleDepartureMulti(
+                                values,
+                                setCustomPickUpDepartureThree,
+                              )
+                            }
+                          >
+                            {departureLocationSelectOptions}
+                          </Select>
+                        </Col>
+                        <Col className="col-1 d-flex align-items-center mt-4">
+                          <i
+                            className="uil-minus-circle font-size-20 text-danger"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setCustomPickUpRowThree(false);
+                              setCustomPickUpIsRowOpen(false);
+                            }}
+                          />
+                        </Col>
+                      </Row>
+                    ) : null}
+                  </>
+                ) : null}
                 <Row className="">
                   <Col className="col-3 d-flex align-items-center mt-4">
-                    <div className="d-flex mt-1 ">
-                      <Label className="form-label">Flexible</Label>
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                      <Label className="form-label mb-0">Flexible</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1611,8 +2268,8 @@ const BoatComponent = ({
                     </div>
                   </Col>
                   <Col className="col-3 d-flex align-items-center mt-4">
-                    <div className="d-flex mt-1 ">
-                      <Label className="form-label">Add Custom Prices</Label>
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                      <Label className="form-label mb-0">Add Custom Prices</Label>
                       <div>
                         <i
                           className="uil-question-circle font-size-15"
@@ -1646,292 +2303,6 @@ const BoatComponent = ({
                     </div>
                   </Col>
                 </Row>
-
-                {customPickUpCheck ? (
-                  <>
-                    <Row className="mt-4">
-                      <div
-                        className="p-3"
-                        style={{ backgroundColor: "#E9F4FF" }}
-                      >
-                        <p className="fs-5 fw-bold text-uppercase text-dark mb-0">
-                          Custom Pick-Up Locations
-                        </p>
-                      </div>
-                    </Row>
-                    <Row className="mb-2 d-flex">
-                      <Col className="col-2">
-                        <div className="d-flex justify-content-between">
-                          <Label className="form-label">Duration</Label>
-                          <div>
-                            <i
-                              className="uil-question-circle font-size-15"
-                              id="custom_pick_up_duration_one"
-                            />
-                            <UncontrolledTooltip
-                              autohide={true}
-                              placement="top"
-                              target="custom_pick_up_duration_one"
-                            >
-                              Select the duration of the trip to define its
-                              available pick-up locations.
-                            </UncontrolledTooltip>
-                          </div>
-                        </div>
-                        <Select
-                          mode="multiple"
-                          allowClear
-                          style={{ width: "100%", paddingTop: "5px" }}
-                          placeholder="Please select"
-                          defaultValue={initialCustomPickUpDurationOne}
-                          onChange={(values) =>
-                            setCustomPickUpDurationOne(values)
-                          }
-                        >
-                          {DURATION_OPTIONS.map(({ value, label }) => (
-                            <Option key={value} value={value}>
-                              {label}
-                            </Option>
-                          ))}
-                        </Select>
-                      </Col>
-                      <Col className="col">
-                        <div className="d-flex justify-content-between">
-                          <Label className="form-label">
-                            Depature Location
-                          </Label>
-                          <div>
-                            <i
-                              className="uil-question-circle font-size-15"
-                              id="custom_pick_up_departure_one"
-                            />
-                            <UncontrolledTooltip
-                              autohide={true}
-                              placement="top"
-                              target="custom_pick_up_departure_one"
-                            >
-                              Choose which departure locations are available for
-                              the selected duration.
-                            </UncontrolledTooltip>
-                          </div>
-                        </div>
-                        <Select
-                          mode="multiple"
-                          allowClear
-                          rows="5"
-                          style={{ width: "100%", paddingTop: "5px" }}
-                          placeholder="Please select"
-                          defaultValue={initialCustomPickUpDepartureOne}
-                          onChange={(values) =>
-                            setCustomPickUpDepartureOne(values)
-                          }
-                        >
-                          {map(depatureLocationData, (item, index) => {
-                            return (
-                              <Option key={index} value={item.id}>
-                                {item.name}
-                              </Option>
-                            );
-                          })}
-                        </Select>
-                      </Col>
-                      <Col className="col-1 d-flex align-items-center mt-4">
-                        <i
-                          className="uil-plus-circle font-size-20 text-paradise"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => setCustomPickUpRowTwo(true)}
-                        />
-                      </Col>
-                    </Row>
-                    {customPickUpRowTwo ? (
-                      <Row className="mb-2 d-flex">
-                        <Col className="col-2">
-                          <div className="d-flex justify-content-between">
-                            <Label className="form-label">Duration</Label>
-                            <div>
-                              <i
-                                className="uil-question-circle font-size-15"
-                                id="custom_pick_up_duration_two"
-                              />
-                              <UncontrolledTooltip
-                                autohide={true}
-                                placement="top"
-                                target="custom_pick_up_duration_two"
-                              >
-                                Select the duration of the trip to define its
-                                available pick-up locations.
-                              </UncontrolledTooltip>
-                            </div>
-                          </div>
-                          <Select
-                            mode="multiple"
-                            allowClear
-                            style={{ width: "100%", paddingTop: "5px" }}
-                            placeholder="Please select"
-                            defaultValue={initialCustomPickUpDurationTwo}
-                            onChange={(values) =>
-                              setCustomPickUpDurationTwo(values)
-                            }
-                          >
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <Option key={value} value={value}>
-                                {label}
-                              </Option>
-                            ))}
-                          </Select>
-                        </Col>
-                        <Col className="col">
-                          <div className="d-flex justify-content-between">
-                            <Label className="form-label">
-                              Depature Location
-                            </Label>
-                            <div>
-                              <i
-                                className="uil-question-circle font-size-15"
-                                id="custom_pick_up_departure_two"
-                              />
-                              <UncontrolledTooltip
-                                autohide={true}
-                                placement="top"
-                                target="custom_pick_up_departure_two"
-                              >
-                                Choose which departure locations are available
-                                for the selected duration.
-                              </UncontrolledTooltip>
-                            </div>
-                          </div>
-                          <Select
-                            mode="multiple"
-                            allowClear
-                            rows="5"
-                            style={{ width: "100%", paddingTop: "5px" }}
-                            placeholder="Please select"
-                            defaultValue={initialCustomPickUpDepartureTwo}
-                            onChange={(values) =>
-                              setCustomPickUpDepartureTwo(values)
-                            }
-                          >
-                            {map(depatureLocationData, (item, index) => {
-                              return (
-                                <Option key={index} value={item.id}>
-                                  {item.name}
-                                </Option>
-                              );
-                            })}
-                          </Select>
-                        </Col>
-                        <Col className="col-1 d-flex align-items-center mt-4">
-                          {customPickUpIsRowOpen || !customPickUpRowThree ? (
-                            <i
-                              className="uil-plus-circle font-size-20 text-paradise"
-                              style={{ cursor: "pointer" }}
-                              onClick={() => setCustomPickUpRowThree(true)}
-                            />
-                          ) : (
-                            <i
-                              className="uil-minus-circle font-size-20 text-danger"
-                              style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setCustomPickUpRowThree(true);
-                                setCustomPickUpRowTwo(false);
-                                setCustomPickUpIsRowOpen(true);
-                              }}
-                            />
-                          )}
-                        </Col>
-                      </Row>
-                    ) : null}
-                    {customPickUpRowThree ? (
-                      <Row className="mb-2 d-flex">
-                        <Col className="col-2">
-                          <div className="d-flex justify-content-between">
-                            <Label className="form-label">Duration</Label>
-                            <div>
-                              <i
-                                className="uil-question-circle font-size-15"
-                                id="custom_pick_up_duration_three"
-                              />
-                              <UncontrolledTooltip
-                                autohide={true}
-                                placement="top"
-                                target="custom_pick_up_duration_three"
-                              >
-                                Select the duration of the trip to define its
-                                available pick-up locations.
-                              </UncontrolledTooltip>
-                            </div>
-                          </div>
-                          <Select
-                            mode="multiple"
-                            allowClear
-                            style={{ width: "100%", paddingTop: "5px" }}
-                            placeholder="Please select"
-                            defaultValue={initialCustomPickUpDurationThree}
-                            onChange={(values) =>
-                              setCustomPickUpDurationThree(values)
-                            }
-                          >
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <Option key={value} value={value}>
-                                {label}
-                              </Option>
-                            ))}
-                          </Select>
-                        </Col>
-                        <Col className="col">
-                          <div className="d-flex justify-content-between">
-                            <Label className="form-label">
-                              Depature Location
-                            </Label>
-                            <div>
-                              <i
-                                className="uil-question-circle font-size-15"
-                                id="custom_pick_up_departure_three"
-                              />
-                              <UncontrolledTooltip
-                                autohide={true}
-                                placement="top"
-                                target="custom_pick_up_departure_three"
-                              >
-                                Choose which departure locations are available
-                                for the selected duration.
-                              </UncontrolledTooltip>
-                            </div>
-                          </div>
-                          <Select
-                            mode="multiple"
-                            allowClear
-                            rows="5"
-                            style={{ width: "100%", paddingTop: "5px" }}
-                            placeholder="Please select"
-                            defaultValue={initialCustomPickUpDepartureThree}
-                            onChange={(values) =>
-                              setCustomPickUpDepartureThree(values)
-                            }
-                          >
-                            {map(depatureLocationData, (item, index) => {
-                              return (
-                                <Option key={index} value={item.id}>
-                                  {item.name}
-                                </Option>
-                              );
-                            })}
-                          </Select>
-                        </Col>
-                        <Col className="col-1 d-flex align-items-center mt-4">
-                          <i
-                            className="uil-minus-circle font-size-20 text-danger"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              setCustomPickUpRowThree(false);
-                              setCustomPickUpIsRowOpen(false);
-                            }}
-                          />
-                        </Col>
-                      </Row>
-                    ) : null}
-                  </>
-                ) : null}
 
                 <Row className="">
                   {flexiblePrice ? (
@@ -1993,7 +2364,7 @@ const BoatComponent = ({
                             ))}
                           </Input>
                         </Col>
-                        <Col className="col-2">
+                        <Col className="col-3">
                           <div className="d-flex justify-content-between">
                             <Label className="form-label">Duration</Label>
                             <div>
@@ -2022,12 +2393,16 @@ const BoatComponent = ({
                             allowClear
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialDurationOne}
+                            value={
+                              durationClassSelectedOne.length > 0
+                                ? durationClassSelectedOne
+                                : initialDurationOne
+                            }
                             onChange={(values) =>
                               setDurationClassSelectedOne(values)
                             }
                           >
-                            {DURATION_OPTIONS.map(({ value, label }) => (
+                            {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                               <Option key={value} value={value}>
                                 {label}
                               </Option>
@@ -2061,18 +2436,19 @@ const BoatComponent = ({
                             rows="5"
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            defaultValue={initialDepartureLocationsOne}
-                            onChange={(e) =>
-                              setDepartureLocationsSelectedOne(e)
+                            value={
+                              dapatureLocationsSelectedOne.length > 0
+                                ? dapatureLocationsSelectedOne
+                                : initialDepartureLocationsOne
+                            }
+                            onChange={(values) =>
+                              handleDepartureMulti(
+                                values,
+                                setDepartureLocationsSelectedOne,
+                              )
                             }
                           >
-                            {map(depatureLocationData, (item, index) => {
-                              return (
-                                <Option key={index} value={item.id}>
-                                  {item.name}
-                                </Option>
-                              );
-                            })}
+                            {departureLocationSelectOptions}
                           </Select>
                         </Col>
                         <Col className="col-1 d-flex align-items-center mt-4">
@@ -2133,7 +2509,7 @@ const BoatComponent = ({
                               )}
                             </Input>
                           </Col>
-                          <Col className="col-2">
+                          <Col className="col-3">
                             <div className="d-flex justify-content-between">
                               <Label className="form-label">Duration</Label>
                               <div>
@@ -2162,12 +2538,16 @@ const BoatComponent = ({
                               allowClear
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDurationTwo}
+                              value={
+                                durationClassSelectedTwo.length > 0
+                                  ? durationClassSelectedTwo
+                                  : initialDurationTwo
+                              }
                               onChange={(values) =>
                                 setDurationClassSelectedTwo(values)
                               }
                             >
-                              {DURATION_OPTIONS.map(({ value, label }) => (
+                              {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                                 <Option key={value} value={value}>
                                   {label}
                                 </Option>
@@ -2201,21 +2581,19 @@ const BoatComponent = ({
                               rows="5"
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDepartureLocationsTwo}
-                              onChange={(e) =>
-                                setDepartureLocationsSelectedTwo(e)
+                              value={
+                                dapatureLocationsSelectedTwo.length > 0
+                                  ? dapatureLocationsSelectedTwo
+                                  : initialDepartureLocationsTwo
                               }
-                              // disabled={
-                              //   voucherInitialData?.brings_read_only === 1 ? true : false
-                              // }
+                              onChange={(values) =>
+                                handleDepartureMulti(
+                                  values,
+                                  setDepartureLocationsSelectedTwo,
+                                )
+                              }
                             >
-                              {map(depatureLocationData, (item, index) => {
-                                return (
-                                  <Option key={index} value={item.id}>
-                                    {item.name}
-                                  </Option>
-                                );
-                              })}
+                              {departureLocationSelectOptions}
                             </Select>
                           </Col>
                           <Col className="col-1 d-flex align-items-center mt-4">
@@ -2296,7 +2674,7 @@ const BoatComponent = ({
                               )}
                             </Input>
                           </Col>
-                          <Col className="col-2">
+                          <Col className="col-3">
                             <div className="d-flex justify-content-between">
                               <Label className="form-label">Duration</Label>
                               <div>
@@ -2325,12 +2703,16 @@ const BoatComponent = ({
                               allowClear
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDurationThree}
+                              value={
+                                durationClassSelectedThree.length > 0
+                                  ? durationClassSelectedThree
+                                  : initialDurationThree
+                              }
                               onChange={(values) =>
                                 setDurationClassSelectedThree(values)
                               }
                             >
-                              {DURATION_OPTIONS.map(({ value, label }) => (
+                              {filteredCustomWorkflowDurationOptions.map(({ value, label }) => (
                                 <Option key={value} value={value}>
                                   {label}
                                 </Option>
@@ -2364,21 +2746,19 @@ const BoatComponent = ({
                               rows="5"
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              defaultValue={initialDepartureLocationsThree}
-                              onChange={(e) =>
-                                setDepartureLocationsSelectedThree(e)
+                              value={
+                                dapatureLocationsSelectedThree.length > 0
+                                  ? dapatureLocationsSelectedThree
+                                  : initialDepartureLocationsThree
                               }
-                              // disabled={
-                              //   voucherInitialData?.brings_read_only === 1 ? true : false
-                              // }
+                              onChange={(values) =>
+                                handleDepartureMulti(
+                                  values,
+                                  setDepartureLocationsSelectedThree,
+                                )
+                              }
                             >
-                              {map(depatureLocationData, (item, index) => {
-                                return (
-                                  <Option key={index} value={item.id}>
-                                    {item.name}
-                                  </Option>
-                                );
-                              })}
+                              {departureLocationSelectOptions}
                             </Select>
                           </Col>
                           <Col className="col-1 d-flex align-items-center mt-4">
@@ -2435,24 +2815,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationOne || ""}
                             onChange={(e) => {
-                              setCustomDurationOne(e.target.value);
+                              setCustomDurationOne(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_1 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2530,24 +2906,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationTwo || ""}
                             onChange={(e) => {
-                              setCustomDurationTwo(e.target.value);
+                              setCustomDurationTwo(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_2 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2627,24 +2999,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationThree || ""}
                             onChange={(e) => {
-                              setCustomDurationThree(e.target.value);
+                              setCustomDurationThree(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_3 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2720,24 +3088,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationFour || ""}
                             onChange={(e) => {
-                              setCustomDurationFour(e.target.value);
+                              setCustomDurationFour(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_4 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2815,24 +3179,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationFive || ""}
                             onChange={(e) => {
-                              setCustomDurationFive(e.target.value);
+                              setCustomDurationFive(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_5 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">
@@ -2908,24 +3268,20 @@ const BoatComponent = ({
                           <Input
                             type="select"
                             name=""
+                            value={customDurationSix || ""}
                             onChange={(e) => {
-                              setCustomDurationSix(e.target.value);
+                              setCustomDurationSix(e.target.value || null);
                             }}
                             onBlur={validationType.handleBlur}
-                            //   value={validationType.values.department || ""}
                           >
-                            <option value={null}>Select....</option>
-                            {DURATION_OPTIONS.map(({ value, label }) => (
-                              <option
-                                key={value}
-                                value={value}
-                                selected={
-                                  dataEdit?.custom_prices?.duration_6 === value
-                                }
-                              >
-                                {label}
-                              </option>
-                            ))}
+                            <option value="">Select....</option>
+                            {filteredCustomWorkflowDurationOptions.map(
+                              ({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ),
+                            )}
                           </Input>
                         </Col>
                         <Col className="col-3">

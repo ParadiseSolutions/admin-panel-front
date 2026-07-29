@@ -10,14 +10,7 @@ import {
 } from "react-table";
 import { Table, Row, Col, Button, Input } from "reactstrap";
 
-const FilteredTable = ({
-  columns,
-  data,
-  productsTable,
-  addonsTable,
-  relatedFilter,
-  setRelatedFilter
-}) => {
+const FilteredTable = ({ columns, data, addonsTable, selectedIds = [] }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -37,6 +30,8 @@ const FilteredTable = ({
       columns,
       data,
       initialState: { pageIndex: 0, pageSize: 10 },
+      // Aqui data solo cambia cuando se envia un filtro nuevo, y ahi si
+      // corresponde volver a la pagina 1, asi que el reset por defecto se queda.
     },
     useGlobalFilter,
     useFilters,
@@ -79,7 +74,13 @@ const FilteredTable = ({
                 prepareRow(row);
                 return (
                   <Fragment key={row.getRowProps().key}>
-                    <tr id={`row-selected-${row.original.id}`} >
+                    <tr
+                      className={
+                        selectedIds.includes(row.original.id)
+                          ? "selected-row"
+                          : undefined
+                      }
+                    >
                       {row.cells.map((cell) => {
                         return (
                           <td key={cell.id} {...cell.getCellProps()}>
@@ -121,7 +122,7 @@ const FilteredTable = ({
           <div className="input-group-text rounded-0 border-start-0">
                   Page{" "}
                   <strong>
-                    {pageIndex + 1} of {pageOptions.length}
+                    {pageIndex + 1} of {pageOptions.length || 1}
                   </strong>
                 </div>
         
@@ -129,8 +130,8 @@ const FilteredTable = ({
             type="number"
             min={1}
             className="text-center input-group-text bg-white rounded-0"
-            max={pageOptions.length}
-            defaultValue={pageIndex + 1}
+            max={pageOptions.length || 1}
+            value={pageIndex + 1}
             onChange={onChangeInInput}
           />
           </div>

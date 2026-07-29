@@ -104,7 +104,10 @@ const TableContainer = ({
       data,
       defaultColumn: { Filter: DefaultColumnFilter },
       initialState: { pageIndex: 0, pageSize: 10 },
+      // Sin esto, cualquier cambio en data devuelve al usuario a la pagina 1 y
+      // le deshace el orden que habia elegido en las columnas.
       autoResetPage: false,
+      autoResetSortBy: false,
     },
     useGlobalFilter,
     useFilters,

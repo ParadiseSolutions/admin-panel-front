@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   useTable,
@@ -127,6 +127,12 @@ const TableContainer = ({
       data,
       defaultColumn: { Filter: DefaultColumnFilter },
       initialState: { pageIndex: 0, pageSize: 10 },
+      // Por defecto react-table vuelve a la pagina 1 y limpia orden y busqueda
+      // cada vez que cambia data. Como las listas se recargan tras cada cambio
+      // de estado, eso sacaba al usuario de donde estaba trabajando.
+      autoResetPage: false,
+      autoResetSortBy: false,
+      autoResetGlobalFilter: false,
     },
     useGlobalFilter,
     useFilters,
@@ -135,6 +141,21 @@ const TableContainer = ({
     usePagination,
     useRowSelect
   );
+
+  // Contrapartida de autoResetPage: si la lista se encoge (por ejemplo al
+  // borrar el ultimo registro de la ultima pagina) hay que traer al usuario a
+  // la ultima pagina que si existe, o se queda viendo una tabla vacia.
+  useEffect(() => {
+    if (pageCount > 0 && pageIndex > pageCount - 1) {
+      gotoPage(pageCount - 1);
+    }
+  }, [pageCount, pageIndex, gotoPage]);
+
+  // Recargar datos conserva la pagina, pero buscar o cambiar el filtro Show
+  // Active es pedir otra lista: ahi si corresponde volver al inicio.
+  useEffect(() => {
+    gotoPage(0);
+  }, [state.globalFilter, switch1, gotoPage]);
 
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";

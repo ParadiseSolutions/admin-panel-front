@@ -20,6 +20,7 @@ import {
   Button,
   Table,
   UncontrolledTooltip,
+  Spinner,
 } from "reactstrap";
 import { useFormik } from "formik";
 import { map } from "lodash";
@@ -124,21 +125,30 @@ const HighSeasons = ({ tourData, toggle }) => {
     );
   };
   const [activeDep, setActiveDep] = useState(false);
+  const [seasonalitySaving, setSeasonalitySaving] = useState(false);
   useEffect(() => {
-    if (tourData?.seasonality) {
-      setActiveDep(tourData.seasonality === 1 ? true : false);
+    // seasonality 0 es valido: no usar truthiness o el switch no se sincroniza al apagar.
+    if (tourData) {
+      setActiveDep(Number(tourData.seasonality) === 1);
     }
   }, [tourData]);
-  const onChangeActive = (data) => {
-    setActiveDep(!activeDep);
-    // console.log(data);
-    if (data) {
-      data = { active: 1 };
-      statusSeasonalityAPI(tourData.id, data);
-    } else {
-      data = { active: 0 };
-      statusSeasonalityAPI(tourData.id, data);
-    }
+  const onChangeActive = (isActive) => {
+    if (!tourData?.id || seasonalitySaving) return;
+    setSeasonalitySaving(true);
+    statusSeasonalityAPI(tourData.id, { active: isActive ? 1 : 0 })
+      .then(() => {
+        setActiveDep(isActive);
+        setSeasonalitySaving(false);
+      })
+      .catch(() => {
+        setSeasonalitySaving(false);
+        Swal.fire({
+          title: "Error",
+          text: "High Season Prices could not be updated. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   };
 
   // console.log(seasonToEdit)
@@ -318,8 +328,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                             name="from"
                             className="form-control"
                             type="date"
-                            // defaultValue="2019-08-19"
-                            id="example-date-input"
+                            id="high-season-from-input"
                             onChange={validationType.handleChange}
                             onBlur={validationType.handleBlur}
                             value={validationType.values.from || ""}
@@ -350,8 +359,7 @@ const HighSeasons = ({ tourData, toggle }) => {
                             name="to"
                             className="form-control"
                             type="date"
-                            // defaultValue="2019-08-19"
-                            id="example-date-input"
+                            id="high-season-to-input"
                             onChange={validationType.handleChange}
                             onBlur={validationType.handleBlur}
                             value={validationType.values.to || ""}
@@ -396,9 +404,27 @@ const HighSeasons = ({ tourData, toggle }) => {
                           uncheckedIcon={<Offsymbol />}
                           checkedIcon={<OnSymbol />}
                           onColor="#3DC7F4"
-                          onChange={(e) => onChangeActive(e)}
+                          disabled={seasonalitySaving}
+                          onChange={(checked) => onChangeActive(checked)}
                           checked={activeDep}
                         />
+                        <div
+                          className="d-flex align-items-center text-muted mt-1"
+                          style={{ minHeight: "14px", fontSize: "10px" }}
+                          role="status"
+                          aria-live="polite"
+                        >
+                          {seasonalitySaving ? (
+                            <>
+                              <Spinner
+                                size="sm"
+                                className="me-1"
+                                style={{ width: "10px", height: "10px" }}
+                              />
+                              Saving...
+                            </>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   </Col>
@@ -438,11 +464,11 @@ const HighSeasons = ({ tourData, toggle }) => {
                                     >
                                       <i
                                         className="mdi mdi-pencil font-size-18"
-                                        id="edittooltip"
+                                        id={`season-edit-${season.id}`}
                                       />
                                       <UncontrolledTooltip
                                         placement="top"
-                                        target="edittooltip"
+                                        target={`season-edit-${season.id}`}
                                       >
                                         Edit
                                       </UncontrolledTooltip>
@@ -456,11 +482,11 @@ const HighSeasons = ({ tourData, toggle }) => {
                                     >
                                       <i
                                         className="mdi mdi-delete font-size-18"
-                                        id="deletetooltip"
+                                        id={`season-delete-${season.id}`}
                                       />
                                       <UncontrolledTooltip
                                         placement="top"
-                                        target="deletetooltip"
+                                        target={`season-delete-${season.id}`}
                                       >
                                         Delete
                                       </UncontrolledTooltip>

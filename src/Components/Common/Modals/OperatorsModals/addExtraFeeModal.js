@@ -44,7 +44,6 @@ const AddExtraFeeModal = ({
   const [currencySelected, setCurrencySelected] = useState([]);
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
 
-  console.log('data a editar', tourData);
   useEffect(() => {
     getExtraFee()
       .then((resp) => {
@@ -158,8 +157,6 @@ const AddExtraFeeModal = ({
   });
 
   ////
-
-  console.log( dataEdit );
 
   return (
     <>
