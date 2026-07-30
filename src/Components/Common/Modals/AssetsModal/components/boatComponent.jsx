@@ -80,6 +80,7 @@ const BoatComponent = ({
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [mainClassSelected, setMainClassSelected] = useState(0);
+  const editActivitiesSyncedRef = useRef(false);
   const fishingAditionalInputs = Number(boatTypeSelected) === 3;
   const selectedBoatTypeName =
     boatTypeData.find((type) => Number(type.id) === Number(boatTypeSelected))
@@ -362,6 +363,10 @@ const BoatComponent = ({
   }, [dataEdit, isEdit]);
 
   useEffect(() => {
+    editActivitiesSyncedRef.current = false;
+  }, [isEdit, dataEdit?.id]);
+
+  useEffect(() => {
     if (customPickUpCheck) {
       setInitialMainDepartureLocations([]);
       setMainDepartureLocationsSelected([]);
@@ -387,9 +392,27 @@ const BoatComponent = ({
 
   // Drop selected activities that are no longer valid for boat type / location.
   useEffect(() => {
+    if (!activityData.length || !Number(boatTypeSelected)) {
+      return;
+    }
+
     const allowedIds = new Set(
       filteredActivityData.map((item) => Number(item.id)),
     );
+
+    if (
+      isEdit &&
+      !editActivitiesSyncedRef.current &&
+      initialOptionsArea?.length
+    ) {
+      const hydrated = initialOptionsArea
+        .map((id) => Number(id))
+        .filter((id) => allowedIds.has(id));
+      setActivitiesSelected(hydrated);
+      editActivitiesSyncedRef.current = true;
+      return;
+    }
+
     setActivitiesSelected((prev) => {
       const next = (prev || []).filter((id) => allowedIds.has(Number(id)));
       if (
@@ -400,7 +423,13 @@ const BoatComponent = ({
       }
       return next;
     });
-  }, [filteredActivityData]);
+  }, [
+    filteredActivityData,
+    activityData.length,
+    boatTypeSelected,
+    isEdit,
+    initialOptionsArea,
+  ]);
 
   // Drop custom-workflow duration selections not allowed for the current Location.
   useEffect(() => {
