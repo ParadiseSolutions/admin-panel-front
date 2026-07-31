@@ -12,7 +12,7 @@ export const createProviderPricingCalc = (ctx) => () => {
     let netPriceInput = ctx.validationType.values.net_rate;
     let publicPriceInput = ctx.validationType.values.public_price;
     let estCommissionInput = ctx.validationType.values.p_est_commission;
-    let rateInput = ctx.validationType.values.rate;
+    let rateInput = ctx.validationType.values.p_est_rate;
     let commissionFixedInput = ctx.validationType.values.p_commission;
     // net price
     let baseAmountInput = ctx.validationType.values.p_base_amount;

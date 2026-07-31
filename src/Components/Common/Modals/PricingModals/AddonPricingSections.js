@@ -155,7 +155,7 @@ const AddonPricingSections = ({
 
   const providerBlur = (field, value, isRate = false) => {
     if (onProviderFieldBlur) {
-      if (field !== "rate") setRecalc?.(true);
+      if (field !== "p_est_rate") setRecalc?.(true);
       onProviderFieldBlur(field, value, isRate);
     } else {
       const formatted = isRate
@@ -462,7 +462,7 @@ const AddonPricingSections = ({
                 </div>
               </Col>
               <Col className="col-2">
-                <div className="form-outline mb-2" id="rate">
+                <div className="form-outline mb-2" id="p_est_rate">
                   <div className="d-flex justify-content-between">
                     <Label className="form-label">Rate %</Label>
                     <div>
@@ -472,11 +472,11 @@ const AddonPricingSections = ({
                     </div>
                   </div>
                   <MoneyInput
-                    name="rate"
+                    name="p_est_rate"
                     validationType={validationType}
                     prefix={null}
                     suffix="%"
-                    onBlur={(e) => providerBlurCalc("rate", e.target.value, true)}
+                    onBlur={(e) => providerBlurCalc("p_est_rate", e.target.value, true)}
                   />
                 </div>
               </Col>
