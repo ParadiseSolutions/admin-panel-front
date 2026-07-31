@@ -332,7 +332,6 @@ const Addons = ({
       addon_description: dataEdit ? dataEdit.description : "",
       public_price: dataEdit?.public ?? "",
       provider_price: dataEdit?.provider_price ?? "",
-      rate: dataEdit?.rate ? setRateFormat(dataEdit.rate) : "",
       net_rate: dataEdit?.net_rate ?? "",
       our_price: dataEdit ? dataEdit.price : "",
       you_save: dataEdit ? setYouSaveFormat(dataEdit.you_save) : "",
@@ -374,8 +373,8 @@ const Addons = ({
       max_qty: Yup.number().integer().nullable(),
       public_price: Yup.number().nullable(),
       provider_price: Yup.number().nullable(),
-      rate: Yup.number().nullable(),
       net_rate: Yup.number().nullable(),
+      p_est_rate: Yup.number().nullable(),
       ship_price: Yup.number().nullable(),
       compare_at: Yup.number().nullable(),
       compare_at_url: Yup.string().url("URL invalid format").trim().nullable(),
@@ -427,6 +426,14 @@ const Addons = ({
             ? values.provider_commission
             : values.p_commission;
 
+      const toRateDecimal = (val) => {
+        if (val === "" || val == null) return null;
+        const num = +val;
+        return num > 1 ? num / 100 : num;
+      };
+
+      const ourRate = toRateDecimal(values.eff_rate);
+
       let data = {
         tour_id: +id,
         match_qty_id: match_qty === "-1" ? null : match_qty,
@@ -442,21 +449,11 @@ const Addons = ({
         public: values.public_price !== "" ? values.public_price : null,
         provider_price:
           values.provider_price !== "" ? values.provider_price : null,
-        rate:
-          values.rate !== ""
-            ? values.rate > 1
-              ? values.rate / 100
-              : values.rate
-            : null,
+        rate: ourRate,
         net_rate: values.net_rate !== "" ? values.net_rate : null,
         price: values.our_price,
         you_save: values.you_save,
-        eff_rate:
-          values.eff_rate !== ""
-            ? values.eff_rate > 1
-              ? values.eff_rate / 100
-              : values.eff_rate
-            : null,
+        eff_rate: ourRate,
         commission: ourCommission !== "" ? ourCommission : values.commission,
         deposit: values.deposit,
         net_price:
@@ -468,7 +465,7 @@ const Addons = ({
         voucher_balance: values.voucher_balance,
         voucher_currency: currencySelected,
         currencySelected: currencySelected,
-        p_est_rate: values.p_est_rate !== "" ? values.p_est_rate : null,
+        p_est_rate: toRateDecimal(values.p_est_rate),
         p_est_commission:
           values.p_est_commission !== "" ? values.p_est_commission : null,
         p_base_amount:
