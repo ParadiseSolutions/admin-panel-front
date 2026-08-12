@@ -24,11 +24,16 @@ export const CANCUN_EXTRA_ACTIVITY_NAMES = [
   "Inshore Fishing & Snorkeling",
 ];
 
-/** Panga and Super Panga share the same activity set. */
-export const PANGA_ACTIVITY_NAMES = [
+/** Panga and Super Panga share the same activity set (tackle + fishing/snorkel combos). */
+export const PANGA_TACKLE_ACTIVITY_NAMES = [
   "Fly Fishing",
   "Spinning Tackle",
   "Fly & Spinning Tackle",
+];
+
+export const PANGA_ACTIVITY_NAMES = [
+  ...PANGA_TACKLE_ACTIVITY_NAMES,
+  ...FISHING_BOAT_ACTIVITY_NAMES.filter((name) => name !== "Sunset Cruise"),
 ];
 
 /** UI-only shortcuts (not saved to DB). */
