@@ -12,6 +12,7 @@ import { Container } from "reactstrap";
 import { useParams } from "react-router-dom";
 import PaymentMethods from "../Providers/Utils/PaymentMethods";
 import Assets from "../Providers/Utils/assets";
+import OperationalInfo from "../Providers/Utils/operationalInfo";
 const EditOperator = () => {
   const { id } = useParams();
   const [data, setData] = useState();
@@ -51,6 +52,7 @@ const EditOperator = () => {
 
             <AutomatedConfirmation socialData={socialData} id={id} />
             <Assets contacts={contacts} id={id} />
+            <OperationalInfo socialData={socialData} id={id} />
             <SocialMedia socialData={socialData} id={id} />
           </div>
         </Container>

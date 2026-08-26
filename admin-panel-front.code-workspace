@@ -19,22 +19,10 @@
 			"path": "../jstourandtravel/cetools/group-tool"
 		},
 		{
-			"path": "E:/Shared/My Webs/Cabo Fishing"
+			"path": "../bookings-forms"
 		},
 		{
-			"path": "E:/Shared/My Webs/Cancun Discounts"
-		},
-		{
-			"path": "E:/Shared/My Webs/CancunFishing"
-		},
-		{
-			"path": "E:/Shared/My Webs/Cozumel"
-		},
-		{
-			"path": "E:/Shared/My Webs/CozumelTours"
-		},
-		{
-			"path": "E:/Shared/My Webs/PVFishing"
+			"path": "../../../../xampp_orders2/htdocs/Orders2"
 		}
 	],
 	"settings": {}
