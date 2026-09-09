@@ -39,6 +39,13 @@ export const getDepatureLocations = (data) => {
       headers: options,
     });
   };
+export const getMeetingLocationTemplates = (params = {}) => {
+    const url = `${API_URL}/assets/meeting-location-templates`;
+    return axios.get(url, {
+      headers: options,
+      params,
+    });
+  };
 export const getBoatEdit = (id) => {
     const url = `${API_URL}/assets/boats/${id}`;
     return axios.get (url, {
