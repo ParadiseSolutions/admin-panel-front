@@ -43,6 +43,7 @@ import {
 } from "../constants/boatActivityOptions";
 import {
   DEPARTURE_SHORTCUTS,
+  groupDepartureLocationOptions,
   resolveDepartureLocationSelection,
 } from "../constants/boatDepartureLocationOptions";
 import {
@@ -121,44 +122,10 @@ const BoatComponent = ({
     [locationSelected],
   );
 
-  const normalizeDepartureName = (value) =>
-    String(value || "")
-      .trim()
-      .replace(/\s+/g, " ")
-      .toLowerCase()
-      .replace(/^marina\s+/i, "");
-
-  const findDepartureIdsForMarina = (marinaId, departureOptions) => {
-    if (!marinaId || !departureOptions?.length) {
-      return [];
-    }
-    const marina = boatLocationData.find(
-      (item) => Number(item.id) === Number(marinaId),
-    );
-    const marinaName = normalizeDepartureName(marina?.name);
-    const matchingDeparture =
-      departureOptions.find((item) => Number(item.id) === Number(marinaId)) ||
-      (marinaName
-        ? departureOptions.find(
-            (item) => normalizeDepartureName(item.name) === marinaName,
-          )
-        : null) ||
-      (marinaName
-        ? departureOptions.find((item) => {
-            const departureName = normalizeDepartureName(item.name);
-            return (
-              !!departureName &&
-              (departureName.includes(marinaName) ||
-                marinaName.includes(departureName))
-            );
-          })
-        : null);
-    return matchingDeparture ? [matchingDeparture.id] : [];
-  };
-
-  // Tracks which Marina+section defaults were already applied, so clearing the
-  // only chip is respected instead of being re-defaulted on the next render.
-  const appliedDepartureDefaultsRef = useRef(new Set());
+  const groupedDepartureLocationOptions = useMemo(
+    () => groupDepartureLocationOptions(filteredDepartureLocationData),
+    [filteredDepartureLocationData],
+  );
 
   const [flexiblePrice, setFlexiblePrice] = useState(false);
   const [customPricesCheck, setCustomPricesCheck] = useState(false);
@@ -511,129 +478,6 @@ const BoatComponent = ({
     filteredDepartureLocationData,
   ]);
 
-  // Default empty/enabled Departure Location selects to the Marina name.
-  // Never overwrite selections the user already customized, and only default
-  // each Marina+section once so the user can clear the last chip on purpose.
-  useEffect(() => {
-    if (!boatLocationSelected || filteredDepartureLocationData.length === 0) {
-      return;
-    }
-
-    const defaultIds = findDepartureIdsForMarina(
-      boatLocationSelected,
-      filteredDepartureLocationData,
-    );
-    if (!defaultIds.length) {
-      return;
-    }
-
-    const allowedIds = new Set(
-      filteredDepartureLocationData.map((item) => Number(item.id)),
-    );
-    const hasValidSelection = (ids = []) =>
-      (ids || []).some((id) => allowedIds.has(Number(id)));
-
-    const applied = appliedDepartureDefaultsRef.current;
-    // Apply the default only once per Marina + section combination.
-    const applyDefaultOnce = (section, current, initial, setter) => {
-      const key = `${boatLocationSelected}:${section}`;
-      if (applied.has(key)) {
-        return;
-      }
-      applied.add(key);
-      if (!hasValidSelection(current) && !hasValidSelection(initial)) {
-        setter(defaultIds);
-      }
-    };
-
-    // Main Departure Location(s) — only when custom pick-up is not enabled.
-    if (fishingAditionalInputs && !customPickUpCheck) {
-      applyDefaultOnce(
-        "main",
-        mainDepartureLocationsSelected,
-        initialMainDepartureLocations,
-        setMainDepartureLocationsSelected,
-      );
-    }
-
-    // Custom pick-up departure rows (only enabled ones).
-    if (customPickUpCheck) {
-      applyDefaultOnce(
-        "custom1",
-        customPickUpDepartureOne,
-        initialCustomPickUpDepartureOne,
-        setCustomPickUpDepartureOne,
-      );
-      if (customPickUpRowTwo) {
-        applyDefaultOnce(
-          "custom2",
-          customPickUpDepartureTwo,
-          initialCustomPickUpDepartureTwo,
-          setCustomPickUpDepartureTwo,
-        );
-      }
-      if (customPickUpRowThree) {
-        applyDefaultOnce(
-          "custom3",
-          customPickUpDepartureThree,
-          initialCustomPickUpDepartureThree,
-          setCustomPickUpDepartureThree,
-        );
-      }
-    }
-
-    // Supported-class departure rows (only enabled ones).
-    if (flexiblePrice) {
-      applyDefaultOnce(
-        "class1",
-        dapatureLocationsSelectedOne,
-        initialDepartureLocationsOne,
-        setDepartureLocationsSelectedOne,
-      );
-      if (supportedClassRowTwo) {
-        applyDefaultOnce(
-          "class2",
-          dapatureLocationsSelectedTwo,
-          initialDepartureLocationsTwo,
-          setDepartureLocationsSelectedTwo,
-        );
-      }
-      if (supportedClassRowThree) {
-        applyDefaultOnce(
-          "class3",
-          dapatureLocationsSelectedThree,
-          initialDepartureLocationsThree,
-          setDepartureLocationsSelectedThree,
-        );
-      }
-    }
-  }, [
-    boatLocationSelected,
-    boatLocationData,
-    filteredDepartureLocationData,
-    fishingAditionalInputs,
-    flexiblePrice,
-    customPickUpCheck,
-    customPickUpRowTwo,
-    customPickUpRowThree,
-    supportedClassRowTwo,
-    supportedClassRowThree,
-    mainDepartureLocationsSelected,
-    initialMainDepartureLocations,
-    customPickUpDepartureOne,
-    initialCustomPickUpDepartureOne,
-    customPickUpDepartureTwo,
-    initialCustomPickUpDepartureTwo,
-    customPickUpDepartureThree,
-    initialCustomPickUpDepartureThree,
-    dapatureLocationsSelectedOne,
-    initialDepartureLocationsOne,
-    dapatureLocationsSelectedTwo,
-    initialDepartureLocationsTwo,
-    dapatureLocationsSelectedThree,
-    initialDepartureLocationsThree,
-  ]);
-
   //multi select activities
   function handleMulti(selected) {
     setActivitiesSelected(
@@ -658,10 +502,15 @@ const BoatComponent = ({
             {shortcut.label}
           </Option>
         ))}
-      {map(filteredDepartureLocationData, (item) => (
-        <Option key={item.id} value={item.id}>
-          {item.name}
-        </Option>
+      {map(groupedDepartureLocationOptions, (group) => (
+        <Select.OptGroup key={group.label} label={group.label}>
+          {map(group.options, (item) => (
+            <Option key={item.id} value={item.id}>
+              {item.name}
+              {item.type_label ? ` (${item.type_label})` : ""}
+            </Option>
+          ))}
+        </Select.OptGroup>
       ))}
     </>
   );

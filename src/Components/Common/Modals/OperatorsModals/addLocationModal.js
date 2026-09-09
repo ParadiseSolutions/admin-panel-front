@@ -28,6 +28,7 @@ import { setDecimalFormat } from "../../../../Utils/CommonFunctions";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import { API_URL, imagesOptions } from "../../../../Utils/API";
+import { getMeetingLocationTemplates } from "../../../../Utils/API/Assets";
 
 const AddLocationModal = ({
   id,
@@ -50,6 +51,8 @@ const AddLocationModal = ({
   const [priceTypeSelected, setPriceTypeSelected] = useState([]);
   const [imageLink, setImageLink] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [meetingTemplates, setMeetingTemplates] = useState([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState("");
 
   useEffect(() => {
     getExtraFee()
@@ -65,6 +68,11 @@ const AddLocationModal = ({
     getPriceType()
       .then((resp) => {
         setPriceTypeData(resp.data.data);
+      })
+      .catch((err) => console.log(err));
+    getMeetingLocationTemplates()
+      .then((resp) => {
+        setMeetingTemplates(resp.data?.data || []);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -235,6 +243,42 @@ const AddLocationModal = ({
                 </Row>
 
                 <Row className="mt-5">
+                  <Col className="col-12">
+                    <div className="form-outline mb-2 mx-2">
+                      <Label className="form-label">Standard Template (optional)</Label>
+                      <Input
+                        type="select"
+                        disabled={readOnlyModal ? true : false}
+                        value={selectedTemplateId}
+                        onChange={(event) => {
+                          const templateId = event.target.value;
+                          setSelectedTemplateId(templateId);
+                          const template = meetingTemplates.find(
+                            (item) => String(item.id) === String(templateId),
+                          );
+                          if (!template) {
+                            return;
+                          }
+                          validationType.setFieldValue("title", template.name);
+                          validationType.setFieldValue(
+                            "meeting_location",
+                            template.meeting_location,
+                          );
+                          validationType.setFieldValue(
+                            "meeting_instructions",
+                            template.meeting_instructions || "",
+                          );
+                        }}
+                      >
+                        <option value="">Choose a template...</option>
+                        {map(meetingTemplates, (template) => (
+                          <option key={template.id} value={template.id}>
+                            {template.name}
+                          </option>
+                        ))}
+                      </Input>
+                    </div>
+                  </Col>
                   <Col className="col-4">
                     <div className="form-outline mb-2 mx-2" id="amount">
                       <div className="d-flex align-items-center justify-content-between">
