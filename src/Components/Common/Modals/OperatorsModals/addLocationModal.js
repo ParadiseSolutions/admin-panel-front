@@ -54,6 +54,16 @@ const AddLocationModal = ({
   const [meetingTemplates, setMeetingTemplates] = useState([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
 
+  const emptyFormValues = {
+    title: "",
+    meeting_location: "",
+    google_maps_url: "",
+    image_url: "",
+    meeting_instructions: "",
+  };
+
+  const isAddMode = (data) => !data?.id;
+
   useEffect(() => {
     getExtraFee()
       .then((resp) => {
@@ -80,8 +90,9 @@ const AddLocationModal = ({
   useEffect(() => {
     setDataEdit(locationEditData);
   }, [locationEditData, locationModal]);
+
   useEffect(() => {
-    if (dataEdit) {
+    if (dataEdit?.id) {
       setExtraFeeSelected(dataEdit.fee_type_id);
       setCurrencySelected(dataEdit.currency);
       setPriceTypeSelected(dataEdit.price_type);
@@ -90,7 +101,6 @@ const AddLocationModal = ({
     }
   }, [dataEdit]);
 
-  // console.log(dataEdit.length);
   const validationType = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -127,15 +137,15 @@ const AddLocationModal = ({
         meeting_instructions: values.meeting_instructions,
       };
       // console.log(data);
-      if (dataEdit.length === 0) {
+      if (isAddMode(dataEdit)) {
         postLocationFee(data)
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 201) {
               Swal.fire("Success!", "Location Added.", "success").then(() => {
-                setLocationModal(false);
-                //history.goBack()
                 setDataEdit([]);
+                resetLocationForm();
+                setLocationModal(false);
                 refreshTable();
               });
             }
@@ -181,7 +191,30 @@ const AddLocationModal = ({
     },
   });
 
-  ////
+  const resetLocationForm = () => {
+    validationType.resetForm({ values: { ...emptyFormValues } });
+    setSelectedTemplateId("");
+    setImageLink(null);
+    const fileInput = document.getElementById("fileInput");
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
+
+  useEffect(() => {
+    if (!locationModal || !isAddMode(locationEditData)) {
+      return;
+    }
+    resetLocationForm();
+    setDataEdit([]);
+  }, [locationModal, locationEditData]);
+
+  const closeLocationModal = () => {
+    setLocationModal(false);
+    setDataEdit([]);
+    setReadOnlyModal(false);
+    resetLocationForm();
+  };
 
   return (
     <>
@@ -189,28 +222,21 @@ const AddLocationModal = ({
         centered
         size="xl"
         isOpen={locationModal}
-        toggle={() => {
-          setLocationModal(false);
-          setDataEdit([]);
-          setReadOnlyModal(false);
-        }}
+        toggle={closeLocationModal}
       >
         <div
           className="modal-header"
           style={{ backgroundColor: "#3DC7F4", border: "none" }}
         >
           <h1 className="modal-title mt-0 text-white">
-            {dataEdit.length === 0
+            {isAddMode(dataEdit)
               ? "+ Add Meeting Location"
               : readOnlyModal
                 ? "View Meeting Location"
                 : "Edit Existing Meeting Location"}
           </h1>
           <button
-            onClick={() => {
-              setLocationModal(false);
-              setDataEdit([]);
-            }}
+            onClick={closeLocationModal}
             type="button"
             className="close"
             data-dismiss="modal"
@@ -236,7 +262,7 @@ const AddLocationModal = ({
               <Col className="col-12">
                 <Row>
                   <img
-                    src={dataEdit.length === 0 ? newFeeImg : editFeeImg}
+                    src={isAddMode(dataEdit) ? newFeeImg : editFeeImg}
                     alt="banner"
                     style={{ height: "158px" }}
                   />
@@ -669,11 +695,7 @@ const AddLocationModal = ({
                             type="button"
                             style={{ border: "none" }}
                             className="waves-effect waves-light mb-3 btn btn-paradise mx-2"
-                            onClick={() => {
-                              setLocationModal(false);
-                              setDataEdit([]);
-                              setReadOnlyModal(false);
-                            }}
+                            onClick={closeLocationModal}
                           >
                             <i className="mdi mdi-plus me-1" />
                             Go to Operator
@@ -684,11 +706,7 @@ const AddLocationModal = ({
                           type="button"
                           style={{ backgroundColor: "#F6851F", border: "none" }}
                           className="waves-effect waves-light mb-3 btn btn-paradiseBlue"
-                          onClick={() => {
-                            setLocationModal(false);
-                            setDataEdit([]);
-                            setReadOnlyModal(false);
-                          }}
+                          onClick={closeLocationModal}
                         >
                           <i className="mdi mdi-plus me-1" />
                           Close
