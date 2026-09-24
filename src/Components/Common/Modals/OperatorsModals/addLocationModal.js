@@ -294,6 +294,13 @@ const AddLocationModal = ({
                             "meeting_instructions",
                             template.meeting_instructions || "",
                           );
+                          validationType.setFieldValue(
+                            "google_maps_url",
+                            template.google_maps_url || "",
+                          );
+                          const templateImageUrl = template.image_url || "";
+                          validationType.setFieldValue("image_url", templateImageUrl);
+                          setImageLink(templateImageUrl || null);
                         }}
                       >
                         <option value="">Choose a template...</option>
