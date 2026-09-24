@@ -1191,7 +1191,7 @@ const BoatComponent = ({
                   <Input
                     name="boat_capacity"
                     placeholder=""
-                    type="number"
+                    type="text"
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
                     value={validationType.values.boat_capacity || ""}
@@ -1233,7 +1233,7 @@ const BoatComponent = ({
                   <Input
                     name="boat_bathroom"
                     placeholder=""
-                    type="number"
+                    type="text"
                     onChange={validationType.handleChange}
                     onBlur={validationType.handleBlur}
                     value={validationType.values.boat_bathroom || ""}
