@@ -4,6 +4,9 @@ export const CANCUN_LOCATION_ID = 7;
 /** Known Fishing Boat type id in asset_boat_types. */
 export const FISHING_BOAT_TYPE_ID = 3;
 
+/** Known Yacht type id in asset_boat_types. */
+export const YACHT_BOAT_TYPE_ID = 11;
+
 /**
  * Canonical names in charter_types_fishing (must match DB / voucher / order).
  * Left-side shorthand from product → right-side = exact name used here.
@@ -29,11 +32,28 @@ export const PANGA_TACKLE_ACTIVITY_NAMES = [
   "Fly Fishing",
   "Spinning Tackle",
   "Fly & Spinning Tackle",
+  "Light Tackle Fishing"
 ];
 
 export const PANGA_ACTIVITY_NAMES = [
   ...PANGA_TACKLE_ACTIVITY_NAMES,
   ...FISHING_BOAT_ACTIVITY_NAMES.filter((name) => name !== "Sunset Cruise"),
+];
+
+/**
+ * Yacht activities (canonical charter_types_fishing names).
+ * Covers fishing, snorkel, whale watching, sunset, fishing+snorkel combos, dinner cruise.
+ */
+export const YACHT_ACTIVITY_NAMES = [
+  "Deep Sea Fishing",
+  "Bottom Fishing",
+  "Light Tackle Fishing",
+  "Snorkeling",
+  "Whale Watching",
+  "Sunset Cruise",
+  "Deep Sea Fishing & Snorkeling",
+  "Bottom Fishing & Snorkeling",
+  "Dinner Cruise",
 ];
 
 /** UI-only shortcuts (not saved to DB). */
@@ -67,6 +87,13 @@ export function isPangaBoatType(boatTypeName = "") {
   return /panga/i.test(String(boatTypeName).trim());
 }
 
+export function isYachtBoatType(boatTypeId, boatTypeName = "") {
+  return (
+    Number(boatTypeId) === YACHT_BOAT_TYPE_ID ||
+    /^yacht$/i.test(String(boatTypeName).trim())
+  );
+}
+
 export function getAllowedActivityNames({
   boatTypeId,
   boatTypeName = "",
@@ -74,6 +101,10 @@ export function getAllowedActivityNames({
 } = {}) {
   if (isPangaBoatType(boatTypeName)) {
     return [...PANGA_ACTIVITY_NAMES];
+  }
+
+  if (isYachtBoatType(boatTypeId, boatTypeName)) {
+    return [...YACHT_ACTIVITY_NAMES];
   }
 
   if (isFishingBoatType(boatTypeId, boatTypeName)) {
@@ -94,6 +125,7 @@ export function getAllManagedActivityNames() {
       ...FISHING_BOAT_ACTIVITY_NAMES,
       ...CANCUN_EXTRA_ACTIVITY_NAMES,
       ...PANGA_ACTIVITY_NAMES,
+      ...YACHT_ACTIVITY_NAMES,
     ]),
   ];
 }
