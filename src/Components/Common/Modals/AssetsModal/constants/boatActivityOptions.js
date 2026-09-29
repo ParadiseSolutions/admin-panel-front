@@ -29,6 +29,7 @@ export const PANGA_TACKLE_ACTIVITY_NAMES = [
   "Fly Fishing",
   "Spinning Tackle",
   "Fly & Spinning Tackle",
+  "Light Tackle Fishing"
 ];
 
 export const PANGA_ACTIVITY_NAMES = [
