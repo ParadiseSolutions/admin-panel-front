@@ -82,10 +82,12 @@ const BoatComponent = ({
   const [uploadingImage, setUploadingImage] = useState(false);
   const [mainClassSelected, setMainClassSelected] = useState(0);
   const editActivitiesSyncedRef = useRef(false);
+  const activitiesEditedRef = useRef(false);
   const fishingAditionalInputs = Number(boatTypeSelected) === 3;
   const selectedBoatTypeName =
     boatTypeData.find((type) => Number(type.id) === Number(boatTypeSelected))
       ?.name || "";
+  const boatTypeCatalogReady = boatTypeData.length > 0;
   const filteredActivityData = useMemo(
     () =>
       filterActivityOptions(
@@ -151,14 +153,6 @@ const BoatComponent = ({
   const [customPickUpDepartureThree, setCustomPickUpDepartureThree] = useState(
     [],
   );
-  const [initialCustomPickUpDepartureOne, setInitialCustomPickUpDepartureOne] =
-    useState([]);
-  const [initialCustomPickUpDepartureTwo, setInitialCustomPickUpDepartureTwo] =
-    useState([]);
-  const [
-    initialCustomPickUpDepartureThree,
-    setInitialCustomPickUpDepartureThree,
-  ] = useState([]);
   const [supportedClassRowTwo, setSupportedClassRowTwo] = useState(false);
   const [supportedClassRowThree, setSupportedClassRowThree] = useState(false);
   const [isRowOpen, setIsRowOpen] = useState(false);
@@ -174,15 +168,7 @@ const BoatComponent = ({
   const [initialDurationOne, setInitialDurationOne] = useState([]);
   const [initialDurationTwo, setInitialDurationTwo] = useState([]);
   const [initialDurationThree, setInitialDurationThree] = useState([]);
-  const [initialMainDepartureLocations, setInitialMainDepartureLocations] =
-    useState([]);
   const [mainDepartureLocationsSelected, setMainDepartureLocationsSelected] =
-    useState([]);
-  const [initialDepartureLocationsOne, setInitialDepartureLocationsOne] =
-    useState([]);
-  const [initialDepartureLocationsTwo, setInitialDepartureLocationsTwo] =
-    useState([]);
-  const [initialDepartureLocationsThree, setInitialDepartureLocationsThree] =
     useState([]);
   const [dapatureLocationsSelectedOne, setDepartureLocationsSelectedOne] =
     useState([]);
@@ -260,20 +246,20 @@ const BoatComponent = ({
       const customPickupLocations =
         dataEdit.custom_pickup_locations ?? dataEdit.custom_pick_up_locations;
 
-      setInitialMainDepartureLocations(
+      const savedMainDepartures =
         hasCustomPickup && dataEdit.has_supported_classes !== 1
           ? []
-          : dataEdit.list_departure_locations || [],
-      );
-      setInitialDepartureLocationsOne(
-        dataEdit.supported_classes?.departure_locations_1 || [],
-      );
-      setInitialDepartureLocationsTwo(
-        dataEdit.supported_classes?.departure_locations_2 || [],
-      );
-      setInitialDepartureLocationsThree(
-        dataEdit.supported_classes?.departure_locations_3 || [],
-      );
+          : dataEdit.list_departure_locations || [];
+      setMainDepartureLocationsSelected([...savedMainDepartures]);
+      const savedDepartureOne =
+        dataEdit.supported_classes?.departure_locations_1 || [];
+      const savedDepartureTwo =
+        dataEdit.supported_classes?.departure_locations_2 || [];
+      const savedDepartureThree =
+        dataEdit.supported_classes?.departure_locations_3 || [];
+      setDepartureLocationsSelectedOne([...savedDepartureOne]);
+      setDepartureLocationsSelectedTwo([...savedDepartureTwo]);
+      setDepartureLocationsSelectedThree([...savedDepartureThree]);
       if (
         dataEdit.supported_classes?.class_id_2 &&
         dataEdit.supported_classes?.class_id_2 !== ""
@@ -297,15 +283,15 @@ const BoatComponent = ({
       setInitialCustomPickUpDurationThree(
         normalizeDurationValues(customPickupLocations?.duration_3),
       );
-      setInitialCustomPickUpDepartureOne(
-        customPickupLocations?.departure_locations_1 || [],
-      );
-      setInitialCustomPickUpDepartureTwo(
-        customPickupLocations?.departure_locations_2 || [],
-      );
-      setInitialCustomPickUpDepartureThree(
-        customPickupLocations?.departure_locations_3 || [],
-      );
+      const savedPickupDepartureOne =
+        customPickupLocations?.departure_locations_1 || [];
+      const savedPickupDepartureTwo =
+        customPickupLocations?.departure_locations_2 || [];
+      const savedPickupDepartureThree =
+        customPickupLocations?.departure_locations_3 || [];
+      setCustomPickUpDepartureOne([...savedPickupDepartureOne]);
+      setCustomPickUpDepartureTwo([...savedPickupDepartureTwo]);
+      setCustomPickUpDepartureThree([...savedPickupDepartureThree]);
       if (
         customPickupLocations?.duration_2?.length ||
         customPickupLocations?.departure_locations_2?.length
@@ -331,41 +317,59 @@ const BoatComponent = ({
 
   useEffect(() => {
     editActivitiesSyncedRef.current = false;
+    activitiesEditedRef.current = false;
   }, [isEdit, dataEdit?.id]);
 
   useEffect(() => {
     if (customPickUpCheck) {
-      setInitialMainDepartureLocations([]);
       setMainDepartureLocationsSelected([]);
     }
   }, [customPickUpCheck]);
 
   const clearDepartureLocationSelections = () => {
     setMainDepartureLocationsSelected([]);
-    setInitialMainDepartureLocations([]);
     setDepartureLocationsSelectedOne([]);
     setDepartureLocationsSelectedTwo([]);
     setDepartureLocationsSelectedThree([]);
-    setInitialDepartureLocationsOne([]);
-    setInitialDepartureLocationsTwo([]);
-    setInitialDepartureLocationsThree([]);
     setCustomPickUpDepartureOne([]);
     setCustomPickUpDepartureTwo([]);
     setCustomPickUpDepartureThree([]);
-    setInitialCustomPickUpDepartureOne([]);
-    setInitialCustomPickUpDepartureTwo([]);
-    setInitialCustomPickUpDepartureThree([]);
   };
 
   // Drop selected activities that are no longer valid for boat type / location.
+  // Wait until the boat-type catalog is loaded: Panga/Yacht matching uses the
+  // type name, and filtering before that name exists wipes a valid selection.
   useEffect(() => {
-    if (!activityData.length || !Number(boatTypeSelected)) {
+    if (
+      !activityData.length ||
+      !Number(boatTypeSelected) ||
+      !boatTypeCatalogReady
+    ) {
       return;
     }
 
     const allowedIds = new Set(
       filteredActivityData.map((item) => Number(item.id)),
     );
+
+    const pruneSelection = (prev) => {
+      const next = (prev || [])
+        .map((id) => Number(id))
+        .filter((id) => allowedIds.has(id));
+      if (
+        next.length === (prev || []).length &&
+        next.every((id, index) => id === Number((prev || [])[index]))
+      ) {
+        return prev;
+      }
+      return next;
+    };
+
+    if (activitiesEditedRef.current) {
+      setActivitiesSelected(pruneSelection);
+      editActivitiesSyncedRef.current = true;
+      return;
+    }
 
     if (
       isEdit &&
@@ -380,20 +384,12 @@ const BoatComponent = ({
       return;
     }
 
-    setActivitiesSelected((prev) => {
-      const next = (prev || []).filter((id) => allowedIds.has(Number(id)));
-      if (
-        next.length === (prev || []).length &&
-        next.every((id, index) => Number(id) === Number(prev[index]))
-      ) {
-        return prev;
-      }
-      return next;
-    });
+    setActivitiesSelected(pruneSelection);
   }, [
     filteredActivityData,
     activityData.length,
     boatTypeSelected,
+    boatTypeCatalogReady,
     isEdit,
     initialOptionsArea,
   ]);
@@ -459,19 +455,12 @@ const BoatComponent = ({
     };
 
     setMainDepartureLocationsSelected(prune);
-    setInitialMainDepartureLocations(prune);
     setDepartureLocationsSelectedOne(prune);
     setDepartureLocationsSelectedTwo(prune);
     setDepartureLocationsSelectedThree(prune);
-    setInitialDepartureLocationsOne(prune);
-    setInitialDepartureLocationsTwo(prune);
-    setInitialDepartureLocationsThree(prune);
     setCustomPickUpDepartureOne(prune);
     setCustomPickUpDepartureTwo(prune);
     setCustomPickUpDepartureThree(prune);
-    setInitialCustomPickUpDepartureOne(prune);
-    setInitialCustomPickUpDepartureTwo(prune);
-    setInitialCustomPickUpDepartureThree(prune);
   }, [
     locationSelected,
     depatureLocationData.length,
@@ -480,8 +469,11 @@ const BoatComponent = ({
 
   //multi select activities
   function handleMulti(selected) {
+    activitiesEditedRef.current = true;
     setActivitiesSelected(
-      resolveActivitySelection(selected, filteredActivityData),
+      resolveActivitySelection(selected, filteredActivityData).map((id) =>
+        Number(id),
+      ),
     );
   }
 
@@ -490,7 +482,7 @@ const BoatComponent = ({
       resolveDepartureLocationSelection(
         selected,
         filteredDepartureLocationData,
-      ),
+      ).map((id) => Number(id)),
     );
   }
 
@@ -505,7 +497,7 @@ const BoatComponent = ({
       {map(groupedDepartureLocationOptions, (group) => (
         <Select.OptGroup key={group.label} label={group.label}>
           {map(group.options, (item) => (
-            <Option key={item.id} value={item.id}>
+            <Option key={item.id} value={Number(item.id)}>
               {item.name}
               {item.type_label ? ` (${item.type_label})` : ""}
             </Option>
@@ -560,9 +552,7 @@ const BoatComponent = ({
     onSubmit: (values) => {
       const mainDepartureLocations = customPickUpCheck
         ? null
-        : mainDepartureLocationsSelected.length > 0
-          ? mainDepartureLocationsSelected
-          : initialMainDepartureLocations;
+        : mainDepartureLocationsSelected;
 
       let data = {
         provider_operator_id: +id,
@@ -597,9 +587,7 @@ const BoatComponent = ({
               : initialDurationOne,
           departure_locations_1: !flexiblePrice
             ? []
-            : dapatureLocationsSelectedOne.length > 0
-              ? dapatureLocationsSelectedOne
-              : initialDepartureLocationsOne,
+            : dapatureLocationsSelectedOne,
           class_id_2: supportedClassRowTwo ? suportedClassSelectedTwo : null,
           duration_2: !supportedClassRowTwo
             ? null
@@ -608,9 +596,7 @@ const BoatComponent = ({
               : initialDurationTwo,
           departure_locations_2: !supportedClassRowTwo
             ? []
-            : dapatureLocationsSelectedTwo.length > 0
-              ? dapatureLocationsSelectedTwo
-              : initialDepartureLocationsTwo,
+            : dapatureLocationsSelectedTwo,
           class_id_3: supportedClassRowThree
             ? suportedClassSelectedThree
             : null,
@@ -621,9 +607,7 @@ const BoatComponent = ({
               : initialDurationThree,
           departure_locations_3: !supportedClassRowThree
             ? []
-            : dapatureLocationsSelectedThree.length > 0
-              ? dapatureLocationsSelectedThree
-              : initialDepartureLocationsThree,
+            : dapatureLocationsSelectedThree,
         },
         has_custom_prices: customPricesCheck ? 1 : 0,
         has_custom_pickup: customPickUpCheck ? 1 : 0,
@@ -633,10 +617,7 @@ const BoatComponent = ({
                 customPickUpDurationOne.length > 0
                   ? customPickUpDurationOne
                   : initialCustomPickUpDurationOne,
-              departure_locations_1:
-                customPickUpDepartureOne.length > 0
-                  ? customPickUpDepartureOne
-                  : initialCustomPickUpDepartureOne,
+              departure_locations_1: customPickUpDepartureOne,
               duration_2: !customPickUpRowTwo
                 ? null
                 : customPickUpDurationTwo.length > 0
@@ -644,9 +625,7 @@ const BoatComponent = ({
                   : initialCustomPickUpDurationTwo,
               departure_locations_2: !customPickUpRowTwo
                 ? []
-                : customPickUpDepartureTwo.length > 0
-                  ? customPickUpDepartureTwo
-                  : initialCustomPickUpDepartureTwo,
+                : customPickUpDepartureTwo,
               duration_3: !customPickUpRowThree
                 ? null
                 : customPickUpDurationThree.length > 0
@@ -654,9 +633,7 @@ const BoatComponent = ({
                   : initialCustomPickUpDurationThree,
               departure_locations_3: !customPickUpRowThree
                 ? []
-                : customPickUpDepartureThree.length > 0
-                  ? customPickUpDepartureThree
-                  : initialCustomPickUpDepartureThree,
+                : customPickUpDepartureThree,
             }
           : null,
         custom_prices: {
@@ -1376,9 +1353,9 @@ const BoatComponent = ({
                         {shortcut.label}
                       </Option>
                     ))}
-                  {map(filteredActivityData, (item, index) => {
+                  {map(filteredActivityData, (item) => {
                     return (
-                      <Option key={index} value={item.id}>
+                      <Option key={item.id} value={Number(item.id)}>
                         {item.text}
                       </Option>
                     );
@@ -1755,11 +1732,7 @@ const BoatComponent = ({
                       style={{ width: "100%", paddingTop: "5px" }}
                       placeholder="Please select"
                       value={
-                        customPickUpCheck
-                          ? []
-                          : mainDepartureLocationsSelected.length > 0
-                            ? mainDepartureLocationsSelected
-                            : initialMainDepartureLocations
+                        customPickUpCheck ? [] : mainDepartureLocationsSelected
                       }
                       onChange={(values) =>
                         handleDepartureMulti(
@@ -1801,7 +1774,6 @@ const BoatComponent = ({
                           const nextValue = !customPickUpCheck;
                           setCustomPickUpCheck(nextValue);
                           if (nextValue) {
-                            setInitialMainDepartureLocations([]);
                             setMainDepartureLocationsSelected([]);
                           }
                         }}
@@ -1888,11 +1860,7 @@ const BoatComponent = ({
                           rows="5"
                           style={{ width: "100%", paddingTop: "5px" }}
                           placeholder="Please select"
-                          value={
-                            customPickUpDepartureOne.length > 0
-                              ? customPickUpDepartureOne
-                              : initialCustomPickUpDepartureOne
-                          }
+                          value={customPickUpDepartureOne}
                           onChange={(values) =>
                             handleDepartureMulti(
                               values,
@@ -1978,11 +1946,7 @@ const BoatComponent = ({
                             rows="5"
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            value={
-                              customPickUpDepartureTwo.length > 0
-                                ? customPickUpDepartureTwo
-                                : initialCustomPickUpDepartureTwo
-                            }
+                            value={customPickUpDepartureTwo}
                             onChange={(values) =>
                               handleDepartureMulti(
                                 values,
@@ -2081,11 +2045,7 @@ const BoatComponent = ({
                             rows="5"
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            value={
-                              customPickUpDepartureThree.length > 0
-                                ? customPickUpDepartureThree
-                                : initialCustomPickUpDepartureThree
-                            }
+                            value={customPickUpDepartureThree}
                             onChange={(values) =>
                               handleDepartureMulti(
                                 values,
@@ -2314,11 +2274,7 @@ const BoatComponent = ({
                             rows="5"
                             style={{ width: "100%", paddingTop: "5px" }}
                             placeholder="Please select"
-                            value={
-                              dapatureLocationsSelectedOne.length > 0
-                                ? dapatureLocationsSelectedOne
-                                : initialDepartureLocationsOne
-                            }
+                            value={dapatureLocationsSelectedOne}
                             onChange={(values) =>
                               handleDepartureMulti(
                                 values,
@@ -2459,11 +2415,7 @@ const BoatComponent = ({
                               rows="5"
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              value={
-                                dapatureLocationsSelectedTwo.length > 0
-                                  ? dapatureLocationsSelectedTwo
-                                  : initialDepartureLocationsTwo
-                              }
+                              value={dapatureLocationsSelectedTwo}
                               onChange={(values) =>
                                 handleDepartureMulti(
                                   values,
@@ -2624,11 +2576,7 @@ const BoatComponent = ({
                               rows="5"
                               style={{ width: "100%", paddingTop: "5px" }}
                               placeholder="Please select"
-                              value={
-                                dapatureLocationsSelectedThree.length > 0
-                                  ? dapatureLocationsSelectedThree
-                                  : initialDepartureLocationsThree
-                              }
+                              value={dapatureLocationsSelectedThree}
                               onChange={(values) =>
                                 handleDepartureMulti(
                                   values,
