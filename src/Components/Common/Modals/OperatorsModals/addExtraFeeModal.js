@@ -107,7 +107,7 @@ const AddExtraFeeModal = ({
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 201) {
-              Swal.fire("Success!", "Fee Added.", "success").then(() => {
+              Swal.fire("Success!", "Extra Fee Added.", "success").then(() => {
                 setExtraFeeModal(false);
                 //history.goBack()
                 setDataEdit([]);
@@ -132,7 +132,7 @@ const AddExtraFeeModal = ({
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 200) {
-              Swal.fire("Success!", "Fee Edited.", "success").then(() => {
+              Swal.fire("Success!", "Extra Fee Edited.", "success").then(() => {
                 setExtraFeeModal(false);
                 //history.goBack()
                 setDataEdit([]);

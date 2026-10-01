@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddExtraFeeModal from "../../../Components/Common/Modals/OperatorsModals/addExtraFeeModal";
 import {
   Form,
@@ -12,6 +12,7 @@ import {
   UncontrolledTooltip,
   Tooltip,
   Label,
+  Spinner,
 } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -43,8 +44,13 @@ import { getNotyfyChannelAPI } from "../../../Utils/API/Providers";
 import AddLocationModal from "../../../Components/Common/Modals/OperatorsModals/addLocationModal";
 import AddBoatModal from "../../../Components/Common/Modals/OperatorsModals/addBoatModal";
 import AddRestrictionModal from "../../../Components/Common/Modals/OperatorsModals/addRestrictionModal";
-import { getVouchersTemplatesAPI } from "../../../Utils/API/Tours";
+import {
+  getVouchersTemplatesAPI,
+  getVoucherFlowAvailableAPI,
+  putVoucherFlowAvailableAPI,
+} from "../../../Utils/API/Tours";
 import AddMapImageModal from "../../../Components/Common/Modals/OperatorsModals/addMapImageModal";
+import { switchTourTab } from "../../../Utils/API";
 
 const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const tourID = tourData?.id;
@@ -81,6 +87,8 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const [ttmlocation, setttmlocation] = useState(false);
   const [ttblocation, setttblocation] = useState(false);
   const [voucherTT, setVoucherTT] = useState(false);
+  const [enableQueueTT, setEnableQueueTT] = useState(false);
+  const [templateError, setTemplateError] = useState(false);
   const [ttdp, setdp] = useState(false);
   const [ttai, setai] = useState(false);
   const [ttpcontact, settpcontact] = useState(false);
@@ -107,6 +115,11 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
   const [templatesData, setTemplatesData] = useState([]);
   const [templateSelected, setTemplateSelected] = useState("");
   const [addAirportMapModal, setAddAirportMapModal] = useState(false);
+  const [voucherFlowAvailable, setVoucherFlowAvailable] = useState(
+    Number(tourData?.voucher_flow_available) === 1,
+  );
+  const [voucherFlowSaving, setVoucherFlowSaving] = useState(false);
+  const voucherFlowTouched = useRef(false);
   // Baselines para medir dirty de los campos que viven fuera de Formik.
   // Las tablas (fees, locations, etc.) se guardan solas en sus modales.
   const [savedSpecialInstructionCheck, setSavedSpecialInstructionCheck] =
@@ -272,6 +285,52 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
     }
   }, [tourID]);
 
+  useEffect(() => {
+    if (!tourID) {
+      return;
+    }
+    let cancelled = false;
+    getVoucherFlowAvailableAPI(tourID)
+      .then((resp) => {
+        if (cancelled || voucherFlowTouched.current) {
+          return;
+        }
+        const value = resp?.data?.data?.voucher_flow_available;
+        setVoucherFlowAvailable(Number(value) === 1);
+      })
+      .catch(() => {
+        if (cancelled || voucherFlowTouched.current) {
+          return;
+        }
+        setVoucherFlowAvailable(Number(tourData?.voucher_flow_available) === 1);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [tourID, tourData?.voucher_flow_available]);
+
+  const voucherFlowChange = (isActive) => {
+    if (!tourID || voucherFlowSaving) {
+      return;
+    }
+    voucherFlowTouched.current = true;
+    setVoucherFlowSaving(true);
+    putVoucherFlowAvailableAPI(tourID, { active: isActive ? 1 : 0 })
+      .then(() => {
+        setVoucherFlowAvailable(isActive);
+        setVoucherFlowSaving(false);
+      })
+      .catch(() => {
+        setVoucherFlowSaving(false);
+        Swal.fire({
+          title: "Error",
+          text: "Enable in Queue could not be updated. Refresh the page and try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
+  };
+
   const refreshTable = () => {
     getAdditionalFeeTable(tourID)
       .then((resp) => {
@@ -324,8 +383,16 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
       setSavedConfirmationChannelSelected(
         voucherInitialData.notification_email,
       );
-      setTemplateSelected(voucherInitialData.voucher_template_id);
-      setSavedTemplateSelected(voucherInitialData.voucher_template_id);
+      const nextTemplate =
+        voucherInitialData.voucher_template_id ??
+        tourData?.voucher_template_id ??
+        "";
+      const normalizedTemplate =
+        nextTemplate === null || nextTemplate === undefined
+          ? ""
+          : String(nextTemplate);
+      setTemplateSelected(normalizedTemplate);
+      setSavedTemplateSelected(normalizedTemplate);
       setPrimaryContactChannelSelected(
         voucherInitialData.primary_contact_channel,
       );
@@ -409,6 +476,24 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
       // name: Yup.string().required("Name is required"),
     }),
     onSubmit: (values, { resetForm }) => {
+      const templateId =
+        templateSelected === null || templateSelected === undefined
+          ? ""
+          : String(templateSelected);
+      if (templateId === "") {
+        setTemplateError(true);
+        const templateField = document.getElementById("voucher_template_id");
+        if (templateField) {
+          templateField.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        Swal.fire(
+          "Error!",
+          "Voucher Template is required.",
+          "error",
+        );
+        return;
+      }
+
       let restArr = [];
       if (rest1) {
         restArr.push({
@@ -504,7 +589,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         send_voucher_read_only: voucherInitialData.send_voucher_read_only,
         notification_email_read_only:
           voucherInitialData.notification_email_read_only,
-        voucher_template_id: templateSelected === "" ? null : templateSelected,
+        voucher_template_id: templateId,
       };
       putVoucherInformationTours(voucherInitialData.tour_id, data)
         .then((resp) => {
@@ -532,7 +617,9 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
               "Edited!",
               "Automated Confirmation Information has been edited.",
               "success",
-            ).then(() => {});
+            ).then(() => {
+              window.location.href = switchTourTab(10);
+            });
           }
         })
         .catch((error) => {
@@ -633,7 +720,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         deleteExtraFeeTours(feeID).then((resp) => {
           if (resp.data.status === 200) {
             refreshTable();
-            Swal.fire("deleted!", "Extra fee has been edited.", "success");
+            Swal.fire("Deleted!", "Extra Fee has been deleted.", "success");
           }
         });
       }
@@ -655,7 +742,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
           if (resp.data.status === 200) {
             refreshTable();
             Swal.fire(
-              "deleted!",
+              "Deleted!",
               "Meeting Location has been deleted.",
               "success",
             );
@@ -678,7 +765,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         deleteBoatLocationsTours(locationID).then((resp) => {
           if (resp.data.status === 200) {
             refreshTable();
-            Swal.fire("deleted!", "Boat Location has been deleted.", "success");
+            Swal.fire("Deleted!", "Boat Location has been deleted.", "success");
           }
         });
       }
@@ -698,7 +785,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
         deleteRestrictionTours(locationID).then((resp) => {
           if (resp.data.status === 200) {
             refreshTable();
-            Swal.fire("deleted!", "Restriction has been deleted.", "success");
+            Swal.fire("Deleted!", "Restriction has been deleted.", "success");
           }
         });
       }
@@ -835,7 +922,7 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
           ) : null}
           <Row>
             <Col
-              className="col-12 p-1 my-2"
+              className="col-12 p-1 my-2 d-flex justify-content-between align-items-center"
               style={{ backgroundColor: "#FFEFDE" }}
             >
               <p
@@ -849,6 +936,56 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
               >
                 Define Voucher Templates
               </p>
+              <div className="d-flex form-check form-switch align-items-center me-2 mb-0">
+                <Label
+                  className="mx-2 mb-0"
+                  htmlFor="voucher-flow-available-switch"
+                >
+                  Enable in Queue
+                </Label>
+                <i
+                  className="uil-question-circle font-size-15 me-2"
+                  id="enableInQueueTT"
+                />
+                <Tooltip
+                  placement="left"
+                  isOpen={enableQueueTT}
+                  target="enableInQueueTT"
+                  toggle={() => {
+                    setEnableQueueTT(!enableQueueTT);
+                  }}
+                >
+                  Enables the tour in the automated confirmations flow (Orders
+                  Queue). Review the information below before enabling it.
+                </Tooltip>
+                <input
+                  type="checkbox"
+                  className="form-check-input mx-1"
+                  id="voucher-flow-available-switch"
+                  checked={voucherFlowAvailable}
+                  disabled={voucherFlowSaving || !tourID}
+                  onChange={(e) => {
+                    voucherFlowChange(e.target.checked);
+                  }}
+                />
+                <div
+                  className="d-flex align-items-center text-muted ms-1"
+                  style={{ minWidth: "70px", fontSize: "10px" }}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {voucherFlowSaving ? (
+                    <>
+                      <Spinner
+                        size="sm"
+                        className="me-1"
+                        style={{ width: "10px", height: "10px" }}
+                      />
+                      Saving...
+                    </>
+                  ) : null}
+                </div>
+              </div>
             </Col>
           </Row>
           <Row>
@@ -2120,12 +2257,19 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                 <div className="input-group">
                   <Input
                     type="select"
-                    name=""
+                    id="voucher_template_id"
+                    name="voucher_template_id"
+                    value={
+                      templateSelected === null || templateSelected === undefined
+                        ? ""
+                        : String(templateSelected)
+                    }
+                    invalid={templateError}
                     onChange={(e) => {
                       setTemplateSelected(e.target.value);
+                      setTemplateError(false);
                     }}
                     onBlur={validationType.handleBlur}
-                    //   value={validationType.values.department || ""}
                   >
                     <option value="">Select....</option>
                     {map(templatesData, (template, index) => {
@@ -2133,12 +2277,6 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                         <option
                           key={index}
                           value={template.voucher_template_id}
-                          selected={
-                            tourData && tourData.voucher_template_id
-                              ? template.voucher_template_id ===
-                                tourData.voucher_template_id
-                              : false
-                          }
                         >
                           {template.voucher_template}
                         </option>
@@ -2146,6 +2284,11 @@ const AutomatedConfirmation = ({ tourData, id, toggle }) => {
                     })}
                   </Input>
                 </div>
+                {templateError ? (
+                  <div className="invalid-feedback d-block">
+                    Voucher Template is required.
+                  </div>
+                ) : null}
               </div>
             </Col>
           </Row>

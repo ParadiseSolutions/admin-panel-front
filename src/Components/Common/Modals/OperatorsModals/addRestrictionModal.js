@@ -128,7 +128,7 @@ const AddRestrictionModal = ({
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 200) {
-              Swal.fire("Success!", "Location Edited.", "success").then(() => {
+              Swal.fire("Success!", "Restriction Edited.", "success").then(() => {
                 setLocationModal(false);
                 //history.goBack()
                 setDataEdit([]);
