@@ -356,7 +356,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         deleteExtraFee(feeID).then((resp) => {
           if (resp.data.status === 200) {
             refreshTable();
-            Swal.fire("deleted!", "Extra fee has been edited.", "success");
+            Swal.fire("Deleted!", "Extra Fee has been deleted.", "success");
           }
         });
       }
@@ -376,7 +376,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         deleteMeetingLocation(locationID).then((resp) => {
           if (resp.data.status === 200) {
             refreshTable();
-            Swal.fire("deleted!", "Meeting Location has been deleted.", "success");
+            Swal.fire("Deleted!", "Meeting Location has been deleted.", "success");
           }
         });
       }
@@ -396,7 +396,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         deleteBoatLocation(locationID).then((resp) => {
           if (resp.data.status === 200) {
             refreshTable();
-            Swal.fire("deleted!", "Boat Location has been deleted.", "success");
+            Swal.fire("Deleted!", "Boat Location has been deleted.", "success");
           }
         });
       }
@@ -416,7 +416,7 @@ const AutomatedConfirmation = ({ socialData, id }) => {
         deleteRestriction(locationID).then((resp) => {
           if (resp.data.status === 200) {
             refreshTable();
-            Swal.fire("deleted!", "Restriction has been deleted.", "success");
+            Swal.fire("Deleted!", "Restriction has been deleted.", "success");
           }
         });
       }

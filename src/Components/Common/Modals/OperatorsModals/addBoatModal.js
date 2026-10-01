@@ -116,7 +116,7 @@ const AddBoatModal = ({
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 201) {
-              Swal.fire("Success!", "Location Added.", "success").then(() => {
+              Swal.fire("Success!", "Boat Location Added.", "success").then(() => {
                 setLocationModal(false);
                 //history.goBack()
                 setDataEdit([]);
@@ -141,7 +141,7 @@ const AddBoatModal = ({
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 200) {
-              Swal.fire("Success!", "Location Edited.", "success").then(() => {
+              Swal.fire("Success!", "Boat Location Edited.", "success").then(() => {
                 setLocationModal(false);
                 //history.goBack()
                 setDataEdit([]);

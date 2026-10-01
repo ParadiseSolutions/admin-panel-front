@@ -142,7 +142,7 @@ const AddLocationModal = ({
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 201) {
-              Swal.fire("Success!", "Location Added.", "success").then(() => {
+              Swal.fire("Success!", "Meeting Location Added.", "success").then(() => {
                 setDataEdit([]);
                 resetLocationForm();
                 setLocationModal(false);
@@ -167,7 +167,7 @@ const AddLocationModal = ({
           .then((resp) => {
             // console.log(resp.data);
             if (resp.data.status === 200) {
-              Swal.fire("Success!", "Location Edited.", "success").then(() => {
+              Swal.fire("Success!", "Meeting Location Edited.", "success").then(() => {
                 setLocationModal(false);
                 //history.goBack()
                 setDataEdit([]);

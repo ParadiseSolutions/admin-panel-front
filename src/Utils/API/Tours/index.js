@@ -366,6 +366,18 @@ export const putPaymentRequestAPI = (id, body) => {
     headers: options,
   });
 };
+export const getVoucherFlowAvailableAPI = (id) => {
+  const url = `${API_URL}/tours/${id}/voucher-flow-available`;
+  return axios.get(url, {
+    headers: options,
+  });
+};
+export const putVoucherFlowAvailableAPI = (id, body) => {
+  const url = `${API_URL}/tours/${id}/voucher-flow-available`;
+  return axios.post(url, body, {
+    headers: options,
+  });
+};
 export const deletePaymentsAPI = (id) => {
   const url = `${API_URL}/payments/${id}`;
   return axios.delete(url, {
