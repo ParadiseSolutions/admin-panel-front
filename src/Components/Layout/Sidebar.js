@@ -4,13 +4,40 @@ import { Link } from "react-router-dom";
 
 import logoSm from "../Assets/images/logo-sm.png";
 import paradiseLogo from "../Assets/images/paradise-logo.png";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 // //Import Scrollbar
 import SimpleBar from "simplebar-react";
 
 // MetisMenu
 import MetisMenu from "metismenujs";
+
+const SIDEBAR_OPEN_KEY = "sidebar-open-sections";
+
+const readOpenSections = () => {
+  const raw = sessionStorage.getItem(SIDEBAR_OPEN_KEY);
+  if (raw === null) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch (error) {
+    return null;
+  }
+};
+
+const sectionsToRestore = (saved) => {
+  const chosen = Array.isArray(saved)
+    ? saved.filter((section) => section === "manage" || section === "manager")
+    : [];
+  return chosen.length > 0 ? chosen : ["manage"];
+};
+
+const sectionIsOpen = (openSections, name) => openSections.indexOf(name) >= 0;
+
+const submenuClassName = (openSections, name) =>
+  sectionIsOpen(openSections, name) ? "sub-menu mm-collapse mm-show" : "sub-menu mm-collapse";
 
 const Sidebar = () => {
   const USERS = 1;
@@ -35,6 +62,7 @@ const Sidebar = () => {
     body.classList.toggle("sidebar-enable");
   }
   const ref = useRef();
+  const [openSections, setOpenSections] = useState(() => sectionsToRestore(readOpenSections()));
 
   const activateParentDropdown = useCallback((item) => {
     item.classList.add("active");
@@ -75,11 +103,28 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
-    // const pathName = props.location.pathname
     const pathName = window.location.pathname
-    new MetisMenu("#side-menu");
-    let matchingMenuItem = null;
     const ul = document.getElementById("side-menu");
+    const menu = new MetisMenu("#side-menu");
+    const syncOpenSections = () => {
+      const open = [];
+      Array.from(ul.children).forEach((item) => {
+        if (!item.getAttribute || !item.getAttribute("data-menu-section")) {
+          return;
+        }
+        const sub = item.querySelector("ul");
+        if (sub) {
+          sub.classList.remove("mm-collapsing");
+          sub.style.height = "";
+        }
+        if (item.classList.contains("mm-active")) {
+          open.push(item.getAttribute("data-menu-section"));
+        }
+      });
+      sessionStorage.setItem(SIDEBAR_OPEN_KEY, JSON.stringify(open));
+      setOpenSections(open);
+    };
+    let matchingMenuItem = null;
     const items = ul.getElementsByTagName("a");
     for (let i = 0; i < items.length; ++i) {
       if (pathName === items[i].pathname) {
@@ -90,6 +135,25 @@ const Sidebar = () => {
     if (matchingMenuItem) {
       activateParentDropdown(matchingMenuItem);
     }
+    Array.from(ul.children).forEach((item) => {
+      if (!item.classList || !item.classList.contains("mm-active")) {
+        return;
+      }
+      const sub = item.querySelector("ul");
+      if (!sub) {
+        return;
+      }
+      sub.classList.add("mm-collapse", "mm-show");
+      sub.classList.remove("mm-collapsing");
+      sub.style.height = "";
+    });
+    ul.addEventListener("shown.metisMenu", syncOpenSections);
+    ul.addEventListener("hidden.metisMenu", syncOpenSections);
+    return () => {
+      ul.removeEventListener("shown.metisMenu", syncOpenSections);
+      ul.removeEventListener("hidden.metisMenu", syncOpenSections);
+      menu.dispose();
+    };
   }, [activateParentDropdown]);
 
   useEffect(() => {
@@ -144,11 +208,11 @@ const Sidebar = () => {
                     <span>{"Dashboard"}</span>
                   </Link>
                 </li>
-                <li className="mm-active">
+                <li data-menu-section="manage" className={sectionIsOpen(openSections, "manage") ? "mm-active" : undefined}>
                   <Link to="/#" className="has-arrow waves-effect" >
                     <span>{"MANAGE"}</span>
                   </Link>
-                  <ul className="sub-menu">
+                  <ul className={submenuClassName(openSections, "manage")}>
                     {
                       userInfo.modules.filter(x => x.module_id === CATEGORIES).length > 0 ?
                         <li>
@@ -259,6 +323,52 @@ const Sidebar = () => {
                     }
                   </ul>
                 </li>
+                {
+                  userInfo.modules.filter((x) => x.module === "Manager").length > 0 ?
+                    <li data-menu-section="manager" className={sectionIsOpen(openSections, "manager") ? "mm-active" : undefined}>
+                      <Link to="/#" className="has-arrow waves-effect">
+                        <span>{"MANAGER"}</span>
+                      </Link>
+                      <ul className={submenuClassName(openSections, "manager")}>
+                        <li>
+                          <Link to="/manager/page-urls" className="waves-effect">
+                            <i className="uil uil-link"></i>
+                            <span>{"Page URLs"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/pricing-option-details" className="waves-effect">
+                            <i className="uil uil-list-ul"></i>
+                            <span>{"Pricing Option Details"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/charter-types" className="waves-effect">
+                            <i className="uil uil-ship"></i>
+                            <span>{"Charter Types"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/charter-types-fishing" className="waves-effect">
+                            <i className="uil uil-anchor"></i>
+                            <span>{"Charter Types Fishing"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/airport-transfers" className="waves-effect">
+                            <i className="uil uil-plane"></i>
+                            <span>{"Airport Transfers"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/related-tours" className="waves-effect">
+                            <i className="uil uil-share-alt"></i>
+                            <span>{"Related Tours"}</span>
+                          </Link>
+                        </li>
+                      </ul>
+                    </li> : (null)
+                }
               </ul>
             </div>
           </SimpleBar>

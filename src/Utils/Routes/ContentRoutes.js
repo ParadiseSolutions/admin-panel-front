@@ -14,6 +14,7 @@ import ProvidersRoutes from "./ProvidersRoutes";
 import LocationsRoutes from "./LocationsRoutes";
 import OperatorsRoutes from "./OperatorsRoutes";
 import TourRoutes from "./ToursRoutes";
+import ManagerRoutes from "./ManagerRoutes";
 import Layout from "../../Components/Layout";
 
 const Fallback = () => <div>loading.....</div>;
@@ -39,6 +40,7 @@ const ContentRoutes = ({ isLogged, ...rest }) => {
             <PrivateRoutes path="/providers" component={ProvidersRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/shoppingcarts" component={ShoppingCartRoutes} isAuthenticated={isLogged} />
             <PrivateRoutes path="/tours" component={TourRoutes} isAuthenticated={isLogged} />
+            <PrivateRoutes path="/manager" component={ManagerRoutes} isAuthenticated={isLogged} />
             <Redirect to="/tours" />
           </Switch>
         </Suspense>
