@@ -259,6 +259,52 @@ const Sidebar = () => {
                     }
                   </ul>
                 </li>
+                {
+                  userInfo.modules.filter((x) => x.module === "Manager").length > 0 ?
+                    <li>
+                      <Link to="/#" className="has-arrow waves-effect">
+                        <span>{"MANAGER"}</span>
+                      </Link>
+                      <ul className="sub-menu">
+                        <li>
+                          <Link to="/manager/page-urls" className="waves-effect">
+                            <i className="uil uil-link"></i>
+                            <span>{"Page URLs"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/pricing-option-details" className="waves-effect">
+                            <i className="uil uil-list-ul"></i>
+                            <span>{"Pricing Option Details"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/charter-types" className="waves-effect">
+                            <i className="uil uil-ship"></i>
+                            <span>{"Charter Types"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/charter-types-fishing" className="waves-effect">
+                            <i className="uil uil-anchor"></i>
+                            <span>{"Charter Types Fishing"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/airport-transfers" className="waves-effect">
+                            <i className="uil uil-plane"></i>
+                            <span>{"Airport Transfers"}</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/manager/related-tours" className="waves-effect">
+                            <i className="uil uil-share-alt"></i>
+                            <span>{"Related Tours"}</span>
+                          </Link>
+                        </li>
+                      </ul>
+                    </li> : (null)
+                }
               </ul>
             </div>
           </SimpleBar>
