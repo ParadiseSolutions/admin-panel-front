@@ -100,6 +100,10 @@ const TableContainer = ({
   onClickNewProvider,
   onClickNewContactProvider,
   onClickAddLocation,
+  managerTable,
+  onClickAddManager,
+  managerAddLabel,
+  managerSearchId,
   onClickFilter,
   onClickRemoveFilter,
   setBulkModal,
@@ -171,6 +175,7 @@ const TableContainer = ({
                 preGlobalFilteredRows={preGlobalFilteredRows}
                 globalFilter={state.globalFilter}
                 setGlobalFilter={setGlobalFilter}
+                searchId={managerSearchId || "search-bar-0"}
               />
             )}
 
@@ -201,6 +206,21 @@ const TableContainer = ({
                   >
                     <i className="mdi mdi-plus me-1" />
                     Add New Category
+                  </Button>
+                </div>
+              </Col>
+            )}
+
+            {managerTable && (
+              <Col sm="10">
+                <div className="text-sm-end">
+                  <Button
+                    type="button"
+                    className="waves-effect waves-light mb-3 btn btn-orange"
+                    onClick={() => onClickAddManager()}
+                  >
+                    <i className="mdi mdi-plus me-1" />
+                    {managerAddLabel || "Add"}
                   </Button>
                 </div>
               </Col>
@@ -523,6 +543,47 @@ const TableContainer = ({
                   ))}
                 </thead>
 
+                <tbody {...getTableBodyProps()}>
+                  {page.map((row) => {
+                    prepareRow(row);
+                    return (
+                      <Fragment key={row.getRowProps().key}>
+                        <tr>
+                          {row.cells.map((cell) => {
+                            return (
+                              <td key={cell.id} {...cell.getCellProps()}>
+                                {cell.render("Cell")}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      </Fragment>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
+          )}
+          {managerTable && (
+            <div className="table-responsive">
+              <Table hover {...getTableProps()} className="react_table">
+                <thead className="table-nowrap">
+                  {headerGroups.map((headerGroup) => (
+                    <tr
+                      key={headerGroup.id}
+                      {...headerGroup.getHeaderGroupProps()}
+                    >
+                      {headerGroup.headers.map((column) => (
+                        <th key={column.id}>
+                          <div {...column.getSortByToggleProps()}>
+                            {column.render("Header")}
+                            {generateSortingIndicator(column)}
+                          </div>
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
                 <tbody {...getTableBodyProps()}>
                   {page.map((row) => {
                     prepareRow(row);
@@ -1306,6 +1367,7 @@ function GlobalFilter({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
+  searchId = "search-bar-0",
 }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(globalFilter);
@@ -1321,11 +1383,11 @@ function GlobalFilter({
         >
           <div className="position-relative col-12">
             <label
-              htmlFor="search-bar-0"
+              htmlFor={searchId}
               className="search-label"
               style={{ width: "100%" }}
             >
-              <span id="search-bar-0-label" className="sr-only">
+              <span id={`${searchId}-label`} className="sr-only">
                 Search this table
               </span>
               <input
@@ -1333,7 +1395,7 @@ function GlobalFilter({
                   setValue(e.target.value);
                   onChange(e.target.value);
                 }}
-                id="search-bar-0"
+                id={searchId}
                 type="text"
                 className="form-control"
                 placeholder={`${count} records...`}
