@@ -51,7 +51,7 @@ export const ManagerPage = ({ title, children }) => (
   </div>
 );
 
-export const IdResult = ({ label, value }) => {
+export const IdResult = ({ label, value, extra }) => {
   if (value === null || value === undefined || value === "") {
     return null;
   }
@@ -64,9 +64,12 @@ export const IdResult = ({ label, value }) => {
           {value}
         </div>
       </div>
-      <button type="button" className="btn btn-orange" onClick={() => copyValue(value)}>
-        Copy
-      </button>
+      <div className="d-flex align-items-center">
+        {extra}
+        <button type="button" className="btn btn-orange" onClick={() => copyValue(value)}>
+          Copy
+        </button>
+      </div>
     </div>
   );
 };

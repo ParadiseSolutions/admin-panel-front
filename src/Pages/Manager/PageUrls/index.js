@@ -1,7 +1,32 @@
 import { useEffect, useState } from "react";
-import { Button, Card, CardBody, Col, Form, Input, Label, Row, Table } from "reactstrap";
+import { Button, Card, CardBody, Col, Form, Input, Label, Row, Table, UncontrolledTooltip } from "reactstrap";
 import { createPageUrl, getPageUrlCatalogs, searchPageUrls } from "../../../Utils/API/Manager";
 import { IdResult, ManagerPage, copyValue, showManagerError } from "../managerUi";
+
+const pageMetaTag = (row) => {
+  const pageType = String(row.page_type || "").toLowerCase();
+  const dataId = row.data_id;
+  const dataType = row.page_type_id === null || row.page_type_id === undefined ? "" : row.page_type_id;
+  return `<meta id="x_info" data-id="${dataId}" data-type="${dataType}">\n<meta name="page-type" content="${pageType}" id="x_info_pagetype">`;
+};
+
+const CopyMetaTag = ({ row, targetId }) => (
+  <span
+    className="text-warning mx-2"
+    onClick={() => {
+      navigator.clipboard.writeText(pageMetaTag(row));
+    }}
+  >
+    <i
+      className="mdi mdi-content-copy font-size-18"
+      id={targetId}
+      style={{ cursor: "pointer" }}
+    />
+    <UncontrolledTooltip placement="top" target={targetId}>
+      Copy Meta Tag
+    </UncontrolledTooltip>
+  </span>
+);
 
 const emptyForm = {
   website_id: "",
@@ -17,7 +42,7 @@ const PageUrls = () => {
   const [searching, setSearching] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
-  const [createdId, setCreatedId] = useState(null);
+  const [created, setCreated] = useState(null);
 
   useEffect(() => {
     getPageUrlCatalogs()
@@ -52,8 +77,7 @@ const PageUrls = () => {
       url: form.url.trim(),
     })
       .then((resp) => {
-        const dataId = resp.data.data && resp.data.data.data_id;
-        setCreatedId(dataId);
+        setCreated(resp.data.data || null);
         setForm(emptyForm);
       })
       .catch(showManagerError)
@@ -62,7 +86,11 @@ const PageUrls = () => {
 
   return (
     <ManagerPage title="PAGE URLS">
-      <IdResult label="data-id" value={createdId} />
+      <IdResult
+        label="data-id"
+        value={created && created.data_id}
+        extra={created ? <CopyMetaTag row={created} targetId="copy-meta-created" /> : null}
+      />
       <Row>
         <Col lg="6">
           <Card>
@@ -102,6 +130,7 @@ const PageUrls = () => {
                           >
                             {row.data_id}
                           </button>
+                          <CopyMetaTag row={row} targetId={`copy-meta-${row.data_id}`} />
                         </td>
                       </tr>
                     ))}

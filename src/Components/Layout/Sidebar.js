@@ -12,6 +12,35 @@ import SimpleBar from "simplebar-react";
 // MetisMenu
 import MetisMenu from "metismenujs";
 
+const SIDEBAR_OPEN_KEY = "sidebar-open-sections";
+
+const readOpenSections = () => {
+  const raw = sessionStorage.getItem(SIDEBAR_OPEN_KEY);
+  if (raw === null) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch (error) {
+    return null;
+  }
+};
+
+const writeOpenSections = () => {
+  const ul = document.getElementById("side-menu");
+  if (!ul) {
+    return;
+  }
+  const open = [];
+  ul.querySelectorAll(":scope > li[data-menu-section]").forEach((item) => {
+    if (item.classList.contains("mm-active")) {
+      open.push(item.getAttribute("data-menu-section"));
+    }
+  });
+  sessionStorage.setItem(SIDEBAR_OPEN_KEY, JSON.stringify(open));
+};
+
 const Sidebar = () => {
   const USERS = 1;
   const DEPARTMENTS = 2;
@@ -75,11 +104,18 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
-    // const pathName = props.location.pathname
     const pathName = window.location.pathname
-    new MetisMenu("#side-menu");
-    let matchingMenuItem = null;
     const ul = document.getElementById("side-menu");
+    const saved = readOpenSections();
+    const sectionsToOpen = saved === null ? ["manage"] : saved;
+    sectionsToOpen.forEach((section) => {
+      const item = ul.querySelector(`:scope > li[data-menu-section="${section}"]`);
+      if (item) {
+        item.classList.add("mm-active");
+      }
+    });
+    const menu = new MetisMenu("#side-menu");
+    let matchingMenuItem = null;
     const items = ul.getElementsByTagName("a");
     for (let i = 0; i < items.length; ++i) {
       if (pathName === items[i].pathname) {
@@ -90,6 +126,13 @@ const Sidebar = () => {
     if (matchingMenuItem) {
       activateParentDropdown(matchingMenuItem);
     }
+    ul.addEventListener("shown.metisMenu", writeOpenSections);
+    ul.addEventListener("hidden.metisMenu", writeOpenSections);
+    return () => {
+      ul.removeEventListener("shown.metisMenu", writeOpenSections);
+      ul.removeEventListener("hidden.metisMenu", writeOpenSections);
+      menu.dispose();
+    };
   }, [activateParentDropdown]);
 
   useEffect(() => {
@@ -144,7 +187,7 @@ const Sidebar = () => {
                     <span>{"Dashboard"}</span>
                   </Link>
                 </li>
-                <li className="mm-active">
+                <li data-menu-section="manage">
                   <Link to="/#" className="has-arrow waves-effect" >
                     <span>{"MANAGE"}</span>
                   </Link>
@@ -261,7 +304,7 @@ const Sidebar = () => {
                 </li>
                 {
                   userInfo.modules.filter((x) => x.module === "Manager").length > 0 ?
-                    <li>
+                    <li data-menu-section="manager">
                       <Link to="/#" className="has-arrow waves-effect">
                         <span>{"MANAGER"}</span>
                       </Link>
