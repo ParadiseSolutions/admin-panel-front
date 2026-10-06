@@ -23,6 +23,9 @@
 		},
 		{
 			"path": "../../../../xampp_orders2/htdocs/Orders2"
+		},
+		{
+			"path": "../../js-knowledge-base"
 		}
 	],
 	"settings": {}
