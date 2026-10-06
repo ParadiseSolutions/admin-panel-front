@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import logoSm from "../Assets/images/logo-sm.png";
 import paradiseLogo from "../Assets/images/paradise-logo.png";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 // //Import Scrollbar
 import SimpleBar from "simplebar-react";
@@ -27,19 +27,17 @@ const readOpenSections = () => {
   }
 };
 
-const writeOpenSections = () => {
-  const ul = document.getElementById("side-menu");
-  if (!ul) {
-    return;
-  }
-  const open = [];
-  ul.querySelectorAll(":scope > li[data-menu-section]").forEach((item) => {
-    if (item.classList.contains("mm-active")) {
-      open.push(item.getAttribute("data-menu-section"));
-    }
-  });
-  sessionStorage.setItem(SIDEBAR_OPEN_KEY, JSON.stringify(open));
+const sectionsToRestore = (saved) => {
+  const chosen = Array.isArray(saved)
+    ? saved.filter((section) => section === "manage" || section === "manager")
+    : [];
+  return chosen.length > 0 ? chosen : ["manage"];
 };
+
+const sectionIsOpen = (openSections, name) => openSections.indexOf(name) >= 0;
+
+const submenuClassName = (openSections, name) =>
+  sectionIsOpen(openSections, name) ? "sub-menu mm-collapse mm-show" : "sub-menu mm-collapse";
 
 const Sidebar = () => {
   const USERS = 1;
@@ -64,6 +62,7 @@ const Sidebar = () => {
     body.classList.toggle("sidebar-enable");
   }
   const ref = useRef();
+  const [openSections, setOpenSections] = useState(() => sectionsToRestore(readOpenSections()));
 
   const activateParentDropdown = useCallback((item) => {
     item.classList.add("active");
@@ -106,15 +105,25 @@ const Sidebar = () => {
   useEffect(() => {
     const pathName = window.location.pathname
     const ul = document.getElementById("side-menu");
-    const saved = readOpenSections();
-    const sectionsToOpen = saved === null ? ["manage"] : saved;
-    sectionsToOpen.forEach((section) => {
-      const item = ul.querySelector(`:scope > li[data-menu-section="${section}"]`);
-      if (item) {
-        item.classList.add("mm-active");
-      }
-    });
     const menu = new MetisMenu("#side-menu");
+    const syncOpenSections = () => {
+      const open = [];
+      Array.from(ul.children).forEach((item) => {
+        if (!item.getAttribute || !item.getAttribute("data-menu-section")) {
+          return;
+        }
+        const sub = item.querySelector("ul");
+        if (sub) {
+          sub.classList.remove("mm-collapsing");
+          sub.style.height = "";
+        }
+        if (item.classList.contains("mm-active")) {
+          open.push(item.getAttribute("data-menu-section"));
+        }
+      });
+      sessionStorage.setItem(SIDEBAR_OPEN_KEY, JSON.stringify(open));
+      setOpenSections(open);
+    };
     let matchingMenuItem = null;
     const items = ul.getElementsByTagName("a");
     for (let i = 0; i < items.length; ++i) {
@@ -126,11 +135,23 @@ const Sidebar = () => {
     if (matchingMenuItem) {
       activateParentDropdown(matchingMenuItem);
     }
-    ul.addEventListener("shown.metisMenu", writeOpenSections);
-    ul.addEventListener("hidden.metisMenu", writeOpenSections);
+    Array.from(ul.children).forEach((item) => {
+      if (!item.classList || !item.classList.contains("mm-active")) {
+        return;
+      }
+      const sub = item.querySelector("ul");
+      if (!sub) {
+        return;
+      }
+      sub.classList.add("mm-collapse", "mm-show");
+      sub.classList.remove("mm-collapsing");
+      sub.style.height = "";
+    });
+    ul.addEventListener("shown.metisMenu", syncOpenSections);
+    ul.addEventListener("hidden.metisMenu", syncOpenSections);
     return () => {
-      ul.removeEventListener("shown.metisMenu", writeOpenSections);
-      ul.removeEventListener("hidden.metisMenu", writeOpenSections);
+      ul.removeEventListener("shown.metisMenu", syncOpenSections);
+      ul.removeEventListener("hidden.metisMenu", syncOpenSections);
       menu.dispose();
     };
   }, [activateParentDropdown]);
@@ -187,11 +208,11 @@ const Sidebar = () => {
                     <span>{"Dashboard"}</span>
                   </Link>
                 </li>
-                <li data-menu-section="manage">
+                <li data-menu-section="manage" className={sectionIsOpen(openSections, "manage") ? "mm-active" : undefined}>
                   <Link to="/#" className="has-arrow waves-effect" >
                     <span>{"MANAGE"}</span>
                   </Link>
-                  <ul className="sub-menu">
+                  <ul className={submenuClassName(openSections, "manage")}>
                     {
                       userInfo.modules.filter(x => x.module_id === CATEGORIES).length > 0 ?
                         <li>
@@ -304,11 +325,11 @@ const Sidebar = () => {
                 </li>
                 {
                   userInfo.modules.filter((x) => x.module === "Manager").length > 0 ?
-                    <li data-menu-section="manager">
+                    <li data-menu-section="manager" className={sectionIsOpen(openSections, "manager") ? "mm-active" : undefined}>
                       <Link to="/#" className="has-arrow waves-effect">
                         <span>{"MANAGER"}</span>
                       </Link>
-                      <ul className="sub-menu">
+                      <ul className={submenuClassName(openSections, "manager")}>
                         <li>
                           <Link to="/manager/page-urls" className="waves-effect">
                             <i className="uil uil-link"></i>
