@@ -84,7 +84,7 @@ const Pricing = ({ history, id, tourData, toggle }) => {
       setters.push(setter);
     };
 
-    if (type === 6 && provider != 147) {
+    if (type === 6) {
       add(getPricingOptionsAPI(38), setPriceTypeData);
       add(getPricingOptionsAPI(39), setPriceOptions);
       add(getPricingOptionsAPI(41), setPriceCollect);
