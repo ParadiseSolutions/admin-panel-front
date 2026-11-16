@@ -85,6 +85,17 @@ const EditTour = ({ history }) => {
     });
   }, [activeTab, id]);
 
+  // Re-read html_needs_update from the API so the button shows the real saved status
+  const refreshPublishStatus = () => {
+    return getTourAPI(id)
+      .then((resp) => {
+        setPublishPending(resp.data.data.html_needs_update === 1 ? true : false);
+      })
+      .catch(() => {
+        // keep the current state if the status can't be re-read
+      });
+  };
+
   const publishTour = () => {
     setPublishing(true);
     postPendingPublishAPI(id).then(() => {
@@ -93,8 +104,7 @@ const EditTour = ({ history }) => {
         "The tour has been published successfully.",
         "success",
       );
-      setPublishPending(false);
-      setPublishing(false);
+      refreshPublishStatus().finally(() => setPublishing(false));
     })
     .catch((error) => {
       Swal.fire({
@@ -103,9 +113,9 @@ const EditTour = ({ history }) => {
         icon: "info",
         confirmButtonText: "Got it"
       });
-      setPublishPending(false);
-      setPublishing(false);
-    });;
+      // Don't assume it was published: show what the database says right now
+      refreshPublishStatus().finally(() => setPublishing(false));
+    });
   };
 
   return (
